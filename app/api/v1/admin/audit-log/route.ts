@@ -1,18 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PaginationSchema } from "@/lib/zod";
-import { apiRoute, authenticate, validateQuery, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, validateQuery, success, error } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
-
-  if (auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "admin:read");
 
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
-  const where: Record<string, unknown> = {};
+  const where: Record<string, unknown> = { tenantId: auth.tenantId };
   if (query.search) {
     where.OR = [
       { entityType: { contains: query.search } },

@@ -1,18 +1,16 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
 
-  if (auth.platformRole !== "HOTEL" && auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "report:read");
 
   const year = parseInt(request.nextUrl.searchParams.get("year") || new Date().getFullYear().toString(), 10);
 
   const records = await prisma.spendRecord.findMany({
-    where: { hotelId: auth.tenantId, year },
+    where: { tenantId: auth.tenantId, year },
     orderBy: [{ month: "asc" }],
   });
 

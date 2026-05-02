@@ -106,6 +106,7 @@ export async function atomicStatusUpdate(
   orderId: string,
   requestedStatus: OrderStatus,
   actorId: string,
+  tenantId: string,
   override?: boolean
 ): Promise<AtomicStatusUpdateResult> {
   // Use transaction with SELECT FOR UPDATE
@@ -150,6 +151,7 @@ export async function atomicStatusUpdate(
         entityType: "ORDER",
         entityId: orderId,
         action: `STATUS_${requestedStatus}`,
+        tenantId,
         actorId,
         beforeState: JSON.stringify({ status: order.status }),
         afterState: JSON.stringify({ status: requestedStatus }),

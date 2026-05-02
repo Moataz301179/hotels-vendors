@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const validated = HotelCreateSchema.parse(body);
 
     const hotel = await prisma.hotel.create({
-      data: validated,
+      data: { ...validated, tenantId: "system" }, // TODO: add authentication and use auth.tenantId
     });
 
     return NextResponse.json({ success: true, data: hotel }, { status: 201 });

@@ -23,7 +23,7 @@ import {
 type RegisterType = "hotel" | "supplier" | "factoring" | "shipping";
 type Step = "role" | "details" | "documents" | "verify" | "success";
 
-const ROLE_CONFIG: Record<RegisterType, { label: string; icon: React.ElementType; color: string; desc: string }> = {
+const ROLE_CONFIG: Record<RegisterType, { label: string; icon: React.ComponentType<{ className?: string; size?: number }>; color: string; desc: string }> = {
   hotel: { label: "Hotel", icon: Building2, color: "text-blue-400", desc: "Streamline procurement across all your properties" },
   supplier: { label: "Supplier", icon: Factory, color: "text-emerald-400", desc: "Reach 500+ hotels with your product catalog" },
   factoring: { label: "Factoring Company", icon: Landmark, color: "text-amber-400", desc: "Provide working capital against hotel invoices" },

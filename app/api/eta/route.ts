@@ -78,6 +78,8 @@ export async function POST(request: NextRequest) {
 
     await prisma.auditLog.create({
       data: {
+          tenantId: invoice.tenantId,
+        
         entityType: "INVOICE",
         entityId: invoiceId,
         action: "ETA_SUBMITTED",

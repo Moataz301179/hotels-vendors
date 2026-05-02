@@ -312,6 +312,7 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
       entityType: "INVOICE",
       entityId: invoice.id,
       action: "ETA_CALLBACK_PROCESSED",
+      tenantId: invoice.tenantId,
       actorId: "system",
       actorRole: "SYSTEM",
       beforeState: JSON.stringify({ etaStatus: invoice.etaStatus }),

@@ -1,15 +1,16 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ sku: string }> }) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "report:read");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { sku } = resolved;
 
   const products = await prisma.product.findMany({
-    where: { sku: { contains: sku } },
+    where: { tenantId: auth.tenantId, sku: { contains: sku } },
     orderBy: { unitPrice: "asc" },
     take: 20,
     include: { supplier: { select: { id: true, name: true, tier: true, city: true } } },

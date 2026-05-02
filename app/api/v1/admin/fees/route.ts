@@ -1,23 +1,20 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
-
-  if (auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "admin:read");
 
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const startOfYear = new Date(new Date().getFullYear(), 0, 1);
 
   const [monthlyInvoices, yearlyInvoices, totalOrders, activeHotels, activeSuppliers] = await Promise.all([
-    prisma.invoice.findMany({ where: { createdAt: { gte: startOfMonth } }, select: { total: true } }),
-    prisma.invoice.findMany({ where: { createdAt: { gte: startOfYear } }, select: { total: true } }),
-    prisma.order.count(),
-    prisma.hotel.count({ where: { status: "ACTIVE" } }),
-    prisma.supplier.count({ where: { status: "ACTIVE" } }),
+    prisma.invoice.findMany({ where: { tenantId: auth.tenantId, createdAt: { gte: startOfMonth } }, select: { total: true } }),
+    prisma.invoice.findMany({ where: { tenantId: auth.tenantId, createdAt: { gte: startOfYear } }, select: { total: true } }),
+    prisma.order.count({ where: { tenantId: auth.tenantId } }),
+    prisma.hotel.count({ where: { tenantId: auth.tenantId, status: "ACTIVE" } }),
+    prisma.supplier.count({ where: { tenantId: auth.tenantId, status: "ACTIVE" } }),
   ]);
 
   const platformFeeRate = 0.025;

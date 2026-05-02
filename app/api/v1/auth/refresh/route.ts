@@ -22,12 +22,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("User not found or inactive", 401);
   }
 
-  const newToken = await createSession(user.id, user.platformRole, user.hotelId);
+  const newToken = await createSession(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
 
   await audit({
     entityType: "USER",
     entityId: user.id,
     action: "REFRESH_TOKEN",
+    tenantId: user.tenantId || user.hotelId || "legacy",
     actorId: user.id,
     actorRole: user.platformRole,
     ipAddress: request.headers.get("x-forwarded-for") || null,

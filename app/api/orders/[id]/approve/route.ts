@@ -128,6 +128,7 @@ export async function POST(
           entityId: id,
           action: action === "REJECT" ? "ORDER_REJECTED" : "ORDER_APPROVED",
           actorId: approverId,
+          tenantId: order.tenantId,
           afterState: JSON.stringify({
             orderId: id,
             status: action === "REJECT" ? "REJECTED" : "APPROVED",
@@ -155,6 +156,7 @@ export async function POST(
             totalCredit: updated.total,
             status: "POSTED",
             hotelId: updated.hotelId,
+            tenantId: updated.tenantId,
           },
         });
       }

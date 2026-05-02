@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { etaClient } from "@/lib/eta/client";
 import { validateForSubmission } from "@/lib/eta/validator";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
 import { z } from "zod";
 
 const SubmitSchema = z.object({
@@ -11,6 +11,7 @@ const SubmitSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "invoice:submit_eta");
   const body = await request.json();
   const data = SubmitSchema.parse(body);
 
@@ -19,15 +20,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
     include: { hotel: true, supplier: true, order: { include: { items: { include: { product: true } } } } },
   });
 
-  if (!invoice) {
+  if (!invoice || invoice.tenantId !== auth.tenantId) {
     return error("Invoice not found", 404);
-  }
-
-  if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
-  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
-    return error("Forbidden", 403);
   }
 
   const validation = await validateForSubmission(data.invoiceId);
@@ -106,6 +100,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       entityType: "INVOICE",
       entityId: data.invoiceId,
       action: "ETA_SUBMIT",
+      tenantId: auth.tenantId,
       actorId: auth.userId,
       actorRole: auth.platformRole,
       afterState: { etaUuid: result.uuid, status: "SUBMITTED" },

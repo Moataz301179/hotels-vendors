@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
       include: { supplier: { select: { name: true } }, inventorySnapshots: { orderBy: { createdAt: "desc" }, take: 1 } },
     });
 
-    const data = products.map((p) => {
+    const data = products.map((p: typeof products[0]) => {
       const snap = p.inventorySnapshots[0];
       const projectedDays = p.avgDailyUsage > 0 ? Math.round(p.stockQuantity / p.avgDailyUsage) : 99;
       const isLow = p.stockQuantity <= p.reorderPoint;
@@ -43,7 +43,8 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, data });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

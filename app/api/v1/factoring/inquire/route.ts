@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { inquireAll } from "@/lib/fintech/factoring-bridge";
 import { assessRisk } from "@/lib/fintech/risk-engine";
 import { validateForFactoring } from "@/lib/eta/validator";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const InquireSchema = z.object({
@@ -12,6 +12,7 @@ const InquireSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:inquire");
   const body = await request.json();
   const data = InquireSchema.parse(body);
 
@@ -53,6 +54,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "INVOICE",
     entityId: data.invoiceId,
     action: "FACTORING_INQUIRY",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { bestOffer: bestOffer?.partnerId, offerCount: allOffers.length },

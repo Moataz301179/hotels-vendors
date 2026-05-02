@@ -1,13 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PaginationSchema } from "@/lib/zod";
-import { apiRoute, authenticate, validateQuery, success } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateQuery, success, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:inquire");
+
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
-  const where: Record<string, unknown> = {};
+  const where: Record<string, unknown> = { tenantId: auth.tenantId };
 
   const requests = await prisma.factoringRequest.findMany({
     where,

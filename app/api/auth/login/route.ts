@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const token = await createSession(user.id, user.platformRole, user.hotelId);
+    const token = await createSession(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
 
     const { passwordHash: _, ...userWithoutPassword } = user;
 

@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
     const tripNumber = `TRIP-${Date.now()}`;
     const trip = await prisma.trip.create({
       data: {
+          tenantId: "system", // TODO: add authentication and use auth.tenantId
         ...validated,
         tripNumber,
         scheduledDate: new Date(validated.scheduledDate),

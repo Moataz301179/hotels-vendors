@@ -400,6 +400,7 @@ function mergeRules(builtIn: AuthorityRule[], dbRules: AuthorityRule[]): Authori
 export async function recordApproval(
   orderId: string,
   approverId: string,
+  tenantId: string,
   action: "APPROVED" | "REJECTED" | "ESCALATED" | "ADMIN_OVERRIDE",
   reason?: string
 ): Promise<void> {
@@ -431,6 +432,7 @@ export async function recordApproval(
       entityType: "ORDER",
       entityId: orderId,
       action: `ORDER_${action}`,
+      tenantId,
       actorId: approverId,
       afterState: JSON.stringify({ status: newStatus, action }),
     },
@@ -448,6 +450,7 @@ export interface AdminOverrideRequest {
   waivePaymentGuarantee: boolean;
   authorizerId: string; // First admin
   coAuthorizerId: string; // Second admin (dual authorization)
+  tenantId: string;
 }
 
 /**
@@ -523,6 +526,7 @@ export async function adminOverride(
         entityType: "ORDER",
         entityId: req.orderId,
         action: "ADMIN_OVERRIDE",
+        tenantId: req.tenantId,
         actorId: req.authorizerId,
         beforeState,
         afterState: JSON.stringify({
@@ -547,6 +551,7 @@ export async function adminOverride(
 
 export interface PaymentGuaranteeInput {
   orderId: string;
+  tenantId: string;
   method: "FACTORING" | "DEPOSIT" | "SPLIT" | "DIRECT" | "WAIVED";
   factoringRequestId?: string;
   factoringCompanyId?: string;
@@ -588,6 +593,7 @@ export async function setPaymentGuarantee(
       entityType: "ORDER",
       entityId: input.orderId,
       action: "PAYMENT_GUARANTEE_SET",
+      tenantId: input.tenantId,
       actorId: input.verifiedBy,
       afterState: JSON.stringify({
         method: input.method,

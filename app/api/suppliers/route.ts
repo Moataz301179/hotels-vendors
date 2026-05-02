@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SupplierCreateSchema, PaginationSchema } from "@/lib/zod";
+import { authenticate } from "@/lib/api-utils";
 import { ZodError } from "zod";
 
 export async function GET(request: NextRequest) {
@@ -53,11 +54,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const ctx = await authenticate(request);
     const body = await request.json();
     const validated = SupplierCreateSchema.parse(body);
 
     const supplier = await prisma.supplier.create({
-      data: validated,
+      data: { ...validated, tenantId: ctx.tenantId },
     });
 
     return NextResponse.json(
@@ -69,6 +71,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "Validation failed", details: error.flatten() },
         { status: 400 }
+      );
+    }
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 401 }
       );
     }
     return NextResponse.json(

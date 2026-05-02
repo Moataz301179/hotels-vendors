@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { adminOverride } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
 import { z } from "zod";
 
 const OverrideSchema = z.object({
@@ -13,12 +13,10 @@ const OverrideSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "admin:read");
+  await requirePermission(auth, "admin:override_authority");
   const body = await request.json();
   const data = OverrideSchema.parse(body);
-
-  if (auth.platformRole !== "ADMIN") {
-    return error("Forbidden: Admin only", 403);
-  }
 
   const result = await adminOverride({
     orderId: data.orderId,
@@ -27,6 +25,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     waivePaymentGuarantee: data.waivePaymentGuarantee,
     authorizerId: data.authorizerId,
     coAuthorizerId: data.coAuthorizerId,
+    tenantId: auth.tenantId,
   });
 
   if (!result.success) {
@@ -37,6 +36,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "ORDER",
     entityId: data.orderId,
     action: "ADMIN_OVERRIDE",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { waived: data.waivePaymentGuarantee, reason: data.reason },

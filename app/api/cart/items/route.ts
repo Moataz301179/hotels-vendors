@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
     let cart = await prisma.cart.findUnique({ where: { userId: user.id } });
     if (!cart) {
       cart = await prisma.cart.create({
-        data: { userId: user.id, hotelId: user.hotelId },
+        data: {
+          userId: user.id, hotelId: user.hotelId || "", tenantId: user.tenantId },
       });
     }
 

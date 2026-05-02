@@ -1,14 +1,17 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, success } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success } from "@/lib/api-utils";
 
-export const GET = apiRoute(async (_request: NextRequest) => {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:read");
+
   // Find products with price changes > 15% in last 30 days
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   const recentOrders = await prisma.order.findMany({
-    where: { createdAt: { gte: thirtyDaysAgo }, status: { not: "CANCELLED" } },
+    where: { tenantId: auth.tenantId, createdAt: { gte: thirtyDaysAgo }, status: { not: "CANCELLED" } },
     include: {
       items: { include: { product: true } },
       hotel: { select: { id: true, name: true, email: true } },

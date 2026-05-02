@@ -1,18 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { InvoiceCreateSchema, PaginationSchema } from "@/lib/zod";
-import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "invoice:read");
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
-  const where: Record<string, unknown> = {};
-  if (auth.platformRole === "HOTEL") {
-    where.hotelId = auth.tenantId;
-  } else if (auth.platformRole === "SUPPLIER") {
-    where.supplierId = auth.tenantId;
-  }
+  const where: Record<string, unknown> = { tenantId: auth.tenantId };
 
   if (query.search) {
     where.invoiceNumber = { contains: query.search };
@@ -34,6 +30,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "invoice:create");
   const body = await request.json();
   const data = validateBody(InvoiceCreateSchema, body);
 
@@ -41,6 +38,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const invoice = await prisma.invoice.create({
     data: {
+          tenantId: auth.tenantId,
       invoiceNumber: data.invoiceNumber,
       orderId: data.orderId,
       hotelId: data.hotelId,
@@ -63,6 +61,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "INVOICE",
     entityId: invoice.id,
     action: "CREATE_INVOICE",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { invoiceNumber: invoice.invoiceNumber, total: invoice.total, orderId: invoice.orderId },

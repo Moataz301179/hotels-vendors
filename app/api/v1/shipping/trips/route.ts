@@ -1,13 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripCreateSchema, PaginationSchema } from "@/lib/zod";
-import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "shipping:read");
+
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
-  const where: Record<string, unknown> = {};
+  const where: Record<string, unknown> = { tenantId: auth.tenantId };
   if (query.search) {
     where.driverName = { contains: query.search };
   }
@@ -29,9 +31,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
 
-  if (auth.platformRole !== "SHIPPING" && auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "shipping:create_trip");
 
   const body = await request.json();
   const data = validateBody(TripCreateSchema, body);
@@ -39,6 +39,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const tripNumber = `TRP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const trip = await prisma.trip.create({
     data: {
+          tenantId: auth.tenantId,
       tripNumber,
       hubId: data.hubId,
       driverName: data.driverName,
@@ -54,6 +55,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "TRIP",
     entityId: trip.id,
     action: "CREATE_TRIP",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { driverName: trip.driverName, vehiclePlate: trip.vehiclePlate },

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const AiUploadSchema = z.object({
@@ -20,9 +20,7 @@ const AiUploadSchema = z.object({
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
 
-  if (auth.platformRole !== "SUPPLIER" && auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "product:create");
 
   const body = await request.json();
   const data = AiUploadSchema.parse(body);
@@ -45,6 +43,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     data.products.map((p) =>
       prisma.product.create({
         data: {
+          tenantId: auth.tenantId,
           sku: p.sku,
           name: p.name,
           description: p.description,
@@ -62,6 +61,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "PRODUCT",
     entityId: "batch",
     action: "AI_UPLOAD",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { createdCount: created.length },

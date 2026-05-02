@@ -1,25 +1,17 @@
 import { NextRequest } from "next/server";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:read");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { id } = resolved;
 
-  const order = await prisma.order.findUnique({ where: { id } });
-  if (!order) {
-    return error("Order not found", 404);
-  }
-
-  if (auth.platformRole === "HOTEL" && order.hotelId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
-  if (auth.platformRole === "SUPPLIER" && order.supplierId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
+  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const user = await prisma.user.findUnique({ where: { id: auth.userId } });
 
@@ -35,6 +27,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     entityType: "ORDER",
     entityId: id,
     action: "EVALUATE_AUTHORITY",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { action: result.action, canProceed: result.canProceed, reason: result.reason },

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { UserCreateSchema, PaginationSchema } from "@/lib/zod";
+import { authenticate } from "@/lib/api-utils";
 import { ZodError } from "zod";
 
 export async function GET(request: NextRequest) {
@@ -54,11 +55,23 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const ctx = await authenticate(request);
     const body = await request.json();
     const validated = UserCreateSchema.parse(body);
 
+    // Verify the role belongs to the same tenant
+    const role = await prisma.role.findFirst({
+      where: { id: validated.roleId, tenantId: ctx.tenantId },
+    });
+    if (!role) {
+      return NextResponse.json(
+        { success: false, error: "Invalid role for this tenant" },
+        { status: 400 }
+      );
+    }
+
     const user = await prisma.user.create({
-      data: validated,
+      data: { ...validated, tenantId: ctx.tenantId },
       include: {
         hotel: { select: { id: true, name: true } },
       },
@@ -70,6 +83,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "Validation failed", details: error.flatten() },
         { status: 400 }
+      );
+    }
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 401 }
       );
     }
     return NextResponse.json(

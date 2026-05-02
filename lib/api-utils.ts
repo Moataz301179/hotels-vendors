@@ -14,6 +14,7 @@ import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } 
 // ─────────────────────────────────────────
 
 export function getTenantId(request: NextRequest): string | null {
+  // DEPRECATED: Do not use. Tenant ID must come from the JWT session.
   return request.headers.get("x-tenant-id");
 }
 
@@ -44,8 +45,8 @@ export async function authenticate(request: NextRequest): Promise<AuthContext> {
   if (!session) {
     throw new ApiError("Invalid or expired session", 401);
   }
-  const tenantId = requireTenantId(request);
-  return { userId: session.userId, platformRole: session.platformRole, tenantId };
+  // Tenant ID comes from the JWT session — NEVER trust client-sent headers
+  return { userId: session.userId, platformRole: session.platformRole, tenantId: session.tenantId };
 }
 
 export async function optionalAuth(request: NextRequest): Promise<AuthContext | null> {
@@ -124,6 +125,7 @@ export async function audit(
     entityType: string;
     entityId: string;
     action: string;
+    tenantId: string;
     actorId?: string | null;
     actorRole?: string | null;
     beforeState?: Record<string, unknown> | null;
@@ -195,3 +197,11 @@ export function apiRoute(
     }
   };
 }
+
+// ─────────────────────────────────────────
+// 9. RBAC & TENANT RE-EXPORTS
+// ─────────────────────────────────────────
+
+export { requirePermission, PermissionDeniedError } from "@/lib/auth/rbac";
+export { tenantWhereClause, enforceTenantOwnership } from "@/lib/tenant/scope";
+export type { TenantContext } from "@/lib/tenant/scope";

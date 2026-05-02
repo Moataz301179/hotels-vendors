@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, validateBody, success, error } from "@/lib/api-utils";
+import { verifyTenantOwnership } from "@/lib/tenant/scope";
 import { z } from "zod";
 
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
@@ -10,21 +11,21 @@ const AskSchema = z.object({
   hotelId: z.string().optional(),
 });
 
-async function getHotelContext(hotelId: string) {
+async function getHotelContext(hotelId: string, tenantId: string) {
   const [orders, spend, topSuppliers] = await Promise.all([
     prisma.order.findMany({
-      where: { hotelId },
+      where: { hotelId, tenantId },
       orderBy: { createdAt: "desc" },
       take: 10,
       include: { supplier: { select: { name: true } }, items: { include: { product: { select: { name: true } } } } },
     }),
     prisma.order.aggregate({
-      where: { hotelId, status: { in: ["DELIVERED", "CONFIRMED"] } },
+      where: { hotelId, tenantId, status: { in: ["DELIVERED", "CONFIRMED"] } },
       _sum: { total: true },
     }),
     prisma.order.groupBy({
       by: ["supplierId"],
-      where: { hotelId },
+      where: { hotelId, tenantId },
       _sum: { total: true },
       _count: { id: true },
       orderBy: { _sum: { total: "desc" } },
@@ -33,7 +34,7 @@ async function getHotelContext(hotelId: string) {
   ]);
 
   const supplierNames = await prisma.supplier.findMany({
-    where: { id: { in: topSuppliers.map((s) => s.supplierId) } },
+    where: { id: { in: topSuppliers.map((s) => s.supplierId) }, tenantId },
     select: { id: true, name: true },
   });
 
@@ -61,7 +62,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   let context = "";
   if (data.hotelId) {
-    const ctx = await getHotelContext(data.hotelId);
+    const owns = await verifyTenantOwnership(auth, "hotel", data.hotelId);
+    if (!owns) {
+      return error("Hotel not found", 404);
+    }
+    const ctx = await getHotelContext(data.hotelId, auth.tenantId);
     context = `Recent orders: ${JSON.stringify(ctx.recentOrders)}. Total spend: ${ctx.totalSpend} EGP. Top suppliers: ${JSON.stringify(ctx.topSuppliers)}.`;
   }
 

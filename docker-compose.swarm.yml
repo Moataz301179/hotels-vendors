@@ -1,0 +1,199 @@
+version: "3.9"
+
+# ═══════════════════════════════════════════════════════════════
+# Hotels Vendors — Autonomous Swarm Infrastructure
+# Hostinger VPS Deployment
+# ═══════════════════════════════════════════════════════════════
+
+services:
+  # ── Core App (Next.js standalone) ──
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hv-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - SESSION_SECRET=${SESSION_SECRET}
+      - KIMI_API_KEY=${KIMI_API_KEY}
+      - XAI_API_KEY=${XAI_API_KEY}
+      - OPENCLAW_URL=http://openclaw:8000
+      - AGENT0_URL=http://agent0:9000
+      - EMAIL_SERVICE=${EMAIL_SERVICE}
+      - EMAIL_API_KEY=${EMAIL_API_KEY}
+      - WHATSAPP_API_KEY=${WHATSAPP_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      openclaw:
+        condition: service_started
+    networks:
+      - hv-network
+    volumes:
+      - app_logs:/app/logs
+      - app_uploads:/app/public/uploads
+
+  # ── PostgreSQL ──
+  postgres:
+    image: postgres:16-alpine
+    container_name: hv-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hotels_vendors}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-hotels_vendors}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hotels_vendors}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hv-network
+
+  # ── Redis (BullMQ + Session Cache) ──
+  redis:
+    image: redis:7-alpine
+    container_name: hv-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hv-network
+
+  # ── OpenClaw — Browser Automation Engine ──
+  openclaw:
+    build:
+      context: ./services/openclaw
+      dockerfile: Dockerfile
+    container_name: hv-openclaw
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+      - DISPLAY=:99
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - openclaw_data:/app/data
+      - openclaw_screenshots:/app/screenshots
+    shm_size: 2gb
+    networks:
+      - hv-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  # ── Agent0 — Lightweight Agent Executor ──
+  agent0:
+    build:
+      context: ./services/agent0
+      dockerfile: Dockerfile
+    container_name: hv-agent0
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      - KIMI_API_KEY=${KIMI_API_KEY}
+      - XAI_API_KEY=${XAI_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+    volumes:
+      - agent0_memory:/app/memory
+    networks:
+      - hv-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # ── Swarm Worker — Background Job Processor ──
+  swarm-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: hv-swarm-worker
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - KIMI_API_KEY=${KIMI_API_KEY}
+      - XAI_API_KEY=${XAI_API_KEY}
+      - OPENCLAW_URL=http://openclaw:8000
+      - AGENT0_URL=http://agent0:9000
+      - WORKER_MODE=swarm
+    depends_on:
+      - postgres
+      - redis
+      - openclaw
+      - agent0
+    networks:
+      - hv-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 1G
+
+  # ── Nginx Reverse Proxy + SSL ──
+  nginx:
+    image: nginx:alpine
+    container_name: hv-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/ssl:/etc/nginx/ssl:ro
+      - certbot_data:/etc/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - hv-network
+
+  # ── Certbot for SSL ──
+  certbot:
+    image: certbot/certbot
+    container_name: hv-certbot
+    volumes:
+      - certbot_data:/etc/letsencrypt
+      - ./deploy/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done'"
+    networks:
+      - hv-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  openclaw_data:
+  openclaw_screenshots:
+  agent0_memory:
+  app_logs:
+  app_uploads:
+  certbot_data:
+
+networks:
+  hv-network:
+    driver: bridge

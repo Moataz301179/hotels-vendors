@@ -23,12 +23,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Invalid email or password", 401);
   }
 
-  const token = await createSession(user.id, user.platformRole, user.hotelId);
+  const token = await createSession(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
 
   await audit({
     entityType: "USER",
     entityId: user.id,
     action: "LOGIN",
+    tenantId: user.tenantId || user.hotelId || "legacy",
     actorId: user.id,
     actorRole: user.platformRole,
     afterState: { email: user.email, platformRole: user.platformRole },

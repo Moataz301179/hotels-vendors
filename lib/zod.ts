@@ -47,7 +47,9 @@ export const UserCreateSchema = z.object({
   name: z.string().min(2),
   phone: z.string().optional(),
   role: z.nativeEnum(UserRole).default(UserRole.DEPARTMENT_HEAD),
-  hotelId: z.string().cuid(),
+  roleId: z.string().cuid(),
+  hotelId: z.string().cuid().optional(),
+  supplierId: z.string().cuid().optional(),
   canOverride: z.boolean().default(false),
 });
 

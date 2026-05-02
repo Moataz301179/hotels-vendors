@@ -1,13 +1,112 @@
 // Hotels Vendors — Digital Procurement Hub
-// PostgreSQL-compatible schema (SQLite for local dev)
-// Last updated: 2026-05-01
+// PostgreSQL + Multi-tenant schema
+// Last updated: 2026-05-02
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────
+// TENANT — Multi-tenant isolation root
+// ─────────────────────────────────────────
+
+model Tenant {
+  id           String       @id @default(cuid())
+  name         String
+  slug         String       @unique
+  type         TenantType   @default(HOTEL_GROUP)
+  status       TenantStatus @default(ACTIVE)
+  taxId        String       @unique
+  logoUrl      String?
+  primaryColor String?
+
+  // Relations
+  users          User[]
+  hotels         Hotel[]
+  suppliers      Supplier[]
+  products       Product[]
+  orders         Order[]
+  invoices       Invoice[]
+  auditLogs      AuditLog[]
+  documents      Document[]
+  carts          Cart[]
+  journalEntries JournalEntry[]
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  roles              Role[]
+  properties         Property[]
+  deliveryZones      DeliveryZone[]
+  spendRecords       SpendRecord[]
+  inventorySnapshots InventorySnapshot[]
+  factoringCompanies FactoringCompany[]
+  creditTransactions CreditTransaction[]
+  factoringRequests  FactoringRequest[]
+  logisticsHubs      LogisticsHub[]
+  trips              Trip[]
+  tripStops          TripStop[]
+  outlets            Outlet[]
+  supplierAudits     SupplierAudit[]
+  payments           Payment[]
+  creditFacilities   CreditFacility[]
+  consolidatedOrders ConsolidatedOrder[]
+}
+
+enum TenantType {
+  HOTEL_GROUP
+  SUPPLIER
+  FACTORING_COMPANY
+  SHIPPING_PROVIDER
+  PLATFORM
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ─────────────────────────────────────────
+// ROLE & PERMISSION — Granular RBAC
+// ─────────────────────────────────────────
+
+model Role {
+  id              String           @id @default(cuid())
+  name            String
+  tenantId        String?
+  tenant          Tenant?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  isGlobal        Boolean          @default(false)
+  permissions     Permission[]
+  users           User[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+
+  @@unique([tenantId, name])
+}
+
+model Permission {
+  id              String           @id @default(cuid())
+  code            String           @unique
+  name            String
+  description     String?
+  roles           Role[]
+  createdAt       DateTime         @default(now())
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  assignedAt   DateTime   @default(now())
+
+  @@id([roleId, permissionId])
 }
 
 // ─────────────────────────────────────────
@@ -16,6 +115,8 @@ datasource db {
 
 model Hotel {
   id            String      @id @default(cuid())
+  tenantId      String
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   name          String
   legalName     String?
   taxId         String      @unique // ETA Tax Registration Number
@@ -33,8 +134,8 @@ model Hotel {
   creditUsed    Float?      @default(0)
 
   // Risk scoring (Fintech Layer)
-  riskScore     Int?        @default(50) // 0-100, higher = riskier
-  riskTier      RiskTier?   @default(MEDIUM)
+  riskScore Int?      @default(50) // 0-100, higher = riskier
+  riskTier  RiskTier? @default(MEDIUM)
 
   // Relations
   properties     Property[]
@@ -65,11 +166,21 @@ model Property {
   hotelId String
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   outlets Outlet[]
   orders  Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum HotelRiskTier {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
 }
 
 enum HotelTier {
@@ -104,15 +215,27 @@ model User {
   role   UserRole   @default(DEPARTMENT_HEAD)
   status UserStatus @default(ACTIVE)
 
-  // Auth — to be configured by Security Expert
+  // Auth
   passwordHash String?
 
-  // Platform role (marketplace actor)
+  // Platform role (marketplace actor) — DEPRECATED: use Role model instead
   platformRole PlatformRole @default(HOTEL)
 
-  // Relations
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  // Tenant & RBAC
+  tenantId     String
+  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  roleId       String
+  assignedRole Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  // Actor relations (nullable — supplier/factoring users don't have hotels)
+  hotelId String?
+  hotel   Hotel?  @relation(fields: [hotelId], references: [id], onDelete: SetNull)
+
+  supplierId String?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+
+  factoringCompanyId String?
+  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id], onDelete: SetNull)
 
   // Authority Matrix override permissions
   canOverride Boolean @default(false)
@@ -129,6 +252,7 @@ model User {
 
   // Session tracking
   lastActive DateTime?
+  orders     Order[]
 }
 
 enum UserRole {
@@ -194,6 +318,11 @@ model Supplier {
   orders   Order[]
   invoices Invoice[]
   audits   SupplierAudit[]
+  users    User[]
+
+  // Tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Coverage
   deliveryZones DeliveryZone[]
@@ -211,6 +340,9 @@ model DeliveryZone {
 
   supplierId String
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -274,6 +406,9 @@ model Product {
   supplierId String
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   orderItems         OrderItem[]
   inventorySnapshots InventorySnapshot[]
 
@@ -332,6 +467,10 @@ model Order {
   supplier   Supplier @relation(fields: [supplierId], references: [id])
 
   requesterId String // User who created the order
+  requester   User   @relation(fields: [requesterId], references: [id])
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   items OrderItem[]
 
@@ -345,13 +484,15 @@ model Order {
   etaSubmissionId String?
 
   // Payment Guarantee (Fintech Layer)
-  paymentGuaranteed     Boolean  @default(false)
+  paymentGuaranteed      Boolean   @default(false)
   paymentGuaranteeMethod String? // FACTORING, DEPOSIT, SPLIT, DIRECT, WAIVED
-  paymentGuaranteeSetAt DateTime?
+  paymentGuaranteeSetAt  DateTime?
 
   // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  creditTransactions CreditTransaction[]
+  tripStops          TripStop[]
 }
 
 model OrderItem {
@@ -380,7 +521,13 @@ model OrderApproval {
   action ApprovalAction
   reason String? // For rejections
 
+  // State snapshots (required by G3)
+  beforeState String? // JSON
+  afterState  String? // JSON
+
   createdAt DateTime @default(now())
+
+  @@index([orderId, approverId])
 }
 
 enum OrderStatus {
@@ -445,17 +592,21 @@ model Invoice {
   supplierId String
   supplier   Supplier @relation(fields: [supplierId], references: [id])
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   // Factoring
-  factoringStatus    FactoringStatus   @default(NOT_FACTORABLE)
+  factoringStatus    FactoringStatus    @default(NOT_FACTORABLE)
   factoringCompanyId String?
-  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id])
+  factoringCompany   FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
   factoringAmount    Float?
   factoringRequests  FactoringRequest[]
 
   // Audit
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  payments  Payment[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  payments           Payment[]
+  creditTransactions CreditTransaction[]
 }
 
 enum EtaStatus {
@@ -504,8 +655,20 @@ model AuthorityRule {
   role         UserRole
   minValue     Float
   maxValue     Float
-  category     String // "Any" or specific ProductCategory
-  supplierTier String // "Any" or specific SupplierTier
+  category     String? // "Any" or specific ProductCategory
+  supplierTier String? // "Any" or specific SupplierTier
+
+  // Risk & tier dimensions (from TS engine)
+  hotelRiskTier HotelRiskTier?
+  hotelTier     HotelTier?
+
+  // Requester context
+  requesterRole UserRole?
+
+  // Gates (from TS engine)
+  requiresPaymentGuarantee Boolean @default(false)
+  requiresEtaValidation    Boolean @default(false)
+  requiresDualSignOff      Boolean @default(false)
 
   // Action
   action AuthorityAction
@@ -514,7 +677,8 @@ model AuthorityRule {
   routeToRole UserRole?
 
   // Scope
-  hotelId String? // null = global rule
+  hotelId  String? // null = global rule
+  tenantId String? // null = platform global rule
 
   // Metadata
   name        String?
@@ -547,6 +711,9 @@ model SpendRecord {
 
   hotelId String
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   category   ProductCategory
   amount     Float
@@ -581,7 +748,15 @@ model AuditLog {
   previousHash String?
   hash         String?
 
+  // Tenant isolation
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([createdAt])
 }
 
 // ─────────────────────────────────────────
@@ -823,6 +998,9 @@ model JournalEntry {
   hotelId String?
   hotel   Hotel?  @relation(fields: [hotelId], references: [id])
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -837,6 +1015,9 @@ model InventorySnapshot {
   id        String  @id @default(cuid())
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Snapshot data
   stockLevel    Int
@@ -863,6 +1044,9 @@ model Cart {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   user      User       @relation(fields: [userId], references: [id])
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 model CartItem {
@@ -883,21 +1067,25 @@ model CartItem {
 // ─────────────────────────────────────────
 
 model FactoringCompany {
-  id          String                 @id @default(cuid())
-  name        String
-  legalName   String?
-  taxId       String                 @unique
+  id           String                 @id @default(cuid())
+  name         String
+  legalName    String?
+  taxId        String                 @unique
   contactEmail String?
   contactPhone String?
-  status      FactoringCompanyStatus @default(ACTIVE)
-  maxFacility Float? // Maximum total factoring exposure
+  status       FactoringCompanyStatus @default(ACTIVE)
+  maxFacility  Float? // Maximum total factoring exposure
   interestRate Float? // Interest rate (e.g. 0.02 = 2%)
-  rate        Float? // Factoring rate (e.g. 0.02 = 2%)
+  rate         Float? // Factoring rate (e.g. 0.02 = 2%)
 
-  invoices   Invoice[]
-  creditTxns CreditTransaction[]
-  creditFacilities CreditFacility[]
+  invoices          Invoice[]
+  creditTxns        CreditTransaction[]
+  creditFacilities  CreditFacility[]
   factoringRequests FactoringRequest[]
+  users             User[]
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -916,9 +1104,17 @@ model CreditTransaction {
   factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id])
 
   orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
   invoiceId String?
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+
+  @@index([hotelId])
+  @@index([factoringCompanyId])
 }
 
 enum FactoringCompanyStatus {
@@ -936,28 +1132,28 @@ enum CreditTxnType {
 }
 
 model FactoringRequest {
-  id              String                 @id @default(cuid())
-  invoiceId       String                 @unique
-  invoice         Invoice                @relation(fields: [invoiceId], references: [id])
+  id        String  @id @default(cuid())
+  invoiceId String  @unique
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
 
   // Request
   requestedAmount Float
-  requestedAt     DateTime               @default(now())
+  requestedAt     DateTime @default(now())
 
   // Partner
   factoringCompanyId String
-  factoringCompany   FactoringCompany    @relation(fields: [factoringCompanyId], references: [id])
+  factoringCompany   FactoringCompany @relation(fields: [factoringCompanyId], references: [id])
 
   // Underwriting
-  status          FactoringRequestStatus @default(PENDING)
-  riskScore       Int?                   @default(50)
-  riskTier        RiskTier               @default(MEDIUM)
+  status    FactoringRequestStatus @default(PENDING)
+  riskScore Int?                   @default(50)
+  riskTier  RiskTier               @default(MEDIUM)
 
   // Terms
-  advanceRate     Float                  @default(0.90)
-  discountRate    Float                  @default(0.02)
-  platformFeeRate Float                  @default(0.015)
-  membershipDiscount Float               @default(0)
+  advanceRate        Float @default(0.90)
+  discountRate       Float @default(0.02)
+  platformFeeRate    Float @default(0.015)
+  membershipDiscount Float @default(0)
 
   // Disbursement
   grossAmount     Float?
@@ -967,15 +1163,18 @@ model FactoringRequest {
   disbursedAmount Float?
 
   // Settlement
-  disbursedAt     DateTime?
-  settledAt       DateTime?
-  hotelPaidAt     DateTime?
+  disbursedAt DateTime?
+  settledAt   DateTime?
+  hotelPaidAt DateTime?
 
   // Non-recourse flag
-  isNonRecourse   Boolean                @default(true)
+  isNonRecourse Boolean @default(true)
 
   // Partner response log
   partnerResponse String?
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1016,8 +1215,11 @@ model LogisticsHub {
   contactPhone   String?
   isActive       Boolean @default(true)
 
-  trips Trip[]
+  trips              Trip[]
   consolidatedOrders ConsolidatedOrder[]
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1038,8 +1240,11 @@ model Trip {
   completedAt   DateTime?
   status        TripStatus @default(SCHEDULED)
 
-  stops TripStop[]
+  stops              TripStop[]
   consolidatedOrders ConsolidatedOrder[]
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1054,6 +1259,10 @@ model TripStop {
   hotel   Hotel  @relation(fields: [hotelId], references: [id])
 
   orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   stopOrder        Int
   stopNumber       Int?
@@ -1102,6 +1311,9 @@ model Outlet {
   propertyId String
   property   Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   managerName    String?
   managerPhone   String?
   operatingHours String?
@@ -1131,6 +1343,9 @@ model SupplierAudit {
   id         String   @id @default(cuid())
   supplierId String
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   auditorName String
   auditDate   DateTime
@@ -1172,7 +1387,13 @@ model Document {
   category   DocCategory @default(OTHER)
   uploadedBy String
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([tenantId])
 }
 
 enum DocCategory {
@@ -1208,6 +1429,9 @@ model Payment {
 
   paidAt        DateTime?
   referenceCode String? // Bank reference
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1255,19 +1479,384 @@ model CreditFacility {
   status             CreditFacilityStatus @default(PENDING)
   approvedAt         DateTime?
   expiresAt          DateTime?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ConsolidatedOrder {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   hubId        String
   hub          LogisticsHub @relation(fields: [hubId], references: [id], onDelete: Cascade)
   tripId       String?
-  trip         Trip?    @relation(fields: [tripId], references: [id])
-  status       String   @default("PENDING")
-  totalValue   Float    @default(0)
+  trip         Trip?        @relation(fields: [tripId], references: [id])
+  status       String       @default("PENDING")
+  totalValue   Float        @default(0)
   deliveryDate DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+// ═══════════════════════════════════════════════════════════════
+// SWARM AUTONOMOUS AGENT SYSTEM — Schema Extensions
+// Add these models to the main schema.prisma before the final closing brace
+// ═══════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────
+// 11. SWARM JOB QUEUE (BullMQ Persistence)
+// ─────────────────────────────────────────
+
+model SwarmJob {
+  id          String   @id @default(cuid())
+  queueName   String   // "growth", "operations", "intelligence", "execution"
+  jobType     String   // "lead_scout", "outreach", "onboarding", "price_check", etc.
+  jobName     String   // Human-readable name
+
+  // Payload
+  payload     String   // JSON: { params }
+  context     String?  // JSON: { previousResults, memoryRefs }
+
+  // Execution
+  status      SwarmJobStatus @default(PENDING)
+  priority    Int      @default(5) // 1=urgent, 10=background
+
+  // Agent assignment
+  assignedAgent String?  // Which agent is handling this
+  squad       String   // "growth", "operations", "intelligence", "execution", "director"
+
+  // Scheduling
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  durationMs  Int?
+
+  // Results
+  output      String?  // JSON result
+  findings    String?  // Markdown summary
+  error       String?
+
+  // Human-in-the-loop
+  requiresApproval Boolean @default(false)
+  approvedAt       DateTime?
+  approvedBy       String?
+  approvalReason   String?
+
+  // Memory linkage
+  memoryRefs  String?  // JSON: [memoryId1, memoryId2]
+
+  // Retry logic
+  attempt     Int      @default(0)
+  maxAttempts Int      @default(3)
+
+  // Parent/child for workflows
+  parentJobId String?
+  childJobIds String?  // JSON array
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, squad])
+  @@index([queueName, status])
+  @@index([scheduledAt])
+  @@index([jobType])
+}
+
+enum SwarmJobStatus {
+  PENDING
+  SCHEDULED
+  RUNNING
+  WAITING_APPROVAL
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRYING
+}
+
+// ─────────────────────────────────────────
+// 12. SWARM MEMORY (Persistent Agent Context)
+// ─────────────────────────────────────────
+
+model SwarmMemory {
+  id          String   @id @default(cuid())
+
+  // Classification
+  memoryType  MemoryType
+  category    String   // "hotel", "supplier", "market", "competitor", "strategy"
+  key         String   // Unique identifier for retrieval
+
+  // Content
+  content     String   // The actual memory content
+  vector      String?  // JSON: embedding vector for similarity search
+  metadata    String?  // JSON: { source, confidence, expiry }
+
+  // Source
+  agentId     String   // Which agent created this
+  agentName   String
+  jobId       String?  // Link to originating job
+
+  // Lifecycle
+  confidence  Float    @default(0.8) // 0-1
+  expiresAt   DateTime?
+  accessCount Int      @default(0)
+
+  // Tenant (for marketplace-wide memories, use platform tenant)
+  tenantId    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([memoryType, key, tenantId])
+  @@index([memoryType, category])
+  @@index([tenantId, memoryType])
+}
+
+enum MemoryType {
+  FACT
+  INSIGHT
+  STRATEGY
+  LEAD
+  SUPPLIER_PROFILE
+  HOTEL_PROFILE
+  MARKET_SIGNAL
+  COMPETITOR_MOVE
+  CONVERSATION
+  ACTION_PLAN
+}
+
+// ─────────────────────────────────────────
+// 13. LEAD PIPELINE (Growth Squad)
+// ─────────────────────────────────────────
+
+model Lead {
+  id          String   @id @default(cuid())
+
+  // Identity
+  entityType  LeadType // HOTEL or SUPPLIER
+  name        String
+  legalName   String?
+  website     String?
+  email       String?
+  phone       String?
+
+  // Location
+  city        String?
+  governorate String?
+  address     String?
+
+  // Classification
+  tier        LeadTier @default(UNRATED)
+  starRating  Int?     // For hotels
+  roomCount   Int?     // For hotels
+  category    String?  // For suppliers: "F&B", "Linens", etc.
+
+  // Discovery
+  source      String   // "scraped", "referral", "manual", "ai_discovered"
+  sourceUrl   String?
+  discoveredBy String  // Agent ID
+
+  // Enrichment
+  enrichment  String?  // JSON: { socialProfiles, news, contacts }
+  trustSignals String? // JSON: { hasWebsite, hasTaxId, yearsInBusiness }
+
+  // Pipeline status
+  status      LeadStatus @default(DISCOVERED)
+  priority    Int        @default(5) // 1-10
+
+  // Outreach tracking
+  lastContactAt DateTime?
+  contactCount  Int      @default(0)
+  responseCount Int      @default(0)
+
+  // Conversion
+  convertedAt DateTime?
+  convertedToId String?  // User ID or Supplier ID if converted
+
+  // Tenant
+  tenantId    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, entityType])
+  @@index([priority, status])
+  @@index([city, entityType])
+  @@index([tenantId])
+}
+
+enum LeadType {
+  HOTEL
+  SUPPLIER
+  FACTOR
+  LOGISTICS
+}
+
+enum LeadTier {
+  UNRATED
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum LeadStatus {
+  DISCOVERED
+  ENRICHED
+  CONTACTED
+  RESPONDED
+  QUALIFIED
+  MEETING_SCHEDULED
+  PROPOSAL_SENT
+  NEGOTIATING
+  CONVERTED
+  LOST
+  PAUSED
+}
+
+// ─────────────────────────────────────────
+// 14. OUTREACH LOG (Compliance + Audit)
+// ─────────────────────────────────────────
+
+model OutreachLog {
+  id          String   @id @default(cuid())
+
+  // What
+  channel     String   // "email", "whatsapp", "sms", "linkedin", "phone"
+  messageType String   // "welcome", "follow_up", "proposal", "reminder", "alert"
+  subject     String?
+  body        String?  // Template used
+
+  // Who
+  leadId      String?
+  leadName    String?
+  recipientEmail String?
+  recipientPhone String?
+
+  // Agent
+  sentByAgent String   // Agent ID
+  agentName   String
+  jobId       String?
+
+  // Approval gate
+  autoSent    Boolean  @default(false)
+  approvedBy  String?
+  approvedAt  DateTime?
+
+  // Result
+  status      OutreachStatus @default(DRAFT)
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  respondedAt DateTime?
+  bounceReason String?
+
+  // Compliance
+  optInVerified Boolean @default(false)
+  unsubscribeToken String?
+  ipAddress   String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([status, channel])
+  @@index([leadId])
+  @@index([sentAt])
+}
+
+enum OutreachStatus {
+  DRAFT
+  PENDING_APPROVAL
+  SCHEDULED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  RESPONDED
+  BOUNCED
+  FAILED
+  UNSUBSCRIBED
+}
+
+// ─────────────────────────────────────────
+// 15. SWARM EVENTS (Audit Trail + Monitoring)
+// ─────────────────────────────────────────
+
+model SwarmEvent {
+  id          String   @id @default(cuid())
+
+  eventType   String   // "job_started", "job_completed", "agent_error", "model_fallback", "approval_required", "lead_converted"
+  severity    EventSeverity @default(INFO)
+
+  // Context
+  squad       String?
+  agentId     String?
+  jobId       String?
+  leadId      String?
+
+  // Data
+  message     String
+  payload     String?  // JSON
+
+  // Alerting
+  alertSent   Boolean  @default(false)
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([eventType, severity])
+  @@index([createdAt])
+  @@index([alertSent])
+}
+
+enum EventSeverity {
+  DEBUG
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+// ─────────────────────────────────────────
+// 16. MODEL HEALTH (Circuit Breaker State)
+// ─────────────────────────────────────────
+
+model ModelHealth {
+  id          String   @id @default(cuid())
+
+  provider    String   // "kimi", "xai", "openai", "ollama"
+  model       String   // "kimi-k2-6", "grok-4-1-fast"
+
+  // Circuit breaker
+  status      ModelStatus @default(HEALTHY)
+  failCount   Int      @default(0)
+  lastFailureAt DateTime?
+  lastSuccessAt DateTime?
+
+  // Performance
+  avgLatencyMs Float?
+  totalCalls   Int      @default(0)
+  successRate  Float    @default(1.0)
+
+  // Config
+  isPrimary   Boolean  @default(false)
+  isFallback  Boolean  @default(false)
+
+  updatedAt   DateTime @updatedAt
+
+  @@unique([provider, model])
+}
+
+enum ModelStatus {
+  HEALTHY
+  DEGRADED
+  UNAVAILABLE
+  DISABLED
+}
+
+// End of Schema

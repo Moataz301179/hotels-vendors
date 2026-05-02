@@ -7,9 +7,13 @@
  */
 
 import { NextRequest } from "next/server";
+import { authenticate, requirePermission } from "@/lib/api-utils";
 import { createPulseStream } from "@/lib/intelligence/sse-pulse";
 
 export async function GET(request: NextRequest) {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:read");
+
   const stream = createPulseStream();
 
   return new Response(stream, {

@@ -2,20 +2,17 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:read");
   const tenantId = auth.tenantId;
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
-  const where: Record<string, unknown> = {};
-  // Tenant isolation: scope by hotel or supplier based on user's tenant
-  if (auth.platformRole === "HOTEL") {
-    where.hotelId = tenantId;
-  } else if (auth.platformRole === "SUPPLIER") {
-    where.supplierId = tenantId;
-  }
+  const where: Record<string, unknown> = { tenantId };
+  // TODO: Scope by actual hotelId/supplierId based on user's entity linkage
+  // Currently simplified — full RLS will filter by tenantId only
 
   if (query.search) {
     where.orderNumber = { contains: query.search };
@@ -37,6 +34,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:create");
   const body = await request.json();
   const data = validateBody(OrderCreateSchema, body);
 
@@ -50,6 +48,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const order = await prisma.order.create({
     data: {
+      tenantId: auth.tenantId,
       orderNumber: data.orderNumber,
       hotelId: data.hotelId,
       propertyId: data.propertyId,
@@ -89,6 +88,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "ORDER",
     entityId: order.id,
     action: "CREATE_ORDER",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { orderNumber: order.orderNumber, total: order.total, status: order.status, evaluation: evaluation.action },

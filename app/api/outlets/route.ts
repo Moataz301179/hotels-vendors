@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const validated = OutletCreateSchema.parse(body);
 
     const outlet = await prisma.outlet.create({
-      data: validated,
+      data: { ...validated, tenantId: "system" }, // TODO: add authentication and use auth.tenantId
       include: {
         property: { select: { id: true, name: true } },
       },

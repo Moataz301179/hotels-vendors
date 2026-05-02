@@ -62,6 +62,7 @@ export async function appendAuditEntry(params: {
   entityType: string;
   entityId: string;
   action: string;
+  tenantId: string;
   actorId?: string | null;
   actorRole?: string | null;
   beforeState?: Record<string, unknown> | null;
@@ -73,6 +74,7 @@ export async function appendAuditEntry(params: {
     entityType,
     entityId,
     action,
+    tenantId,
     actorId = null,
     actorRole = null,
     beforeState = null,
@@ -95,6 +97,7 @@ export async function appendAuditEntry(params: {
       entityType,
       entityId,
       action,
+      tenantId,
       actorId,
       actorRole,
       beforeState: beforeState ? JSON.stringify(beforeState) : null,

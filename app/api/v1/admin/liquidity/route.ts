@@ -1,13 +1,10 @@
 import { NextRequest } from "next/server";
 import { getLiquidityMonitorData } from "@/lib/fintech/risk-engine";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
-
-  if (auth.platformRole !== "ADMIN" && auth.platformRole !== "FACTORING") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "admin:read");
 
   const data = await getLiquidityMonitorData();
   return success({ liquidity: data });

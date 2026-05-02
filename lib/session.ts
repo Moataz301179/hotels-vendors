@@ -31,15 +31,16 @@ export async function createSession(
 
 export async function verifySession(
   token: string
-): Promise<{ userId: string; platformRole: string } | null> {
+): Promise<{ userId: string; platformRole: string; tenantId: string } | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET, {
       clockTolerance: 60,
     });
     const userId = payload.userId as string;
     const platformRole = payload.platformRole as string;
-    if (!userId || !platformRole) return null;
-    return { userId, platformRole };
+    const tenantId = payload.tenantId as string;
+    if (!userId || !platformRole || !tenantId) return null;
+    return { userId, platformRole, tenantId };
   } catch {
     return null;
   }

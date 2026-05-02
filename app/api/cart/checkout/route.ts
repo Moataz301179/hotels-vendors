@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Validate all items belong to the selected supplier
     const mismatched = cart.items.filter(
-      (item) => item.product.supplierId !== validated.supplierId
+      (item: typeof cart.items[0]) => item.product.supplierId !== validated.supplierId
     );
     if (mismatched.length > 0) {
       return NextResponse.json(
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subtotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+    const subtotal = cart.items.reduce((sum: number, item: typeof cart.items[0]) => sum + item.total, 0);
     const vatRate = 0.14;
     const vatAmount = subtotal * vatRate;
     const total = subtotal + vatAmount;
@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
           hotelId: cart.hotelId,
           supplierId: validated.supplierId,
           requesterId: user.id,
+          tenantId: user.tenantId,
           propertyId: undefined,
           outletId: validated.outletId,
           status: "DRAFT",
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
           deliveryDate: validated.deliveryDate ? new Date(validated.deliveryDate) : undefined,
           deliveryInstructions: validated.deliveryInstructions,
           items: {
-            create: cart.items.map((item) => ({
+            create: cart.items.map((item: typeof cart.items[0]) => ({
               productId: item.productId,
               quantity: item.quantity,
               unitPrice: item.unitPrice,

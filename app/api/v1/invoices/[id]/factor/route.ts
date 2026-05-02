@@ -4,29 +4,24 @@ import { inquireAll, fundThroughPartner } from "@/lib/fintech/factoring-bridge";
 import { validateForFactoring } from "@/lib/eta/validator";
 import { assessRisk } from "@/lib/fintech/risk-engine";
 import { calculateHubRevenue } from "@/lib/fintech/hub-revenue";
-import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "invoice:factor");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { id } = resolved;
+
+  const record = await prisma.invoice.findUnique({ where: { id }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
     include: { hotel: true, supplier: true, order: true },
   });
 
-  if (!invoice) {
-    return error("Invoice not found", 404);
-  }
-
-  if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
-  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
+  if (!invoice) return error("Invoice not found", 404);
 
   const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "INVOICE_FACTOR", amount: invoice.total });
 
@@ -94,6 +89,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   // Create factoring request record
   await prisma.factoringRequest.create({
     data: {
+          tenantId: auth.tenantId,
       invoiceId: id,
       factoringCompanyId: bestOffer.partnerId,
       requestedAmount: invoice.total,
@@ -117,6 +113,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     entityType: "INVOICE",
     entityId: id,
     action: "FACTORING_FUNDED",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: {

@@ -31,7 +31,7 @@ export const GET = apiRoute(async (_request: NextRequest) => {
     name: user.name,
     role: user.role,
     platformRole: user.platformRole,
-    hotelId: user.hotelId,
+    hotelId: user.hotelId || null,
     canOverride: user.canOverride,
     permissions,
     hotel: user.hotel

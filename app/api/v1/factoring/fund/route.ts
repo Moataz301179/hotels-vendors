@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { fundThroughPartner } from "@/lib/fintech/factoring-bridge";
 import { calculateHubRevenue } from "@/lib/fintech/hub-revenue";
-import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const FundSchema = z.object({
@@ -13,6 +13,7 @@ const FundSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:fund");
   const body = await request.json();
   const data = FundSchema.parse(body);
 
@@ -69,6 +70,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   await prisma.factoringRequest.create({
     data: {
+          tenantId: auth.tenantId,
       invoiceId: data.invoiceId,
       factoringCompanyId: data.partnerId,
       requestedAmount: invoice.total,
@@ -89,6 +91,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "INVOICE",
     entityId: data.invoiceId,
     action: "FACTORING_FUND",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: {

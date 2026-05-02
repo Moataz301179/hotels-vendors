@@ -1,0 +1,355 @@
+// ═══════════════════════════════════════════════════════════════
+// SWARM AUTONOMOUS AGENT SYSTEM — Schema Extensions
+// Add these models to the main schema.prisma before the final closing brace
+// ═══════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────
+// 11. SWARM JOB QUEUE (BullMQ Persistence)
+// ─────────────────────────────────────────
+
+model SwarmJob {
+  id          String   @id @default(cuid())
+  queueName   String   // "growth", "operations", "intelligence", "execution"
+  jobType     String   // "lead_scout", "outreach", "onboarding", "price_check", etc.
+  jobName     String   // Human-readable name
+
+  // Payload
+  payload     String   // JSON: { params }
+  context     String?  // JSON: { previousResults, memoryRefs }
+
+  // Execution
+  status      SwarmJobStatus @default(PENDING)
+  priority    Int      @default(5) // 1=urgent, 10=background
+
+  // Agent assignment
+  assignedAgent String?  // Which agent is handling this
+  squad       String   // "growth", "operations", "intelligence", "execution", "director"
+
+  // Scheduling
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  durationMs  Int?
+
+  // Results
+  output      String?  // JSON result
+  findings    String?  // Markdown summary
+  error       String?
+
+  // Human-in-the-loop
+  requiresApproval Boolean @default(false)
+  approvedAt       DateTime?
+  approvedBy       String?
+  approvalReason   String?
+
+  // Memory linkage
+  memoryRefs  String?  // JSON: [memoryId1, memoryId2]
+
+  // Retry logic
+  attempt     Int      @default(0)
+  maxAttempts Int      @default(3)
+
+  // Parent/child for workflows
+  parentJobId String?
+  childJobIds String?  // JSON array
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, squad])
+  @@index([queueName, status])
+  @@index([scheduledAt])
+  @@index([jobType])
+}
+
+enum SwarmJobStatus {
+  PENDING
+  SCHEDULED
+  RUNNING
+  WAITING_APPROVAL
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRYING
+}
+
+// ─────────────────────────────────────────
+// 12. SWARM MEMORY (Persistent Agent Context)
+// ─────────────────────────────────────────
+
+model SwarmMemory {
+  id          String   @id @default(cuid())
+
+  // Classification
+  memoryType  MemoryType
+  category    String   // "hotel", "supplier", "market", "competitor", "strategy"
+  key         String   // Unique identifier for retrieval
+
+  // Content
+  content     String   // The actual memory content
+  vector      String?  // JSON: embedding vector for similarity search
+  metadata    String?  // JSON: { source, confidence, expiry }
+
+  // Source
+  agentId     String   // Which agent created this
+  agentName   String
+  jobId       String?  // Link to originating job
+
+  // Lifecycle
+  confidence  Float    @default(0.8) // 0-1
+  expiresAt   DateTime?
+  accessCount Int      @default(0)
+
+  // Tenant (for marketplace-wide memories, use platform tenant)
+  tenantId    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([memoryType, key, tenantId])
+  @@index([memoryType, category])
+  @@index([tenantId, memoryType])
+}
+
+enum MemoryType {
+  FACT
+  INSIGHT
+  STRATEGY
+  LEAD
+  SUPPLIER_PROFILE
+  HOTEL_PROFILE
+  MARKET_SIGNAL
+  COMPETITOR_MOVE
+  CONVERSATION
+  ACTION_PLAN
+}
+
+// ─────────────────────────────────────────
+// 13. LEAD PIPELINE (Growth Squad)
+// ─────────────────────────────────────────
+
+model Lead {
+  id          String   @id @default(cuid())
+
+  // Identity
+  entityType  LeadType // HOTEL or SUPPLIER
+  name        String
+  legalName   String?
+  website     String?
+  email       String?
+  phone       String?
+
+  // Location
+  city        String?
+  governorate String?
+  address     String?
+
+  // Classification
+  tier        LeadTier @default(UNRATED)
+  starRating  Int?     // For hotels
+  roomCount   Int?     // For hotels
+  category    String?  // For suppliers: "F&B", "Linens", etc.
+
+  // Discovery
+  source      String   // "scraped", "referral", "manual", "ai_discovered"
+  sourceUrl   String?
+  discoveredBy String  // Agent ID
+
+  // Enrichment
+  enrichment  String?  // JSON: { socialProfiles, news, contacts }
+  trustSignals String? // JSON: { hasWebsite, hasTaxId, yearsInBusiness }
+
+  // Pipeline status
+  status      LeadStatus @default(DISCOVERED)
+  priority    Int        @default(5) // 1-10
+
+  // Outreach tracking
+  lastContactAt DateTime?
+  contactCount  Int      @default(0)
+  responseCount Int      @default(0)
+
+  // Conversion
+  convertedAt DateTime?
+  convertedToId String?  // User ID or Supplier ID if converted
+
+  // Tenant
+  tenantId    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, entityType])
+  @@index([priority, status])
+  @@index([city, entityType])
+  @@index([tenantId])
+}
+
+enum LeadType {
+  HOTEL
+  SUPPLIER
+  FACTOR
+  LOGISTICS
+}
+
+enum LeadTier {
+  UNRATED
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum LeadStatus {
+  DISCOVERED
+  ENRICHED
+  CONTACTED
+  RESPONDED
+  QUALIFIED
+  MEETING_SCHEDULED
+  PROPOSAL_SENT
+  NEGOTIATING
+  CONVERTED
+  LOST
+  PAUSED
+}
+
+// ─────────────────────────────────────────
+// 14. OUTREACH LOG (Compliance + Audit)
+// ─────────────────────────────────────────
+
+model OutreachLog {
+  id          String   @id @default(cuid())
+
+  // What
+  channel     String   // "email", "whatsapp", "sms", "linkedin", "phone"
+  messageType String   // "welcome", "follow_up", "proposal", "reminder", "alert"
+  subject     String?
+  body        String?  // Template used
+
+  // Who
+  leadId      String?
+  leadName    String?
+  recipientEmail String?
+  recipientPhone String?
+
+  // Agent
+  sentByAgent String   // Agent ID
+  agentName   String
+  jobId       String?
+
+  // Approval gate
+  autoSent    Boolean  @default(false)
+  approvedBy  String?
+  approvedAt  DateTime?
+
+  // Result
+  status      OutreachStatus @default(DRAFT)
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  respondedAt DateTime?
+  bounceReason String?
+
+  // Compliance
+  optInVerified Boolean @default(false)
+  unsubscribeToken String?
+  ipAddress   String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([status, channel])
+  @@index([leadId])
+  @@index([sentAt])
+}
+
+enum OutreachStatus {
+  DRAFT
+  PENDING_APPROVAL
+  SCHEDULED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  RESPONDED
+  BOUNCED
+  FAILED
+  UNSUBSCRIBED
+}
+
+// ─────────────────────────────────────────
+// 15. SWARM EVENTS (Audit Trail + Monitoring)
+// ─────────────────────────────────────────
+
+model SwarmEvent {
+  id          String   @id @default(cuid())
+
+  eventType   String   // "job_started", "job_completed", "agent_error", "model_fallback", "approval_required", "lead_converted"
+  severity    EventSeverity @default(INFO)
+
+  // Context
+  squad       String?
+  agentId     String?
+  jobId       String?
+  leadId      String?
+
+  // Data
+  message     String
+  payload     String?  // JSON
+
+  // Alerting
+  alertSent   Boolean  @default(false)
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([eventType, severity])
+  @@index([createdAt])
+  @@index([alertSent])
+}
+
+enum EventSeverity {
+  DEBUG
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+// ─────────────────────────────────────────
+// 16. MODEL HEALTH (Circuit Breaker State)
+// ─────────────────────────────────────────
+
+model ModelHealth {
+  id          String   @id @default(cuid())
+
+  provider    String   // "kimi", "xai", "openai", "ollama"
+  model       String   // "kimi-k2-6", "grok-4-1-fast"
+
+  // Circuit breaker
+  status      ModelStatus @default(HEALTHY)
+  failCount   Int      @default(0)
+  lastFailureAt DateTime?
+  lastSuccessAt DateTime?
+
+  // Performance
+  avgLatencyMs Float?
+  totalCalls   Int      @default(0)
+  successRate  Float    @default(1.0)
+
+  // Config
+  isPrimary   Boolean  @default(false)
+  isFallback  Boolean  @default(false)
+
+  updatedAt   DateTime @updatedAt
+
+  @@unique([provider, model])
+}
+
+enum ModelStatus {
+  HEALTHY
+  DEGRADED
+  UNAVAILABLE
+  DISABLED
+}

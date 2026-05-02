@@ -7,11 +7,14 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let userId: string | null = null;
   let platformRole: string | null = null;
 
+  let tenantId: string | null = null;
+
   if (token) {
     const session = await verifySession(token);
     if (session) {
       userId = session.userId;
       platformRole = session.platformRole;
+      tenantId = session.tenantId;
     }
   }
 
@@ -22,6 +25,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       entityType: "USER",
       entityId: userId,
       action: "LOGOUT",
+      tenantId: tenantId || "system",
       actorId: userId,
       actorRole: platformRole,
       ipAddress: request.headers.get("x-forwarded-for") || null,

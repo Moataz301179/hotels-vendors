@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createDepositPayment } from "@/lib/payments/paymob";
-import { apiRoute, authenticate, validateBody, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, success, error, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const DepositSchema = z.object({
@@ -14,8 +14,12 @@ const DepositSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:read");
   const body = await request.json();
   const data = validateBody(DepositSchema, body);
+
+  const record = await prisma.order.findUnique({ where: { id: data.orderId }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const order = await prisma.order.findUnique({
     where: { id: data.orderId },
@@ -23,7 +27,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   if (!order) return error("Order not found", 404);
-  if (order.hotelId !== auth.tenantId) return error("Forbidden", 403);
   if (order.paymentGuaranteed) return error("Deposit already paid", 400);
 
   const depositAmount = Math.round(order.total * 0.2 * 100); // 20% in cents

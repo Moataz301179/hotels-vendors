@@ -2,29 +2,24 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { etaClient } from "@/lib/eta/client";
 import { validateForSubmission } from "@/lib/eta/validator";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "invoice:submit_eta");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { id } = resolved;
+
+  const record = await prisma.invoice.findUnique({ where: { id }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
     include: { hotel: true, supplier: true, order: { include: { items: { include: { product: true } } } } },
   });
 
-  if (!invoice) {
-    return error("Invoice not found", 404);
-  }
-
-  if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
-  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
+  if (!invoice) return error("Invoice not found", 404);
 
   const validation = await validateForSubmission(id);
   if (!validation.valid) {
@@ -107,6 +102,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
       entityType: "INVOICE",
       entityId: id,
       action: "ETA_SUBMIT",
+      tenantId: auth.tenantId,
       actorId: auth.userId,
       actorRole: auth.platformRole,
       afterState: { etaUuid: result.uuid, status: "SUBMITTED" },
@@ -121,6 +117,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
       entityType: "INVOICE",
       entityId: id,
       action: "ETA_SUBMIT_FAILED",
+      tenantId: auth.tenantId,
       actorId: auth.userId,
       actorRole: auth.platformRole,
       afterState: { error: message },

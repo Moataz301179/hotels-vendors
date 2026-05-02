@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const OptimizeSchema = z.object({
@@ -10,9 +10,7 @@ const OptimizeSchema = z.object({
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
 
-  if (auth.platformRole !== "SHIPPING" && auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "shipping:read");
 
   const body = await request.json();
   const data = OptimizeSchema.parse(body);
@@ -22,7 +20,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
     include: { stops: { include: { hotel: true } } },
   });
 
-  if (!trip) {
+  if (!trip || trip.tenantId !== auth.tenantId) {
+    return error("Trip not found", 404);
+  }
+  if (trip.stops.some((s) => s.tenantId !== auth.tenantId)) {
     return error("Trip not found", 404);
   }
 

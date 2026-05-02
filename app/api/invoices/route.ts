@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     const validated = InvoiceCreateSchema.parse(body);
 
     const invoice = await prisma.invoice.create({
-      data: validated,
+      data: { ...validated, tenantId: "system" }, // TODO: add authentication and use auth.tenantId
       include: {
         order: { select: { id: true, orderNumber: true } },
         hotel: { select: { id: true, name: true } },

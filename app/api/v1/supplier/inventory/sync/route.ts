@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const SyncSchema = z.object({
@@ -16,12 +16,18 @@ const SyncSchema = z.object({
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
 
-  if (auth.platformRole !== "SUPPLIER" && auth.platformRole !== "ADMIN") {
-    return error("Forbidden", 403);
-  }
+  await requirePermission(auth, "product:create");
 
   const body = await request.json();
   const data = SyncSchema.parse(body);
+
+  const products = await prisma.product.findMany({
+    where: { id: { in: data.products.map((p) => p.productId) } },
+    select: { id: true, tenantId: true },
+  });
+  if (products.length !== data.products.length || products.some((p) => p.tenantId !== auth.tenantId)) {
+    return error("Not found", 404);
+  }
 
   const updates = await prisma.$transaction(
     data.products.map((p) =>
@@ -39,6 +45,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     entityType: "PRODUCT",
     entityId: "batch",
     action: "INVENTORY_SYNC",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { updatedCount: updates.length },

@@ -14,14 +14,39 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let hotel;
   let supplier;
   let factoringCompany;
-  let tenantId = "";
+
+  const platformRole = data.type.toUpperCase() as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN";
+
+  // 1. Create Tenant first — every entity belongs to a tenant
+  const tenant = await prisma.tenant.create({
+    data: {
+      name: data.name,
+      slug: `${data.type}-${data.taxId}`,
+      type: platformRole === "HOTEL" ? "HOTEL_GROUP" :
+            platformRole === "SUPPLIER" ? "SUPPLIER" :
+            platformRole === "FACTORING" ? "FACTORING_COMPANY" :
+            platformRole === "SHIPPING" ? "SHIPPING_PROVIDER" : "PLATFORM",
+      taxId: data.taxId,
+    },
+  });
+
+  // 2. Create a default Owner role for this tenant
+  const ownerRole = await prisma.role.create({
+    data: {
+      name: "Owner",
+      tenantId: tenant.id,
+      isGlobal: false,
+    },
+  });
 
   const userBase = {
     email: data.email,
     name: data.name,
     passwordHash,
-    platformRole: data.type.toUpperCase() as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN",
+    platformRole,
     role: "OWNER" as const,
+    tenantId: tenant.id,
+    roleId: ownerRole.id,
   };
 
   if (data.type === "hotel") {
@@ -34,9 +59,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
         address: data.address,
         commercialReg: data.commercialReg,
         email: data.email,
+        tenantId: tenant.id,
       },
     });
-    tenantId = hotel.id;
     await prisma.user.create({
       data: { ...userBase, hotelId: hotel.id },
     });
@@ -51,11 +76,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
         address: data.address,
         commercialReg: data.commercialReg,
         phone: data.phone,
+        tenantId: tenant.id,
       },
     });
-    tenantId = supplier.id;
     await prisma.user.create({
-      data: { ...userBase, hotelId: "system" },
+      data: { ...userBase, supplierId: supplier.id },
     });
   } else if (data.type === "factoring") {
     factoringCompany = await prisma.factoringCompany.create({
@@ -64,17 +89,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
         taxId: data.taxId,
         contactEmail: data.email,
         contactPhone: data.phone,
+        tenantId: tenant.id,
       },
     });
-    tenantId = factoringCompany.id;
     await prisma.user.create({
-      data: { ...userBase, hotelId: "system" },
+      data: { ...userBase, factoringCompanyId: factoringCompany.id },
     });
   } else {
     await prisma.user.create({
-      data: { ...userBase, hotelId: "system" },
+      data: userBase,
     });
-    tenantId = "system";
   }
 
   const user = await prisma.user.findUnique({
@@ -85,15 +109,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
     throw new Error("User creation failed");
   }
 
-  const token = await createSession(user.id, user.platformRole, tenantId);
+  const token = await createSession(user.id, user.platformRole, tenant.id);
 
   await audit({
     entityType: "USER",
     entityId: user.id,
     action: "REGISTER",
+    tenantId: tenant.id,
     actorId: user.id,
     actorRole: user.platformRole,
-    afterState: { email: user.email, platformRole: user.platformRole, type: data.type },
+    afterState: { email: user.email, platformRole: user.platformRole, type: data.type, tenantId: tenant.id },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });
@@ -104,6 +129,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
     hotel,
     supplier,
     factoringCompany,
-    tenantId,
+    tenantId: tenant.id,
   }, 201);
 });

@@ -56,7 +56,8 @@ export async function GET(request: NextRequest) {
       cart = await prisma.cart.create({
         data: {
           userId: user.id,
-          hotelId: user.hotelId,
+          hotelId: user.hotelId || "",
+          tenantId: user.tenantId,
         },
         include: {
           items: {

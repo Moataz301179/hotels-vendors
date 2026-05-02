@@ -59,6 +59,7 @@ export async function POST(
 
     const audit = await prisma.supplierAudit.create({
       data: {
+          tenantId: "system", // TODO: add authentication and use auth.tenantId
         supplierId: id,
         auditorName: validated.auditorName,
         auditDate: new Date(validated.auditDate),

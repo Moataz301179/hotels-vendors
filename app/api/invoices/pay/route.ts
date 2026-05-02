@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     await prisma.journalEntry.create({
       data: {
+          tenantId: inv.hotel.tenantId,
         entryNumber: `JE-PAY-${inv.invoiceNumber}`,
         date: new Date(),
         sourceType: "PAYMENT",

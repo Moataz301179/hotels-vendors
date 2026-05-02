@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
 
     const facility = await prisma.creditFacility.create({
       data: {
+          tenantId: "system", // TODO: add authentication and use auth.tenantId
         ...validated,
         status: "PENDING",
         utilized: 0,

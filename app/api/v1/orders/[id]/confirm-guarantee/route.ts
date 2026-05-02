@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { setPaymentGuarantee } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const ConfirmGuaranteeSchema = z.object({
@@ -15,25 +15,21 @@ const ConfirmGuaranteeSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:approve");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { id } = resolved;
   const body = await request.json();
   const data = ConfirmGuaranteeSchema.parse(body);
 
-  const order = await prisma.order.findUnique({ where: { id } });
-  if (!order) {
-    return error("Order not found", 404);
-  }
+  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
-  if (auth.platformRole === "HOTEL" && order.hotelId !== auth.tenantId) {
-    return error("Forbidden", 403);
-  }
-
-  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CONFIRM_GUARANTEE", amount: order.total });
+  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CONFIRM_GUARANTEE", amount: 0 });
 
   await setPaymentGuarantee({
     orderId: id,
+    tenantId: auth.tenantId,
     method: data.method,
     factoringRequestId: data.factoringRequestId,
     factoringCompanyId: data.factoringCompanyId,
@@ -49,6 +45,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     entityType: "ORDER",
     entityId: id,
     action: "PAYMENT_GUARANTEE_SET",
+    tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: { method: data.method, etaValidated: data.etaValidated, etaUuid: data.etaUuid },

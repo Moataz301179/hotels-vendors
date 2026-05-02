@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
 
     const order = await prisma.order.create({
       data: {
+          tenantId: "system", // TODO: add authentication and use auth.tenantId
         ...orderData,
         subtotal,
         vatAmount,

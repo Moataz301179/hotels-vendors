@@ -232,28 +232,33 @@ export async function validateSession(
 // ─────────────────────────────────────────
 
 export async function triggerAdminLockdown(userId: string, reason: string): Promise<void> {
-  // 1. Invalidate all sessions for user
+  // 1. Get user for tenantId
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { tenantId: true } });
+  if (!user) throw new Error("User not found");
+
+  // 2. Invalidate all sessions for user
   await invalidateAllSessions(userId);
 
-  // 2. Flag user account
+  // 3. Flag user account
   await prisma.user.update({
     where: { id: userId },
     data: { status: "SUSPENDED" },
   });
 
-  // 3. Write security audit log
+  // 4. Write security audit log
   await prisma.auditLog.create({
     data: {
       entityType: "USER",
       entityId: userId,
       action: "SECURITY_LOCKDOWN",
+      tenantId: user.tenantId,
       actorId: "SYSTEM",
       actorRole: "SECURITY",
       afterState: JSON.stringify({ reason, status: "SUSPENDED" }),
     },
   });
 
-  // 4. TODO: Send immediate alert to all admins (email + in-app + SMS)
+  // 5. TODO: Send immediate alert to all admins (email + in-app + SMS)
   // await sendSecurityAlert({ userId, reason, severity: "CRITICAL" });
 }
 

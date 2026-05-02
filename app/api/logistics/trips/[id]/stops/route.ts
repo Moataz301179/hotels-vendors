@@ -27,6 +27,7 @@ export async function POST(
 
     const stop = await prisma.tripStop.create({
       data: {
+          tenantId: "system", // TODO: add authentication and use auth.tenantId
         tripId: id,
         hotelId: trip.hubId, // fallback; in real use case, derive from order
         orderId: validated.orderId,

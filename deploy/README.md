@@ -1,140 +1,137 @@
-# Hotels Vendors — Deployment Guide
+# Hotels Vendors — Swarm Infrastructure Deployment
 
-## Overview
+## Architecture Overview
 
-This directory contains everything needed to deploy Hotels Vendors to Hostinger VPS.
-
-## Files
-
-| File | Purpose |
-|---|---|
-| `hostinger-deploy.sh` | Full automated deployment script for Ubuntu 22.04+ |
-| `docker-compose.yml` | Alternative Docker-based deployment |
-| `.env.example` | Production environment variables template |
-| `nginx.conf` | Nginx reverse proxy configuration |
-| `pm2-config.json` | PM2 process manager configuration |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    HOSTINGER VPS (Ubuntu)                   │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────────────┐  │
+│  │   App   │  │ OpenClaw│  │ Agent0  │  │Swarm Worker  │  │
+│  │ :3000   │  │ :8000   │  │ :9000   │  │ (BullMQ)     │  │
+│  │ Next.js │  │Browser  │  │ LLM     │  │ Background   │  │
+│  │         │  │Automation│  │Router   │  │ Jobs         │  │
+│  └────┬────┘  └────┬────┘  └────┬────┘  └──────┬───────┘  │
+│       │            │            │               │          │
+│  ┌────┴────────────┴────────────┴───────────────┘          │
+│  │              Docker Network (hv-network)                 │
+│  └────┬────────────┬───────────────────────────────────────┘
+│       │            │
+│  ┌────┴────┐  ┌────┴────┐
+│  │ Postgres│  │  Redis  │
+│  │ :5432   │  │ :6379   │
+│  └─────────┘  └─────────┘
+│
+│  ┌─────────┐  ┌─────────────────┐
+│  │  Nginx  │  │ Cloudflare Tunnel│ (optional)
+│  │ :80/443 │  │ (if no direct IP)│
+│  └─────────┘  └─────────────────┘
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Quick Start
 
-### Option 1: Automated Script (Recommended)
+### 1. Provision Hostinger VPS
+- Ubuntu 22.04 LTS
+- 4 vCPU, 8GB RAM minimum (for swarm + OpenClaw)
+- 100GB SSD
 
+### 2. Run Deploy Script
 ```bash
-# On your Hostinger VPS
-ssh ubuntu@your-vps-ip
-cd /var/www
-git clone https://github.com/your-org/hotels-vendors.git
+ssh ubuntu@YOUR_VPS_IP
+git clone https://github.com/Moataz301179/hotels-vendors.git
 cd hotels-vendors
-chmod +x deploy/hostinger-deploy.sh
-sudo ./deploy/hostinger-deploy.sh production
+chmod +x deploy/hostinger-v2.sh
+./deploy/hostinger-v2.sh production
 ```
 
-### Option 2: Manual Steps
-
+### 3. Configure Environment
+Edit `.env` with your actual API keys:
 ```bash
-# 1. Install Node.js 20
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# 2. Install PostgreSQL
-sudo apt-get install -y postgresql-14
-sudo -u postgres psql -c "CREATE DATABASE hotelsvendors;"
-sudo -u postgres psql -c "CREATE USER hv WITH ENCRYPTED PASSWORD 'your-password';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE hotelsvendors TO hv;"
-
-# 3. Install Redis
-sudo apt-get install -y redis-server
-
-# 4. Install dependencies
-npm ci --legacy-peer-deps
-
-# 5. Setup environment
-cp deploy/.env.example .env
-# Edit .env with your production values
-
-# 6. Run migrations
-npx prisma migrate deploy
-
-# 7. Build
-npm run build
-
-# 8. Start with PM2
-pm2 start deploy/pm2-config.json
-pm2 save
-pm2 startup
+nano /var/www/hotelsvendors/.env
+# Set: DATABASE_URL, SESSION_SECRET, KIMI_API_KEY, XAI_API_KEY, EMAIL_API_KEY
 ```
 
-## Environment Variables
-
-Copy `deploy/.env.example` to `.env` and fill in:
-
-| Variable | Description | Required |
-|---|---|---|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `REDIS_URL` | Redis connection string | Yes |
-| `SESSION_SECRET` | JWT signing secret (64+ chars) | Yes |
-| `ETA_CLIENT_ID` | Egyptian Tax Authority OAuth client ID | Yes |
-| `ETA_CLIENT_SECRET` | Egyptian Tax Authority OAuth secret | Yes |
-| `ETA_API_URL` | ETA API base URL | Yes |
-| `PAYMOB_API_KEY` | Paymob payment gateway API key | Yes |
-| `EFG_HERMES_API_KEY` | EFG Hermes factoring API key | Yes |
-| `CONTACT_FACTORS_API_KEY` | Contact Factoring API key | Yes |
-| `NEXT_PUBLIC_APP_URL` | Public app URL (https://www.hotelsvendors.com) | Yes |
-
-## SSL Certificate
-
-The deployment script automatically sets up Let's Encrypt via Certbot. To renew manually:
-
+### 4. Restart Services
 ```bash
-sudo certbot renew --dry-run
+cd /var/www/hotelsvendors
+docker-compose -f docker-compose.swarm.yml restart
 ```
 
-Auto-renewal is configured via cron.
+## Swarm Management
 
-## Monitoring
-
-### PM2 Status
+### Trigger Director Cycle (Manual)
 ```bash
-pm2 status
-pm2 logs hotelsvendors-production
+curl -X POST https://www.hotelsvendors.com/api/v1/swarm/director/plan \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
 ```
 
-### Nginx Status
+### Check Swarm Health
 ```bash
-sudo systemctl status nginx
-sudo nginx -t
+curl https://www.hotelsvendors.com/api/v1/swarm/health \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
 ```
 
-### Database
+### List All Agents
 ```bash
-sudo -u postgres psql hotelsvendors
+curl https://www.hotelsvendors.com/api/v1/swarm/agents \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
 ```
 
-### Redis
+### View Jobs
 ```bash
-redis-cli ping
+curl "https://www.hotelsvendors.com/api/v1/swarm/jobs?status=PENDING&limit=20" \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
+```
+
+## Scheduled Jobs (Auto-Running)
+
+| Job | Schedule | Squad |
+|-----|----------|-------|
+| Director Daily Plan | 6:00 AM Cairo | Director |
+| Lead Scout | Every 4 hours | Growth |
+| Price Benchmark | 8:00 AM daily | Intelligence |
+| Health Check | Every 2 hours | Operations |
+
+## Logs
+
+```bash
+# App logs
+docker-compose -f docker-compose.swarm.yml logs -f app
+
+# Swarm worker logs
+docker-compose -f docker-compose.swarm.yml logs -f swarm-worker
+
+# OpenClaw logs
+docker-compose -f docker-compose.swarm.yml logs -f openclaw
+
+# Agent0 logs
+docker-compose -f docker-compose.swarm.yml logs -f agent0
+```
+
+## Scaling
+
+```bash
+# Scale swarm workers
+docker-compose -f docker-compose.swarm.yml up -d --scale swarm-worker=4
+
+# Restart single service
+docker-compose -f docker-compose.swarm.yml restart swarm-worker
 ```
 
 ## Troubleshooting
 
-| Issue | Solution |
-|---|---|
-| Build fails with peer deps | Run `npm ci --legacy-peer-deps` |
-| Prisma generate fails | Run `npx prisma generate` after install |
-| 502 Bad Gateway | Check PM2 is running: `pm2 restart all` |
-| ETA API errors | Verify credentials in `.env` |
-| Redis connection refused | Check `redis-server` is running |
-
-## Rollback
-
+### OpenClaw browser fails
 ```bash
-# Rollback to previous deployment
-pm2 stop hotelsvendors-production
-git checkout <previous-commit>
-npm ci --legacy-peer-deps
-npm run build
-pm2 start deploy/pm2-config.json
+docker-compose -f docker-compose.swarm.yml exec openclaw playwright install chromium
 ```
 
-## Support
+### Database connection issues
+```bash
+docker-compose -f docker-compose.swarm.yml exec postgres psql -U hotels_vendors -d hotels_vendors
+```
 
-For deployment issues, contact the Integration Lead or The Auditor.
+### Redis memory full
+```bash
+docker-compose -f docker-compose.swarm.yml exec redis redis-cli INFO memory
+```
