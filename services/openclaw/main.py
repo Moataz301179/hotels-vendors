@@ -454,7 +454,10 @@ async def fill_form(req: FillFormRequest):
                 await _human_click(page, req.submit_selector)
             else:
                 await page.click(req.submit_selector)
-            await page.wait_for_load_state("networkidle")
+            try:
+                await page.wait_for_load_state("networkidle", timeout=req.timeout)
+            except Exception:
+                pass  # Form may have submitted without full load
 
         if req.wait_for:
             await page.wait_for_selector(req.wait_for, timeout=req.timeout)
@@ -609,7 +612,10 @@ async def create_account(req: CreateAccountRequest):
         # Submit
         submit = req.submit_selector or "button[type='submit'], input[type='submit']"
         await _human_click(page, submit)
-        await page.wait_for_load_state("networkidle")
+        try:
+            await page.wait_for_load_state("networkidle", timeout=req.timeout)
+        except Exception:
+            pass  # Form may have submitted without full load
 
         # Check success
         success = True
