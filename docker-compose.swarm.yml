@@ -95,6 +95,8 @@ services:
       - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
       - DISPLAY=:99
       - PYTHONUNBUFFERED=1
+      - AGENT0_URL=http://agent0:9000
+      - OPENCLAW_DATA=/app/data
     volumes:
       - openclaw_data:/app/data
       - openclaw_screenshots:/app/screenshots
