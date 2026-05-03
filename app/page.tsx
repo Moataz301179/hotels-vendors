@@ -42,6 +42,11 @@ const IMAGES = {
   invoice: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80",
   delivery: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=80",
   money: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80",
+  // Hero category images
+  fnb: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
+  linens: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+  uniforms: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
+  guestConsumables: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
 };
 
 const TABS = [
@@ -229,104 +234,203 @@ function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t
   );
 }
 
-/* ─── Hero with Video ─── */
+/* ─── Animated Rotating Hooks ─── */
+const HOTEL_HOOKS = [
+  "Stop chasing suppliers. Start commanding your inventory.",
+  "From 15 hours of admin to 15 minutes.",
+  "Never overpay. Never miss a delivery. Never worry about ETA.",
+  "Your procurement team deserves an upgrade.",
+];
+
+const SUPPLIER_HOOKS = [
+  "Stop chasing payments. Start scaling production.",
+  "We collect. You create. That's the deal.",
+  "Cash flow that moves as fast as you do.",
+  "Your sales, guaranteed. Your focus, production.",
+];
+
+/* ─── Hero with Dual-Audience Hooks + Category Mosaic ─── */
 function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hookIndex, setHookIndex] = useState(0);
+  const [isHotel, setIsHotel] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHookIndex((prev) => {
+        const next = prev + 1;
+        const arr = isHotel ? HOTEL_HOOKS : SUPPLIER_HOOKS;
+        if (next >= arr.length) {
+          setIsHotel((h) => !h);
+          return 0;
+        }
+        return next;
+      });
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [isHotel]);
+
+  const currentHooks = isHotel ? HOTEL_HOOKS : SUPPLIER_HOOKS;
+  const audienceLabel = isHotel ? "For Hotels" : "For Suppliers";
+  const audienceColor = isHotel ? "#3b82f6" : "#22c55e";
+
+  const categoryImages = [
+    { src: IMAGES.fnb, label: "F&B", sub: "Gourmet Supplies" },
+    { src: IMAGES.linens, label: "Linens", sub: "Bedding & Towels" },
+    { src: IMAGES.uniforms, label: "Uniforms", sub: "Staff Attire" },
+    { src: IMAGES.guestConsumables, label: "Amenities", sub: "Guest Supplies" },
+  ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video Background */}
-      <div className="absolute inset-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/videos/demo-hero-poster.jpg"
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-          onPlay={() => setVideoPlaying(true)}
-          onPause={() => setVideoPlaying(false)}
-        >
-          <source src="/videos/demo-hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background mosaic */}
+      <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
+        {categoryImages.map((cat, i) => (
+          <div key={cat.label} className="relative overflow-hidden">
+            <Image src={cat.src} alt={cat.label} fill className="object-cover opacity-20" />
+            <div className="absolute inset-0 bg-black/70" />
+          </div>
+        ))}
       </div>
+      {/* Red glow accent */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#dc2626]/5 rounded-full blur-[150px]" />
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center pt-24">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <SectionBadge>
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-            </span>
-            Now Live in Egypt
-          </SectionBadge>
-        </motion.div>
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 w-full pt-28 pb-20">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Copy */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-[11px] font-medium text-white/40 tracking-wider uppercase">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
+                </span>
+                Now Live in Egypt — 52+ Hotels Onboarded
+              </span>
+            </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter text-white leading-[0.95]"
-        >
-          The Procurement
-          <br />
-          <span className="text-[#ef4444]">Platform</span>
-          <br />
-          <span className="text-white/60">for Egyptian Hotels</span>
-        </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95]"
+            >
+              Procurement
+              <br />
+              <span className="text-[#ef4444]">Without</span>
+              <br />
+              <span className="text-white/50">The Pain.</span>
+            </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 text-lg sm:text-xl text-white/40 max-w-2xl mx-auto leading-relaxed"
-        >
-          Connect with verified suppliers, automate purchase orders, and stay ETA-compliant — all in one place.
-        </motion.p>
+            {/* Animated hook */}
+            <div className="mt-8 h-16">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${isHotel}-${hookIndex}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-start gap-3"
+                >
+                  <span
+                    className="mt-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase shrink-0"
+                    style={{ backgroundColor: `${audienceColor}15`, color: audienceColor, border: `1px solid ${audienceColor}30` }}
+                  >
+                    {audienceLabel}
+                  </span>
+                  <p className="text-lg text-white/50 leading-snug">
+                    {currentHooks[hookIndex]}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Link href="/register" className="group px-8 py-4 text-sm font-semibold rounded-xl bg-white text-black hover:bg-white/90 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-            Start Free Trial
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <button
-            onClick={() => onTabChange("product")}
-            className="px-8 py-4 text-sm font-semibold rounded-xl border border-white/10 text-white/60 hover:bg-white/[0.03] hover:text-white hover:border-white/20 transition-all flex items-center gap-2"
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-10 flex flex-wrap items-center gap-3"
+            >
+              <Link href="/register?type=hotel" className="group px-6 py-3.5 text-sm font-semibold rounded-xl bg-white text-black hover:bg-white/90 transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                <Building2 className="w-4 h-4" />
+                Join as Hotel
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link href="/register?type=supplier" className="group px-6 py-3.5 text-sm font-semibold rounded-xl border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/10 transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                <Factory className="w-4 h-4" />
+                Join as Supplier
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+
+            {/* Quick trust line */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="mt-6 text-[12px] text-white/25 flex items-center gap-4"
+            >
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> No credit card</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> 14-day free</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> Cancel anytime</span>
+            </motion.p>
+          </div>
+
+          {/* Right: Category Mosaic */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hidden lg:grid grid-cols-2 gap-3"
           >
-            <Eye className="w-4 h-4" />
-            Explore Platform
-          </button>
-        </motion.div>
+            {categoryImages.map((cat, i) => (
+              <motion.div
+                key={cat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
+                className="group relative h-48 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500"
+              >
+                <Image src={cat.src} alt={cat.label} fill className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <div className="text-sm font-bold text-white">{cat.label}</div>
+                  <div className="text-[11px] text-white/40">{cat.sub}</div>
+                </div>
+                <div className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
-        {/* Stats */}
+        {/* Stats bar */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl"
         >
           {[
-            { val: "52+", label: "Hotels" },
-            { val: "68+", label: "Suppliers" },
-            { val: "15M+", label: "EGP GMV" },
-            { val: "99.9%", label: "ETA Compliant" },
+            { val: "52+", label: "Hotels Onboarded", icon: <Building2 className="w-4 h-4" /> },
+            { val: "68+", label: "Verified Suppliers", icon: <Factory className="w-4 h-4" /> },
+            { val: "15M+", label: "EGP GMV Processed", icon: <CreditCard className="w-4 h-4" /> },
+            { val: "99.9%", label: "ETA Compliant", icon: <FileCheck className="w-4 h-4" /> },
           ].map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="text-3xl font-bold text-white tracking-tight">{s.val}</div>
-              <div className="text-[11px] text-white/30 mt-1 uppercase tracking-widest">{s.label}</div>
+            <div key={s.label} className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/30">
+                {s.icon}
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white tracking-tight">{s.val}</div>
+                <div className="text-[11px] text-white/30">{s.label}</div>
+              </div>
             </div>
           ))}
         </motion.div>
