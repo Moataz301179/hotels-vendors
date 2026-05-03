@@ -161,8 +161,8 @@ async def _human_type(page: Page, selector: str, text: str):
         if random.random() < 0.05:  # 5% chance of pause
             await _human_delay(200, 600)
 
-async def _human_click(page: Page, selector: str):
-    """Move mouse naturally then click"""
+async def _human_click(page: Page, selector: str, timeout: int = 5000):
+    """Move mouse naturally then click. Raises if element not found within timeout."""
     elem = await page.query_selector(selector)
     if elem:
         box = await elem.bounding_box()
@@ -172,7 +172,9 @@ async def _human_click(page: Page, selector: str):
             y = box["y"] + random.uniform(2, box["height"] - 2)
             await page.mouse.move(x, y)
             await _human_delay(100, 400)
-    await page.click(selector)
+    else:
+        raise Exception(f"Element not found: {selector}")
+    await page.click(selector, timeout=timeout)
 
 async def _random_viewport(page: Page):
     """Occasionally resize viewport slightly"""
@@ -450,10 +452,11 @@ async def fill_form(req: FillFormRequest):
             await _human_delay(100, 300)
 
         if req.submit_selector:
+            click_timeout = min(req.timeout, 10000)
             if req.human_like:
-                await _human_click(page, req.submit_selector)
+                await _human_click(page, req.submit_selector, timeout=click_timeout)
             else:
-                await page.click(req.submit_selector)
+                await page.click(req.submit_selector, timeout=click_timeout)
             try:
                 await page.wait_for_load_state("networkidle", timeout=req.timeout)
             except Exception:
@@ -610,8 +613,9 @@ async def create_account(req: CreateAccountRequest):
                 pass
 
         # Submit
-        submit = req.submit_selector or "button[type='submit'], input[type='submit']"
-        await _human_click(page, submit)
+        submit = req.submit_selector or "button[type='submit'], input[type='submit'], button"
+        click_timeout = min(req.timeout, 10000)
+        await _human_click(page, submit, timeout=click_timeout)
         try:
             await page.wait_for_load_state("networkidle", timeout=req.timeout)
         except Exception:
