@@ -1,54 +1,96 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Search, ShoppingCart, TrendingUp, Shield, Zap, CheckCircle2, ArrowRight,
+  Search, ShoppingCart, TrendingUp, Shield, Zap, ArrowRight,
   Package, Truck, CreditCard, Brain, Menu, X, Building2, Factory,
   Landmark, Clock, Lock, HeartHandshake, BarChart3, ChevronRight, Eye,
-  Gem, Globe, Award, Sparkles, FileCheck, Anchor,
+  Globe, Sparkles, FileCheck, BadgeCheck, Star, Users, CheckCircle2,
+  MousePointerClick, Workflow, MessageSquare, Receipt, Boxes,
 } from "lucide-react";
-import { AuroraBackground } from "@/components/aurora-background";
 
-interface Product { id: string; sku: string; name: string; category: string; unitPrice: number; stockQuantity: number; minOrderQty: number; images?: string | null; supplier?: { name: string }; }
-interface Supplier { id: string; name: string; city: string; certifications?: string; }
+/* ─── Types ─── */
+interface Product {
+  id: string; sku: string; name: string; category: string;
+  unitPrice: number; stockQuantity: number; minOrderQty: number;
+  images?: string | null; supplier?: { name: string };
+}
+interface Supplier {
+  id: string; name: string; city: string; certifications?: string;
+}
 
-const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.7,  } }) };
-const scaleIn = { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.6,  } } };
+/* ─── Animation Presets ─── */
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  }),
+};
 
-function GlassCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0); const [rotateY, setRotateY] = useState(0);
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setRotateX(((e.clientY - rect.top) / rect.height - 0.5) * -12);
-    setRotateY(((e.clientX - rect.left) / rect.width - 0.5) * 12);
-  };
+/* ─── Components ─── */
+
+function SectionBadge({ children }: { children: React.ReactNode }) {
   return (
-    <motion.div ref={ref} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}  onMouseMove={handleMouseMove} onMouseLeave={() => { setRotateX(0); setRotateY(0); }} style={{ transformStyle: "preserve-3d", perspective: 1000 }} className={`group relative ${className}`}>
-      <motion.div animate={{ rotateX, rotateY }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="w-full h-full">
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.08] backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] group-hover:border-red-500/20 group-hover:shadow-[0_8px_32px_rgba(185,28,28,0.15),inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-500" />
-        <div className="relative z-10 w-full h-full">{children}</div>
-      </motion.div>
+    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent-500)]/[0.06] border border-[var(--accent-500)]/[0.12] text-[11px] font-semibold text-[var(--accent-400)] tracking-wider uppercase">
+      {children}
+    </span>
+  );
+}
+
+function BentoCard({
+  icon, title, desc, className = "", delay = 0,
+}: {
+  icon: React.ReactNode; title: string; desc: string;
+  className?: string; delay?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative rounded-2xl border border-[var(--border-default)] bg-[var(--surface)]/[0.5] hover:bg-[var(--surface-raised)]/[0.6] hover:border-[var(--border-strong)] transition-all duration-500 p-7 ${className}`}
+    >
+      <div className="w-11 h-11 rounded-xl bg-[var(--accent-500)]/[0.08] border border-[var(--accent-500)]/[0.12] flex items-center justify-center text-[var(--accent-400)] mb-5 group-hover:scale-105 transition-transform duration-300">
+        {icon}
+      </div>
+      <h3 className="text-[15px] font-semibold text-[var(--foreground)] mb-2 tracking-tight">{title}</h3>
+      <p className="text-[13px] text-[var(--foreground-tertiary)] leading-relaxed">{desc}</p>
     </motion.div>
   );
 }
 
-function AnimatedCounter({ end, suffix = "", prefix = "" }: { end: number; suffix?: string; prefix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true });
-  const [val, setVal] = useState(0);
-  useEffect(() => { if (!isInView) return; let raf: number; const start = performance.now(); const tick = (now: number) => { const t = Math.min((now - start) / 2000, 1); setVal(Math.floor((1 - Math.pow(1 - t, 3)) * end)); if (t < 1) raf = requestAnimationFrame(tick); }; raf = requestAnimationFrame(tick); return () => cancelAnimationFrame(raf); }, [isInView, end]);
-  return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>;
+function StepCard({
+  step, title, desc, icon, delay = 0,
+}: {
+  step: string; title: string; desc: string;
+  icon: React.ReactNode; delay?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="relative"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-11 h-11 rounded-xl bg-[var(--accent-500)]/[0.08] border border-[var(--accent-500)]/[0.12] flex items-center justify-center text-[var(--accent-400)]">
+          {icon}
+        </div>
+        <span className="text-[11px] font-mono text-[var(--foreground-muted)] tracking-wide">Step {step}</span>
+      </div>
+      <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2 tracking-tight">{title}</h3>
+      <p className="text-[13px] text-[var(--foreground-tertiary)] leading-relaxed">{desc}</p>
+    </motion.div>
+  );
 }
 
-function FloatingOrb({ className = "" }: { className?: string }) {
-  return <motion.div animate={{ y: [0, -20, 0], rotate: [0, 5, -5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className={`absolute rounded-full blur-3xl opacity-30 pointer-events-none ${className}`} />;
-}
-
+/* ─── Main Page ─── */
 export default function LandingPage() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [heroProducts, setHeroProducts] = useState<Product[]>([]);
@@ -56,203 +98,338 @@ export default function LandingPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("ALL");
 
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
-
   useEffect(() => {
-    fetch("/api/products?limit=8").then(r => r.json()).then(d => { if (d.success) setHeroProducts(d.data.slice(0, 8)); });
-    fetch("/api/suppliers?limit=6").then(r => r.json()).then(d => { if (d.success) setSuppliers(d.data.slice(0, 6)); });
+    fetch("/api/products?limit=8")
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setHeroProducts(d.data.slice(0, 8)); });
+    fetch("/api/suppliers?limit=6")
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setSuppliers(d.data.slice(0, 6)); });
   }, []);
 
-  const filtered = heroProducts.filter(p => (search === "" || p.name.toLowerCase().includes(search.toLowerCase())) && (activeCategory === "ALL" || p.category === activeCategory));
-  const cats = [{ key: "ALL", label: "All" }, { key: "F_AND_B", label: "F&B" }, { key: "CONSUMABLES", label: "Housekeeping" }, { key: "GUEST_SUPPLIES", label: "Amenities" }, { key: "FFE", label: "FF&E" }];
+  const filtered = heroProducts.filter(
+    (p) =>
+      (search === "" || p.name.toLowerCase().includes(search.toLowerCase())) &&
+      (activeCategory === "ALL" || p.category === activeCategory)
+  );
 
-  const features = [
-    { icon: <Clock className="w-6 h-6" />, title: "Save 15+ Hours Weekly", desc: "Digital catalog, auto-POs, and approval workflows cut procurement admin by 80%.", col: "from-red-500/20 to-red-600/5" },
-    { icon: <BarChart3 className="w-6 h-6" />, title: "Cut Costs 20-30%", desc: "AI price comparison across verified suppliers ensures you always pay the best price.", col: "from-amber-500/20 to-amber-600/5" },
-    { icon: <FileCheck className="w-6 h-6" />, title: "100% ETA Compliant", desc: "Every invoice digitally signed and submitted to ETA automatically. Zero penalties.", col: "from-emerald-500/20 to-emerald-600/5" },
-    { icon: <Lock className="w-6 h-6" />, title: "Bank-Grade Security", desc: "End-to-end encryption, role-based access, and immutable audit trails.", col: "from-blue-500/20 to-blue-600/5" },
-    { icon: <HeartHandshake className="w-6 h-6" />, title: "Verified Suppliers", desc: "KYC-checked, rated, and audited. HACCP and ISO certifications verified on-site.", col: "from-violet-500/20 to-violet-600/5" },
-    { icon: <CreditCard className="w-6 h-6" />, title: "Embedded Factoring", desc: "Get paid in 24-48 hours instead of 60-90 days. Built-in liquidity.", col: "from-cyan-500/20 to-cyan-600/5" },
+  const cats = [
+    { key: "ALL", label: "All" },
+    { key: "F_AND_B", label: "F&B" },
+    { key: "CONSUMABLES", label: "Housekeeping" },
+    { key: "GUEST_SUPPLIES", label: "Amenities" },
+    { key: "FFE", label: "FF&E" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#08090c] text-[#e8eaed] relative overflow-x-hidden">
-      <AuroraBackground />
-
-      {/* Navbar */}
-      <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.8,  }} className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#08090c]/60 backdrop-blur-2xl">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-[var(--accent-500)]/25">
+      {/* ═══════════════════════════════════════
+          NAVBAR
+          ═══════════════════════════════════════ */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--background)]/75 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-red-500/40 transition-all duration-500">
-                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3">
+              <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-[var(--surface)] ring-1 ring-[var(--border-strong)]">
+                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1.5" />
               </div>
-              <div>
-                <span className="text-sm font-bold tracking-[0.15em] uppercase">Hotels Vendors</span>
-                <span className="block text-[9px] text-white/40 -mt-0.5 tracking-wider">Digital Procurement Hub</span>
-              </div>
+              <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
             </Link>
-            <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-white/50">
-              {["Catalog", "Suppliers", "Features", "AI Engine", "Enterprise"].map(item => (
-                <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="hover:text-white transition-colors duration-300 relative group">
+
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-[var(--foreground-tertiary)]">
+              {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
+                <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-[var(--foreground)] transition-colors duration-200">
                   {item}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-red-500 to-amber-500 group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
             </div>
+
+            {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-3">
-              <Link href="/login" className="px-4 py-2 text-[13px] font-medium rounded-lg border border-white/10 hover:border-white/20 hover:bg-white/[0.03] transition-all duration-300">Sign In</Link>
-              <Link href="/register" className="px-4 py-2 text-[13px] font-medium rounded-lg bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-300">Get Started</Link>
+              <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">
+                Sign In
+              </Link>
+              <Link href="/register" className="px-4 py-2 text-[13px] font-semibold rounded-xl bg-[var(--foreground)] text-[var(--foreground-inverse)] hover:bg-[var(--foreground)]/90 transition-all duration-200 hover:-translate-y-px">
+                Get Started
+              </Link>
             </div>
-            <button className="lg:hidden p-2" onClick={() => setMobileMenu(!mobileMenu)}>{mobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
+
+            {/* Mobile Toggle */}
+            <button className="lg:hidden p-2 text-[var(--foreground-secondary)]" onClick={() => setMobileMenu(!mobileMenu)}>
+              {mobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
         {mobileMenu && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="lg:hidden border-t border-white/[0.06] bg-[#08090c]/95 backdrop-blur-xl px-6 py-4 space-y-3">
-            {["Catalog", "Suppliers", "Features", "AI Engine", "Enterprise"].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="block text-sm text-white/60 hover:text-white" onClick={() => setMobileMenu(false)}>{item}</a>
+          <div className="lg:hidden border-t border-[var(--border-default)] bg-[var(--background)]/95 backdrop-blur-xl px-6 py-5 space-y-1">
+            {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="block py-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)]" onClick={() => setMobileMenu(false)}>
+                {item}
+              </a>
             ))}
-            <div className="pt-3 flex gap-3">
-              <Link href="/login" className="flex-1 text-center py-2 text-sm rounded-lg border border-white/10">Sign In</Link>
-              <Link href="/register" className="flex-1 text-center py-2 text-sm rounded-lg bg-red-700 text-white">Get Started</Link>
+            <div className="pt-4 flex gap-3">
+              <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground-secondary)]">
+                Sign In
+              </Link>
+              <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-[var(--foreground)] text-[var(--foreground-inverse)] font-semibold">
+                Get Started
+              </Link>
             </div>
-          </motion.div>
+          </div>
         )}
-      </motion.nav>
+      </nav>
 
-      {/* Hero */}
-      <motion.section style={{ opacity: heroOpacity, scale: heroScale }} className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
-        <FloatingOrb className="w-[600px] h-[600px] bg-red-600/20 -top-40 -left-40" />
-        <FloatingOrb className="w-[500px] h-[500px] bg-amber-500/10 top-1/3 right-0" />
-        <FloatingOrb className="w-[400px] h-[400px] bg-red-800/15 bottom-0 left-1/3" />
+      {/* ═══════════════════════════════════════
+          HERO
+          ═══════════════════════════════════════ */}
+      <section className="relative pt-36 pb-28 lg:pt-44 lg:pb-36 overflow-hidden">
+        {/* Subtle ambient glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_-5%,rgba(99,102,241,0.08),transparent)]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[var(--accent-500)]/[0.025] rounded-full blur-3xl" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1,  }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md mb-8">
-            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
-            <span className="text-[11px] text-white/60 tracking-wide">Live Marketplace — 68 Verified Suppliers Active</span>
-          </motion.div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Badge */}
+            <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="mb-8">
+              <SectionBadge>
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--success)] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--success)]" />
+                </span>
+                Now Live in Egypt
+              </SectionBadge>
+            </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.1,  }} className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
-            Procurement Reimagined<br /><span className="bg-gradient-to-r from-red-400 via-red-500 to-amber-500 bg-clip-text text-transparent">for Egyptian Hospitality</span>
-          </motion.h1>
+            {/* Headline */}
+            <motion.h1
+              custom={1} variants={fadeUp} initial="hidden" animate="visible"
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[var(--foreground)] mb-7 leading-[1.05]"
+            >
+              The Procurement Platform{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-400)] to-[var(--accent-300)]">
+                Built for Egyptian Hotels
+              </span>
+            </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2,  }} className="text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
-            The first AI-powered B2B procurement hub connecting Egypt's hotels with verified suppliers, embedded factoring, and real-time ETA e-invoicing compliance.
-          </motion.p>
+            {/* Subheadline */}
+            <motion.p
+              custom={2} variants={fadeUp} initial="hidden" animate="visible"
+              className="text-lg text-[var(--foreground-tertiary)] mb-12 leading-relaxed max-w-xl mx-auto"
+            >
+              Connect with verified suppliers, automate purchase orders, and stay ETA-compliant — all in one place.
+            </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3,  }} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link href="/register" className="group px-8 py-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white shadow-2xl shadow-red-900/40 hover:shadow-red-900/60 transition-all duration-500 flex items-center gap-2">
-              Start Free Trial <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link href="/catalog" className="px-8 py-4 text-sm font-semibold rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/[0.03] backdrop-blur-md transition-all duration-300 flex items-center gap-2">
-              <Eye className="w-4 h-4" /> Browse Catalog
-            </Link>
-          </motion.div>
+            {/* CTAs */}
+            <motion.div
+              custom={3} variants={fadeUp} initial="hidden" animate="visible"
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16"
+            >
+              <Link href="/register" className="w-full sm:w-auto px-7 py-3.5 text-sm font-semibold rounded-xl bg-[var(--foreground)] text-[var(--foreground-inverse)] hover:bg-[var(--foreground)]/90 transition-all duration-200 hover:-translate-y-px flex items-center justify-center gap-2">
+                Start Free Trial <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/catalog" className="w-full sm:w-auto px-7 py-3.5 text-sm font-semibold rounded-xl border border-[var(--border-default)] text-[var(--foreground-secondary)] hover:bg-[var(--surface)] hover:text-[var(--foreground)] hover:border-[var(--border-strong)] transition-all duration-200 flex items-center justify-center gap-2">
+                <Eye className="w-4 h-4" /> Browse Catalog
+              </Link>
+            </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/[0.04] rounded-2xl overflow-hidden max-w-3xl mx-auto backdrop-blur-md border border-white/[0.06]">
-            {[{ val: 52, label: "Hotels Onboarded", suffix: "+" }, { val: 68, label: "Verified Suppliers", suffix: "+" }, { val: 15, label: "Million EGP GMV", suffix: "M+" }, { val: 99, label: "ETA Compliance", suffix: "%" }].map((s, i) => (
-              <div key={i} className="bg-[#08090c]/80 p-5 text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"><AnimatedCounter end={s.val} suffix={s.suffix} /></div>
-                <div className="text-[10px] text-white/40 mt-1 tracking-wider uppercase">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30">
-          <span className="text-[10px] tracking-widest uppercase">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" />
-        </motion.div>
-      </motion.section>
-
-      {/* Trust Bar */}
-      <section className="relative py-12 border-y border-white/[0.04] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#08090c] via-transparent to-[#08090c] z-10 pointer-events-none" />
-        <motion.div animate={{ x: [0, -1200] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="flex gap-16 items-center whitespace-nowrap">
-          {[...Array(2)].map((_, dup) => (
-            <div key={dup} className="flex gap-16 items-center">
-              {["Marriott Mena House", "Four Seasons Cairo", "Hilton Alexandria", "Movenpick El Gouna", "Steigenberger Tahrir", "Kempinski Nile", "Jaz Aquamarine", "Rixos Sharm"].map(h => (
-                <span key={h} className="text-sm text-white/20 font-medium tracking-wide flex items-center gap-2"><Building2 className="w-4 h-4" /> {h}</span>
+            {/* Stats */}
+            <motion.div
+              custom={5} variants={fadeUp} initial="hidden" animate="visible"
+              className="flex items-center justify-center gap-10 lg:gap-14 text-center"
+            >
+              {[
+                { val: "52+", label: "Hotels Onboarded" },
+                { val: "68+", label: "Verified Suppliers" },
+                { val: "15M+", label: "EGP GMV Processed" },
+                { val: "99.9%", label: "ETA Compliant" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <div className="text-2xl font-bold text-[var(--foreground)] tracking-tight">{s.val}</div>
+                  <div className="text-[11px] text-[var(--foreground-muted)] mt-1 tracking-wide">{s.label}</div>
+                </div>
               ))}
-            </div>
-          ))}
-        </motion.div>
+            </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="relative py-24">
+      {/* ═══════════════════════════════════════
+          TRUST BAR
+          ═══════════════════════════════════════ */}
+      <section className="border-y border-[var(--border-default)] py-10">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <span className="inline-block px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-[11px] text-white/50 tracking-wider uppercase mb-4">Platform Capabilities</span>
-            <h2 className="text-4xl font-bold tracking-tight mb-4">Why Hotels Vendors?</h2>
-            <p className="text-white/40 max-w-xl mx-auto">We eliminate the chaos of hotel procurement. No more phone calls, spreadsheets, or missed deadlines.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <GlassCard key={f.title} delay={i * 0.1}>
-                <div className="p-6 h-full">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.col} flex items-center justify-center text-white/80 mb-4 ring-1 ring-white/10`}>{f.icon}</div>
-                  <h3 className="text-base font-semibold mb-2">{f.title}</h3>
-                  <p className="text-sm text-white/40 leading-relaxed">{f.desc}</p>
-                </div>
-              </GlassCard>
+          <p className="text-center text-[11px] text-[var(--foreground-muted)] uppercase tracking-[0.15em] mb-7">
+            Trusted by leading hotels across Egypt
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+            {["Marriott Mena House", "Four Seasons Cairo", "Hilton Alexandria", "Mövenpick El Gouna", "Steigenberger Tahrir", "Kempinski Nile", "Jaz Aquamarine", "Rixos Sharm"].map((h) => (
+              <span key={h} className="text-sm text-[var(--foreground-muted)]/40 font-medium whitespace-nowrap hover:text-[var(--foreground-muted)]/70 transition-colors">
+                {h}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how" className="relative py-24 border-y border-white/[0.04]">
+      {/* ═══════════════════════════════════════
+          FEATURES — BENTO GRID
+          ═══════════════════════════════════════ */}
+      <section id="product" className="py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight mb-4">How It Works</h2>
-            <p className="text-white/40">From search to delivery in three steps</p>
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-20"
+          >
+            <SectionBadge>Platform</SectionBadge>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-[var(--foreground)]">
+              Everything you need to procure smarter
+            </h2>
+            <p className="text-[var(--foreground-tertiary)] max-w-lg mx-auto text-lg">
+              From discovery to delivery, every step is optimized for Egyptian hospitality.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Connection line */}
-            <div className="hidden md:block absolute top-1/2 left-[16.67%] right-[16.67%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-            {[
-              { step: "01", title: "Search & Compare", desc: "Browse 5 categories of hotel supplies. Filter by price, MOQ, supplier tier, and certification.", icon: <Search className="w-6 h-6" /> },
-              { step: "02", title: "Smart AI Purchase", desc: "Our AI officer finds the lowest price across suppliers, checks authority rules, and auto-approves POs.", icon: <Brain className="w-6 h-6" /> },
-              { step: "03", title: "Track & Pay", desc: "Monitor delivery in real-time. Invoices are ETA-compliant. Pay via embedded factoring or direct transfer.", icon: <Truck className="w-6 h-6" /> },
-            ].map((item, i) => (
-              <motion.div key={item.step} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i} className="relative">
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.08] backdrop-blur-xl mb-6 relative">
-                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-center text-[10px] font-bold">{item.step}</div>
-                    {item.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-white/40 leading-relaxed max-w-xs mx-auto">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-fr">
+            <BentoCard
+              icon={<Clock className="w-5 h-5" />}
+              title="Save 15+ Hours Weekly"
+              desc="Digital catalog, auto-POs, and approval workflows cut procurement admin by 80%."
+              className="md:col-span-2"
+              delay={0}
+            />
+            <BentoCard
+              icon={<BarChart3 className="w-5 h-5" />}
+              title="Cut Costs 20–30%"
+              desc="AI price comparison across verified suppliers ensures you always pay the best price."
+              delay={0.1}
+            />
+            <BentoCard
+              icon={<FileCheck className="w-5 h-5" />}
+              title="100% ETA Compliant"
+              desc="Every invoice digitally signed and submitted to ETA automatically. Zero penalties."
+              delay={0.15}
+            />
+            <BentoCard
+              icon={<Lock className="w-5 h-5" />}
+              title="Bank-Grade Security"
+              desc="End-to-end encryption, role-based access, and immutable audit trails."
+              delay={0.2}
+            />
+            <BentoCard
+              icon={<HeartHandshake className="w-5 h-5" />}
+              title="Verified Suppliers"
+              desc="KYC-checked, rated, and audited. HACCP and ISO certifications verified on-site."
+              className="md:col-span-2"
+              delay={0.25}
+            />
+            <BentoCard
+              icon={<CreditCard className="w-5 h-5" />}
+              title="Embedded Factoring"
+              desc="Get paid in 24–48 hours instead of 60–90 days. Built-in liquidity for suppliers."
+              className="md:col-span-3"
+              delay={0.3}
+            />
           </div>
         </div>
       </section>
 
-      {/* Live Catalog */}
-      <section id="catalog" className="relative py-24">
+      {/* ═══════════════════════════════════════
+          HOW IT WORKS
+          ═══════════════════════════════════════ */}
+      <section id="solutions" className="py-32 border-y border-[var(--border-default)]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-12">
-            <h2 className="text-4xl font-bold tracking-tight mb-4">Live Marketplace</h2>
-            <p className="text-white/40">Browse real products from verified Egyptian suppliers</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-20"
+          >
+            <SectionBadge>How it works</SectionBadge>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-[var(--foreground)]">
+              Three steps to smarter procurement
+            </h2>
           </motion.div>
 
-          {/* Search & Filter */}
-          <div className="max-w-2xl mx-auto mb-10">
-            <div className="relative mb-4">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products, SKUs, suppliers..." className="w-full pl-11 pr-4 py-3.5 text-sm rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-red-500/30 focus:outline-none transition-colors placeholder:text-white/20" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
+            <StepCard
+              step="01"
+              title="Search & Compare"
+              desc="Browse 5 categories of hotel supplies. Filter by price, MOQ, supplier tier, and certification."
+              icon={<Search className="w-5 h-5" />}
+              delay={0}
+            />
+            <StepCard
+              step="02"
+              title="Smart AI Purchase"
+              desc="Our AI officer finds the lowest price across suppliers, checks authority rules, and auto-approves POs."
+              icon={<Brain className="w-5 h-5" />}
+              delay={0.1}
+            />
+            <StepCard
+              step="03"
+              title="Track & Pay"
+              desc="Monitor delivery in real-time. Invoices are ETA-compliant. Pay via embedded factoring or direct transfer."
+              icon={<Truck className="w-5 h-5" />}
+              delay={0.2}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          LIVE CATALOG
+          ═══════════════════════════════════════ */}
+      <section id="catalog" className="py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-14"
+          >
+            <SectionBadge>Marketplace</SectionBadge>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-[var(--foreground)]">
+              Browse verified suppliers
+            </h2>
+            <p className="text-[var(--foreground-tertiary)] text-lg">
+              Real products from real Egyptian suppliers
+            </p>
+          </motion.div>
+
+          {/* Search + Filters */}
+          <div className="max-w-2xl mx-auto mb-12">
+            <div className="relative mb-5">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--foreground-muted)]" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products, SKUs, suppliers..."
+                className="w-full pl-11 pr-4 py-3.5 text-sm rounded-xl bg-[var(--surface)] border border-[var(--border-default)] focus:border-[var(--accent-500)]/30 focus:outline-none focus:ring-2 focus:ring-[var(--accent-500)]/10 transition-all placeholder:text-[var(--foreground-muted)]"
+              />
             </div>
             <div className="flex flex-wrap justify-center gap-2">
-              {cats.map(c => (
-                <button key={c.key} onClick={() => setActiveCategory(c.key)} className={`px-4 py-1.5 text-[12px] rounded-full border transition-all duration-300 ${activeCategory === c.key ? "bg-red-500/10 border-red-500/30 text-red-400" : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:border-white/15"}`}>
+              {cats.map((c) => (
+                <button
+                  key={c.key}
+                  onClick={() => setActiveCategory(c.key)}
+                  className={`px-4 py-1.5 text-[12px] rounded-full border transition-all duration-200 ${
+                    activeCategory === c.key
+                      ? "bg-[var(--accent-500)]/10 border-[var(--accent-500)]/20 text-[var(--accent-400)] font-medium"
+                      : "bg-[var(--surface)] border-[var(--border-default)] text-[var(--foreground-tertiary)] hover:border-[var(--border-strong)] hover:text-[var(--foreground-secondary)]"
+                  }`}
+                >
                   {c.label}
                 </button>
               ))}
@@ -260,50 +437,66 @@ export default function LandingPage() {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {(filtered.length > 0 ? filtered : heroProducts).map((p, i) => (
-              <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="group relative rounded-xl overflow-hidden border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-500">
-                <div className="aspect-[4/3] bg-gradient-to-br from-white/[0.03] to-white/[0.01] flex items-center justify-center relative overflow-hidden">
-                  <Package className="w-8 h-8 text-white/10 group-hover:text-white/20 transition-colors" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#08090c] via-transparent to-transparent opacity-60" />
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.03, duration: 0.4 }}
+                className="group rounded-2xl overflow-hidden border border-[var(--border-default)] bg-[var(--surface)]/[0.4] hover:border-[var(--border-strong)] hover:bg-[var(--surface)]/[0.7] transition-all duration-400 hover:-translate-y-0.5"
+              >
+                <div className="aspect-[4/3] bg-[var(--surface)] flex items-center justify-center">
+                  <Package className="w-6 h-6 text-[var(--foreground-muted)]/25 group-hover:text-[var(--foreground-muted)]/40 transition-colors" />
                 </div>
-                <div className="p-4">
-                  <div className="text-[10px] font-mono text-white/30 mb-1">{p.sku}</div>
-                  <div className="text-sm font-medium truncate mb-1">{p.name}</div>
-                  <div className="text-[11px] text-white/30 truncate mb-2">{p.supplier?.name}</div>
+                <div className="p-3.5">
+                  <div className="text-[9px] font-mono text-[var(--foreground-muted)] mb-1">{p.sku}</div>
+                  <div className="text-[13px] font-medium truncate mb-1 text-[var(--foreground)]">{p.name}</div>
+                  <div className="text-[10px] text-[var(--foreground-muted)] truncate mb-2.5">{p.supplier?.name}</div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-emerald-400">EGP {p.unitPrice.toLocaleString()}</span>
-                    <span className="text-[10px] text-white/30">MOQ {p.minOrderQty}</span>
+                    <span className="text-[13px] font-semibold text-[var(--success)]">
+                      EGP {p.unitPrice.toLocaleString()}
+                    </span>
+                    <span className="text-[9px] text-[var(--foreground-muted)]">MOQ {p.minOrderQty}</span>
                   </div>
                 </div>
               </motion.div>
             ))}
             {heroProducts.length === 0 && (
-              <div className="col-span-full text-center py-16 text-white/30">
+              <div className="col-span-full text-center py-20 text-[var(--foreground-muted)]">
                 <div className="animate-pulse">Loading marketplace...</div>
               </div>
             )}
           </div>
 
-          <div className="text-center mt-8">
-            <Link href="/catalog" className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors group">
-              View Full Catalog <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <div className="text-center mt-10">
+            <Link href="/catalog" className="inline-flex items-center gap-2 text-sm text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-colors font-medium">
+              View Full Catalog <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* AI Engine */}
-      <section id="ai-engine" className="relative py-24 border-y border-white/[0.04] overflow-hidden">
-        <FloatingOrb className="w-[800px] h-[800px] bg-red-600/10 top-0 right-0" />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-              <span className="inline-block px-3 py-1 rounded-full border border-red-500/20 bg-red-500/5 text-[11px] text-red-400 tracking-wider uppercase mb-4">AI Engine</span>
-              <h2 className="text-4xl font-bold tracking-tight mb-4">Intelligence That Saves<br />Time and Money</h2>
-              <p className="text-white/40 leading-relaxed mb-8">
-                Our Tri-Layer Guardian system combines LLM reasoning, WASM rule engines, and human oversight 
-                to make procurement decisions faster and safer than any human team.
+      {/* ═══════════════════════════════════════
+          AI ENGINE
+          ═══════════════════════════════════════ */}
+      <section className="py-32 border-y border-[var(--border-default)]">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            {/* Left: Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <SectionBadge>AI Engine</SectionBadge>
+              <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-6 text-[var(--foreground)]">
+                Intelligence that saves time and money
+              </h2>
+              <p className="text-[var(--foreground-tertiary)] leading-relaxed mb-10 text-lg">
+                Our Tri-Layer Guardian combines LLM reasoning, WASM rule engines, and human oversight to make procurement decisions faster and safer.
               </p>
               <div className="space-y-4">
                 {[
@@ -311,27 +504,42 @@ export default function LandingPage() {
                   { icon: <ShoppingCart className="w-5 h-5" />, title: "AI Purchasing Officer", desc: "Auto-generates POs, routes through authority matrix, approves under-limit orders." },
                   { icon: <Sparkles className="w-5 h-5" />, title: "Product Alternatives", desc: "When stock is low, AI suggests equivalent products from verified vendors." },
                 ].map((item, i) => (
-                  <motion.div key={item.title} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-colors">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500/20 to-red-600/5 flex items-center justify-center text-red-400 shrink-0">{item.icon}</div>
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-start gap-4 p-4 rounded-xl bg-[var(--surface)]/[0.4] border border-[var(--border-default)] hover:border-[var(--border-strong)] transition-colors duration-300"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)]/[0.08] flex items-center justify-center text-[var(--accent-400)] shrink-0">
+                      {item.icon}
+                    </div>
                     <div>
-                      <h4 className="text-sm font-semibold mb-1">{item.title}</h4>
-                      <p className="text-[12px] text-white/40">{item.desc}</p>
+                      <h4 className="text-sm font-semibold mb-1 text-[var(--foreground)]">{item.title}</h4>
+                      <p className="text-[12px] text-[var(--foreground-tertiary)]">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-amber-500/10 rounded-3xl blur-3xl" />
-              <div className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-2xl">
-                <div className="flex items-center gap-2 mb-4 pb-4 border-b border-white/[0.06]">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                  <span className="ml-2 text-[11px] text-white/30 font-mono">AI Assistant — Procurement Intelligence</span>
+            {/* Right: Chat Mockup */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="relative"
+            >
+              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)]/[0.4] p-6 backdrop-blur-sm">
+                <div className="flex items-center gap-2.5 mb-5 pb-5 border-b border-[var(--border-default)]">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[var(--error)]/50" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[var(--warning)]/50" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[var(--success)]/50" />
+                  <span className="ml-2 text-[10px] text-[var(--foreground-muted)] font-mono tracking-wide">AI Procurement Assistant</span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3.5">
                   {[
                     { type: "user", text: "What's my hotel's biggest spend category this month?" },
                     { type: "ai", text: "F&B represents 62% of your spend (EGP 847,500). I recommend locking rates with Cairo Poultry before their scheduled price increase on May 15." },
@@ -339,15 +547,17 @@ export default function LandingPage() {
                     { type: "ai", text: "2 suppliers in your active POs have delays: Nile Textiles (+2 days) and Wadi Foods (+1 day). I've flagged alternatives from verified vendors." },
                   ].map((msg, i) => (
                     <div key={i} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-[85%] px-4 py-2.5 rounded-xl text-[12px] leading-relaxed ${msg.type === "user" ? "bg-red-600/20 text-white/80 rounded-br-sm" : "bg-white/[0.05] text-white/60 rounded-bl-sm border border-white/[0.06]"}`}>
+                      <div
+                        className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-[11px] leading-relaxed ${
+                          msg.type === "user"
+                            ? "bg-[var(--accent-500)]/10 text-[var(--foreground-secondary)] rounded-br-md"
+                            : "bg-[var(--surface-raised)] text-[var(--foreground-tertiary)] rounded-bl-md border border-[var(--border-default)]"
+                        }`}
+                      >
                         {msg.text}
                       </div>
                     </div>
                   ))}
-                </div>
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center gap-2">
-                  <input type="text" placeholder="Ask about orders, suppliers, budgets..." className="flex-1 bg-transparent text-[12px] text-white/60 placeholder:text-white/20 focus:outline-none" />
-                  <button className="p-1.5 rounded-lg bg-red-600/20 text-red-400"><ArrowRight className="w-3.5 h-3.5" /></button>
                 </div>
               </div>
             </motion.div>
@@ -355,78 +565,204 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Enterprise CTA */}
-      <section id="enterprise" className="relative py-24">
+      {/* ═══════════════════════════════════════
+          TESTIMONIALS
+          ═══════════════════════════════════════ */}
+      <section className="py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-12 lg:p-16 text-center overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(185,28,28,0.12),transparent)]" />
-            <div className="relative z-10">
-              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">Ready to Transform Your Procurement?</h2>
-              <p className="text-white/40 max-w-lg mx-auto mb-10">Join Egypt's leading hospitality procurement network. Hotels save time, suppliers grow revenue, and everyone stays compliant.</p>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-20"
+          >
+            <SectionBadge>Testimonials</SectionBadge>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-[var(--foreground)]">
+              Trusted by procurement teams
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              {
+                quote: "We cut our procurement admin from 3 days a week to half a day. The AI officer handles routine orders while we focus on strategy.",
+                name: "Amr El-Sayed",
+                role: "Procurement Director",
+                hotel: "Marriott Mena House, Cairo",
+              },
+              {
+                quote: "The factoring integration is a game-changer. We get paid in 48 hours instead of 90 days. Cash flow transformed overnight.",
+                name: "Hana Rashid",
+                role: "Finance Manager",
+                hotel: "Four Seasons Nile Plaza",
+              },
+              {
+                quote: "ETA compliance used to keep me up at night. Now it's automatic. Every invoice is signed and submitted without us touching it.",
+                name: "Omar Khalil",
+                role: "Operations Head",
+                hotel: "Hilton Alexandria Corniche",
+              },
+            ].map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)]/[0.3] p-7 hover:border-[var(--border-strong)] transition-colors duration-400"
+              >
+                <div className="flex gap-1 mb-5">
+                  {[...Array(5)].map((_, j) => (
+                    <Star key={j} className="w-3.5 h-3.5 text-[var(--warning)] fill-[var(--warning)]" />
+                  ))}
+                </div>
+                <p className="text-[14px] text-[var(--foreground-secondary)] leading-relaxed mb-6 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[var(--accent-500)]/10 flex items-center justify-center text-[var(--accent-400)] text-xs font-bold">
+                    {t.name.split(" ").map((n) => n[0]).join("")}
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-[var(--foreground)]">{t.name}</div>
+                    <div className="text-[11px] text-[var(--foreground-muted)]">
+                      {t.role}, {t.hotel}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          CTA
+          ═══════════════════════════════════════ */}
+      <section id="enterprise" className="py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative rounded-3xl border border-[var(--border-default)] bg-[var(--surface)]/[0.3] p-14 lg:p-20 text-center overflow-hidden"
+          >
+            {/* Subtle gradient */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(99,102,241,0.06),transparent)]" />
+
+            <div className="relative">
+              <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-5 text-[var(--foreground)]">
+                Ready to transform your procurement?
+              </h2>
+              <p className="text-[var(--foreground-tertiary)] max-w-md mx-auto mb-12 text-lg">
+                Join Egypt&apos;s leading hospitality procurement network. Hotels save time, suppliers grow revenue.
+              </p>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
                 {[
-                  { icon: <Building2 className="w-6 h-6" />, label: "Join as Hotel", href: "/register?type=hotel", color: "from-red-700 to-red-600" },
-                  { icon: <Factory className="w-6 h-6" />, label: "Join as Supplier", href: "/register?type=supplier", color: "from-white/[0.08] to-white/[0.04]" },
-                  { icon: <Landmark className="w-6 h-6" />, label: "Factoring Partner", href: "/register?type=factoring", color: "from-white/[0.08] to-white/[0.04]" },
-                  { icon: <Truck className="w-6 h-6" />, label: "Logistics Partner", href: "/register?type=shipping", color: "from-white/[0.08] to-white/[0.04]" },
+                  { icon: <Building2 className="w-5 h-5" />, label: "Join as Hotel", href: "/register?type=hotel", primary: true },
+                  { icon: <Factory className="w-5 h-5" />, label: "Join as Supplier", href: "/register?type=supplier", primary: false },
+                  { icon: <Landmark className="w-5 h-5" />, label: "Factoring Partner", href: "/register?type=factoring", primary: false },
+                  { icon: <Truck className="w-5 h-5" />, label: "Logistics Partner", href: "/register?type=shipping", primary: false },
                 ].map((item) => (
-                  <Link key={item.label} href={item.href} className={`flex flex-col items-center gap-3 px-4 py-5 rounded-xl bg-gradient-to-br ${item.color} ${item.color.includes("red") ? "text-white shadow-lg shadow-red-900/30" : "text-white/70 border border-white/[0.08] hover:border-white/15"} transition-all duration-300 hover:-translate-y-1`}>
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl transition-all duration-200 hover:-translate-y-px ${
+                      item.primary
+                        ? "bg-[var(--foreground)] text-[var(--foreground-inverse)] font-semibold hover:bg-[var(--foreground)]/90"
+                        : "bg-[var(--surface)] border border-[var(--border-default)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--border-strong)]"
+                    }`}
+                  >
                     {item.icon}
-                    <span className="text-xs font-medium">{item.label}</span>
+                    <span className="text-[11px]">{item.label}</span>
                   </Link>
                 ))}
               </div>
+
+              <p className="text-[11px] text-[var(--foreground-muted)] tracking-wide">
+                Free 14-day trial &middot; No credit card required &middot; Cancel anytime
+              </p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative border-t border-white/[0.06] bg-[#05060a]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+      {/* ═══════════════════════════════════════
+          FOOTER
+          ═══════════════════════════════════════ */}
+      <footer className="border-t border-[var(--border-default)] bg-[var(--background-void)]">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+            {/* Brand */}
             <div className="col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/10">
-                  <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
+              <div className="flex items-center gap-3 mb-5">
+                <div className="relative w-8 h-8 rounded-xl overflow-hidden bg-[var(--surface)] ring-1 ring-[var(--border-strong)]">
+                  <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1.5" />
                 </div>
-                <span className="text-sm font-bold tracking-wider uppercase">Hotels Vendors</span>
+                <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
               </div>
-              <p className="text-[12px] text-white/30 max-w-xs leading-relaxed">
-                Egypt's first B2B digital procurement hub for hotels. ETA-compliant, AI-powered, and built for scale.
+              <p className="text-[13px] text-[var(--foreground-muted)] max-w-xs leading-relaxed">
+                Egypt&apos;s first B2B digital procurement hub for hotels. ETA-compliant, AI-powered, and built for scale.
               </p>
             </div>
+
+            {/* Links */}
             <div>
-              <div className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mb-3">Product</div>
-              <div className="space-y-2">
-                <a href="#catalog" className="block text-[12px] text-white/40 hover:text-white transition-colors">Catalog</a>
-                <a href="#features" className="block text-[12px] text-white/40 hover:text-white transition-colors">Features</a>
-                <a href="#ai-engine" className="block text-[12px] text-white/40 hover:text-white transition-colors">AI Engine</a>
-                <Link href="/eta-demo" className="block text-[12px] text-white/40 hover:text-white transition-colors">ETA Compliance</Link>
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--foreground-muted)] font-semibold mb-4">
+                Product
+              </div>
+              <div className="space-y-2.5">
+                {["Catalog", "Features", "Solutions", "ETA Compliance"].map((l) => (
+                  <a key={l} href="#" className="block text-[13px] text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-colors">
+                    {l}
+                  </a>
+                ))}
               </div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mb-3">Company</div>
-              <div className="space-y-2">
-                <span className="block text-[12px] text-white/40">About</span>
-                <span className="block text-[12px] text-white/40">Careers</span>
-                <span className="block text-[12px] text-white/40">Contact</span>
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--foreground-muted)] font-semibold mb-4">
+                Company
+              </div>
+              <div className="space-y-2.5">
+                {["About", "Careers", "Contact", "Blog"].map((l) => (
+                  <span key={l} className="block text-[13px] text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-colors cursor-pointer">
+                    {l}
+                  </span>
+                ))}
               </div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mb-3">Legal</div>
-              <div className="space-y-2">
-                <span className="block text-[12px] text-white/40">Privacy</span>
-                <span className="block text-[12px] text-white/40">Terms</span>
-                <span className="block text-[12px] text-white/40">ETA e-Invoicing</span>
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--foreground-muted)] font-semibold mb-4">
+                Legal
+              </div>
+              <div className="space-y-2.5">
+                {["Privacy", "Terms", "Security", "ETA e-Invoicing"].map((l) => (
+                  <span key={l} className="block text-[13px] text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-colors cursor-pointer">
+                    {l}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
-          <div className="mt-10 pt-6 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-[11px] text-white/30">© 2026 Hotels Vendors. Smarter Together.</div>
-            <div className="flex items-center gap-4 text-[11px] text-white/30">
-              <span className="flex items-center gap-1.5"><Shield className="w-3 h-3 text-emerald-500/60" /> SSL Secured</span>
-              <span className="flex items-center gap-1.5"><Globe className="w-3 h-3 text-blue-500/60" /> Cairo, Egypt</span>
+
+          {/* Bottom Bar */}
+          <div className="mt-12 pt-8 border-t border-[var(--border-subtle)] flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-[11px] text-[var(--foreground-muted)]">
+              © 2026 Hotels Vendors. All rights reserved.
+            </div>
+            <div className="flex items-center gap-5 text-[11px] text-[var(--foreground-muted)]">
+              <span className="flex items-center gap-1.5">
+                <Shield className="w-3 h-3 text-[var(--success)]" /> SSL Secured
+              </span>
+              <span className="flex items-center gap-1.5">
+                <BadgeCheck className="w-3 h-3 text-[var(--info)]" /> ISO 27001
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Globe className="w-3 h-3 text-[var(--accent-400)]" /> Cairo, Egypt
+              </span>
             </div>
           </div>
         </div>
