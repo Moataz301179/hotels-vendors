@@ -1,6 +1,8 @@
 """
 Agent0 — Lightweight Agent Executor for Hotels Vendors Swarm
-Handles: LLM calls, tool execution, memory retrieval, result formatting
+LLM: xAI Grok (primary) → Kimi (fallback)
+Embeddings: Ollama (local, free)
+Memory: Redis
 """
 
 import json
@@ -10,13 +12,15 @@ from typing import Any, Optional
 
 import httpx
 import redis
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 # ── Config ──
-KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 XAI_API_KEY = os.getenv("XAI_API_KEY", "")
+KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
 
 # Redis connection
 redis_client = redis.from_url(REDIS_URL, decode_responses=True)
@@ -24,7 +28,7 @@ redis_client = redis.from_url(REDIS_URL, decode_responses=True)
 # ── Models ──
 
 class LLMMessage(BaseModel):
-    role: str  # system, user, assistant
+    role: str
     content: str
 
 class ToolCall(BaseModel):
@@ -36,12 +40,13 @@ class AgentRequest(BaseModel):
     agent_name: str
     system_prompt: str
     user_prompt: str
-    model: str = "kimi-k2-6"  # or "grok-4-1-fast"
+    model: str = "grok-4-1-fast"
     temperature: float = 0.3
     max_tokens: int = 4096
     tools: Optional[list[dict]] = None
     memory_context: Optional[str] = None
     job_id: Optional[str] = None
+    use_embedding: bool = True
 
 class AgentResponse(BaseModel):
     success: bool
@@ -54,27 +59,8 @@ class AgentResponse(BaseModel):
 
 # ── LLM Providers ──
 
-async def call_kimi(messages: list[dict], temperature: float, max_tokens: int) -> dict:
-    """Call Kimi API (Moonshot AI)"""
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.post(
-            "https://api.moonshot.ai/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {KIMI_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "kimi-k2-6",
-                "messages": messages,
-                "temperature": temperature,
-                "max_tokens": max_tokens,
-            },
-        )
-        response.raise_for_status()
-        return response.json()
-
-async def call_grok(messages: list[dict], temperature: float, max_tokens: int) -> dict:
-    """Call xAI Grok API"""
+async def call_xai(messages: list[dict], temperature: float, max_tokens: int) -> dict:
+    """Call xAI Grok API — PRIMARY"""
     async with httpx.AsyncClient(timeout=60.0) as client:
         response = await client.post(
             "https://api.x.ai/v1/chat/completions",
@@ -92,21 +78,57 @@ async def call_grok(messages: list[dict], temperature: float, max_tokens: int) -
         response.raise_for_status()
         return response.json()
 
+async def call_groq(messages: list[dict], temperature: float, max_tokens: int) -> dict:
+    """Call Groq API — FALLBACK 1"""
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "llama-3.3-70b-versatile",
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            },
+        )
+        response.raise_for_status()
+        return response.json()
+
+async def call_kimi(messages: list[dict], temperature: float, max_tokens: int) -> dict:
+    """Call Kimi API — FALLBACK 2"""
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            "https://api.moonshot.ai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {KIMI_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "kimi-k2-6",
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            },
+        )
+        response.raise_for_status()
+        return response.json()
+
 async def call_llm(
     model: str,
     messages: list[dict],
     temperature: float,
     max_tokens: int,
 ) -> tuple[str, dict]:
-    """Route to correct provider with fallback"""
+    """Route to correct provider with fallback chain: Grok → Groq → Kimi"""
     errors = []
-
-    # Try requested model first
-    providers = []
-    if model.startswith("kimi"):
-        providers = [("kimi", call_kimi), ("grok", call_grok)]
-    else:
-        providers = [("grok", call_grok), ("kimi", call_kimi)]
+    providers = [
+        ("xai", call_xai),
+        ("groq", call_groq),
+        ("kimi", call_kimi),
+    ]
 
     for provider_name, call_fn in providers:
         try:
@@ -123,13 +145,36 @@ async def call_llm(
 
     raise Exception(f"All providers failed: {'; '.join(errors)}")
 
-# ── Memory Helpers ──
+# ── Ollama Embeddings ──
 
-def get_memory_context(agent_id: str, query: str, limit: int = 5) -> str:
-    """Retrieve relevant memories from Redis"""
+async def create_ollama_embedding(text: str) -> list[float]:
+    """Create embeddings using Ollama (free, local)"""
+    model = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.post(
+            f"{OLLAMA_URL}/api/embeddings",
+            json={"model": model, "prompt": text},
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data.get("embedding", [])
+
+# ── Memory with Vector Search ──
+
+def cosine_similarity(a: list[float], b: list[float]) -> float:
+    if not a or not b or len(a) != len(b):
+        return 0.0
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = sum(x * x for x in a) ** 0.5
+    norm_b = sum(x * x for x in b) ** 0.5
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
+
+def get_memory_context(agent_id: str, query: str, query_embedding: list[float], limit: int = 5) -> str:
+    """Retrieve relevant memories using vector similarity"""
     try:
-        # Simple keyword-based retrieval (replace with vector search later)
-        pattern = f"swarm:memory:*"
+        pattern = "swarm:memory:*"
         keys = redis_client.scan_iter(match=pattern, count=100)
         memories = []
         for key in keys:
@@ -137,10 +182,14 @@ def get_memory_context(agent_id: str, query: str, limit: int = 5) -> str:
             if data:
                 mem = json.loads(data)
                 if mem.get("agent_id") == agent_id or mem.get("category") == "general":
+                    mem_embedding = mem.get("embedding", [])
+                    if mem_embedding and query_embedding:
+                        mem["_score"] = cosine_similarity(query_embedding, mem_embedding)
+                    else:
+                        mem["_score"] = 0.0
                     memories.append(mem)
 
-        # Sort by recency and relevance (simplified)
-        memories.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        memories.sort(key=lambda x: x.get("_score", 0), reverse=True)
         top = memories[:limit]
 
         if not top:
@@ -148,13 +197,15 @@ def get_memory_context(agent_id: str, query: str, limit: int = 5) -> str:
 
         lines = ["## Relevant Context from Memory:"]
         for m in top:
-            lines.append(f"- [{m.get('memory_type')}] {m.get('content', '')[:200]}")
+            score = m.get("_score", 0)
+            lines.append(f"- [{m.get('memory_type')}] (relevance: {score:.2f}) {m.get('content', '')[:200]}")
         return "\n".join(lines)
     except Exception as e:
         return f"# Memory retrieval error: {e}"
 
-def store_memory(agent_id: str, agent_name: str, content: str, memory_type: str, category: str, job_id: Optional[str] = None):
-    """Store a memory in Redis with TTL"""
+def store_memory(agent_id: str, agent_name: str, content: str, memory_type: str, category: str,
+                 embedding: Optional[list[float]] = None, job_id: Optional[str] = None):
+    """Store a memory in Redis with TTL + optional embedding"""
     try:
         mem_id = f"swarm:memory:{agent_id}:{int(time.time() * 1000)}"
         data = {
@@ -164,47 +215,49 @@ def store_memory(agent_id: str, agent_name: str, content: str, memory_type: str,
             "memory_type": memory_type,
             "category": category,
             "job_id": job_id,
+            "embedding": embedding,
             "created_at": time.time(),
         }
-        redis_client.setex(mem_id, 7 * 24 * 3600, json.dumps(data))  # 7 days TTL
+        redis_client.setex(mem_id, 7 * 24 * 3600, json.dumps(data))
     except Exception as e:
         print(f"Memory store error: {e}")
 
 # ── FastAPI App ──
 
-app = FastAPI(title="Agent0", version="2.0.0")
+app = FastAPI(title="Agent0", version="3.0.0")
 
 @app.post("/execute", response_model=AgentResponse)
 async def execute_agent(req: AgentRequest):
     start = time.time()
 
     try:
-        # Build messages
         messages = [{"role": "system", "content": req.system_prompt}]
 
-        # Add memory context if available
+        # Generate embedding for query (Ollama, free)
+        query_embedding: list[float] = []
+        if req.use_embedding:
+            try:
+                query_embedding = await create_ollama_embedding(req.user_prompt)
+            except Exception as e:
+                print(f"[Agent0] Embedding failed: {e}")
+
+        # Add memory context with vector search
         if req.memory_context:
             messages.append({"role": "system", "content": f"Context:\n{req.memory_context}"})
         else:
-            memory = get_memory_context(req.agent_id, req.user_prompt)
+            memory = get_memory_context(req.agent_id, req.user_prompt, query_embedding)
             if memory:
                 messages.append({"role": "system", "content": memory})
 
         messages.append({"role": "user", "content": req.user_prompt})
 
-        # Call LLM
-        content, meta = await call_llm(
-            req.model,
-            messages,
-            req.temperature,
-            req.max_tokens,
-        )
+        # Call LLM (Grok primary)
+        content, meta = await call_llm(req.model, messages, req.temperature, req.max_tokens)
 
-        # Try to parse tool calls from content
+        # Parse tool calls
         tool_calls = None
         if "TOOL_CALL:" in content or "tool_call" in content.lower():
             try:
-                # Extract JSON tool calls
                 import re
                 json_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
                 if json_match:
@@ -216,14 +269,11 @@ async def execute_agent(req: AgentRequest):
             except Exception:
                 pass
 
-        # Store result as memory
+        # Store result as memory with embedding
         store_memory(
-            req.agent_id,
-            req.agent_name,
+            req.agent_id, req.agent_name,
             f"Task: {req.user_prompt[:200]}... Result: {content[:500]}",
-            "ACTION",
-            "execution",
-            req.job_id,
+            "ACTION", "execution", query_embedding, req.job_id,
         )
 
         return AgentResponse(
@@ -246,7 +296,6 @@ async def execute_agent(req: AgentRequest):
 
 @app.post("/execute-batch")
 async def execute_batch(requests: list[AgentRequest]):
-    """Execute multiple agents in parallel"""
     import asyncio
     tasks = [execute_agent(req) for req in requests]
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -261,11 +310,21 @@ async def health():
     except Exception:
         pass
 
+    ollama_ok = False
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            r = await client.get(f"{OLLAMA_URL}/api/tags")
+            ollama_ok = r.status_code == 200
+    except Exception:
+        pass
+
     return {
         "status": "healthy",
         "redis": "connected" if redis_ok else "disconnected",
-        "kimi_key_set": bool(KIMI_API_KEY),
+        "ollama": "connected" if ollama_ok else "disconnected",
         "xai_key_set": bool(XAI_API_KEY),
+        "groq_key_set": bool(GROQ_API_KEY),
+        "kimi_key_set": bool(KIMI_API_KEY),
     }
 
 @app.post("/memory/store")
@@ -275,5 +334,12 @@ async def store_memory_endpoint(agent_id: str, content: str, memory_type: str = 
 
 @app.get("/memory/retrieve")
 async def retrieve_memory(agent_id: str, query: str, limit: int = 5):
-    context = get_memory_context(agent_id, query, limit)
+    query_embedding = await create_ollama_embedding(query)
+    context = get_memory_context(agent_id, query, query_embedding, limit)
     return {"success": True, "context": context}
+
+@app.post("/embed")
+async def embed(text: str):
+    """Standalone embedding endpoint"""
+    embedding = await create_ollama_embedding(text)
+    return {"success": True, "embedding": embedding, "dimensions": len(embedding)}
