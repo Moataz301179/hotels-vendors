@@ -583,7 +583,6 @@ export async function runAcquisition(
     results.push(result);
 
     await recordSwarmEvent("acquisition_source_complete", "INFO", {
-      runId: config.id,
       sourceId,
       ...result,
     });
