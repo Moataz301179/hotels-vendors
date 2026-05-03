@@ -582,10 +582,7 @@ export async function runAcquisition(
     result.durationMs = Date.now() - start;
     results.push(result);
 
-    await recordSwarmEvent("acquisition_source_complete", "INFO", {
-      sourceId,
-      ...result,
-    });
+    await recordSwarmEvent("acquisition_source_complete", "INFO", result);
   }
 
   return results;
