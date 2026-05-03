@@ -44,6 +44,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
       tenantId: auth.tenantId,
       name: lead.name,
       legalName: lead.legalName || lead.name,
+      taxId: `PENDING_${lead.id.slice(0, 8)}`,
       email: lead.email || `lead_${lead.id}@placeholder.hotelsvendors.com`,
       phone: lead.phone,
       address: lead.address,
