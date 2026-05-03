@@ -58,7 +58,7 @@ async def call_kimi(messages: list[dict], temperature: float, max_tokens: int) -
     """Call Kimi API (Moonshot AI)"""
     async with httpx.AsyncClient(timeout=60.0) as client:
         response = await client.post(
-            "https://api.moonshot.cn/v1/chat/completions",
+            "https://api.moonshot.ai/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {KIMI_API_KEY}",
                 "Content-Type": "application/json",

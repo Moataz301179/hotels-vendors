@@ -30,7 +30,7 @@ function buildModelConfigs(): ModelConfig[] {
       provider: "kimi",
       model: "kimi-k2-6",
       apiKey: process.env.KIMI_API_KEY,
-      baseUrl: "https://api.moonshot.cn/v1/chat/completions",
+      baseUrl: "https://api.moonshot.ai/v1/chat/completions",
       isPrimary: true,
       isFallback: false,
     });
