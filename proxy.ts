@@ -44,6 +44,7 @@ const ROLE_ROUTES: Record<string, string[]> = {
   SUPPLIER: ["/supplier"],
   FACTORING: ["/factoring"],
   SHIPPING: ["/shipping"],
+  MARKETING: ["/marketing"],
 };
 
 const ROLE_DEFAULT_PATH: Record<string, string> = {
@@ -52,6 +53,7 @@ const ROLE_DEFAULT_PATH: Record<string, string> = {
   SUPPLIER: "/supplier",
   FACTORING: "/factoring",
   SHIPPING: "/shipping",
+  MARKETING: "/marketing",
 };
 
 /* ── Helpers ── */
@@ -67,7 +69,8 @@ function isProtectedPath(path: string): boolean {
     path.startsWith("/supplier") ||
     path.startsWith("/factoring") ||
     path.startsWith("/shipping") ||
-    path.startsWith("/admin")
+    path.startsWith("/admin") ||
+    path.startsWith("/marketing")
   );
 }
 

@@ -88,6 +88,7 @@ export function getDashboardPath(platformRole: string): string {
     FACTORING: "/factoring",
     SHIPPING: "/shipping",
     ADMIN: "/admin",
+    MARKETING: "/marketing",
   };
   return paths[platformRole] || "/hotel";
 }

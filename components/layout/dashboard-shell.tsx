@@ -6,7 +6,7 @@ import { DashboardHeader } from "./dashboard-header";
 
 interface DashboardShellProps {
   children: ReactNode;
-  role: "admin" | "hotel" | "supplier" | "factoring" | "shipping";
+  role: "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 }
 
 export function DashboardShell({ children, role }: DashboardShellProps) {

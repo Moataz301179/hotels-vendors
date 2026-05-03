@@ -2,7 +2,7 @@
 
 /* ─────────────────────────────────────────
    Hotels Vendors — Global Design System v3.0
-   Solid Black + White + Vibrant Red
+   Solid Black + White + Electric Indigo
    Premium B2B Fintech Dark Theme
    ───────────────────────────────────────── */
 
@@ -22,17 +22,17 @@
   --foreground-muted: #444444;
   --foreground-inverse: #000000;
 
-  /* Accent — Vibrant Red */
-  --accent-50: #fef2f2;
-  --accent-100: #fee2e2;
-  --accent-200: #fecaca;
-  --accent-300: #fca5a5;
-  --accent-400: #f87171;
-  --accent-500: #ef4444;
-  --accent-600: #dc2626;
-  --accent-700: #b91c1c;
-  --accent-800: #991b1b;
-  --accent-900: #7f1d1d;
+  /* Accent — Electric Indigo */
+  --accent-50: #eef2ff;
+  --accent-100: #e0e7ff;
+  --accent-200: #c7d2fe;
+  --accent-300: #a5b4fc;
+  --accent-400: #818cf8;
+  --accent-500: #6366f1;
+  --accent-600: #4f46e5;
+  --accent-700: #4338ca;
+  --accent-800: #3730a3;
+  --accent-900: #312e81;
 
   /* Grey Scale */
   --grey-50: #fafafa;
@@ -47,16 +47,16 @@
   --grey-900: #171717;
 
   /* Semantic */
-  --success: #22c55e;
-  --warning: #eab308;
-  --error: #ef4444;
-  --info: #3b82f6;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
 
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.12);
-  --border-accent: rgba(220, 38, 38, 0.30);
+  --border-accent: rgba(99, 102, 241, 0.30);
 
   /* Glassmorphism — Minimal */
   --glass-bg: rgba(10, 10, 10, 0.80);
@@ -64,7 +64,7 @@
   --glass-blur: 16px;
 
   /* Shadows */
-  --shadow-glow-red: 0 0 60px rgba(220, 38, 38, 0.15);
+  --shadow-glow-accent: 0 0 60px rgba(99, 102, 241, 0.15);
   --shadow-glow-white: 0 0 40px rgba(255, 255, 255, 0.04);
 
   /* Layout */
@@ -78,13 +78,23 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
   --color-foreground: var(--foreground);
   --color-foreground-secondary: var(--foreground-secondary);
   --color-foreground-tertiary: var(--foreground-tertiary);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-accent-400: var(--accent-400);
   --color-accent-500: var(--accent-500);
   --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
   --color-grey-500: var(--grey-500);
   --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-subtle: var(--border-subtle);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -95,7 +105,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-::selection { background: rgba(220, 38, 38, 0.35); color: #fff; }
+::selection { background: rgba(99, 102, 241, 0.35); color: #fff; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }

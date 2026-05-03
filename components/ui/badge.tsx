@@ -18,13 +18,13 @@ const badgeVariants = cva(
         outline:
           "border-[var(--border-default)] text-[var(--foreground-secondary)]",
         success:
-          "border-transparent bg-emerald-500/15 text-emerald-400",
+          "border-transparent bg-[var(--success)]/15 text-[var(--success)]",
         warning:
-          "border-transparent bg-amber-500/15 text-amber-400",
+          "border-transparent bg-[var(--warning)]/15 text-[var(--warning)]",
         error:
-          "border-transparent bg-red-500/15 text-red-400",
+          "border-transparent bg-[var(--error)]/15 text-[var(--error)]",
         info:
-          "border-transparent bg-blue-500/15 text-blue-400",
+          "border-transparent bg-[var(--info)]/15 text-[var(--info)]",
       },
     },
     defaultVariants: {

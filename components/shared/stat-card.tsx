@@ -24,9 +24,9 @@ export function StatCard({
 }: StatCardProps) {
   const changeColor =
     changeType === "positive"
-      ? "text-emerald-400"
+      ? "text-[var(--success)]"
       : changeType === "negative"
-      ? "text-red-400"
+      ? "text-[var(--error)]"
       : "text-[var(--foreground-muted)]";
 
   return (

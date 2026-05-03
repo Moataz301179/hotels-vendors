@@ -41,7 +41,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping";
+  const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
     <DashboardShell role={validRole}>

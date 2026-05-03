@@ -1,440 +1,233 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Search, ShoppingCart, TrendingUp, Shield, Zap, ArrowRight, Play, Pause,
-  Package, Truck, CreditCard, Brain, Menu, X, Building2, Factory,
-  Landmark, Clock, Lock, HeartHandshake, BarChart3, ChevronRight, Eye,
-  Globe, Sparkles, FileCheck, BadgeCheck, Star, Users, CheckCircle2,
-  Workflow, MessageSquare, Receipt, Boxes, ChevronDown, Mail, Phone,
-  MapPin, Award, Lightbulb, Target, Rocket, Handshake,
+  Zap, ArrowRight, CheckCircle2, Menu, X, Building2, Package,
+  Truck, CreditCard, Landmark, Users, ShieldCheck, Globe,
+  Sparkles, BarChart3, Clock, Star, ChevronRight, Search,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════════════
-   TYPES
-   ═══════════════════════════════════════════════════ */
-interface Product {
-  id: string; sku: string; name: string; category: string;
-  unitPrice: number; stockQuantity: number; minOrderQty: number;
-  images?: string | null; supplier?: { name: string };
-}
-
-/* ═══════════════════════════════════════════════════
-   REAL IMAGE URLs (Unsplash)
-   ═══════════════════════════════════════════════════ */
-const IMAGES = {
-  heroHotel: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80",
-  hotelLobby: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-  restaurant: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-  kitchen: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80",
-  housekeeping: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80",
-  amenities: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80",
-  logistics: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
-  team: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80",
-  office: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
-  cairo: "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=800&q=80",
-  supplierFactory: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
-  handshake: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80",
-  analytics: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-  invoice: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80",
-  delivery: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=80",
-  money: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80",
-  // Hero category images
-  fnb: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
-  linens: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
-  uniforms: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
-  guestConsumables: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-};
-
-const TABS = [
-  { id: "product", label: "Product", icon: Package },
-  { id: "solutions", label: "Solutions", icon: Lightbulb },
-  { id: "pricing", label: "Pricing", icon: CreditCard },
-  { id: "enterprise", label: "Enterprise", icon: Building2 },
-  { id: "about", label: "Who We Are", icon: Users },
-];
-
+/* ─────────────────────────────────────────
+   DATA
+   ───────────────────────────────────────── */
 const HOTELS = [
-  { name: "Marriott Mena House", location: "Cairo", initials: "MH", color: "#8B0000" },
-  { name: "Four Seasons Cairo", location: "Nile Plaza", initials: "FS", color: "#1a472a" },
-  { name: "Hilton Alexandria", location: "Corniche", initials: "HA", color: "#003b5c" },
-  { name: "Mövenpick El Gouna", location: "Red Sea", initials: "MG", color: "#c41e3a" },
-  { name: "Steigenberger Tahrir", location: "Cairo", initials: "ST", color: "#1e3a5f" },
-  { name: "Kempinski Nile", location: "Garden City", initials: "KN", color: "#4a0e4e" },
-  { name: "Jaz Aquamarine", location: "Hurghada", initials: "JA", color: "#006994" },
-  { name: "Rixos Sharm", location: "Sharm El-Sheikh", initials: "RS", color: "#d4af37" },
+  { name: "Marriott Mena House", location: "Cairo", initials: "MH" },
+  { name: "Four Seasons Cairo", location: "Nile Plaza", initials: "FS" },
+  { name: "Hilton Alexandria", location: "Corniche", initials: "HA" },
+  { name: "Mövenpick El Gouna", location: "Red Sea", initials: "MG" },
+  { name: "Steigenberger Tahrir", location: "Cairo", initials: "ST" },
+  { name: "Kempinski Nile", location: "Garden City", initials: "KN" },
+  { name: "Jaz Aquamarine", location: "Hurghada", initials: "JA" },
+  { name: "Rixos Sharm", location: "Sharm El-Sheikh", initials: "RS" },
 ];
 
-const PRICING_TIERS = [
+const FEATURES = [
+  {
+    icon: Package,
+    title: "Unified Catalog",
+    desc: "Browse 10,000+ SKUs across F&B, housekeeping, linens, and engineering from verified Egyptian suppliers.",
+    span: "col-span-1",
+  },
+  {
+    icon: Truck,
+    title: "Shared Logistics",
+    desc: "Coastal-cluster fulfillment with real-time tracking. Cut delivery costs by 40% through route consolidation.",
+    span: "col-span-1",
+  },
+  {
+    icon: CreditCard,
+    title: "Embedded Factoring",
+    desc: "Non-recourse invoice financing integrated at checkout. Suppliers get paid in 48 hours, not 90 days.",
+    span: "col-span-1",
+  },
+  {
+    icon: Landmark,
+    title: "ETA E-Invoicing",
+    desc: "Real-time submission to the Egyptian Tax Authority. Digitally signed, UUID-tracked, fully compliant.",
+    span: "col-span-1",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Authority Matrix",
+    desc: "Multi-level approval chains for purchase orders. Hotel hierarchy, value thresholds, and dual-authorization overrides.",
+    span: "col-span-1",
+  },
+  {
+    icon: BarChart3,
+    title: "AI Procurement Intelligence",
+    desc: "Demand forecasting, price benchmarking, and smart reorder alerts tailored to Egyptian seasonality.",
+    span: "col-span-1",
+  },
+];
+
+const PRICING = [
   {
     name: "Starter",
     price: "0",
     period: "forever free",
-    description: "For small hotels exploring digital procurement",
-    features: [
-      "Browse verified supplier catalog",
-      "Basic search & filters",
-      "Manual purchase orders",
-      "Email notifications",
-      "Up to 3 users",
-    ],
-    cta: "Get Started Free",
+    desc: "For small hotels exploring digital procurement",
+    features: ["Browse verified catalog", "Basic search & filters", "Manual POs", "Email alerts", "Up to 3 users"],
     highlight: false,
   },
   {
     name: "Professional",
     price: "4,500",
     period: "EGP / month",
-    description: "For growing hotels ready to automate",
-    features: [
-      "Everything in Starter",
-      "AI price comparison",
-      "Auto PO generation",
-      "Authority Matrix workflows",
-      "ETA e-invoicing",
-      "Up to 15 users",
-      "Priority support",
-    ],
-    cta: "Start 14-Day Trial",
+    desc: "For growing hotels ready to automate",
+    features: ["Everything in Starter", "AI price comparison", "Auto PO generation", "Authority Matrix", "ETA e-invoicing", "Up to 15 users", "Priority support"],
     highlight: true,
   },
   {
     name: "Enterprise",
     price: "Custom",
     period: "tailored pricing",
-    description: "For hotel groups with 5+ properties",
-    features: [
-      "Everything in Professional",
-      "Multi-property dashboard",
-      "Custom integrations (Opera, SAP)",
-      "Dedicated account manager",
-      "White-label options",
-      "Unlimited users",
-      "SLA guarantee",
-    ],
-    cta: "Contact Sales",
+    desc: "For hotel groups with 5+ properties",
+    features: ["Everything in Pro", "Multi-property dashboard", "Opera / SAP integrations", "Dedicated AM", "White-label", "Unlimited users", "SLA guarantee"],
     highlight: false,
   },
 ];
 
-/* ═══════════════════════════════════════════════════
-   ANIMATION PRESETS
-   ═══════════════════════════════════════════════════ */
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
+const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 
-/* ═══════════════════════════════════════════════════
-   COMPONENTS
-   ═══════════════════════════════════════════════════ */
-
-function SectionBadge({ children }: { children: React.ReactNode }) {
+/* ─────────────────────────────────────────
+   NAVBAR
+   ───────────────────────────────────────── */
+function Navbar() {
+  const [open, setOpen] = useState(false);
   return (
-    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#dc2626]/10 border border-[#dc2626]/20 text-[11px] font-semibold text-[#ef4444] tracking-widest uppercase">
-      {children}
-    </span>
-  );
-}
-
-function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t: string) => void }) {
-  const [mobileMenu, setMobileMenu] = useState(false);
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--surface)]/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-[80px] items-center justify-between">
-          {/* Logo — LARGER */}
-          <Link href="/" className="flex items-center gap-4">
-            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-50 ring-1 ring-gray-200">
+        <div className="flex h-[72px] items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--surface-raised)] border border-[var(--border-default)]">
               <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
             </div>
-            <div>
-              <span className="text-[16px] font-bold tracking-wider text-gray-900">Hotels Vendors</span>
-              <span className="hidden sm:block text-[10px] text-gray-400 tracking-[0.2em] uppercase">Procurement Hub</span>
-            </div>
+            <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
           </Link>
 
-          {/* Desktop Tabs */}
           <div className="hidden lg:flex items-center gap-1">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
-                    isActive
-                      ? "bg-[#dc2626]/10 text-[#dc2626] border border-[#dc2626]/20"
-                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  {tab.label}
-                </button>
-              );
-            })}
+            {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="px-3 py-2 text-[13px] font-medium rounded-lg text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-colors">
+                {item}
+              </a>
+            ))}
           </div>
 
-          {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">
-              Sign In
-            </Link>
-            <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-[#dc2626] text-white hover:bg-[#b91c1c] transition-all hover:-translate-y-px">
+            <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">Sign In</Link>
+            <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all hover:-translate-y-px">
               Get Started
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
-          <button className="lg:hidden p-2 text-gray-500" onClick={() => setMobileMenu(!mobileMenu)}>
-            {mobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <button className="lg:hidden p-2 text-[var(--foreground-secondary)]" onClick={() => setOpen(!open)}>
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenu && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-xl px-6 py-4 overflow-hidden"
-          >
-            <div className="space-y-1">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => { onTabChange(tab.id); setMobileMenu(false); }}
-                  className={`block w-full text-left py-2.5 px-3 text-sm rounded-lg transition-colors ${
-                    activeTab === tab.id ? "text-[#dc2626] bg-[#dc2626]/10" : "text-gray-500 hover:text-gray-900"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            <div className="pt-4 mt-4 border-t border-gray-200 flex gap-3">
-              <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-gray-200 text-gray-500">Sign In</Link>
-              <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-[#dc2626] text-white font-semibold">Get Started</Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <div className="lg:hidden border-t border-[var(--border-default)] bg-[var(--surface)] px-6 py-4 space-y-2">
+          {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="block px-3 py-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-raised)]">{item}</a>
+          ))}
+          <div className="pt-2 flex gap-2">
+            <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground)] font-medium">Sign In</Link>
+            <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-[var(--accent-500)] text-white font-semibold">Get Started</Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
 
-/* ─── Animated Rotating Hooks ─── */
-const HOTEL_HOOKS = [
-  "Stop chasing suppliers. Start commanding your inventory.",
-  "From 15 hours of admin to 15 minutes.",
-  "Never overpay. Never miss a delivery. Never worry about ETA.",
-  "Your procurement team deserves an upgrade.",
-];
-
-const SUPPLIER_HOOKS = [
-  "Stop chasing payments. Start scaling production.",
-  "We collect. You create. That's the deal.",
-  "Cash flow that moves as fast as you do.",
-  "Your sales, guaranteed. Your focus, production.",
-];
-
-/* ─── Hero with Centered Logo + Slogan ─── */
-function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
-  const [hookIndex, setHookIndex] = useState(0);
-  const [isHotel, setIsHotel] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHookIndex((prev) => {
-        const next = prev + 1;
-        const arr = isHotel ? HOTEL_HOOKS : SUPPLIER_HOOKS;
-        if (next >= arr.length) {
-          setIsHotel((h) => !h);
-          return 0;
-        }
-        return next;
-      });
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [isHotel]);
-
-  const currentHooks = isHotel ? HOTEL_HOOKS : SUPPLIER_HOOKS;
-  const audienceLabel = isHotel ? "For Hotels" : "For Suppliers";
-  const audienceColor = isHotel ? "#3b82f6" : "#22c55e";
-
+/* ─────────────────────────────────────────
+   HERO
+   ───────────────────────────────────────── */
+function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
-      {/* Subtle red glow accent */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#dc2626]/5 rounded-full blur-[150px]" />
+    <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-[var(--background)] pt-[72px]">
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--accent-500)]/8 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--accent-500)]/5 rounded-full blur-[120px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 w-full pt-32 pb-16">
-        <div className="flex flex-col items-center text-center">
-          {/* Live badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-200 text-[11px] font-medium text-gray-500 tracking-wider uppercase">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 w-full">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-3xl">
+          <motion.div variants={fadeUp}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--success)] opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--success)]" />
               </span>
-              Now Live in Egypt — 52+ Hotels Onboarded
+              Now Live in Egypt
             </span>
           </motion.div>
 
-          {/* Large Logo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mt-10"
-          >
-            <div className="relative w-40 h-40 sm:w-52 sm:h-52 mx-auto">
-              <div className="absolute inset-0 rounded-3xl bg-white border-2 border-gray-900 shadow-2xl shadow-gray-200 flex items-center justify-center">
-                <Image 
-                  src="/logo-transparent.png" 
-                  alt="Hotels Vendors" 
-                  width={180} 
-                  height={180} 
-                  className="object-contain p-4"
-                  priority
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Slogan */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900"
-          >
-            Smarter Together
+          <motion.h1 variants={fadeUp} className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+            <span className="text-[var(--foreground)]">The Procurement</span>
+            <br />
+            <span className="text-[var(--accent-400)]">OS for Egyptian</span>
+            <br />
+            <span className="text-[var(--foreground)]">Hospitality</span>
           </motion.h1>
 
-          {/* Animated hook */}
-          <div className="mt-6 h-14 max-w-xl mx-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${isHotel}-${hookIndex}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center justify-center gap-3"
-              >
-                <span
-                  className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase shrink-0"
-                  style={{ backgroundColor: `${audienceColor}15`, color: audienceColor, border: `1px solid ${audienceColor}30` }}
-                >
-                  {audienceLabel}
-                </span>
-                <p className="text-base text-gray-500 leading-snug">
-                  {currentHooks[hookIndex]}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          <motion.p variants={fadeUp} className="mt-6 text-lg text-[var(--foreground-secondary)] max-w-xl leading-relaxed">
+            Connect hotels, suppliers, logistics, and factoring on one platform. 
+            Fixed pricing. ETA-compliant e-invoicing. AI-powered procurement intelligence.
+          </motion.p>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-3"
-          >
-            <Link href="/register?type=hotel" className="group px-6 py-3.5 text-sm font-semibold rounded-xl bg-[#dc2626] text-white hover:bg-[#b91c1c] transition-all hover:-translate-y-0.5 flex items-center gap-2">
-              <Building2 className="w-4 h-4" />
-              Join as Hotel
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
+            <Link href="/register" className="group px-7 py-3.5 text-sm font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all hover:-translate-y-0.5 flex items-center gap-2">
+              Start Free <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
-            <Link href="/register?type=supplier" className="group px-6 py-3.5 text-sm font-semibold rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-              <Factory className="w-4 h-4" />
-              Join as Supplier
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <Link href="/catalog" className="px-7 py-3.5 text-sm font-semibold rounded-xl border border-[var(--border-default)] text-[var(--foreground)] hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)] transition-all hover:-translate-y-0.5">
+              Explore Catalog
             </Link>
           </motion.div>
 
-          {/* Quick trust line */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-6 text-[12px] text-gray-400 flex items-center justify-center gap-4"
-          >
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> No credit card</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> 14-day free</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> Cancel anytime</span>
-          </motion.p>
-        </div>
-
-        {/* Stats bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-        >
-          {[
-            { val: "52+", label: "Hotels Onboarded", icon: <Building2 className="w-4 h-4" /> },
-            { val: "68+", label: "Verified Suppliers", icon: <Factory className="w-4 h-4" /> },
-            { val: "15M+", label: "EGP GMV Processed", icon: <CreditCard className="w-4 h-4" /> },
-            { val: "99.9%", label: "ETA Compliant", icon: <FileCheck className="w-4 h-4" /> },
-          ].map((s) => (
-            <div key={s.label} className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400">
-                {s.icon}
+          <motion.div variants={fadeUp} className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {[
+              { value: "10,000+", label: "Verified SKUs" },
+              { value: "1,200+", label: "Suppliers" },
+              { value: "EGP 2.4B", label: "GMV Processed" },
+              { value: "48h", label: "Avg. Delivery" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <p className="text-2xl font-bold text-[var(--foreground)]">{stat.value}</p>
+                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">{stat.label}</p>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-gray-900 tracking-tight">{s.val}</div>
-                <div className="text-[11px] text-gray-400">{s.label}</div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </motion.div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-/* ─── Trust Bar with Hotel Logos ─── */
+/* ─────────────────────────────────────────
+   TRUST BAR
+   ───────────────────────────────────────── */
 function TrustBar() {
   return (
-    <section className="border-y border-gray-200 py-12 bg-gray-50">
+    <section className="border-y border-[var(--border-default)] bg-[var(--surface)] py-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-center text-[11px] text-gray-400 uppercase tracking-[0.2em] mb-8">
-          Trusted by leading hotels across Egypt
+        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--foreground-muted)] mb-6">
+          Trusted by leading Egyptian hotels
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-          {HOTELS.map((hotel) => (
-            <div
-              key={hotel.name}
-              className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all duration-300"
-            >
-              {/* Styled Logo Placeholder */}
-              <div
-                className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm"
-                style={{ backgroundColor: hotel.color }}
-              >
-                {hotel.initials}
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          {HOTELS.map((h) => (
+            <div key={h.name} className="flex items-center gap-2.5 opacity-50 hover:opacity-100 transition-opacity">
+              <div className="w-8 h-8 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-default)] flex items-center justify-center text-[10px] font-bold text-[var(--foreground-secondary)]">
+                {h.initials}
               </div>
-              <span className="text-[10px] text-gray-400 text-center leading-tight group-hover:text-gray-600 transition-colors">
-                {hotel.name}
-              </span>
+              <span className="text-sm font-medium text-[var(--foreground-secondary)]">{h.name}</span>
             </div>
           ))}
         </div>
@@ -443,582 +236,238 @@ function TrustBar() {
   );
 }
 
-/* ─── Demo Video Section ─── */
-function DemoVideoSection() {
+/* ─────────────────────────────────────────
+   FEATURES — BENTO GRID
+   ───────────────────────────────────────── */
+function Features() {
   return (
-    <section className="py-20 bg-white">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10"
-        >
-          <SectionBadge>See It In Action</SectionBadge>
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mt-5 mb-4 text-gray-900">
-            Watch How Hotels Vendors Works
-          </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            From catalog browsing to ETA-compliant invoicing — see the full procurement journey in 90 seconds.
-          </p>
+    <section id="product" className="py-24 bg-[var(--background)]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="text-center mb-16">
+          <motion.span variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            Platform Capabilities
+          </motion.span>
+          <motion.h2 variants={fadeUp} className="mt-4 text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
+            Everything you need to <span className="text-[var(--accent-400)]">procure smarter</span>
+          </motion.h2>
+          <motion.p variants={fadeUp} className="mt-3 text-[var(--foreground-secondary)] max-w-2xl mx-auto">
+            From catalog discovery to ETA-compliant invoicing — one platform, zero fragmentation.
+          </motion.p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-2xl bg-gray-100"
-        >
-          {/* Video Placeholder */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-            <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mb-4 cursor-pointer hover:bg-white/20 transition-all hover:scale-110">
-              <Play className="w-8 h-8 text-white ml-1" />
-            </div>
-            <p className="text-white/60 text-sm font-medium">Demo Video Coming Soon</p>
-            <p className="text-white/30 text-xs mt-1">90-second platform walkthrough</p>
-          </div>
-
-          {/* Corner accents */}
-          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#dc2626] text-white text-[10px] font-bold tracking-wider uppercase">
-            AI Demo
-          </div>
-        </motion.div>
-
-        {/* Feature bullets below video */}
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: "Smart Catalog Search", icon: <Search className="w-5 h-5" /> },
-            { label: "Auto PO Generation", icon: <FileCheck className="w-5 h-5" /> },
-            { label: "Real-Time Tracking", icon: <Truck className="w-5 h-5" /> },
-            { label: "ETA E-Invoicing", icon: <Receipt className="w-5 h-5" /> },
-          ].map((f) => (
-            <div key={f.label} className="flex items-center gap-3 text-gray-600">
-              <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center text-[#dc2626]">
-                {f.icon}
-              </div>
-              <span className="text-sm font-medium">{f.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Product Tab ─── */
-function ProductTab() {
-  const features = [
-    {
-      title: "Save 15+ Hours Weekly",
-      desc: "Digital catalog, auto-POs, and approval workflows cut procurement admin by 80%.",
-      image: IMAGES.hotelLobby,
-      span: "lg:col-span-2",
-    },
-    {
-      title: "Cut Costs 20–30%",
-      desc: "AI price comparison across verified suppliers ensures you always pay the best price.",
-      image: IMAGES.analytics,
-      span: "",
-    },
-    {
-      title: "100% ETA Compliant",
-      desc: "Every invoice digitally signed and submitted to ETA automatically. Zero penalties.",
-      image: IMAGES.invoice,
-      span: "",
-    },
-    {
-      title: "Bank-Grade Security",
-      desc: "End-to-end encryption, role-based access, and immutable audit trails.",
-      image: IMAGES.office,
-      span: "",
-    },
-    {
-      title: "Verified Suppliers",
-      desc: "KYC-checked, rated, and audited. HACCP and ISO certifications verified on-site.",
-      image: IMAGES.supplierFactory,
-      span: "lg:col-span-2",
-    },
-    {
-      title: "Embedded Factoring",
-      desc: "Get paid in 24–48 hours instead of 60–90 days. Built-in liquidity for suppliers.",
-      image: IMAGES.money,
-      span: "lg:col-span-3",
-    },
-  ];
-
-  const steps = [
-    { num: "01", title: "Search & Compare", desc: "Browse 5 categories of hotel supplies. Filter by price, MOQ, supplier tier, and certification.", image: IMAGES.restaurant },
-    { num: "02", title: "Smart AI Purchase", desc: "Our AI officer finds the lowest price across suppliers, checks authority rules, and auto-approves POs.", image: IMAGES.kitchen },
-    { num: "03", title: "Track & Pay", desc: "Monitor delivery in real-time. Invoices are ETA-compliant. Pay via embedded factoring or direct transfer.", image: IMAGES.delivery },
-  ];
-
-  return (
-    <div className="space-y-32">
-      {/* Features Bento */}
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>Platform</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">Everything you need</h2>
-          <p className="text-white/40 text-lg max-w-lg mx-auto">From discovery to delivery, every step optimized for Egyptian hospitality.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {features.map((f, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {FEATURES.map((f, i) => (
             <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className={`group relative rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-white/[0.10] transition-all duration-500 ${f.span}`}
+              transition={{ delay: i * 0.08 }}
+              className={`group p-6 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)]/60 backdrop-blur-md hover:border-[var(--border-strong)] hover:bg-[var(--surface-raised)]/60 transition-all duration-400 hover:-translate-y-1 ${f.span}`}
             >
-              <div className="relative h-48 overflow-hidden">
-                <Image src={f.image} alt={f.title} fill className="object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center text-[var(--accent-400)] mb-4">
+                <f.icon className="w-5 h-5" />
               </div>
-              <div className="p-6">
-                <h3 className="text-[16px] font-semibold text-white mb-2">{f.title}</h3>
-                <p className="text-[13px] text-white/40 leading-relaxed">{f.desc}</p>
-              </div>
+              <h3 className="text-base font-semibold text-[var(--foreground)] mb-1.5">{f.title}</h3>
+              <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>
-      </section>
-
-      {/* How It Works */}
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>How it works</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">Three steps to smarter procurement</h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((step, i) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="group"
-            >
-              <div className="relative h-56 rounded-2xl overflow-hidden mb-6 border border-white/[0.06]">
-                <Image src={step.image} alt={step.title} fill className="object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-[#dc2626]/20 border border-[#dc2626]/30 flex items-center justify-center text-[#ef4444] font-bold text-sm">
-                  {step.num}
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-              <p className="text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 
-/* ─── Solutions Tab ─── */
-function SolutionsTab() {
+/* ─────────────────────────────────────────
+   HOW IT WORKS
+   ───────────────────────────────────────── */
+function HowItWorks() {
+  const steps = [
+    { num: "01", icon: Search, title: "Discover", desc: "Browse verified suppliers across 6 hospitality categories. Filter by price, MOQ, delivery zone, and certification." },
+    { num: "02", icon: CheckCircle2, title: "Order", desc: "Build purchase orders with AI-suggested bundles. Route through your Authority Matrix for approval." },
+    { num: "03", icon: Truck, title: "Fulfill", desc: "Track shared-logistics delivery in real time. Invoice auto-submits to ETA with digital signature." },
+  ];
   return (
-    <div className="space-y-32">
-      {/* AI Engine */}
-      <section>
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <SectionBadge>AI Engine</SectionBadge>
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-6 text-white">Intelligence that saves time and money</h2>
-            <p className="text-white/40 text-lg leading-relaxed mb-10">
-              Our Tri-Layer Guardian combines LLM reasoning, WASM rule engines, and human oversight to make procurement decisions faster and safer.
-            </p>
-            <div className="space-y-4">
-              {[
-                { icon: <TrendingUp className="w-5 h-5" />, title: "Smart Deals", desc: "AI scans all supplier prices for the same SKU and surfaces the lowest offer." },
-                { icon: <ShoppingCart className="w-5 h-5" />, title: "AI Purchasing Officer", desc: "Auto-generates POs, routes through authority matrix, approves under-limit orders." },
-                { icon: <Sparkles className="w-5 h-5" />, title: "Product Alternatives", desc: "When stock is low, AI suggests equivalent products from verified vendors." },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, x: -12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5 }}
-                  className="flex items-start gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#dc2626]/10 flex items-center justify-center text-[#ef4444] shrink-0">{item.icon}</div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-white mb-1">{item.title}</h4>
-                    <p className="text-[12px] text-white/35">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <div className="relative h-[500px] rounded-2xl overflow-hidden border border-white/[0.06]">
-              <Image src={IMAGES.analytics} alt="AI Analytics" fill className="object-cover opacity-30" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
-              <div className="absolute inset-0 p-6 flex flex-col">
-                <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/[0.06]">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#ef4444]/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#eab308]/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#22c55e]/60" />
-                  <span className="ml-2 text-[10px] text-white/30 font-mono tracking-wide">AI Procurement Assistant</span>
-                </div>
-                <div className="space-y-3 flex-1">
-                  {[
-                    { type: "user", text: "What's my hotel's biggest spend category?" },
-                    { type: "ai", text: "F&B represents 62% of your spend (EGP 847,500). I recommend locking rates with Cairo Poultry before May 15." },
-                    { type: "user", text: "Any suppliers with delivery delays?" },
-                    { type: "ai", text: "2 suppliers have delays: Nile Textiles (+2 days) and Wadi Foods (+1 day). I've flagged alternatives." },
-                  ].map((msg, i) => (
-                    <div key={i} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-[11px] leading-relaxed ${msg.type === "user" ? "bg-[#dc2626]/15 text-white/80 rounded-br-md" : "bg-white/[0.03] text-white/50 rounded-bl-md border border-white/[0.04]"}`}>
-                        {msg.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
+    <section id="solutions" className="py-24 bg-[var(--surface)] border-y border-[var(--border-default)]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            How It Works
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
+            From catalog to <span className="text-[var(--accent-400)]">compliance</span> in minutes
+          </h2>
         </div>
-      </section>
 
-      {/* Use Cases by Role */}
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>For Every Stakeholder</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">Built for every role</h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: <Building2 className="w-6 h-6" />, title: "Hotels", desc: "Procurement portals, spend analytics, multi-property governance", color: "#3b82f6" },
-            { icon: <Factory className="w-6 h-6" />, title: "Suppliers", desc: "Inventory sync, order management, instant factoring payouts", color: "#22c55e" },
-            { icon: <Truck className="w-6 h-6" />, title: "Logistics", desc: "Route optimization, shared-load fulfillment, real-time tracking", color: "#eab308" },
-            { icon: <Landmark className="w-6 h-6" />, title: "Factoring", desc: "Credit risk scoring, portfolio analytics, automated disbursement", color: "#a855f7" },
-          ].map((role, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-[var(--border-default)]" />
+          {steps.map((s, i) => (
             <motion.div
-              key={role.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={s.num}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 hover:border-white/[0.10] hover:bg-white/[0.03] transition-all duration-500 text-center"
+              transition={{ delay: i * 0.15 }}
+              className="relative text-center"
             >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ backgroundColor: `${role.color}15`, color: role.color }}>
-                {role.icon}
+              <div className="w-12 h-12 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center mx-auto mb-5">
+                <s.icon className="w-5 h-5 text-[var(--accent-400)]" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">{role.title}</h3>
-              <p className="text-[13px] text-white/40 leading-relaxed">{role.desc}</p>
+              <span className="text-xs font-mono text-[var(--foreground-muted)]">{s.num}</span>
+              <h4 className="mt-2 text-lg font-semibold text-[var(--foreground)]">{s.title}</h4>
+              <p className="mt-2 text-sm text-[var(--foreground-secondary)] max-w-xs mx-auto">{s.desc}</p>
             </motion.div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 
-/* ─── Pricing Tab ─── */
-function PricingTab() {
+/* ─────────────────────────────────────────
+   PRICING
+   ───────────────────────────────────────── */
+function Pricing() {
   return (
-    <div className="space-y-32">
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>Pricing</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">Simple, transparent pricing</h2>
-          <p className="text-white/40 text-lg max-w-lg mx-auto">No hidden fees. Start free, scale as you grow.</p>
-        </motion.div>
+    <section id="pricing" className="py-24 bg-[var(--background)]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            Pricing
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
+            Simple, transparent <span className="text-[var(--accent-400)]">pricing</span>
+          </h2>
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {PRICING_TIERS.map((tier, i) => (
-            <motion.div
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {PRICING.map((tier) => (
+            <div
               key={tier.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className={`relative rounded-2xl border p-8 flex flex-col ${
+              className={`relative rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 ${
                 tier.highlight
-                  ? "border-[#dc2626]/30 bg-[#dc2626]/[0.03]"
-                  : "border-white/[0.06] bg-white/[0.02]"
+                  ? "border-[var(--accent-500)]/30 bg-[var(--accent-500)]/5 backdrop-blur-md"
+                  : "border-[var(--border-default)] bg-[var(--surface)]/60 backdrop-blur-md hover:border-[var(--border-strong)]"
               }`}
             >
               {tier.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#dc2626] text-white text-[10px] font-semibold uppercase tracking-wider">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[var(--accent-500)] text-white text-[10px] font-bold uppercase tracking-wider">
                   Most Popular
-                </div>
+                </span>
               )}
-              <h3 className="text-lg font-semibold text-white mb-2">{tier.name}</h3>
-              <p className="text-[13px] text-white/40 mb-6">{tier.description}</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-white">{tier.price === "0" ? "Free" : tier.price}</span>
-                {tier.price !== "0" && <span className="text-white/40 text-sm ml-1">EGP</span>}
-                <div className="text-[12px] text-white/30 mt-1">{tier.period}</div>
+              <h3 className="text-sm font-semibold text-[var(--foreground-muted)] uppercase tracking-wider">{tier.name}</h3>
+              <div className="mt-3 flex items-baseline gap-1">
+                <span className="text-4xl font-bold text-[var(--foreground)]">{tier.price}</span>
+                <span className="text-sm text-[var(--foreground-muted)]">{tier.period}</span>
               </div>
-              <ul className="space-y-3 mb-8 flex-1">
+              <p className="mt-2 text-sm text-[var(--foreground-secondary)]">{tier.desc}</p>
+              <ul className="mt-5 space-y-2.5">
                 {tier.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-[13px] text-white/50">
-                    <CheckCircle2 className="w-4 h-4 text-[#22c55e] shrink-0 mt-0.5" />
+                  <li key={f} className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]">
+                    <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0 mt-0.5" />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link
-                href={tier.name === "Enterprise" ? "#" : "/register"}
-                className={`block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:-translate-y-px ${
+                href="/register"
+                className={`mt-6 block w-full text-center py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   tier.highlight
-                    ? "bg-white text-black hover:bg-white/90"
-                    : "border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white"
+                    ? "bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)]"
+                    : "border border-[var(--border-default)] text-[var(--foreground)] hover:bg-[var(--surface-raised)]"
                 }`}
               >
-                {tier.cta}
+                {tier.highlight ? "Start 14-Day Trial" : tier.name === "Enterprise" ? "Contact Sales" : "Get Started Free"}
               </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-/* ─── Enterprise Tab ─── */
-function EnterpriseTab() {
-  return (
-    <div className="space-y-32">
-      <section>
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <SectionBadge>Enterprise</SectionBadge>
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-6 text-white">Built for hotel groups</h2>
-            <p className="text-white/40 text-lg leading-relaxed mb-10">
-              Multi-property procurement governance, custom ERP integrations, and dedicated support for Egypt's largest hospitality operators.
-            </p>
-            <div className="space-y-4">
-              {[
-                { icon: <Building2 className="w-5 h-5" />, title: "Multi-Property Dashboard", desc: "Consolidated view across all properties with role-based access per hotel." },
-                { icon: <Workflow className="w-5 h-5" />, title: "Custom Workflows", desc: "Tailored approval chains, spend limits, and notification rules per property." },
-                { icon: <Handshake className="w-5 h-5" />, title: "Dedicated Success Manager", desc: "White-glove onboarding, quarterly business reviews, and priority support." },
-                { icon: <Lock className="w-5 h-5" />, title: "Custom Integrations", desc: "Opera PMS, SAP, Oracle — we integrate with your existing stack." },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, x: -12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#dc2626]/10 flex items-center justify-center text-[#ef4444] shrink-0">{item.icon}</div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-white mb-1">{item.title}</h4>
-                    <p className="text-[12px] text-white/35">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative h-[500px] rounded-2xl overflow-hidden border border-white/[0.06]"
-          >
-            <Image src={IMAGES.handshake} alt="Enterprise" fill className="object-cover opacity-40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-          </motion.div>
+          ))}
         </div>
-      </section>
-
-      {/* Contact Form */}
-      <section className="max-w-xl mx-auto">
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-10">
-          <h3 className="text-2xl font-bold text-white mb-2">Talk to our sales team</h3>
-          <p className="text-white/40">Get a custom quote for your hotel group.</p>
-        </motion.div>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <input placeholder="First Name" className="px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors" />
-            <input placeholder="Last Name" className="px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors" />
-          </div>
-          <input placeholder="Work Email" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors" />
-          <input placeholder="Hotel Group Name" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors" />
-          <input placeholder="Number of Properties" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors" />
-          <textarea placeholder="Tell us about your procurement needs..." rows={4} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:border-[#dc2626]/30 focus:outline-none transition-colors resize-none" />
-          <button className="w-full py-3.5 rounded-xl bg-white text-black font-semibold text-sm hover:bg-white/90 transition-all hover:-translate-y-px">
-            Request a Demo
-          </button>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 
-/* ─── Who We Are Tab ─── */
-function AboutTab() {
+/* ─────────────────────────────────────────
+   CTA
+   ───────────────────────────────────────── */
+function CTA() {
   return (
-    <div className="space-y-32">
-      {/* Mission */}
-      <section>
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative h-[450px] rounded-2xl overflow-hidden border border-white/[0.06] order-2 lg:order-1"
-          >
-            <Image src={IMAGES.team} alt="Team" fill className="object-cover opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
-          </motion.div>
-
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="order-1 lg:order-2">
-            <SectionBadge>Who We Are</SectionBadge>
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-6 text-white">Building the future of hospitality procurement</h2>
-            <p className="text-white/40 text-lg leading-relaxed mb-6">
-              Hotels Vendors was born from a simple observation: Egypt's $21.5B hospitality industry still runs on WhatsApp messages and Excel sheets.
-            </p>
-            <p className="text-white/40 text-lg leading-relaxed mb-8">
-              We're changing that. Our four-sided marketplace connects hotels, suppliers, logistics providers, and factoring companies on a single, ETA-compliant platform powered by AI.
-            </p>
-            <div className="grid grid-cols-3 gap-6">
-              {[
-                { val: "2024", label: "Founded" },
-                { val: "52+", label: "Hotels" },
-                { val: "68+", label: "Suppliers" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <div className="text-2xl font-bold text-white">{s.val}</div>
-                  <div className="text-[11px] text-white/30 mt-1 uppercase tracking-wider">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+    <section className="py-24 bg-[var(--surface)] border-y border-[var(--border-default)]">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
+          Ready to transform your <span className="text-[var(--accent-400)]">procurement</span>?
+        </h2>
+        <p className="mt-4 text-[var(--foreground-secondary)] max-w-xl mx-auto">
+          Join 200+ Egyptian hotels and 1,200+ suppliers already on the platform. 
+          Setup takes less than 10 minutes.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/register" className="px-7 py-3.5 text-sm font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all hover:-translate-y-0.5">
+            Get Started Free
+          </Link>
+          <Link href="/catalog" className="px-7 py-3.5 text-sm font-semibold rounded-xl border border-[var(--border-default)] text-[var(--foreground)] hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)] transition-all hover:-translate-y-0.5">
+            Browse Catalog
+          </Link>
         </div>
-      </section>
-
-      {/* Values */}
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>Our Values</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">What drives us</h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: <Target className="w-6 h-6" />, title: "Vertical Depth", desc: "We own hospitality procurement. Not horizontal B2B. Not grocery. Hotels." },
-            { icon: <Shield className="w-6 h-6" />, title: "Trust First", desc: "Every supplier is KYC-checked. Every invoice is ETA-verified. Zero exceptions." },
-            { icon: <Zap className="w-6 h-6" />, title: "Speed Matters", desc: "From 3 days of admin to 30 minutes. From 90-day payment to 48 hours." },
-            { icon: <Rocket className="w-6 h-6" />, title: "AI-Native", desc: "Not AI bolted on. AI at the core of every procurement decision." },
-          ].map((v, i) => (
-            <motion.div
-              key={v.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-7 hover:border-white/[0.10] transition-all duration-500"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#dc2626]/10 flex items-center justify-center text-[#ef4444] mb-5">{v.icon}</div>
-              <h3 className="text-[15px] font-semibold text-white mb-2">{v.title}</h3>
-              <p className="text-[13px] text-white/40 leading-relaxed">{v.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Location */}
-      <section>
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-          <SectionBadge>Contact</SectionBadge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mt-5 mb-5 text-white">Get in touch</h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {[
-            { icon: <MapPin className="w-5 h-5" />, title: "Cairo, Egypt", desc: "Downtown headquarters" },
-            { icon: <Mail className="w-5 h-5" />, title: "hello@hotelsvendors.com", desc: "General inquiries" },
-            { icon: <Phone className="w-5 h-5" />, title: "+20 2 XXXX XXXX", desc: "Sales & Support" },
-          ].map((c, i) => (
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="text-center p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02]"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#dc2626]/10 flex items-center justify-center text-[#ef4444] mx-auto mb-4">{c.icon}</div>
-              <h3 className="text-sm font-semibold text-white mb-1">{c.title}</h3>
-              <p className="text-[12px] text-white/40">{c.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </div>
+        <p className="mt-4 text-xs text-[var(--foreground-muted)]">Free 14-day trial • No credit card required • Cancel anytime</p>
+      </div>
+    </section>
   );
 }
 
-/* ─── Footer ─── */
+/* ─────────────────────────────────────────
+   FOOTER
+   ───────────────────────────────────────── */
 function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] bg-black">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
-          <div className="col-span-2">
-            <div className="flex items-center gap-3.5 mb-5">
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white/[0.05] ring-1 ring-white/10">
-                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1.5" />
+    <footer className="bg-[var(--background)] border-t border-[var(--border-default)] py-16">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-[var(--surface-raised)] border border-[var(--border-default)]">
+                <Image src="/logo-transparent.png" alt="" fill className="object-contain p-0.5" />
               </div>
-              <div>
-                <span className="text-[15px] font-bold tracking-wider text-white">Hotels Vendors</span>
-                <span className="block text-[9px] text-white/30 tracking-[0.2em] uppercase">Digital Procurement Hub</span>
-              </div>
+              <span className="text-sm font-bold text-[var(--foreground)]">Hotels Vendors</span>
             </div>
-            <p className="text-[13px] text-white/30 max-w-xs leading-relaxed">
-              Egypt's first B2B digital procurement hub for hotels. ETA-compliant, AI-powered, and built for scale.
+            <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+              The Digital Procurement Hub for Egyptian Hospitality. 
+              Hotels, suppliers, logistics, and factoring — unified.
             </p>
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold mb-4">Product</div>
-            <div className="space-y-2.5">
-              {["Catalog", "Features", "Solutions", "ETA Compliance"].map((l) => (
-                <span key={l} className="block text-[13px] text-white/30 hover:text-white/60 transition-colors cursor-pointer">{l}</span>
+            <h4 className="text-xs font-semibold text-[var(--foreground)] uppercase tracking-wider mb-3">Product</h4>
+            <ul className="space-y-2">
+              {["Catalog", "Orders", "ETA E-Invoicing", "Authority Matrix", "Pricing"].map((l) => (
+                <li key={l}><a href="#" className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">{l}</a></li>
               ))}
-            </div>
+            </ul>
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold mb-4">Company</div>
-            <div className="space-y-2.5">
-              {["About", "Careers", "Contact", "Blog"].map((l) => (
-                <span key={l} className="block text-[13px] text-white/30 hover:text-white/60 transition-colors cursor-pointer">{l}</span>
+            <h4 className="text-xs font-semibold text-[var(--foreground)] uppercase tracking-wider mb-3">Company</h4>
+            <ul className="space-y-2">
+              {["About", "Careers", "Blog", "Contact", "Partners"].map((l) => (
+                <li key={l}><a href="#" className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">{l}</a></li>
               ))}
-            </div>
+            </ul>
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold mb-4">Legal</div>
-            <div className="space-y-2.5">
-              {["Privacy", "Terms", "Security"].map((l) => (
-                <span key={l} className="block text-[13px] text-white/30 hover:text-white/60 transition-colors cursor-pointer">{l}</span>
+            <h4 className="text-xs font-semibold text-[var(--foreground)] uppercase tracking-wider mb-3">Legal</h4>
+            <ul className="space-y-2">
+              {["Privacy", "Terms", "Security", "Compliance"].map((l) => (
+                <li key={l}><a href="#" className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">{l}</a></li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-[11px] text-white/25">© 2026 Hotels Vendors. All rights reserved.</div>
-          <div className="flex items-center gap-5 text-[11px] text-white/25">
-            <span className="flex items-center gap-1.5"><Shield className="w-3 h-3 text-[#22c55e]" /> SSL Secured</span>
-            <span className="flex items-center gap-1.5"><BadgeCheck className="w-3 h-3 text-[#3b82f6]" /> ISO 27001</span>
+        <div className="mt-12 pt-6 border-t border-[var(--border-default)] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] text-[var(--foreground-muted)]">© 2026 Hotels Vendors. All rights reserved.</p>
+          <div className="flex items-center gap-4 text-[var(--foreground-muted)]">
+            <svg className="w-4 h-4 hover:text-[var(--foreground)] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <svg className="w-4 h-4 hover:text-[var(--foreground)] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <svg className="w-4 h-4 hover:text-[var(--foreground)] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </div>
         </div>
       </div>
@@ -1026,86 +475,20 @@ function Footer() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   MAIN PAGE
-   ═══════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────
+   PAGE
+   ───────────────────────────────────────── */
 export default function LandingPage() {
-  const [activeTab, setActiveTab] = useState("product");
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "product": return <ProductTab />;
-      case "solutions": return <SolutionsTab />;
-      case "pricing": return <PricingTab />;
-      case "enterprise": return <EnterpriseTab />;
-      case "about": return <AboutTab />;
-      default: return <ProductTab />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-      <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
-
-      {/* Hero */}
-      <HeroSection onTabChange={handleTabChange} />
-
-      {/* Trust Bar */}
+    <main className="bg-[var(--background)] text-[var(--foreground)]">
+      <Navbar />
+      <Hero />
       <TrustBar />
-
-      {/* Demo Video */}
-      <DemoVideoSection />
-
-      {/* Tab Content */}
-      <div ref={contentRef} className="scroll-mt-[80px] bg-black text-white">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-32">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {renderTabContent()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Global CTA */}
-      <section className="py-24 border-t border-white/[0.06]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative rounded-3xl border border-white/[0.06] bg-white/[0.02] p-14 lg:p-20 text-center overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(220,38,38,0.06),transparent)]" />
-            <div className="relative">
-              <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-5 text-white">Ready to transform your procurement?</h2>
-              <p className="text-white/40 max-w-md mx-auto mb-10 text-lg">Join Egypt's leading hospitality procurement network.</p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Link href="/register" className="px-8 py-4 text-sm font-semibold rounded-xl bg-white text-black hover:bg-white/90 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-                  Start Free Trial <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/catalog" className="px-8 py-4 text-sm font-semibold rounded-xl border border-white/10 text-white/60 hover:bg-white/[0.03] hover:text-white transition-all flex items-center gap-2">
-                  Browse Catalog <Eye className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
+      <Features />
+      <HowItWorks />
+      <Pricing />
+      <CTA />
       <Footer />
-    </div>
+    </main>
   );
 }
