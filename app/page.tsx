@@ -148,17 +148,17 @@ function SectionBadge({ children }: { children: React.ReactNode }) {
 function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t: string) => void }) {
   const [mobileMenu, setMobileMenu] = useState(false);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-[72px] items-center justify-between">
+        <div className="flex h-[80px] items-center justify-between">
           {/* Logo — LARGER */}
-          <Link href="/" className="flex items-center gap-3.5">
-            <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-white/[0.05] ring-1 ring-white/10">
-              <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1.5" />
+          <Link href="/" className="flex items-center gap-4">
+            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-50 ring-1 ring-gray-200">
+              <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
             </div>
             <div>
-              <span className="text-[15px] font-bold tracking-wider text-white">Hotels Vendors</span>
-              <span className="hidden sm:block text-[9px] text-white/30 tracking-[0.2em] uppercase">Procurement Hub</span>
+              <span className="text-[16px] font-bold tracking-wider text-gray-900">Hotels Vendors</span>
+              <span className="hidden sm:block text-[10px] text-gray-400 tracking-[0.2em] uppercase">Procurement Hub</span>
             </div>
           </Link>
 
@@ -173,8 +173,8 @@ function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t
                   onClick={() => onTabChange(tab.id)}
                   className={`flex items-center gap-2 px-4 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                     isActive
-                      ? "bg-[#dc2626]/10 text-white border border-[#dc2626]/20"
-                      : "text-white/40 hover:text-white hover:bg-white/[0.03]"
+                      ? "bg-[#dc2626]/10 text-[#dc2626] border border-[#dc2626]/20"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -186,16 +186,16 @@ function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-white/50 hover:text-white transition-colors">
+            <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">
               Sign In
             </Link>
-            <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-white text-black hover:bg-white/90 transition-all hover:-translate-y-px">
+            <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-[#dc2626] text-white hover:bg-[#b91c1c] transition-all hover:-translate-y-px">
               Get Started
             </Link>
           </div>
 
           {/* Mobile Toggle */}
-          <button className="lg:hidden p-2 text-white/50" onClick={() => setMobileMenu(!mobileMenu)}>
+          <button className="lg:hidden p-2 text-gray-500" onClick={() => setMobileMenu(!mobileMenu)}>
             {mobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
@@ -208,7 +208,7 @@ function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-white/[0.06] bg-black/95 backdrop-blur-xl px-6 py-4 overflow-hidden"
+            className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-xl px-6 py-4 overflow-hidden"
           >
             <div className="space-y-1">
               {TABS.map((tab) => (
@@ -216,16 +216,16 @@ function Navbar({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t
                   key={tab.id}
                   onClick={() => { onTabChange(tab.id); setMobileMenu(false); }}
                   className={`block w-full text-left py-2.5 px-3 text-sm rounded-lg transition-colors ${
-                    activeTab === tab.id ? "text-white bg-[#dc2626]/10" : "text-white/50 hover:text-white"
+                    activeTab === tab.id ? "text-[#dc2626] bg-[#dc2626]/10" : "text-gray-500 hover:text-gray-900"
                   }`}
                 >
                   {tab.label}
                 </button>
               ))}
             </div>
-            <div className="pt-4 mt-4 border-t border-white/[0.06] flex gap-3">
-              <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-white/10 text-white/50">Sign In</Link>
-              <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-white text-black font-semibold">Get Started</Link>
+            <div className="pt-4 mt-4 border-t border-gray-200 flex gap-3">
+              <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-gray-200 text-gray-500">Sign In</Link>
+              <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-[#dc2626] text-white font-semibold">Get Started</Link>
             </div>
           </motion.div>
         )}
@@ -249,7 +249,7 @@ const SUPPLIER_HOOKS = [
   "Your sales, guaranteed. Your focus, production.",
 ];
 
-/* ─── Hero with Dual-Audience Hooks + Category Mosaic ─── */
+/* ─── Hero with Centered Logo + Slogan ─── */
 function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
   const [hookIndex, setHookIndex] = useState(0);
   const [isHotel, setIsHotel] = useState(true);
@@ -273,141 +273,113 @@ function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
   const audienceLabel = isHotel ? "For Hotels" : "For Suppliers";
   const audienceColor = isHotel ? "#3b82f6" : "#22c55e";
 
-  const categoryImages = [
-    { src: IMAGES.fnb, label: "F&B", sub: "Gourmet Supplies" },
-    { src: IMAGES.linens, label: "Linens", sub: "Bedding & Towels" },
-    { src: IMAGES.uniforms, label: "Uniforms", sub: "Staff Attire" },
-    { src: IMAGES.guestConsumables, label: "Amenities", sub: "Guest Supplies" },
-  ];
-
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background mosaic */}
-      <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
-        {categoryImages.map((cat, i) => (
-          <div key={cat.label} className="relative overflow-hidden">
-            <Image src={cat.src} alt={cat.label} fill className="object-cover opacity-20" />
-            <div className="absolute inset-0 bg-black/70" />
-          </div>
-        ))}
-      </div>
-      {/* Red glow accent */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#dc2626]/5 rounded-full blur-[150px]" />
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
+      {/* Subtle red glow accent */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#dc2626]/5 rounded-full blur-[150px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 w-full pt-28 pb-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Copy */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-[11px] font-medium text-white/40 tracking-wider uppercase">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-                </span>
-                Now Live in Egypt — 52+ Hotels Onboarded
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95]"
-            >
-              Procurement
-              <br />
-              <span className="text-[#ef4444]">Without</span>
-              <br />
-              <span className="text-white/50">The Pain.</span>
-            </motion.h1>
-
-            {/* Animated hook */}
-            <div className="mt-8 h-16">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`${isHotel}-${hookIndex}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex items-start gap-3"
-                >
-                  <span
-                    className="mt-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase shrink-0"
-                    style={{ backgroundColor: `${audienceColor}15`, color: audienceColor, border: `1px solid ${audienceColor}30` }}
-                  >
-                    {audienceLabel}
-                  </span>
-                  <p className="text-lg text-white/50 leading-snug">
-                    {currentHooks[hookIndex]}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-10 flex flex-wrap items-center gap-3"
-            >
-              <Link href="/register?type=hotel" className="group px-6 py-3.5 text-sm font-semibold rounded-xl bg-white text-black hover:bg-white/90 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-                <Building2 className="w-4 h-4" />
-                Join as Hotel
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link href="/register?type=supplier" className="group px-6 py-3.5 text-sm font-semibold rounded-xl border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/10 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-                <Factory className="w-4 h-4" />
-                Join as Supplier
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-
-            {/* Quick trust line */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="mt-6 text-[12px] text-white/25 flex items-center gap-4"
-            >
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> No credit card</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> 14-day free</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> Cancel anytime</span>
-            </motion.p>
-          </div>
-
-          {/* Right: Category Mosaic */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 w-full pt-32 pb-16">
+        <div className="flex flex-col items-center text-center">
+          {/* Live badge */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden lg:grid grid-cols-2 gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            {categoryImages.map((cat, i) => (
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-200 text-[11px] font-medium text-gray-500 tracking-wider uppercase">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
+              </span>
+              Now Live in Egypt — 52+ Hotels Onboarded
+            </span>
+          </motion.div>
+
+          {/* Large Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="mt-10"
+          >
+            <div className="relative w-40 h-40 sm:w-52 sm:h-52 mx-auto">
+              <div className="absolute inset-0 rounded-3xl bg-white border-2 border-gray-900 shadow-2xl shadow-gray-200 flex items-center justify-center">
+                <Image 
+                  src="/logo-transparent.png" 
+                  alt="Hotels Vendors" 
+                  width={180} 
+                  height={180} 
+                  className="object-contain p-4"
+                  priority
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Slogan */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900"
+          >
+            Smarter Together
+          </motion.h1>
+
+          {/* Animated hook */}
+          <div className="mt-6 h-14 max-w-xl mx-auto">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={cat.label}
+                key={`${isHotel}-${hookIndex}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
-                className="group relative h-48 rounded-2xl overflow-hidden border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500"
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-center gap-3"
               >
-                <Image src={cat.src} alt={cat.label} fill className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <div className="text-sm font-bold text-white">{cat.label}</div>
-                  <div className="text-[11px] text-white/40">{cat.sub}</div>
-                </div>
-                <div className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowRight className="w-3.5 h-3.5 text-white" />
-                </div>
+                <span
+                  className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase shrink-0"
+                  style={{ backgroundColor: `${audienceColor}15`, color: audienceColor, border: `1px solid ${audienceColor}30` }}
+                >
+                  {audienceLabel}
+                </span>
+                <p className="text-base text-gray-500 leading-snug">
+                  {currentHooks[hookIndex]}
+                </p>
               </motion.div>
-            ))}
+            </AnimatePresence>
+          </div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+          >
+            <Link href="/register?type=hotel" className="group px-6 py-3.5 text-sm font-semibold rounded-xl bg-[#dc2626] text-white hover:bg-[#b91c1c] transition-all hover:-translate-y-0.5 flex items-center gap-2">
+              <Building2 className="w-4 h-4" />
+              Join as Hotel
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/register?type=supplier" className="group px-6 py-3.5 text-sm font-semibold rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all hover:-translate-y-0.5 flex items-center gap-2">
+              <Factory className="w-4 h-4" />
+              Join as Supplier
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
+
+          {/* Quick trust line */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-6 text-[12px] text-gray-400 flex items-center justify-center gap-4"
+          >
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> No credit card</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> 14-day free</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-[#22c55e]" /> Cancel anytime</span>
+          </motion.p>
         </div>
 
         {/* Stats bar */}
@@ -415,7 +387,7 @@ function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl"
+          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
         >
           {[
             { val: "52+", label: "Hotels Onboarded", icon: <Building2 className="w-4 h-4" /> },
@@ -423,13 +395,13 @@ function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
             { val: "15M+", label: "EGP GMV Processed", icon: <CreditCard className="w-4 h-4" /> },
             { val: "99.9%", label: "ETA Compliant", icon: <FileCheck className="w-4 h-4" /> },
           ].map((s) => (
-            <div key={s.label} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/30">
+            <div key={s.label} className="flex items-center justify-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400">
                 {s.icon}
               </div>
               <div>
-                <div className="text-2xl font-bold text-white tracking-tight">{s.val}</div>
-                <div className="text-[11px] text-white/30">{s.label}</div>
+                <div className="text-2xl font-bold text-gray-900 tracking-tight">{s.val}</div>
+                <div className="text-[11px] text-gray-400">{s.label}</div>
               </div>
             </div>
           ))}
@@ -442,16 +414,16 @@ function HeroSection({ onTabChange }: { onTabChange: (t: string) => void }) {
 /* ─── Trust Bar with Hotel Logos ─── */
 function TrustBar() {
   return (
-    <section className="border-y border-white/[0.06] py-12 bg-black">
+    <section className="border-y border-gray-200 py-12 bg-gray-50">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-center text-[11px] text-white/25 uppercase tracking-[0.2em] mb-8">
+        <p className="text-center text-[11px] text-gray-400 uppercase tracking-[0.2em] mb-8">
           Trusted by leading hotels across Egypt
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {HOTELS.map((hotel) => (
             <div
               key={hotel.name}
-              className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] hover:border-white/[0.08] hover:bg-white/[0.04] transition-all duration-300"
+              className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all duration-300"
             >
               {/* Styled Logo Placeholder */}
               <div
@@ -460,9 +432,72 @@ function TrustBar() {
               >
                 {hotel.initials}
               </div>
-              <span className="text-[10px] text-white/40 text-center leading-tight group-hover:text-white/60 transition-colors">
+              <span className="text-[10px] text-gray-400 text-center leading-tight group-hover:text-gray-600 transition-colors">
                 {hotel.name}
               </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Demo Video Section ─── */
+function DemoVideoSection() {
+  return (
+    <section className="py-20 bg-white">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-10"
+        >
+          <SectionBadge>See It In Action</SectionBadge>
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mt-5 mb-4 text-gray-900">
+            Watch How Hotels Vendors Works
+          </h2>
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">
+            From catalog browsing to ETA-compliant invoicing — see the full procurement journey in 90 seconds.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-2xl bg-gray-100"
+        >
+          {/* Video Placeholder */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+            <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mb-4 cursor-pointer hover:bg-white/20 transition-all hover:scale-110">
+              <Play className="w-8 h-8 text-white ml-1" />
+            </div>
+            <p className="text-white/60 text-sm font-medium">Demo Video Coming Soon</p>
+            <p className="text-white/30 text-xs mt-1">90-second platform walkthrough</p>
+          </div>
+
+          {/* Corner accents */}
+          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#dc2626] text-white text-[10px] font-bold tracking-wider uppercase">
+            AI Demo
+          </div>
+        </motion.div>
+
+        {/* Feature bullets below video */}
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { label: "Smart Catalog Search", icon: <Search className="w-5 h-5" /> },
+            { label: "Auto PO Generation", icon: <FileCheck className="w-5 h-5" /> },
+            { label: "Real-Time Tracking", icon: <Truck className="w-5 h-5" /> },
+            { label: "ETA E-Invoicing", icon: <Receipt className="w-5 h-5" /> },
+          ].map((f) => (
+            <div key={f.label} className="flex items-center gap-3 text-gray-600">
+              <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center text-[#dc2626]">
+                {f.icon}
+              </div>
+              <span className="text-sm font-medium">{f.label}</span>
             </div>
           ))}
         </div>
@@ -1015,7 +1050,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white antialiased">
+    <div className="min-h-screen bg-gray-50 text-gray-900 antialiased">
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Hero */}
@@ -1024,8 +1059,11 @@ export default function LandingPage() {
       {/* Trust Bar */}
       <TrustBar />
 
+      {/* Demo Video */}
+      <DemoVideoSection />
+
       {/* Tab Content */}
-      <div ref={contentRef} className="scroll-mt-[80px]">
+      <div ref={contentRef} className="scroll-mt-[80px] bg-black text-white">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-32">
           <AnimatePresence mode="wait">
             <motion.div
