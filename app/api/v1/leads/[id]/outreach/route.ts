@@ -39,7 +39,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
   let channel = data.channel;
 
   // If no custom message provided, draft one with AI
-  if (!subject || !body) {
+  if (!subject || !messageBody) {
     const draft = await draftOutreach(params.id, auth.tenantId, params.id);
     if (!draft) {
       return success({ error: "Failed to draft outreach message" }, 500);
@@ -96,7 +96,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
     leadId: params.id,
     channel,
     subject,
-    body,
+    body: messageBody,
     status: data.autoSend ? "SENT" : "PENDING_APPROVAL",
     autoSend: data.autoSend,
   });
