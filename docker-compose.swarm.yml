@@ -22,6 +22,10 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
       - KIMI_API_KEY=${KIMI_API_KEY}
       - XAI_API_KEY=${XAI_API_KEY}
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.1:8b}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - OPENCLAW_URL=http://openclaw:8000
       - AGENT0_URL=http://agent0:9000
       - EMAIL_SERVICE=${EMAIL_SERVICE}
@@ -146,6 +150,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - ollama
       - openclaw
       - agent0
     networks:
@@ -155,6 +160,30 @@ services:
       resources:
         limits:
           memory: 1G
+
+  # ── Ollama — Local LLM Engine ──
+  ollama:
+    image: ollama/ollama:latest
+    container_name: hv-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_NUM_PARALLEL=2
+    networks:
+      - hv-network
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    # GPU support (optional - uncomment if VPS has GPU)
+    # runtime: nvidia
+    # devices:
+    #   - /dev/nvidia0:/dev/nvidia0
+    #   - /dev/nvidiactl:/dev/nvidiactl
 
   # ── Nginx Reverse Proxy + SSL ──
   nginx:
@@ -190,6 +219,7 @@ volumes:
   openclaw_data:
   openclaw_screenshots:
   agent0_memory:
+  ollama_data:
   app_logs:
   app_uploads:
   certbot_data:

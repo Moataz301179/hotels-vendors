@@ -38,6 +38,63 @@ This is a **Digital Procurement Hub for the B2B hotel sector**. It is not a simp
 | Testing | None | No test framework is installed. Agents assigned to testing must add one. |
 | Database | Prisma + SQLite (dev) → PostgreSQL (prod) | Schema migration to multi-tenant model is **IN PROGRESS**. See System Guardrails. |
 | Auth / RBAC | Custom JWT + Middleware | Tenant-aware sessions with server-side RBAC. **NO client-side role switching.** |
+| Swarm LLM | Ollama (local/VPS) | **PRIMARY** — zero-cost inference via Docker. Fallback chain: Groq → OpenRouter → Kimi/xAI. |
+| Job Queue | BullMQ + Redis | 4 squad queues (growth, operations, intelligence, execution). |
+| Agent Memory | Prisma + Redis | Hybrid: Prisma persistent + Redis hot cache with confidence scoring. |
+
+## Swarm LLM Architecture (v3 — Ollama Primary)
+
+### Provider Hierarchy
+
+The swarm uses a cascading fallback system. **Ollama is the primary provider** — it runs locally on the VPS at zero API cost.
+
+```
+Ollama (local/VPS)     → PRIMARY    → zero cost, zero rate limits
+  ↓ (down / slow)
+Groq (free tier)       → FALLBACK 1 → 20 req/min, 1M tok/day, no CC required
+  ↓ (rate limited / down)
+OpenRouter             → FALLBACK 2 → $5-10 credits, 100+ models
+  ↓ (no credits)
+Kimi (Moonshot)        → FALLBACK 3 → pay-as-you-go, funded only
+  ↓ (no credits)
+xAI (Grok)             → FALLBACK 4 → pay-as-you-go, funded only
+```
+
+### Configuration
+
+Set in `.env` or Docker Compose environment:
+
+```bash
+# REQUIRED — Ollama runs inside Docker, no API key needed
+OLLAMA_URL=http://ollama:11434
+OLLAMA_MODEL=llama3.2:3b       # CPU VPS: 3B params for speed
+# OLLAMA_MODEL=llama3.1:8b     # GPU VPS: 8B+ params for quality
+
+# OPTIONAL — Free fallback, highly recommended
+GROQ_API_KEY=gsk_...             # Get free at https://console.groq.com
+
+# OPTIONAL — Paid fallbacks
+OPENROUTER_API_KEY=sk-or-v1-...
+KIMI_API_KEY=sk-...
+XAI_API_KEY=xai-...
+```
+
+### Ollama Model Selection Guide
+
+| VPS Type | Recommended Model | Params | Reason |
+|---|---|---|---|
+| CPU-only (2-4 vCPU, 8GB RAM) | `llama3.2:3b` or `phi3:3.8b` | 3-4B | Fast enough for swarm tasks (~5-10s) |
+| CPU-only (4+ vCPU, 16GB RAM) | `llama3.1:8b` or `gemma4:8b` | 8B | Better quality, ~15-30s per call |
+| GPU (NVIDIA T4/A10) | `llama3.1:8b`, `phi4:14.7b` | 8-15B | Near-instant, highest quality |
+
+### Key Files
+
+- `lib/swarm/model-router.ts` — Provider router with circuit breaker, timeout handling, health tracking
+- `lib/swarm/director.ts` — Strategic orchestrator (The Winning Horse)
+- `lib/swarm/scheduler.ts` — BullMQ job queue management
+- `lib/swarm/memory.ts` — Hybrid persistent + cache memory layer
+- `lib/swarm/agents/index.ts` — 15 agent definitions across 4 squads
+- `docker-compose.swarm.yml` — Full Docker stack including Ollama service
 
 ## Project Structure
 

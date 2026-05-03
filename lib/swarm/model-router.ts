@@ -1,6 +1,6 @@
 /**
- * Swarm Model Router
- * Kimi 2.6 primary, Grok 4.1 Fast fallback, OpenRouter universal fallback
+ * Swarm Model Router v3 — Ollama Primary Architecture
+ * Ollama (local/VPS) → Groq (free tier) → OpenRouter (universal) → Kimi/xAI (if funded)
  * Circuit breaker pattern for resilience
  */
 
@@ -14,29 +14,73 @@ interface LLMMessage {
 interface ModelConfig {
   provider: string;
   model: string;
-  apiKey: string;
+  apiKey: string | undefined;
   baseUrl: string;
   isPrimary: boolean;
   isFallback: boolean;
   headers?: Record<string, string>;
+  // Ollama uses different response shape
+  isOllama?: boolean;
 }
 
 function buildModelConfigs(): ModelConfig[] {
   const configs: ModelConfig[] = [];
+  const appUrl = process.env.APP_URL || "https://hotelsvendors.com";
 
-  // Kimi via Moonshot
+  // ── 1. OLLAMA (Primary — local/VPS, zero cost) ──
+  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+  const ollamaModel = process.env.OLLAMA_MODEL || "phi4:latest";
+  configs.push({
+    provider: "ollama",
+    model: ollamaModel,
+    apiKey: undefined, // Ollama requires no API key
+    baseUrl: `${ollamaUrl}/api/chat`,
+    isPrimary: true,
+    isFallback: false,
+    isOllama: true,
+  });
+
+  // ── 2. GROQ (Free tier fallback — 20 req/min, 1M tok/day) ──
+  if (process.env.GROQ_API_KEY) {
+    configs.push({
+      provider: "groq",
+      model: "llama-3.3-70b-versatile",
+      apiKey: process.env.GROQ_API_KEY,
+      baseUrl: "https://api.groq.com/openai/v1/chat/completions",
+      isPrimary: false,
+      isFallback: true,
+    });
+  }
+
+  // ── 3. OPENROUTER (Universal fallback, accepts $5-10 credits) ──
+  if (process.env.OPENROUTER_API_KEY) {
+    configs.push({
+      provider: "openrouter",
+      model: "meta-llama/llama-3.3-70b-instruct",
+      apiKey: process.env.OPENROUTER_API_KEY,
+      baseUrl: "https://openrouter.ai/api/v1/chat/completions",
+      isPrimary: false,
+      isFallback: true,
+      headers: {
+        "HTTP-Referer": appUrl,
+        "X-Title": "Hotels Vendors Swarm",
+      },
+    });
+  }
+
+  // ── 4. KIMI (Funded fallback only) ──
   if (process.env.KIMI_API_KEY) {
     configs.push({
       provider: "kimi",
       model: "kimi-k2-6",
       apiKey: process.env.KIMI_API_KEY,
       baseUrl: "https://api.moonshot.ai/v1/chat/completions",
-      isPrimary: true,
-      isFallback: false,
+      isPrimary: false,
+      isFallback: true,
     });
   }
 
-  // Grok via xAI
+  // ── 5. XAI/GROK (Funded fallback only) ──
   if (process.env.XAI_API_KEY) {
     configs.push({
       provider: "xai",
@@ -45,22 +89,6 @@ function buildModelConfigs(): ModelConfig[] {
       baseUrl: "https://api.x.ai/v1/chat/completions",
       isPrimary: false,
       isFallback: true,
-    });
-  }
-
-  // OpenRouter — universal fallback (supports Kimi, Grok, Claude, GPT, etc.)
-  if (process.env.OPENROUTER_API_KEY) {
-    configs.push({
-      provider: "openrouter",
-      model: "moonshotai/kimi-k2-6",
-      apiKey: process.env.OPENROUTER_API_KEY,
-      baseUrl: "https://openrouter.ai/api/v1/chat/completions",
-      isPrimary: false,
-      isFallback: true,
-      headers: {
-        "HTTP-Referer": process.env.APP_URL || "https://hotelsvendors.com",
-        "X-Title": "Hotels Vendors Swarm",
-      },
     });
   }
 
@@ -115,7 +143,7 @@ async function updateModelHealth(provider: string, model: string, success: boole
         lastFailureAt: success ? undefined : new Date(),
         failCount: success ? 0 : { increment: 1 },
         totalCalls: { increment: 1 },
-        avgLatencyMs: latencyMs,
+        avgLatencyMs: latencyMs, // Simplified — could average with existing
       },
       create: {
         provider,
@@ -123,60 +151,114 @@ async function updateModelHealth(provider: string, model: string, success: boole
         status: success ? "HEALTHY" : "DEGRADED",
         lastSuccessAt: success ? new Date() : undefined,
         lastFailureAt: success ? undefined : new Date(),
-        isPrimary: provider === "kimi",
-        isFallback: provider === "xai" || provider === "openrouter",
+        isPrimary: provider === "ollama",
+        isFallback: provider !== "ollama",
       },
     });
   } catch (e) {
-    console.error("[ModelHealth] Failed to update:", e);
+    // Silently ignore DB errors — LLM call must not fail because of metrics
   }
 }
 
-async function callProvider(config: ModelConfig, messages: LLMMessage[], temperature: number, maxTokens: number): Promise<{ content: string; tokensUsed?: number; provider: string }> {
+async function callProvider(
+  config: ModelConfig,
+  messages: LLMMessage[],
+  temperature: number,
+  maxTokens: number,
+  timeoutMs?: number
+): Promise<{ content: string; tokensUsed?: number; provider: string }> {
   const start = Date.now();
-  const body = {
-    model: config.model,
-    messages,
-    temperature,
-    max_tokens: maxTokens,
-  };
+  const timeout = timeoutMs || DEFAULT_TIMEOUTS[config.provider] || 30_000;
+
+  // Ollama uses streaming API by default; request non-streaming
+  const body = config.isOllama
+    ? {
+        model: config.model,
+        messages,
+        stream: false,
+        options: {
+          temperature,
+          num_predict: maxTokens,
+        },
+      }
+    : {
+        model: config.model,
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+      };
 
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${config.apiKey}`,
     "Content-Type": "application/json",
     ...config.headers,
   };
-
-  const res = await fetch(config.baseUrl, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`${config.provider} HTTP ${res.status}: ${text}`);
+  if (config.apiKey) {
+    headers.Authorization = `Bearer ${config.apiKey}`;
   }
 
-  const data = await res.json();
-  const latency = Date.now() - start;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  recordSuccess(config.provider);
-  await updateModelHealth(config.provider, config.model, true, latency);
+  try {
+    const res = await fetch(config.baseUrl, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
 
-  return {
-    content: data.choices?.[0]?.message?.content || "",
-    tokensUsed: data.usage?.total_tokens,
-    provider: config.provider,
-  };
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`${config.provider} HTTP ${res.status}: ${text}`);
+    }
+
+    const data = await res.json();
+    const latency = Date.now() - start;
+
+    recordSuccess(config.provider);
+    await updateModelHealth(config.provider, config.model, true, latency);
+
+    // Ollama response shape: { message: { role, content }, done, ... }
+    // OpenAI-compatible: { choices: [{ message: { content } }], usage: { total_tokens } }
+    const content = config.isOllama
+      ? data.message?.content || ""
+      : data.choices?.[0]?.message?.content || "";
+
+    const tokensUsed = config.isOllama
+      ? (data.prompt_eval_count || 0) + (data.eval_count || 0)
+      : data.usage?.total_tokens;
+
+    return {
+      content,
+      tokensUsed,
+      provider: config.provider,
+    };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error(`${config.provider} request timed out after ${timeout}ms`);
+    }
+    throw error;
+  }
 }
 
 export interface RouterOptions {
   temperature?: number;
   maxTokens?: number;
   timeoutMs?: number;
-  preferredModel?: "kimi" | "xai" | "openrouter" | "auto";
+  preferredModel?: "ollama" | "groq" | "openrouter" | "kimi" | "xai" | "auto";
 }
+
+// Default timeouts per provider
+const DEFAULT_TIMEOUTS: Record<string, number> = {
+  ollama: 120_000,   // 2 min — local models can be slow on CPU
+  groq: 30_000,      // 30 sec — fast API
+  openrouter: 45_000, // 45 sec
+  kimi: 30_000,
+  xai: 30_000,
+};
 
 export interface RouterResult {
   content: string;
@@ -188,7 +270,7 @@ export interface RouterResult {
 }
 
 /**
- * Execute an LLM call with automatic fallback
+ * Execute an LLM call with automatic fallback chain
  */
 export async function executeLLM(
   systemPrompt: string,
@@ -208,12 +290,10 @@ export async function executeLLM(
 
   // Determine order
   let order: ModelConfig[];
-  if (preferredModel === "kimi") {
-    order = currentModels.filter((m) => m.provider === "kimi").concat(currentModels.filter((m) => m.provider !== "kimi"));
-  } else if (preferredModel === "xai") {
-    order = currentModels.filter((m) => m.provider === "xai").concat(currentModels.filter((m) => m.provider !== "xai"));
-  } else if (preferredModel === "openrouter") {
-    order = currentModels.filter((m) => m.provider === "openrouter").concat(currentModels.filter((m) => m.provider !== "openrouter"));
+  if (preferredModel !== "auto") {
+    order = currentModels
+      .filter((m) => m.provider === preferredModel)
+      .concat(currentModels.filter((m) => m.provider !== preferredModel));
   } else {
     order = currentModels.filter((m) => m.isPrimary).concat(currentModels.filter((m) => m.isFallback));
   }
@@ -221,7 +301,8 @@ export async function executeLLM(
   let lastError: Error | null = null;
 
   for (const model of order) {
-    if (!model.apiKey) {
+    // Ollama doesn't need an API key; others do
+    if (model.provider !== "ollama" && !model.apiKey) {
       console.warn(`[ModelRouter] ${model.provider} API key missing, skipping`);
       continue;
     }
@@ -233,7 +314,7 @@ export async function executeLLM(
     }
 
     try {
-      const result = await callProvider(model, messages, temperature, maxTokens);
+      const result = await callProvider(model, messages, temperature, maxTokens, options.timeoutMs);
       const latency = Date.now() - start;
 
       return {
@@ -252,13 +333,18 @@ export async function executeLLM(
     }
   }
 
-  throw lastError || new Error("All LLM providers failed. Please configure at least one API key: KIMI_API_KEY, XAI_API_KEY, or OPENROUTER_API_KEY.");
+  throw lastError || new Error(
+    "All LLM providers failed. Ensure Ollama is running (docker compose up ollama) " +
+    "or configure a fallback: GROQ_API_KEY, OPENROUTER_API_KEY, KIMI_API_KEY, or XAI_API_KEY."
+  );
 }
 
 /**
  * Quick health check for all models
  */
-export async function checkModelHealth(): Promise<Array<{ provider: string; model: string; healthy: boolean; circuitOpen: boolean }>> {
+export async function checkModelHealth(): Promise<
+  Array<{ provider: string; model: string; healthy: boolean; circuitOpen: boolean }>
+> {
   const currentModels = buildModelConfigs();
   return currentModels.map((m) => ({
     provider: m.provider,
@@ -266,4 +352,45 @@ export async function checkModelHealth(): Promise<Array<{ provider: string; mode
     healthy: !circuitState.get(m.provider)?.open,
     circuitOpen: !!circuitState.get(m.provider)?.open,
   }));
+}
+
+/**
+ * Pull a model into Ollama (call this during VPS setup)
+ */
+export async function pullOllamaModel(model: string = process.env.OLLAMA_MODEL || "phi4:latest"): Promise<boolean> {
+  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+  try {
+    const res = await fetch(`${ollamaUrl}/api/pull`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model, stream: false }),
+    });
+    if (!res.ok) {
+      console.error(`[Ollama] Failed to pull ${model}:`, await res.text());
+      return false;
+    }
+    console.log(`[Ollama] Successfully pulled ${model}`);
+    return true;
+  } catch (e) {
+    console.error(`[Ollama] Pull error for ${model}:`, e);
+    return false;
+  }
+}
+
+/**
+ * List available Ollama models
+ */
+export async function listOllamaModels(): Promise<Array<{ name: string; size: string }>> {
+  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+  try {
+    const res = await fetch(`${ollamaUrl}/api/tags`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.models || []).map((m: any) => ({
+      name: m.name,
+      size: m.size ? `${Math.round(m.size / 1024 / 1024)}MB` : "unknown",
+    }));
+  } catch {
+    return [];
+  }
 }
