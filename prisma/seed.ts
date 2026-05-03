@@ -55,6 +55,19 @@ async function main() {
     { code: "user:read", name: "View Users", description: "View user list" },
     { code: "user:update", name: "Update Users", description: "Edit user details" },
     { code: "user:delete", name: "Delete Users", description: "Deactivate users" },
+    // Leads / Acquisition
+    { code: "lead:read", name: "View Leads", description: "View supplier leads" },
+    { code: "lead:create", name: "Create Leads", description: "Add and acquire leads" },
+    { code: "lead:update", name: "Update Leads", description: "Edit lead details" },
+    { code: "lead:delete", name: "Delete Leads", description: "Remove leads" },
+    { code: "lead:enrich", name: "Enrich Leads", description: "AI-enrich lead data" },
+    { code: "lead:outreach", name: "Outreach Leads", description: "Send outreach messages" },
+    { code: "lead:convert", name: "Convert Leads", description: "Convert leads to suppliers" },
+    // Suppliers
+    { code: "supplier:create", name: "Create Suppliers", description: "Add new suppliers" },
+    { code: "supplier:read", name: "View Suppliers", description: "View supplier directory" },
+    { code: "supplier:update", name: "Update Suppliers", description: "Edit supplier details" },
+    { code: "supplier:delete", name: "Delete Suppliers", description: "Remove suppliers" },
     // Reports / Admin
     { code: "admin:read", name: "View Admin Dashboard", description: "Access admin dashboard" },
     { code: "admin:manage_tenants", name: "Manage Tenants", description: "Create and manage tenants" },
@@ -82,7 +95,7 @@ async function main() {
   // ─────────────────────────────────────────
 
   const roleDefs = [
-    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read"] },
+    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete"] },
     { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
     { name: "Hotel Manager", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "product:read", "invoice:read", "invoice:submit_eta", "user:read", "user:update", "report:read", "shipping:read", "factoring:inquire"] },
     { name: "Department Head", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "product:read", "invoice:read", "user:read"] },

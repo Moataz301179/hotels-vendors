@@ -1677,6 +1677,9 @@ model Lead {
   convertedAt DateTime?
   convertedToId String?  // User ID or Supplier ID if converted
 
+  // Relations
+  outreachLogs OutreachLog[]
+
   // Tenant
   tenantId    String
 
@@ -1733,6 +1736,7 @@ model OutreachLog {
 
   // Who
   leadId      String?
+  lead        Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
   leadName    String?
   recipientEmail String?
   recipientPhone String?

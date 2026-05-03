@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { executeLLM } from "./model-router";
 import { getMemoryContext, storeMemory } from "./memory";
 import { recordSwarmEvent } from "./monitoring";
+import { runAcquisition } from "./acquisition-engine";
 
 // ── Queues ──
 export const swarmQueues = {
@@ -170,6 +171,32 @@ export function createSwarmWorker(squad: string) {
           openclawResult = await executeOpenClaw(payload.openclawAction);
         }
 
+        // Execute acquisition engine if context contains acquisition run
+        let acquisitionResult = null;
+        if (payload.context?.acquisitionRun) {
+          const runConfig = payload.context.acquisitionRun as {
+            sourceIds: string[];
+            maxLeadsPerSource: number;
+            autoEnrich: boolean;
+            autoOutreach: boolean;
+            dryRun: boolean;
+          };
+          const tenantId = String(payload.context.tenantId || "platform");
+          acquisitionResult = await runAcquisition(
+            {
+              id: `scheduled_${Date.now()}`,
+              sourceIds: runConfig.sourceIds,
+              maxLeadsPerSource: runConfig.maxLeadsPerSource,
+              options: {
+                autoEnrich: runConfig.autoEnrich,
+                autoOutreach: runConfig.autoOutreach,
+                dryRun: runConfig.dryRun,
+              },
+            },
+            tenantId
+          );
+        }
+
         const duration = Date.now() - start;
 
         // Update DB
@@ -183,6 +210,7 @@ export function createSwarmWorker(squad: string) {
               output: JSON.stringify({
                 llmResult: result,
                 openclawResult,
+                acquisitionResult,
               }),
               findings: result.content.substring(0, 2000),
             },
@@ -287,15 +315,26 @@ Output ONLY valid JSON.`,
     { repeat: { cron: "0 6 * * *", tz: "Africa/Cairo" }, jobId: "director-daily-plan" }
   );
 
-  // Growth: Lead scouting every 4 hours
+  // Growth: Lead scouting every 4 hours via Acquisition Engine
   await addSwarmJob(
     {
       jobType: "lead_scout",
       agentId: "lead-scout",
       agentName: "Lead Scout",
       squad: "growth",
-      systemPrompt: `You are a lead generation specialist for Hotels Vendors. Your job is to identify high-potential hotels and suppliers in Egypt. You analyze data sources and produce structured lead lists with enrichment data. Focus on: Cairo hotels (5-star, 200+ rooms), 6th of October suppliers (F&B, linens, chemicals), North Coast seasonal properties.`,
-      userPrompt: `Search for and identify 10 new high-priority leads (mix of hotels and suppliers) in Egypt. For each provide: name, city, type, estimated tier, discovery source, and initial outreach angle. Output as structured JSON array.`,
+      systemPrompt: `You are the Lead Scout agent. Your mission: discover high-quality suppliers from Egyptian industrial directories using browser automation. You orchestrate the full acquisition pipeline: discover → enrich → dedupe → store → score → draft outreach.`,
+      userPrompt: `Execute automated supplier acquisition from top-priority sources. Target: 6th of October and 10th of Ramadan industrial directories.`,
+      context: {
+        acquisitionRun: {
+          sourceIds: ["industrialzones-6oct", "industrialzones-10ramadan", "yellowpages-eg-hospitality"],
+          maxLeadsPerSource: 15,
+          autoEnrich: true,
+          autoOutreach: false,
+          dryRun: false,
+        },
+        tenantId: "platform", // Platform-wide acquisition
+      },
+      requiresApproval: false,
       memoryCategory: "lead",
     },
     { repeat: { cron: "0 */4 * * *", tz: "Africa/Cairo" }, jobId: "growth-lead-scout" }
