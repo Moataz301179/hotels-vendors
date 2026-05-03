@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/components/app/auth-context";
+// Client auth context removed — auth is server-side only per G2
 import { Hotel, Factory, Landmark, Truck, ArrowRight } from "lucide-react";
 
 const DEMO_ACCOUNTS = [
@@ -14,7 +14,6 @@ const DEMO_ACCOUNTS = [
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,26 +23,65 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const result = await login(email, password);
-    setLoading(false);
-    if (result.success) {
-      router.push("/dashboard");
-      router.refresh();
-    } else {
-      setError(result.error || "Login failed");
+    try {
+      const res = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
+      const json = await res.json();
+      setLoading(false);
+      if (json.success && json.data?.user) {
+        // Redirect based on platform role
+        const role = json.data.user.platformRole;
+        const rolePaths: Record<string, string> = {
+          HOTEL: "/hotel",
+          SUPPLIER: "/supplier",
+          FACTORING: "/factoring",
+          SHIPPING: "/shipping",
+          ADMIN: "/admin",
+        };
+        router.push(rolePaths[role] || "/hotel");
+        router.refresh();
+      } else {
+        setError(json.error || "Login failed");
+      }
+    } catch {
+      setLoading(false);
+      setError("Network error");
     }
   }
 
   async function demoLogin(demoEmail: string, demoPassword: string) {
     setError("");
     setLoading(true);
-    const result = await login(demoEmail, demoPassword);
-    setLoading(false);
-    if (result.success) {
-      router.push("/dashboard");
-      router.refresh();
-    } else {
-      setError(result.error || "Demo login failed");
+    try {
+      const res = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: demoEmail, password: demoPassword }),
+        credentials: "include",
+      });
+      const json = await res.json();
+      setLoading(false);
+      if (json.success && json.data?.user) {
+        const role = json.data.user.platformRole;
+        const rolePaths: Record<string, string> = {
+          HOTEL: "/hotel",
+          SUPPLIER: "/supplier",
+          FACTORING: "/factoring",
+          SHIPPING: "/shipping",
+          ADMIN: "/admin",
+        };
+        router.push(rolePaths[role] || "/hotel");
+        router.refresh();
+      } else {
+        setError(json.error || "Demo login failed");
+      }
+    } catch {
+      setLoading(false);
+      setError("Network error");
     }
   }
 

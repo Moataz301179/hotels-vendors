@@ -37,14 +37,24 @@ export interface AuthContext {
 }
 
 export async function authenticate(request: NextRequest): Promise<AuthContext> {
-  const token = await getSessionToken();
+  // Primary: read from session cookie
+  let token = await getSessionToken();
+
+  // Fallback: read from middleware-injected header (edge-verified)
+  if (!token) {
+    const headerToken = request.headers.get("x-session-token");
+    if (headerToken) token = headerToken;
+  }
+
   if (!token) {
     throw new ApiError("Unauthorized", 401);
   }
+
   const session = await verifySession(token);
   if (!session) {
     throw new ApiError("Invalid or expired session", 401);
   }
+
   // Tenant ID comes from the JWT session — NEVER trust client-sent headers
   return { userId: session.userId, platformRole: session.platformRole, tenantId: session.tenantId };
 }
