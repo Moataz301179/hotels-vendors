@@ -4,34 +4,23 @@
  * Usage: npx tsx scripts/test-ollama.ts
  */
 
-import { executeLLM, checkModelHealth, listOllamaModels, pullOllamaModel } from "../lib/swarm/model-router";
+import { executeLLM, getProviderHealth } from "../lib/swarm/model-router";
 
 async function main() {
   console.log("═══════════════════════════════════════════════════");
   console.log("  🧠 Ollama Integration Test");
   console.log("═══════════════════════════════════════════════════\n");
 
-  // 1. List available models
-  console.log("[1/4] Checking Ollama models...");
-  const models = await listOllamaModels();
-  if (models.length === 0) {
-    console.log("  ⚠️  No models found. Pulling llama3.1:8b...");
-    await pullOllamaModel("llama3.1:8b");
-  } else {
-    console.log(`  ✅ Found ${models.length} model(s):`);
-    models.forEach((m) => console.log(`     • ${m.name} (${m.size})`));
-  }
-
-  // 2. Health check
-  console.log("\n[2/4] Checking model health...");
-  const health = await checkModelHealth();
+  // 1. Health check
+  console.log("[1/4] Checking provider health...");
+  const health = getProviderHealth();
   health.forEach((h) => {
     const status = h.circuitOpen ? "🔴 OPEN" : "🟢 OK";
     console.log(`  ${status} ${h.provider}/${h.model}`);
   });
 
-  // 3. Test simple prompt
-  console.log("\n[3/4] Testing simple prompt...");
+  // 2. Test simple prompt
+  console.log("\n[2/3] Testing simple prompt...");
   try {
     const result = await executeLLM(
       "You are a helpful assistant. Respond in 1 sentence.",
@@ -45,8 +34,8 @@ async function main() {
     console.error("  ❌ Failed:", (e as Error).message);
   }
 
-  // 4. Test complex prompt (Director-style)
-  console.log("\n[4/4] Testing Director-style strategic prompt...");
+  // 3. Test complex prompt (Director-style)
+  console.log("\n[3/3] Testing Director-style strategic prompt...");
   try {
     const result = await executeLLM(
       `You are The Director — the supreme orchestrator of Hotels Vendors, a B2B procurement platform for Egyptian hospitality.
