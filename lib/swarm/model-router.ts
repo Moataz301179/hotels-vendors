@@ -1,6 +1,6 @@
 /**
  * Swarm Model Router
- * Kimi 2.6 primary, Grok 4.1 Fast fallback
+ * Kimi 2.6 primary, Grok 4.1 Fast fallback, OpenRouter universal fallback
  * Circuit breaker pattern for resilience
  */
 
@@ -12,32 +12,62 @@ interface LLMMessage {
 }
 
 interface ModelConfig {
-  provider: "kimi" | "xai";
+  provider: string;
   model: string;
   apiKey: string;
   baseUrl: string;
   isPrimary: boolean;
   isFallback: boolean;
+  headers?: Record<string, string>;
 }
 
-const MODELS: ModelConfig[] = [
-  {
-    provider: "kimi",
-    model: "kimi-k2-6",
-    apiKey: process.env.KIMI_API_KEY || "",
-    baseUrl: "https://api.moonshot.cn/v1/chat/completions",
-    isPrimary: true,
-    isFallback: false,
-  },
-  {
-    provider: "xai",
-    model: "grok-4-1-fast",
-    apiKey: process.env.XAI_API_KEY || "",
-    baseUrl: "https://api.x.ai/v1/chat/completions",
-    isPrimary: false,
-    isFallback: true,
-  },
-];
+function buildModelConfigs(): ModelConfig[] {
+  const configs: ModelConfig[] = [];
+
+  // Kimi via Moonshot
+  if (process.env.KIMI_API_KEY) {
+    configs.push({
+      provider: "kimi",
+      model: "kimi-k2-6",
+      apiKey: process.env.KIMI_API_KEY,
+      baseUrl: "https://api.moonshot.cn/v1/chat/completions",
+      isPrimary: true,
+      isFallback: false,
+    });
+  }
+
+  // Grok via xAI
+  if (process.env.XAI_API_KEY) {
+    configs.push({
+      provider: "xai",
+      model: "grok-4-1-fast",
+      apiKey: process.env.XAI_API_KEY,
+      baseUrl: "https://api.x.ai/v1/chat/completions",
+      isPrimary: false,
+      isFallback: true,
+    });
+  }
+
+  // OpenRouter — universal fallback (supports Kimi, Grok, Claude, GPT, etc.)
+  if (process.env.OPENROUTER_API_KEY) {
+    configs.push({
+      provider: "openrouter",
+      model: "moonshotai/kimi-k2-6",
+      apiKey: process.env.OPENROUTER_API_KEY,
+      baseUrl: "https://openrouter.ai/api/v1/chat/completions",
+      isPrimary: false,
+      isFallback: true,
+      headers: {
+        "HTTP-Referer": process.env.APP_URL || "https://hotelsvendors.com",
+        "X-Title": "Hotels Vendors Swarm",
+      },
+    });
+  }
+
+  return configs;
+}
+
+const MODELS = buildModelConfigs();
 
 // Circuit breaker state (in-memory, per-process)
 const circuitState = new Map<string, { failCount: number; lastFailAt: number; open: boolean }>();
@@ -94,7 +124,7 @@ async function updateModelHealth(provider: string, model: string, success: boole
         lastSuccessAt: success ? new Date() : undefined,
         lastFailureAt: success ? undefined : new Date(),
         isPrimary: provider === "kimi",
-        isFallback: provider === "xai",
+        isFallback: provider === "xai" || provider === "openrouter",
       },
     });
   } catch (e) {
@@ -111,12 +141,15 @@ async function callProvider(config: ModelConfig, messages: LLMMessage[], tempera
     max_tokens: maxTokens,
   };
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${config.apiKey}`,
+    "Content-Type": "application/json",
+    ...config.headers,
+  };
+
   const res = await fetch(config.baseUrl, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(body),
   });
 
@@ -142,7 +175,7 @@ export interface RouterOptions {
   temperature?: number;
   maxTokens?: number;
   timeoutMs?: number;
-  preferredModel?: "kimi" | "xai" | "auto";
+  preferredModel?: "kimi" | "xai" | "openrouter" | "auto";
 }
 
 export interface RouterResult {
@@ -170,14 +203,19 @@ export async function executeLLM(
     { role: "user", content: userPrompt },
   ];
 
+  // Refresh configs in case env vars changed
+  const currentModels = buildModelConfigs();
+
   // Determine order
   let order: ModelConfig[];
   if (preferredModel === "kimi") {
-    order = MODELS.filter((m) => m.provider === "kimi").concat(MODELS.filter((m) => m.provider !== "kimi"));
+    order = currentModels.filter((m) => m.provider === "kimi").concat(currentModels.filter((m) => m.provider !== "kimi"));
   } else if (preferredModel === "xai") {
-    order = MODELS.filter((m) => m.provider === "xai").concat(MODELS.filter((m) => m.provider !== "xai"));
+    order = currentModels.filter((m) => m.provider === "xai").concat(currentModels.filter((m) => m.provider !== "xai"));
+  } else if (preferredModel === "openrouter") {
+    order = currentModels.filter((m) => m.provider === "openrouter").concat(currentModels.filter((m) => m.provider !== "openrouter"));
   } else {
-    order = MODELS.filter((m) => m.isPrimary).concat(MODELS.filter((m) => m.isFallback));
+    order = currentModels.filter((m) => m.isPrimary).concat(currentModels.filter((m) => m.isFallback));
   }
 
   let lastError: Error | null = null;
@@ -214,14 +252,15 @@ export async function executeLLM(
     }
   }
 
-  throw lastError || new Error("All LLM providers failed");
+  throw lastError || new Error("All LLM providers failed. Please configure at least one API key: KIMI_API_KEY, XAI_API_KEY, or OPENROUTER_API_KEY.");
 }
 
 /**
  * Quick health check for all models
  */
 export async function checkModelHealth(): Promise<Array<{ provider: string; model: string; healthy: boolean; circuitOpen: boolean }>> {
-  return MODELS.map((m) => ({
+  const currentModels = buildModelConfigs();
+  return currentModels.map((m) => ({
     provider: m.provider,
     model: m.model,
     healthy: !circuitState.get(m.provider)?.open,

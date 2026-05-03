@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>هوتيلز فيندورز — حلول المشتريات الذكية</title>
+  <style>
+    body { margin: 0; padding: 0; background: #0a0a0a; font-family: 'Inter', 'Noto Sans Arabic', -apple-system, sans-serif; }
+    .container { max-width: 600px; margin: 0 auto; background: #111; color: #fff; direction: rtl; }
+    .header { background: linear-gradient(135deg, #9b1c1c 0%, #1a1a1a 100%); padding: 40px 30px; text-align: center; }
+    .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+    .header p { margin: 10px 0 0; opacity: 0.8; font-size: 14px; }
+    .content { padding: 40px 30px; }
+    .content h2 { color: #e63939; font-size: 20px; margin-top: 0; }
+    .content p { line-height: 1.7; color: #ccc; font-size: 15px; }
+    .stats { display: table; width: 100%; margin: 30px 0; }
+    .stat { display: table-cell; text-align: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+    .stat-number { font-size: 32px; font-weight: 700; color: #e63939; }
+    .stat-label { font-size: 12px; color: #888; margin-top: 5px; }
+    .cta { text-align: center; margin: 40px 0; }
+    .cta a { display: inline-block; background: #e63939; color: #fff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px; }
+    .footer { padding: 30px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏨 هوتيلز فيندورز</h1>
+      <p>نحو مستقبل أفضل معاً</p>
+    </div>
+    <div class="content">
+      <h2>وفر 30% من تكاليف المشتريات</h2>
+      <p>فريق {{hotel_name}} المحترم،</p>
+      <p>أتواصل معكم لأن هوتيلز فيندورز يغير طريقة إدارة المشتريات في الفنادق المصرية — والفنادق مثلكم تحقق <strong>توفير 30%</strong> في أول 90 يوماً.</p>
+      
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">30%</div>
+          <div class="stat-label">توفير في التكاليف</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">مورد معتمد</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">24س</div>
+          <div class="stat-label">توصيل سريع</div>
+        </div>
+      </div>
+
+      <p><strong>ما الذي يميزنا؟</strong></p>
+      <p>✓ <strong>كتالوجات بأسعار ثابتة</strong> — لا مفاوضات، لا مفاجآت<br>
+      ✓ <strong>التوافق مع الفاتورة الإلكترونية</strong> — إلزامي وآلي<br>
+      ✓ <strong>نظام الموافقات متعدد المستويات</strong> — مدمج من الأساس<br>
+      ✓ <strong>التمويل المدمج</strong> — ادفع للموردين الآن، واستقر لاحقاً</p>
+
+      <p>يسعدني أن أعرض عليكم كيف يمكن لـ {{hotel_name}} الاستفادة. هل يمكننا حجز مكالمة مدتها 15 دقيقة هذا الأسبوع؟</p>
+
+      <div class="cta">
+        <a href="https://hotelsvendors.com/demo?ref={{utm_source}}">احجز عرض توضيحي</a>
+      </div>
+
+      <p style="font-size: 13px; color: #888;">أو رد مباشرة على هذا البريد — أقرأ كل رد شخصياً.</p>
+    </div>
+    <div class="footer">
+      هوتيلز فيندورز — سوق المشتريات B2B للضيافة المصرية<br>
+      <a href="https://hotelsvendors.com/unsubscribe?token={{unsubscribe_token}}" style="color: #666;">إلغاء الاشتراك</a>
+    </div>
+  </div>
+</body>
+</html>
