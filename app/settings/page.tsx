@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useTheme } from "@/components/theme/theme-provider";
 import {
   Palette,
@@ -10,6 +12,7 @@ import {
   Monitor,
   Smartphone,
   Tablet,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -29,7 +32,26 @@ export default function SettingsPage() {
   } = useTheme();
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div className="min-h-screen bg-[var(--background)]">
+      {/* Navbar */}
+      <nav className="border-b border-[var(--border-default)] bg-[var(--surface)]/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="flex h-[72px] items-center justify-between">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--surface-raised)] border border-[var(--border-default)]">
+                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
+              </div>
+              <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
+            </Link>
+            <Link href="/" className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">
+              <ArrowLeft size={14} />
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-[1200px] mx-auto px-6 py-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white tracking-tight">Settings</h1>
         <p className="text-sm text-[var(--foreground-muted)] mt-1">
@@ -203,6 +225,7 @@ export default function SettingsPage() {
           </p>
         </section>
       </div>
+    </div>
     </div>
   );
 }
