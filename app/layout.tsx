@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
-
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -67,7 +67,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${nunito.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased bg-background text-foreground font-sans">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

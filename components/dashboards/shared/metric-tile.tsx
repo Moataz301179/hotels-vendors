@@ -13,22 +13,22 @@ export function MetricTile({
   value,
   trend,
   icon: Icon,
-  iconBg = "bg-accent-cyan/10 text-accent-cyan",
+  iconBg = "bg-cyan-500/10 text-cyan-400",
 }: MetricTileProps) {
   return (
-    <div className="bento-item glass-card p-5">
+    <div className="glass-card rounded-xl p-5">
       <div className="flex items-start justify-between mb-3">
         <div className={`p-2 rounded-lg ${iconBg}`}>
           <Icon size={18} />
         </div>
         {trend && (
-          <span className="text-[11px] font-medium text-accent-emerald bg-accent-emerald/10 px-2 py-0.5 rounded-full">
+          <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
             {trend}
           </span>
         )}
       </div>
-      <p className="metric-value text-2xl font-bold text-foreground">{value}</p>
-      <p className="metric-label mt-1">{label}</p>
+      <p className="text-2xl font-bold text-white">{value}</p>
+      <p className="text-[11px] text-[var(--foreground-muted)] mt-1 uppercase tracking-wider">{label}</p>
     </div>
   );
 }

@@ -82,21 +82,21 @@ export default function CatalogPage() {
             onClick={() => router.push("/hotel")}
             className="p-2 rounded-lg hover:bg-white/5 transition-colors"
           >
-            <ArrowLeft size={20} className="text-foreground-muted" />
+            <ArrowLeft size={20} className="text-[var(--foreground-muted)]" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Product Catalog</h1>
-            <p className="text-sm text-foreground-muted">Browse and order from verified suppliers</p>
+            <h1 className="text-2xl font-bold text-[var(--foreground)]">Product Catalog</h1>
+            <p className="text-sm text-[var(--foreground-muted)]">Browse and order from verified suppliers</p>
           </div>
         </div>
         <button
           onClick={() => router.push("/hotel/order")}
-          className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium transition-colors"
+          className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-500)] hover:bg-[var(--accent-600)] text-white font-medium transition-colors"
         >
           <ShoppingCart size={18} />
           <span>Cart</span>
           {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-accent-gold text-black text-xs font-bold flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[var(--accent-500)] text-black text-xs font-bold flex items-center justify-center">
               {totalItems}
             </span>
           )}
@@ -105,13 +105,13 @@ export default function CatalogPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-faint" />
+        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]" />
         <input
           type="text"
           placeholder="Search products by name or SKU..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-border-default text-foreground placeholder:text-foreground-faint focus:border-brand-500 focus:outline-none transition-colors"
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-[var(--border-default)] text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-brand-500 focus:outline-none transition-colors"
         />
       </div>
 
@@ -127,7 +127,7 @@ export default function CatalogPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 active
                   ? "bg-brand-600 text-white"
-                  : "bg-surface border border-border-default text-foreground-muted hover:border-border-strong hover:text-foreground"
+                  : "bg-surface border border-[var(--border-default)] text-[var(--foreground-muted)] hover:border-border-strong hover:text-[var(--foreground)]"
               }`}
             >
               <Icon size={16} />
@@ -145,9 +145,9 @@ export default function CatalogPage() {
           ))}
         </div>
       ) : error ? (
-        <div className="glass-card p-8 text-center text-foreground-muted">{error}</div>
+        <div className="glass-card p-8 text-center text-[var(--foreground-muted)]">{error}</div>
       ) : filtered.length === 0 ? (
-        <div className="glass-card p-8 text-center text-foreground-muted">
+        <div className="glass-card p-8 text-center text-[var(--foreground-muted)]">
           No products found. Try a different search or category.
         </div>
       ) : (
@@ -172,28 +172,28 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: () => void }
   return (
     <div className="glass-card p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
       <div className="flex items-start justify-between">
-        <div className="w-10 h-10 rounded-lg bg-surface-raised flex items-center justify-center">
-          <Package size={20} className="text-foreground-muted" />
+        <div className="w-10 h-10 rounded-lg bg-[var(--surface-raised)] flex items-center justify-center">
+          <Package size={20} className="text-[var(--foreground-muted)]" />
         </div>
-        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-accent-emerald/10 text-accent-emerald">
+        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-bg-emerald-500/10 text-emerald-400">
           {product.stockQuantity} in stock
         </span>
       </div>
 
       <div className="flex-1">
-        <p className="text-xs text-foreground-faint uppercase tracking-wider">{product.sku}</p>
-        <h3 className="text-sm font-semibold text-foreground mt-0.5 line-clamp-2">{product.name}</h3>
-        <p className="text-xs text-foreground-muted mt-1">{product.supplier.name} · {product.supplier.city}</p>
+        <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">{product.sku}</p>
+        <h3 className="text-sm font-semibold text-[var(--foreground)] mt-0.5 line-clamp-2">{product.name}</h3>
+        <p className="text-xs text-[var(--foreground-muted)] mt-1">{product.supplier.name} · {product.supplier.city}</p>
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-border-subtle">
+      <div className="flex items-center justify-between pt-2 border-t border-[var(--border-subtle)]">
         <div>
-          <p className="text-lg font-bold text-foreground metric-value">{product.unitPrice.toLocaleString()}</p>
-          <p className="text-xs text-foreground-faint">{product.currency} / unit</p>
+          <p className="text-lg font-bold text-[var(--foreground)] metric-value">{product.unitPrice.toLocaleString()}</p>
+          <p className="text-xs text-[var(--foreground-muted)]">{product.currency} / unit</p>
         </div>
         <button
           onClick={onAdd}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--accent-500)] hover:bg-[var(--accent-600)] text-white text-sm font-medium transition-colors"
         >
           <Plus size={16} />
           Add

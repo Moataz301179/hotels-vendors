@@ -122,6 +122,7 @@ function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
+            <Link href="/settings" className="px-3 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">Settings</Link>
             <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">Sign In</Link>
             <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all hover:-translate-y-px">
               Get Started
@@ -140,6 +141,7 @@ function Navbar() {
             <a key={item} href={`#${item.toLowerCase()}`} className="block px-3 py-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-raised)]">{item}</a>
           ))}
           <div className="pt-2 flex gap-2">
+            <Link href="/settings" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground)] font-medium">Settings</Link>
             <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground)] font-medium">Sign In</Link>
             <Link href="/register" className="flex-1 text-center py-2.5 text-sm rounded-xl bg-[var(--accent-500)] text-white font-semibold">Get Started</Link>
           </div>
@@ -158,9 +160,26 @@ function Hero() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--accent-500)]/8 rounded-full blur-[150px]" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--accent-500)]/5 rounded-full blur-[120px]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 w-full">
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-3xl">
-          <motion.div variants={fadeUp}>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-16 w-full">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="flex flex-col items-center text-center">
+          {/* Logo */}
+          <motion.div variants={fadeUp} className="mb-6">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+              <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain drop-shadow-2xl" />
+            </div>
+          </motion.div>
+
+          {/* Brand Name */}
+          <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--foreground)]">
+            HOTELS VENDORS
+          </motion.h1>
+
+          {/* Slogan */}
+          <motion.p variants={fadeUp} className="mt-3 text-lg sm:text-xl text-[var(--accent-400)] font-medium tracking-wide">
+            Smarter Together
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-6">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--success)] opacity-60" />
@@ -170,20 +189,12 @@ function Hero() {
             </span>
           </motion.div>
 
-          <motion.h1 variants={fadeUp} className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
-            <span className="text-[var(--foreground)]">The Procurement</span>
-            <br />
-            <span className="text-[var(--accent-400)]">OS for Egyptian</span>
-            <br />
-            <span className="text-[var(--foreground)]">Hospitality</span>
-          </motion.h1>
-
-          <motion.p variants={fadeUp} className="mt-6 text-lg text-[var(--foreground-secondary)] max-w-xl leading-relaxed">
-            Connect hotels, suppliers, logistics, and factoring on one platform. 
+          <motion.p variants={fadeUp} className="mt-6 text-lg text-[var(--foreground-secondary)] max-w-2xl leading-relaxed">
+            The Procurement OS for Egyptian Hospitality. Connect hotels, suppliers, logistics, and factoring on one platform.
             Fixed pricing. ETA-compliant e-invoicing. AI-powered procurement intelligence.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link href="/register" className="group px-7 py-3.5 text-sm font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all hover:-translate-y-0.5 flex items-center gap-2">
               Start Free <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
@@ -192,7 +203,7 @@ function Hero() {
             </Link>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
+          <motion.div variants={fadeUp} className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl w-full">
             {[
               { value: "10,000+", label: "Verified SKUs" },
               { value: "1,200+", label: "Suppliers" },

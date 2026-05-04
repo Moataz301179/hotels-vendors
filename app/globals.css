@@ -1,77 +1,42 @@
 @import "tailwindcss";
 
-/* ─────────────────────────────────────────
-   Hotels Vendors — Global Design System v3.0
-   Solid Black + White + Electric Indigo
-   Premium B2B Fintech Dark Theme
-   ───────────────────────────────────────── */
-
 :root {
-  /* Background — Solid Black Hierarchy */
   --background: #000000;
   --background-void: #000000;
   --surface: #0a0a0a;
   --surface-raised: #111111;
   --surface-hover: #1a1a1a;
-  --surface-glass: rgba(10, 10, 10, 0.85);
-
-  /* Foreground — White Scale */
   --foreground: #ffffff;
   --foreground-secondary: #a0a0a0;
   --foreground-tertiary: #666666;
   --foreground-muted: #444444;
   --foreground-inverse: #000000;
-
-  /* Accent — Electric Indigo */
-  --accent-50: #eef2ff;
-  --accent-100: #e0e7ff;
-  --accent-200: #c7d2fe;
-  --accent-300: #a5b4fc;
-  --accent-400: #818cf8;
-  --accent-500: #6366f1;
-  --accent-600: #4f46e5;
-  --accent-700: #4338ca;
-  --accent-800: #3730a3;
-  --accent-900: #312e81;
-
-  /* Grey Scale */
-  --grey-50: #fafafa;
-  --grey-100: #f5f5f5;
-  --grey-200: #e5e5e5;
-  --grey-300: #d4d4d4;
-  --grey-400: #a3a3a3;
-  --grey-500: #737373;
-  --grey-600: #525252;
-  --grey-700: #404040;
-  --grey-800: #262626;
-  --grey-900: #171717;
-
-  /* Semantic */
+  --accent-50: #fef2f2;
+  --accent-100: #fee2e2;
+  --accent-200: #fecaca;
+  --accent-300: #fca5a5;
+  --accent-400: #f87171;
+  --accent-500: #dc143c;
+  --accent-600: #b91c1c;
+  --accent-700: #991b1b;
+  --accent-800: #7f1d1d;
+  --accent-900: #450a0a;
   --success: #34d399;
   --warning: #fbbf24;
-  --error: #f87171;
+  --error: #ef4444;
   --info: #60a5fa;
-
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --border-accent: rgba(99, 102, 241, 0.30);
-
-  /* Glassmorphism — Minimal */
-  --glass-bg: rgba(10, 10, 10, 0.80);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --glass-blur: 16px;
-
-  /* Shadows */
-  --shadow-glow-accent: 0 0 60px rgba(99, 102, 241, 0.15);
-  --shadow-glow-white: 0 0 40px rgba(255, 255, 255, 0.04);
-
-  /* Layout */
-  --header-height: 72px;
-
-  /* Motion */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-default: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.12);
+  --border-accent: rgba(220,38,60,0.35);
+  --glass-bg: rgba(10,10,10,0.75);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-blur: 20px;
+  --shadow-glow-accent: 0 0 60px rgba(220,38,60,0.18);
+  --shadow-glow-white: 0 0 40px rgba(255,255,255,0.04);
+  --header-height: 64px;
+  --sidebar-width: 260px;
+  --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
 }
 
 @theme inline {
@@ -87,7 +52,6 @@
   --color-accent-500: var(--accent-500);
   --color-accent-600: var(--accent-600);
   --color-accent-700: var(--accent-700);
-  --color-grey-500: var(--grey-500);
   --color-border-default: var(--border-default);
   --color-border-strong: var(--border-strong);
   --color-border-subtle: var(--border-subtle);
@@ -99,25 +63,23 @@
 }
 
 html { scroll-behavior: smooth; }
-body {
-  background-color: #000000;
-  color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-::selection { background: rgba(99, 102, 241, 0.35); color: #fff; }
-
-/* Scrollbar */
+body { background-color: #000000; color: #ffffff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+::selection { background: rgba(220,38,60,0.30); color: #fff; }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
-
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(20,20,20,0.8) 0%, rgba(220,38,60,0.04) 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.glass-card:hover {
+  border-color: rgba(220,38,60,0.20);
 }
