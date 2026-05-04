@@ -107,12 +107,12 @@ export default function MarketplacePage() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-500)]/8 rounded-full blur-[150px]" />
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] font-semibold text-white tracking-widest uppercase mb-6">
               <Package size={12} />
               Marketplace
             </span>
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-              Browse <span className="text-[var(--accent-400)]">10,000+</span> verified products
+              Browse <span className="text-white">10,000+</span> verified products
             </h1>
             <p className="mt-4 text-lg text-[var(--foreground-secondary)]">
               From F&B to housekeeping, find everything your hotel needs from Egypt's best suppliers.
@@ -194,7 +194,7 @@ export default function MarketplacePage() {
       <section className="border-t border-[var(--border-default)] bg-[var(--surface)] py-16">
         <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-            Ready to <span className="text-[var(--accent-400)]">procure smarter</span>?
+            Ready to <span className="text-white">procure smarter</span>?
           </h2>
           <p className="mt-3 text-[var(--foreground-secondary)] max-w-xl mx-auto">
             Join 200+ Egyptian hotels already sourcing on Hotels Vendors. Setup takes 10 minutes.
@@ -245,7 +245,7 @@ function ProductCard({ product }: { product: Product }) {
         <p className="text-[11px] text-[var(--foreground-muted)] uppercase tracking-wider">{product.sku}</p>
         <h3 className="text-sm font-semibold text-[var(--foreground)] mt-0.5 line-clamp-2">{product.name}</h3>
         <div className="flex items-center gap-1.5 mt-2">
-          <ShieldCheck size={12} className="text-[var(--accent-400)]" />
+          <ShieldCheck size={12} className="text-white" />
           <p className="text-xs text-[var(--foreground-secondary)]">{product.supplier.name} · {product.supplier.city}</p>
         </div>
         {product.supplier.rating && (

@@ -15,7 +15,7 @@
   --accent-100: #fee2e2;
   --accent-200: #fecaca;
   --accent-300: #fca5a5;
-  --accent-400: #f87171;
+  --accent-400: #ff6b6b;
   --accent-500: #dc143c;
   --accent-600: #b91c1c;
   --accent-700: #991b1b;
@@ -82,4 +82,13 @@ body { background-color: #000000; color: #ffffff; -webkit-font-smoothing: antial
 }
 .glass-card:hover {
   border-color: rgba(220,38,60,0.20);
+}
+
+.red-solid {
+  background: #dc143c;
+  color: #ffffff;
+  border: none;
+}
+.red-solid:hover {
+  background: #b91c1c;
 }

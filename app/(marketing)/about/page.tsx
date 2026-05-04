@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-500)]/8 rounded-full blur-[150px]" />
         <div className="relative mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            Who We <span className="text-[var(--accent-400)]">Are</span>
+            Who We <span className="text-white">Are</span>
           </h1>
           <p className="mt-4 text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto">
             Built by hospitality professionals, for hospitality professionals. 
@@ -54,7 +54,7 @@ export default function AboutPage() {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-raised)] text-5xl font-bold text-[var(--accent-400)]" id="ceo-fallback">
+                <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-raised)] text-5xl font-bold text-white" id="ceo-fallback">
                   MAG
                 </div>
               </div>
@@ -63,8 +63,8 @@ export default function AboutPage() {
             {/* Bio */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-3">
-                <Award size={16} className="text-[var(--accent-400)]" />
-                <span className="text-[11px] font-semibold text-[var(--accent-400)] uppercase tracking-widest">Founder & CEO</span>
+                <Award size={16} className="text-white" />
+                <span className="text-[11px] font-semibold text-white uppercase tracking-widest">Founder & CEO</span>
               </div>
               <h2 className="text-3xl font-bold text-[var(--foreground)]">Moataz Abdel Ghani</h2>
               <p className="mt-1 text-[var(--foreground-muted)]">Chief Executive Officer & Founder, Hotels Vendors</p>
@@ -92,7 +92,7 @@ export default function AboutPage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 {["EY — Ernst & Young", "Deloitte", "KPMG"].map((firm) => (
                   <span key={firm} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-default)] text-sm text-[var(--foreground-secondary)]">
-                    <Briefcase size={14} className="text-[var(--accent-400)]" />
+                    <Briefcase size={14} className="text-white" />
                     {firm}
                   </span>
                 ))}
@@ -106,11 +106,11 @@ export default function AboutPage() {
       <section className="py-24">
         <div className="mx-auto max-w-5xl px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] font-semibold text-white tracking-widest uppercase">
               Our Mission
             </span>
             <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
-              Replace <span className="text-[var(--accent-400)]">WhatsApp + Excel</span> with one intelligent platform
+              Replace <span className="text-white">WhatsApp + Excel</span> with one intelligent platform
             </h2>
           </div>
 
@@ -121,7 +121,7 @@ export default function AboutPage() {
               { icon: Globe, title: "For Egypt", desc: "The first hospitality procurement platform natively integrated with the Egyptian Tax Authority. Built local. Built compliant. Built to scale." },
             ].map((item) => (
               <div key={item.title} className="glass-card rounded-xl p-6">
-                <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center text-[var(--accent-400)] mb-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white mb-4">
                   <item.icon className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">{item.title}</h3>
@@ -136,7 +136,7 @@ export default function AboutPage() {
       <section className="py-16 border-t border-[var(--border-default)] bg-[var(--surface)]">
         <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-            Built by <span className="text-[var(--accent-400)]">professionals</span>. Backed by <span className="text-[var(--accent-400)]">Big 4 rigor</span>.
+            Built by <span className="text-white">professionals</span>. Backed by <span className="text-white">Big 4 rigor</span>.
           </h2>
           <p className="mt-3 text-[var(--foreground-secondary)] max-w-xl mx-auto">
             Every line of code, every governance rule, and every compliance check reflects institutional-grade standards.

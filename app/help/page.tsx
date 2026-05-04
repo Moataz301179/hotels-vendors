@@ -35,14 +35,14 @@ export default function HelpPage() {
       <div className="mx-auto max-w-5xl px-6 py-10 space-y-10">
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <PlayCircle size={18} className="text-[var(--accent-400)]" />
+            <PlayCircle size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Portal Video Guides</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {GUIDES.map((g) => (
               <a key={g.role} href={g.href} className="glass-card rounded-xl p-5 hover:-translate-y-1 transition-transform">
                 <div className="w-12 h-12 rounded-xl bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center mb-4">
-                  <PlayCircle size={24} className="text-[var(--accent-400)]" />
+                  <PlayCircle size={24} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-white mb-1">{g.role}</h3>
                 <p className="text-xs text-[var(--foreground-muted)]">{g.desc}</p>
@@ -53,7 +53,7 @@ export default function HelpPage() {
 
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <BookOpen size={18} className="text-[var(--accent-400)]" />
+            <BookOpen size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-3">
@@ -68,13 +68,13 @@ export default function HelpPage() {
 
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <MessageCircle size={18} className="text-[var(--accent-400)]" />
+            <MessageCircle size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Still Need Help?</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a href="mailto:support@hotelsvendors.com" className="glass-card rounded-xl p-5 flex items-center gap-4 hover:border-[var(--accent-500)]/30 transition-colors">
               <div className="w-10 h-10 rounded-lg bg-[var(--accent-500)]/10 flex items-center justify-center">
-                <Mail size={18} className="text-[var(--accent-400)]" />
+                <Mail size={18} className="text-white" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white">Email Support</p>
@@ -83,7 +83,7 @@ export default function HelpPage() {
             </a>
             <div className="glass-card rounded-xl p-5 flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-[var(--accent-500)]/10 flex items-center justify-center">
-                <Phone size={18} className="text-[var(--accent-400)]" />
+                <Phone size={18} className="text-white" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white">Phone Support</p>
@@ -92,7 +92,7 @@ export default function HelpPage() {
             </div>
           </div>
           <p className="mt-4 text-xs text-[var(--foreground-muted)] text-center">
-            Or use the <strong className="text-[var(--accent-400)]">AI Assistant</strong> floating button at the bottom-right of any dashboard page.
+            Or use the <strong className="text-white">AI Assistant</strong> floating button at the bottom-right of any dashboard page.
           </p>
         </section>
       </div>

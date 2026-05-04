@@ -23,7 +23,7 @@ export default function SocialMediaPage() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 w-full">
           <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-3xl">
             <motion.div variants={fadeUp}>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-white tracking-widest uppercase">
                 <Megaphone className="w-3 h-3" />
                 Marketing Hub
               </span>
@@ -31,7 +31,7 @@ export default function SocialMediaPage() {
             <motion.h1 variants={fadeUp} className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
               <span className="text-[var(--foreground)]">The Story of</span>
               <br />
-              <span className="text-[var(--accent-400)]">Smarter Procurement</span>
+              <span className="text-white">Smarter Procurement</span>
             </motion.h1>
             <motion.p variants={fadeUp} className="mt-6 text-lg text-[var(--foreground-secondary)] max-w-xl leading-relaxed">
               Hotels Vendors is building the digital infrastructure for Egyptian hospitality.
@@ -53,7 +53,7 @@ export default function SocialMediaPage() {
       <section className="py-20 bg-[var(--surface)] border-y border-[var(--border-default)]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-white tracking-widest uppercase">
               Brand Pillars
             </span>
             <h2 className="mt-4 text-3xl font-bold text-[var(--foreground)]">
@@ -75,7 +75,7 @@ export default function SocialMediaPage() {
                 transition={{ delay: i * 0.1 }}
                 className="p-6 rounded-2xl border border-[var(--border-default)] bg-[var(--background)]/60 backdrop-blur-md text-center"
               >
-                <div className="w-12 h-12 rounded-xl bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center mx-auto mb-4 text-[var(--accent-400)]">
+                <div className="w-12 h-12 rounded-xl bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 flex items-center justify-center mx-auto mb-4 text-white">
                   <p.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--foreground)]">{p.title}</h3>
@@ -90,7 +90,7 @@ export default function SocialMediaPage() {
       <section id="channels" className="py-20 bg-[var(--background)]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-[var(--accent-400)] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-500)]/10 border border-[var(--accent-500)]/20 text-[11px] font-semibold text-white tracking-widest uppercase">
               Connect With Us
             </span>
             <h2 className="mt-4 text-3xl font-bold text-[var(--foreground)]">
@@ -113,7 +113,7 @@ export default function SocialMediaPage() {
                 className="group p-6 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)]/60 backdrop-blur-md hover:border-[var(--border-strong)] hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)]/10 flex items-center justify-center text-[var(--accent-400)]">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)]/10 flex items-center justify-center text-white">
                     <channel.icon className="w-5 h-5" />
                   </div>
                   <div>
@@ -132,7 +132,7 @@ export default function SocialMediaPage() {
       <section className="py-20 bg-[var(--surface)] border-t border-[var(--border-default)]">
         <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-[var(--foreground)]">
-            Be part of the <span className="text-[var(--accent-400)]">procurement revolution</span>
+            Be part of the <span className="text-white">procurement revolution</span>
           </h2>
           <p className="mt-4 text-[var(--foreground-secondary)] max-w-xl mx-auto">
             Whether you are a hotel, supplier, or logistics provider — there is a place for you on Hotels Vendors.

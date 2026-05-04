@@ -63,7 +63,7 @@ export default function SettingsPage() {
         {/* Presets */}
         <section className="glass-card rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <LayoutTemplate size={18} className="text-[var(--accent-400)]" />
+            <LayoutTemplate size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Theme Presets</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -101,7 +101,7 @@ export default function SettingsPage() {
         {/* Custom Accent */}
         <section className="glass-card rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <Palette size={18} className="text-[var(--accent-400)]" />
+            <Palette size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Custom Accent Color</h2>
           </div>
           <div className="flex flex-wrap items-center gap-4">
@@ -142,7 +142,7 @@ export default function SettingsPage() {
         {/* Typography */}
         <section className="glass-card rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <Type size={18} className="text-[var(--accent-400)]" />
+            <Type size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Typography</h2>
           </div>
 
@@ -202,7 +202,7 @@ export default function SettingsPage() {
         {/* Layout Density */}
         <section className="glass-card rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <LayoutTemplate size={18} className="text-[var(--accent-400)]" />
+            <LayoutTemplate size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Layout Density</h2>
           </div>
           <div className="flex gap-3">
