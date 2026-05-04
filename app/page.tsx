@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 
 const CATEGORY_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=500&h=350&fit=crop", label: "Linens", count: "2,400+ SKUs" },
-  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=350&fit=crop", label: "F&B", count: "4,100+ SKUs" },
-  { src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=350&fit=crop", label: "Cleaning", count: "1,800+ SKUs" },
-  { src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&h=350&fit=crop", label: "Engineering", count: "1,700+ SKUs" },
+  { src: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=500&h=280&fit=crop", label: "Linens", count: "2,400+ SKUs" },
+  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=280&fit=crop", label: "F&B", count: "4,100+ SKUs" },
+  { src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=280&fit=crop", label: "Cleaning", count: "1,800+ SKUs" },
+  { src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&h=280&fit=crop", label: "Engineering", count: "1,700+ SKUs" },
 ];
 
 const FEATURES = [
@@ -39,26 +39,26 @@ const HOTELS = [
 ];
 
 const WHEEL_SEGMENTS = [
-  { label: "1,000 LE", color: "#800000", text: "#ffffff" },
-  { label: "2,000 LE", color: "#a0a0a0", text: "#000000" },
-  { label: "3,000 LE", color: "#800000", text: "#ffffff" },
-  { label: "Try Again", color: "#1a1a1a", text: "#ffffff" },
-  { label: "4,000 LE", color: "#800000", text: "#ffffff" },
+  "1,000 LE",
+  "2,000 LE",
+  "3,000 LE",
+  "Try Again",
+  "4,000 LE",
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
-const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
+const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
 
 function ChatbotWidget() {
   const [open, setOpen] = useState(false);
-  const [showOffer, setShowOffer] = useState(true);
+  const [showOffer, setShowOffer] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowOffer(true), 3000);
+    const t = setTimeout(() => setShowOffer(true), 4000);
     return () => clearTimeout(t);
   }, []);
 
@@ -68,23 +68,23 @@ function ChatbotWidget() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-3 bg-white text-black p-4 rounded-lg shadow-xl max-w-[260px] text-sm relative border border-white/20"
+          className="mb-3 bg-white text-black p-4 rounded shadow-xl max-w-[240px] text-sm relative"
         >
-          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 text-black/40 hover:text-black">
+          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 text-black/30 hover:text-black">
             <XIcon className="w-3 h-3" />
           </button>
-          <p className="font-semibold mb-1">Need help getting started?</p>
-          <p className="text-xs text-black/60 mb-3">I can guide you through registration in under 2 minutes.</p>
-          <Link href="/register" onClick={() => setOpen(false)} className="inline-block px-4 py-2 text-xs font-semibold bg-[#800000] text-white rounded hover:bg-[#660000] transition-colors">
-            Start Registration
+          <p className="font-semibold mb-1 text-xs">Need help getting started?</p>
+          <p className="text-[11px] text-black/50 mb-3">I can guide you through registration.</p>
+          <Link href="/register" className="inline-block px-4 py-2 text-[11px] font-semibold bg-[#800000] text-white rounded hover:bg-[#660000]">
+            Register Now
           </Link>
         </motion.div>
       )}
       <button
         onClick={() => { setOpen(!open); setShowOffer(false); }}
-        className="w-14 h-14 rounded-full bg-[#800000] border-2 border-white/20 flex items-center justify-center shadow-2xl hover:bg-[#660000] transition-colors"
+        className="w-12 h-12 rounded-full bg-[#800000] border border-white/20 flex items-center justify-center shadow-xl hover:bg-[#660000] transition-colors"
       >
-        <MessageCircle className="w-6 h-6 text-white" />
+        <MessageCircle className="w-5 h-5 text-white" />
       </button>
     </div>
   );
@@ -109,36 +109,70 @@ function SpinWheel() {
       setSpinning(false);
       const finalAngle = newRotation % 360;
       const index = Math.floor((360 - finalAngle + segmentAngle / 2) / segmentAngle) % WHEEL_SEGMENTS.length;
-      setResult(WHEEL_SEGMENTS[index].label);
+      setResult(WHEEL_SEGMENTS[index]);
       setShowResult(true);
     }, 4000);
   };
 
+  const segAngle = 360 / WHEEL_SEGMENTS.length;
+
   return (
-    <div className="flex flex-col items-center gap-3 p-5 rounded-lg border border-white/10 bg-white/[0.02]">
-      <p className="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Spin to Win</p>
-      <p className="text-[10px] text-white/25">Yearly subscription discount</p>
+    <div className="flex flex-col items-center gap-3">
       <div className="relative">
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent border-t-white" />
         <div
-          className="w-32 h-32 rounded-full border border-white/15 relative overflow-hidden"
-          style={{ transform: `rotate(${rotation}deg)`, transitionDuration: spinning ? "4s" : "0s", transitionTimingFunction: "cubic-bezier(0.2, 0.8, 0.3, 1)" }}
+          className="w-36 h-36 rounded-full border-2 border-white/20 relative overflow-hidden"
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transitionDuration: spinning ? "4s" : "0s",
+            transitionTimingFunction: "cubic-bezier(0.2, 0.8, 0.3, 1)",
+          }}
         >
           {WHEEL_SEGMENTS.map((seg, i) => {
-            const angle = 360 / WHEEL_SEGMENTS.length;
+            const startAngle = i * segAngle;
+            const endAngle = (i + 1) * segAngle;
+            const midAngle = startAngle + segAngle / 2;
+            const x1 = 50 + 50 * Math.cos((startAngle - 90) * Math.PI / 180);
+            const y1 = 50 + 50 * Math.sin((startAngle - 90) * Math.PI / 180);
+            const x2 = 50 + 50 * Math.cos((endAngle - 90) * Math.PI / 180);
+            const y2 = 50 + 50 * Math.sin((endAngle - 90) * Math.PI / 180);
+            const isRed = seg !== "Try Again";
             return (
-              <div key={i} className="absolute w-full h-full flex items-center justify-center" style={{ clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos((i * angle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((i * angle - 90) * Math.PI / 180)}%, ${50 + 50 * Math.cos(((i + 1) * angle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin(((i + 1) * angle - 90) * Math.PI / 180)}%)`, backgroundColor: seg.color }}>
-                <span className="text-[9px] font-bold absolute" style={{ color: seg.text, transform: `rotate(${i * angle + angle / 2}deg) translateY(-22px)` }}>{seg.label}</span>
+              <div
+                key={i}
+                className="absolute w-full h-full"
+                style={{
+                  clipPath: `polygon(50% 50%, ${x1}% ${y1}%, ${x2}% ${y2}%)`,
+                  backgroundColor: isRed ? "#800000" : "#1a1a1a",
+                }}
+              >
+                <span
+                  className="text-[9px] font-bold absolute left-1/2 top-1/2"
+                  style={{
+                    color: "#ffffff",
+                    transform: `rotate(${midAngle}deg) translateX(-50%) translateY(-42px)`,
+                    transformOrigin: "center",
+                  }}
+                >
+                  {seg}
+                </span>
               </div>
             );
           })}
         </div>
       </div>
-      <button onClick={spin} disabled={spinning} className="px-4 py-2 text-[11px] font-semibold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-50 rounded">
+      <button
+        onClick={spin}
+        disabled={spinning}
+        className="px-5 py-2 text-[11px] font-semibold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-50 rounded"
+      >
         {spinning ? "Spinning..." : "Spin Now"}
       </button>
+      <p className="text-[10px] text-white/40 uppercase tracking-wider">Spin to claim your discount now</p>
       {showResult && result && (
-        <p className="text-xs font-bold text-white">{result === "Try Again" ? result : `You won ${result}!`}</p>
+        <p className="text-xs font-bold text-white">
+          {result === "Try Again" ? result : `You won ${result}!`}
+        </p>
       )}
     </div>
   );
@@ -153,7 +187,7 @@ function Navbar() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-horse-only.svg" alt="" width={22} height={28} className="brightness-0 invert" />
+            <Image src="/logo-icon.svg" alt="" width={20} height={24} className="brightness-0 invert" />
           </Link>
           <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
@@ -197,32 +231,32 @@ function Navbar() {
 function Hero() {
   return (
     <section className="bg-black pt-14">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
           {/* Left: Content */}
           <div className="lg:col-span-3">
             <motion.div variants={stagger} initial="hidden" animate="visible" className="text-center lg:text-left">
-              <motion.div variants={fadeUp} className="mb-8 flex justify-center lg:justify-start">
-                <Image src="/logo-horse-only.svg" alt="Hotels Vendors" width={70} height={90} className="brightness-0 invert" />
+              <motion.div variants={fadeUp} className="mb-6 flex justify-center lg:justify-start">
+                <Image src="/logo-icon.svg" alt="Hotels Vendors" width={60} height={72} className="brightness-0 invert" />
               </motion.div>
-              <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+              <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space), system-ui, sans-serif", letterSpacing: "0.04em" }}>
                 HOTELS VENDORS
               </motion.h1>
-              <motion.p variants={fadeUp} className="mt-3 text-sm text-white/40 font-medium tracking-[0.35em] uppercase">
+              <motion.p variants={fadeUp} className="mt-2 text-xs text-white/40 font-medium tracking-[0.4em] uppercase">
                 Smarter Together
               </motion.p>
-              <motion.p variants={fadeUp} className="mt-8 text-base text-white/40 max-w-md mx-auto lg:mx-0 leading-relaxed">
+              <motion.p variants={fadeUp} className="mt-6 text-sm text-white/40 max-w-md mx-auto lg:mx-0 leading-relaxed">
                 The Procurement OS for Egyptian Hospitality. One platform for hotels, suppliers, logistics, and factoring.
               </motion.p>
               <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3">
-                <Link href="/register" className="px-6 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors flex items-center gap-2">
+                <Link href="/register" className="px-6 py-2.5 text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors flex items-center gap-2">
                   Start Free <ArrowRight className="w-4 h-4" />
                 </Link>
-                <Link href="/catalog" className="px-6 py-3 text-sm font-semibold border border-white/20 text-white hover:bg-white/5 transition-colors">
+                <Link href="/catalog" className="px-6 py-2.5 text-sm font-semibold border border-white/20 text-white hover:bg-white/5 transition-colors">
                   Explore Catalog
                 </Link>
               </motion.div>
-              <motion.div variants={fadeUp} className="mt-12 grid grid-cols-4 gap-4 max-w-md mx-auto lg:mx-0">
+              <motion.div variants={fadeUp} className="mt-10 grid grid-cols-4 gap-3 max-w-md mx-auto lg:mx-0">
                 {[
                   { value: "10,000+", label: "SKUs" },
                   { value: "1,200+", label: "Suppliers" },
@@ -230,7 +264,7 @@ function Hero() {
                   { value: "48h", label: "Delivery" },
                 ].map((stat) => (
                   <div key={stat.label} className="border border-white/10 rounded p-3 text-center">
-                    <p className="text-lg font-bold text-white">{stat.value}</p>
+                    <p className="text-base font-bold text-white">{stat.value}</p>
                     <p className="text-[9px] text-white/30 mt-0.5 uppercase tracking-wider">{stat.label}</p>
                   </div>
                 ))}
@@ -238,19 +272,19 @@ function Hero() {
             </motion.div>
           </div>
 
-          {/* Right: Images + Promo */}
-          <div className="lg:col-span-2 flex flex-col items-center gap-6">
-            <div className="grid grid-cols-2 gap-3 w-full">
+          {/* Right: Single column images + wheel */}
+          <div className="lg:col-span-2 flex flex-col items-center gap-4">
+            <div className="flex flex-col gap-3 w-full max-w-xs">
               {CATEGORY_IMAGES.map((cat, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="relative aspect-[4/3] rounded overflow-hidden border border-white/10 group"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15 + i * 0.1 }}
+                  className="relative aspect-[16/9] rounded overflow-hidden border border-white/10 group"
                 >
-                  <Image src={cat.src} alt={cat.label} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="250px" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <Image src={cat.src} alt={cat.label} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="350px" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-3 left-3">
                     <p className="text-sm font-bold text-white">{cat.label}</p>
                     <p className="text-[10px] text-white/50">{cat.count}</p>
@@ -258,7 +292,9 @@ function Hero() {
                 </motion.div>
               ))}
             </div>
-            <SpinWheel />
+            <div className="w-full max-w-xs border border-white/10 rounded p-4 flex flex-col items-center gap-2 bg-white/[0.01]">
+              <SpinWheel />
+            </div>
           </div>
         </div>
       </div>
@@ -285,7 +321,7 @@ function Features() {
     <section id="product" className="py-20 bg-black">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="text-center mb-14">
-          <motion.h2 variants={fadeUp} className="text-3xl font-bold text-white">Platform Capabilities</motion.h2>
+          <motion.h2 variants={fadeUp} className="text-2xl font-bold text-white">Platform Capabilities</motion.h2>
           <motion.p variants={fadeUp} className="mt-3 text-white/35 max-w-lg mx-auto text-sm">From catalog discovery to ETA-compliant invoicing — one platform, zero fragmentation.</motion.p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -320,10 +356,10 @@ function HowItWorks() {
     <section id="solutions" className="py-20 bg-[#050505] border-y border-white/10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="text-center mb-14">
-          <h2 className="text-3xl font-bold text-white">How It Works</h2>
+          <h2 className="text-2xl font-bold text-white">How It Works</h2>
           <p className="mt-3 text-white/35 text-sm">From catalog to compliance in minutes</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {steps.map((s, i) => (
             <motion.div key={s.num} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.12 }} className="border border-white/[0.06] rounded p-6 text-center hover:border-white/15 transition-colors">
               <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4">
@@ -345,7 +381,7 @@ function Pricing() {
     <section id="pricing" className="py-20 bg-black">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="text-center mb-14">
-          <h2 className="text-3xl font-bold text-white">Pricing</h2>
+          <h2 className="text-2xl font-bold text-white">Pricing</h2>
           <p className="mt-3 text-white/35 text-sm">Simple, transparent pricing</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
@@ -381,7 +417,7 @@ function CTA() {
   return (
     <section className="py-20 bg-[#800000]">
       <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-        <h2 className="text-3xl font-bold text-white">Ready to Transform Your Procurement</h2>
+        <h2 className="text-2xl font-bold text-white">Ready to Transform Your Procurement</h2>
         <p className="mt-4 text-white/60 text-sm max-w-md mx-auto">Join 200+ Egyptian hotels and 1,200+ suppliers. Setup takes less than 10 minutes.</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link href="/register" className="px-7 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors">Get Started Free</Link>
@@ -399,7 +435,7 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <Image src="/logo-horse-only.svg" alt="" width={16} height={20} className="brightness-0 invert" />
+              <Image src="/logo-icon.svg" alt="" width={16} height={20} className="brightness-0 invert" />
               <span className="text-sm font-bold text-white">Hotels Vendors</span>
             </div>
             <p className="text-[11px] text-white/25 leading-relaxed">The Digital Procurement Hub for Egyptian Hospitality.</p>

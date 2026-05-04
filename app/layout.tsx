@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
-const inter = Inter({
-  variable: "--font-inter",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -65,8 +65,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased bg-background text-foreground font-sans">
+    <html lang="en" className={`${spaceGrotesk.variable} h-full`}>
+      <body className="min-h-full flex flex-col antialiased bg-background text-foreground" style={{ fontFamily: "var(--font-space), system-ui, sans-serif" }}>
         <ThemeProvider>
           {children}
         </ThemeProvider>
