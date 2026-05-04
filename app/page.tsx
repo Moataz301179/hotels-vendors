@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight, CheckCircle2, Menu, X, Package,
@@ -37,16 +38,7 @@ const fadeUp = {
 
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 
-function HorseLogo({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M65 15 L75 25 L70 35 L80 45 L70 60 L55 55 L45 65 L35 60 L30 70 L25 65 L30 50 L40 45 L35 35 L45 25 L55 30 L65 15Z" />
-      <path d="M35 60 L30 70 L25 65 L30 50Z" opacity="0.5" />
-      <path d="M55 30 L65 15 L60 25Z" opacity="0.3" />
-      <circle cx="58" cy="38" r="3" opacity="0.6" />
-    </svg>
-  );
-}
+
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -94,7 +86,7 @@ function Hero() {
         <motion.div variants={stagger} initial="hidden" animate="visible">
           {/* Logo in center of hero */}
           <motion.div variants={fadeUp} className="mb-8 flex justify-center">
-            <HorseLogo className="w-32 h-32 text-white" />
+            <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={160} height={62} className="object-contain" priority />
           </motion.div>
 
           <motion.h1 variants={fadeUp} className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white">
