@@ -114,11 +114,12 @@ function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">
-            {["Product", "Solutions", "Pricing", "Enterprise", "About"].map((item) => (
+            {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} className="px-3 py-2 text-[13px] font-medium rounded-lg text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-colors">
                 {item}
               </a>
             ))}
+            <Link href="/about" className="px-3 py-2 text-[13px] font-medium rounded-lg text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-colors">About</Link>
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
@@ -140,6 +141,7 @@ function Navbar() {
           {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="block px-3 py-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-raised)]">{item}</a>
           ))}
+          <Link href="/about" className="block px-3 py-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-raised)]">About</Link>
           <div className="pt-2 flex gap-2">
             <Link href="/settings" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground)] font-medium">Settings</Link>
             <Link href="/login" className="flex-1 text-center py-2.5 text-sm rounded-xl border border-[var(--border-default)] text-[var(--foreground)] font-medium">Sign In</Link>

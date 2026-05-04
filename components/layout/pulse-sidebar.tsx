@@ -61,6 +61,10 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: Settings, label: "Security", href: "/admin/security" },
       ],
     },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
+    },
   ],
   supplier: [
     {
@@ -70,6 +74,10 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: PackageSearch, label: "Products", href: "/supplier/products" },
         { icon: ClipboardList, label: "Orders", href: "/supplier/orders" },
       ],
+    },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
     },
   ],
 };
