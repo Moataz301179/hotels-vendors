@@ -186,8 +186,8 @@ function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#800000]">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-icon.svg" alt="" width={20} height={24} className="brightness-0 invert" />
+          <Link href="/" className="flex items-center">
+            <Image src="/hotelsvendors.png" alt="Hotels Vendors" width={130} height={70} className="object-contain" priority />
           </Link>
           <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
@@ -236,9 +236,6 @@ function Hero() {
           {/* Left: Content */}
           <div className="lg:col-span-3">
             <motion.div variants={stagger} initial="hidden" animate="visible" className="text-center lg:text-left">
-              <motion.div variants={fadeUp} className="mb-6 flex justify-center lg:justify-start">
-                <Image src="/logo-icon.svg" alt="Hotels Vendors" width={60} height={72} className="brightness-0 invert" />
-              </motion.div>
               <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space), system-ui, sans-serif", letterSpacing: "0.04em" }}>
                 HOTELS VENDORS
               </motion.h1>
@@ -434,10 +431,9 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <Image src="/logo-icon.svg" alt="" width={16} height={20} className="brightness-0 invert" />
-              <span className="text-sm font-bold text-white">Hotels Vendors</span>
-            </div>
+            <div className="mb-3">
+            <span className="text-sm font-bold text-white">Hotels Vendors</span>
+          </div>
             <p className="text-[11px] text-white/25 leading-relaxed">The Digital Procurement Hub for Egyptian Hospitality.</p>
           </div>
           <div>
