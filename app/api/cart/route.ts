@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: {
         ...cart,
-        summary: { subtotal, vatAmount, total, itemCount: cart.items.reduce((sum, i) => sum + i.quantity, 0) },
+        summary: { subtotal, vatAmount, total, itemCount: cart.items.reduce((sum: number, i: { quantity: number }) => sum + i.quantity, 0) },
       },
     });
   } catch (error) {
