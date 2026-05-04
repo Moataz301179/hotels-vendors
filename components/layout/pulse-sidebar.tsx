@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Settings,
+  HelpCircle,
 } from "lucide-react";
 
 interface PulseSidebarProps {
@@ -45,6 +46,10 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
     {
       section: "INTELLIGENCE",
       items: [{ icon: BrainCircuit, label: "Intelligence", href: "/hotel/intelligence" }],
+    },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
     },
   ],
   admin: [

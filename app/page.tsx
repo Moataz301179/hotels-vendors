@@ -114,7 +114,7 @@ function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">
-            {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
+            {["Product", "Solutions", "Pricing", "Enterprise", "About"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} className="px-3 py-2 text-[13px] font-medium rounded-lg text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-colors">
                 {item}
               </a>

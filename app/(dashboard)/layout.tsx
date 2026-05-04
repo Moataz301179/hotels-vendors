@@ -4,6 +4,7 @@ import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
+import { ChatbotWidget } from "@/components/ai-assistant/chatbot";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
@@ -48,6 +49,7 @@ export default async function DashboardLayout({
       <DashboardCartWrapper>
         {children}
       </DashboardCartWrapper>
+      <ChatbotWidget />
     </DashboardShell>
   );
 }
