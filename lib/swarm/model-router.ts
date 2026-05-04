@@ -27,7 +27,7 @@ function buildModelConfigs(): ModelConfig[] {
   const configs: ModelConfig[] = [];
   const appUrl = process.env.APP_URL || "https://hotelsvendors.com";
 
-  // ── 1. XAI GROK (Primary — fast, cheap reasoning, $10 credit) ──
+  // ── 1. XAI GROK (Primary — fast reasoning, $410 credit) ──
   if (process.env.XAI_API_KEY) {
     configs.push({
       provider: "xai",
