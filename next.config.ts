@@ -10,6 +10,30 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.gravatar.com" },
     ],
   },
+
+  // Disable aggressive static page caching — we control cache at nginx level
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
+          },
+        ],
+      },
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
