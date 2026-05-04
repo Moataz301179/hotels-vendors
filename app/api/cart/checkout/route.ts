@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     const vatAmount = subtotal * vatRate;
     const total = subtotal + vatAmount;
 
-    const order = await prisma.$transaction(async (tx) => {
+    const order = await prisma.$transaction(async (tx: typeof prisma) => {
       const created = await tx.order.create({
         data: {
           orderNumber: generateOrderNumber(),
