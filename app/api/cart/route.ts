@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const subtotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+    const subtotal = cart.items.reduce((sum: number, item: { total: number }) => sum + item.total, 0);
     const vatRate = 0.14;
     const vatAmount = subtotal * vatRate;
     const total = subtotal + vatAmount;
