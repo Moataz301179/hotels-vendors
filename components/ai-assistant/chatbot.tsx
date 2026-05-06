@@ -40,11 +40,11 @@ export function ChatbotWidget() {
       const res = await fetch("/api/v1/ai/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg.content }),
+        body: JSON.stringify({ question: userMsg.content }),
       });
 
       const json = await res.json();
-      const reply = json.data?.response || json.response || "I'm here to help. Could you provide more details?";
+      const reply = json.data?.answer || json.answer || "I'm here to help. Could you provide more details?";
 
       setMessages((prev) => [
         ...prev,
