@@ -1,6 +1,7 @@
 "use client";
 
-import { Bot, Play, Pause, Clock } from "lucide-react";
+import { useState } from "react";
+import { Bot, Play, Pause, Clock, Loader2 } from "lucide-react";
 import type { SwarmAgentDef } from "@/lib/swarm/agents";
 
 interface OpenClawAgentCardProps {
@@ -29,8 +30,34 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 export function OpenClawAgentCard({ agent, recentJob }: OpenClawAgentCardProps) {
+  const [running, setRunning] = useState(false);
   const squadColor = SQUAD_COLORS[agent.squad] || "rgba(255,255,255,0.20)";
   const statusColor = recentJob ? STATUS_DOT[recentJob.status] || "rgba(255,255,255,0.20)" : "rgba(255,255,255,0.10)";
+
+  async function handleRun() {
+    setRunning(true);
+    try {
+      const res = await fetch("/api/v1/swarm/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agentId: agent.id,
+          jobType: agent.id,
+          prompt: `Execute ${agent.name}'s primary function: ${agent.role}.`,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        window.location.reload();
+      } else {
+        alert(json.error || "Failed to queue job");
+      }
+    } catch {
+      alert("Network error");
+    } finally {
+      setRunning(false);
+    }
+  }
 
   return (
     <div className="glass-card p-3 hover:bg-white/[0.02] transition-colors group">
@@ -76,11 +103,21 @@ export function OpenClawAgentCard({ agent, recentJob }: OpenClawAgentCardProps) 
               : "No recent jobs"}
           </span>
         </div>
-        {agent.requiresApproval && (
-          <span className="text-[8px] text-[#f59e0b] bg-[rgba(245,158,11,0.08)] px-1 py-0.5 rounded">
-            Approval
-          </span>
-        )}
+        <div className="flex items-center gap-1.5">
+          {agent.requiresApproval && (
+            <span className="text-[8px] text-[#f59e0b] bg-[rgba(245,158,11,0.08)] px-1 py-0.5 rounded">
+              Approval
+            </span>
+          )}
+          <button
+            onClick={handleRun}
+            disabled={running}
+            className="flex items-center gap-0.5 text-[8px] text-[#34d399] bg-[rgba(52,211,153,0.08)] hover:bg-[rgba(52,211,153,0.14)] px-1.5 py-0.5 rounded transition-colors disabled:opacity-50"
+          >
+            {running ? <Loader2 size={9} className="animate-spin" /> : <Play size={9} />}
+            Run
+          </button>
+        </div>
       </div>
     </div>
   );
