@@ -12,11 +12,19 @@ import {
   BarChart3,
   Zap,
   BrainCircuit,
+  Bot,
   ChevronLeft,
   ChevronRight,
   Settings,
   HelpCircle,
+  Truck,
+  Landmark,
+  Megaphone,
+  ShieldCheck,
+  Store,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface PulseSidebarProps {
   role: string;
@@ -30,22 +38,24 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "OPERATIONS",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/hotel" },
-        { icon: Building2, label: "Hotels", href: "/hotel/properties" },
+        { icon: Building2, label: "Properties", href: "/hotel/properties" },
         { icon: Users, label: "Suppliers", href: "/hotel/suppliers" },
         { icon: PackageSearch, label: "Catalog", href: "/hotel/catalog" },
         { icon: ClipboardList, label: "Orders", href: "/hotel/order" },
         { icon: FileText, label: "Invoices", href: "/hotel/invoices" },
         { icon: Calculator, label: "Accounting", href: "/hotel/accounting" },
+      ],
+    },
+    {
+      section: "INTELLIGENCE",
+      items: [
         { icon: BarChart3, label: "AI Inventory", href: "/hotel/ai-inventory" },
+        { icon: BrainCircuit, label: "Intelligence", href: "/hotel/intelligence" },
       ],
     },
     {
       section: "COMPLIANCE",
       items: [{ icon: Zap, label: "ETA Demo", href: "/eta-demo" }],
-    },
-    {
-      section: "INTELLIGENCE",
-      items: [{ icon: BrainCircuit, label: "Intelligence", href: "/hotel/intelligence" }],
     },
     {
       section: "SUPPORT",
@@ -54,11 +64,13 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
   ],
   admin: [
     {
-      section: "OPERATIONS",
+      section: "PLATFORM",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+        { icon: ShieldCheck, label: "Security", href: "/admin/security" },
         { icon: Users, label: "Suppliers", href: "/admin/suppliers" },
-        { icon: Settings, label: "Security", href: "/admin/security" },
+        { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
+        { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
       ],
     },
     {
@@ -71,8 +83,52 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "OPERATIONS",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/supplier" },
-        { icon: PackageSearch, label: "Products", href: "/supplier/products" },
+        { icon: Store, label: "Products", href: "/supplier/products" },
         { icon: ClipboardList, label: "Orders", href: "/supplier/orders" },
+        { icon: BarChart3, label: "Analytics", href: "/supplier/analytics" },
+      ],
+    },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
+    },
+  ],
+  factoring: [
+    {
+      section: "PORTFOLIO",
+      items: [
+        { icon: LayoutDashboard, label: "Dashboard", href: "/factoring" },
+        { icon: FileText, label: "Invoices", href: "/factoring/invoices" },
+        { icon: Landmark, label: "Risk Engine", href: "/factoring/risk" },
+      ],
+    },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
+    },
+  ],
+  shipping: [
+    {
+      section: "LOGISTICS",
+      items: [
+        { icon: LayoutDashboard, label: "Dashboard", href: "/shipping" },
+        { icon: Truck, label: "Routes", href: "/shipping/routes" },
+        { icon: ClipboardList, label: "Deliveries", href: "/shipping/deliveries" },
+      ],
+    },
+    {
+      section: "SUPPORT",
+      items: [{ icon: HelpCircle, label: "Help & Guides", href: "/help" }],
+    },
+  ],
+  marketing: [
+    {
+      section: "GROWTH",
+      items: [
+        { icon: LayoutDashboard, label: "Dashboard", href: "/marketing" },
+        { icon: Megaphone, label: "Campaigns", href: "/marketing/campaigns" },
+        { icon: Users, label: "Leads", href: "/marketing/leads" },
+        { icon: BarChart3, label: "Analytics", href: "/marketing/analytics" },
       ],
     },
     {
@@ -83,91 +139,110 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
 };
 
 export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
-  const [activePath, setActivePath] = useState("");
+  const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-[var(--border-subtle)] bg-[var(--surface)]">
+      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
         <button
           onClick={onToggle}
-          className="p-2 rounded-lg hover:bg-[var(--surface-raised)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+          className="p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.35)] hover:text-white transition-colors"
         >
           <ChevronRight size={18} />
         </button>
-        <div className="mt-6 flex flex-col gap-3">
+
+        <div className="mt-6 flex flex-col gap-1 w-full px-2">
           {navGroups.map((g) =>
-            g.items.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="p-2.5 rounded-xl hover:bg-[var(--surface-raised)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
-                title={item.label}
-              >
-                <item.icon size={18} />
-              </a>
-            ))
+            g.items.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
+                    isActive
+                      ? "bg-[rgba(128,0,0,0.15)] text-white"
+                      : "text-[rgba(255,255,255,0.35)] hover:text-white hover:bg-[rgba(255,255,255,0.04)]"
+                  }`}
+                  title={item.label}
+                >
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#800000] rounded-r-full" />
+                  )}
+                  <item.icon size={18} />
+                </Link>
+              );
+            })
           )}
+        </div>
+
+        <div className="mt-auto flex flex-col gap-1 w-full px-2">
+          <button className="flex items-center justify-center w-10 h-10 rounded-lg text-[rgba(255,255,255,0.35)] hover:text-white hover:bg-[rgba(255,255,255,0.04)] transition-all">
+            <Settings size={18} />
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col bg-[var(--surface)] border-r border-[var(--border-subtle)]">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)]">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[var(--accent-500)] flex items-center justify-center">
-            <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-              <path d="M8 4L16 12L8 20L4 16L8 12V4Z" fill="white"/>
-              <path d="M16 12L24 4V12L20 16L24 20L16 28L12 24L16 20V12Z" fill="white" opacity="0.7"/>
-            </svg>
+    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 h-16 border-b border-[rgba(255,255,255,0.04)]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#800000] to-[#4d0000] flex items-center justify-center">
+            <span className="text-white text-[10px] font-bold">HV</span>
           </div>
-          <div className="leading-tight">
-            <p className="text-sm font-bold text-white tracking-wide">Hotels Vendors</p>
-            <p className="text-[10px] text-[var(--foreground-muted)] tracking-widest uppercase">Smarter Together</p>
-          </div>
+          <span className="text-sm font-semibold text-white tracking-tight">HotelsVendors</span>
         </div>
         <button
           onClick={onToggle}
-          className="p-1.5 rounded-lg hover:bg-[var(--surface-raised)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+          className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.30)] hover:text-white transition-colors"
         >
           <ChevronLeft size={16} />
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto py-4 px-3">
         {navGroups.map((group) => (
-          <div key={group.section}>
-            <p className="px-3 mb-2 text-[10px] font-semibold text-[var(--foreground-muted)] uppercase tracking-widest">
+          <div key={group.section} className="mb-5">
+            <p className="px-3 mb-1.5 text-[10px] font-semibold text-[rgba(255,255,255,0.25)] uppercase tracking-wider">
               {group.section}
             </p>
-            <div className="space-y-0.5">
-              {group.items.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setActivePath(item.href)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                    activePath === item.href
-                      ? "bg-[var(--accent-500)]/15 text-[var(--accent-400)] border border-[var(--accent-500)]/20"
-                      : "text-[var(--foreground-secondary)] hover:text-white hover:bg-[var(--surface-raised)]"
-                  }`}
-                >
-                  <item.icon size={16} />
-                  <span className="font-medium">{item.label}</span>
-                </a>
-              ))}
+            <div className="flex flex-col gap-0.5">
+              {group.items.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
+                      isActive
+                        ? "bg-[rgba(128,0,0,0.12)] text-white font-medium"
+                        : "text-[rgba(255,255,255,0.50)] hover:text-white hover:bg-[rgba(255,255,255,0.03)]"
+                    }`}
+                  >
+                    {isActive && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#800000] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                    )}
+                    <item.icon size={17} className={isActive ? "text-[#800000]" : ""} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         ))}
       </nav>
 
-      <div className="px-4 py-3 border-t border-[var(--border-subtle)]">
-        <a href="/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--foreground-secondary)] hover:text-white hover:bg-[var(--surface-raised)] transition-colors w-full">
-          <Settings size={16} />
-          <span className="font-medium">Settings</span>
-        </a>
+      {/* Footer */}
+      <div className="p-3 border-t border-[rgba(255,255,255,0.04)]">
+        <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[rgba(255,255,255,0.40)] hover:text-white hover:bg-[rgba(255,255,255,0.03)] transition-all w-full">
+          <Settings size={17} />
+          <span>Settings</span>
+        </button>
       </div>
     </div>
   );

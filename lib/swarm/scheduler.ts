@@ -10,14 +10,19 @@ import { executeLLM } from "./model-router";
 import { getMemoryContext, storeMemory } from "./memory";
 import { recordSwarmEvent } from "./monitoring";
 import { runAcquisition } from "./acquisition-engine";
+import { executeAgentJob } from "./agent-executor";
+import { getAgentById } from "./agents";
 
 // ── Queues ──
 export const swarmQueues = {
-  growth: new Queue("swarm-growth", { connection: getRedisConnection() }),
-  operations: new Queue("swarm-operations", { connection: getRedisConnection() }),
-  intelligence: new Queue("swarm-intelligence", { connection: getRedisConnection() }),
-  execution: new Queue("swarm-execution", { connection: getRedisConnection() }),
   director: new Queue("swarm-director", { connection: getRedisConnection() }),
+  platform: new Queue("swarm-platform", { connection: getRedisConnection() }),
+  fintech: new Queue("swarm-fintech", { connection: getRedisConnection() }),
+  supplier: new Queue("swarm-supplier", { connection: getRedisConnection() }),
+  hotel: new Queue("swarm-hotel", { connection: getRedisConnection() }),
+  logistics: new Queue("swarm-logistics", { connection: getRedisConnection() }),
+  intelligence: new Queue("swarm-intelligence", { connection: getRedisConnection() }),
+  growth: new Queue("swarm-growth", { connection: getRedisConnection() }),
 };
 
 function getRedisConnection() {
@@ -27,26 +32,52 @@ function getRedisConnection() {
 
 // ── Job Types ──
 export type SwarmJobType =
+  // Director
+  | "director_plan"
+  | "director_review"
+  // Platform
+  | "schema_design"
+  | "security_audit"
+  | "deploy_pipeline"
+  | "test_automation"
+  // Fintech
+  | "fee_calculation"
+  | "eta_submission"
+  | "credit_assessment"
+  | "authority_enforcement"
+  // Supplier
+  | "supplier_onboard"
+  | "catalog_validate"
+  | "trust_assess"
+  | "coastal_mapping"
+  // Hotel
+  | "procurement_design"
+  | "order_flow"
+  | "spend_analytics"
+  | "multi_property_setup"
+  // Logistics
+  | "route_optimize"
+  | "delivery_track"
+  | "partner_manage"
+  // Intelligence
+  | "price_benchmark"
+  | "demand_forecast"
+  | "matchmake"
+  | "ai_assistant_train"
+  // Growth
   | "lead_scout"
   | "lead_enrich"
   | "outreach_draft"
   | "outreach_send"
   | "content_generate"
+  | "seo_optimize"
   | "social_listen"
-  | "supplier_onboard"
-  | "catalog_validate"
-  | "trust_assess"
   | "health_check"
-  | "price_benchmark"
-  | "demand_forecast"
-  | "matchmake"
   | "audit_data"
   | "web_navigate"
   | "form_fill"
   | "document_ocr"
-  | "report_generate"
-  | "director_plan"
-  | "director_review";
+  | "report_generate";
 
 export interface SwarmJobPayload {
   jobType: SwarmJobType;
@@ -75,6 +106,9 @@ export async function addSwarmJob(
   } = {}
 ): Promise<Job> {
   const queue = swarmQueues[payload.squad as keyof typeof swarmQueues] || swarmQueues.director;
+  if (!queue) {
+    throw new Error(`Unknown squad: ${payload.squad}`);
+  }
 
   const job = await queue.add(payload.jobType, payload, {
     priority: options.priority || 5,
@@ -148,12 +182,36 @@ export function createSwarmWorker(squad: string) {
         // Retrieve memory context
         const memoryContext = await getMemoryContext(payload.agentId, payload.userPrompt);
 
-        // Execute LLM call
-        const result = await executeLLM(
-          payload.systemPrompt,
-          memoryContext ? `${memoryContext}\n\n${payload.userPrompt}` : payload.userPrompt,
-          { temperature: 0.3, maxTokens: 4096 }
-        );
+        // Get agent definition for tool list
+        const agentDef = getAgentById(payload.agentId);
+        const agentTools = agentDef?.tools || [];
+
+        // Execute agent job with autonomous tool use
+        let result: { content: string; provider: string; latencyMs: number; toolRounds?: number };
+        let toolResults: { success: boolean; data: unknown; error?: string }[] = [];
+
+        if (agentTools.length > 0 && agentTools.some((t) => t.startsWith("openclaw_") || t.startsWith("memory_") || t.startsWith("database_"))) {
+          const execResult = await executeAgentJob({
+            agentId: payload.agentId,
+            agentName: payload.agentName,
+            systemPrompt: payload.systemPrompt,
+            userPrompt: payload.userPrompt,
+            tools: agentTools,
+            memoryContext,
+            temperature: 0.3,
+            maxTokens: 4096,
+          });
+          result = execResult;
+          toolResults = execResult.toolResults;
+        } else {
+          // Fallback to simple LLM call for agents without tools
+          const llmResult = await executeLLM(
+            payload.systemPrompt,
+            memoryContext ? `${memoryContext}\n\n${payload.userPrompt}` : payload.userPrompt,
+            { temperature: 0.3, maxTokens: 4096 }
+          );
+          result = llmResult;
+        }
 
         // Store result in memory
         await storeMemory({
@@ -211,6 +269,7 @@ export function createSwarmWorker(squad: string) {
                 llmResult: result,
                 openclawResult,
                 acquisitionResult,
+                toolResults,
               }),
               findings: result.content.substring(0, 2000),
             },
@@ -375,10 +434,13 @@ Output ONLY valid JSON.`,
 export function initializeSwarmWorkers() {
   const workers = [
     createSwarmWorker("director"),
-    createSwarmWorker("growth"),
-    createSwarmWorker("operations"),
+    createSwarmWorker("platform"),
+    createSwarmWorker("fintech"),
+    createSwarmWorker("supplier"),
+    createSwarmWorker("hotel"),
+    createSwarmWorker("logistics"),
     createSwarmWorker("intelligence"),
-    createSwarmWorker("execution"),
+    createSwarmWorker("growth"),
   ];
 
   workers.forEach((w) => {

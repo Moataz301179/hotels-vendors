@@ -1,57 +1,90 @@
 "use client";
 
-import { Search, Bell, ChevronDown } from "lucide-react";
+import { Search, Bell, ChevronDown, Settings } from "lucide-react";
 
 interface DashboardHeaderProps {
   role: string;
 }
 
-export function DashboardHeader({ role }: DashboardHeaderProps) {
-  const roleBadge: Record<string, string> = {
-    admin: "Platform Admin",
-    hotel: "Hotel Buyer",
-    supplier: "Supplier",
-    factoring: "Factoring Partner",
-    shipping: "Logistics",
-    marketing: "Marketing",
-  };
+const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
+  admin: { label: "Platform Admin", badgeColor: "bg-[#800000]" },
+  hotel: { label: "Hotel Buyer", badgeColor: "bg-emerald-500" },
+  supplier: { label: "Supplier", badgeColor: "bg-blue-500" },
+  factoring: { label: "Factoring Partner", badgeColor: "bg-amber-500" },
+  shipping: { label: "Logistics", badgeColor: "bg-cyan-500" },
+  marketing: { label: "Marketing", badgeColor: "bg-purple-500" },
+};
 
-  const label = roleBadge[role] || "User";
+export function DashboardHeader({ role }: DashboardHeaderProps) {
+  const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-100">
-      <div className="flex items-center gap-4">
-        <h1 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Dashboard</h1>
+    <header
+      className="h-16 flex items-center justify-between px-6 sticky top-0 z-30"
+      style={{
+        background: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(16px) saturate(1.2)",
+        WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+      }}
+    >
+      {/* Left: Breadcrumb / Context */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-medium text-[rgba(255,255,255,0.35)] uppercase tracking-wider">
+          Dashboard
+        </span>
+        <span className="text-[rgba(255,255,255,0.15)]">/</span>
+        <span className="text-xs font-medium text-[rgba(255,255,255,0.60)]">
+          {config.label}
+        </span>
       </div>
 
-      <div className="flex-1 max-w-xl mx-8">
-        <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+      {/* Center: Search */}
+      <div className="flex-1 max-w-md mx-8">
+        <div className="relative group">
+          <Search
+            size={15}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(255,255,255,0.30)] group-focus-within:text-[#800000] transition-colors"
+          />
           <input
             type="text"
-            placeholder="Search..."
-            className="w-full h-10 pl-10 pr-4 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[var(--accent-500)] focus:ring-1 focus:ring-[var(--accent-500)]/20 transition-colors"
+            placeholder="Search orders, suppliers, products..."
+            className="w-full h-9 pl-9 pr-4 rounded-lg text-sm text-white placeholder:text-[rgba(255,255,255,0.25)] glass-input"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200">
-          <span className="w-2 h-2 rounded-full bg-[var(--accent-500)]" />
-          <span className="text-xs font-medium text-gray-700">{label}</span>
-          <ChevronDown size={12} className="text-gray-400" />
+      {/* Right: Actions */}
+      <div className="flex items-center gap-3">
+        {/* Role Badge */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-card">
+          <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
+          <span className="text-xs font-medium text-[rgba(255,255,255,0.70)]">
+            {config.label}
+          </span>
+          <ChevronDown size={12} className="text-[rgba(255,255,255,0.30)]" />
         </div>
 
-        <button className="relative p-2.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors">
-          <Bell size={18} />
-          <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--accent-500)] ring-2 ring-white" />
+        {/* Settings */}
+        <button className="relative p-2 rounded-lg text-[rgba(255,255,255,0.40)] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-all">
+          <Settings size={18} />
         </button>
 
-        <button className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-full bg-[var(--accent-500)] flex items-center justify-center text-white text-sm font-bold">
+        {/* Notifications */}
+        <button className="relative p-2 rounded-lg text-[rgba(255,255,255,0.40)] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-all">
+          <Bell size={18} />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#800000] ring-2 ring-black" />
+        </button>
+
+        {/* Avatar */}
+        <button className="flex items-center gap-2.5 pl-1">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#800000] to-[#4d0000] flex items-center justify-center text-white text-xs font-bold ring-2 ring-[rgba(255,255,255,0.08)]">
             AH
           </div>
-          <span className="text-sm font-medium text-gray-900">Ahmed Hassan</span>
+          <div className="hidden md:block text-left">
+            <p className="text-xs font-medium text-white leading-tight">Ahmed Hassan</p>
+            <p className="text-[10px] text-[rgba(255,255,255,0.35)] leading-tight">Nile Palace Hotel</p>
+          </div>
         </button>
       </div>
     </header>
