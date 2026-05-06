@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Sparkline } from "@/components/dashboards/shared/sparkline";
 import { PipelineSteps } from "@/components/dashboards/shared/pipeline-steps";
+import { OrderActions } from "@/components/dashboards/hotel/order-actions";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth/server-auth";
 
@@ -53,6 +54,7 @@ async function getData() {
     hotelName: user.name,
     orders: orders.map((o) => ({
       id: o.orderNumber,
+      dbId: o.id,
       supplier: o.supplier?.name ?? "Unknown",
       items: o.items.length,
       total: `EGP ${o.total.toLocaleString()}`,
@@ -313,14 +315,7 @@ export default async function HotelDashboardPage() {
                     <td className="px-5 py-3.5 text-[rgba(255,255,255,0.30)] text-xs">{o.date}</td>
                     <td className="px-5 py-3.5">
                       {o.status.includes("PENDING") ? (
-                        <div className="flex items-center gap-1.5">
-                          <button className="p-1.5 rounded-md hover:bg-[rgba(52,211,153,0.10)] text-[#34d399] border border-[rgba(52,211,153,0.15)] hover:border-[rgba(52,211,153,0.30)] transition-all">
-                            <CheckCircle size={14} />
-                          </button>
-                          <button className="p-1.5 rounded-md hover:bg-[rgba(239,68,68,0.10)] text-[#ef4444] border border-[rgba(239,68,68,0.15)] hover:border-[rgba(239,68,68,0.30)] transition-all">
-                            <XCircle size={14} />
-                          </button>
-                        </div>
+                        <OrderActions orderId={o.dbId} />
                       ) : (
                         <button className="text-[11px] text-[rgba(255,255,255,0.40)] hover:text-white transition-colors">
                           View →
