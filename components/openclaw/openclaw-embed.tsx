@@ -22,7 +22,7 @@ export function OpenClawEmbed({
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
         <div className="flex items-center gap-2">
-          <Bot size={16} className="text-[#800000]" />
+          <Bot size={16} className="text-[#FF5C00]" />
           <span className="text-sm font-semibold text-white">OpenClaw Workspace</span>
         </div>
         <div className="flex items-center gap-2">

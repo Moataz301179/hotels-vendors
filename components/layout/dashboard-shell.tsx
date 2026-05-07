@@ -13,7 +13,7 @@ export function DashboardShell({ children, role }: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex h-screen w-full overflow-hidden" style={{ background: 'linear-gradient(180deg, #121212 0%, #1C1C1C 100%)' }}>
       {/* Pulse Sidebar */}
       <aside
         className={`flex-shrink-0 transition-all duration-300 ease-out ${

@@ -15,7 +15,7 @@ export default function AdminSettingsPage() {
       <div className="flex items-start justify-between gap-4 mb-8 animate-fade-in-up">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Settings size={22} className="text-[#800000]" />
+            <Settings size={22} className="text-[#FF5C00]" />
             <span className="gradient-text-animated">Platform Settings</span>
           </h1>
           <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
@@ -53,12 +53,12 @@ export default function AdminSettingsPage() {
               <input
                 type="text"
                 defaultValue="Hotels Vendors"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#800000]/50 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#FF5C00]/50 transition-colors"
               />
             </div>
             <div>
               <label className="block text-[11px] text-white/40 mb-1.5">Default Currency</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#800000]/50 transition-colors">
+              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#FF5C00]/50 transition-colors">
                 <option value="EGP">EGP — Egyptian Pound</option>
                 <option value="USD">USD — US Dollar</option>
                 <option value="EUR">EUR — Euro</option>
@@ -66,14 +66,14 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <label className="block text-[11px] text-white/40 mb-1.5">Timezone</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#800000]/50 transition-colors">
+              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#FF5C00]/50 transition-colors">
                 <option value="Africa/Cairo">Africa/Cairo (UTC+2)</option>
                 <option value="UTC">UTC</option>
               </select>
             </div>
             <div>
               <label className="block text-[11px] text-white/40 mb-1.5">Default Language</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#800000]/50 transition-colors">
+              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#FF5C00]/50 transition-colors">
                 <option value="en">English</option>
                 <option value="ar">العربية (Arabic)</option>
               </select>
@@ -166,17 +166,17 @@ export default function AdminSettingsPage() {
             <div>
               <label className="block text-[11px] text-white/40 mb-1.5">Brand Color</label>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg border border-white/[0.08]" style={{ background: "#800000" }} />
+                <div className="w-8 h-8 rounded-lg border border-white/[0.08]" style={{ background: "#FF5C00" }} />
                 <input
                   type="text"
-                  defaultValue="#800000"
-                  className="flex-1 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white font-mono focus:outline-none focus:border-[#800000]/50 transition-colors"
+                  defaultValue="#FF5C00"
+                  className="flex-1 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white font-mono focus:outline-none focus:border-[#FF5C00]/50 transition-colors"
                 />
               </div>
             </div>
             <div>
               <label className="block text-[11px] text-white/40 mb-1.5">Dashboard Theme</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#800000]/50 transition-colors">
+              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#FF5C00]/50 transition-colors">
                 <option value="dark">Dark (Default)</option>
                 <option value="light">Light</option>
                 <option value="system">System</option>

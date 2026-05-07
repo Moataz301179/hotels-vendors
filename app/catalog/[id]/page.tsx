@@ -22,7 +22,7 @@ export default function PublicProductDetailPage() {
       <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
         <Package className="w-12 h-12 text-white/20" />
         <h1 className="text-xl font-semibold">Product Not Found</h1>
-        <Link href="/catalog" className="px-4 py-2 rounded-lg bg-[#800000] text-white text-sm">Back to Catalog</Link>
+        <Link href="/catalog" className="px-4 py-2 rounded-lg bg-[#FF5C00] text-white text-sm">Back to Catalog</Link>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function PublicProductDetailPage() {
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center">
               <Image src="/logo-horse-only.png" alt="" width={24} height={24} className="opacity-90" />
             </div>
             <div>
@@ -49,7 +49,7 @@ export default function PublicProductDetailPage() {
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/catalog" className="text-sm text-white/50 hover:text-white transition-colors">Catalog</Link>
-            <Link href="/login" className="px-4 py-2 rounded-lg bg-[#800000] hover:bg-[#990000] text-white text-sm font-medium transition-colors">Sign In</Link>
+            <Link href="/login" className="px-4 py-2 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-colors">Sign In</Link>
           </div>
         </div>
       </header>
@@ -62,14 +62,14 @@ export default function PublicProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <div className="relative aspect-square rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#800000]/5 to-transparent">
+            <div className="relative aspect-square rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#FF5C00]/5 to-transparent">
               <Package className="w-20 h-20 text-white/10 mb-4" />
               <span className="text-sm text-white/20 font-mono">{product.sku}</span>
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${product.stockQuantity === 0 ? "text-red-400 bg-red-500/10 border-red-500/20" : product.stockQuantity < 20 ? "text-amber-400 bg-amber-500/10 border-amber-500/20" : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"}`}>
                   {product.stockQuantity === 0 ? "Out of Stock" : product.stockQuantity < 20 ? "Low Stock" : "In Stock"}
                 </span>
-                {product.supplierTier === "PREMIER" && <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#800000]/20 text-[#ff4d4d] border border-[#800000]/30">Premier</span>}
+                {product.supplierTier === "PREMIER" && <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FF5C00]/20 text-[#ff7a33] border border-[#FF5C00]/30">Premier</span>}
               </div>
             </div>
           </motion.div>
@@ -77,7 +77,7 @@ export default function PublicProductDetailPage() {
           {/* Info */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <span className="px-2.5 py-1 rounded-md bg-[#800000]/15 text-[#ff4d4d] text-xs font-semibold border border-[#800000]/25">{cat?.label || product.category}</span>
+              <span className="px-2.5 py-1 rounded-md bg-[#FF5C00]/15 text-[#ff7a33] text-xs font-semibold border border-[#FF5C00]/25">{cat?.label || product.category}</span>
               <span className="text-xs text-white/30 font-mono">{product.sku}</span>
             </div>
             <h1 className="text-2xl font-bold">{product.name}</h1>
@@ -100,11 +100,11 @@ export default function PublicProductDetailPage() {
                 <span className="px-4 text-sm font-medium min-w-[4rem] text-center">{qty}</span>
                 <button onClick={() => setQty(Math.min(product.stockQuantity, qty + 1))} className="px-4 py-3 text-white/60"><Plus className="w-4 h-4" /></button>
               </div>
-              <button onClick={() => setAdded(true)} disabled={product.stockQuantity === 0} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#800000] hover:bg-[#990000] disabled:bg-white/[0.05] text-white font-medium transition-all">
+              <button onClick={() => setAdded(true)} disabled={product.stockQuantity === 0} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#FF5C00] hover:bg-[#e65100] disabled:bg-white/[0.05] text-white font-medium transition-all">
                 {added ? <><Check className="w-5 h-5" /><span>Sign in to Order</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
               </button>
             </div>
-            {added && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[#ff4d4d]">Please <Link href="/login" className="underline">sign in</Link> to place orders</motion.p>}
+            {added && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[#ff7a33]">Please <Link href="/login" className="underline">sign in</Link> to place orders</motion.p>}
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span className="text-xs text-emerald-400">ETA E-Invoicing Compliant</span>
@@ -112,7 +112,7 @@ export default function PublicProductDetailPage() {
             <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
               <p className="text-xs font-semibold text-white/40 uppercase mb-3">Supplier</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center text-sm font-bold text-[#ff4d4d]">{product.supplierName.charAt(0)}</div>
+                <div className="w-10 h-10 rounded-lg bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center text-sm font-bold text-[#ff7a33]">{product.supplierName.charAt(0)}</div>
                 <div>
                   <p className="text-sm font-medium">{product.supplierName}</p>
                   <div className="flex items-center gap-2 text-xs text-white/40">
@@ -155,9 +155,9 @@ export default function PublicProductDetailPage() {
             <h2 className="text-lg font-semibold mb-4">More from {cat?.label || product.category}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {related.map((p) => (
-                <Link key={p.id} href={`/catalog/${p.id}`} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-[#800000]/30 transition-colors">
+                <Link key={p.id} href={`/catalog/${p.id}`} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-[#FF5C00]/30 transition-colors">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#800000]/15 text-[#ff4d4d]">{p.sku}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#FF5C00]/15 text-[#ff7a33]">{p.sku}</span>
                     <span className="text-[10px] text-white/30">{getCategoryById(p.category)?.label || p.category}</span>
                   </div>
                   <p className="text-sm font-medium line-clamp-2">{p.name}</p>

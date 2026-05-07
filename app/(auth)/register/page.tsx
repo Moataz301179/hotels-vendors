@@ -97,8 +97,8 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden py-12">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#800000]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#800000]/3 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF5C00]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#FF5C00]/3 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative w-full max-w-lg mx-4">
@@ -109,7 +109,7 @@ export default function RegisterPage() {
           className="flex flex-col items-center mb-8"
         >
           <Link href="/" className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center">
               <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={32} height={32} className="opacity-90" />
             </div>
             <div>
@@ -136,7 +136,7 @@ export default function RegisterPage() {
                       step > s.id
                         ? "bg-emerald-500 text-white"
                         : step === s.id
-                        ? "bg-[#800000] text-white shadow-[0_0_12px_rgba(128,0,0,0.3)]"
+                        ? "bg-[#FF5C00] text-white shadow-[0_0_12px_rgba(255,92,0,0.3)]"
                         : "bg-white/[0.04] text-white/30 border border-white/[0.08]"
                     }`}
                   >
@@ -155,7 +155,7 @@ export default function RegisterPage() {
             {/* Progress bar */}
             <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-[#800000] rounded-full"
+                className="h-full bg-[#FF5C00] rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${stepProgress}%` }}
                 transition={{ duration: 0.3 }}
@@ -189,7 +189,7 @@ export default function RegisterPage() {
                       value={form.name}
                       onChange={(e) => updateForm("name", e.target.value)}
                       placeholder="Omar El-Sayed"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export default function RegisterPage() {
                       value={form.email}
                       onChange={(e) => updateForm("email", e.target.value)}
                       placeholder="omar@nilegrand.com"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function RegisterPage() {
                       value={form.password}
                       onChange={(e) => updateForm("password", e.target.value)}
                       placeholder="Min 8 characters"
-                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -238,7 +238,7 @@ export default function RegisterPage() {
                       value={form.phone}
                       onChange={(e) => updateForm("phone", e.target.value)}
                       placeholder="+20 1XX XXX XXXX"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function RegisterPage() {
                         onClick={() => updateForm("role", role.value)}
                         className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
                           form.role === role.value
-                            ? "bg-[#800000]/15 border-[#800000]/40 text-[#ff4d4d]"
+                            ? "bg-[#FF5C00]/15 border-[#FF5C00]/40 text-[#ff7a33]"
                             : "bg-white/[0.02] border-white/[0.06] text-white/50 hover:text-white/80 hover:border-white/[0.12]"
                         }`}
                       >
@@ -274,7 +274,7 @@ export default function RegisterPage() {
                     value={form.companyName}
                     onChange={(e) => updateForm("companyName", e.target.value)}
                     placeholder="Nile Grand Hotel"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                   />
                 </div>
                 <div className="space-y-2">
@@ -284,7 +284,7 @@ export default function RegisterPage() {
                     value={form.taxId}
                     onChange={(e) => updateForm("taxId", e.target.value)}
                     placeholder="123456789"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -295,7 +295,7 @@ export default function RegisterPage() {
                       value={form.city}
                       onChange={(e) => updateForm("city", e.target.value)}
                       placeholder="Cairo"
-                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -305,7 +305,7 @@ export default function RegisterPage() {
                       value={form.governorate}
                       onChange={(e) => updateForm("governorate", e.target.value)}
                       placeholder="Cairo"
-                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#800000]/50 transition-all"
+                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 transition-all"
                     />
                   </div>
                 </div>
@@ -353,7 +353,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#800000] hover:bg-[#990000] text-white text-sm font-medium transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-all"
                 >
                   <span>Continue</span>
                   <ArrowRight className="w-4 h-4" />
@@ -363,7 +363,7 @@ export default function RegisterPage() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#800000] hover:bg-[#990000] text-white text-sm font-medium transition-all disabled:opacity-50"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-all disabled:opacity-50"
                 >
                   {loading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -387,7 +387,7 @@ export default function RegisterPage() {
           className="text-center text-sm text-white/30 mt-6"
         >
           Already have an account?{" "}
-          <Link href="/login" className="text-[#ff4d4d] hover:text-[#ff6666] font-medium transition-colors">
+          <Link href="/login" className="text-[#ff7a33] hover:text-[#ff6666] font-medium transition-colors">
             Sign in
           </Link>
         </motion.p>

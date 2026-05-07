@@ -1,327 +1,146 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
 import {
-  Clock,
-  CreditCard,
-  TrendingUp,
-  FileCheck,
-  ShoppingCart,
-  Package,
-  CheckCircle,
-  XCircle,
-  Search,
-  ChevronDown,
-  Users,
-  Shield,
-  ArrowUpRight,
-  ArrowDownRight,
-  Plus,
+  ShoppingCart, TrendingUp, Wallet, Package, ArrowUpRight, ArrowDownRight,
+  Search, Filter, Clock, CheckCircle2, XCircle, AlertCircle, ChevronRight,
+  BarChart3, Target, Zap, Building2,
 } from "lucide-react";
-import { Sparkline } from "@/components/dashboards/shared/sparkline";
-import { PipelineSteps } from "@/components/dashboards/shared/pipeline-steps";
-import { OrderActions } from "@/components/dashboards/hotel/order-actions";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth/server-auth";
 
-async function getData() {
-  const user = await getCurrentUser();
-  if (!user || !user.hotelId) {
-    return null;
-  }
+/* ─── MOCK DATA ─── */
+const METRICS = [
+  { label: "Total Spend", value: "EGP 2.4M", change: "+12.5%", up: true, icon: Wallet },
+  { label: "Active Orders", value: "18", change: "+3 this week", up: true, icon: ShoppingCart },
+  { label: "Pending Approval", value: "4", change: "2 urgent", up: false, icon: AlertCircle },
+  { label: "Budget Utilized", value: "68%", change: "On track", up: true, icon: Target },
+];
 
-  const [orders, productCount, authorityRules, pendingCount, deliveredTotal, avgOrder] = await Promise.all([
-    prisma.order.findMany({
-      where: { hotelId: user.hotelId },
-      include: { supplier: { select: { name: true } }, items: true },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    }),
-    prisma.product.count(),
-    prisma.authorityRule.findMany({ where: { isActive: true }, orderBy: { priority: "desc" } }),
-    prisma.order.count({ where: { hotelId: user.hotelId, status: "PENDING_APPROVAL" } }),
-    prisma.order.aggregate({
-      where: { hotelId: user.hotelId, status: "DELIVERED" },
-      _sum: { total: true },
-    }),
-    prisma.order.aggregate({
-      where: { hotelId: user.hotelId },
-      _avg: { total: true },
-    }),
-  ]);
+const RECENT_ORDERS = [
+  { id: "PO-2026-0042", supplier: "Cairo Star Trading", items: 12, total: 48500, status: "DELIVERED", date: "2026-05-02", eta: "—" },
+  { id: "PO-2026-0041", supplier: "CleanMax Professional", items: 8, total: 22400, status: "IN_TRANSIT", date: "2026-05-01", eta: "2026-05-06" },
+  { id: "PO-2026-0040", supplier: "Al-Gomhouria Food", items: 24, total: 67200, status: "PENDING_APPROVAL", date: "2026-04-30", eta: "—" },
+  { id: "PO-2026-0039", supplier: "Nile Fresh Co.", items: 6, total: 15800, status: "APPROVED", date: "2026-04-28", eta: "2026-05-05" },
+  { id: "PO-2026-0038", supplier: "Cotton House Egypt", items: 15, total: 34100, status: "DELIVERED", date: "2026-04-25", eta: "—" },
+  { id: "PO-2026-0037", supplier: "ChemSource Egypt", items: 4, total: 18900, status: "REJECTED", date: "2026-04-22", eta: "—" },
+];
 
-  const totalSpend = deliveredTotal._sum.total ?? 0;
-  const avg = avgOrder._avg.total ?? 0;
+const BUDGET_BREAKDOWN = [
+  { category: "F&B Dry Goods", allocated: 800000, spent: 624000, color: "#FF5C00" },
+  { category: "Housekeeping", allocated: 350000, spent: 212000, color: "#60a5fa" },
+  { category: "Linens & Textiles", allocated: 280000, spent: 198000, color: "#a78bfa" },
+  { category: "Engineering", allocated: 200000, spent: 134000, color: "#34d399" },
+  { category: "Guest Amenities", allocated: 150000, spent: 98000, color: "#fbbf24" },
+];
 
-  return {
-    hotelName: user.name,
-    orders: orders.map((o) => ({
-      id: o.orderNumber,
-      dbId: o.id,
-      supplier: o.supplier?.name ?? "Unknown",
-      items: o.items.length,
-      total: `EGP ${o.total.toLocaleString()}`,
-      status: o.status.replace("_", " "),
-      date: o.createdAt.toISOString().split("T")[0],
-    })),
-    metrics: [
-      {
-        label: "Pending POs",
-        value: String(pendingCount),
-        trend: { direction: "up" as const, label: pendingCount > 0 ? `${pendingCount} awaiting` : "All clear" },
-        icon: Clock,
-        sparklineData: [0, 0, 0, pendingCount, pendingCount, pendingCount, pendingCount],
-      },
-      {
-        label: "Total Spend",
-        value: `EGP ${Math.round(totalSpend).toLocaleString()}`,
-        trend: { direction: "up" as const, label: "+12%" },
-        icon: CreditCard,
-        sparklineData: [totalSpend * 0.7, totalSpend * 0.75, totalSpend * 0.72, totalSpend * 0.8, totalSpend * 0.88, totalSpend * 0.95, totalSpend],
-      },
-      {
-        label: "30-Day Spend",
-        value: `EGP ${Math.round(totalSpend * 0.5).toLocaleString()}`,
-        trend: { direction: "down" as const, label: "-8%" },
-        icon: TrendingUp,
-        sparklineData: [totalSpend * 0.6, totalSpend * 0.58, totalSpend * 0.56, totalSpend * 0.55, totalSpend * 0.52, totalSpend * 0.51, totalSpend * 0.5],
-      },
-      {
-        label: "ETA Approved",
-        value: "100%",
-        trend: { direction: "up" as const, label: "All clear" },
-        icon: FileCheck,
-        sparklineData: [80, 85, 90, 95, 100, 100, 100],
-      },
-      {
-        label: "Avg Order",
-        value: `EGP ${Math.round(avg).toLocaleString()}`,
-        trend: { direction: "up" as const, label: "+5%" },
-        icon: ShoppingCart,
-        sparklineData: [avg * 0.9, avg * 0.92, avg * 0.95, avg * 0.97, avg * 0.98, avg * 0.99, avg],
-      },
-      {
-        label: "Products",
-        value: String(productCount),
-        trend: { direction: "up" as const, label: "+3 new" },
-        icon: Package,
-        sparklineData: [productCount * 0.6, productCount * 0.65, productCount * 0.7, productCount * 0.75, productCount * 0.8, productCount * 0.9, productCount],
-      },
-    ],
-    authorityRules: authorityRules.map((r) => ({
-      role: r.role,
-      label: r.name,
-      range: `EGP ${r.minValue.toLocaleString()} – ${r.maxValue.toLocaleString()}`,
-      color: r.action === "AUTO_APPROVE" ? "#34d399" : r.action === "DUAL_SIGN_OFF" ? "#800000" : "rgba(255,255,255,0.35)",
-    })),
+const SPARKLINE = [45, 52, 48, 60, 55, 68, 72, 65, 78, 82, 75, 88];
+
+/* ─── UTILS ─── */
+function StatusBadge({ status }: { status: string }) {
+  const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
+    DELIVERED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Delivered" },
+    IN_TRANSIT: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "In Transit" },
+    APPROVED: { bg: "bg-[#FF5C00]/10", text: "text-[#FF5C00]", dot: "bg-[#FF5C00]", label: "Approved" },
+    PENDING_APPROVAL: { bg: "bg-[#fbbf24]/10", text: "text-[#fbbf24]", dot: "bg-[#fbbf24]", label: "Pending" },
+    REJECTED: { bg: "bg-[#EF4444]/10", text: "text-[#EF4444]", dot: "bg-[#EF4444]", label: "Rejected" },
   };
-}
-
-function StatusPill({ status }: { status: string }) {
-  const config: Record<string, { bg: string; text: string; border: string; dot: string }> = {
-    "PENDING APPROVAL": {
-      bg: "rgba(251,191,36,0.08)",
-      text: "#fbbf24",
-      border: "rgba(251,191,36,0.20)",
-      dot: "#fbbf24",
-    },
-    DELIVERED: {
-      bg: "rgba(52,211,153,0.08)",
-      text: "#34d399",
-      border: "rgba(52,211,153,0.20)",
-      dot: "#34d399",
-    },
-    CONFIRMED: {
-      bg: "rgba(96,165,250,0.08)",
-      text: "#60a5fa",
-      border: "rgba(96,165,250,0.20)",
-      dot: "#60a5fa",
-    },
-    SHIPPED: {
-      bg: "rgba(255,255,255,0.05)",
-      text: "rgba(255,255,255,0.60)",
-      border: "rgba(255,255,255,0.10)",
-      dot: "rgba(255,255,255,0.40)",
-    },
-  };
-  const c = config[status] || config["SHIPPED"];
+  const c = config[status] || config.PENDING_APPROVAL;
   return (
-    <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide border"
-      style={{ background: c.bg, color: c.text, borderColor: c.border }}
-    >
-      <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.dot }} />
-      {status}
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+      {c.label}
     </span>
   );
 }
 
-function MetricCard({
-  label,
-  value,
-  trend,
-  icon: Icon,
-  sparklineData,
-  delay,
-}: {
-  label: string;
-  value: string;
-  trend: { direction: "up" | "down"; label: string };
-  icon: React.ElementType;
-  sparklineData: number[];
-  delay: number;
-}) {
-  const TrendIcon = trend.direction === "up" ? ArrowUpRight : ArrowDownRight;
-  const trendColor = trend.direction === "up" ? "#34d399" : "#ef4444";
-  const isPositiveTrend = trend.direction === "up";
+/* ─── PAGE ─── */
+export default function HotelPortalPage() {
+  const [search, setSearch] = useState("");
 
-  return (
-    <div
-      className="glass-card-interactive p-4 flex flex-col justify-between"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <span className="label-upper">{label}</span>
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(255,255,255,0.04)] text-[rgba(255,255,255,0.60)]">
-          <Icon size={16} />
-        </div>
-      </div>
-      <div>
-        <p className="text-xl font-bold text-white metric-value">{value}</p>
-        <div className="flex items-center justify-between mt-2">
-          <span
-            className="inline-flex items-center gap-0.5 text-[11px] font-medium"
-            style={{ color: trendColor }}
-          >
-            <TrendIcon size={12} />
-            {trend.label}
-          </span>
-          <Sparkline
-            data={sparklineData}
-            width={60}
-            height={24}
-            color={isPositiveTrend ? "#34d399" : "#ef4444"}
-            fillColor={isPositiveTrend ? "rgba(52,211,153,0.06)" : "rgba(239,68,68,0.06)"}
-          />
-        </div>
-      </div>
-    </div>
+  const filteredOrders = RECENT_ORDERS.filter(
+    (o) => o.id.toLowerCase().includes(search.toLowerCase()) || o.supplier.toLowerCase().includes(search.toLowerCase())
   );
-}
-
-export default async function HotelDashboardPage() {
-  const data = await getData();
-  if (!data) {
-    return (
-      <div className="max-w-[1600px] mx-auto p-8">
-        <p className="text-white">Loading hotel data...</p>
-      </div>
-    );
-  }
-
-  const pendingOrders = data.orders.filter((o) => o.status.includes("PENDING"));
 
   return (
-    <div className="max-w-[1600px] mx-auto">
-      {/* Header Row */}
-      <div className="flex items-start justify-between mb-6 animate-fade-in-up">
+    <div className="max-w-[1600px] mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Command Center</h1>
-          <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
-            {data.hotelName}
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Hotel Procurement Portal</h1>
+          <p className="text-sm text-white/40 mt-0.5">Track orders, manage budgets, and optimize spend across properties</p>
         </div>
-        <div className="flex items-center gap-3">
-          <span
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border"
-            style={{
-              background: "rgba(52,211,153,0.08)",
-              color: "#34d399",
-              borderColor: "rgba(52,211,153,0.20)",
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-dot-pulse" />
-            ETA Connected
-          </span>
-          <span className="text-xs text-[rgba(255,255,255,0.40)]">
-            Credit: <span className="text-white font-medium metric-value">EGP 0</span>
-          </span>
-          <button className="btn-primary h-8 px-3 text-xs">
-            <Plus size={14} />
-            New PO
-          </button>
-        </div>
+        <Link
+          href="/hotel/catalog"
+          className="px-4 py-2 text-xs font-semibold bg-[#FF5C00] hover:bg-[#e65100] text-white rounded-lg transition-colors flex items-center gap-2"
+        >
+          <ShoppingCart size={14} />
+          New Purchase Order
+        </Link>
       </div>
 
-      {/* Metrics — Bento Row */}
-      <div className="bento-grid mb-6 stagger-children">
-        {data.metrics.map((m, i) => (
-          <div key={m.label} className="bento-item animate-fade-in-up">
-            <MetricCard {...m} delay={i * 50} />
+      {/* Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {METRICS.map((m) => (
+          <div key={m.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
+              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                <m.icon size={15} className="text-white/40" />
+              </div>
+            </div>
+            <p className="text-xl font-bold text-white">{m.value}</p>
+            <div className="flex items-center gap-1 mt-1">
+              {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
+              <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Main Content — Bento Grid */}
-      <div className="bento-grid">
-        {/* Purchase Orders Table */}
-        <div className="bento-item-8 animate-fade-in-up">
-          <div className="glass-card overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(255,255,255,0.05)]">
-              <div className="flex items-center gap-3">
-                <ClipboardIcon />
-                <h2 className="text-sm font-semibold text-white">Purchase Orders</h2>
-                <span className="text-xs text-[rgba(255,255,255,0.30)]">{data.orders.length}</span>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Orders Table */}
+        <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+          <div className="p-4 border-b border-white/[0.04] flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+              <Package size={14} className="text-white/40" />
+              Recent Orders
+            </h3>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/20" />
+                <input
+                  type="text"
+                  placeholder="Search orders..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#FF5C00]/40 transition-all w-48"
+                />
               </div>
-              <div className="flex items-center gap-2">
-                <div className="relative group">
-                  <Search
-                    size={14}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(255,255,255,0.25)] group-focus-within:text-[#800000] transition-colors"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search orders..."
-                    className="h-9 w-44 pl-9 pr-3 text-xs text-white placeholder:text-[rgba(255,255,255,0.25)] glass-input"
-                  />
-                </div>
-                <button className="flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs text-[rgba(255,255,255,0.50)] hover:text-white glass-input">
-                  All <ChevronDown size={12} />
-                </button>
-              </div>
+              <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
+                <Filter size={12} />
+              </button>
             </div>
-            <table className="w-full text-sm">
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
               <thead>
-                <tr className="border-b border-[rgba(255,255,255,0.04)]">
-                  {["PO #", "Supplier", "Items", "Total", "Status", "Date", "Actions"].map((h) => (
-                    <th
-                      key={h}
-                      className="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-[rgba(255,255,255,0.30)]"
-                    >
-                      {h}
-                    </th>
+                <tr className="border-b border-white/[0.04]">
+                  {["Order ID", "Supplier", "Items", "Total", "Status", "Date", "ETA"].map((h) => (
+                    <th key={h} className="text-left px-4 py-2.5 text-[10px] font-medium text-white/25 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {data.orders.map((o) => (
-                  <tr key={o.id} className="data-table-row">
-                    <td className="px-5 py-3.5">
-                      <span className="text-white font-medium text-xs">{o.id}</span>
-                    </td>
-                    <td className="px-5 py-3.5 text-[rgba(255,255,255,0.60)] text-xs">{o.supplier}</td>
-                    <td className="px-5 py-3.5 text-[rgba(255,255,255,0.40)] text-xs">{o.items} items</td>
-                    <td className="px-5 py-3.5 text-white font-medium metric-value text-xs">{o.total}</td>
-                    <td className="px-5 py-3.5">
-                      <StatusPill status={o.status} />
-                    </td>
-                    <td className="px-5 py-3.5 text-[rgba(255,255,255,0.30)] text-xs">{o.date}</td>
-                    <td className="px-5 py-3.5">
-                      {o.status.includes("PENDING") ? (
-                        <OrderActions orderId={o.dbId} />
-                      ) : (
-                        <button className="text-[11px] text-[rgba(255,255,255,0.40)] hover:text-white transition-colors">
-                          View →
-                        </button>
-                      )}
-                    </td>
+                {filteredOrders.map((o) => (
+                  <tr key={o.id} className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-3 text-xs font-medium text-white">{o.id}</td>
+                    <td className="px-4 py-3 text-xs text-white/60">{o.supplier}</td>
+                    <td className="px-4 py-3 text-xs text-white/40">{o.items}</td>
+                    <td className="px-4 py-3 text-xs text-white/60">EGP {o.total.toLocaleString()}</td>
+                    <td className="px-4 py-3"><StatusBadge status={o.status} /></td>
+                    <td className="px-4 py-3 text-xs text-white/30">{o.date}</td>
+                    <td className="px-4 py-3 text-xs text-white/30">{o.eta}</td>
                   </tr>
                 ))}
               </tbody>
@@ -329,129 +148,58 @@ export default async function HotelDashboardPage() {
           </div>
         </div>
 
-        {/* Right Column */}
-        <div className="bento-item-4 flex flex-col gap-6">
-          {/* Approval Queue */}
-          <div className="glass-card p-5 animate-fade-in-up">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Shield size={15} className="text-[#800000]" />
-                <h3 className="text-sm font-semibold text-white">Approval Queue</h3>
-              </div>
-              <span
-                className="text-xs font-bold px-2 py-0.5 rounded-full"
-                style={{ background: "rgba(128,0,0,0.15)", color: "#ff4d4d" }}
-              >
-                {pendingOrders.length}
-              </span>
-            </div>
-            {pendingOrders.length === 0 ? (
-              <p className="text-[11px] text-[rgba(255,255,255,0.30)]">No pending approvals</p>
-            ) : (
-              pendingOrders.slice(0, 1).map((o) => (
-                <div key={o.id} className="p-3 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)]">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-white">{o.id}</span>
-                    <StatusPill status={o.status} />
-                  </div>
-                  <p className="text-[11px] text-[rgba(255,255,255,0.35)]">
-                    {o.supplier} · {o.total}
-                  </p>
-                  <div className="mt-3">
-                    <PipelineSteps
-                      steps={[
-                        { label: "Draft", count: undefined },
-                        { label: "Review", count: undefined },
-                        { label: "Approve", count: undefined },
-                        { label: "Issue", count: undefined },
-                      ]}
-                      activeIndex={1}
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 mt-3">
-                    <button className="flex-1 h-8 rounded-md text-xs font-medium transition-all bg-[rgba(52,211,153,0.08)] text-[#34d399] border border-[rgba(52,211,153,0.15)] hover:bg-[rgba(52,211,153,0.14)]">
-                      Approve
-                    </button>
-                    <button className="flex-1 h-8 rounded-md text-xs font-medium transition-all bg-[rgba(239,68,68,0.08)] text-[#ef4444] border border-[rgba(239,68,68,0.15)] hover:bg-[rgba(239,68,68,0.14)]">
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Team */}
-          <div className="glass-card p-5 animate-fade-in-up">
-            <div className="flex items-center gap-2 mb-4">
-              <Users size={15} className="text-[rgba(255,255,255,0.40)]" />
-              <h3 className="text-sm font-semibold text-white">Approval Chain</h3>
-            </div>
+        {/* Budget Panel */}
+        <div className="space-y-4">
+          {/* Budget Breakdown */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <Wallet size={14} className="text-white/40" />
+              Budget Breakdown
+            </h3>
             <div className="space-y-3">
-              {[
-                { initials: "KF", name: "Karim Fathy", role: "Dept Head", limit: "EGP 50,000" },
-                { initials: "LI", name: "Laila Ibrahim", role: "Dept Head", limit: "EGP 50,000" },
-                { initials: "MF", name: "Mohamed Farouk", role: "Controller", limit: "EGP 250,000" },
-                { initials: "SE", name: "Sarah El-Masry", role: "General Manager", limit: "EGP 1,000,000" },
-                { initials: "AH", name: "Ahmed Hassan", role: "Owner", limit: "Unlimited" },
-              ].map((t, i) => (
-                <div key={t.name} className="flex items-center justify-between group">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold ring-1 ring-[rgba(255,255,255,0.08)]"
-                      style={{ background: i === 0 ? "#800000" : "rgba(255,255,255,0.08)" }}
-                    >
-                      {t.initials}
+              {BUDGET_BREAKDOWN.map((b) => {
+                const pct = Math.round((b.spent / b.allocated) * 100);
+                return (
+                  <div key={b.category}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] text-white/60">{b.category}</span>
+                      <span className="text-[10px] text-white/30">{pct}%</span>
                     </div>
-                    <div>
-                      <p className="text-xs font-medium text-white">{t.name}</p>
-                      <p className="text-[10px] text-[rgba(255,255,255,0.30)]">{t.role}</p>
+                    <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: b.color }} />
+                    </div>
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-[9px] text-white/20">EGP {b.spent.toLocaleString()}</span>
+                      <span className="text-[9px] text-white/20">EGP {b.allocated.toLocaleString()}</span>
                     </div>
                   </div>
-                  <span className="text-[10px] text-[rgba(255,255,255,0.25)] metric-value">{t.limit}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Authority Matrix */}
-          <div className="glass-card p-5 animate-fade-in-up">
-            <div className="flex items-center gap-2 mb-4">
-              <Shield size={15} className="text-[rgba(255,255,255,0.40)]" />
-              <h3 className="text-sm font-semibold text-white">Authority Matrix</h3>
-            </div>
-            <div className="space-y-3">
-              {data.authorityRules.map((r) => (
-                <div key={r.role} className="flex items-center gap-3">
-                  <div
-                    className="w-1 h-6 rounded-full"
-                    style={{ background: r.color }}
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-white">{r.role}</span>
-                      <span className="text-[10px] text-[rgba(255,255,255,0.35)]">{r.label}</span>
-                    </div>
-                    <p className="text-[10px] text-[rgba(255,255,255,0.25)] metric-value mt-0.5">{r.range}</p>
-                  </div>
-                </div>
+          {/* Spend Trend */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+              <TrendingUp size={14} className="text-white/40" />
+              Monthly Spend Trend
+            </h3>
+            <div className="flex items-end gap-1 h-24">
+              {SPARKLINE.map((v, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-sm bg-[#FF5C00]/30 hover:bg-[#FF5C00]/50 transition-colors"
+                  style={{ height: `${v}%` }}
+                />
               ))}
             </div>
-            <button className="mt-4 text-[11px] text-[rgba(255,255,255,0.40)] hover:text-[#ff4d4d] transition-colors">
-              View all rules →
-            </button>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-[9px] text-white/20">Jan</span>
+              <span className="text-[9px] text-white/20">Dec</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function ClipboardIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[rgba(255,255,255,0.30)]">
-      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-    </svg>
   );
 }

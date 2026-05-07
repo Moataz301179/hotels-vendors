@@ -25,7 +25,7 @@ export function CompareDrawer() {
           >
             <button
               onClick={() => setIsOpen(true)}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-[#800000] hover:bg-[#990000] text-white shadow-[0_0_24px_rgba(128,0,0,0.4)] transition-colors"
+              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-[#FF5C00] hover:bg-[#e65100] text-white shadow-[0_0_24px_rgba(255,92,0,0.4)] transition-colors"
             >
               <Scale className="w-5 h-5" />
               <span className="text-sm font-medium">Compare ({items.length})</span>
@@ -56,7 +56,7 @@ export function CompareDrawer() {
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
                 <div className="flex items-center gap-3">
-                  <Scale className="w-5 h-5 text-[#ff4d4d]" />
+                  <Scale className="w-5 h-5 text-[#ff7a33]" />
                   <h2 className="text-lg font-semibold">Product Comparison</h2>
                   <span className="text-sm text-white/40">{items.length} items</span>
                 </div>
@@ -85,7 +85,7 @@ export function CompareDrawer() {
                     {items.map((item) => (
                       <div key={item.id} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#800000]/15 text-[#ff4d4d] border border-[#800000]/25">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#FF5C00]/15 text-[#ff7a33] border border-[#FF5C00]/25">
                             {getCategoryById(item.category)?.code || item.category}
                           </span>
                           <button
@@ -97,7 +97,7 @@ export function CompareDrawer() {
                         </div>
                         <Link
                           href={`/hotel/catalog/${item.id}`}
-                          className="text-sm font-medium text-white/90 hover:text-[#ff4d4d] transition-colors line-clamp-2 min-h-[2.5rem]"
+                          className="text-sm font-medium text-white/90 hover:text-[#ff7a33] transition-colors line-clamp-2 min-h-[2.5rem]"
                         >
                           {item.name}
                         </Link>

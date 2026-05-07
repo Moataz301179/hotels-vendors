@@ -39,7 +39,7 @@ export function PipelineSteps({ steps, activeIndex, className = "" }: PipelineSt
                 isCompleted
                   ? "bg-white border-white"
                   : isActive
-                  ? "bg-[#800000] border-[#800000] shadow-[0_0_12px_rgba(128,0,0,0.50)]"
+                  ? "bg-[#FF5C00] border-[#FF5C00] shadow-[0_0_12px_rgba(255,92,0,0.50)]"
                   : "bg-transparent border-[rgba(255,255,255,0.15)]"
               }`}
             >

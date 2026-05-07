@@ -47,7 +47,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
           onClick={() => onSelectCategory("")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
             !activeCategory
-              ? "bg-[#800000] text-white shadow-[0_0_16px_rgba(128,0,0,0.3)]"
+              ? "bg-[#FF5C00] text-white shadow-[0_0_16px_rgba(255,92,0,0.3)]"
               : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
           }`}
         >
@@ -70,7 +70,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                 onClick={() => onSelectCategory(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? "bg-[#800000] text-white shadow-[0_0_16px_rgba(128,0,0,0.3)]"
+                    ? "bg-[#FF5C00] text-white shadow-[0_0_16px_rgba(255,92,0,0.3)]"
                     : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
                 }`}
               >
@@ -98,7 +98,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                   >
                     <div className="p-3 border-b border-white/[0.06]">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-[#ff4d4d]" />
+                        <Icon className="w-4 h-4 text-[#ff7a33]" />
                         <span className="text-sm font-semibold">{cat.label}</span>
                         <span className="text-[10px] text-white/30">{cat.code}</span>
                       </div>

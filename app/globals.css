@@ -1,45 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --background-void: #000000;
-  --surface: #0a0a0a;
-  --surface-raised: #111111;
-  --surface-hover: #1a1a1a;
+  --background: #121212;
+  --background-void: #1C1C1C;
+  --surface: #1a1a1a;
+  --surface-raised: #222222;
+  --surface-hover: #2a2a2a;
   --foreground: #ffffff;
-  --foreground-secondary: rgba(255,255,255,0.60);
-  --foreground-tertiary: rgba(255,255,255,0.40);
-  --foreground-muted: rgba(255,255,255,0.35);
-  --foreground-faint: rgba(255,255,255,0.25);
-  --foreground-inverse: #000000;
-  --accent-500: #800000;
-  --accent-600: #660000;
-  --accent-700: #4d0000;
-  --accent-glow: rgba(128,0,0,0.35);
-  --accent-glow-strong: rgba(128,0,0,0.50);
+  --foreground-secondary: rgba(255,255,255,0.65);
+  --foreground-tertiary: rgba(255,255,255,0.45);
+  --foreground-muted: rgba(255,255,255,0.40);
+  --foreground-faint: rgba(255,255,255,0.30);
+  --foreground-inverse: #121212;
+  --accent-500: #FF5C00;
+  --accent-600: #e65100;
+  --accent-700: #cc4700;
+  --accent-glow: rgba(255,92,0,0.35);
+  --accent-glow-strong: rgba(255,92,0,0.50);
   /* Legacy aliases for backward compatibility */
-  --brand-500: #800000;
-  --brand-400: #ff4d4d;
-  --brand-600: #990000;
-  --brand-700: #660000;
-  --brand-800: #4d0000;
+  --brand-500: #FF5C00;
+  --brand-400: #ff7a33;
+  --brand-600: #e65100;
+  --brand-700: #cc4700;
+  --brand-800: #b33d00;
   --accent-cyan: #06b6d4;
   --accent-emerald: #34d399;
   --accent-amber: #f59e0b;
   --accent-gold: #fbbf24;
   --foreground-dim: rgba(255,255,255,0.20);
-  --success: #34d399;
-  --warning: #fbbf24;
-  --error: #ef4444;
+  --success: #10B981;
+  --warning: #FF5C00;
+  --error: #EF4444;
   --info: #60a5fa;
   --border-subtle: rgba(255,255,255,0.05);
   --border-default: rgba(255,255,255,0.08);
   --border-strong: rgba(255,255,255,0.12);
-  --border-accent: rgba(128,0,0,0.40);
+  --border-accent: rgba(255,92,0,0.40);
   --glass-bg: rgba(10,10,10,0.80);
   --glass-border: rgba(255,255,255,0.06);
   --glass-blur: 20px;
-  --shadow-glow-accent: 0 0 40px rgba(128,0,0,0.20);
+  --shadow-glow-accent: 0 0 40px rgba(255,92,0,0.20);
   --shadow-glow-white: 0 0 30px rgba(255,255,255,0.04);
   --header-height: 64px;
   --sidebar-width: 260px;
@@ -81,8 +81,8 @@
 }
 
 html { scroll-behavior: smooth; }
-body { background-color: #000000; color: #ffffff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-::selection { background: rgba(128,0,0,0.40); color: #fff; }
+body { background: linear-gradient(180deg, #121212 0%, #1C1C1C 100%); color: #ffffff; min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+::selection { background: rgba(255,92,0,0.40); color: #fff; }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }

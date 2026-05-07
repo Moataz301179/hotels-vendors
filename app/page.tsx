@@ -52,13 +52,23 @@ const fadeUp = {
 
 /* ─── LOGO SVG ─── */
 
-function HorseLogo({ className = "w-7 h-7", stroke = "#800000" }: { className?: string; stroke?: string }) {
+function HorseLogo({ className = "w-8 h-10", stroke = "#FF5C00" }: { className?: string; stroke?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" className={className} fill="none">
-      <path d="M85 15 C95 15, 105 22, 110 32 L108 42 C112 48, 115 55, 112 62 L105 75 C100 82, 92 85, 84 83 L72 88 C65 92, 58 98, 55 105 L48 120 C45 128, 38 135, 30 138 L20 135 C15 132, 12 125, 15 118 L22 98 C25 90, 32 85, 40 82 L52 78 C58 76, 62 72, 60 66 L55 52 C52 42, 58 32, 68 28 L78 22 C80 18, 82 15, 85 15Z" stroke={stroke} strokeWidth="3" strokeLinejoin="round" opacity="0.95" />
-      <path d="M58 32 C62 28, 68 26, 74 28 L80 42 C82 48, 80 55, 75 60 L65 70 C60 75, 55 78, 50 76 L42 72 C38 70, 36 65, 38 60 L45 45 C48 38, 52 34, 58 32Z" stroke={stroke} strokeWidth="2" strokeLinejoin="round" opacity="0.45" />
-      <circle cx="88" cy="38" r="3.5" fill={stroke} opacity="0.8" />
-      <path d="M25 125 C30 122, 35 120, 40 122" stroke={stroke} strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" className={className} fill="none" stroke={stroke} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+      {/* Horse Knight Head Outline - Exact trace: flared mane right, ear up, nostril flare, jaw curve */}
+      <path d="M10 20 Q15 10 25 15 Q40 5 55 20 Q70 15 80 30 Q90 40 95 55 Q100 70 92 85 Q85 95 75 105 Q65 115 55 120 Q45 125 35 118 Q25 110 20 95 Q18 80 22 65 Q25 50 28 40 Q25 30 20 25 Q15 22 10 20 Z" />
+      {/* Mane flare/ear */}
+      <path d="M55 20 Q65 10 75 25 Q85 20 90 35 Q95 45 92 55" />
+      {/* Eye/Nostril */}
+      <circle cx="35" cy="45" r="2" fill={stroke} opacity="0.9" />
+      <ellipse cx="85" cy="60" rx="2.5" ry="1.5" />
+      {/* Integrated HV Letters - V tilted in mane (45deg), H parallel tilt in neck for clarity */}
+      <g transform="translate(60,70) rotate(-15)">
+        <text x="0" y="8" fontSize="18" fontWeight="900" fontFamily="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" letterSpacing="-0.5" opacity="0.95">H</text>
+      </g>
+      <g transform="translate(75,45) rotate(45)">
+        <text x="0" y="12" fontSize="16" fontWeight="800" fontFamily="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" letterSpacing="0" opacity="0.95">V</text>
+      </g>
     </svg>
   );
 }
@@ -87,7 +97,7 @@ function ChatbotWidget() {
           </Link>
         </motion.div>
       )}
-      <button onClick={() => { setOpen(!open); setShowOffer(false); }} className="w-10 h-10 border border-[#800000]/50 bg-[#800000] flex items-center justify-center hover:bg-[#660000] transition-colors rounded-lg shadow-lg shadow-[#800000]/20">
+      <button onClick={() => { setOpen(!open); setShowOffer(false); }} className="w-10 h-10 border border-[#FF5C00]/50 bg-[#FF5C00] flex items-center justify-center hover:bg-[#cc4700] transition-colors rounded-lg shadow-lg shadow-[#FF5C00]/20">
         <MessageCircle className="w-4 h-4 text-white" />
       </button>
     </div>
@@ -111,7 +121,7 @@ function Navbar() {
       <div className="mx-auto max-w-6xl px-5">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <HorseLogo className="w-7 h-8" stroke="#800000" />
+            <HorseLogo className="w-7 h-8" stroke="#FF5C00" />
             <span className="text-[14px] font-bold text-black tracking-tight">Hotels Vendors</span>
           </Link>
 
@@ -172,7 +182,7 @@ function HeroVisual() {
       {/* Orbiting accent rings */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-white/[0.06] rounded-full" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-white/[0.04] rounded-full" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-[#800000]/20 rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-[#FF5C00]/20 rounded-full" />
 
       {/* Floating cards */}
       <motion.div
@@ -182,8 +192,8 @@ function HeroVisual() {
         className="absolute top-4 left-4 lg:left-8 bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 backdrop-blur-sm"
       >
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#800000]/20 flex items-center justify-center">
-            <Package className="w-3.5 h-3.5 text-[#ff4d4d]" />
+          <div className="w-7 h-7 rounded-lg bg-[#FF5C00]/20 flex items-center justify-center">
+            <Package className="w-3.5 h-3.5 text-[#ff7a33]" />
           </div>
           <div>
             <p className="text-[10px] font-semibold text-white">New Order</p>
@@ -246,10 +256,10 @@ function HeroVisual() {
       {/* Center node */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-[#800000]/10 border border-[#800000]/30 flex items-center justify-center">
-            <HorseLogo className="w-8 h-9" stroke="#ff4d4d" />
+          <div className="w-16 h-16 rounded-2xl bg-[#FF5C00]/10 border border-[#FF5C00]/30 flex items-center justify-center">
+            <HorseLogo className="w-8 h-9" stroke="#ff7a33" />
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-[#800000]/20 blur-xl -z-10" />
+          <div className="absolute inset-0 rounded-2xl bg-[#FF5C00]/20 blur-xl -z-10" />
         </div>
       </div>
 
@@ -261,9 +271,9 @@ function HeroVisual() {
         <line x1="75%" y1="80%" x2="50%" y2="50%" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="4 4" />
         <defs>
           <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#800000" stopOpacity="0" />
-            <stop offset="50%" stopColor="#800000" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#800000" stopOpacity="0" />
+            <stop offset="0%" stopColor="#FF5C00" stopOpacity="0" />
+            <stop offset="50%" stopColor="#FF5C00" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#FF5C00" stopOpacity="0" />
           </linearGradient>
         </defs>
       </svg>
@@ -277,7 +287,7 @@ function Hero() {
   return (
     <section className="relative bg-black pt-16 overflow-hidden">
       {/* Subtle radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#800000]/[0.07] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#FF5C00]/[0.07] rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -288,13 +298,13 @@ function Hero() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] mb-6">
-              <Sparkles className="w-3 h-3 text-[#ff4d4d]" />
+              <Sparkles className="w-3 h-3 text-[#ff7a33]" />
               <span className="text-[11px] font-medium text-white/50">Now serving 200+ Egyptian hotels</span>
             </div>
 
             <h1 className="text-[32px] sm:text-[40px] lg:text-[48px] font-bold text-white leading-[1.1] tracking-tight">
               The procurement platform{" "}
-              <span className="text-[#ff4d4d]">built for Egyptian hospitality</span>
+              <span className="text-[#ff7a33]">built for Egyptian hospitality</span>
             </h1>
 
             <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-md">
@@ -370,7 +380,7 @@ function Categories() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="text-[11px] font-semibold text-[#ff4d4d] tracking-[0.15em] uppercase">Catalog</span>
+          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Catalog</span>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Everything your hotel needs</h2>
           <p className="mt-2 text-[14px] text-white/35 max-w-md">Verified suppliers across six core procurement categories.</p>
         </motion.div>
@@ -419,7 +429,7 @@ function Features() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="text-[11px] font-semibold text-[#ff4d4d] tracking-[0.15em] uppercase">Platform</span>
+          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Platform</span>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Capabilities</h2>
           <p className="mt-2 text-[14px] text-white/35 max-w-md">From catalog discovery to ETA-compliant invoicing — one platform, zero fragmentation.</p>
         </motion.div>
@@ -466,7 +476,7 @@ function HowItWorks() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="text-[11px] font-semibold text-[#ff4d4d] tracking-[0.15em] uppercase">Process</span>
+          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Process</span>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">How it works</h2>
           <p className="mt-2 text-[14px] text-white/35">From catalog to compliance in three steps</p>
         </motion.div>
@@ -554,7 +564,7 @@ function Pricing() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="text-[11px] font-semibold text-[#ff4d4d] tracking-[0.15em] uppercase">Pricing</span>
+          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Pricing</span>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Simple, transparent plans</h2>
           <p className="mt-2 text-[14px] text-white/35">No hidden fees. Scale as you grow.</p>
         </motion.div>
@@ -568,7 +578,7 @@ function Pricing() {
               viewport={{ once: true }}
               className={`rounded-xl p-6 transition-all duration-300 ${
                 tier.highlight
-                  ? "border border-[#800000]/40 bg-[#800000]/[0.03]"
+                  ? "border border-[#FF5C00]/40 bg-[#FF5C00]/[0.03]"
                   : "border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.025]"
               }`}
             >
@@ -620,7 +630,7 @@ function CTA() {
           className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.015] p-10 lg:p-16 text-center"
         >
           {/* Background accent */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#800000]/[0.08] rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#FF5C00]/[0.08] rounded-full blur-[100px] pointer-events-none" />
 
           <div className="relative">
             <h2 className="text-[28px] sm:text-[36px] font-bold text-white tracking-tight">Ready to transform your procurement?</h2>
@@ -649,7 +659,7 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-2">
             <div className="flex items-center gap-2.5 mb-3">
-              <HorseLogo className="w-5 h-6" stroke="#800000" />
+              <HorseLogo className="w-5 h-6" stroke="#FF5C00" />
               <span className="text-[14px] font-bold text-white tracking-tight">Hotels Vendors</span>
             </div>
             <p className="text-[13px] text-white/25 leading-relaxed max-w-[240px]">The Digital Procurement Hub for Egyptian Hospitality.</p>

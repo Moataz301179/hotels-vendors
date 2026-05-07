@@ -103,7 +103,7 @@ export function ProductCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-[#800000]/40 transition-all duration-300"
+      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-[#FF5C00]/40 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ y: -4 }}
@@ -122,7 +122,7 @@ export function ProductCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#800000]/10 to-transparent">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF5C00]/10 to-transparent">
             <Package className="w-12 h-12 text-white/10" />
           </div>
         )}
@@ -133,7 +133,7 @@ export function ProductCard({
             {stockStatus.label}
           </span>
           {supplierTier === "PREMIER" && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#800000]/20 text-[#ff4d4d] border border-[#800000]/30">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#FF5C00]/20 text-[#ff7a33] border border-[#FF5C00]/30">
               Premier
             </span>
           )}
@@ -150,7 +150,7 @@ export function ProductCard({
             onClick={() => setIsWishlisted(!isWishlisted)}
             className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
               isWishlisted
-                ? "bg-[#800000] border-[#800000] text-white"
+                ? "bg-[#FF5C00] border-[#FF5C00] text-white"
                 : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
             }`}
           >
@@ -167,7 +167,7 @@ export function ProductCard({
               onClick={() => inCompare ? removeItem(compareData.id) : addItem(compareData)}
               className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
                 inCompare
-                  ? "bg-[#800000] border-[#800000] text-white"
+                  ? "bg-[#FF5C00] border-[#FF5C00] text-white"
                   : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
               }`}
             >
@@ -256,7 +256,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart?.(id, qty)}
             disabled={stockQuantity === 0}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#800000] hover:bg-[#990000] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Add to Cart</span>

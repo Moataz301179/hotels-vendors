@@ -146,9 +146,9 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
-        <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-[#800000]/20 transition-colors">
-          <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={24} height={24} className="opacity-90" priority />
+      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
+        <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-[#FF5C00]/20 transition-colors">
+          <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={28} height={32} className="opacity-90 object-contain" priority />
         </Link>
         <button
           onClick={onToggle}
@@ -173,7 +173,7 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#800000] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#FF5C00] rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -192,11 +192,11 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
+    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-[rgba(255,255,255,0.04)]">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center group-hover:bg-[#800000]/25 transition-colors">
+          <div className="w-8 h-8 rounded-lg bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center group-hover:bg-[#FF5C00]/25 transition-colors">
             <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={20} height={20} className="opacity-90" priority />
           </div>
           <span className="text-sm font-semibold text-white tracking-tight">HotelsVendors</span>
@@ -230,9 +230,9 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#800000] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#FF5C00] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#800000]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-[#FF5C00]" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );

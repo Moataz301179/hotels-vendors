@@ -2,20 +2,10 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
-  Search,
-  ShoppingCart,
-  Package,
-  Star,
-  MapPin,
-  ArrowRight,
-  Grid3X3,
-  LayoutList,
-  ArrowUpDown,
-  X,
-  ChevronDown,
+  Search, ShoppingCart, Package, Star, MapPin, ArrowRight,
+  Grid3X3, LayoutList, ArrowUpDown, X,
 } from "lucide-react";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
 import catalogData from "@/data/catalog-products.json";
@@ -63,34 +53,34 @@ export default function PublicCatalogPage() {
     new Intl.NumberFormat("en-EG", { style: "currency", currency: c, minimumFractionDigits: 0 }).format(p);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white text-gray-900">
       <GlobalHeader />
 
-      {/* Hero — Solid Black */}
-      <div className="relative overflow-hidden border-b border-white/[0.06] bg-black">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(185,28,28,0.08),_transparent_60%)]" />
+      {/* Hero — Dark */}
+      <div className="relative overflow-hidden border-b border-gray-100 bg-[#121212]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,92,0,0.08),_transparent_60%)]" />
         <div className="relative max-w-[1600px] mx-auto px-6 py-14">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#b91c1c]/10 border border-[#b91c1c]/20 mb-4">
-              <Package className="w-3.5 h-3.5 text-[#b91c1c]" />
-              <span className="text-xs font-medium text-[#b91c1c]">Public Marketplace — Browse without signing in</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FF5C00]/10 border border-[#FF5C00]/20 mb-4">
+              <Package className="w-3.5 h-3.5 text-[#FF5C00]" />
+              <span className="text-xs font-medium text-[#FF5C00]">Public Marketplace — Browse without signing in</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-white">
               {activeCategory ? `${getCategoryById(activeCategory)?.label || activeCategory}` : "One-Stop Hotel Procurement"}
             </h1>
             <p className="text-white/40 text-base mb-8 max-w-lg">
-              {activeCategory
-                ? `${COUNTS[activeCategory] || 0} verified products from Egyptian suppliers. Sign in to order.`
-                : `${ALL_PRODUCTS.length}+ verified products from 57 Egyptian suppliers across 10 hotel procurement categories.`}
+              Discover verified suppliers across 10 hotel procurement categories. Compare prices, check stock, and build orders — all in one place.
             </p>
-            <div className="relative w-full max-w-xl">
+
+            {/* Search */}
+            <div className="relative max-w-xl">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
                 type="text"
+                placeholder="Search products, suppliers, SKUs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search products, suppliers, SKUs..."
-                className="w-full pl-12 pr-10 py-3.5 rounded-xl border border-white/[0.08] bg-white/[0.04] text-sm text-white placeholder:text-white/25 outline-none focus:border-[#b91c1c]/50 focus:ring-1 focus:ring-[#b91c1c]/20 transition-all"
+                className="w-full pl-12 pr-10 py-3.5 rounded-xl border border-white/[0.08] bg-white/[0.04] text-sm text-white placeholder:text-white/25 outline-none focus:border-[#FF5C00]/50 focus:ring-1 focus:ring-[#FF5C00]/20 transition-all"
               />
               {search && (
                 <button onClick={() => setSearch("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
@@ -102,39 +92,36 @@ export default function PublicCatalogPage() {
         </div>
       </div>
 
-      {/* Category Nav */}
+      {/* Category Nav — Dark sticky */}
       <div className="border-b border-white/[0.06] bg-[#0a0a0a]/80 backdrop-blur-sm sticky top-16 z-40">
-        <div className="max-w-[1600px] mx-auto px-6">
-          <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide">
+        <div className="max-w-[1600px] mx-auto px-6 py-3">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
             <button
               onClick={() => setActiveCategory("")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all ${
                 !activeCategory
-                  ? "bg-[#b91c1c] text-white shadow-[0_0_16px_rgba(185,28,28,0.25)]"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+                  ? "bg-[#FF5C00] text-white shadow-[0_0_16px_rgba(255,92,0,0.25)]"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
-              All Products
+              All Categories
             </button>
             {HOTEL_CATEGORIES.map((cat) => {
-              const count = COUNTS[cat.id] || 0;
               const isActive = activeCategory === cat.id;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(isActive ? "" : cat.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                  className={`shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all flex items-center gap-2 ${
                     isActive
-                      ? "bg-[#b91c1c] text-white shadow-[0_0_16px_rgba(185,28,28,0.25)]"
-                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+                      ? "bg-[#FF5C00] text-white shadow-[0_0_16px_rgba(255,92,0,0.25)]"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                   }`}
                 >
-                  <span>{cat.label}</span>
-                  {count > 0 && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white/80" : "bg-white/[0.06] text-white/30"}`}>
-                      {count}
-                    </span>
-                  )}
+                  {cat.label}
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white/80" : "bg-gray-100 text-gray-500"}`}>
+                    {COUNTS[cat.id] || 0}
+                  </span>
                 </button>
               );
             })}
@@ -142,30 +129,30 @@ export default function PublicCatalogPage() {
         </div>
       </div>
 
-      {/* Toolbar */}
-      <div className="border-b border-white/[0.06] bg-black">
+      {/* Toolbar — Light */}
+      <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
-          <span className="text-sm text-white/40">{filtered.length} products found</span>
+          <span className="text-sm text-gray-500">{filtered.length} products found</span>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <ArrowUpDown className="w-3.5 h-3.5 text-white/30" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent text-sm text-white/60 outline-none cursor-pointer"
+                className="bg-transparent text-sm text-gray-600 outline-none cursor-pointer"
               >
-                <option value="relevance" className="bg-[#0a0a0a]">Relevance</option>
-                <option value="price_low" className="bg-[#0a0a0a]">Price: Low → High</option>
-                <option value="price_high" className="bg-[#0a0a0a]">Price: High → Low</option>
-                <option value="rating" className="bg-[#0a0a0a]">Top Rated</option>
-                <option value="lead" className="bg-[#0a0a0a]">Fastest Delivery</option>
+                <option value="relevance" className="bg-white">Relevance</option>
+                <option value="price_low" className="bg-white">Price: Low → High</option>
+                <option value="price_high" className="bg-white">Price: High → Low</option>
+                <option value="rating" className="bg-white">Top Rated</option>
+                <option value="lead" className="bg-white">Fastest Delivery</option>
               </select>
             </div>
-            <div className="flex rounded-lg border border-white/[0.08] overflow-hidden">
-              <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#b91c1c] text-white" : "text-white/40 hover:text-white/70"}`}>
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+              <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#FF5C00] text-white" : "text-gray-400 hover:text-gray-700"}`}>
                 <Grid3X3 className="w-4 h-4" />
               </button>
-              <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#b91c1c] text-white" : "text-white/40 hover:text-white/70"}`}>
+              <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#FF5C00] text-white" : "text-gray-400 hover:text-gray-700"}`}>
                 <LayoutList className="w-4 h-4" />
               </button>
             </div>
@@ -173,15 +160,15 @@ export default function PublicCatalogPage() {
         </div>
       </div>
 
-      {/* Products */}
+      {/* Products — White bg */}
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-white/30">
-            <Package className="w-12 h-12 mb-4" />
-            <p className="text-lg font-medium">No products found</p>
+          <div className="flex flex-col items-center justify-center py-24 text-gray-400">
+            <Package className="w-12 h-12 mb-4 text-gray-300" />
+            <p className="text-lg font-medium text-gray-600">No products found</p>
             <button
               onClick={() => { setActiveCategory(""); setSearch(""); }}
-              className="mt-4 px-5 py-2.5 rounded-lg bg-[#b91c1c] hover:bg-[#991b1b] text-white text-sm font-medium transition-colors"
+              className="mt-4 px-5 py-2.5 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-colors"
             >
               View All Products
             </button>
@@ -194,28 +181,28 @@ export default function PublicCatalogPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.03 }}
-                className="group relative flex flex-col rounded-2xl border border-white/[0.06] bg-[#111] overflow-hidden hover:border-[#b91c1c]/30 hover:shadow-[0_8px_32px_rgba(185,28,28,0.08)] transition-all duration-300"
+                className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white overflow-hidden hover:border-[#FF5C00]/30 hover:shadow-[0_8px_32px_rgba(255,92,0,0.08)] transition-all duration-300"
               >
                 {/* Image */}
-                <div className="relative aspect-[16/10] bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] overflow-hidden">
+                <div className="relative aspect-[16/10] bg-gray-100 overflow-hidden">
                   <div className="w-full h-full flex flex-col items-center justify-center">
-                    <Package className="w-10 h-10 text-white/[0.08] group-hover:text-white/[0.15] transition-colors" />
-                    <span className="text-[10px] text-white/15 mt-2 font-mono tracking-wider">{product.sku}</span>
+                    <Package className="w-10 h-10 text-gray-200 group-hover:text-gray-300 transition-colors" />
+                    <span className="text-[10px] text-gray-300 mt-2 font-mono tracking-wider">{product.sku}</span>
                   </div>
                   <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                     <span
                       className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                         product.stockQuantity === 0
-                          ? "text-red-400 bg-red-500/10 border-red-500/20"
+                          ? "text-red-500 bg-red-50 border-red-200"
                           : product.stockQuantity < 20
-                          ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                          : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                          ? "text-amber-600 bg-amber-50 border-amber-200"
+                          : "text-emerald-600 bg-emerald-50 border-emerald-200"
                       }`}
                     >
                       {product.stockQuantity === 0 ? "Out of Stock" : product.stockQuantity < 20 ? "Low Stock" : "In Stock"}
                     </span>
                     {product.supplierTier === "PREMIER" && (
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#b91c1c]/15 text-[#ef4444] border border-[#b91c1c]/25">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#FF5C00]/10 text-[#FF5C00] border border-[#FF5C00]/20">
                         Premier
                       </span>
                     )}
@@ -225,52 +212,52 @@ export default function PublicCatalogPage() {
                 {/* Content */}
                 <div className="flex flex-col gap-3 p-5">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-wider text-[#b91c1c] font-bold">
+                    <span className="text-[10px] uppercase tracking-wider text-[#FF5C00] font-bold">
                       {getCategoryById(product.category)?.code || product.category}
                     </span>
-                    <span className="w-1 h-1 rounded-full bg-white/15" />
-                    <span className="text-[10px] uppercase tracking-wider text-white/30">{product.unitOfMeasure}</span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                    <span className="text-[10px] uppercase tracking-wider text-gray-400">{product.unitOfMeasure}</span>
                   </div>
 
-                  <h3 className="text-[15px] font-semibold text-white/95 leading-snug line-clamp-2 min-h-[2.6rem] group-hover:text-white transition-colors">
+                  <h3 className="text-[15px] font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[2.6rem] group-hover:text-[#FF5C00] transition-colors">
                     {product.name}
                   </h3>
 
                   <div className="flex items-center gap-2.5">
                     <div className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                      <span className="text-xs font-semibold text-white/80">{product.supplierRating.toFixed(1)}</span>
+                      <span className="text-xs font-semibold text-gray-700">{product.supplierRating.toFixed(1)}</span>
                     </div>
-                    <span className="text-[10px] text-white/25">({product.supplierReviewCount})</span>
-                    <span className="w-1 h-1 rounded-full bg-white/15" />
-                    <MapPin className="w-3 h-3 text-white/25" />
-                    <span className="text-[10px] text-white/35">{product.supplierCity}</span>
+                    <span className="text-[10px] text-gray-400">({product.supplierReviewCount})</span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                    <MapPin className="w-3 h-3 text-gray-300" />
+                    <span className="text-[10px] text-gray-500">{product.supplierCity}</span>
                   </div>
 
                   <div className="flex items-baseline gap-2 pt-1">
-                    <span className="text-xl font-bold text-white tracking-tight">
+                    <span className="text-xl font-bold text-gray-900 tracking-tight">
                       {formatPrice(product.unitPrice, product.currency)}
                     </span>
-                    <span className="text-xs text-white/30">/ {product.unitOfMeasure}</span>
+                    <span className="text-xs text-gray-400">/ {product.unitOfMeasure}</span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-[10px] text-white/25">
+                  <div className="flex items-center gap-3 text-[10px] text-gray-400">
                     <span>MOQ: {product.minOrderQty}</span>
-                    <span className="w-1 h-1 rounded-full bg-white/10" />
+                    <span className="w-1 h-1 rounded-full bg-gray-200" />
                     <span>{product.leadTimeDays} day delivery</span>
                   </div>
 
                   <div className="flex items-center gap-2 pt-1">
                     <Link
                       href={`/catalog/${product.id}`}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] text-sm font-medium text-white/70 hover:text-white hover:border-[#b91c1c]/40 hover:bg-[#b91c1c]/5 transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:text-[#FF5C00] hover:border-[#FF5C00]/40 hover:bg-[#FF5C00]/5 transition-all"
                     >
                       <span>View Details</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                     <button
                       onClick={() => handleAdd(product.id)}
-                      className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#b91c1c] hover:bg-[#991b1b] text-white transition-all active:scale-95"
+                      className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#FF5C00] hover:bg-[#e65100] text-white transition-all active:scale-95"
                     >
                       <ShoppingCart className="w-4 h-4" />
                     </button>
@@ -280,14 +267,14 @@ export default function PublicCatalogPage() {
                     <motion.p
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-xs text-[#ef4444] text-center"
+                      className="text-xs text-[#EF4444] text-center"
                     >
                       Please <Link href="/login" className="underline font-medium">sign in</Link> to order
                     </motion.p>
                   )}
 
-                  <p className="text-[10px] text-white/20 truncate pt-0.5">
-                    by <span className="text-white/40">{product.supplierName}</span>
+                  <p className="text-[10px] text-gray-300 truncate pt-0.5">
+                    by <span className="text-gray-500">{product.supplierName}</span>
                   </p>
                 </div>
               </motion.div>

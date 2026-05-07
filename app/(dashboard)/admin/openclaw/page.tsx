@@ -109,7 +109,7 @@ export default async function OpenClawHubPage() {
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 animate-fade-in-up">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Globe size={22} className="text-[#800000]" />
+            <Globe size={22} className="text-[#FF5C00]" />
             <span className="gradient-text-animated">OpenClaw Integration Hub</span>
           </h1>
           <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
@@ -207,8 +207,8 @@ export default async function OpenClawHubPage() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[rgba(128,0,0,0.15)] flex items-center justify-center">
-                <Camera size={16} className="text-[#ff4d4d]" />
+              <div className="w-8 h-8 rounded-lg bg-[rgba(255,92,0,0.15)] flex items-center justify-center">
+                <Camera size={16} className="text-[#ff7a33]" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Visual Tests</p>
