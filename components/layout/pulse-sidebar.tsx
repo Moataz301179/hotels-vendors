@@ -70,11 +70,9 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "PLATFORM",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-        { icon: ShieldCheck, label: "Security", href: "/admin/security" },
-        { icon: Users, label: "Suppliers", href: "/admin/suppliers" },
+        { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
-        { icon: Shield, label: "Mission Control", href: "/admin/control" },
       ],
     },
     {

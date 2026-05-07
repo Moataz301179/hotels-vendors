@@ -1,272 +1,299 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   Search,
   ShoppingCart,
-  Filter,
-  Star,
-  Truck,
-  ShieldCheck,
   Package,
-  ChefHat,
-  Sparkles,
-  Bath,
-  Armchair,
-  Wrench,
+  Star,
+  MapPin,
   ArrowRight,
+  SlidersHorizontal,
+  Grid3X3,
+  LayoutList,
+  ArrowUpDown,
+  Filter,
+  X,
 } from "lucide-react";
+import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
+import catalogData from "@/data/catalog-products.json";
 
-const CATEGORIES = [
-  { key: "ALL", label: "All Products", icon: Package },
-  { key: "F_AND_B", label: "F&B", icon: ChefHat },
-  { key: "CONSUMABLES", label: "Housekeeping", icon: Sparkles },
-  { key: "GUEST_SUPPLIES", label: "Amenities", icon: Bath },
-  { key: "FFE", label: "Equipment", icon: Armchair },
-  { key: "SERVICES", label: "Services", icon: Wrench },
-];
+const ICON_MAP: Record<string, React.ElementType> = {
+  UtensilsCrossed: Package,
+  Sparkles: Package,
+  Bath: Package,
+  Wrench: Package,
+  Sofa: Package,
+  Briefcase: Package,
+  Shirt: Package,
+  Droplets: Package,
+  Monitor: Package,
+  Shield: Package,
+};
 
 interface Product {
   id: string;
   sku: string;
   name: string;
+  description: string | null;
   category: string;
   unitPrice: number;
   currency: string;
   stockQuantity: number;
   minOrderQty: number;
-  supplier: { id: string; name: string; city: string; rating?: number };
+  unitOfMeasure: string;
+  leadTimeDays: number;
+  supplierName: string;
+  supplierTier: string;
+  supplierRating: number;
+  supplierReviewCount: number;
+  supplierCity: string;
 }
 
-export default function MarketplacePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+const ALL_PRODUCTS: Product[] = (catalogData as { products: Product[] }).products;
+
+const COUNTS = ALL_PRODUCTS.reduce((acc, p) => {
+  acc[p.category] = (acc[p.category] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+export default function PublicCatalogPage() {
+  const [activeCategory, setActiveCategory] = useState("");
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("ALL");
-  const [error, setError] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState("relevance");
+  const [cart, setCart] = useState<Record<string, number>>({});
+  const [showLoginPrompt, setShowLoginPrompt] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const params = new URLSearchParams();
-        if (activeCategory !== "ALL") params.set("category", activeCategory);
-        const res = await fetch(`/api/v1/hotel/catalog?${params.toString()}`);
-        const json = await res.json();
-        if (json.success) {
-          setProducts(json.data.products || []);
-        } else {
-          setError(json.error || "Failed to load products");
-        }
-      } catch {
-        setError("Network error");
-      } finally {
-        setLoading(false);
-      }
+  const filtered = useMemo(() => {
+    let list = [...ALL_PRODUCTS];
+    if (activeCategory) list = list.filter((p) => p.category === activeCategory);
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.sku.toLowerCase().includes(q) ||
+          p.supplierName.toLowerCase().includes(q)
+      );
     }
-    fetchProducts();
-  }, [activeCategory]);
+    if (sortBy === "price_low") list.sort((a, b) => a.unitPrice - b.unitPrice);
+    else if (sortBy === "price_high") list.sort((a, b) => b.unitPrice - a.unitPrice);
+    else if (sortBy === "rating") list.sort((a, b) => b.supplierRating - a.supplierRating);
+    else if (sortBy === "lead") list.sort((a, b) => a.leadTimeDays - b.leadTimeDays);
+    return list;
+  }, [activeCategory, search, sortBy]);
 
-  const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.sku.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleAdd = (id: string) => {
+    setShowLoginPrompt(id);
+    setTimeout(() => setShowLoginPrompt(null), 2000);
+  };
+
+  const formatPrice = (p: number, c: string) =>
+    new Intl.NumberFormat("en-EG", { style: "currency", currency: c, minimumFractionDigits: 0 }).format(p);
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      {/* Navbar */}
-      <nav className="border-b border-[var(--border-default)] bg-[var(--surface)]/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex h-[72px] items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--surface-raised)] border border-[var(--border-default)]">
-                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
-              </div>
-              <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
-            </Link>
-            <div className="hidden lg:flex items-center gap-1">
-              {["Product", "Solutions", "Pricing", "Enterprise"].map((item) => (
-                <a key={item} href={`/#${item.toLowerCase()}`} className="px-3 py-2 text-[13px] font-medium rounded-lg text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-colors">
-                  {item}
-                </a>
-              ))}
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center">
+              <Image src="/logo-horse-only.png" alt="" width={24} height={24} className="opacity-90" />
             </div>
-            <div className="hidden lg:flex items-center gap-3">
-              <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">Sign In</Link>
-              <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all">
-                Get Started
-              </Link>
+            <div>
+              <h1 className="text-sm font-bold tracking-tight">Hotels Vendors</h1>
+              <p className="text-[9px] text-white/30 uppercase tracking-wider">Procurement Hub</p>
             </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--accent-500)]/8 rounded-full blur-[150px]" />
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] font-semibold text-white tracking-widest uppercase mb-6">
-              <Package size={12} />
-              Marketplace
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-              Browse <span className="text-white">10,000+</span> verified products
-            </h1>
-            <p className="mt-4 text-lg text-[var(--foreground-secondary)]">
-              From F&B to housekeeping, find everything your hotel needs from Egypt's best suppliers.
-            </p>
-          </div>
-
-          {/* Search Bar */}
-          <div className="mt-10 max-w-2xl mx-auto relative">
-            <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]" />
-            <input
-              type="text"
-              placeholder="Search by product name, SKU, or supplier..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 rounded-2xl bg-[var(--surface)] border border-[var(--border-default)] text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:outline-none focus:border-[var(--accent-500)] text-base shadow-lg"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Toolbar */}
-      <section className="border-y border-[var(--border-default)] bg-[var(--surface)]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-[var(--foreground-muted)]">
-              <Filter size={16} />
-              <span className="text-xs font-medium uppercase tracking-wider">Categories</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((cat) => {
-                const Icon = cat.icon;
-                const active = activeCategory === cat.key;
-                return (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCategory(cat.key)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                      active
-                        ? "bg-[var(--accent-500)] text-white shadow-md"
-                        : "bg-[var(--background)] border border-[var(--border-default)] text-[var(--foreground-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--foreground)]"
-                    }`}
-                  >
-                    <Icon size={16} />
-                    {cat.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="glass-card p-5 h-56 animate-pulse" />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="glass-card p-8 text-center text-[var(--foreground-muted)]">{error}</div>
-          ) : filtered.length === 0 ? (
-            <div className="glass-card p-8 text-center text-[var(--foreground-muted)]">
-              No products found. Try a different search or category.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {filtered.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="border-t border-[var(--border-default)] bg-[var(--surface)] py-16">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-            Ready to <span className="text-white">procure smarter</span>?
-          </h2>
-          <p className="mt-3 text-[var(--foreground-secondary)] max-w-xl mx-auto">
-            Join 200+ Egyptian hotels already sourcing on Hotels Vendors. Setup takes 10 minutes.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/register" className="px-7 py-3.5 text-sm font-semibold rounded-xl bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] transition-all">
-              Get Started Free
-            </Link>
-            <Link href="/login" className="px-7 py-3.5 text-sm font-semibold rounded-xl border border-[var(--border-default)] text-[var(--foreground)] hover:bg-[var(--surface-raised)] transition-all">
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="px-4 py-2 rounded-lg bg-[#800000] hover:bg-[#990000] text-white text-sm font-medium transition-colors">
               Sign In
             </Link>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Footer */}
-      <footer className="bg-[var(--background)] border-t border-[var(--border-default)] py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] text-[var(--foreground-muted)]">© 2026 Hotels Vendors. All rights reserved.</p>
-          <div className="flex items-center gap-6 text-[var(--foreground-muted)] text-xs">
-            <a href="#" className="hover:text-[var(--foreground)] transition-colors">Privacy</a>
-            <a href="#" className="hover:text-[var(--foreground)] transition-colors">Terms</a>
-            <a href="#" className="hover:text-[var(--foreground)] transition-colors">Support</a>
-          </div>
+      {/* Hero */}
+      <div className="relative overflow-hidden border-b border-white/[0.06]">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#800000]/10 via-transparent to-[#800000]/5" />
+        <div className="relative max-w-[1600px] mx-auto px-6 py-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-2">
+              <Package className="w-5 h-5 text-[#ff4d4d]" />
+              <span className="text-xs font-medium text-[#ff4d4d] uppercase tracking-wider">Public Marketplace</span>
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight mb-2">
+              {activeCategory ? `${getCategoryById(activeCategory)?.label || activeCategory} Products` : "One-Stop Hotel Procurement"}
+            </h1>
+            <p className="text-white/50 text-sm mb-6">
+              Browse {ALL_PRODUCTS.length}+ verified products from 57 Egyptian suppliers. Sign in to order.
+            </p>
+            <div className="relative w-full max-w-xl">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products, suppliers, SKUs..."
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-sm text-white placeholder:text-white/30 outline-none focus:border-[#800000]/50 focus:shadow-[0_0_20px_rgba(128,0,0,0.15)] transition-all"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </motion.div>
         </div>
-      </footer>
-    </div>
-  );
-}
-
-function ProductCard({ product }: { product: Product }) {
-  return (
-    <div className="glass-card rounded-xl p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300">
-      <div className="flex items-start justify-between">
-        <div className="w-12 h-12 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-default)] flex items-center justify-center">
-          <Package size={24} className="text-[var(--foreground-muted)]" />
-        </div>
-        <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${
-          product.stockQuantity > 100
-            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-            : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-        }`}>
-          {product.stockQuantity} in stock
-        </span>
       </div>
 
-      <div className="flex-1">
-        <p className="text-[11px] text-[var(--foreground-muted)] uppercase tracking-wider">{product.sku}</p>
-        <h3 className="text-sm font-semibold text-[var(--foreground)] mt-0.5 line-clamp-2">{product.name}</h3>
-        <div className="flex items-center gap-1.5 mt-2">
-          <ShieldCheck size={12} className="text-white" />
-          <p className="text-xs text-[var(--foreground-secondary)]">{product.supplier.name} · {product.supplier.city}</p>
+      {/* Category Nav */}
+      <div className="border-b border-white/[0.06] bg-[#0a0a0a]/50">
+        <div className="max-w-[1600px] mx-auto px-6">
+          <div className="flex items-center gap-1 overflow-x-auto py-2">
+            <button
+              onClick={() => setActiveCategory("")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                !activeCategory ? "bg-[#800000] text-white" : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+              }`}
+            >
+              All
+            </button>
+            {HOTEL_CATEGORIES.map((cat) => {
+              const count = COUNTS[cat.id] || 0;
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(isActive ? "" : cat.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                    isActive ? "bg-[#800000] text-white" : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <span>{cat.label}</span>
+                  {count > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-white/40">{count}</span>}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        {product.supplier.rating && (
-          <div className="flex items-center gap-1 mt-1">
-            <Star size={12} className="text-amber-400 fill-amber-400" />
-            <span className="text-xs text-[var(--foreground-secondary)]">{product.supplier.rating}</span>
+      </div>
+
+      {/* Toolbar */}
+      <div className="border-b border-white/[0.06]">
+        <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+          <span className="text-sm text-white/40">{filtered.length} products</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="w-3.5 h-3.5 text-white/30" />
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-sm text-white/60 outline-none cursor-pointer">
+                <option value="relevance" className="bg-[#0a0a0a]">Relevance</option>
+                <option value="price_low" className="bg-[#0a0a0a]">Price: Low → High</option>
+                <option value="price_high" className="bg-[#0a0a0a]">Price: High → Low</option>
+                <option value="rating" className="bg-[#0a0a0a]">Top Rated</option>
+                <option value="lead" className="bg-[#0a0a0a]">Fastest Delivery</option>
+              </select>
+            </div>
+            <div className="flex rounded-lg border border-white/[0.08] overflow-hidden">
+              <button onClick={() => setViewMode("grid")} className={`p-2 ${viewMode === "grid" ? "bg-[#800000] text-white" : "text-white/40"}`}><Grid3X3 className="w-4 h-4" /></button>
+              <button onClick={() => setViewMode("list")} className={`p-2 ${viewMode === "list" ? "bg-[#800000] text-white" : "text-white/40"}`}><LayoutList className="w-4 h-4" /></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Products */}
+      <div className="max-w-[1600px] mx-auto px-6 py-8">
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-white/30">
+            <SlidersHorizontal className="w-12 h-12 mb-4" />
+            <p className="text-lg font-medium">No products found</p>
+            <button onClick={() => { setActiveCategory(""); setSearch(""); }} className="mt-4 px-4 py-2 rounded-lg bg-[#800000] text-white text-sm">View All</button>
+          </div>
+        ) : (
+          <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
+            {filtered.map((product, i) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
+                className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-[#800000]/40 transition-all"
+              >
+                {/* Image */}
+                <div className="relative aspect-[4/3] bg-black overflow-hidden">
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#800000]/10 to-transparent">
+                    <Package className="w-12 h-12 text-white/10" />
+                    <span className="text-[10px] text-white/20 mt-2 font-mono">{product.sku}</span>
+                  </div>
+                  <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                      product.stockQuantity === 0 ? "text-red-400 bg-red-500/10 border-red-500/20" :
+                      product.stockQuantity < 20 ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
+                      "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                    }`}>
+                      {product.stockQuantity === 0 ? "Out of Stock" : product.stockQuantity < 20 ? "Low Stock" : "In Stock"}
+                    </span>
+                    {product.supplierTier === "PREMIER" && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#800000]/20 text-[#ff4d4d] border border-[#800000]/30">Premier</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col gap-2 p-4">
+                  <div className="flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-wider">
+                    <span>{getCategoryById(product.category)?.label || product.category}</span>
+                    <span className="w-1 h-1 rounded-full bg-white/20" />
+                    <span>{product.unitOfMeasure}</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-white/90 leading-snug line-clamp-2 min-h-[2.5rem]">{product.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span className="text-xs font-medium">{product.supplierRating.toFixed(1)}</span>
+                    <span className="text-[10px] text-white/30">({product.supplierReviewCount})</span>
+                    <span className="w-1 h-1 rounded-full bg-white/20" />
+                    <MapPin className="w-3 h-3 text-white/30" />
+                    <span className="text-[10px] text-white/40">{product.supplierCity}</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="text-lg font-bold">{formatPrice(product.unitPrice, product.currency)}</span>
+                    <span className="text-xs text-white/40">/ {product.unitOfMeasure}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] text-white/30">
+                    <span>Min: {product.minOrderQty}</span>
+                    <span>Lead: {product.leadTimeDays}d</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Link
+                      href={`/catalog/${product.id}`}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-white/[0.08] text-sm text-white/70 hover:text-white hover:border-white/[0.14] transition-colors"
+                    >
+                      <span>View Details</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                    <button
+                      onClick={() => handleAdd(product.id)}
+                      className="flex items-center justify-center px-3 py-2 rounded-lg bg-[#800000] hover:bg-[#990000] text-white transition-colors"
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {showLoginPrompt === product.id && (
+                    <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-[#ff4d4d] text-center">
+                      Please <Link href="/login" className="underline">sign in</Link> to add to cart
+                    </motion.div>
+                  )}
+                  <p className="text-[10px] text-white/30 truncate">Sold by <span className="text-white/50">{product.supplierName}</span></p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         )}
-      </div>
-
-      <div className="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
-        <div>
-          <p className="text-lg font-bold text-[var(--foreground)]">{product.unitPrice.toLocaleString()}</p>
-          <p className="text-[11px] text-[var(--foreground-muted)]">{product.currency} / unit · MOQ {product.minOrderQty}</p>
-        </div>
-        <Link
-          href="/login"
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--accent-500)] hover:bg-[var(--accent-600)] text-white text-sm font-medium transition-colors"
-        >
-          Order <ArrowRight size={14} />
-        </Link>
       </div>
     </div>
   );

@@ -88,11 +88,11 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
         {/* Avatar */}
         <button className="flex items-center gap-2.5 pl-1">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#800000] to-[#4d0000] flex items-center justify-center text-white text-xs font-bold ring-2 ring-[rgba(255,255,255,0.08)]">
-            AH
+            MZ
           </div>
           <div className="hidden md:block text-left">
-            <p className="text-xs font-medium text-white leading-tight">Ahmed Hassan</p>
-            <p className="text-[10px] text-[rgba(255,255,255,0.35)] leading-tight">Nile Palace Hotel</p>
+            <p className="text-xs font-medium text-white leading-tight">Moataz</p>
+            <p className="text-[10px] text-[rgba(255,255,255,0.35)] leading-tight">CEO</p>
           </div>
         </button>
       </div>
