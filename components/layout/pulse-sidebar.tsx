@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -13,6 +14,8 @@ import {
   Zap,
   BrainCircuit,
   Bot,
+  Shield,
+  Target,
   ChevronLeft,
   ChevronRight,
   Settings,
@@ -71,6 +74,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: Users, label: "Suppliers", href: "/admin/suppliers" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
+        { icon: Shield, label: "Mission Control", href: "/admin/control" },
       ],
     },
     {
@@ -145,6 +149,9 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
   if (collapsed) {
     return (
       <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
+        <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-[#800000]/20 transition-colors">
+          <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={24} height={24} className="opacity-90" priority />
+        </Link>
         <button
           onClick={onToggle}
           className="p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.35)] hover:text-white transition-colors"
@@ -190,12 +197,12 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
     <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-[rgba(255,255,255,0.04)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#800000] to-[#4d0000] flex items-center justify-center">
-            <span className="text-white text-[10px] font-bold">HV</span>
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center group-hover:bg-[#800000]/25 transition-colors">
+            <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={20} height={20} className="opacity-90" priority />
           </div>
           <span className="text-sm font-semibold text-white tracking-tight">HotelsVendors</span>
-        </div>
+        </Link>
         <button
           onClick={onToggle}
           className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.30)] hover:text-white transition-colors"

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { Search, Bell, ChevronDown, Settings } from "lucide-react";
 
 interface DashboardHeaderProps {
@@ -28,15 +30,22 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
         borderBottom: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      {/* Left: Breadcrumb / Context */}
-      <div className="flex items-center gap-3">
-        <span className="text-xs font-medium text-[rgba(255,255,255,0.35)] uppercase tracking-wider">
-          Dashboard
-        </span>
-        <span className="text-[rgba(255,255,255,0.15)]">/</span>
-        <span className="text-xs font-medium text-[rgba(255,255,255,0.60)]">
-          {config.label}
-        </span>
+      {/* Left: Logo + Breadcrumb */}
+      <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center group-hover:bg-[#800000]/25 transition-colors">
+            <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={20} height={20} className="opacity-90" priority />
+          </div>
+        </Link>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-[rgba(255,255,255,0.35)] uppercase tracking-wider">
+            Dashboard
+          </span>
+          <span className="text-[rgba(255,255,255,0.15)]">/</span>
+          <span className="text-xs font-medium text-[rgba(255,255,255,0.60)]">
+            {config.label}
+          </span>
+        </div>
       </div>
 
       {/* Center: Search */}
