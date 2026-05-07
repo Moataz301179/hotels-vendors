@@ -2,144 +2,72 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  ClipboardList,
-  Truck,
-  DollarSign,
-  Settings,
-  Bell,
-  Search,
-  Menu,
-  X,
-  LogOut,
-  ChevronDown,
-  Shield,
-} from "lucide-react";
 import { useState } from "react";
-
-const NAV_ITEMS = [
-  { label: "Dashboard", href: "/hotel", icon: LayoutDashboard },
-  { label: "Marketplace", href: "/hotel/catalog", icon: ShoppingBag },
-  { label: "Orders", href: "/hotel/order", icon: ClipboardList },
-  { label: "Logistics", href: "/shipping", icon: Truck },
-  { label: "Payments", href: "/factoring", icon: DollarSign },
-];
-
-const ADMIN_ITEMS = [
-  { label: "Mission Control", href: "/admin/control", icon: Shield },
-  { label: "Swarm", href: "/admin/swarm", icon: Settings },
-];
+import { Search, Bell, Menu, X, ShoppingCart } from "lucide-react";
 
 export function GlobalHeader() {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-
-  const isAdmin = pathname?.startsWith("/admin");
-  const navItems = isAdmin ? ADMIN_ITEMS : NAV_ITEMS;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 rounded-lg bg-[#800000]/15 border border-[#800000]/25 flex items-center justify-center group-hover:bg-[#800000]/25 transition-colors">
+            <div className="relative w-11 h-12 flex items-center justify-center rounded-lg border-2 border-[#b91c1c]/80 bg-white p-1">
               <Image
                 src="/logo-horse-only.png"
                 alt="Hotels Vendors"
-                width={24}
-                height={24}
-                className="opacity-90 group-hover:opacity-100 transition-opacity"
+                width={36}
+                height={42}
+                className="object-contain"
                 priority
               />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-sm font-bold tracking-tight leading-tight">Hotels Vendors</h1>
-              <p className="text-[9px] text-white/30 uppercase tracking-wider leading-tight">Procurement Hub</p>
+            <div>
+              <h1 className="text-[15px] font-bold tracking-tight text-gray-900 leading-tight">Hotels Vendors</h1>
+              <p className="text-[9px] text-gray-400 uppercase tracking-wider leading-tight">Digital Procurement Hub</p>
             </div>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-[#800000]/15 text-[#ff4d4d] border border-[#800000]/20"
-                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+            {[
+              { label: "Catalog", href: "/catalog" },
+              { label: "Suppliers", href: "/catalog" },
+              { label: "Solutions", href: "/catalog" },
+              { label: "Pricing", href: "/catalog" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <button className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-colors">
+          {/* Right */}
+          <div className="flex items-center gap-3">
+            <button className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors">
               <Search className="w-4 h-4" />
-              <span className="text-xs">Search...</span>
             </button>
-
-            {/* Notifications */}
-            <button className="relative p-2 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#800000] border border-black" />
-            </button>
-
-            {/* User */}
-            <div className="relative">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 p-1.5 pr-3 rounded-lg hover:bg-white/[0.04] transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#800000]/20 border border-[#800000]/30 flex items-center justify-center text-xs font-bold text-[#ff4d4d]">
-                  OM
-                </div>
-                <ChevronDown className={`w-3 h-3 text-white/30 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {userMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-white/[0.08] bg-[#0a0a0a]/95 backdrop-blur-xl shadow-2xl overflow-hidden"
-                >
-                  <div className="p-3 border-b border-white/[0.06]">
-                    <p className="text-sm font-medium">Omar El-Sayed</p>
-                    <p className="text-xs text-white/40">hotel.owner@nilegrand.com</p>
-                  </div>
-                  <div className="p-2">
-                    <Link href="/settings" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/[0.04] transition-colors">
-                      <Settings className="w-4 h-4" />
-                      <span>Settings</span>
-                    </Link>
-                    <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-colors">
-                      <LogOut className="w-4 h-4" />
-                      <span>Sign Out</span>
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Mobile Menu */}
+            <Link
+              href="/login"
+              className="hidden sm:inline-flex px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className="px-5 py-2 rounded-lg bg-[#b91c1c] hover:bg-[#991b1b] text-white text-sm font-medium transition-colors"
+            >
+              Get Started
+            </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-colors"
+              className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-50"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -149,33 +77,24 @@ export function GlobalHeader() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          className="md:hidden border-t border-white/[0.06] bg-black/90 backdrop-blur-xl"
-        >
+        <div className="md:hidden border-t border-gray-100 bg-white">
           <nav className="px-4 py-3 space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-[#800000]/15 text-[#ff4d4d] border border-[#800000]/20"
-                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+            {["Catalog", "Suppliers", "Solutions", "Pricing"].map((item) => (
+              <Link
+                key={item}
+                href="/catalog"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                {item}
+              </Link>
+            ))}
+            <div className="pt-2 flex gap-2">
+              <Link href="/login" className="flex-1 text-center px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700">Sign In</Link>
+              <Link href="/register" className="flex-1 text-center px-4 py-2.5 rounded-lg bg-[#b91c1c] text-white text-sm font-medium">Get Started</Link>
+            </div>
           </nav>
-        </motion.div>
+        </div>
       )}
     </header>
   );
