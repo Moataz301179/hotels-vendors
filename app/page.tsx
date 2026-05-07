@@ -1,166 +1,266 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
-  ArrowRight, CheckCircle2, Menu, X, Package, ShoppingCart,
-  Truck, CreditCard, Landmark, ShieldCheck, BarChart3, Search,
-  MessageCircle, XIcon, Zap, Users, FileCheck, TrendingUp,
-  ChevronRight, Building2, MapPin, Clock, Sparkles, Boxes,
-  UtensilsCrossed, Bath, BedDouble, Wrench, Monitor, HeartHandshake,
-  ArrowUpRight, Play, Star, Hexagon, CircleDot, Triangle,
+  ArrowRight, Menu, X, MessageCircle, XIcon, ChevronRight,
+  Sparkles, Building2, Truck, Landmark, Package, MapPin,
+  TrendingUp, Clock, ShieldCheck, Zap, Search, BarChart3,
+  CheckCircle2,
 } from "lucide-react";
 
-/* ─── DATA ─── */
+/* ════════════════════════════════════════════
+   ANIMATED MESH BACKGROUND (Canvas)
+   Organic flowing gradient orbs
+   ════════════════════════════════════════════ */
 
-const FEATURES = [
-  { icon: Package, title: "Unified Catalog", desc: "10,000+ SKUs across F&B, housekeeping, linens, and engineering from verified Egyptian suppliers." },
-  { icon: Truck, title: "Shared Logistics", desc: "Coastal-cluster fulfillment with real-time tracking. Cut delivery costs by 40%." },
-  { icon: CreditCard, title: "Embedded Factoring", desc: "Non-recourse invoice financing. Suppliers get paid in 48 hours, not 90 days." },
-  { icon: Landmark, title: "ETA E-Invoicing", desc: "Real-time submission to the Egyptian Tax Authority. Digitally signed, fully compliant." },
-  { icon: ShieldCheck, title: "Authority Matrix", desc: "Multi-level approval chains for purchase orders by value, hierarchy, and supplier tier." },
-  { icon: BarChart3, title: "AI Intelligence", desc: "Demand forecasting, price benchmarking, and smart reorder alerts by season." },
-];
-
-const CATEGORIES = [
-  { icon: UtensilsCrossed, label: "Food & Beverage", count: "4,100+ SKUs", tint: "from-amber-500/10 to-transparent", accent: "#f59e0b" },
-  { icon: Bath, label: "Housekeeping", count: "1,800+ SKUs", tint: "from-cyan-500/10 to-transparent", accent: "#06b6d4" },
-  { icon: BedDouble, label: "Linens & Textiles", count: "2,400+ SKUs", tint: "from-rose-500/10 to-transparent", accent: "#f43f5e" },
-  { icon: Wrench, label: "Engineering", count: "1,700+ SKUs", tint: "from-emerald-500/10 to-transparent", accent: "#10b981" },
-  { icon: Boxes, label: "Room Amenities", count: "1,300+ SKUs", tint: "from-violet-500/10 to-transparent", accent: "#8b5cf6" },
-  { icon: Monitor, label: "IT & Technology", count: "900+ SKUs", tint: "from-sky-500/10 to-transparent", accent: "#0ea5e9" },
-];
-
-const PRICING = [
-  { name: "Starter", price: "0", period: "free forever", desc: "For small hotels exploring digital procurement", features: ["Browse verified catalog", "Basic search & filters", "Manual POs", "Email alerts", "Up to 3 users"], highlight: false },
-  { name: "Professional", price: "4,500", period: "EGP / month", desc: "For growing hotels ready to automate", features: ["Everything in Starter", "AI price comparison", "Auto PO generation", "Authority Matrix", "ETA e-invoicing", "Up to 15 users", "Priority support"], highlight: true },
-  { name: "Enterprise", price: "Custom", period: "tailored pricing", desc: "For hotel groups with 5+ properties", features: ["Everything in Pro", "Multi-property dashboard", "Opera / SAP integrations", "Dedicated AM", "White-label options", "Unlimited users", "SLA guarantee"], highlight: false },
-];
-
-const HOTELS = [
-  "Marriott Mena House", "Four Seasons", "Hilton Alexandria",
-  "Mövenpick El Gouna", "Steigenberger", "Kempinski Nile",
-  "Jaz Aquamarine", "Rixos Sharm",
-];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
-};
-
-/* ─── LOGO SVG ─── */
-
-function HorseLogo({ className = "w-8 h-10", stroke = "#FF5C00" }: { className?: string; stroke?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" className={className} fill="none" stroke={stroke} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-      {/* Horse Knight Head Outline - Exact trace: flared mane right, ear up, nostril flare, jaw curve */}
-      <path d="M10 20 Q15 10 25 15 Q40 5 55 20 Q70 15 80 30 Q90 40 95 55 Q100 70 92 85 Q85 95 75 105 Q65 115 55 120 Q45 125 35 118 Q25 110 20 95 Q18 80 22 65 Q25 50 28 40 Q25 30 20 25 Q15 22 10 20 Z" />
-      {/* Mane flare/ear */}
-      <path d="M55 20 Q65 10 75 25 Q85 20 90 35 Q95 45 92 55" />
-      {/* Eye/Nostril */}
-      <circle cx="35" cy="45" r="2" fill={stroke} opacity="0.9" />
-      <ellipse cx="85" cy="60" rx="2.5" ry="1.5" />
-      {/* Integrated HV Letters - V tilted in mane (45deg), H parallel tilt in neck for clarity */}
-      <g transform="translate(60,70) rotate(-15)">
-        <text x="0" y="8" fontSize="18" fontWeight="900" fontFamily="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" letterSpacing="-0.5" opacity="0.95">H</text>
-      </g>
-      <g transform="translate(75,45) rotate(45)">
-        <text x="0" y="12" fontSize="16" fontWeight="800" fontFamily="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" letterSpacing="0" opacity="0.95">V</text>
-      </g>
-    </svg>
-  );
-}
-
-/* ─── CHATBOT ─── */
-
-function ChatbotWidget() {
-  const [open, setOpen] = useState(false);
-  const [showOffer, setShowOffer] = useState(false);
+function AnimatedMeshBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef = useRef<number>(0);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowOffer(true), 5000);
-    return () => clearTimeout(t);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = 0, h = 0;
+    const orbs = [
+      { x: 0.3, y: 0.3, r: 0.4, hue: 20, speed: 0.0003, phase: 0 },
+      { x: 0.7, y: 0.6, r: 0.35, hue: 25, speed: 0.0004, phase: 2 },
+      { x: 0.5, y: 0.8, r: 0.3, hue: 15, speed: 0.00025, phase: 4 },
+      { x: 0.2, y: 0.7, r: 0.25, hue: 30, speed: 0.00035, phase: 1 },
+    ];
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    let time = 0;
+    const animate = () => {
+      time += 1;
+      ctx.fillStyle = "#030303";
+      ctx.fillRect(0, 0, w, h);
+
+      orbs.forEach((orb) => {
+        const ox = w * (orb.x + Math.sin(time * orb.speed + orb.phase) * 0.15);
+        const oy = h * (orb.y + Math.cos(time * orb.speed * 0.7 + orb.phase) * 0.1);
+        const r = Math.min(w, h) * orb.r;
+
+        const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
+        grad.addColorStop(0, `hsla(${orb.hue}, 100%, 55%, 0.08)`);
+        grad.addColorStop(0.5, `hsla(${orb.hue}, 100%, 50%, 0.03)`);
+        grad.addColorStop(1, "transparent");
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      });
+
+      // Subtle noise texture
+      ctx.fillStyle = "rgba(255,255,255,0.008)";
+      for (let i = 0; i < 200; i++) {
+        const nx = Math.random() * w;
+        const ny = Math.random() * h;
+        ctx.fillRect(nx, ny, 1, 1);
+      }
+
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
-  return (
-    <div className="fixed bottom-5 right-5 z-50">
-      {showOffer && !open && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-2 border border-white/[0.08] bg-[#0a0a0a] p-3 max-w-[200px] relative rounded-lg">
-          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 text-white/20 hover:text-white/60">
-            <XIcon className="w-3 h-3" />
-          </button>
-          <p className="text-[11px] font-medium text-white/70 pr-4">Need help getting started?</p>
-          <Link href="/register" className="inline-block mt-2 px-3 py-1.5 text-[10px] font-semibold bg-white text-black hover:bg-white/90 transition-colors rounded">
-            Register Now
-          </Link>
-        </motion.div>
-      )}
-      <button onClick={() => { setOpen(!open); setShowOffer(false); }} className="w-10 h-10 border border-[#FF5C00]/50 bg-[#FF5C00] flex items-center justify-center hover:bg-[#cc4700] transition-colors rounded-lg shadow-lg shadow-[#FF5C00]/20">
-        <MessageCircle className="w-4 h-4 text-white" />
-      </button>
-    </div>
-  );
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 }
 
-/* ─── NAVBAR (WHITE) ─── */
+/* ════════════════════════════════════════════
+   PARTICLE NETWORK (Canvas overlay for Hero)
+   ════════════════════════════════════════════ */
 
-function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+function NetworkVisualization() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef = useRef<number>(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = 0, h = 0;
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Create nodes
+    const nodeCount = 40;
+    const nodes: { x: number; y: number; vx: number; vy: number; r: number; color: string; type: string }[] = [];
+    const colors = ["#FF5C00", "#10B981", "#0EA5E9", "#8B5CF6"];
+    const types = ["hotel", "supplier", "logistics", "factoring"];
+
+    for (let i = 0; i < nodeCount; i++) {
+      const typeIdx = i % 4;
+      nodes.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: typeIdx === 0 ? 3 : 2,
+        color: colors[typeIdx],
+        type: types[typeIdx],
+      });
+    }
+
+    let time = 0;
+    const animate = () => {
+      time += 0.016;
+      ctx.clearRect(0, 0, w, h);
+
+      // Update nodes
+      nodes.forEach((n) => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 20 || n.x > w - 20) n.vx *= -1;
+        if (n.y < 20 || n.y > h - 20) n.vy *= -1;
+      });
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[j].x - nodes[i].x;
+          const dy = nodes[j].y - nodes[i].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            const alpha = (1 - dist / 150) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(255, 92, 0, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      nodes.forEach((n) => {
+        const pulse = Math.sin(time * 2 + n.x) * 0.3 + 0.7;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = n.color;
+        ctx.fill();
+
+        // Glow
+        const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 6);
+        const rgb = n.color === "#FF5C00" ? "255,92,0" : n.color === "#10B981" ? "16,185,129" : n.color === "#0EA5E9" ? "14,165,233" : "139,92,246";
+        glow.addColorStop(0, `rgba(${rgb},0.3)`);
+        glow.addColorStop(1, `rgba(${rgb},0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 6, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Animated data packets
+      for (let i = 0; i < 5; i++) {
+        const t = ((time * 0.3 + i * 0.2) % 1);
+        const n1 = nodes[Math.floor(i * 7) % nodes.length];
+        const n2 = nodes[Math.floor(i * 7 + 5) % nodes.length];
+        const px = n1.x + (n2.x - n1.x) * t;
+        const py = n1.y + (n2.y - n1.y) * t;
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        ctx.beginPath();
+        ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-60" />;
+}
+
+/* ════════════════════════════════════════════
+   NAV
+   ════════════════════════════════════════════ */
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.05)]" : "bg-white"}`}>
-      <div className="mx-auto max-w-6xl px-5">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#030303]/90 backdrop-blur-xl border-b border-white/[0.06]" : ""}`}>
+      <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <HorseLogo className="w-7 h-8" stroke="#FF5C00" />
-            <span className="text-[14px] font-bold text-black tracking-tight">Hotels Vendors</span>
+            <Image src="/logo-horse-only.png" alt="" width={32} height={32} className="w-8 h-8 object-contain" />
+            <span className="text-[15px] font-bold text-white tracking-tight">Hotels Vendors</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: "Catalog", href: "/catalog" },
-              { label: "Solutions", href: "#solutions" },
-              { label: "Pricing", href: "#pricing" },
-              { label: "About", href: "#about" },
-            ].map((item) => (
-              <a key={item.label} href={item.href} className="text-[13px] font-medium text-black/50 hover:text-black transition-colors">
-                {item.label}
+            {["Catalog", "Platform", "Pricing"].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="text-[13px] font-medium text-white/40 hover:text-white transition-colors">
+                {item}
               </a>
             ))}
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/login" className="text-[13px] font-medium text-black/50 hover:text-black transition-colors px-3 py-1.5">
-              Sign In
-            </Link>
-            <Link href="/register" className="px-4 py-2 text-[12px] font-semibold bg-black text-white hover:bg-black/80 transition-colors rounded-md">
+            <Link href="/login" className="text-[13px] font-medium text-white/40 hover:text-white px-4 py-2">Sign In</Link>
+            <Link href="/register" className="px-5 py-2.5 text-[12px] font-semibold bg-[#FF5C00] text-white hover:bg-[#cc4700] rounded-lg shadow-lg shadow-[#FF5C00]/20 transition-all">
               Get Started
             </Link>
           </div>
 
-          <button className="md:hidden p-2 text-black" onClick={() => setOpen(!open)}>
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <button className="md:hidden p-2 text-white" onClick={() => setMobileOpen(!mobileOpen)}>
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {open && (
-        <div className="md:hidden bg-white border-t border-black/5 px-5 py-4 space-y-1">
-          {["Catalog", "Solutions", "Pricing", "About"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="block py-2 text-[14px] font-medium text-black/60 hover:text-black">{item}</a>
+      {mobileOpen && (
+        <div className="md:hidden bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-white/[0.06] px-6 py-5 space-y-1">
+          {["Catalog", "Platform", "Pricing"].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="block py-2.5 text-[14px] text-white/60">{item}</a>
           ))}
           <div className="pt-3 flex gap-2">
-            <Link href="/login" className="flex-1 text-center py-2.5 text-[13px] border border-black/10 text-black rounded-md font-medium">Sign In</Link>
-            <Link href="/register" className="flex-1 text-center py-2.5 text-[13px] bg-black text-white rounded-md font-semibold">Get Started</Link>
+            <Link href="/login" className="flex-1 text-center py-2.5 text-[13px] border border-white/10 rounded-lg">Sign In</Link>
+            <Link href="/register" className="flex-1 text-center py-2.5 text-[13px] bg-[#FF5C00] rounded-lg font-semibold">Get Started</Link>
           </div>
         </div>
       )}
@@ -168,182 +268,356 @@ function Navbar() {
   );
 }
 
-/* ─── ABSTRACT HERO VISUAL (CSS-only, no images) ─── */
-
-function HeroVisual() {
-  return (
-    <div className="relative w-full h-full min-h-[360px] lg:min-h-[420px]">
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.04]" style={{
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
-        backgroundSize: '40px 40px'
-      }} />
-
-      {/* Orbiting accent rings */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-white/[0.06] rounded-full" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-white/[0.04] rounded-full" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-[#FF5C00]/20 rounded-full" />
-
-      {/* Floating cards */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        className="absolute top-4 left-4 lg:left-8 bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 backdrop-blur-sm"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#FF5C00]/20 flex items-center justify-center">
-            <Package className="w-3.5 h-3.5 text-[#ff7a33]" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold text-white">New Order</p>
-            <p className="text-[9px] text-white/30">EGP 24,500</p>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.6 }}
-        className="absolute top-16 right-2 lg:right-6 bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 backdrop-blur-sm"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold text-white">ETA Verified</p>
-            <p className="text-[9px] text-white/30">Invoice #8821</p>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
-        className="absolute bottom-20 left-2 lg:left-4 bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 backdrop-blur-sm"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center">
-            <Truck className="w-3.5 h-3.5 text-amber-400" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold text-white">In Transit</p>
-            <p className="text-[9px] text-white/30">Hurghada → Cairo</p>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
-        className="absolute bottom-6 right-6 lg:right-12 bg-white/[0.03] border border-white/[0.08] rounded-xl p-3 backdrop-blur-sm"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-sky-500/10 flex items-center justify-center">
-            <CreditCard className="w-3.5 h-3.5 text-sky-400" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold text-white">Factored</p>
-            <p className="text-[9px] text-white/30">48h payout</p>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Center node */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-[#FF5C00]/10 border border-[#FF5C00]/30 flex items-center justify-center">
-            <HorseLogo className="w-8 h-9" stroke="#ff7a33" />
-          </div>
-          <div className="absolute inset-0 rounded-2xl bg-[#FF5C00]/20 blur-xl -z-10" />
-        </div>
-      </div>
-
-      {/* Connection lines (decorative) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
-        <line x1="30%" y1="20%" x2="50%" y2="50%" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="4 4" />
-        <line x1="70%" y1="25%" x2="50%" y2="50%" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="4 4" />
-        <line x1="25%" y1="75%" x2="50%" y2="50%" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="4 4" />
-        <line x1="75%" y1="80%" x2="50%" y2="50%" stroke="url(#grad1)" strokeWidth="1" strokeDasharray="4 4" />
-        <defs>
-          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FF5C00" stopOpacity="0" />
-            <stop offset="50%" stopColor="#FF5C00" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#FF5C00" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
-  );
-}
-
-/* ─── HERO ─── */
+/* ════════════════════════════════════════════
+   HERO — Full viewport, massive visual impact
+   ════════════════════════════════════════════ */
 
 function Hero() {
   return (
-    <section className="relative bg-black pt-16 overflow-hidden">
-      {/* Subtle radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#FF5C00]/[0.07] rounded-full blur-[120px] pointer-events-none" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <AnimatedMeshBackground />
+      <NetworkVisualization />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left content */}
+      {/* Radial vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#030303_70%)]" />
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Logo mark */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative w-20 h-20 mx-auto mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] mb-6">
-              <Sparkles className="w-3 h-3 text-[#ff7a33]" />
-              <span className="text-[11px] font-medium text-white/50">Now serving 200+ Egyptian hotels</span>
+            <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={80} height={80} className="w-20 h-20 object-contain relative z-10" />
+            <div className="absolute inset-0 bg-[#FF5C00]/25 blur-3xl rounded-full scale-150" />
+          </motion.div>
+
+          {/* Headline */}
+          <h1 className="text-[48px] sm:text-[72px] lg:text-[96px] font-bold text-white leading-[0.95] tracking-[-0.04em]">
+            The Network for<br />
+            <span className="text-[#FF5C00]">Egyptian</span> Hospitality
+          </h1>
+
+          <p className="mt-8 text-[17px] sm:text-[20px] text-white/30 leading-relaxed max-w-xl mx-auto">
+            Hotels, suppliers, logistics, and factoring — connected on one 
+            compliant platform.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/register" className="group px-8 py-4 text-[14px] font-semibold bg-[#FF5C00] text-white hover:bg-[#cc4700] rounded-xl flex items-center gap-2 shadow-xl shadow-[#FF5C00]/25 transition-all">
+              Start Free <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/catalog" className="px-8 py-4 text-[14px] font-semibold border border-white/12 text-white hover:bg-white/[0.03] rounded-xl transition-all">
+              Explore Catalog
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+      >
+        <div className="w-6 h-10 border-2 border-white/10 rounded-full flex items-start justify-center p-1.5">
+          <div className="w-1.5 h-3 bg-white/30 rounded-full" />
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════
+   PRODUCT MOCKUP — 3D perspective dashboard
+   ════════════════════════════════════════════ */
+
+function ProductMockup() {
+  return (
+    <section className="relative py-24 overflow-hidden">
+      <div className="mx-auto max-w-6xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
+        >
+          <span className="text-[11px] font-semibold text-[#FF5C00] tracking-[0.2em] uppercase">Platform</span>
+          <h2 className="mt-4 text-[36px] sm:text-[56px] font-bold text-white tracking-[-0.03em] leading-none">
+            Your command center
+          </h2>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 60, rotateX: 20 }}
+          whileInView={{ opacity: 1, y: 0, rotateX: 8 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative perspective-[1500px]"
+        >
+          <div className="relative transform-gpu" style={{ transformStyle: "preserve-3d" }}>
+            {/* Browser chrome */}
+            <div className="rounded-t-xl border border-white/[0.08] border-b-0 bg-[#0c0c0c] px-4 py-3 flex items-center gap-3">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-[#ff5f57]/50" />
+                <div className="w-3 h-3 rounded-full bg-[#febc2e]/50" />
+                <div className="w-3 h-3 rounded-full bg-[#28c840]/50" />
+              </div>
+              <div className="flex-1 mx-4">
+                <div className="max-w-sm mx-auto h-7 bg-white/[0.04] rounded-md flex items-center px-3 gap-2">
+                  <ShieldCheck className="w-3 h-3 text-white/15" />
+                  <span className="text-[10px] text-white/15">app.hotelsvendors.com</span>
+                </div>
+              </div>
             </div>
 
-            <h1 className="text-[32px] sm:text-[40px] lg:text-[48px] font-bold text-white leading-[1.1] tracking-tight">
-              The procurement platform{" "}
-              <span className="text-[#ff7a33]">built for Egyptian hospitality</span>
-            </h1>
+            {/* Dashboard body */}
+            <div className="rounded-b-xl border border-white/[0.08] border-t-0 bg-[#060606] p-6 overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#FF5C00]/10 flex items-center justify-center">
+                    <Image src="/logo-horse-only.png" alt="" width={20} height={20} className="w-5 h-5 object-contain opacity-70" />
+                  </div>
+                  <div className="h-4 w-28 bg-white/[0.06] rounded" />
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-9 w-9 rounded-lg bg-white/[0.03]" />
+                  <div className="h-9 w-9 rounded-full bg-[#FF5C00]/15" />
+                </div>
+              </div>
 
-            <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-md">
-              Connect hotels, suppliers, logistics, and factoring on a single compliant platform. From catalog discovery to ETA e-invoice submission.
+              {/* Metric cards */}
+              <div className="grid grid-cols-4 gap-3 mb-6">
+                {[
+                  { color: "#FF5C00", w1: 16, w2: 20 },
+                  { color: "#f59e0b", w1: 14, w2: 12 },
+                  { color: "#10B981", w1: 18, w2: 16 },
+                  { color: "#0EA5E9", w1: 12, w2: 18 },
+                ].map((m, i) => (
+                  <div key={i} className="rounded-xl border border-white/[0.04] bg-white/[0.015] p-4">
+                    <div className="h-2.5 w-2.5 rounded-full mb-3" style={{ backgroundColor: `${m.color}40` }} />
+                    <div className="h-3 w-20 bg-white/[0.06] rounded mb-2" />
+                    <div className="h-6 w-24 bg-white/[0.1] rounded" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Chart */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-2 rounded-xl border border-white/[0.04] bg-white/[0.015] p-5">
+                  <div className="h-4 w-36 bg-white/[0.06] rounded mb-6" />
+                  <div className="flex items-end gap-1 h-28">
+                    {[35, 50, 42, 65, 58, 78, 72, 88, 82, 92, 87, 95].map((h, i) => (
+                      <div key={i} className="flex-1 rounded-t-sm transition-all" style={{ height: `${h}%`, background: `linear-gradient(to top, rgba(255,92,0,0.25), rgba(255,92,0,0.05))` }} />
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-xl border border-white/[0.04] bg-white/[0.015] p-5">
+                  <div className="h-4 w-28 bg-white/[0.06] rounded mb-5" />
+                  {[80, 65, 50, 38, 25].map((w, i) => (
+                    <div key={i} className="flex items-center gap-2 mb-3">
+                      <div className="h-2.5 w-2.5 rounded-full bg-white/[0.06]" />
+                      <div className="h-2 flex-1 bg-white/[0.03] rounded-full overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${w}%`, backgroundColor: "rgba(255,92,0,0.25)" }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Reflection */}
+            <div className="absolute -bottom-16 left-0 right-0 h-16 opacity-20" style={{ transform: "scaleY(-0.25)", transformOrigin: "top", filter: "blur(12px)" }}>
+              <div className="w-full h-full bg-[#060606] rounded-b-xl" />
+            </div>
+
+            {/* Bottom glow */}
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-2/3 h-20 bg-[#FF5C00]/8 blur-3xl rounded-full" />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════
+   FOUR ACTORS — Large visual cards
+   ════════════════════════════════════════════ */
+
+function FourActors() {
+  const actors = [
+    { icon: Building2, title: "Hotels", count: "200+", color: "#10B981", desc: "Procurement portal with AI catalog discovery and seasonal forecasting" },
+    { icon: Package, title: "Suppliers", count: "1,200+", color: "#FF5C00", desc: "Inventory sync, RFQ management, and embedded factoring for cash flow" },
+    { icon: Truck, title: "Logistics", count: "40+", color: "#0EA5E9", desc: "Shared-route fulfillment with real-time tracking across coastal clusters" },
+    { icon: Landmark, title: "Factoring", count: "12", color: "#8B5CF6", desc: "Non-recourse invoice financing. Paid in 48 hours, not 90 days" },
+  ];
+
+  return (
+    <section id="platform" className="relative py-28 overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#FF5C00]/[0.02] rounded-full blur-[150px]" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="mb-16"
+        >
+          <span className="text-[11px] font-semibold text-[#FF5C00] tracking-[0.2em] uppercase">Marketplace</span>
+          <h2 className="mt-4 text-[36px] sm:text-[56px] font-bold text-white tracking-[-0.03em] leading-none">
+            Four sides.<br />One platform.
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {actors.map((actor, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0a0a0a] hover:border-white/[0.12] transition-all duration-500 p-8"
+            >
+              {/* Hover gradient */}
+              <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ backgroundColor: `${actor.color}10` }} />
+
+              <div className="relative">
+                <div className="flex items-start justify-between mb-8">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${actor.color}12` }}>
+                    <actor.icon className="w-7 h-7" style={{ color: actor.color }} />
+                  </div>
+                  <span className="text-[36px] font-bold" style={{ color: `${actor.color}40` }}>{actor.count}</span>
+                </div>
+                <h3 className="text-[24px] font-bold text-white mb-2">{actor.title}</h3>
+                <p className="text-[14px] text-white/30 leading-relaxed max-w-sm">{actor.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════
+   MAP + STATS SPLIT
+   ════════════════════════════════════════════ */
+
+function MapStats() {
+  return (
+    <section className="relative py-28 overflow-hidden">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <span className="text-[11px] font-semibold text-[#FF5C00] tracking-[0.2em] uppercase">Coverage</span>
+            <h2 className="mt-4 text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
+              From Cairo to<br />the Red Sea
+            </h2>
+            <p className="mt-5 text-[16px] text-white/30 leading-relaxed max-w-md">
+              Shared logistics clusters across Egypt's key hospitality corridors. 
+              48-hour delivery to any coastal property.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/register" className="px-5 py-2.5 text-[13px] font-semibold bg-white text-black hover:bg-white/90 transition-colors rounded-lg flex items-center gap-2">
-                Start Free <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/catalog" className="px-5 py-2.5 text-[13px] font-semibold border border-white/12 text-white hover:bg-white/[0.03] transition-colors rounded-lg flex items-center gap-2">
-                Explore Catalog <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Stats row */}
-            <div className="mt-10 flex items-center gap-8">
+            <div className="mt-10 grid grid-cols-2 gap-4">
               {[
-                { value: "10K+", label: "SKUs" },
-                { value: "1,200+", label: "Suppliers" },
-                { value: "2.4B", label: "EGP GMV" },
-                { value: "48h", label: "Delivery" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-[20px] font-bold text-white tracking-tight">{stat.value}</p>
-                  <p className="text-[11px] text-white/25 uppercase tracking-wider mt-0.5">{stat.label}</p>
+                { value: "6", label: "Coastal Clusters", icon: MapPin },
+                { value: "48h", label: "Avg. Delivery", icon: Clock },
+                { value: "40%", label: "Cost Cut", icon: TrendingUp },
+                { value: "100%", label: "ETA Ready", icon: ShieldCheck },
+              ].map((stat, i) => (
+                <div key={i} className="flex items-center gap-3 p-4 rounded-xl border border-white/[0.05] bg-white/[0.015]">
+                  <stat.icon className="w-5 h-5 text-[#FF5C00]/40" />
+                  <div>
+                    <p className="text-[22px] font-bold text-white">{stat.value}</p>
+                    <p className="text-[11px] text-white/20">{stat.label}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right: abstract visual */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
             className="relative"
           >
-            <HeroVisual />
+            {/* Stylized Egypt map SVG */}
+            <div className="relative w-full aspect-square max-w-md mx-auto">
+              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                {/* Egypt silhouette */}
+                <path
+                  d="M32 6 L34 4 L37 6 L40 10 L42 14 L44 18 L47 22 L50 26 L52 30 L54 36 L57 44 L60 52 L62 60 L65 68 L68 76 L70 82 L72 86 L74 90 L76 92 L78 94 L76 96 L73 95 L70 93 L66 90 L62 86 L58 80 L54 74 L50 68 L46 62 L42 56 L38 50 L35 44 L32 38 L30 32 L28 26 L26 20 L28 14 L30 8 Z"
+                  fill="rgba(255,92,0,0.03)"
+                  stroke="rgba(255,92,0,0.12)"
+                  strokeWidth="0.3"
+                />
+                {/* Nile */}
+                <path
+                  d="M42 14 Q44 24 42 34 Q40 44 44 54 Q48 64 52 74 Q56 82 60 88"
+                  stroke="rgba(14,165,233,0.15)"
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeDasharray="1 2"
+                />
+                {/* Cluster dots with pulse animation */}
+                {[
+                  { x: 62, y: 58, name: "Hurghada" },
+                  { x: 68, y: 75, name: "Sharm" },
+                  { x: 58, y: 72, name: "Marsa Alam" },
+                  { x: 22, y: 18, name: "Alexandria" },
+                  { x: 40, y: 35, name: "Cairo" },
+                ].map((c, i) => (
+                  <g key={i}>
+                    <circle cx={c.x} cy={c.y} r="1.2" fill="#FF5C00" opacity="0.8">
+                      <animate attributeName="r" values="1.2;2;1.2" dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.8;0.3;0.8" dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" />
+                    </circle>
+                    <circle cx={c.x} cy={c.y} r="3" fill="none" stroke="#FF5C00" strokeWidth="0.2" opacity="0.2">
+                      <animate attributeName="r" values="2;5;2" dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.3;0;0.3" dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" />
+                    </circle>
+                  </g>
+                ))}
+                {/* Connection lines */}
+                {[
+                  { x1: 40, y1: 35, x2: 62, y2: 58 },
+                  { x1: 40, y1: 35, x2: 68, y2: 75 },
+                  { x1: 40, y1: 35, x2: 58, y2: 72 },
+                  { x1: 40, y1: 35, x2: 22, y2: 18 },
+                ].map((line, i) => (
+                  <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="rgba(255,92,0,0.08)" strokeWidth="0.3" strokeDasharray="2 3">
+                    <animate attributeName="stroke-opacity" values="0.05;0.15;0.05" dur={`${3 + i}s`} repeatCount="indefinite" />
+                  </line>
+                ))}
+              </svg>
+              {/* Labels */}
+              <div className="absolute inset-0">
+                {[
+                  { x: 62, y: 52, name: "Hurghada" },
+                  { x: 72, y: 72, name: "Sharm" },
+                  { x: 52, y: 72, name: "Marsa Alam" },
+                  { x: 16, y: 14, name: "Alexandria" },
+                  { x: 46, y: 32, name: "Cairo" },
+                ].map((c, i) => (
+                  <span key={i} className="absolute text-[9px] font-medium text-white/30 whitespace-nowrap" style={{ left: `${c.x}%`, top: `${c.y}%` }}>
+                    {c.name}
+                  </span>
+                ))}
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -351,263 +625,73 @@ function Hero() {
   );
 }
 
-/* ─── TRUST BAR ─── */
-
-function TrustBar() {
-  return (
-    <section className="bg-black border-y border-white/[0.04]">
-      <div className="mx-auto max-w-6xl px-5 py-6">
-        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
-          <span className="text-[11px] font-medium text-white/20 uppercase tracking-wider">Trusted by leading hotels</span>
-          {HOTELS.map((h) => (
-            <span key={h} className="text-[12px] font-semibold text-white/15 hover:text-white/40 transition-colors">{h}</span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── CATEGORIES (icon cards, no images) ─── */
-
-function Categories() {
-  return (
-    <section className="bg-black py-20">
-      <div className="mx-auto max-w-6xl px-5">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Catalog</span>
-          <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Everything your hotel needs</h2>
-          <p className="mt-2 text-[14px] text-white/35 max-w-md">Verified suppliers across six core procurement categories.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {CATEGORIES.map((cat, i) => (
-            <motion.div
-              key={cat.label}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.025] hover:border-white/[0.12] transition-all duration-300 p-5 cursor-pointer"
-            >
-              {/* Gradient tint */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${cat.tint} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300" style={{ backgroundColor: `${cat.accent}15` }}>
-                  <cat.icon className="w-5 h-5" style={{ color: cat.accent }} />
-                </div>
-                <h3 className="text-[15px] font-semibold text-white group-hover:text-white/90 transition-colors">{cat.label}</h3>
-                <p className="mt-1 text-[12px] text-white/30">{cat.count}</p>
-                <div className="mt-4 flex items-center gap-1 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: cat.accent }}>
-                  Browse <ArrowUpRight className="w-3 h-3" />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── FEATURES ─── */
-
-function Features() {
-  return (
-    <section id="product" className="bg-[#050505] py-20">
-      <div className="mx-auto max-w-6xl px-5">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Platform</span>
-          <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Capabilities</h2>
-          <p className="mt-2 text-[14px] text-white/35 max-w-md">From catalog discovery to ETA-compliant invoicing — one platform, zero fragmentation.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {FEATURES.map((f, i) => (
-            <motion.div
-              key={f.title}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="group rounded-xl border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.025] hover:border-white/[0.12] transition-all duration-300 p-5"
-            >
-              <div className="w-9 h-9 rounded-lg border border-white/[0.08] flex items-center justify-center mb-4 group-hover:border-white/[0.15] transition-colors">
-                <f.icon className="w-[18px] h-[18px] text-white/30 group-hover:text-white/50 transition-colors" />
-              </div>
-              <h3 className="text-[15px] font-semibold text-white">{f.title}</h3>
-              <p className="mt-1.5 text-[13px] text-white/30 leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── HOW IT WORKS ─── */
-
-function HowItWorks() {
-  const steps = [
-    { num: "01", icon: Search, title: "Discover", desc: "Browse verified suppliers across 6 categories. Filter by price, MOQ, and delivery zone." },
-    { num: "02", icon: FileCheck, title: "Order", desc: "Build purchase orders with AI-suggested bundles. Route through your Authority Matrix." },
-    { num: "03", icon: Truck, title: "Fulfill", desc: "Track shared-logistics delivery in real time. Invoice auto-submits to ETA." },
-  ];
-
-  return (
-    <section id="solutions" className="bg-black py-20">
-      <div className="mx-auto max-w-6xl px-5">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Process</span>
-          <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">How it works</h2>
-          <p className="mt-2 text-[14px] text-white/35">From catalog to compliance in three steps</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.num}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="relative rounded-xl border border-white/[0.06] bg-white/[0.015] p-6"
-            >
-              {/* Step connector line */}
-              {i < 2 && (
-                <div className="hidden md:block absolute top-10 left-full w-4 h-px bg-gradient-to-r from-white/[0.08] to-transparent z-10" />
-              )}
-
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-[11px] font-mono text-white/15">{s.num}</span>
-                <div className="flex-1 h-px bg-white/[0.06]" />
-              </div>
-              <div className="w-9 h-9 rounded-lg border border-white/[0.08] flex items-center justify-center mb-4">
-                <s.icon className="w-[18px] h-[18px] text-white/40" />
-              </div>
-              <h4 className="text-[16px] font-semibold text-white">{s.title}</h4>
-              <p className="mt-2 text-[13px] text-white/30 leading-relaxed">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── METRICS BANNER ─── */
-
-function MetricsBanner() {
-  const metrics = [
-    { icon: Building2, value: "200+", label: "Hotels Onboarded" },
-    { icon: MapPin, value: "6", label: "Coastal Clusters" },
-    { icon: Clock, value: "48h", label: "Avg. Delivery" },
-    { icon: TrendingUp, value: "40%", label: "Cost Reduction" },
-  ];
-
-  return (
-    <section className="bg-[#050505] py-16">
-      <div className="mx-auto max-w-6xl px-5">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {metrics.map((m, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="flex items-center gap-4 rounded-xl border border-white/[0.06] bg-white/[0.015] p-4"
-            >
-              <div className="w-9 h-9 rounded-lg border border-white/[0.08] flex items-center justify-center shrink-0">
-                <m.icon className="w-4 h-4 text-white/30" />
-              </div>
-              <div>
-                <p className="text-[18px] font-bold text-white tracking-tight">{m.value}</p>
-                <p className="text-[10px] text-white/25 uppercase tracking-wider">{m.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── PRICING ─── */
+/* ════════════════════════════════════════════
+   PRICING
+   ════════════════════════════════════════════ */
 
 function Pricing() {
+  const tiers = [
+    { name: "Starter", price: "Free", period: "forever", desc: "Small hotels exploring digital procurement", features: ["Browse catalog", "Basic search", "Manual POs", "Email alerts", "3 users"], highlight: false },
+    { name: "Professional", price: "4,500", period: "EGP/mo", desc: "Growing hotels ready to automate", features: ["Everything in Starter", "AI price comparison", "Auto PO generation", "Authority Matrix", "ETA e-invoicing", "15 users", "Priority support"], highlight: true },
+    { name: "Enterprise", price: "Custom", period: "pricing", desc: "Hotel groups with 5+ properties", features: ["Everything in Pro", "Multi-property dashboard", "Opera/SAP integration", "Dedicated AM", "White-label", "Unlimited users", "SLA"], highlight: false },
+  ];
+
   return (
-    <section id="pricing" className="bg-black py-20">
-      <div className="mx-auto max-w-6xl px-5">
+    <section id="pricing" className="relative py-28 overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#FF5C00]/[0.03] rounded-full blur-[120px]" />
+
+      <div className="relative mx-auto max-w-5xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
         >
-          <span className="text-[11px] font-semibold text-[#ff7a33] tracking-[0.15em] uppercase">Pricing</span>
-          <h2 className="mt-3 text-[28px] sm:text-[32px] font-bold text-white tracking-tight">Simple, transparent plans</h2>
-          <p className="mt-2 text-[14px] text-white/35">No hidden fees. Scale as you grow.</p>
+          <span className="text-[11px] font-semibold text-[#FF5C00] tracking-[0.2em] uppercase">Pricing</span>
+          <h2 className="mt-4 text-[36px] sm:text-[56px] font-bold text-white tracking-[-0.03em] leading-none">
+            Scale as you grow
+          </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {PRICING.map((tier) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {tiers.map((tier, i) => (
             <motion.div
               key={tier.name}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className={`rounded-xl p-6 transition-all duration-300 ${
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+              className={`relative overflow-hidden rounded-2xl p-8 ${
                 tier.highlight
-                  ? "border border-[#FF5C00]/40 bg-[#FF5C00]/[0.03]"
-                  : "border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.025]"
+                  ? "border border-[#FF5C00]/20 bg-[#FF5C00]/[0.02]"
+                  : "border border-white/[0.06] bg-[#0a0a0a]"
               }`}
             >
-              {tier.highlight && (
-                <span className="inline-block px-2 py-1 text-[9px] font-bold uppercase tracking-wider bg-white text-black rounded mb-4">Most Popular</span>
-              )}
-              <h3 className="text-[11px] font-semibold text-white/40 uppercase tracking-wider">{tier.name}</h3>
-              <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-[28px] font-bold text-white tracking-tight">{tier.price}</span>
-                <span className="text-[11px] text-white/30">{tier.period}</span>
+              {tier.highlight && <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF5C00]/40 to-transparent" />}
+              {tier.highlight && <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#FF5C00] text-white rounded-full mb-6">Most Popular</span>}
+
+              <h3 className="text-[12px] font-semibold text-white/30 uppercase tracking-wider">{tier.name}</h3>
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-[32px] font-bold text-white">{tier.price}</span>
+                <span className="text-[12px] text-white/25">{tier.period}</span>
               </div>
-              <p className="mt-2 text-[13px] text-white/30 leading-relaxed">{tier.desc}</p>
-              <ul className="mt-5 space-y-2.5">
+              <p className="mt-2 text-[13px] text-white/25">{tier.desc}</p>
+
+              <ul className="mt-6 space-y-2.5">
                 {tier.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[13px] text-white/40">
-                    <CheckCircle2 className="w-4 h-4 text-white/25 shrink-0 mt-0.5" />
+                  <li key={f} className="flex items-start gap-2 text-[13px] text-white/35">
+                    <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.highlight ? "text-[#FF5C00]" : "text-white/15"}`} />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link
-                href="/register"
-                className={`mt-6 block w-full text-center py-2.5 text-[13px] font-semibold transition-colors rounded-lg ${
-                  tier.highlight
-                    ? "bg-white text-black hover:bg-white/90"
-                    : "border border-white/10 text-white hover:bg-white/[0.03]"
-                }`}
-              >
-                {tier.highlight ? "Start 14-Day Trial" : tier.name === "Enterprise" ? "Contact Sales" : "Get Started Free"}
+
+              <Link href="/register" className={`mt-8 block w-full text-center py-3 text-[13px] font-semibold rounded-xl transition-all ${
+                tier.highlight
+                  ? "bg-[#FF5C00] text-white hover:bg-[#cc4700] shadow-lg shadow-[#FF5C00]/20"
+                  : "border border-white/10 text-white hover:bg-white/[0.03]"
+              }`}>
+                {tier.highlight ? "Start Trial" : tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
               </Link>
             </motion.div>
           ))}
@@ -617,29 +701,39 @@ function Pricing() {
   );
 }
 
-/* ─── CTA ─── */
+/* ════════════════════════════════════════════
+   CTA
+   ════════════════════════════════════════════ */
 
-function CTA() {
+function FinalCTA() {
   return (
-    <section className="bg-[#050505] py-20">
-      <div className="mx-auto max-w-6xl px-5">
+    <section className="relative py-28 overflow-hidden">
+      <div className="mx-auto max-w-4xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.015] p-10 lg:p-16 text-center"
+          viewport={{ once: true, margin: "-100px" }}
+          className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-[#0a0a0a] p-12 lg:p-20 text-center"
         >
-          {/* Background accent */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#FF5C00]/[0.08] rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[250px] bg-[#FF5C00]/[0.06] rounded-full blur-[100px]" />
 
           <div className="relative">
-            <h2 className="text-[28px] sm:text-[36px] font-bold text-white tracking-tight">Ready to transform your procurement?</h2>
-            <p className="mt-3 text-[14px] text-white/35 max-w-md mx-auto">Join 200+ Egyptian hotels and 1,200+ suppliers. Setup takes less than 10 minutes.</p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/register" className="px-6 py-2.5 text-[13px] font-semibold bg-white text-black hover:bg-white/90 transition-colors rounded-lg">
+            <div className="relative w-16 h-16 mx-auto mb-8">
+              <Image src="/logo-horse-only.png" alt="" width={64} height={64} className="w-16 h-16 object-contain relative z-10" />
+              <div className="absolute inset-0 bg-[#FF5C00]/15 blur-2xl rounded-full" />
+            </div>
+
+            <h2 className="text-[32px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
+              Join the network
+            </h2>
+            <p className="mt-4 text-[16px] text-white/30 max-w-sm mx-auto">
+              Setup takes 10 minutes. No credit card required.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Link href="/register" className="px-8 py-3.5 text-[14px] font-semibold bg-[#FF5C00] text-white hover:bg-[#cc4700] rounded-xl shadow-xl shadow-[#FF5C00]/20 transition-all">
                 Get Started Free
               </Link>
-              <Link href="/catalog" className="px-6 py-2.5 text-[13px] font-semibold border border-white/12 text-white hover:bg-white/[0.03] transition-colors rounded-lg">
+              <Link href="/catalog" className="px-8 py-3.5 text-[14px] font-semibold border border-white/10 text-white hover:bg-white/[0.03] rounded-xl transition-all">
                 Browse Catalog
               </Link>
             </div>
@@ -650,67 +744,92 @@ function CTA() {
   );
 }
 
-/* ─── FOOTER ─── */
+/* ════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════ */
 
 function Footer() {
   return (
-    <footer className="bg-black border-t border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-5 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          <div className="col-span-2 md:col-span-2">
+    <footer className="relative border-t border-white/[0.04]">
+      <div className="mx-auto max-w-7xl px-6 py-14">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-8">
+          <div className="col-span-2 md:col-span-4">
             <div className="flex items-center gap-2.5 mb-3">
-              <HorseLogo className="w-5 h-6" stroke="#FF5C00" />
-              <span className="text-[14px] font-bold text-white tracking-tight">Hotels Vendors</span>
+              <Image src="/logo-horse-only.png" alt="" width={24} height={24} className="w-6 h-6 object-contain" />
+              <span className="text-[14px] font-bold text-white">Hotels Vendors</span>
             </div>
-            <p className="text-[13px] text-white/25 leading-relaxed max-w-[240px]">The Digital Procurement Hub for Egyptian Hospitality.</p>
+            <p className="text-[12px] text-white/20 leading-relaxed max-w-[260px]">
+              The Digital Procurement Hub for Egyptian Hospitality.
+            </p>
           </div>
-          <div>
-            <h4 className="text-[11px] font-semibold text-white uppercase tracking-wider mb-3">Product</h4>
-            <ul className="space-y-2">
-              {["Catalog", "Orders", "ETA E-Invoicing", "Authority Matrix", "Pricing"].map((l) => (
-                <li key={l}><a href="#" className="text-[13px] text-white/25 hover:text-white/60 transition-colors">{l}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[11px] font-semibold text-white uppercase tracking-wider mb-3">Company</h4>
-            <ul className="space-y-2">
-              {["About", "Careers", "Blog", "Contact"].map((l) => (
-                <li key={l}><a href="#" className="text-[13px] text-white/25 hover:text-white/60 transition-colors">{l}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[11px] font-semibold text-white uppercase tracking-wider mb-3">Legal</h4>
-            <ul className="space-y-2">
-              {["Privacy", "Terms", "Security", "Compliance"].map((l) => (
-                <li key={l}><a href="#" className="text-[13px] text-white/25 hover:text-white/60 transition-colors">{l}</a></li>
-              ))}
-            </ul>
-          </div>
+          {[
+            { title: "Product", links: ["Catalog", "Orders", "ETA", "Pricing"] },
+            { title: "Company", links: ["About", "Careers", "Blog", "Contact"] },
+            { title: "Legal", links: ["Privacy", "Terms", "Security"] },
+          ].map((col, i) => (
+            <div key={i} className="col-span-1 md:col-span-2">
+              <h4 className="text-[10px] font-semibold text-white/30 uppercase tracking-wider mb-3">{col.title}</h4>
+              <ul className="space-y-2">
+                {col.links.map((l) => (
+                  <li key={l}><a href="#" className="text-[12px] text-white/20 hover:text-white/50 transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div className="mt-10 pt-6 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-[11px] text-white/15">© 2026 Hotels Vendors. All rights reserved.</p>
+        <div className="mt-10 pt-6 border-t border-white/[0.03] flex items-center justify-between">
+          <p className="text-[10px] text-white/10">© 2026 Hotels Vendors</p>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span className="text-[10px] text-white/15">Operational</span>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
 
-/* ─── PAGE ─── */
+/* ════════════════════════════════════════════
+   CHATBOT
+   ════════════════════════════════════════════ */
+
+function ChatbotWidget() {
+  const [showOffer, setShowOffer] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShowOffer(true), 10000);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      {showOffer && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-3 border border-white/[0.08] bg-[#0a0a0a] p-4 max-w-[200px] relative rounded-xl shadow-2xl">
+          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 text-white/20 hover:text-white/60"><XIcon className="w-3 h-3" /></button>
+          <p className="text-[11px] text-white/60 pr-4">Ready to transform procurement?</p>
+          <Link href="/register" className="inline-block mt-2 px-3 py-1.5 text-[10px] font-semibold bg-[#FF5C00] text-white rounded-lg">Get Started</Link>
+        </motion.div>
+      )}
+      <Link href="/register" className="w-12 h-12 bg-[#FF5C00] flex items-center justify-center hover:bg-[#cc4700] rounded-xl shadow-xl shadow-[#FF5C00]/20 transition-all">
+        <MessageCircle className="w-5 h-5 text-white" />
+      </Link>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   PAGE
+   ════════════════════════════════════════════ */
 
 export default function LandingPage() {
   return (
-    <main className="bg-black text-white min-h-screen">
+    <main className="bg-[#030303] text-white min-h-screen">
       <Navbar />
       <Hero />
-      <TrustBar />
-      <Categories />
-      <Features />
-      <HowItWorks />
-      <MetricsBanner />
+      <ProductMockup />
+      <FourActors />
+      <MapStats />
       <Pricing />
-      <CTA />
+      <FinalCTA />
       <Footer />
       <ChatbotWidget />
     </main>
