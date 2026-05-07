@@ -366,7 +366,7 @@ export default async function AdminDashboardPage() {
               value={99.8}
               size={72}
               strokeWidth={5}
-              color="#FF5C00"
+              color="#DC143C"
               trackColor="rgba(255,255,255,0.05)"
             >
               <span className="text-lg font-bold text-white metric-value">99.8%</span>

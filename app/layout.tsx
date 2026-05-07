@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     google: "google-site-verification-placeholder",
   },
   other: {
-    "msapplication-TileColor": "#FF5C00",
+    "msapplication-TileColor": "#DC143C",
     "msapplication-TileImage": "/logo-horse-only.png",
     "theme-color": "#0c0e12",
   },

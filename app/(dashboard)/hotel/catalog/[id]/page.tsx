@@ -85,7 +85,7 @@ export default function ProductDetailPage() {
         <p className="text-sm text-white/40">This product may have been removed or the URL is incorrect.</p>
         <Link
           href="/hotel/catalog"
-          className="px-4 py-2 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-colors"
+          className="px-4 py-2 rounded-lg bg-[#DC143C] hover:bg-[#b91c1c] text-white text-sm font-medium transition-colors"
         >
           Back to Catalog
         </Link>
@@ -156,7 +156,7 @@ export default function ProductDetailPage() {
               {product.images && product.images.length > 0 ? (
                 <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#FF5C00]/5 to-transparent">
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#DC143C]/5 to-transparent">
                   <Package className="w-20 h-20 text-white/10 mb-4" />
                   <span className="text-sm text-white/20">{product.sku}</span>
                 </div>
@@ -167,7 +167,7 @@ export default function ProductDetailPage() {
                   {stockStatus.label}
                 </span>
                 {product.supplierTier === "PREMIER" && (
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FF5C00]/20 text-[#ff7a33] border border-[#FF5C00]/30">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#DC143C]/20 text-[#DC143C] border border-[#DC143C]/30">
                     Premier Supplier
                   </span>
                 )}
@@ -184,7 +184,7 @@ export default function ProductDetailPage() {
           >
             {/* Category & SKU */}
             <div className="flex items-center gap-3">
-              <span className="px-2.5 py-1 rounded-md bg-[#FF5C00]/15 text-[#ff7a33] text-xs font-semibold border border-[#FF5C00]/25">
+              <span className="px-2.5 py-1 rounded-md bg-[#DC143C]/15 text-[#DC143C] text-xs font-semibold border border-[#DC143C]/25">
                 {category?.label || product.category}
               </span>
               <span className="text-xs text-white/30 font-mono">{product.sku}</span>
@@ -235,7 +235,7 @@ export default function ProductDetailPage() {
                     onClick={() => setQty(Math.max(tier.qty, product.minOrderQty))}
                     className={`p-2 rounded-lg border text-center transition-all ${
                       qty >= tier.qty
-                        ? "bg-[#FF5C00]/15 border-[#FF5C00]/30 text-white"
+                        ? "bg-[#DC143C]/15 border-[#DC143C]/30 text-white"
                         : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
                     }`}
                   >
@@ -272,7 +272,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={product.stockQuantity === 0}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#FF5C00] hover:bg-[#e65100] disabled:bg-white/[0.05] disabled:text-white/20 text-white font-medium transition-all active:scale-[0.98]"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#DC143C] hover:bg-[#b91c1c] disabled:bg-white/[0.05] disabled:text-white/20 text-white font-medium transition-all active:scale-[0.98]"
               >
                 {addedToCart ? (
                   <>
@@ -291,7 +291,7 @@ export default function ProductDetailPage() {
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 className={`p-3 rounded-xl border transition-colors ${
                   isWishlisted
-                    ? "bg-[#FF5C00] border-[#FF5C00] text-white"
+                    ? "bg-[#DC143C] border-[#DC143C] text-white"
                     : "border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/[0.14]"
                 }`}
               >
@@ -320,7 +320,7 @@ export default function ProductDetailPage() {
                 }
                 className={`p-3 rounded-xl border transition-colors ${
                   inCompare
-                    ? "bg-[#FF5C00] border-[#FF5C00] text-white"
+                    ? "bg-[#DC143C] border-[#DC143C] text-white"
                     : "border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/[0.14]"
                 }`}
               >
@@ -349,7 +349,7 @@ export default function ProductDetailPage() {
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">Supplier</p>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${
                   product.supplierTier === "PREMIER"
-                    ? "bg-[#FF5C00]/15 text-[#ff7a33] border border-[#FF5C00]/25"
+                    ? "bg-[#DC143C]/15 text-[#DC143C] border border-[#DC143C]/25"
                     : product.supplierTier === "CORE"
                     ? "bg-blue-500/15 text-blue-400 border border-blue-500/25"
                     : "bg-white/[0.06] text-white/40 border border-white/[0.08]"
@@ -358,7 +358,7 @@ export default function ProductDetailPage() {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center text-sm font-bold text-[#ff7a33]">
+                <div className="w-10 h-10 rounded-lg bg-[#DC143C]/15 border border-[#DC143C]/25 flex items-center justify-center text-sm font-bold text-[#DC143C]">
                   {product.supplierName.charAt(0)}
                 </div>
                 <div>
@@ -416,7 +416,7 @@ export default function ProductDetailPage() {
             { icon: Clock, title: "Reorder Alert", desc: "Auto-reminder when stock drops below reorder point" },
           ].map((item) => (
             <div key={item.title} className="flex items-start gap-3 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-              <item.icon className="w-5 h-5 text-[#ff7a33] flex-shrink-0 mt-0.5" />
+              <item.icon className="w-5 h-5 text-[#DC143C] flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium">{item.title}</p>
                 <p className="text-xs text-white/40 mt-0.5">{item.desc}</p>

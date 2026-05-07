@@ -1,10 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Truck, MapPin, Clock, CheckCircle2, AlertCircle, ArrowUpRight, ArrowDownRight,
   Package, Route, Fuel, Thermometer, Navigation,
 } from "lucide-react";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
 
 /* ─── MOCK DATA ─── */
 const METRICS = [
@@ -94,7 +105,7 @@ const FLEET = [
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     PICKED_UP: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "Picked Up" },
-    IN_TRANSIT: { bg: "bg-[#FF5C00]/10", text: "text-[#FF5C00]", dot: "bg-[#FF5C00]", label: "In Transit" },
+    IN_TRANSIT: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "In Transit" },
     ARRIVED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Arrived" },
     DELIVERED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Delivered" },
     DELAYED: { bg: "bg-[#EF4444]/10", text: "text-[#EF4444]", dot: "bg-[#EF4444]", label: "Delayed" },
@@ -110,7 +121,7 @@ function StatusBadge({ status }: { status: string }) {
 
 function ShipmentProgress({ progress, status }: { progress: number; status: string }) {
   const isDelayed = status === "DELAYED";
-  const color = progress >= 100 ? "#10B981" : isDelayed ? "#EF4444" : progress > 50 ? "#FF5C00" : "#60a5fa";
+  const color = progress >= 100 ? "#10B981" : isDelayed ? "#EF4444" : progress > 50 ? "#DC143C" : "#60a5fa";
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-1">
@@ -126,7 +137,7 @@ function ShipmentProgress({ progress, status }: { progress: number; status: stri
       {/* Stage dots */}
       <div className="flex items-center justify-between mt-1.5 px-0.5">
         <div className={`w-2 h-2 rounded-full ${progress >= 5 ? "bg-[#60a5fa]" : "bg-white/10"}`} title="Picked Up" />
-        <div className={`w-2 h-2 rounded-full ${progress >= 50 ? "bg-[#FF5C00]" : "bg-white/10"}`} title="In Transit" />
+        <div className={`w-2 h-2 rounded-full ${progress >= 50 ? "bg-[#DC143C]" : "bg-white/10"}`} title="In Transit" />
         <div className={`w-2 h-2 rounded-full ${progress >= 100 ? "bg-[#10B981]" : "bg-white/10"}`} title="Arrived" />
       </div>
     </div>
@@ -136,19 +147,28 @@ function ShipmentProgress({ progress, status }: { progress: number; status: stri
 /* ─── PAGE ─── */
 export default function LogisticsPortalPage() {
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6">
+    <motion.div
+      className="max-w-[1600px] mx-auto space-y-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Logistics Command Center</h1>
           <p className="text-sm text-white/40 mt-0.5">Real-time fleet tracking, route optimization, and delivery management</p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {METRICS.map((m) => (
-          <div key={m.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors">
+          <motion.div
+            key={m.label}
+            variants={fadeInUp}
+            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+          >
             <div className="flex items-start justify-between mb-3">
               <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
               <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
@@ -160,12 +180,12 @@ export default function LogisticsPortalPage() {
               {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
               <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Shipments + Fleet Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Active Shipments */}
         <div className="lg:col-span-2 space-y-4">
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
@@ -216,7 +236,7 @@ export default function LogisticsPortalPage() {
               {FLEET.map((f) => (
                 <div key={f.id} className="flex items-center justify-between p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${f.status === "EN_ROUTE" ? "bg-[#FF5C00]" : f.status === "DELAYED" ? "bg-[#EF4444]" : f.status === "RETURNING" ? "bg-[#10B981]" : "bg-[#60a5fa]"}`} />
+                    <div className={`w-2 h-2 rounded-full ${f.status === "EN_ROUTE" ? "bg-[#DC143C]" : f.status === "DELAYED" ? "bg-[#EF4444]" : f.status === "RETURNING" ? "bg-[#10B981]" : "bg-[#60a5fa]"}`} />
                     <div>
                       <p className="text-xs font-medium text-white">{f.id}</p>
                       <p className="text-[10px] text-white/25">{f.type} · {f.capacity}</p>
@@ -246,7 +266,7 @@ export default function LogisticsPortalPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

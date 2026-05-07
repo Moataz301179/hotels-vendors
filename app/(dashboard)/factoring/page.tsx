@@ -1,9 +1,20 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   Landmark, FileText, CreditCard, TrendingUp, ArrowUpRight, ArrowDownRight,
   Clock, CheckCircle2, XCircle, AlertCircle, Star, Shield, Wallet,
 } from "lucide-react";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
 
 /* ─── MOCK DATA ─── */
 const METRICS = [
@@ -105,7 +116,7 @@ function StatusBadge({ status }: { status: string }) {
     REJECTED: { bg: "bg-[#EF4444]/10", text: "text-[#EF4444]", dot: "bg-[#EF4444]", label: "Rejected" },
     COMPLETED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Completed" },
     SCHEDULED: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "Scheduled" },
-    PENDING: { bg: "bg-[#FF5C00]/10", text: "text-[#FF5C00]", dot: "bg-[#FF5C00]", label: "Pending" },
+    PENDING: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Pending" },
   };
   const c = config[status] || config.PENDING_REVIEW;
   return (
@@ -143,7 +154,7 @@ function FactoringProgress({ progress, status }: { progress: number; status: str
 }
 
 function CreditScoreRing({ score }: { score: number }) {
-  const color = score >= 80 ? "#10B981" : score >= 60 ? "#FF5C00" : "#EF4444";
+  const color = score >= 80 ? "#10B981" : score >= 60 ? "#DC143C" : "#EF4444";
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
@@ -169,19 +180,28 @@ function CreditScoreRing({ score }: { score: number }) {
 /* ─── PAGE ─── */
 export default function FinancePortalPage() {
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6">
+    <motion.div
+      className="max-w-[1600px] mx-auto space-y-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Finance & Factoring Hub</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage factoring requests, credit scores, and payment flows</p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {METRICS.map((m) => (
-          <div key={m.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors">
+          <motion.div
+            key={m.label}
+            variants={fadeInUp}
+            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+          >
             <div className="flex items-start justify-between mb-3">
               <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
               <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
@@ -193,12 +213,12 @@ export default function FinancePortalPage() {
               {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
               <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Factoring Requests */}
         <div className="lg:col-span-2 space-y-4">
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
@@ -215,7 +235,7 @@ export default function FinancePortalPage() {
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[11px] font-mono text-white/40">{fr.id}</span>
                         <StatusBadge status={fr.status} />
-                        <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded ${fr.riskLevel === "LOW" ? "bg-[#10B981]/10 text-[#10B981]" : fr.riskLevel === "MEDIUM" ? "bg-[#FF5C00]/10 text-[#FF5C00]" : "bg-[#EF4444]/10 text-[#EF4444]"}`}>
+                        <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded ${fr.riskLevel === "LOW" ? "bg-[#10B981]/10 text-[#10B981]" : fr.riskLevel === "MEDIUM" ? "bg-[#DC143C]/10 text-[#DC143C]" : "bg-[#EF4444]/10 text-[#EF4444]"}`}>
                           {fr.riskLevel} RISK
                         </span>
                       </div>
@@ -259,7 +279,7 @@ export default function FinancePortalPage() {
                         <span className="text-[9px] text-white/40">{Math.round((cp.utilized / cp.limit) * 100)}%</span>
                       </div>
                       <div className="h-1 rounded-full bg-white/[0.04]">
-                        <div className="h-full rounded-full bg-[#FF5C00]" style={{ width: `${(cp.utilized / cp.limit) * 100}%` }} />
+                        <div className="h-full rounded-full bg-[#DC143C]" style={{ width: `${(cp.utilized / cp.limit) * 100}%` }} />
                       </div>
                     </div>
                   </div>
@@ -294,7 +314,7 @@ export default function FinancePortalPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

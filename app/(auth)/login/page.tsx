@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,15 +42,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF5C00]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#FF5C00]/3 rounded-full blur-[100px]" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02]" />
-      </div>
-
-      <div className="relative w-full max-w-md mx-4">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md mx-4">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -58,9 +52,7 @@ export default function LoginPage() {
           className="flex flex-col items-center mb-8"
         >
           <Link href="/" className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-[#FF5C00]/15 border border-[#FF5C00]/25 flex items-center justify-center">
-              <Image src="/logo-horse-only.png" alt="Hotels Vendors" width={32} height={32} className="opacity-90" />
-            </div>
+            <BrandLogo variant="dark" size="lg" />
             <div>
               <h1 className="text-xl font-bold tracking-tight">Hotels Vendors</h1>
               <p className="text-[10px] text-white/40 uppercase tracking-wider">Digital Procurement Hub</p>
@@ -105,7 +97,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@hotel.com"
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 focus:shadow-[0_0_0_3px_rgba(255,92,0,0.1)] transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#DC143C]/50 focus:shadow-[0_0_0_3px_rgba(220,20,60,0.1)] transition-all"
                 />
               </div>
             </div>
@@ -121,7 +113,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF5C00]/50 focus:shadow-[0_0_0_3px_rgba(255,92,0,0.1)] transition-all"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#DC143C]/50 focus:shadow-[0_0_0_3px_rgba(220,20,60,0.1)] transition-all"
                 />
                 <button
                   type="button"
@@ -136,10 +128,10 @@ export default function LoginPage() {
             {/* Remember + Forgot */}
             <div className="flex items-center justify-between text-xs">
               <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
-                <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.04] accent-[#FF5C00]" />
+                <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.04] accent-[#DC143C]" />
                 <span>Remember me</span>
               </label>
-              <Link href="/forgot-password" className="text-[#ff7a33] hover:text-[#ff6666] transition-colors">
+              <Link href="/forgot-password" className="text-[#DC143C] hover:text-[#e83a5e] transition-colors">
                 Forgot password?
               </Link>
             </div>
@@ -148,7 +140,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#FF5C00] hover:bg-[#e65100] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#DC143C] hover:bg-[#b91c1c] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -198,7 +190,7 @@ export default function LoginPage() {
           className="text-center text-sm text-white/30 mt-6"
         >
           Don't have an account?{" "}
-          <Link href="/register" className="text-[#ff7a33] hover:text-[#ff6666] font-medium transition-colors">
+          <Link href="/register" className="text-[#DC143C] hover:text-[#e83a5e] font-medium transition-colors">
             Create account
           </Link>
         </motion.p>

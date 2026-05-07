@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Store, Package, ClipboardList, TrendingUp, ArrowUpRight, ArrowDownRight,
   Search, Filter, Plus, Star, MapPin, Clock, CheckCircle2, XCircle,
   BarChart3, Eye, Edit3, Trash2,
 } from "lucide-react";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
 
 /* ─── MOCK DATA ─── */
 const METRICS = [
@@ -33,7 +44,7 @@ const RFQS = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "F&B": "#FF5C00",
+  "F&B": "#DC143C",
   "Housekeeping": "#60a5fa",
   "Linens": "#a78bfa",
   "Amenities": "#fbbf24",
@@ -44,7 +55,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     OPEN: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "Open" },
-    RESPONDED: { bg: "bg-[#FF5C00]/10", text: "text-[#FF5C00]", dot: "bg-[#FF5C00]", label: "Responded" },
+    RESPONDED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Responded" },
     CLOSED: { bg: "bg-white/[0.04]", text: "text-white/40", dot: "bg-white/30", label: "Closed" },
     AWARDED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Awarded" },
   };
@@ -60,7 +71,7 @@ function StatusBadge({ status }: { status: string }) {
 function StockIndicator({ stock, moq }: { stock: number; moq: number }) {
   const ratio = stock / moq;
   if (ratio >= 10) return <span className="text-[11px] text-[#10B981]">{stock} in stock</span>;
-  if (ratio >= 5) return <span className="text-[11px] text-[#FF5C00]">{stock} low stock</span>;
+  if (ratio >= 5) return <span className="text-[11px] text-[#DC143C]">{stock} low stock</span>;
   return <span className="text-[11px] text-[#EF4444]">{stock} critical</span>;
 }
 
@@ -73,26 +84,35 @@ export default function SupplierPortalPage() {
   );
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6">
+    <motion.div
+      className="max-w-[1600px] mx-auto space-y-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Supplier Central</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage inventory, respond to RFQs, and track marketplace performance</p>
         </div>
         <Link
           href="/supplier/products"
-          className="px-4 py-2 text-xs font-semibold bg-[#FF5C00] hover:bg-[#e65100] text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold bg-[#DC143C] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
         >
           <Plus size={14} />
           Add Product
         </Link>
-      </div>
+      </motion.div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {METRICS.map((m) => (
-          <div key={m.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors">
+          <motion.div
+            key={m.label}
+            variants={fadeInUp}
+            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+          >
             <div className="flex items-start justify-between mb-3">
               <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
               <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
@@ -104,12 +124,12 @@ export default function SupplierPortalPage() {
               {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
               <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Inventory Table */}
         <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <div className="p-4 border-b border-white/[0.04] flex items-center justify-between">
@@ -125,7 +145,7 @@ export default function SupplierPortalPage() {
                   placeholder="Search products..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#FF5C00]/40 transition-all w-48"
+                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#DC143C]/40 transition-all w-48"
                 />
               </div>
               <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
@@ -159,7 +179,7 @@ export default function SupplierPortalPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button className="p-1 rounded text-white/20 hover:text-white/60 hover:bg-white/[0.05]"><Eye size={12} /></button>
-                        <button className="p-1 rounded text-white/20 hover:text-[#FF5C00] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
+                        <button className="p-1 rounded text-white/20 hover:text-[#DC143C] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
                       </div>
                     </td>
                   </tr>
@@ -205,7 +225,7 @@ export default function SupplierPortalPage() {
                 <span className="text-xs font-semibold text-white">34%</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04]">
-                <div className="h-full w-[34%] rounded-full bg-[#FF5C00]" />
+                <div className="h-full w-[34%] rounded-full bg-[#DC143C]" />
               </div>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-[11px] text-white/40">Avg. Response Time</span>
@@ -217,7 +237,7 @@ export default function SupplierPortalPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

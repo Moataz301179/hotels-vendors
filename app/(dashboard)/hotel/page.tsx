@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ShoppingCart, TrendingUp, Wallet, Package, ArrowUpRight, ArrowDownRight,
   Search, Filter, Clock, CheckCircle2, XCircle, AlertCircle, ChevronRight,
   BarChart3, Target, Zap, Building2,
 } from "lucide-react";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
 
 /* ─── MOCK DATA ─── */
 const METRICS = [
@@ -26,7 +37,7 @@ const RECENT_ORDERS = [
 ];
 
 const BUDGET_BREAKDOWN = [
-  { category: "F&B Dry Goods", allocated: 800000, spent: 624000, color: "#FF5C00" },
+  { category: "F&B Dry Goods", allocated: 800000, spent: 624000, color: "#DC143C" },
   { category: "Housekeeping", allocated: 350000, spent: 212000, color: "#60a5fa" },
   { category: "Linens & Textiles", allocated: 280000, spent: 198000, color: "#a78bfa" },
   { category: "Engineering", allocated: 200000, spent: 134000, color: "#34d399" },
@@ -40,7 +51,7 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     DELIVERED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Delivered" },
     IN_TRANSIT: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "In Transit" },
-    APPROVED: { bg: "bg-[#FF5C00]/10", text: "text-[#FF5C00]", dot: "bg-[#FF5C00]", label: "Approved" },
+    APPROVED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Approved" },
     PENDING_APPROVAL: { bg: "bg-[#fbbf24]/10", text: "text-[#fbbf24]", dot: "bg-[#fbbf24]", label: "Pending" },
     REJECTED: { bg: "bg-[#EF4444]/10", text: "text-[#EF4444]", dot: "bg-[#EF4444]", label: "Rejected" },
   };
@@ -62,26 +73,35 @@ export default function HotelPortalPage() {
   );
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6">
+    <motion.div
+      className="max-w-[1600px] mx-auto space-y-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Hotel Procurement Portal</h1>
           <p className="text-sm text-white/40 mt-0.5">Track orders, manage budgets, and optimize spend across properties</p>
         </div>
         <Link
           href="/hotel/catalog"
-          className="px-4 py-2 text-xs font-semibold bg-[#FF5C00] hover:bg-[#e65100] text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold bg-[#DC143C] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
         >
           <ShoppingCart size={14} />
           New Purchase Order
         </Link>
-      </div>
+      </motion.div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {METRICS.map((m) => (
-          <div key={m.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors">
+          <motion.div
+            key={m.label}
+            variants={fadeInUp}
+            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+          >
             <div className="flex items-start justify-between mb-3">
               <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
               <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
@@ -93,12 +113,12 @@ export default function HotelPortalPage() {
               {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
               <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Orders Table */}
         <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <div className="p-4 border-b border-white/[0.04] flex items-center justify-between">
@@ -114,7 +134,7 @@ export default function HotelPortalPage() {
                   placeholder="Search orders..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#FF5C00]/40 transition-all w-48"
+                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#DC143C]/40 transition-all w-48"
                 />
               </div>
               <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
@@ -188,7 +208,7 @@ export default function HotelPortalPage() {
               {SPARKLINE.map((v, i) => (
                 <div
                   key={i}
-                  className="flex-1 rounded-sm bg-[#FF5C00]/30 hover:bg-[#FF5C00]/50 transition-colors"
+                  className="flex-1 rounded-sm bg-[#DC143C]/30 hover:bg-[#DC143C]/50 transition-colors"
                   style={{ height: `${v}%` }}
                 />
               ))}
@@ -199,7 +219,7 @@ export default function HotelPortalPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

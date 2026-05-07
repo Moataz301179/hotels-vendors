@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/components/theme/theme-provider";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import {
   Palette,
   Type,
@@ -38,9 +38,7 @@ export default function SettingsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--surface-raised)] border border-[var(--border-default)]">
-                <Image src="/logo-transparent.png" alt="Hotels Vendors" fill className="object-contain p-1" />
-              </div>
+              <BrandLogo variant="dark" size="md" />
               <span className="text-sm font-bold tracking-wider text-[var(--foreground)]">Hotels Vendors</span>
             </Link>
             <Link href="/" className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors">
