@@ -2,6 +2,7 @@ import { Sparkline } from "@/components/dashboards/shared/sparkline";
 import { DataTableMini } from "@/components/dashboards/shared/data-table-mini";
 import { ProgressRing } from "@/components/dashboards/shared/progress-ring";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import {
   Building2,
   Banknote,
@@ -13,6 +14,13 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   ShieldCheck,
+  Plus,
+  Download,
+  Settings,
+  Eye,
+  FileText,
+  Zap,
+  TrendingUp,
 } from "lucide-react";
 
 async function getData() {
@@ -153,7 +161,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6 animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 animate-fade-in-up">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             <span className="gradient-text-animated">Platform Control</span>
@@ -162,7 +170,7 @@ export default async function AdminDashboardPage() {
             Oversee tenants, fees, audit logs, and system health
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border"
             style={{
@@ -174,7 +182,49 @@ export default async function AdminDashboardPage() {
             <AlertTriangle size={12} />
             {data.anomalyFlags} anomalies
           </span>
+          <Link
+            href="/admin/suppliers/pipeline"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors"
+          >
+            <Plus size={12} />
+            Add Tenant
+          </Link>
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors">
+            <Download size={12} />
+            Export
+          </button>
+          <Link
+            href="/admin/settings"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
+          >
+            <Settings size={12} />
+            Settings
+          </Link>
         </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 animate-fade-in-up">
+        {[
+          { icon: Building2, label: "Tenants", href: "/admin/suppliers/pipeline", count: String(data.tenants.length) },
+          { icon: FileText, label: "Audit Logs", href: "#", count: String(data.auditLog.length) },
+          { icon: Zap, label: "Swarm", href: "/admin/swarm", count: "Live" },
+          { icon: TrendingUp, label: "Analytics", href: "#", count: "View" },
+        ].map((action) => (
+          <Link
+            key={action.label}
+            href={action.href}
+            className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] hover:border-white/[0.10] transition-all group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-white/[0.08] transition-colors">
+              <action.icon size={15} className="text-white/40" />
+            </div>
+            <div>
+              <p className="text-[11px] text-white/30 uppercase tracking-wider">{action.label}</p>
+              <p className="text-sm font-semibold text-white">{action.count}</p>
+            </div>
+          </Link>
+        ))}
       </div>
 
       {/* Metrics */}
@@ -197,25 +247,32 @@ export default async function AdminDashboardPage() {
                 {data.tenants.length} tenants
               </span>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {data.tenants.map((t) => (
-                <div
+                <Link
                   key={t.name}
-                  className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                  href={`/admin/suppliers/pipeline`}
+                  className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-[rgba(255,255,255,0.03)] transition-colors group"
                 >
                   <div className="flex items-center gap-3">
                     <span
                       className="w-2 h-2 rounded-full"
                       style={{ background: tenantDot(t.status) }}
                     />
-                    <span className="text-sm text-white">{t.name}</span>
+                    <span className="text-sm text-white group-hover:text-white/90">{t.name}</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-xs text-[rgba(255,255,255,0.25)]">{t.lastActivity}</span>
                     <span className="text-xs text-[rgba(255,255,255,0.40)] metric-value">{t.users} users</span>
+                    <Eye size={12} className="text-white/15 group-hover:text-white/40 transition-colors" />
                   </div>
-                </div>
+                </Link>
               ))}
+            </div>
+            <div className="mt-3 pt-3 border-t border-white/[0.04]">
+              <Link href="/admin/suppliers/pipeline" className="text-[11px] text-white/30 hover:text-white/60 transition-colors flex items-center gap-1">
+                View all tenants <ArrowUpRight size={10} />
+              </Link>
             </div>
           </div>
         </div>
@@ -235,6 +292,12 @@ export default async function AdminDashboardPage() {
               ]}
               data={data.auditLog}
             />
+            <div className="mt-3 pt-3 border-t border-white/[0.04] flex items-center justify-between">
+              <span className="text-[11px] text-white/20">Last 5 entries</span>
+              <Link href="#" className="text-[11px] text-white/30 hover:text-white/60 transition-colors flex items-center gap-1">
+                View full log <ArrowUpRight size={10} />
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -268,6 +331,9 @@ export default async function AdminDashboardPage() {
             <p className="text-[11px] text-[rgba(255,255,255,0.30)] mt-1">
               Last blocked 3 minutes ago
             </p>
+            <Link href="#" className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-[#ef4444]/70 hover:text-[#ef4444] transition-colors">
+              Review incidents <ArrowUpRight size={10} />
+            </Link>
           </div>
         </div>
 
