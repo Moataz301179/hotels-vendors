@@ -95,15 +95,15 @@ export const metadata: Metadata = {
     google: "google-site-verification-placeholder",
   },
   other: {
-    "msapplication-TileColor": "#DC143C",
+    "msapplication-TileColor": "#022349",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0a0a12",
+    "theme-color": "#050505",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a12" },
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",

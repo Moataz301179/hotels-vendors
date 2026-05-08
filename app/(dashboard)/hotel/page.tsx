@@ -41,10 +41,10 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     IN_TRANSIT: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "In Transit" },
-    APPROVED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Approved" },
+    APPROVED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Approved" },
     PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
-    CONFIRMED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Confirmed" },
+    CONFIRMED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Confirmed" },
     DRAFT: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/30", label: "Draft" },
   };
   const c = config[status] || config.DRAFT;
@@ -114,7 +114,7 @@ export default function HotelPortalPage() {
 
   const budgetBreakdown = useMemo(() => {
     if (!spendData?.byCategory) return [];
-    const colors = ["#DC143C", "#60a5fa", "#a78bfa", "#34d399", "#fbbf24", "#f87171"];
+    const colors = ["#022349", "#60a5fa", "#a78bfa", "#34d399", "#fbbf24", "#f87171"];
     return Object.entries(spendData.byCategory).map(([category, data], i) => ({
       category,
       spent: data.amount,
@@ -147,7 +147,7 @@ export default function HotelPortalPage() {
         </div>
         <Link
           href="/hotel/catalog"
-          className="px-4 py-2 text-xs font-semibold bg-[#DC143C] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold bg-[#022349] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
         >
           <ShoppingCart size={14} />
           New Purchase Order
@@ -198,7 +198,7 @@ export default function HotelPortalPage() {
                   placeholder="Search orders..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#DC143C]/40 transition-all w-48"
+                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 transition-all w-48"
                 />
               </div>
               <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
@@ -225,7 +225,7 @@ export default function HotelPortalPage() {
                   {filteredOrders.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="px-4 py-8 text-center text-sm text-white/30">
-                        No orders found. <Link href="/hotel/catalog" className="text-[#DC143C] hover:underline">Browse the catalog</Link> to place your first order.
+                        No orders found. <Link href="/hotel/catalog" className="text-[#022349] hover:underline">Browse the catalog</Link> to place your first order.
                       </td>
                     </tr>
                   ) : (
@@ -300,7 +300,7 @@ export default function HotelPortalPage() {
                   {sparkline.map((v, i) => (
                     <div
                       key={i}
-                      className="flex-1 rounded-sm bg-[#DC143C]/30 hover:bg-[#DC143C]/50 transition-colors"
+                      className="flex-1 rounded-sm bg-[#022349]/30 hover:bg-[#022349]/50 transition-colors"
                       style={{ height: `${Math.max(v, 4)}%` }}
                     />
                   ))}

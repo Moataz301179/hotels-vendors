@@ -73,7 +73,7 @@ export const PRESETS: ThemePreset[] = [
     },
     bg: {
       background: "#050508",
-      surface: "#0a0a0f",
+      surface: "#050505",
       surfaceRaised: "#12121a",
       surfaceHover: "#1a1a25",
     },

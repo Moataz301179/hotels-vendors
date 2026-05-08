@@ -173,7 +173,7 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#DC143C] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#022349] rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -228,9 +228,9 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#DC143C] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#022349] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#DC143C]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-[#022349]" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );

@@ -194,17 +194,17 @@ export default function LandingPage() {
       <MarketingNav />
 
       {/* ─── HERO ─── Dark Premium */}
-      <section className="relative bg-[#0a0a12] pt-[88px] pb-16 overflow-hidden">
+      <section className="relative bg-[#050505] pt-[88px] pb-16 overflow-hidden">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             {/* Left: Text */}
             <div>
-              <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-4">
+              <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-4">
                 Digital Procurement Infrastructure
               </p>
               <h1 className="text-[30px] md:text-[36px] lg:text-[40px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
                 The Intelligent Procurement Platform for{" "}
-                <span className="text-[#8B0A1E]">Egyptian Hospitality</span>
+                <span className="text-[#022349]">Egyptian Hospitality</span>
               </h1>
               <p className="mt-4 text-[15px] text-white/50 leading-[1.7] max-w-lg">
                 Connect hotels, suppliers, logistics, and finance in one
@@ -227,7 +227,7 @@ export default function LandingPage() {
                     key={usp.label}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[11px] font-medium text-white/60"
                   >
-                    <usp.icon className="w-3 h-3 text-[#8B0A1E]" />
+                    <usp.icon className="w-3 h-3 text-[#022349]" />
                     {usp.label}
                   </span>
                 ))}
@@ -236,7 +236,7 @@ export default function LandingPage() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-white text-[#0a0a12] rounded-lg hover:bg-white/90 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-white text-[#050505] rounded-lg hover:bg-white/90 transition-colors"
                 >
                   Onboard Your Organization
                   <ArrowRight className="w-4 h-4" />
@@ -298,7 +298,7 @@ export default function LandingPage() {
       <section className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12">
-            <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+            <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
               Procurement Marketplace
             </p>
             <h2 className="text-[24px] md:text-[28px] font-bold text-black tracking-[-0.02em]">
@@ -316,8 +316,8 @@ export default function LandingPage() {
                 key={cat.name}
                 className="group p-5 rounded-xl bg-white border border-black/[0.08] hover:border-black/[0.15] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-lg bg-[#8B0A1E]/[0.06] flex items-center justify-center mb-4 group-hover:bg-[#8B0A1E]/[0.10] transition-colors">
-                  <cat.icon className="w-5 h-5 text-[#8B0A1E]" />
+                <div className="w-10 h-10 rounded-lg bg-[#022349]/[0.06] flex items-center justify-center mb-4 group-hover:bg-[#022349]/[0.10] transition-colors">
+                  <cat.icon className="w-5 h-5 text-[#022349]" />
                 </div>
                 <h3 className="text-[15px] font-semibold text-black mb-0.5">
                   {cat.name}
@@ -338,10 +338,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── PLATFORM FEATURES ─── Dark */}
-      <section id="platform" className="py-20 bg-[#0a0a12] border-y border-white/[0.06]">
+      <section id="platform" className="py-20 bg-[#050505] border-y border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12">
-            <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+            <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
               Platform Capabilities
             </p>
             <h2 className="text-[24px] md:text-[28px] font-bold text-white tracking-[-0.02em]">
@@ -378,7 +378,7 @@ export default function LandingPage() {
       <section className="py-20 bg-[#f5f5f7]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12">
-            <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+            <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
               Procurement Flow
             </p>
             <h2 className="text-[24px] md:text-[28px] font-bold text-black tracking-[-0.02em]">
@@ -392,7 +392,7 @@ export default function LandingPage() {
             {STEPS.map((step) => (
               <div key={step.number} className="relative">
                 <div className="w-20 h-20 rounded-xl bg-white border border-black/[0.08] flex flex-col items-center justify-center mb-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-                  <span className="text-[9px] font-bold text-[#8B0A1E] tracking-wider">
+                  <span className="text-[9px] font-bold text-[#022349] tracking-wider">
                     STEP
                   </span>
                   <span className="text-[24px] font-bold text-black leading-none mt-0.5">
@@ -412,7 +412,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── METRICS BANNER ─── Dark */}
-      <section className="py-16 bg-[#0a0a12] border-y border-white/[0.06]">
+      <section className="py-16 bg-[#050505] border-y border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {METRICS.map((metric) => (
@@ -433,7 +433,7 @@ export default function LandingPage() {
       <section id="pricing" className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12">
-            <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+            <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
               Pricing
             </p>
             <h2 className="text-[24px] md:text-[28px] font-bold text-black tracking-[-0.02em]">
@@ -451,12 +451,12 @@ export default function LandingPage() {
                 key={tier.name}
                 className={`relative rounded-xl p-5 transition-all duration-300 ${
                   tier.highlighted
-                    ? "bg-[#8B0A1E]/[0.04] border-2 border-[#8B0A1E]/25"
+                    ? "bg-[#022349]/[0.04] border-2 border-[#022349]/25"
                     : "bg-white border border-black/[0.08] hover:border-black/[0.12] shadow-[0_2px_12px_rgba(0,0,0,0.04)]"
                 }`}
               >
                 {tier.highlighted && (
-                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#8B0A1E] text-[10px] font-bold text-white uppercase tracking-wider">
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#022349] text-[10px] font-bold text-white uppercase tracking-wider">
                     Most Popular
                   </div>
                 )}
@@ -478,7 +478,7 @@ export default function LandingPage() {
                       key={feature}
                       className="flex items-start gap-2 text-[13px] text-black/50"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#8B0A1E] flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#022349] flex-shrink-0 mt-0.5" />
                       {feature}
                     </li>
                   ))}
@@ -487,7 +487,7 @@ export default function LandingPage() {
                   href="/register"
                   className={`block text-center py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
                     tier.highlighted
-                      ? "bg-[#8B0A1E] text-white hover:bg-[#6B0512]"
+                      ? "bg-[#022349] text-white hover:bg-[#6B0512]"
                       : "bg-black/[0.03] text-black hover:bg-black/[0.06] border border-black/[0.08]"
                   }`}
                 >
@@ -499,7 +499,7 @@ export default function LandingPage() {
 
           <p className="text-center mt-8 text-[12px] text-black/25">
             Need a procurement audit?{" "}
-            <Link href="/about" className="text-[#8B0A1E] hover:underline">
+            <Link href="/about" className="text-[#022349] hover:underline">
               Schedule a consultation
             </Link>
           </p>
@@ -507,7 +507,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FINAL CTA ─── Dark */}
-      <section className="py-20 bg-[#0a0a12] border-y border-white/[0.06]">
+      <section className="py-20 bg-[#050505] border-y border-white/[0.06]">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <h2 className="text-[24px] md:text-[28px] font-bold text-white tracking-[-0.02em] mb-3">
             Ready to replace WhatsApp and Excel?
@@ -519,7 +519,7 @@ export default function LandingPage() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-white text-[#0a0a12] rounded-lg hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-white text-[#050505] rounded-lg hover:bg-white/90 transition-colors"
             >
               Start Free Trial
               <ArrowRight className="w-4 h-4" />

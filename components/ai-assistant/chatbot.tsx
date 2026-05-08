@@ -61,7 +61,7 @@ const ROLE_CONFIG: Record<RoleMode, { label: string; color: string; icon: React.
   },
   admin: {
     label: "Admin Mode",
-    color: "text-[#DC143C]",
+    color: "text-[#022349]",
     icon: ShieldCheck,
     prompts: [
       "System health summary",
@@ -143,7 +143,7 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#DC143C] text-white shadow-lg shadow-[#DC143C]/20 hover:bg-[#b91c1c] transition-all flex items-center justify-center hover:scale-110"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#022349] shadow-lg shadow-black/20 hover:bg-[#022349] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
           title="Smart Assistant"
         >
           <Sparkles size={22} />
@@ -156,8 +156,8 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#DC143C]/15 flex items-center justify-center">
-                <Bot size={16} className="text-[#DC143C]" />
+              <div className="w-8 h-8 rounded-full bg-[#022349]/15 flex items-center justify-center">
+                <Bot size={16} className="text-white" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Smart Assistant</p>
@@ -180,13 +180,13 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
             {messages.map((m, i) => (
               <div key={i} className={`flex gap-2.5 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                  m.role === "user" ? "bg-[#DC143C]" : "bg-white/[0.04] border border-white/[0.08]"
+                  m.role === "user" ? "bg-[#022349]" : "bg-white/[0.04] border border-white/[0.08]"
                 }`}>
-                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[#DC143C]" />}
+                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[#022349]" />}
                 </div>
                 <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "bg-[#DC143C] text-white rounded-tr-sm"
+                    ? "bg-[#022349] text-white rounded-tr-sm"
                     : "bg-white/[0.04] border border-white/[0.08] text-white/70 rounded-tl-sm"
                 }`}>
                   {m.content}
@@ -196,7 +196,7 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
             {loading && (
               <div className="flex gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-                  <Bot size={12} className="text-[#DC143C]" />
+                  <Bot size={12} className="text-[#022349]" />
                 </div>
                 <div className="bg-white/[0.04] border border-white/[0.08] px-3 py-2 rounded-xl rounded-tl-sm">
                   <Loader2 size={16} className="animate-spin text-white/30" />
@@ -227,12 +227,12 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Ask anything about your workspace..."
-                className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#DC143C]/40 transition-colors"
+                className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/40 transition-colors"
               />
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-lg bg-[#DC143C] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-10 h-10 rounded-lg bg-[#022349] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Send size={16} />
               </button>

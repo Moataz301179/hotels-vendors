@@ -44,12 +44,12 @@ interface Order {
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     OPEN: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Open" },
-    RESPONDED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Responded" },
+    RESPONDED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Responded" },
     CLOSED: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/30", label: "Closed" },
     AWARDED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Awarded" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     IN_TRANSIT: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "In Transit" },
-    APPROVED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Approved" },
+    APPROVED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Approved" },
     PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
   };
@@ -65,7 +65,7 @@ function StatusBadge({ status }: { status: string }) {
 function StockIndicator({ stock, moq }: { stock: number; moq: number }) {
   const ratio = stock / moq;
   if (ratio >= 10) return <span className="text-[11px] text-emerald-400">{stock} in stock</span>;
-  if (ratio >= 5) return <span className="text-[11px] text-[#DC143C]">{stock} low stock</span>;
+  if (ratio >= 5) return <span className="text-[11px] text-[#022349]">{stock} low stock</span>;
   return <span className="text-[11px] text-red-400">{stock} critical</span>;
 }
 
@@ -90,8 +90,8 @@ function SkeletonTable() {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "F&B": "#DC143C",
-  "Food & Beverage": "#DC143C",
+  "F&B": "#022349",
+  "Food & Beverage": "#022349",
   "Housekeeping": "#60a5fa",
   "Linens": "#a78bfa",
   "Linens & Textiles": "#a78bfa",
@@ -152,7 +152,7 @@ export default function SupplierPortalPage() {
         </div>
         <Link
           href="/supplier/products"
-          className="px-4 py-2 text-xs font-semibold bg-[#DC143C] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold bg-[#022349] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2"
         >
           <Plus size={14} />
           Add Product
@@ -203,7 +203,7 @@ export default function SupplierPortalPage() {
                   placeholder="Search products..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#DC143C]/40 transition-all w-48"
+                  className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 transition-all w-48"
                 />
               </div>
               <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
@@ -228,13 +228,13 @@ export default function SupplierPortalPage() {
                   {filteredInventory.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="px-4 py-8 text-center text-sm text-white/30">
-                        No products found. <Link href="/supplier/products" className="text-[#DC143C] hover:underline">Add your first product</Link>.
+                        No products found. <Link href="/supplier/products" className="text-[#022349] hover:underline">Add your first product</Link>.
                       </td>
                     </tr>
                   ) : (
                     filteredInventory.map((item) => {
                       const stock = item.inventorySnapshots[0]?.stockQuantity ?? 0;
-                      const color = CATEGORY_COLORS[item.category] || "#DC143C";
+                      const color = CATEGORY_COLORS[item.category] || "#022349";
                       return (
                         <tr key={item.id} className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors group">
                           <td className="px-4 py-3 text-[11px] font-mono text-white/40">{item.sku}</td>
@@ -250,7 +250,7 @@ export default function SupplierPortalPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button className="p-1 rounded text-white/20 hover:text-white/60 hover:bg-white/[0.05]"><Eye size={12} /></button>
-                              <button className="p-1 rounded text-white/20 hover:text-[#DC143C] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
+                              <button className="p-1 rounded text-white/20 hover:text-[#022349] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
                             </div>
                           </td>
                         </tr>
@@ -316,7 +316,7 @@ export default function SupplierPortalPage() {
                 <span className="text-xs font-semibold text-white">87%</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04]">
-                <div className="h-full w-[87%] rounded-full bg-[#DC143C]" />
+                <div className="h-full w-[87%] rounded-full bg-[#022349]" />
               </div>
             </div>
           </div>

@@ -141,7 +141,7 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 const TIER_COLORS: Record<string, string> = {
-  luxury: "#8B0A1E",
+  luxury: "#022349",
   upscale: "#1a1a2e",
   midscale: "#2d2d44",
 };
@@ -199,7 +199,7 @@ export function OurClientsSection() {
     <section className="py-16 bg-[#f5f5f7] border-y border-black/[0.06]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10">
-          <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+          <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
             Egyptian Hotel Partners
           </p>
           <h2 className="text-[24px] md:text-[28px] font-bold text-black tracking-[-0.02em]">
@@ -232,7 +232,7 @@ export function OurClientsSection() {
             onClick={() => setActiveChain("all")}
             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all border ${
               activeChain === "all"
-                ? "bg-[#8B0A1E] text-white border-[#8B0A1E]"
+                ? "bg-[#022349] text-white border-[#022349]"
                 : "bg-white text-black/50 border-black/[0.08] hover:text-black"
             }`}
           >
@@ -244,7 +244,7 @@ export function OurClientsSection() {
               onClick={() => setActiveChain(chain)}
               className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all border ${
                 activeChain === chain
-                  ? "bg-[#8B0A1E] text-white border-[#8B0A1E]"
+                  ? "bg-[#022349] text-white border-[#022349]"
                   : "bg-white text-black/50 border-black/[0.08] hover:text-black"
               }`}
             >
@@ -308,7 +308,7 @@ export function OurClientsSection() {
                 </span>
               </div>
 
-              <h3 className="text-[13px] font-semibold text-black leading-snug mb-1 group-hover:text-[#8B0A1E] transition-colors">
+              <h3 className="text-[13px] font-semibold text-black leading-snug mb-1 group-hover:text-[#022349] transition-colors">
                 {hotel.name}
               </h3>
 

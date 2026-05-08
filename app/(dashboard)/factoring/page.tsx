@@ -51,7 +51,7 @@ function StatusBadge({ status }: { status: string }) {
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
     COMPLETED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Completed" },
     SCHEDULED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Scheduled" },
-    PENDING: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Pending" },
+    PENDING: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Pending" },
     FUNDED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Funded" },
   };
   const c = config[status] || config.PENDING_REVIEW;
@@ -64,7 +64,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function CreditScoreRing({ score }: { score: number }) {
-  const color = score >= 80 ? "#10B981" : score >= 60 ? "#DC143C" : "#EF4444";
+  const color = score >= 80 ? "#10B981" : score >= 60 ? "#022349" : "#EF4444";
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
@@ -283,7 +283,7 @@ export default function FinancePortalPage() {
                 <span className="text-xs font-semibold text-white">24h</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04]">
-                <div className="h-full w-[70%] rounded-full bg-[#DC143C]" />
+                <div className="h-full w-[70%] rounded-full bg-[#022349]" />
               </div>
             </div>
           </div>

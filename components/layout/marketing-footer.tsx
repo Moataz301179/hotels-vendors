@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-[#0a0a12] border-t border-white/[0.06]">
+    <footer className="bg-[#050505] border-t border-white/[0.06]">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
           {/* Brand */}

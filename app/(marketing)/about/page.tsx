@@ -30,7 +30,7 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <p className="text-[12px] font-medium text-[#DC143C] tracking-[0.15em] uppercase mb-6">
+            <p className="text-[12px] font-medium text-[#022349] tracking-[0.15em] uppercase mb-6">
               About Us
             </p>
             <h1 className="text-[48px] sm:text-[64px] font-bold text-white leading-[1.05] tracking-[-0.03em]">
@@ -88,8 +88,8 @@ export default function AboutPage() {
               className="pt-4"
             >
               <div className="flex items-center gap-2 mb-4">
-                <Award size={16} className="text-[#DC143C]" />
-                <span className="text-[11px] font-semibold text-[#DC143C] uppercase tracking-widest">
+                <Award size={16} className="text-[#022349]" />
+                <span className="text-[11px] font-semibold text-[#022349] uppercase tracking-widest">
                   Founder & CEO
                 </span>
               </div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DC143C]/10 border border-[#DC143C]/20 text-[11px] font-semibold text-[#DC143C] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
               Our Mission
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em] leading-tight">
@@ -235,7 +235,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DC143C]/10 border border-[#DC143C]/20 text-[11px] font-semibold text-[#DC143C] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
               Our Values
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em] leading-tight">
@@ -270,7 +270,7 @@ export default function AboutPage() {
                 transition={{ delay: i * 0.08, duration: 0.5 }}
                 className="flex gap-4 p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02]"
               >
-                <CheckCircle2 className="w-5 h-5 text-[#DC143C] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-[#022349] shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-[15px] font-semibold text-white mb-1">
                     {item.title}
@@ -295,7 +295,7 @@ export default function AboutPage() {
           >
             <div className="relative w-14 h-14 mx-auto mb-8">
               <BrandLogo variant="dark" size="xl" className="relative z-10" />
-              <div className="absolute inset-0 bg-[#DC143C]/8 blur-2xl rounded-full" />
+              <div className="absolute inset-0 bg-[#022349]/8 blur-2xl rounded-full" />
             </div>
             <h2 className="text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
               Built by professionals.
@@ -308,7 +308,7 @@ export default function AboutPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="group px-7 py-3.5 text-[14px] font-medium bg-[#DC143C] text-white hover:bg-[#b91031] rounded-lg transition-colors flex items-center gap-2"
+                className="group px-7 py-3.5 text-[14px] font-medium bg-[#022349] text-white hover:bg-[#01305e] rounded-lg transition-colors flex items-center gap-2"
               >
                 Get Started Free
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

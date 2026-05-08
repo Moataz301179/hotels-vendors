@@ -33,7 +33,7 @@ export function MarketingNav() {
       }`}
     >
       {/* ─── TOP ROW — BLACK ─── */}
-      <div className="bg-[#0a0a12] border-b border-white/[0.08]">
+      <div className="bg-[#050505] border-b border-white/[0.08]">
         <div className="mx-auto max-w-7xl px-6 h-[52px] flex items-center justify-between relative">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 relative z-10">
@@ -50,7 +50,7 @@ export function MarketingNav() {
                 Hotels Vendors
               </span>
               <span className="text-[9px] font-medium text-white/40 uppercase tracking-[0.1em] leading-none mt-0.5">
-                Digital Procurement
+                Smarter Together
               </span>
             </div>
           </Link>
@@ -85,7 +85,7 @@ export function MarketingNav() {
             </Link>
             <Link
               href="/register"
-              className="px-5 py-2 text-[13px] font-semibold bg-[#8B0A1E] text-white hover:bg-[#6B0512] rounded-lg transition-colors"
+              className="px-5 py-2 text-[13px] font-semibold bg-white text-[#022349] hover:bg-white/90 rounded-lg transition-colors"
             >
               Get Started
             </Link>
@@ -108,7 +108,7 @@ export function MarketingNav() {
             <span className="text-[14px] font-bold text-black tracking-tight">
               Hotels Vendors
             </span>
-            <span className="w-1 h-1 rounded-full bg-[#8B0A1E]" />
+            <span className="w-1 h-1 rounded-full bg-[#022349]" />
             <span className="text-[11px] font-medium text-black/40 uppercase tracking-[0.1em]">
               Smarter Together
             </span>
@@ -126,7 +126,7 @@ export function MarketingNav() {
                 type="text"
                 placeholder="Search products, suppliers, categories..."
                 autoFocus
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] bg-black/[0.02] text-sm text-black placeholder:text-black/30 outline-none focus:border-[#8B0A1E]/40 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] bg-black/[0.02] text-sm text-black placeholder:text-black/30 outline-none focus:border-[#022349]/40 transition-all"
               />
             </div>
           </div>
@@ -135,7 +135,7 @@ export function MarketingNav() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-[#0a0a12] border-t border-white/[0.06] px-6 py-5 shadow-xl">
+        <div className="lg:hidden bg-[#050505] border-t border-white/[0.06] px-6 py-5 shadow-xl">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -155,7 +155,7 @@ export function MarketingNav() {
             </Link>
             <Link
               href="/register"
-              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0A1E] text-white rounded-lg hover:bg-[#6B0512] transition-colors"
+              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-white text-[#022349] rounded-lg hover:bg-white/90 transition-colors"
             >
               Get Started
             </Link>

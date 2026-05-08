@@ -18,7 +18,7 @@ export function AuroraBackground() {
 
     const blobs = [
       { x: w * 0.2, y: h * 0.3, r: 400, dx: 0.3, dy: 0.2, color: "rgba(185, 28, 28, 0.15)" },
-      { x: w * 0.7, y: h * 0.5, r: 500, dx: -0.2, dy: 0.3, color: "rgba(220, 38, 38, 0.12)" },
+      { x: w * 0.7, y: h * 0.5, r: 500, dx: -0.2, dy: 0.3, color: "rgba(2, 35, 73, 0.12)" },
       { x: w * 0.5, y: h * 0.7, r: 350, dx: 0.15, dy: -0.25, color: "rgba(201, 162, 39, 0.08)" },
       { x: w * 0.8, y: h * 0.2, r: 300, dx: -0.3, dy: 0.15, color: "rgba(185, 28, 28, 0.1)" },
     ];

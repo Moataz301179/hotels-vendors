@@ -29,7 +29,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 const ALL_PRODUCTS: any[] = (catalogData as { products: any[] }).products;
 
-const RED = "#8B0A1E";
+const RED = "#022349";
 const RED_DIM = "rgba(139,10,30,0.15)";
 const RED_GLOW = "rgba(139,10,30,0.25)";
 const GOLD = "#e1a95f";
@@ -190,9 +190,9 @@ export default function MarketplacePage() {
   const memberDiscount = (price: number) => Math.round(price * 0.92);
 
   return (
-    <div className="min-h-screen bg-[#0a0a12] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0a0a12]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
@@ -355,7 +355,7 @@ export default function MarketplacePage() {
         {/* Left Sidebar — Categories */}
         <aside
           className={`${
-            mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a12] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"
+            mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#050505] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"
           }`}
         >
           {mobileSidebarOpen && (
@@ -417,7 +417,7 @@ export default function MarketplacePage() {
             </p>
             <Link
               href="/register"
-              className="mt-3 block w-full text-center py-2 text-[11px] font-medium text-[#0a0a12] rounded-lg"
+              className="mt-3 block w-full text-center py-2 text-[11px] font-medium text-[#050505] rounded-lg"
               style={{ background: GOLD }}
             >
               Become a Member

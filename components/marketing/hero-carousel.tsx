@@ -110,7 +110,7 @@ export function HeroCarousel() {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-md bg-[#8B0A1E]/80 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-[#022349]/80 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">
                     {String(current + 1).padStart(2, "0")}
                   </span>
@@ -152,7 +152,7 @@ export function HeroCarousel() {
             onClick={() => goTo(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
               i === current
-                ? "w-6 bg-[#8B0A1E]"
+                ? "w-6 bg-[#022349]"
                 : "w-1.5 bg-white/30 hover:bg-white/50"
             }`}
           />

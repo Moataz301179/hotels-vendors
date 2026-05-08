@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function HotelsPage() {
   return (
-    <main className="min-h-screen bg-[#0a0a12]">
+    <main className="min-h-screen bg-[#050505]">
       <MarketingNav />
 
-      <div className="pt-[140px] pb-8 bg-[#0a0a12]">
+      <div className="pt-[140px] pb-8 bg-[#050505]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
-            <p className="text-[11px] font-semibold text-[#8B0A1E] tracking-[0.18em] uppercase mb-3">
+            <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
               Partner Network
             </p>
             <h1 className="text-[28px] md:text-[36px] font-bold text-white tracking-[-0.02em]">

@@ -293,7 +293,7 @@ export default function AdminMissionControl() {
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <MetricCard label="Total Tenants" value="47" icon={Building2} color="#34d399" />
-            <MetricCard label="Monthly GMV" value="2.4M EGP" icon={Banknote} color="#8B0A1E" />
+            <MetricCard label="Monthly GMV" value="2.4M EGP" icon={Banknote} color="#022349" />
             <MetricCard label="Platform Fees" value="48K EGP" icon={Receipt} color="#fbbf24" />
             <MetricCard label="Active Users" value="156" icon={Users} color="#55b3ff" />
           </div>
@@ -354,13 +354,13 @@ export default function AdminMissionControl() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
               <input placeholder="Search users..." className="pl-10 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-white/[0.12] w-72" />
             </div>
-            <button onClick={() => setShowAddUser(!showAddUser)} className="px-4 py-2 rounded-lg bg-[#8B0A1E] hover:bg-[#6B0512] text-white text-sm font-medium transition-colors flex items-center gap-2">
+            <button onClick={() => setShowAddUser(!showAddUser)} className="px-4 py-2 rounded-lg bg-[#022349] hover:bg-[#6B0512] text-white text-sm font-medium transition-colors flex items-center gap-2">
               <Plus size={14} /> Add User
             </button>
           </div>
 
           {showAddUser && (
-            <div className="glass-card p-4 border border-[#8B0A1E]/20">
+            <div className="glass-card p-4 border border-[#022349]/20">
               <p className="text-sm text-white/60 mb-2">Add New User</p>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 <input placeholder="Full Name" className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none" />

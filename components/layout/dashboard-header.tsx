@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-[#DC143C]" },
+  admin: { label: "Platform Admin", badgeColor: "bg-[#022349]" },
   hotel: { label: "Hotel Buyer", badgeColor: "bg-emerald-500" },
   supplier: { label: "Supplier", badgeColor: "bg-blue-500" },
   factoring: { label: "Factoring Partner", badgeColor: "bg-amber-500" },
@@ -38,11 +38,11 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
       {/* Center: Search with Advanced Filters */}
       <div className="flex-1 max-w-xl mx-4 lg:mx-8">
         <div className="relative group flex items-center">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#DC143C] transition-colors z-10" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#022349] transition-colors z-10" />
           <input
             type="text"
             placeholder="Search orders, suppliers, products..."
-            className="w-full h-9 pl-9 pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#DC143C]/40 focus:ring-1 focus:ring-[#DC143C]/10 transition-all"
+            className="w-full h-9 pl-9 pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 focus:ring-1 focus:ring-[#022349]/10 transition-all"
           />
           <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
             <SlidersHorizontal size={11} />
@@ -64,11 +64,11 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
 
         <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all">
           <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#DC143C] ring-2 ring-[#121212]" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#022349] ring-2 ring-[#121212]" />
         </button>
 
         <button className="flex items-center gap-2.5 pl-1">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#DC143C] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#022349] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10">
             MZ
           </div>
           <div className="hidden md:block text-left">
