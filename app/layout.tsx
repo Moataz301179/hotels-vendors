@@ -83,10 +83,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/logo-icon.png", sizes: "32x32", type: "image/png" },
-      { url: "/logo-horse-only.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo-icon-white.png", sizes: "192x192", type: "image/png" },
     ],
     apple: [
-      { url: "/logo-horse-only.png", sizes: "180x180", type: "image/png" },
+      { url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" },
     ],
     shortcut: "/logo-icon.png",
   },
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   },
   other: {
     "msapplication-TileColor": "#DC143C",
-    "msapplication-TileImage": "/logo-horse-only.png",
+    "msapplication-TileImage": "/logo-icon-white.png",
     "theme-color": "#0a0a12",
   },
 };

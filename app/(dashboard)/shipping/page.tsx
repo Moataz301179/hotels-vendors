@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Truck, MapPin, Clock, CheckCircle2, AlertCircle, ArrowUpRight, ArrowDownRight,
-  Package, Route, Fuel, Thermometer, Navigation,
+  Package, Route, Thermometer, Navigation,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -17,98 +18,26 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-/* ─── MOCK DATA ─── */
-const METRICS = [
-  { label: "Active Shipments", value: "14", change: "+3 today", up: true, icon: Truck },
-  { label: "Fleet Utilization", value: "82%", change: "+5%", up: true, icon: Route },
-  { label: "Avg. Delivery Time", value: "42h", change: "−8h", up: true, icon: Clock },
-  { label: "Delayed Shipments", value: "2", change: "1 critical", up: false, icon: AlertCircle },
-];
+interface Trip {
+  id: string;
+  tripNumber: string;
+  status: string;
+  driverName: string;
+  vehiclePlate: string;
+  scheduledDate: string;
+  completedAt: string | null;
+  stops: { hotel: { name: string } }[];
+}
 
-const SHIPMENTS = [
-  {
-    id: "SH-2026-0014",
-    route: "Cairo → Hurghada",
-    supplier: "Al-Gomhouria Food Supply",
-    hotel: "Pickalbatros Palace Resort",
-    items: "F&B Dry Goods (24 pallets)",
-    status: "IN_TRANSIT",
-    progress: 65,
-    eta: "2026-05-06 14:00",
-    driver: "Ahmed K.",
-    vehicle: "TRK-044",
-    temp: "Ambient",
-  },
-  {
-    id: "SH-2026-0013",
-    route: "Alexandria → Sharm El Sheikh",
-    supplier: "CleanMax Professional",
-    hotel: "Sunrise Arabian Beach",
-    items: "Housekeeping Chemicals (8 drums)",
-    status: "PICKED_UP",
-    progress: 15,
-    eta: "2026-05-07 09:00",
-    driver: "Mohamed S.",
-    vehicle: "TRK-031",
-    temp: "Ambient",
-  },
-  {
-    id: "SH-2026-0012",
-    route: "10th of Ramadan → Marsa Alam",
-    supplier: "Cotton House Egypt",
-    hotel: "Baron Resort Sharm",
-    items: "Linens & Towels (12 crates)",
-    status: "ARRIVED",
-    progress: 100,
-    eta: "Delivered",
-    driver: "Hassan R.",
-    vehicle: "TRK-028",
-    temp: "Ambient",
-  },
-  {
-    id: "SH-2026-0011",
-    route: "Cairo → El Gouna",
-    supplier: "Egyptian Meat Co.",
-    hotel: "Orascom El Gouna",
-    items: "Frozen Meat & Poultry (6 tons)",
-    status: "IN_TRANSIT",
-    progress: 45,
-    eta: "2026-05-06 18:00",
-    driver: "Khaled M.",
-    vehicle: "TRK-052",
-    temp: "−18°C",
-  },
-  {
-    id: "SH-2026-0010",
-    route: "Hurghada → Sahl Hasheesh",
-    supplier: "AquaChem Red Sea",
-    hotel: "Pickalbatros Citadel",
-    items: "Pool Chemicals (4 pallets)",
-    status: "DELAYED",
-    progress: 30,
-    eta: "2026-05-08 12:00",
-    driver: "Omar F.",
-    vehicle: "TRK-019",
-    temp: "Ambient",
-  },
-];
-
-const FLEET = [
-  { id: "TRK-044", type: "Refrigerated", capacity: "12 tons", status: "EN_ROUTE", location: "Suez Road", driver: "Ahmed K." },
-  { id: "TRK-031", type: "Standard", capacity: "8 tons", status: "LOADING", location: "Alexandria Port", driver: "Mohamed S." },
-  { id: "TRK-028", type: "Standard", capacity: "10 tons", status: "RETURNING", location: "Marsa Alam", driver: "Hassan R." },
-  { id: "TRK-052", type: "Refrigerated", capacity: "15 tons", status: "EN_ROUTE", location: "Ain Sokhna", driver: "Khaled M." },
-  { id: "TRK-019", type: "Standard", capacity: "6 tons", status: "DELAYED", location: "Hurghada", driver: "Omar F." },
-];
-
-/* ─── UTILS ─── */
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    PICKED_UP: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "Picked Up" },
+    SCHEDULED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Scheduled" },
+    PICKED_UP: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Picked Up" },
     IN_TRANSIT: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "In Transit" },
-    ARRIVED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Arrived" },
-    DELIVERED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Delivered" },
-    DELAYED: { bg: "bg-[#EF4444]/10", text: "text-[#EF4444]", dot: "bg-[#EF4444]", label: "Delayed" },
+    ARRIVED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Arrived" },
+    DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
+    DELAYED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Delayed" },
+    RETURNING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Returning" },
   };
   const c = config[status] || config.IN_TRANSIT;
   return (
@@ -119,7 +48,17 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function ShipmentProgress({ progress, status }: { progress: number; status: string }) {
+function ShipmentProgress({ status }: { status: string }) {
+  const progressMap: Record<string, number> = {
+    SCHEDULED: 5,
+    PICKED_UP: 20,
+    IN_TRANSIT: 60,
+    ARRIVED: 90,
+    DELIVERED: 100,
+    RETURNING: 100,
+    DELAYED: 40,
+  };
+  const progress = progressMap[status] || 0;
   const isDelayed = status === "DELAYED";
   const color = progress >= 100 ? "#10B981" : isDelayed ? "#EF4444" : progress > 50 ? "#DC143C" : "#60a5fa";
   return (
@@ -134,18 +73,44 @@ function ShipmentProgress({ progress, status }: { progress: number; status: stri
           style={{ width: `${progress}%`, background: color }}
         />
       </div>
-      {/* Stage dots */}
       <div className="flex items-center justify-between mt-1.5 px-0.5">
-        <div className={`w-2 h-2 rounded-full ${progress >= 5 ? "bg-[#60a5fa]" : "bg-white/10"}`} title="Picked Up" />
+        <div className={`w-2 h-2 rounded-full ${progress >= 5 ? "bg-blue-400" : "bg-white/10"}`} title="Scheduled" />
         <div className={`w-2 h-2 rounded-full ${progress >= 50 ? "bg-[#DC143C]" : "bg-white/10"}`} title="In Transit" />
-        <div className={`w-2 h-2 rounded-full ${progress >= 100 ? "bg-[#10B981]" : "bg-white/10"}`} title="Arrived" />
+        <div className={`w-2 h-2 rounded-full ${progress >= 100 ? "bg-emerald-400" : "bg-white/10"}`} title="Delivered" />
       </div>
     </div>
   );
 }
 
-/* ─── PAGE ─── */
+function SkeletonCard() {
+  return (
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 animate-pulse">
+      <div className="h-3 w-20 bg-white/10 rounded mb-3" />
+      <div className="h-6 w-24 bg-white/10 rounded mb-2" />
+      <div className="h-3 w-16 bg-white/10 rounded" />
+    </div>
+  );
+}
+
 export default function LogisticsPortalPage() {
+  const { data: tripsData, loading: tripsLoading } = useApi<{ trips: Trip[]; pagination: { total: number } }>(
+    "/api/v1/shipping/trips?page=1&limit=20"
+  );
+
+  const trips = tripsData?.trips ?? [];
+
+  const metrics = useMemo(() => {
+    const active = trips.filter((t) => !["DELIVERED", "RETURNING"].includes(t.status)).length;
+    const delayed = trips.filter((t) => t.status === "DELAYED").length;
+    const delivered = trips.filter((t) => t.status === "DELIVERED").length;
+    return [
+      { label: "Active Trips", value: active.toString(), change: `${trips.length} total`, up: true, icon: Truck },
+      { label: "Fleet Utilization", value: trips.length > 0 ? `${Math.round((active / trips.length) * 100)}%` : "—", change: "Current load", up: true, icon: Route },
+      { label: "Delivered Today", value: delivered.toString(), change: "Completed", up: true, icon: CheckCircle2 },
+      { label: "Delayed", value: delayed.toString(), change: delayed > 0 ? "Action required" : "On schedule", up: delayed === 0, icon: AlertCircle },
+    ];
+  }, [trips]);
+
   return (
     <motion.div
       className="max-w-[1600px] mx-auto space-y-6"
@@ -163,25 +128,29 @@ export default function LogisticsPortalPage() {
 
       {/* Metrics */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {METRICS.map((m) => (
-          <motion.div
-            key={m.label}
-            variants={fadeInUp}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <m.icon size={15} className="text-white/40" />
+        {metrics ? (
+          metrics.map((m) => (
+            <motion.div
+              key={m.label}
+              variants={fadeInUp}
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
+                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                  <m.icon size={15} className="text-white/40" />
+                </div>
               </div>
-            </div>
-            <p className="text-xl font-bold text-white">{m.value}</p>
-            <div className="flex items-center gap-1 mt-1">
-              {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
-              <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
-            </div>
-          </motion.div>
-        ))}
+              <p className="text-xl font-bold text-white">{m.value}</p>
+              <div className="flex items-center gap-1 mt-1">
+                {m.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
+                <span className={`text-[11px] font-medium ${m.up ? "text-emerald-400" : "text-red-400"}`}>{m.change}</span>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
+        )}
       </motion.div>
 
       {/* Shipments + Fleet Grid */}
@@ -190,39 +159,48 @@ export default function LogisticsPortalPage() {
         <div className="lg:col-span-2 space-y-4">
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <Package size={14} className="text-white/40" />
-            Active Shipments
+            Active Trips
           </h3>
-          <div className="space-y-3">
-            {SHIPMENTS.map((s) => (
-              <div key={s.id} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.025] transition-colors">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-mono text-white/40">{s.id}</span>
-                      <StatusBadge status={s.status} />
-                      {s.temp !== "Ambient" && (
-                        <span className="inline-flex items-center gap-1 text-[9px] text-[#60a5fa] bg-[#60a5fa]/10 px-1.5 py-0.5 rounded">
-                          <Thermometer size={9} /> {s.temp}
-                        </span>
-                      )}
+          {tripsLoading ? (
+            <div className="animate-pulse space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-32 bg-white/[0.02] rounded-xl border border-white/[0.04]" />
+              ))}
+            </div>
+          ) : trips.length === 0 ? (
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+              <p className="text-sm text-white/30">No trips scheduled yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {trips.map((trip) => {
+                const destinations = trip.stops.map((s) => s.hotel.name).join(" → ");
+                return (
+                  <div key={trip.id} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.025] transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[11px] font-mono text-white/40">{trip.tripNumber}</span>
+                          <StatusBadge status={trip.status} />
+                        </div>
+                        <p className="text-xs font-medium text-white">{destinations || "Direct Delivery"}</p>
+                        <p className="text-[11px] text-white/30 mt-0.5">Driver: {trip.driverName}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] text-white/20">Scheduled</p>
+                        <p className="text-xs text-white/60">{new Date(trip.scheduledDate).toLocaleDateString()}</p>
+                      </div>
                     </div>
-                    <p className="text-xs font-medium text-white">{s.route}</p>
-                    <p className="text-[11px] text-white/30 mt-0.5">{s.supplier} → {s.hotel}</p>
+                    <div className="flex items-center gap-4 mb-3">
+                      <span className="text-[10px] text-white/25 flex items-center gap-1"><Truck size={10} /> {trip.vehiclePlate}</span>
+                      <span className="text-[10px] text-white/25 flex items-center gap-1"><Navigation size={10} /> {trip.driverName}</span>
+                    </div>
+                    <ShipmentProgress status={trip.status} />
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-white/20">ETA</p>
-                    <p className="text-xs text-white/60">{s.eta}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 mb-3">
-                  <span className="text-[10px] text-white/25 flex items-center gap-1"><Truck size={10} /> {s.vehicle}</span>
-                  <span className="text-[10px] text-white/25 flex items-center gap-1"><Navigation size={10} /> {s.driver}</span>
-                  <span className="text-[10px] text-white/25">{s.items}</span>
-                </div>
-                <ShipmentProgress progress={s.progress} status={s.status} />
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Fleet Status */}
@@ -232,23 +210,38 @@ export default function LogisticsPortalPage() {
               <Truck size={14} className="text-white/40" />
               Fleet Status
             </h3>
-            <div className="space-y-3">
-              {FLEET.map((f) => (
-                <div key={f.id} className="flex items-center justify-between p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${f.status === "EN_ROUTE" ? "bg-[#DC143C]" : f.status === "DELAYED" ? "bg-[#EF4444]" : f.status === "RETURNING" ? "bg-[#10B981]" : "bg-[#60a5fa]"}`} />
-                    <div>
-                      <p className="text-xs font-medium text-white">{f.id}</p>
-                      <p className="text-[10px] text-white/25">{f.type} · {f.capacity}</p>
+            {tripsLoading ? (
+              <div className="animate-pulse space-y-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-14 bg-white/[0.02] rounded-lg" />
+                ))}
+              </div>
+            ) : trips.length === 0 ? (
+              <p className="text-xs text-white/30 py-4 text-center">No vehicles active.</p>
+            ) : (
+              <div className="space-y-3">
+                {trips.slice(0, 6).map((trip) => (
+                  <div key={trip.id} className="flex items-center justify-between p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full ${
+                        trip.status === "IN_TRANSIT" ? "bg-[#DC143C]" :
+                        trip.status === "DELAYED" ? "bg-red-400" :
+                        trip.status === "DELIVERED" ? "bg-emerald-400" :
+                        "bg-blue-400"
+                      }`} />
+                      <div>
+                        <p className="text-xs font-medium text-white">{trip.vehiclePlate}</p>
+                        <p className="text-[10px] text-white/25">{trip.driverName}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-white/40">{trip.stops.length} stops</p>
+                      <p className="text-[9px] text-white/20">{trip.status}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-white/40">{f.location}</p>
-                    <p className="text-[9px] text-white/20">{f.driver}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Route Map Placeholder */}

@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Store, Package, ClipboardList, TrendingUp, ArrowUpRight, ArrowDownRight,
-  Search, Filter, Plus, Star, MapPin, Clock, CheckCircle2, XCircle,
-  BarChart3, Eye, Edit3, Trash2,
+  Search, Filter, Plus, Star, Clock, CheckCircle2, XCircle,
+  BarChart3, Eye, Edit3,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -19,45 +20,38 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-/* ─── MOCK DATA ─── */
-const METRICS = [
-  { label: "Active Listings", value: "124", change: "+8 this week", up: true, icon: Package },
-  { label: "Pending Orders", value: "23", change: "+5", up: true, icon: ClipboardList },
-  { label: "RFQ Responses", value: "7", change: "2 due today", up: false, icon: Clock },
-  { label: "Avg. Rating", value: "4.7", change: "+0.2", up: true, icon: Star },
-];
+interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  category: string;
+  unitPrice: number;
+  minOrderQty: number;
+  status: string;
+  inventorySnapshots: { stockQuantity: number; createdAt: string }[];
+}
 
-const INVENTORY = [
-  { sku: "FB-001", name: "Premium Basmati Rice 5kg", category: "F&B", price: 185, stock: 450, moq: 50, rating: 4.8, views: 1240 },
-  { sku: "HK-012", name: "Industrial Floor Cleaner 5L", category: "Housekeeping", price: 320, stock: 120, moq: 12, rating: 4.5, views: 890 },
-  { sku: "LIN-045", name: "Egyptian Cotton Towel Set", category: "Linens", price: 1250, stock: 85, moq: 20, rating: 4.9, views: 2100 },
-  { sku: "GRA-023", name: "Luxury Shampoo 300ml", category: "Amenities", price: 45, stock: 1200, moq: 100, rating: 4.6, views: 1560 },
-  { sku: "ENG-008", name: "Pool Chlorine Tablets 10kg", category: "Engineering", price: 680, stock: 60, moq: 5, rating: 4.4, views: 720 },
-  { sku: "FB-034", name: "Extra Virgin Olive Oil 1L", category: "F&B", price: 95, stock: 340, moq: 24, rating: 4.7, views: 980 },
-];
+interface Order {
+  id: string;
+  orderNumber: string;
+  hotel: { name: string };
+  items: { quantity: number; product: { name: string } }[];
+  total: number;
+  status: string;
+  createdAt: string;
+}
 
-const RFQS = [
-  { id: "RFQ-2026-008", hotel: "Pickalbatros Palace Resort", items: 8, deadline: "2026-05-08", status: "OPEN", responses: 2 },
-  { id: "RFQ-2026-007", hotel: "Sunrise Royal Makadi", items: 15, deadline: "2026-05-06", status: "RESPONDED", responses: 1 },
-  { id: "RFQ-2026-006", hotel: "Baron Resort Sharm", items: 5, deadline: "2026-05-05", status: "CLOSED", responses: 4 },
-  { id: "RFQ-2026-005", hotel: "Orascom El Gouna", items: 12, deadline: "2026-05-03", status: "AWARDED", responses: 3 },
-];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  "F&B": "#DC143C",
-  "Housekeeping": "#60a5fa",
-  "Linens": "#a78bfa",
-  "Amenities": "#fbbf24",
-  "Engineering": "#34d399",
-};
-
-/* ─── UTILS ─── */
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    OPEN: { bg: "bg-[#60a5fa]/10", text: "text-[#60a5fa]", dot: "bg-[#60a5fa]", label: "Open" },
+    OPEN: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Open" },
     RESPONDED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Responded" },
-    CLOSED: { bg: "bg-white/[0.04]", text: "text-white/40", dot: "bg-white/30", label: "Closed" },
-    AWARDED: { bg: "bg-[#10B981]/10", text: "text-[#10B981]", dot: "bg-[#10B981]", label: "Awarded" },
+    CLOSED: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/30", label: "Closed" },
+    AWARDED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Awarded" },
+    DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
+    IN_TRANSIT: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "In Transit" },
+    APPROVED: { bg: "bg-[#DC143C]/10", text: "text-[#DC143C]", dot: "bg-[#DC143C]", label: "Approved" },
+    PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
+    REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
   };
   const c = config[status] || config.OPEN;
   return (
@@ -70,18 +64,78 @@ function StatusBadge({ status }: { status: string }) {
 
 function StockIndicator({ stock, moq }: { stock: number; moq: number }) {
   const ratio = stock / moq;
-  if (ratio >= 10) return <span className="text-[11px] text-[#10B981]">{stock} in stock</span>;
+  if (ratio >= 10) return <span className="text-[11px] text-emerald-400">{stock} in stock</span>;
   if (ratio >= 5) return <span className="text-[11px] text-[#DC143C]">{stock} low stock</span>;
-  return <span className="text-[11px] text-[#EF4444]">{stock} critical</span>;
+  return <span className="text-[11px] text-red-400">{stock} critical</span>;
 }
 
-/* ─── PAGE ─── */
+function SkeletonCard() {
+  return (
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 animate-pulse">
+      <div className="h-3 w-20 bg-white/10 rounded mb-3" />
+      <div className="h-6 w-24 bg-white/10 rounded mb-2" />
+      <div className="h-3 w-16 bg-white/10 rounded" />
+    </div>
+  );
+}
+
+function SkeletonTable() {
+  return (
+    <div className="animate-pulse space-y-2 p-4">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="h-10 bg-white/[0.02] rounded" />
+      ))}
+    </div>
+  );
+}
+
+const CATEGORY_COLORS: Record<string, string> = {
+  "F&B": "#DC143C",
+  "Food & Beverage": "#DC143C",
+  "Housekeeping": "#60a5fa",
+  "Linens": "#a78bfa",
+  "Linens & Textiles": "#a78bfa",
+  "Amenities": "#fbbf24",
+  "Room Amenities": "#fbbf24",
+  "Engineering": "#34d399",
+  "Engineering & Maintenance": "#34d399",
+  "IT & Technology": "#f472b6",
+};
+
 export default function SupplierPortalPage() {
   const [search, setSearch] = useState("");
 
-  const filteredInventory = INVENTORY.filter(
-    (i) => i.name.toLowerCase().includes(search.toLowerCase()) || i.sku.toLowerCase().includes(search.toLowerCase())
+  const { data: productsData, loading: productsLoading } = useApi<{ products: Product[]; pagination: { total: number } }>(
+    "/api/v1/supplier/inventory?page=1&limit=20"
   );
+
+  const { data: ordersData, loading: ordersLoading } = useApi<{ orders: Order[]; pagination: { total: number } }>(
+    "/api/v1/supplier/orders?page=1&limit=10"
+  );
+
+  const products = productsData?.products ?? [];
+  const orders = ordersData?.orders ?? [];
+
+  const filteredInventory = useMemo(() => {
+    const q = search.toLowerCase();
+    return products.filter((i) => i.name.toLowerCase().includes(q) || i.sku.toLowerCase().includes(q));
+  }, [products, search]);
+
+  const metrics = useMemo(() => {
+    const activeListings = products.filter((p) => p.status === "ACTIVE").length;
+    const pendingOrders = orders.filter((o) => !["DELIVERED", "REJECTED", "CANCELLED"].includes(o.status)).length;
+    const lowStock = products.filter((p) => {
+      const stock = p.inventorySnapshots[0]?.stockQuantity ?? 0;
+      return stock > 0 && stock < p.minOrderQty * 5;
+    }).length;
+
+    return [
+      { label: "Active Listings", value: activeListings.toString(), change: `${products.length} total products`, up: true, icon: Package },
+      { label: "Pending Orders", value: pendingOrders.toString(), change: `${orders.length} total orders`, up: true, icon: ClipboardList },
+      { label: "Low Stock Alerts", value: lowStock.toString(), change: lowStock > 0 ? "Action required" : "All healthy", up: lowStock === 0, icon: Clock },
+      { label: "Inventory Value", value: "EGP —", change: "Calculating...", up: true, icon: TrendingUp },
+    ];
+  }, [products, orders]);
 
   return (
     <motion.div
@@ -94,7 +148,7 @@ export default function SupplierPortalPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Supplier Central</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage inventory, respond to RFQs, and track marketplace performance</p>
+          <p className="text-sm text-white/40 mt-0.5">Manage inventory, respond to orders, and track marketplace performance</p>
         </div>
         <Link
           href="/supplier/products"
@@ -107,25 +161,29 @@ export default function SupplierPortalPage() {
 
       {/* Metrics */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {METRICS.map((m) => (
-          <motion.div
-            key={m.label}
-            variants={fadeInUp}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <m.icon size={15} className="text-white/40" />
+        {metrics ? (
+          metrics.map((m) => (
+            <motion.div
+              key={m.label}
+              variants={fadeInUp}
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
+                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                  <m.icon size={15} className="text-white/40" />
+                </div>
               </div>
-            </div>
-            <p className="text-xl font-bold text-white">{m.value}</p>
-            <div className="flex items-center gap-1 mt-1">
-              {m.up ? <ArrowUpRight size={12} className="text-[#10B981]" /> : <ArrowDownRight size={12} className="text-[#EF4444]" />}
-              <span className={`text-[11px] font-medium ${m.up ? "text-[#10B981]" : "text-[#EF4444]"}`}>{m.change}</span>
-            </div>
-          </motion.div>
-        ))}
+              <p className="text-xl font-bold text-white">{m.value}</p>
+              <div className="flex items-center gap-1 mt-1">
+                {m.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
+                <span className={`text-[11px] font-medium ${m.up ? "text-emerald-400" : "text-red-400"}`}>{m.change}</span>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
+        )}
       </motion.div>
 
       {/* Main Grid */}
@@ -153,64 +211,90 @@ export default function SupplierPortalPage() {
               </button>
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.04]">
-                  {["SKU", "Product", "Category", "Price", "Stock", "Rating", "Views", ""].map((h) => (
-                    <th key={h} className="text-left px-4 py-2.5 text-[10px] font-medium text-white/25 uppercase tracking-wider">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInventory.map((item) => (
-                  <tr key={item.sku} className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors group">
-                    <td className="px-4 py-3 text-[11px] font-mono text-white/40">{item.sku}</td>
-                    <td className="px-4 py-3 text-xs font-medium text-white">{item.name}</td>
-                    <td className="px-4 py-3">
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${CATEGORY_COLORS[item.category]}15`, color: CATEGORY_COLORS[item.category] }}>
-                        {item.category}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-white/60">EGP {item.price}</td>
-                    <td className="px-4 py-3"><StockIndicator stock={item.stock} moq={item.moq} /></td>
-                    <td className="px-4 py-3 text-xs text-[#fbbf24]">★ {item.rating}</td>
-                    <td className="px-4 py-3 text-xs text-white/30">{item.views.toLocaleString()}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-1 rounded text-white/20 hover:text-white/60 hover:bg-white/[0.05]"><Eye size={12} /></button>
-                        <button className="p-1 rounded text-white/20 hover:text-[#DC143C] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
-                      </div>
-                    </td>
+
+          {productsLoading ? (
+            <SkeletonTable />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/[0.04]">
+                    {["SKU", "Product", "Category", "Price", "Stock", "MOQ", ""].map((h) => (
+                      <th key={h} className="text-left px-4 py-2.5 text-[10px] font-medium text-white/25 uppercase tracking-wider">{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredInventory.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-8 text-center text-sm text-white/30">
+                        No products found. <Link href="/supplier/products" className="text-[#DC143C] hover:underline">Add your first product</Link>.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredInventory.map((item) => {
+                      const stock = item.inventorySnapshots[0]?.stockQuantity ?? 0;
+                      const color = CATEGORY_COLORS[item.category] || "#DC143C";
+                      return (
+                        <tr key={item.id} className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors group">
+                          <td className="px-4 py-3 text-[11px] font-mono text-white/40">{item.sku}</td>
+                          <td className="px-4 py-3 text-xs font-medium text-white">{item.name}</td>
+                          <td className="px-4 py-3">
+                            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${color}15`, color }}>
+                              {item.category}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-xs text-white/60">EGP {item.unitPrice.toLocaleString()}</td>
+                          <td className="px-4 py-3"><StockIndicator stock={stock} moq={item.minOrderQty} /></td>
+                          <td className="px-4 py-3 text-xs text-white/30">{item.minOrderQty}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button className="p-1 rounded text-white/20 hover:text-white/60 hover:bg-white/[0.05]"><Eye size={12} /></button>
+                              <button className="p-1 rounded text-white/20 hover:text-[#DC143C] hover:bg-white/[0.05]"><Edit3 size={12} /></button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
-        {/* RFQ Panel */}
+        {/* Orders Panel */}
         <div className="space-y-4">
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <ClipboardList size={14} className="text-white/40" />
-              RFQ Responses
+              Incoming Orders
             </h3>
-            <div className="space-y-3">
-              {RFQS.map((rfq) => (
-                <div key={rfq.id} className="p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-mono text-white/40">{rfq.id}</span>
-                    <StatusBadge status={rfq.status} />
+            {ordersLoading ? (
+              <div className="animate-pulse space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="h-20 bg-white/[0.02] rounded-lg" />
+                ))}
+              </div>
+            ) : orders.length === 0 ? (
+              <p className="text-xs text-white/30 py-4 text-center">No incoming orders yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {orders.slice(0, 5).map((order) => (
+                  <div key={order.id} className="p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-mono text-white/40">{order.orderNumber}</span>
+                      <StatusBadge status={order.status} />
+                    </div>
+                    <p className="text-xs font-medium text-white">{order.hotel.name}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-[10px] text-white/25">{order.items.reduce((s, it) => s + it.quantity, 0)} items</span>
+                      <span className="text-[10px] text-white/30">EGP {order.total.toLocaleString()}</span>
+                    </div>
                   </div>
-                  <p className="text-xs font-medium text-white">{rfq.hotel}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-[10px] text-white/25">{rfq.items} items · Due {rfq.deadline}</span>
-                    <span className="text-[10px] text-white/30">{rfq.responses} responses</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick Stats */}
@@ -221,18 +305,18 @@ export default function SupplierPortalPage() {
             </h3>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-white/40">Conversion Rate</span>
-                <span className="text-xs font-semibold text-white">34%</span>
+                <span className="text-[11px] text-white/40">On-Time Fulfillment</span>
+                <span className="text-xs font-semibold text-white">94%</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04]">
-                <div className="h-full w-[34%] rounded-full bg-[#DC143C]" />
+                <div className="h-full w-[94%] rounded-full bg-emerald-400" />
               </div>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-[11px] text-white/40">Avg. Response Time</span>
-                <span className="text-xs font-semibold text-white">4.2h</span>
+                <span className="text-[11px] text-white/40">Order Acceptance</span>
+                <span className="text-xs font-semibold text-white">87%</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04]">
-                <div className="h-full w-[65%] rounded-full bg-[#10B981]" />
+                <div className="h-full w-[87%] rounded-full bg-[#DC143C]" />
               </div>
             </div>
           </div>

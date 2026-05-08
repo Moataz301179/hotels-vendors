@@ -49,7 +49,7 @@ export default async function DashboardLayout({
       <DashboardCartWrapper>
         {children}
       </DashboardCartWrapper>
-      <ChatbotWidget />
+      <ChatbotWidget mode={validRole} />
     </DashboardShell>
   );
 }

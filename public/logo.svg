@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 240" fill="white">
+  <!-- Shield outer shape -->
+  <path d="M20 15 
+           C55 5, 105 5, 140 15 
+           L150 20 
+           L150 160 
+           C150 190, 105 225, 85 235 
+           C65 225, 20 190, 20 160 
+           L20 20 
+           Z" 
+        opacity="0.95"/>
+  
+  <!-- H left vertical bar -->
+  <path d="M45 45 L45 190 L60 190 L60 125 L105 125 L105 190 L120 190 L120 45 L105 45 L105 100 L60 100 L60 45 Z" 
+        opacity="0.95"/>
+  
+  <!-- Diagonal stripe 1 -->
+  <path d="M20 85 L150 160 L150 140 L20 65 Z" opacity="0.3"/>
+  
+  <!-- Diagonal stripe 2 -->
+  <path d="M20 120 L150 195 L150 175 L20 100 Z" opacity="0.3"/>
+  
+  <!-- Diagonal stripe 3 -->
+  <path d="M20 155 L110 210 L95 220 L20 175 Z" opacity="0.3"/>
+</svg>

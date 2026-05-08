@@ -29,7 +29,7 @@ import {
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { HeroCarousel } from "@/components/marketing/hero-carousel";
-import { TrustedByMarquee } from "@/components/marketing/trusted-by-marquee";
+import { OurClientsSection } from "@/components/marketing/our-clients";
 
 export const metadata: Metadata = {
   title: "Hotels Vendors — Digital Procurement Hub for Egyptian Hospitality",
@@ -178,16 +178,14 @@ const PRICING = [
 ];
 
 const TRUST_LOGOS = [
-  "Jaz Hotel Group",
-  "Sunrise Hotels",
+  "Marriott International",
+  "Four Seasons",
+  "Hilton",
+  "Mövenpick",
+  "Steigenberger",
   "Pickalbatros",
-  "Pyramisa",
-  "Baron Hotels",
-  "Siva Hotels",
-  "Stella Di Mare",
-  "Desert Rose",
-  "Reef Oasis",
-  "Tropitel",
+  "Sunrise Resorts",
+  "Baron Group",
 ];
 
 export default function LandingPage() {
@@ -294,7 +292,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── OUR CLIENTS ─── Real Hotels */}
-      <TrustedByMarquee />
+      <OurClientsSection />
 
       {/* ─── CATEGORY DISCOVERY ─── White */}
       <section className="py-20 bg-white">

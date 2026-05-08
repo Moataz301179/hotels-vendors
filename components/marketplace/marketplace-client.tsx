@@ -21,14 +21,17 @@ import {
   Check,
 } from "lucide-react";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
+import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
+import { MarketplaceBanner } from "./marketplace-banner";
+import { SupplierShowcase } from "./supplier-showcase";
 import catalogData from "@/data/catalog-products.json";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 const ALL_PRODUCTS: any[] = (catalogData as { products: any[] }).products;
 
-const RED = "#DC143C";
-const RED_DIM = "rgba(220,20,60,0.15)";
-const RED_GLOW = "rgba(220,20,60,0.25)";
+const RED = "#8B0A1E";
+const RED_DIM = "rgba(139,10,30,0.15)";
+const RED_GLOW = "rgba(139,10,30,0.25)";
 const GOLD = "#e1a95f";
 const GOLD_DIM = "rgba(225,169,95,0.15)";
 
@@ -38,36 +41,55 @@ const COUNTS = ALL_PRODUCTS.reduce((acc, p) => {
 }, {} as Record<string, number>);
 
 /* ═══════════════════════════════════════════
-   UNSPLASH IMAGES FOR CATEGORIES
+   PRODUCT IMAGE COMPONENT — URL or gradient fallback
    ═══════════════════════════════════════════ */
 
-const CAT_IMAGES: Record<string, string> = {
-  fb: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80",
-  hk: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=400&q=80",
-  lin: "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&q=80",
-  eng: "https://images.unsplash.com/photo-1581092921461-eab62e97a782?w=400&q=80",
-  gra: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80",
-  ffe: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80",
-  ose: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80",
-  spa: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80",
-  it: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80",
-  sec: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80",
-};
+function ProductImage({ product }: { product: any }) {
+  const resolved = getProductImage(product);
 
-const PRODUCT_IMAGES = [
-  "https://images.unsplash.com/photo-1544025162-d76690b68f11?w=400&q=80",
-  "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&q=80",
-  "https://images.unsplash.com/photo-1563729768-6af784d6df1d?w=400&q=80",
-  "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=80",
-  "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&q=80",
-  "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80",
-  "https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?w=400&q=80",
-  "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",
-];
+  if (resolved.type === "url") {
+    return (
+      <img
+        src={resolved.src}
+        alt={product.name}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+    );
+  }
 
-function getProductImage(index: number) {
-  return PRODUCT_IMAGES[index % PRODUCT_IMAGES.length];
+  // Gradient fallback with initials
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={{
+        background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)`,
+      }}
+    >
+      <div className="text-center">
+        <span className="text-[32px] font-bold text-white/20 tracking-tight">
+          {resolved.initials}
+        </span>
+        <p className="text-[10px] text-white/15 uppercase tracking-wider mt-1">
+          {product.category.toUpperCase()}
+        </p>
+      </div>
+    </div>
+  );
 }
+
+const CAT_IMAGES: Record<string, string> = {
+  fb: getCategoryImage("fb"),
+  hk: getCategoryImage("hk"),
+  lin: getCategoryImage("lin"),
+  eng: getCategoryImage("eng"),
+  gra: getCategoryImage("gra"),
+  ffe: getCategoryImage("ffe"),
+  ose: getCategoryImage("ose"),
+  spa: getCategoryImage("spa"),
+  it: getCategoryImage("it"),
+  sec: getCategoryImage("sec"),
+};
 
 /* ═══════════════════════════════════════════
    FILTER CHIPS
@@ -327,11 +349,13 @@ export default function MarketplacePage() {
       </header>
 
       {/* Main Layout */}
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 flex gap-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
+        <MarketplaceBanner />
+        <div className="flex gap-6">
         {/* Left Sidebar — Categories */}
         <aside
           className={`${
-            mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"
+            mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a12] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"
           }`}
         >
           {mobileSidebarOpen && (
@@ -446,12 +470,7 @@ export default function MarketplacePage() {
                 >
                   {/* Image */}
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={getProductImage(i)}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    <ProductImage product={product} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                       <span
@@ -565,6 +584,8 @@ export default function MarketplacePage() {
               ))}
             </div>
           )}
+          <SupplierShowcase />
+        </div>
         </div>
       </div>
     </div>

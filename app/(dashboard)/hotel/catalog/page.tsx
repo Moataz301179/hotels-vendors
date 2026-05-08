@@ -135,7 +135,7 @@ export default function HotelCatalogPage() {
     <div className="min-h-screen bg-black text-white">
       {/* Hero */}
       <div className="relative overflow-hidden border-b border-white/[0.06]">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#DC143C]/10 via-transparent to-[#DC143C]/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#8B0A1E]/10 via-transparent to-[#8B0A1E]/5" />
         <div className="relative max-w-[1600px] mx-auto px-6 py-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -144,8 +144,8 @@ export default function HotelCatalogPage() {
             className="max-w-2xl"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-5 h-5 text-[#DC143C]" />
-              <span className="text-xs font-medium text-[#DC143C] uppercase tracking-wider">
+              <Package className="w-5 h-5 text-[#8B0A1E]" />
+              <span className="text-xs font-medium text-[#8B0A1E] uppercase tracking-wider">
                 Procurement Marketplace
               </span>
             </div>
@@ -190,12 +190,12 @@ export default function HotelCatalogPage() {
               {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
             </span>
             {activeCategoryLabel && (
-              <span className="px-2 py-0.5 rounded-md bg-[#DC143C]/15 border border-[#DC143C]/25 text-[#DC143C] text-xs font-medium">
+              <span className="px-2 py-0.5 rounded-md bg-[#8B0A1E]/15 border border-[#8B0A1E]/25 text-[#8B0A1E] text-xs font-medium">
                 {activeCategoryLabel}
               </span>
             )}
             {totalCartItems > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full bg-[#DC143C]/20 border border-[#DC143C]/30 text-[#DC143C] text-xs font-medium">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#8B0A1E]/20 border border-[#8B0A1E]/30 text-[#8B0A1E] text-xs font-medium">
                 {totalCartItems} in cart
               </span>
             )}
@@ -220,13 +220,13 @@ export default function HotelCatalogPage() {
             <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#DC143C] text-white" : "text-white/40 hover:text-white/70"}`}
+                className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#8B0A1E] text-white" : "text-white/40 hover:text-white/70"}`}
               >
                 <Grid3X3 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#DC143C] text-white" : "text-white/40 hover:text-white/70"}`}
+                className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#8B0A1E] text-white" : "text-white/40 hover:text-white/70"}`}
               >
                 <LayoutList className="w-4 h-4" />
               </button>
@@ -245,7 +245,7 @@ export default function HotelCatalogPage() {
             {activeCategory && (
               <button
                 onClick={() => setActiveCategory("")}
-                className="mt-4 px-4 py-2 rounded-lg bg-[#DC143C] text-white text-sm font-medium hover:bg-[#b91c1c] transition-colors"
+                className="mt-4 px-4 py-2 rounded-lg bg-[#8B0A1E] text-white text-sm font-medium hover:bg-[#6B0512] transition-colors"
               >
                 View All Products
               </button>

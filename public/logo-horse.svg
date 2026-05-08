@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#c8102e"/>
+  <!-- Stylized horse head facing right: angular geometric -->
+  <path d="M100 150 Q120 120 150 140 L200 130 Q220 140 210 160 L190 180 Q170 190 150 170 L120 180 Q100 170 100 150 Z" fill="#ffffff" stroke="#ffffff" stroke-width="8" stroke-linejoin="round"/>
+  <!-- Mane stripes -->
+  <path d="M120 130 L140 110 L160 125 L150 140" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M130 140 L155 125 L170 140 L160 155" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <!-- Ear -->
+  <path d="M160 120 Q175 105 185 120 L175 135 Q165 130 160 120" fill="#ffffff" stroke="#ffffff" stroke-width="6"/>
+  <!-- Eye -->
+  <circle cx="175" cy="145" r="8" fill="#333"/>
+  <circle cx="178" cy="143" r="3" fill="#000"/>
+  <!-- Snout/nostril -->
+  <ellipse cx="220" cy="155" rx="15" ry="10" fill="#f8f8f8" stroke="#ffffff" stroke-width="4"/>
+  <circle cx="230" cy="152" r="3" fill="#333"/>
+  <!-- Neck/jaw line -->
+  <path d="M100 160 Q80 180 70 200 L90 220 Q110 210 130 200" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+</svg>

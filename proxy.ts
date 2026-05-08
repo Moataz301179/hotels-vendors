@@ -23,6 +23,10 @@ const PUBLIC_PATHS = [
   "/register",
   "/catalog",
   "/eta-demo",
+  "/hotels",
+  "/marketplace",
+  "/suppliers",
+  "/about",
   "/api/v1/auth/login",
   "/api/v1/auth/register",
   "/api/v1/auth/refresh",
@@ -65,12 +69,18 @@ function isPublicPath(path: string): boolean {
 
 function isProtectedPath(path: string): boolean {
   return (
-    path.startsWith("/hotel") ||
-    path.startsWith("/supplier") ||
-    path.startsWith("/factoring") ||
-    path.startsWith("/shipping") ||
-    path.startsWith("/admin") ||
-    path.startsWith("/marketing")
+    path.startsWith("/hotel/") ||
+    path === "/hotel" ||
+    path.startsWith("/supplier/") ||
+    path === "/supplier" ||
+    path.startsWith("/factoring/") ||
+    path === "/factoring" ||
+    path.startsWith("/shipping/") ||
+    path === "/shipping" ||
+    path.startsWith("/admin/") ||
+    path === "/admin" ||
+    path.startsWith("/marketing/") ||
+    path === "/marketing"
   );
 }
 

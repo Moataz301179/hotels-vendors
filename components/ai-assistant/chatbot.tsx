@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, User, Bot, Loader2 } from "lucide-react";
+import {
+  MessageCircle, X, Send, User, Bot, Loader2, Sparkles,
+  ShoppingCart, Package, Landmark, Truck, ShieldCheck, BarChart3,
+} from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -9,12 +12,83 @@ interface Message {
   timestamp: Date;
 }
 
-export function ChatbotWidget() {
+type RoleMode = "hotel" | "supplier" | "factoring" | "shipping" | "admin" | "marketing";
+
+const ROLE_CONFIG: Record<RoleMode, { label: string; color: string; icon: React.ElementType; prompts: string[] }> = {
+  hotel: {
+    label: "Hotel Mode",
+    color: "text-emerald-400",
+    icon: ShoppingCart,
+    prompts: [
+      "Find F&B suppliers in 6th of October",
+      "Check status of my latest order",
+      "What's my budget utilization?",
+      "Suggest reorder for low-stock items",
+    ],
+  },
+  supplier: {
+    label: "Supplier Mode",
+    color: "text-amber-400",
+    icon: Package,
+    prompts: [
+      "Forecast demand for next month",
+      "Which products need price adjustment?",
+      "Summarize my pending orders",
+      "Generate invoice from delivered orders",
+    ],
+  },
+  factoring: {
+    label: "Factoring Mode",
+    color: "text-purple-400",
+    icon: Landmark,
+    prompts: [
+      "Assess risk of top 5 hotels",
+      "Portfolio yield this quarter",
+      "Flag overdue invoices",
+      "Liquidity forecast for next 30 days",
+    ],
+  },
+  shipping: {
+    label: "Logistics Mode",
+    color: "text-cyan-400",
+    icon: Truck,
+    prompts: [
+      "Optimize tomorrow's North Coast route",
+      "Fuel cost forecast for May",
+      "Delivery bottleneck alerts",
+      "Fleet utilization summary",
+    ],
+  },
+  admin: {
+    label: "Admin Mode",
+    color: "text-[#DC143C]",
+    icon: ShieldCheck,
+    prompts: [
+      "System health summary",
+      "Fee anomaly detection",
+      "Cross-tenant audit flags",
+      "Swarm agent status overview",
+    ],
+  },
+  marketing: {
+    label: "Growth Mode",
+    color: "text-pink-400",
+    icon: BarChart3,
+    prompts: [
+      "Lead pipeline summary",
+      "Campaign performance",
+      "Supplier acquisition targets",
+      "Social media analytics",
+    ],
+  },
+};
+
+export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Welcome to Hotels Vendors! I'm your AI assistant. Ask me anything about the platform, your orders, or how to get started.",
+      content: "Welcome to Hotels Vendors. I'm your Intelligence Engine. Ask me anything about your workspace, orders, or market insights.",
       timestamp: new Date(),
     },
   ]);
@@ -22,16 +96,19 @@ export function ChatbotWidget() {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const config = ROLE_CONFIG[mode];
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  async function handleSend() {
-    if (!input.trim() || loading) return;
+  async function handleSend(text?: string) {
+    const msg = text || input;
+    if (!msg.trim() || loading) return;
 
-    const userMsg: Message = { role: "user", content: input.trim(), timestamp: new Date() };
+    const userMsg: Message = { role: "user", content: msg.trim(), timestamp: new Date() };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
@@ -40,11 +117,11 @@ export function ChatbotWidget() {
       const res = await fetch("/api/v1/ai/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: userMsg.content }),
+        body: JSON.stringify({ question: msg.trim(), role: mode }),
       });
 
       const json = await res.json();
-      const reply = json.data?.answer || json.answer || "I'm here to help. Could you provide more details?";
+      const reply = json.data?.answer || json.answer || "I'm processing your request. Could you provide more context?";
 
       setMessages((prev) => [
         ...prev,
@@ -53,7 +130,7 @@ export function ChatbotWidget() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Sorry, I'm having trouble connecting right now. Please try again shortly.", timestamp: new Date() },
+        { role: "assistant", content: "Connection issue detected. Please retry in a moment.", timestamp: new Date() },
       ]);
     } finally {
       setLoading(false);
@@ -66,30 +143,33 @@ export function ChatbotWidget() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--accent-500)] text-white shadow-lg hover:bg-[var(--accent-600)] transition-all flex items-center justify-center hover:scale-110"
-          title="AI Assistant"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#DC143C] text-white shadow-lg shadow-[#DC143C]/20 hover:bg-[#b91c1c] transition-all flex items-center justify-center hover:scale-110"
+          title="Smart Assistant"
         >
-          <MessageCircle size={24} />
+          <Sparkles size={22} />
         </button>
       )}
 
       {/* Chat Window */}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] glass-card rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-[var(--border-default)]">
+        <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-4rem)] bg-[#0f0f0f] rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-white/[0.08]">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--surface-raised)]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[var(--accent-500)]/15 flex items-center justify-center">
-                <Bot size={16} className="text-[var(--accent-400)]" />
+              <div className="w-8 h-8 rounded-full bg-[#DC143C]/15 flex items-center justify-center">
+                <Bot size={16} className="text-[#DC143C]" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">HV Assistant</p>
-                <p className="text-[10px] text-[var(--foreground-muted)]">AI-powered support</p>
+                <p className="text-sm font-semibold text-white">Smart Assistant</p>
+                <p className="text-[10px] text-white/40 flex items-center gap-1">
+                  <span className={`w-1.5 h-1.5 rounded-full ${config.color.replace("text-", "bg-")}`} />
+                  {config.label}
+                </p>
               </div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="p-1.5 rounded-lg hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)] hover:text-white transition-colors"
+              className="p-1.5 rounded-lg hover:bg-white/5 text-white/30 hover:text-white transition-colors"
             >
               <X size={16} />
             </button>
@@ -100,14 +180,14 @@ export function ChatbotWidget() {
             {messages.map((m, i) => (
               <div key={i} className={`flex gap-2.5 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                  m.role === "user" ? "bg-[var(--accent-500)]" : "bg-[var(--surface-raised)] border border-[var(--border-default)]"
+                  m.role === "user" ? "bg-[#DC143C]" : "bg-white/[0.04] border border-white/[0.08]"
                 }`}>
-                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[var(--accent-400)]" />}
+                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[#DC143C]" />}
                 </div>
                 <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "bg-[var(--accent-500)] text-white rounded-tr-sm"
-                    : "bg-[var(--surface-raised)] border border-[var(--border-default)] text-[var(--foreground-secondary)] rounded-tl-sm"
+                    ? "bg-[#DC143C] text-white rounded-tr-sm"
+                    : "bg-white/[0.04] border border-white/[0.08] text-white/70 rounded-tl-sm"
                 }`}>
                   {m.content}
                 </div>
@@ -115,35 +195,49 @@ export function ChatbotWidget() {
             ))}
             {loading && (
               <div className="flex gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-[var(--surface-raised)] border border-[var(--border-default)] flex items-center justify-center">
-                  <Bot size={12} className="text-[var(--accent-400)]" />
+                <div className="w-7 h-7 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
+                  <Bot size={12} className="text-[#DC143C]" />
                 </div>
-                <div className="bg-[var(--surface-raised)] border border-[var(--border-default)] px-3 py-2 rounded-xl rounded-tl-sm">
-                  <Loader2 size={16} className="animate-spin text-[var(--foreground-muted)]" />
+                <div className="bg-white/[0.04] border border-white/[0.08] px-3 py-2 rounded-xl rounded-tl-sm">
+                  <Loader2 size={16} className="animate-spin text-white/30" />
                 </div>
               </div>
             )}
           </div>
 
+          {/* Prompt Chips */}
+          <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5 border-t border-white/[0.04]">
+            {config.prompts.map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => handleSend(prompt)}
+                className="px-2 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-[11px] text-white/40 hover:text-white/70 hover:border-white/[0.12] transition-colors"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+
           {/* Input */}
-          <div className="px-3 py-3 border-t border-[var(--border-subtle)] bg-[var(--surface-raised)]">
+          <div className="px-3 py-3 border-t border-white/[0.06] bg-white/[0.02]">
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask anything..."
-                className="flex-1 h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border-default)] text-sm text-white placeholder:text-[var(--foreground-muted)] focus:outline-none focus:border-[var(--accent-500)]"
+                placeholder="Ask anything about your workspace..."
+                className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#DC143C]/40 transition-colors"
               />
               <button
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-lg bg-[var(--accent-500)] text-white flex items-center justify-center hover:bg-[var(--accent-600)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-10 h-10 rounded-lg bg-[#DC143C] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Send size={16} />
               </button>
             </div>
+            <p className="text-[9px] text-white/15 text-center mt-1.5">Powered by Hotels Vendors Intelligence Engine</p>
           </div>
         </div>
       )}

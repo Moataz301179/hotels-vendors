@@ -25,8 +25,8 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
 
-const RED = "#DC143C";
-const RED_DIM = "rgba(220,20,60,0.15)";
+const RED = "#8B0A1E";
+const RED_DIM = "rgba(139,10,30,0.15)";
 const GOLD = "#e1a95f";
 const GOLD_DIM = "rgba(225,169,95,0.15)";
 

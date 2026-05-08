@@ -6,6 +6,8 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
+  --brand-red: #c8102e;
+  --header-bg: var(--brand-red);
   /* ── Background Layers ──
      Blue-purple undertone. Never pure black (#000000).
      Creates atmospheric depth like a dimly lit room. */

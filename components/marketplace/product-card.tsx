@@ -5,7 +5,42 @@ import Image from "next/image";
 import { Star, ShoppingCart, Heart, Eye, Package, MapPin, Scale } from "lucide-react";
 import { motion } from "framer-motion";
 import { getCategoryById } from "@/lib/marketplace/categories";
+import { getProductImage } from "@/lib/marketplace/product-images";
 import { useCompare } from "./compare-context";
+
+function ProductImageDisplay({ name, category }: { name: string; category: string }) {
+  const resolved = getProductImage({ name, category });
+
+  if (resolved.type === "url") {
+    return (
+      <Image
+        src={resolved.src}
+        alt={name}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+    );
+  }
+
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={{
+        background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)`,
+      }}
+    >
+      <div className="text-center">
+        <span className="text-[28px] font-bold text-white/20 tracking-tight">
+          {resolved.initials}
+        </span>
+        <p className="text-[9px] text-white/12 uppercase tracking-wider mt-1">
+          {category.toUpperCase()}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 interface ProductCardProps {
   id: string;
@@ -103,7 +138,7 @@ export function ProductCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-[#DC143C]/40 transition-all duration-300"
+      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-[#8B0A1E]/40 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ y: -4 }}
@@ -113,19 +148,7 @@ export function ProductCard({
     >
       {/* Image Area */}
       <div className="relative aspect-[4/3] bg-black overflow-hidden">
-        {images && images.length > 0 ? (
-          <Image
-            src={images[0]}
-            alt={name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#DC143C]/10 to-transparent">
-            <Package className="w-12 h-12 text-white/10" />
-          </div>
-        )}
+        <ProductImageDisplay name={name} category={category} />
 
         {/* Overlays */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
@@ -133,7 +156,7 @@ export function ProductCard({
             {stockStatus.label}
           </span>
           {supplierTier === "PREMIER" && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#DC143C]/20 text-[#ff7a33] border border-[#DC143C]/30">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#8B0A1E]/20 text-[#ff7a33] border border-[#8B0A1E]/30">
               Premier
             </span>
           )}
@@ -150,7 +173,7 @@ export function ProductCard({
             onClick={() => setIsWishlisted(!isWishlisted)}
             className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
               isWishlisted
-                ? "bg-[#DC143C] border-[#DC143C] text-white"
+                ? "bg-[#8B0A1E] border-[#8B0A1E] text-white"
                 : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
             }`}
           >
@@ -167,7 +190,7 @@ export function ProductCard({
               onClick={() => inCompare ? removeItem(compareData.id) : addItem(compareData)}
               className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
                 inCompare
-                  ? "bg-[#DC143C] border-[#DC143C] text-white"
+                  ? "bg-[#8B0A1E] border-[#8B0A1E] text-white"
                   : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
               }`}
             >
@@ -256,7 +279,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart?.(id, qty)}
             disabled={stockQuantity === 0}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#DC143C] hover:bg-[#b91c1c] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#8B0A1E] hover:bg-[#6B0512] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Add to Cart</span>
