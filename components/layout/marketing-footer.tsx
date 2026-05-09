@@ -7,9 +7,9 @@ export function MarketingFooter() {
   return (
     <footer className="bg-[#050505] border-t border-white/[0.06]">
       <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <Image
                 src="/logo-icon-white.png"
@@ -29,8 +29,7 @@ export function MarketingFooter() {
               </div>
             </div>
             <p className="text-[12px] text-white/30 leading-relaxed max-w-xs">
-              The intelligent procurement platform for Egyptian hospitality.
-              Tenant-isolated, ETA-native, and governed by Authority Matrix.
+              Egypt's first AI-powered digital procurement hub built exclusively for the hospitality sector.
             </p>
           </div>
 
@@ -40,9 +39,25 @@ export function MarketingFooter() {
               Platform
             </h4>
             <ul className="space-y-2.5">
-              {["Marketplace", "For Hotels", "For Suppliers", "Logistics", "Factoring", "ETA Compliance"].map((item) => (
+              {["How it Works", "Features", "Security", "API Docs"].map((item) => (
                 <li key={item}>
                   <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Marketplace */}
+          <div>
+            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+              Marketplace
+            </h4>
+            <ul className="space-y-2.5">
+              {["Browse Products", "Categories", "Top Suppliers", "Deals & Offers"].map((item) => (
+                <li key={item}>
+                  <Link href="/marketplace" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -56,7 +71,7 @@ export function MarketingFooter() {
               Company
             </h4>
             <ul className="space-y-2.5">
-              {["About", "Pricing", "Careers", "Contact", "Blog", "Press"].map((item) => (
+              {["About Us", "Careers", "Press", "Partners", "Contact"].map((item) => (
                 <li key={item}>
                   <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
                     {item}
@@ -72,7 +87,7 @@ export function MarketingFooter() {
               Legal
             </h4>
             <ul className="space-y-2.5">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy", "Security"].map((item) => (
+              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
                 <li key={item}>
                   <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
                     {item}
@@ -85,7 +100,7 @@ export function MarketingFooter() {
 
         <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-white/20">
-            &copy; 2026 Hotels Vendors. All rights reserved.
+            &copy; 2026 Hotels Vendors. All rights reserved. Cairo, Egypt.
           </p>
           <div className="flex items-center gap-6">
             {["LinkedIn", "Twitter", "Facebook"].map((social) => (
