@@ -25,6 +25,14 @@ import {
   Megaphone,
   ShieldCheck,
   Store,
+  FileCheck,
+  Scale,
+  CreditCard,
+  Calendar,
+  ShoppingBag,
+  Bot,
+  BarChart3,
+  ClipboardList,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -70,9 +78,36 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "PLATFORM",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+        { icon: BarChart3, label: "Analytics", href: "/analytics" },
+        { icon: Bot, label: "AI Agents", href: "/ai-agents" },
         { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
+      ],
+    },
+    {
+      section: "OPERATIONS",
+      items: [
+        { icon: ClipboardList, label: "Procurement", href: "/procurement" },
+        { icon: ShoppingBag, label: "Orders", href: "/orders" },
+        { icon: Truck, label: "Shipping", href: "/shipping" },
+        { icon: Calendar, label: "Scheduler", href: "/scheduler" },
+        { icon: FileCheck, label: "ETA Center", href: "/eta" },
+      ],
+    },
+    {
+      section: "FINANCE",
+      items: [
+        { icon: Landmark, label: "Factoring", href: "/factoring" },
+        { icon: CreditCard, label: "Payments", href: "/payments" },
+      ],
+    },
+    {
+      section: "GOVERNANCE",
+      items: [
+        { icon: Scale, label: "Disputes", href: "/dispute" },
+        { icon: Shield, label: "Security", href: "/security" },
+        { icon: Settings, label: "Settings", href: "/settings" },
       ],
     },
     {

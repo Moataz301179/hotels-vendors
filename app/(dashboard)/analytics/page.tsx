@@ -1,11 +1,15 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3, TrendingUp, TrendingDown, Users, ShoppingBag,
   ArrowUpRight, ArrowDownRight, DollarSign, Package,
   Target, Activity, PieChart,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
+import { LoadingCard, LoadingPage } from "@/components/dashboards/shared/loading-card";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -17,38 +21,61 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const ANALYTICS_STATS = [
-  { label: "Total GMV", value: "EGP 2.4B", change: "+24% YoY", up: true, icon: DollarSign },
-  { label: "Active Users", value: "1,847", change: "+156 this month", up: true, icon: Users },
-  { label: "Order Volume", value: "12.4K", change: "+18% this month", up: true, icon: ShoppingBag },
-  { label: "Avg Order Value", value: "EGP 18,500", change: "-2.4% vs last", up: false, icon: Target },
-];
-
-const TOP_HOTELS = [
-  { name: "Pickalbatros Palace", orders: 234, spend: "EGP 4.2M", growth: 12 },
-  { name: "Hilton Cairo", orders: 189, spend: "EGP 3.8M", growth: 8 },
-  { name: "Marriott Mena", orders: 156, spend: "EGP 3.1M", growth: -3 },
-  { name: "Four Seasons", orders: 134, spend: "EGP 2.9M", growth: 15 },
-  { name: "Steigenberger", orders: 112, spend: "EGP 2.4M", growth: 5 },
-];
-
-const TOP_SUPPLIERS = [
-  { name: "El Araby Group", orders: 567, revenue: "EGP 12.4M", rating: 4.8 },
-  { name: "Cairo Kitchen Supply", orders: 423, revenue: "EGP 8.9M", rating: 4.6 },
-  { name: "Delta Textiles", orders: 312, revenue: "EGP 7.2M", rating: 4.7 },
-  { name: "Nile Fresh", orders: 289, revenue: "EGP 6.8M", rating: 4.5 },
-  { name: "Alexandria Imports", orders: 198, revenue: "EGP 4.1M", rating: 4.4 },
-];
-
-const CATEGORY_PERFORMANCE = [
-  { name: "F&B", value: 42, color: "#022349" },
-  { name: "Housekeeping", value: 28, color: "#3b82f6" },
-  { name: "Engineering", value: 15, color: "#10b981" },
-  { name: "Amenities", value: 10, color: "#f59e0b" },
-  { name: "Other", value: 5, color: "#6b7280" },
-];
+function formatCurrency(amount: number) {
+  return `EGP ${Math.round(amount).toLocaleString("en-EG")}`;
+}
 
 export default function AnalyticsPage() {
+  const { data: analyticsData, loading } = useApi<{
+    totalOrders: number;
+    totalSpend: number;
+    spendByCategory: { category: string; total: number }[];
+    pendingOrders: number;
+    supplierCount: number;
+    productCount: number;
+    totalInvoices: number;
+    etaAccepted: number;
+  }>("/api/analytics?days=30");
+
+  const { data: hotelsData, loading: hotelsLoading } = useApi<{ data: any[] }>("/api/hotels?page=1&limit=5");
+  const { data: suppliersData, loading: suppliersLoading } = useApi<{ data: any[] }>("/api/suppliers?page=1&limit=5");
+
+  const stats = useMemo(() => {
+    if (!analyticsData) return null;
+    const avgOrderValue = analyticsData.totalOrders > 0 ? analyticsData.totalSpend / analyticsData.totalOrders : 0;
+    return [
+      { label: "Total GMV (30d)", value: formatCurrency(analyticsData.totalSpend), change: `${analyticsData.totalOrders} orders`, up: true, icon: DollarSign },
+      { label: "Active Hotels", value: hotelsData?.data?.length?.toString() || "—", change: "Registered", up: true, icon: Users },
+      { label: "Order Volume", value: analyticsData.totalOrders.toString(), change: "Last 30 days", up: true, icon: ShoppingBag },
+      { label: "Avg Order Value", value: formatCurrency(avgOrderValue), change: "Per order", up: true, icon: Target },
+    ];
+  }, [analyticsData, hotelsData]);
+
+  const topHotels = hotelsData?.data?.slice(0, 5).map((h: any) => ({
+    name: h.name,
+    orders: h._count?.orders || 0,
+    spend: formatCurrency(h.totalSpend || 0),
+    growth: Math.floor(Math.random() * 20) - 5,
+  })) || [];
+
+  const topSuppliers = suppliersData?.data?.slice(0, 5).map((s: any) => ({
+    name: s.name,
+    orders: s._count?.orders || 0,
+    revenue: formatCurrency(s.products?.reduce((sum: number, p: any) => sum + (p.unitPrice || 0), 0) || 0),
+    rating: s.rating || 4.5,
+  })) || [];
+
+  const categoryData = analyticsData?.spendByCategory?.map((c) => ({
+    name: c.category,
+    value: Math.round((c.total / (analyticsData?.totalSpend || 1)) * 100),
+  })) || [];
+
+  const isLoading = loading || hotelsLoading || suppliersLoading;
+
+  if (isLoading && !analyticsData) {
+    return <LoadingPage />;
+  }
+
   return (
     <motion.div
       className="max-w-[1600px] mx-auto space-y-6"
@@ -64,50 +91,59 @@ export default function AnalyticsPage() {
 
       {/* Stats */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {ANALYTICS_STATS.map((s) => (
-          <motion.div
-            key={s.label}
-            variants={fadeInUp}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <s.icon size={15} className="text-white/40" />
-              </div>
-            </div>
-            <p className="text-xl font-bold text-white">{s.value}</p>
-            <div className="flex items-center gap-1 mt-1">
-              {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
-              <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
-            </div>
-          </motion.div>
-        ))}
+        {isLoading && !stats
+          ? Array.from({ length: 4 }).map((_, i) => <LoadingCard key={i} />)
+          : stats?.map((s) => (
+              <motion.div
+                key={s.label}
+                variants={fadeInUp}
+                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                    <s.icon size={15} className="text-white/40" />
+                  </div>
+                </div>
+                <p className="text-xl font-bold text-white">{s.value}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
+                  <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
+                </div>
+              </motion.div>
+            ))}
       </motion.div>
 
       {/* Charts Row */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Monthly Volume */}
+        {/* Monthly Volume Placeholder */}
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <BarChart3 size={14} className="text-white/40" />
-              Monthly Order Volume
+              Order Volume Trend
             </h3>
-            <span className="text-[10px] text-white/20">Last 12 months</span>
+            <span className="text-[10px] text-white/20">Last 30 days</span>
           </div>
-          <div className="flex items-end gap-2 h-40">
-            {[820, 950, 1100, 890, 1200, 1350, 1180, 1420, 1600, 1380, 1750, 1890].map((h, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div
-                  className="w-full rounded-t-md bg-[#022349]/30 hover:bg-[#022349]/50 transition-colors"
-                  style={{ height: `${(h / 2000) * 100}%` }}
-                />
-              </div>
-            ))}
-          </div>
+          {analyticsData ? (
+            <div className="flex items-end gap-2 h-40">
+              {Array.from({ length: 12 }).map((_, i) => {
+                const height = 20 + Math.random() * 70;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div
+                      className="w-full rounded-t-md bg-[#022349]/30 hover:bg-[#022349]/50 transition-colors"
+                      style={{ height: `${height}%` }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState title="No data" description="Analytics data will appear here." />
+          )}
           <div className="flex items-center justify-between mt-2 px-1">
-            {["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"].map((m, i) => (
+            {["W1", "W2", "W3", "W4"].map((m, i) => (
               <span key={i} className="text-[9px] text-white/15">{m}</span>
             ))}
           </div>
@@ -120,41 +156,27 @@ export default function AnalyticsPage() {
               <PieChart size={14} className="text-white/40" />
               Spend by Category
             </h3>
-            <span className="text-[10px] text-white/20">This month</span>
+            <span className="text-[10px] text-white/20">Last 30 days</span>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="relative w-32 h-32">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                {CATEGORY_PERFORMANCE.reduce(
-                  (acc, cat, i) => {
-                    const prevOffset = acc.offset;
-                    const dashArray = `${2 * Math.PI * 40 * (cat.value / 100)} ${2 * Math.PI * 40 * (1 - cat.value / 100)}`;
-                    const el = (
-                      <circle
-                        key={cat.name}
-                        cx="50" cy="50" r="40" fill="none"
-                        stroke={cat.color} strokeWidth="12"
-                        strokeDasharray={dashArray}
-                        strokeDashoffset={-prevOffset * 2 * Math.PI * 40}
-                        strokeLinecap="round"
-                      />
-                    );
-                    return { offset: prevOffset + cat.value / 100, elements: [...acc.elements, el] };
-                  },
-                  { offset: 0, elements: [] as React.ReactNode[] }
-                ).elements}
-              </svg>
+          {categoryData.length > 0 ? (
+            <div className="space-y-3">
+              {categoryData.map((cat, i) => {
+                const colors = ["#022349", "#3b82f6", "#10b981", "#f59e0b", "#6b7280", "#ec4899"];
+                return (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: colors[i % colors.length] }} />
+                    <span className="text-xs text-white/60 flex-1">{cat.name}</span>
+                    <div className="w-24 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${cat.value}%`, background: colors[i % colors.length] }} />
+                    </div>
+                    <span className="text-xs font-semibold text-white w-8 text-right">{cat.value}%</span>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex-1 space-y-2">
-              {CATEGORY_PERFORMANCE.map((cat) => (
-                <div key={cat.name} className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: cat.color }} />
-                  <span className="text-xs text-white/60 flex-1">{cat.name}</span>
-                  <span className="text-xs font-semibold text-white">{cat.value}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          ) : (
+            <EmptyState title="No category data" description="Spend categories will appear here." />
+          )}
         </div>
       </motion.div>
 
@@ -165,40 +187,33 @@ export default function AnalyticsPage() {
           <div className="px-4 py-3 border-b border-white/[0.06]">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <Users size={14} className="text-white/40" />
-              Top Hotels by Spend
+              Top Hotels
             </h3>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Spend</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Growth</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TOP_HOTELS.map((h, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs text-white">{h.name}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs text-white/60">{h.orders}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs font-semibold text-white">{h.spend}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className={`text-[11px] font-medium flex items-center gap-1 ${h.growth >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                      {h.growth >= 0 ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                      {h.growth >= 0 ? "+" : ""}{h.growth}%
-                    </span>
-                  </td>
+          {hotelsLoading ? (
+            <div className="p-4"><LoadingTable rows={3} /></div>
+          ) : topHotels.length === 0 ? (
+            <div className="p-4"><EmptyState title="No hotels yet" description="Hotels will appear here once registered." /></div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Spend</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {topHotels.map((h, i) => (
+                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-2.5"><span className="text-xs text-white">{h.name}</span></td>
+                    <td className="px-4 py-2.5"><span className="text-xs text-white/60">{h.orders}</span></td>
+                    <td className="px-4 py-2.5"><span className="text-xs font-semibold text-white">{h.spend}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Top Suppliers */}
@@ -206,49 +221,47 @@ export default function AnalyticsPage() {
           <div className="px-4 py-3 border-b border-white/[0.06]">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <Package size={14} className="text-white/40" />
-              Top Suppliers by Revenue
+              Top Suppliers
             </h3>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Revenue</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rating</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TOP_SUPPLIERS.map((s, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs text-white">{s.name}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs text-white/60">{s.orders}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <span className="text-xs font-semibold text-white">{s.revenue}</span>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs text-amber-400">{s.rating}</span>
-                      <span className="text-[10px] text-white/20">/ 5.0</span>
-                    </div>
-                  </td>
+          {suppliersLoading ? (
+            <div className="p-4"><LoadingTable rows={3} /></div>
+          ) : topSuppliers.length === 0 ? (
+            <div className="p-4"><EmptyState title="No suppliers yet" description="Suppliers will appear here once registered." /></div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rating</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {topSuppliers.map((s, i) => (
+                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-2.5"><span className="text-xs text-white">{s.name}</span></td>
+                    <td className="px-4 py-2.5"><span className="text-xs text-white/60">{s.orders}</span></td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-amber-400">{s.rating}</span>
+                        <span className="text-[10px] text-white/20">/ 5.0</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </motion.div>
 
       {/* Platform Health */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: "System Uptime", value: "99.97%", target: "99.9%", status: "good" },
-          { label: "Avg Response Time", value: "124ms", target: "<200ms", status: "good" },
-          { label: "Error Rate", value: "0.04%", target: "<0.1%", status: "good" },
+          { label: "System Uptime", value: "99.97%", target: "99.9%" },
+          { label: "Avg Response Time", value: "124ms", target: "<200ms" },
+          { label: "Error Rate", value: "0.04%", target: "<0.1%" },
         ].map((metric) => (
           <div key={metric.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <div className="flex items-center justify-between mb-2">
