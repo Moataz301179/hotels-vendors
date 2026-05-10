@@ -283,6 +283,12 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
     throw new Error(`Invoice not found for ETA UUID: ${payload.uuid}`);
   }
 
+  // Idempotency check: skip if this exact callback was already processed
+  const log = invoice.submissionLog ? JSON.parse(invoice.submissionLog) : {};
+  if (log.lastCallback?.uuid === payload.uuid && log.lastCallback?.status === payload.status) {
+    return; // Already processed this exact callback
+  }
+
   // Map ETA status to internal status
   const etaStatusMap: Record<string, EtaStatus> = {
     Submitted: "SUBMITTING",

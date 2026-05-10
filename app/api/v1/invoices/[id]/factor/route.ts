@@ -33,7 +33,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   }
 
   // Assess risk
-  const risk = await assessRisk(invoice.hotelId);
+  const risk = await assessRisk(invoice.hotelId, auth.tenantId);
 
   // Inquire partners
   const { bestOffer, allOffers } = await inquireAll({

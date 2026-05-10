@@ -6,6 +6,6 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "admin:read");
 
-  const data = await getRiskHeatmapData();
+  const data = await getRiskHeatmapData(auth.tenantId);
   return success({ heatmap: data });
 });

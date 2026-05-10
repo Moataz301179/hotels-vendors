@@ -90,6 +90,9 @@ export function createOrderWorker(): Worker {
           if (order.status !== "APPROVED") {
             throw new Error(`Cannot confirm order in status ${order.status}`);
           }
+          if (!order.paymentGuaranteed) {
+            throw new Error("Payment guarantee required before confirmation");
+          }
 
           await prisma.order.update({
             where: { id: orderId },

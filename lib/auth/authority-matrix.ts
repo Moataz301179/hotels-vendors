@@ -217,7 +217,7 @@ export async function evaluateAuthority(
 ): Promise<AuthorityEvaluationResult> {
   // 1. Load order with all dimensions
   const order = await prisma.order.findUnique({
-    where: { id: orderId },
+    where: { id: orderId, tenantId: ctx.tenantId },
     include: {
       hotel: { include: { properties: true, creditFacilities: true } },
       supplier: true,
@@ -237,7 +237,7 @@ export async function evaluateAuthority(
   }
 
   // 2. Re-evaluate hotel risk (fresh assessment)
-  const riskAssessment = await assessRisk(order.hotelId);
+  const riskAssessment = await assessRisk(order.hotelId, ctx.tenantId);
 
   // 3. Load active rules (global + tenant-specific)
   const dbRules = await prisma.authorityRule.findMany({
@@ -271,7 +271,7 @@ export async function evaluateAuthority(
     if (rule.requiresPaymentGuarantee && !order.paymentGuaranteed) {
       // For HIGH/CRITICAL risk, offer Smart Fixes
       if (riskAssessment.riskTier === "HIGH" || riskAssessment.riskTier === "CRITICAL") {
-        const smartFixes = await generateSmartFixes(orderId, order.hotelId, order.total);
+        const smartFixes = await generateSmartFixes(orderId, order.hotelId, order.total, ctx.tenantId);
         return {
           action: "SMART_FIX_REQUIRED",
           rule,

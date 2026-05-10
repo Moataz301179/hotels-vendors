@@ -69,7 +69,7 @@ export function createFactoringWorker(): Worker {
 
       switch (action) {
         case "INQUIRE": {
-          const risk = await assessRisk(invoice.hotelId);
+          const risk = await assessRisk(invoice.hotelId, tenantId);
 
           const { bestOffer } = await inquireAll({
             hotelTaxId: invoice.hotel.taxId,
@@ -191,6 +191,27 @@ export function createFactoringWorker(): Worker {
                 description: `Factoring partner fee — ${invoice.invoiceNumber}`,
               },
             ],
+          });
+
+          // Auto-post factoring journal: Dr Bank / Cr Factoring Liability
+          const journalLines = [
+            { accountCode: "1100", accountName: "Bank / Cash", debit: funding.disbursedAmount, credit: 0 },
+            { accountCode: "2300", accountName: "Factoring Liability", debit: 0, credit: funding.disbursedAmount },
+          ];
+          await prisma.journalEntry.create({
+            data: {
+              tenantId,
+              entryNumber: `JE-FAC-${invoice.invoiceNumber}-${Date.now()}`,
+              date: new Date(),
+              sourceType: "ADJUSTMENT",
+              sourceId: invoice.id,
+              description: `Factoring disbursement — ${funding.transactionReference}`,
+              lines: JSON.stringify(journalLines),
+              totalDebit: funding.disbursedAmount,
+              totalCredit: funding.disbursedAmount,
+              status: "POSTED",
+              hotelId: invoice.hotelId,
+            },
           });
 
           // Update credit facility utilization

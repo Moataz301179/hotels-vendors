@@ -12,6 +12,7 @@ import { prisma } from "@/lib/prisma";
 import { etaClient } from "./client";
 import { validateForSubmission } from "./validator";
 import { recordSwarmEvent } from "@/lib/swarm/monitoring";
+import { moveToDeadLetter } from "@/lib/queues/dead-letter";
 
 // ── Queue ──
 export const etaQueue = new Queue("eta-submission", {
@@ -41,13 +42,13 @@ export async function addEtaSubmissionJob(
     attempts: 3,
     backoff: { type: "exponential", delay: 10000 },
     removeOnComplete: { count: 100 },
-    removeOnFail: { count: 50 },
+    removeOnFail: false,
   });
 }
 
 // ── Worker ──
 export function createEtaWorker(): Worker {
-  return new Worker<EtaJobPayload>(
+  const worker = new Worker<EtaJobPayload>(
     "eta-submission",
     async (job) => {
       const { invoiceId, tenantId, userId, platformRole } = job.data;
@@ -171,6 +172,19 @@ export function createEtaWorker(): Worker {
     },
     { connection: getRedisConnection(), concurrency: 2 }
   );
+
+  worker.on("failed", async (job, err) => {
+    if (!job) return;
+    await moveToDeadLetter("eta-submission", job, err.message);
+    await recordSwarmEvent("eta_dlq_moved", "ERROR", {
+      jobId: job.id,
+      invoiceId: job.data.invoiceId,
+      tenantId: job.data.tenantId,
+      reason: err.message,
+    });
+  });
+
+  return worker;
 }
 
 // ── Dead Letter Handler ──

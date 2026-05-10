@@ -37,7 +37,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error(`Factoring blocked: ${etaValid.message}`, 422);
   }
 
-  const risk = await assessRisk(invoice.hotelId);
+  const risk = await assessRisk(invoice.hotelId, auth.tenantId);
 
   const { bestOffer, allOffers } = await inquireAll({
     hotelTaxId: invoice.hotel.taxId,

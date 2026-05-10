@@ -1,6 +1,6 @@
 /**
- * Swarm Model Router v4 — Grok Primary Architecture
- * xAI Grok (fast/cheap) → Ollama (local/embeddings) → OpenRouter (universal backup)
+ * Swarm Model Router v4 — Ollama Primary Architecture
+ * Ollama (local/zero-cost) → xAI Grok (fast/cheap) → OpenRouter (universal backup)
  * Circuit breaker pattern for resilience
  */
 
@@ -27,19 +27,7 @@ function buildModelConfigs(): ModelConfig[] {
   const configs: ModelConfig[] = [];
   const appUrl = process.env.APP_URL || "https://hotelsvendors.com";
 
-  // ── 1. XAI GROK (Primary — fast reasoning, $410 credit) ──
-  if (process.env.XAI_API_KEY) {
-    configs.push({
-      provider: "xai",
-      model: "grok-4-1-fast",
-      apiKey: process.env.XAI_API_KEY,
-      baseUrl: "https://api.x.ai/v1/chat/completions",
-      isPrimary: true,
-      isFallback: false,
-    });
-  }
-
-  // ── 2. OLLAMA (Local fallback + embeddings — zero cost) ──
+  // ── 1. OLLAMA (Primary — local/zero cost, no rate limits) ──
   const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
   configs.push({
@@ -47,12 +35,37 @@ function buildModelConfigs(): ModelConfig[] {
     model: ollamaModel,
     apiKey: undefined,
     baseUrl: `${ollamaUrl}/api/chat`,
-    isPrimary: false,
-    isFallback: true,
+    isPrimary: true,
+    isFallback: false,
     isOllama: true,
   });
 
-  // ── 3. GROQ (Free tier backup — 20 req/min, 1M tok/day) ──
+  // ── 2. XAI GROK (Fast fallback — $410 credit) ──
+  if (process.env.XAI_API_KEY) {
+    configs.push({
+      provider: "xai",
+      model: "grok-4-1-fast",
+      apiKey: process.env.XAI_API_KEY,
+      baseUrl: "https://api.x.ai/v1/chat/completions",
+      isPrimary: false,
+      isFallback: true,
+    });
+  }
+
+  // ── 3. OLLAMA EMBEDDINGS (Local embeddings — zero cost) ──
+  const ollamaEmbedModel = process.env.OLLAMA_EMBED_MODEL || "nomic-embed-text";
+  configs.push({
+    provider: "ollama",
+    model: ollamaEmbedModel,
+    apiKey: undefined,
+    baseUrl: `${ollamaUrl}/api/embeddings`,
+    isPrimary: false,
+    isFallback: false,
+    isOllama: true,
+    isEmbedding: true,
+  });
+
+  // ── 4. GROQ (Free tier backup — 20 req/min, 1M tok/day) ──
   if (process.env.GROQ_API_KEY) {
     configs.push({
       provider: "groq",

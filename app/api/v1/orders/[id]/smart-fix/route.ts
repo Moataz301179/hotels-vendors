@@ -20,7 +20,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   if (!order) return error("Order not found", 404);
 
-  const fixes = await generateSmartFixes(id, order.hotelId, order.total);
+  const fixes = await generateSmartFixes(id, order.hotelId, order.total, auth.tenantId);
 
   await audit({
     entityType: "ORDER",

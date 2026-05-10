@@ -114,9 +114,9 @@ const WEIGHTS = {
  * Calculate composite risk score for a hotel.
  * Score: 0-100 (0 = lowest risk, 100 = highest risk)
  */
-export async function assessRisk(hotelId: string): Promise<RiskAssessment> {
+export async function assessRisk(hotelId: string, tenantId?: string): Promise<RiskAssessment> {
   const hotel = await prisma.hotel.findUnique({
-    where: { id: hotelId },
+    where: { id: hotelId, ...(tenantId ? { tenantId } : {}) },
     include: {
       properties: true,
       invoices: { orderBy: { issueDate: "desc" }, take: 24 },
@@ -249,9 +249,10 @@ function calculateScaleScore(hotel: { roomCount: number | null; properties: { ro
 export async function generateSmartFixes(
   orderId: string,
   hotelId: string,
-  orderTotal: number
+  orderTotal: number,
+  tenantId?: string
 ): Promise<SmartFix[]> {
-  const assessment = await assessRisk(hotelId);
+  const assessment = await assessRisk(hotelId, tenantId);
   const credit = await checkCreditLimit(hotelId, orderTotal);
   const fixes: SmartFix[] = [];
 
@@ -413,8 +414,9 @@ export interface RiskHeatmapData {
 /**
  * Generate data for the admin Credit Heatmap dashboard.
  */
-export async function getRiskHeatmapData(): Promise<RiskHeatmapData[]> {
+export async function getRiskHeatmapData(tenantId?: string): Promise<RiskHeatmapData[]> {
   const hotels = await prisma.hotel.findMany({
+    where: tenantId ? { tenantId } : {},
     include: {
       properties: true,
       invoices: { orderBy: { issueDate: "desc" }, take: 12 },
@@ -426,7 +428,7 @@ export async function getRiskHeatmapData(): Promise<RiskHeatmapData[]> {
   const results: RiskHeatmapData[] = [];
 
   for (const hotel of hotels) {
-    const assessment = await assessRisk(hotel.id);
+    const assessment = await assessRisk(hotel.id, hotel.tenantId);
     results.push({
       hotelId: hotel.id,
       hotelName: hotel.name,
