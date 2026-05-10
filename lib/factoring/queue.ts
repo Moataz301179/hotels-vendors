@@ -223,7 +223,7 @@ export function createFactoringWorker(): Worker {
             disbursedAmount: funding.disbursedAmount,
           });
 
-          return { funded: true, disbursedAmount: funding.disbursedAmount },
+          return { funded: true, disbursedAmount: funding.disbursedAmount };
         }
 
         case "COLLECT_FEES": {
