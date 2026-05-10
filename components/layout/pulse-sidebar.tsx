@@ -20,6 +20,7 @@ import {
   ChevronRight,
   Settings,
   HelpCircle,
+  X,
   Truck,
   Landmark,
   Megaphone,
@@ -38,6 +39,7 @@ interface PulseSidebarProps {
   role: string;
   collapsed: boolean;
   onToggle: () => void;
+  isMobile?: boolean;
 }
 
 const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementType; label: string; href: string }[] }[]> = {
@@ -172,7 +174,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
   ],
 };
 
-export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
+export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSidebarProps) {
   const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
 
@@ -226,7 +228,7 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
   return (
     <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-16 border-b border-[rgba(255,255,255,0.04)]">
+      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(255,255,255,0.04)]">
         <Link href="/" className="flex items-center gap-2.5 group">
           <BrandLogo variant="dark" size="md" />
           <span className="text-sm font-semibold text-white tracking-tight">HotelsVendors</span>
@@ -234,8 +236,9 @@ export function PulseSidebar({ role, collapsed, onToggle }: PulseSidebarProps) {
         <button
           onClick={onToggle}
           className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.30)] hover:text-white transition-colors"
+          aria-label={isMobile ? "Close menu" : "Collapse sidebar"}
         >
-          <ChevronLeft size={16} />
+          {isMobile ? <X size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 

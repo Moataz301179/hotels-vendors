@@ -196,32 +196,34 @@ export default function SecurityPage() {
           ) : entries.length === 0 ? (
             <div className="p-4"><EmptyState title="No audit entries" description="Audit log will populate as actions are taken." /></div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Action</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Entity</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actor</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Time</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {entries.map((entry) => (
-                  <tr key={entry.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                    <td className="px-4 py-3"><span className="text-xs text-white">{entry.action}</span></td>
-                    <td className="px-4 py-3"><span className="text-[11px] text-white/40">{entry.entityType} #{entry.entityId?.slice(0, 8)}</span></td>
-                    <td className="px-4 py-3"><span className="text-[11px] text-white/30 font-mono">{entry.actorId?.slice(0, 12)}...</span></td>
-                    <td className="px-4 py-3"><span className="text-[11px] text-white/30">{new Date(entry.createdAt).toLocaleDateString()}</span></td>
-                    <td className="px-4 py-3">
-                      <button onClick={() => setSelectedEntry(entry)} className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
-                        <Eye size={14} />
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px]">
+                <thead>
+                  <tr className="border-b border-white/[0.06]">
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Action</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Entity</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actor</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Time</th>
+                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {entries.map((entry) => (
+                    <tr key={entry.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                      <td className="px-4 py-3"><span className="text-xs text-white">{entry.action}</span></td>
+                      <td className="px-4 py-3"><span className="text-[11px] text-white/40">{entry.entityType} #{entry.entityId?.slice(0, 8)}</span></td>
+                      <td className="px-4 py-3"><span className="text-[11px] text-white/30 font-mono">{entry.actorId?.slice(0, 12)}...</span></td>
+                      <td className="px-4 py-3"><span className="text-[11px] text-white/30">{new Date(entry.createdAt).toLocaleDateString()}</span></td>
+                      <td className="px-4 py-3">
+                        <button onClick={() => setSelectedEntry(entry)} className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                          <Eye size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </motion.div>
       )}
@@ -231,7 +233,8 @@ export default function SecurityPage() {
           <div className="px-4 py-3 border-b border-white/[0.06]">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2"><Users size={14} className="text-white/40" />Role Permissions Matrix</h3>
           </div>
-          <table className="w-full">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Role</th>
@@ -260,7 +263,8 @@ export default function SecurityPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </motion.div>
       )}
 

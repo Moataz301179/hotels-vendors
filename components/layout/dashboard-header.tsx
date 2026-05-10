@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Bell, Settings, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Bell, Settings, SlidersHorizontal, Menu } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 
 interface DashboardHeaderProps {
   role: string;
+  onMenuClick?: () => void;
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
@@ -17,14 +18,21 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
   marketing: { label: "Marketing", badgeColor: "bg-purple-500" },
 };
 
-export function DashboardHeader({ role }: DashboardHeaderProps) {
+export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 sticky top-0 z-30 bg-[#121212]/80 backdrop-blur-xl border-b border-white/[0.06]">
-      {/* Left: Logo + Breadcrumb */}
-      <div className="flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2.5">
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#121212]/80 backdrop-blur-xl border-b border-white/[0.06]">
+      {/* Left: Mobile Menu + Logo */}
+      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+        <button
+          onClick={onMenuClick}
+          className="md:hidden p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.06] transition-colors flex-shrink-0"
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <BrandLogo variant="dark" size="md" />
           <span className="text-sm font-semibold text-white hidden lg:block">Hotels Vendors</span>
         </Link>
@@ -35,30 +43,30 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
         </div>
       </div>
 
-      {/* Center: Search with Advanced Filters */}
-      <div className="flex-1 max-w-xl mx-4 lg:mx-8">
+      {/* Center: Search */}
+      <div className="flex-1 max-w-xl mx-2 sm:mx-4 lg:mx-8">
         <div className="relative group flex items-center">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#022349] transition-colors z-10" />
           <input
             type="text"
             placeholder="Search orders, suppliers, products..."
-            className="w-full h-9 pl-9 pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 focus:ring-1 focus:ring-[#022349]/10 transition-all"
+            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 focus:ring-1 focus:ring-[#022349]/10 transition-all"
           />
-          <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
+          <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
             <SlidersHorizontal size={11} />
-            <span className="hidden sm:inline">Advanced Filters</span>
+            <span className="hidden sm:inline">Filters</span>
           </button>
         </div>
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]">
           <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
           <span className="text-xs font-medium text-white/60">{config.label}</span>
         </div>
 
-        <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all">
+        <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
           <Settings size={18} />
         </button>
 
@@ -67,8 +75,8 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#022349] ring-2 ring-[#121212]" />
         </button>
 
-        <button className="flex items-center gap-2.5 pl-1">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#022349] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10">
+        <button className="flex items-center gap-2 pl-1">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#022349] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10 flex-shrink-0">
             MZ
           </div>
           <div className="hidden md:block text-left">

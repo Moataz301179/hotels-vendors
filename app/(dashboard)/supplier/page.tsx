@@ -184,8 +184,8 @@ export default function SupplierDashboardPage() {
               description="Orders will appear here when hotels purchase your products."
             />
           ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-white/[0.06]">
                     <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order</th>

@@ -195,26 +195,28 @@ export default function AIAgentsPage() {
         ) : runs.length === 0 ? (
           <div className="p-4"><EmptyState title="No runs yet" description="Agent runs will appear here once executed." /></div>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Agent</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Task</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">When</th>
-              </tr>
-            </thead>
-            <tbody>
-              {runs.slice(0, 8).map((run) => (
-                <tr key={run.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-2.5"><span className="text-xs font-medium text-white">{run.agentName}</span></td>
-                  <td className="px-4 py-2.5"><span className="text-[11px] text-white/40">{run.taskDescription?.slice(0, 40)}...</span></td>
-                  <td className="px-4 py-2.5"><StatusBadge status={run.status} /></td>
-                  <td className="px-4 py-2.5"><span className="text-[11px] text-white/30">{new Date(run.startedAt).toLocaleDateString()}</span></td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px]">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Agent</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Task</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">When</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {runs.slice(0, 8).map((run) => (
+                  <tr key={run.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-2.5"><span className="text-xs font-medium text-white">{run.agentName}</span></td>
+                    <td className="px-4 py-2.5"><span className="text-[11px] text-white/40">{run.taskDescription?.slice(0, 40)}...</span></td>
+                    <td className="px-4 py-2.5"><StatusBadge status={run.status} /></td>
+                    <td className="px-4 py-2.5"><span className="text-[11px] text-white/30">{new Date(run.startedAt).toLocaleDateString()}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </motion.div>
     </motion.div>

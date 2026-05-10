@@ -195,24 +195,26 @@ export default function AnalyticsPage() {
           ) : topHotels.length === 0 ? (
             <div className="p-4"><EmptyState title="No hotels yet" description="Hotels will appear here once registered." /></div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Spend</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topHotels.map((h, i) => (
-                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                    <td className="px-4 py-2.5"><span className="text-xs text-white">{h.name}</span></td>
-                    <td className="px-4 py-2.5"><span className="text-xs text-white/60">{h.orders}</span></td>
-                    <td className="px-4 py-2.5"><span className="text-xs font-semibold text-white">{h.spend}</span></td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[360px]">
+                <thead>
+                  <tr className="border-b border-white/[0.06]">
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Spend</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {topHotels.map((h, i) => (
+                    <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                      <td className="px-4 py-2.5"><span className="text-xs text-white">{h.name}</span></td>
+                      <td className="px-4 py-2.5"><span className="text-xs text-white/60">{h.orders}</span></td>
+                      <td className="px-4 py-2.5"><span className="text-xs font-semibold text-white">{h.spend}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
@@ -229,16 +231,17 @@ export default function AnalyticsPage() {
           ) : topSuppliers.length === 0 ? (
             <div className="p-4"><EmptyState title="No suppliers yet" description="Suppliers will appear here once registered." /></div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
-                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topSuppliers.map((s, i) => (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[360px]">
+                <thead>
+                  <tr className="border-b border-white/[0.06]">
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Orders</th>
+                    <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topSuppliers.map((s, i) => (
                   <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
                     <td className="px-4 py-2.5"><span className="text-xs text-white">{s.name}</span></td>
                     <td className="px-4 py-2.5"><span className="text-xs text-white/60">{s.orders}</span></td>
@@ -251,7 +254,8 @@ export default function AnalyticsPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
           )}
         </div>
       </motion.div>

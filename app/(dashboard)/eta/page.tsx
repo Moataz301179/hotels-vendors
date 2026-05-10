@@ -185,8 +185,8 @@ export default function ETACenterPage() {
               }
             />
           ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-white/[0.06]">
                     <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice ID</th>
@@ -279,8 +279,8 @@ export default function ETACenterPage() {
       )}
 
       {activeTab === "rules" && (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-          <table className="w-full">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[480px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rule</th>
