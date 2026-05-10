@@ -30,9 +30,6 @@ import {
   CreditCard,
   Calendar,
   ShoppingBag,
-  Bot,
-  BarChart3,
-  ClipboardList,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

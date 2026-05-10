@@ -8,7 +8,7 @@ import {
   Target, Activity, PieChart,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
-import { LoadingCard, LoadingPage } from "@/components/dashboards/shared/loading-card";
+import { LoadingCard, LoadingPage, LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
 
 const fadeInUp = {

@@ -3,10 +3,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Shield, Lock, Key, Eye, EyeOff, AlertTriangle, CheckCircle2,
-  ArrowUpRight, ArrowDownRight, Users, FileText, Clock,
-  ShieldAlert, ShieldCheck,
+  Shield, Lock, Key, AlertTriangle, CheckCircle2,
+  ArrowUpRight, ArrowDownRight, Users, FileText,
+  ShieldAlert, ShieldCheck, Eye,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
+import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import { Modal } from "@/components/ui/modal";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -18,32 +22,16 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const SECURITY_STATS = [
-  { label: "Security Score", value: "94/100", change: "Excellent", up: true, icon: ShieldCheck },
-  { label: "Active Sessions", value: "23", change: "5 admin, 18 users", up: true, icon: Users },
-  { label: "Failed Logins", value: "3", change: "Last 24 hours", up: true, icon: AlertTriangle },
-  { label: "MFA Adoption", value: "87%", change: "156 of 180 users", up: true, icon: Lock },
-];
-
-const AUDIT_LOGS = [
-  { action: "User login", user: "ahmed@hotelsvendors.com", ip: "196.219.123.45", status: "success", time: "2m ago" },
-  { action: "Role changed", user: "admin@hotelsvendors.com", ip: "196.219.123.12", status: "success", time: "15m ago" },
-  { action: "Failed login", user: "unknown", ip: "203.87.45.111", status: "failed", time: "32m ago" },
-  { action: "API key regenerated", user: "sara@hotelsvendors.com", ip: "196.219.123.45", status: "success", time: "1h ago" },
-  { action: "Authority override", user: "admin@hotelsvendors.com", ip: "196.219.123.12", status: "success", time: "2h ago" },
-  { action: "Settings updated", user: "khaled@hotelsvendors.com", ip: "196.219.123.78", status: "success", time: "3h ago" },
-];
-
-const PERMISSION_MATRIX = [
-  { role: "Platform Admin", users: 3, permissions: ["all", "all", "all", "all", "all", "all"] },
-  { role: "Hotel Manager", users: 12, permissions: ["read", "read", "write", "read", "none", "read"] },
-  { role: "Supplier Admin", users: 45, permissions: ["read", "write", "read", "none", "read", "read"] },
-  { role: "Finance Officer", users: 8, permissions: ["read", "read", "read", "write", "read", "none"] },
-  { role: "Logistics Coordinator", users: 6, permissions: ["read", "write", "none", "read", "write", "none"] },
-  { role: "Viewer", users: 28, permissions: ["read", "read", "none", "none", "none", "read"] },
-];
-
-const PERMISSION_HEADERS = ["Orders", "Inventory", "Users", "Finance", "Shipping", "Reports"];
+interface AuditEntry {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  actorId: string;
+  beforeState: string;
+  afterState: string;
+  createdAt: string;
+}
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; label: string }> = {
@@ -53,9 +41,7 @@ function StatusBadge({ status }: { status: string }) {
   };
   const c = config[status] || config.success;
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${c.bg} ${c.text}`}>
-      {c.label}
-    </span>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${c.bg} ${c.text}`}>{c.label}</span>
   );
 }
 
@@ -66,21 +52,28 @@ function PermCell({ perm }: { perm: string }) {
     read: "bg-white/10 text-white/40",
     none: "bg-red-500/10 text-red-400/50",
   };
-  const labels: Record<string, string> = {
-    all: "All",
-    write: "Write",
-    read: "Read",
-    none: "—",
-  };
+  const labels: Record<string, string> = { all: "All", write: "Write", read: "Read", none: "—" };
   return (
-    <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${colors[perm] || colors.none}`}>
-      {labels[perm] || perm}
-    </span>
+    <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${colors[perm] || colors.none}`}>{labels[perm] || perm}</span>
   );
 }
 
 export default function SecurityPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
+
+  const { data: auditData, loading: auditLoading, error: auditError } = useApi<{ entries: AuditEntry[]; pagination: { total: number } }>(
+    "/api/v1/admin/audit-log?page=1&limit=20"
+  );
+
+  const entries = auditData?.entries ?? [];
+
+  const stats = [
+    { label: "Security Score", value: "94/100", change: "Excellent", up: true, icon: ShieldCheck },
+    { label: "Active Sessions", value: "23", change: "5 admin, 18 users", up: true, icon: Users },
+    { label: "Failed Logins", value: "3", change: "Last 24 hours", up: true, icon: AlertTriangle },
+    { label: "MFA Adoption", value: "87%", change: "156 of 180 users", up: true, icon: Lock },
+  ];
 
   return (
     <motion.div
@@ -103,7 +96,7 @@ export default function SecurityPage() {
 
       {/* Stats */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {SECURITY_STATS.map((s) => (
+        {stats.map((s) => (
           <motion.div
             key={s.label}
             variants={fadeInUp}
@@ -135,9 +128,7 @@ export default function SecurityPage() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              activeTab === tab.id
-                ? "bg-white/[0.06] text-white border border-white/[0.08]"
-                : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+              activeTab === tab.id ? "bg-white/[0.06] text-white border border-white/[0.08]" : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
             }`}
           >
             {tab.label}
@@ -147,12 +138,8 @@ export default function SecurityPage() {
 
       {activeTab === "overview" && (
         <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Security Checklist */}
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Shield size={14} className="text-white/40" />
-              Security Checklist
-            </h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Shield size={14} className="text-white/40" />Security Checklist</h3>
             <div className="space-y-3">
               {[
                 { label: "Two-Factor Authentication", status: "enabled", critical: true },
@@ -165,30 +152,17 @@ export default function SecurityPage() {
                 { label: "DDoS Protection", status: "warning", critical: true },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                    item.status === "enabled" ? "bg-emerald-500/10" : "bg-amber-500/10"
-                  }`}>
-                    {item.status === "enabled" ? (
-                      <CheckCircle2 size={12} className="text-emerald-400" />
-                    ) : (
-                      <AlertTriangle size={12} className="text-amber-400" />
-                    )}
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${item.status === "enabled" ? "bg-emerald-500/10" : "bg-amber-500/10"}`}>
+                    {item.status === "enabled" ? <CheckCircle2 size={12} className="text-emerald-400" /> : <AlertTriangle size={12} className="text-amber-400" />}
                   </div>
                   <span className="text-xs text-white flex-1">{item.label}</span>
-                  {item.critical && (
-                    <span className="text-[9px] text-red-400/50 font-medium">Critical</span>
-                  )}
+                  {item.critical && <span className="text-[9px] text-red-400/50 font-medium">Critical</span>}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Recent Alerts */}
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <ShieldAlert size={14} className="text-white/40" />
-              Recent Alerts
-            </h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><ShieldAlert size={14} className="text-white/40" />Recent Alerts</h3>
             <div className="space-y-3">
               {[
                 { level: "warning", msg: "Failed login attempt from IP 203.87.45.111", time: "32m ago" },
@@ -198,11 +172,7 @@ export default function SecurityPage() {
                 { level: "info", msg: "New user registered: Laila Ibrahim", time: "8h ago" },
               ].map((alert, i) => (
                 <div key={i} className="flex items-start gap-3 p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                  <div className={`w-2 h-2 rounded-full mt-1 ${
-                    alert.level === "warning" ? "bg-amber-400" :
-                    alert.level === "success" ? "bg-emerald-400" :
-                    "bg-blue-400"
-                  }`} />
+                  <div className={`w-2 h-2 rounded-full mt-1 ${alert.level === "warning" ? "bg-amber-400" : alert.level === "success" ? "bg-emerald-400" : "bg-blue-400"}`} />
                   <div className="flex-1">
                     <p className="text-[11px] text-white/60">{alert.msg}</p>
                     <p className="text-[10px] text-white/20 mt-0.5">{alert.time}</p>
@@ -217,77 +187,75 @@ export default function SecurityPage() {
       {activeTab === "audit" && (
         <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
           <div className="px-4 py-3 border-b border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <FileText size={14} className="text-white/40" />
-              Audit Log
-            </h3>
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2"><FileText size={14} className="text-white/40" />Audit Log</h3>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Action</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">User</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">IP Address</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {AUDIT_LOGS.map((log, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-white">{log.action}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{log.user}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] font-mono text-white/30">{log.ip}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={log.status} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{log.time}</span>
-                  </td>
+          {auditLoading ? (
+            <div className="p-4"><LoadingTable rows={5} /></div>
+          ) : auditError ? (
+            <div className="p-4"><EmptyState title="Error loading audit log" description={auditError} /></div>
+          ) : entries.length === 0 ? (
+            <div className="p-4"><EmptyState title="No audit entries" description="Audit log will populate as actions are taken." /></div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Action</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Entity</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actor</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Time</th>
+                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {entries.map((entry) => (
+                  <tr key={entry.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-3"><span className="text-xs text-white">{entry.action}</span></td>
+                    <td className="px-4 py-3"><span className="text-[11px] text-white/40">{entry.entityType} #{entry.entityId?.slice(0, 8)}</span></td>
+                    <td className="px-4 py-3"><span className="text-[11px] text-white/30 font-mono">{entry.actorId?.slice(0, 12)}...</span></td>
+                    <td className="px-4 py-3"><span className="text-[11px] text-white/30">{new Date(entry.createdAt).toLocaleDateString()}</span></td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => setSelectedEntry(entry)} className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                        <Eye size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </motion.div>
       )}
 
       {activeTab === "permissions" && (
         <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
           <div className="px-4 py-3 border-b border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Users size={14} className="text-white/40" />
-              Role Permissions Matrix
-            </h3>
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2"><Users size={14} className="text-white/40" />Role Permissions Matrix</h3>
           </div>
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/[0.06]">
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Role</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Users</th>
-                {PERMISSION_HEADERS.map((h) => (
+                {["Orders", "Inventory", "Users", "Finance", "Shipping", "Reports"].map((h) => (
                   <th key={h} className="text-center px-2 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {PERMISSION_MATRIX.map((role, i) => (
+              {[
+                { role: "Platform Admin", users: 3, perms: ["all", "all", "all", "all", "all", "all"] },
+                { role: "Hotel Manager", users: 12, perms: ["read", "read", "write", "read", "none", "read"] },
+                { role: "Supplier Admin", users: 45, perms: ["read", "write", "read", "none", "read", "read"] },
+                { role: "Finance Officer", users: 8, perms: ["read", "read", "read", "write", "read", "none"] },
+                { role: "Logistics Coordinator", users: 6, perms: ["read", "write", "none", "read", "write", "none"] },
+                { role: "Viewer", users: 28, perms: ["read", "read", "none", "none", "none", "read"] },
+              ].map((role, i) => (
                 <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-xs font-medium text-white">{role.role}</span>
+                    <span className="text-[10px] text-white/20 ml-2">({role.users})</span>
                   </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{role.users}</span>
-                  </td>
-                  {role.permissions.map((perm, j) => (
-                    <td key={j} className="px-2 py-3 text-center">
-                      <PermCell perm={perm} />
-                    </td>
+                  {role.perms.map((perm, j) => (
+                    <td key={j} className="px-2 py-3 text-center"><PermCell perm={perm} /></td>
                   ))}
                 </tr>
               ))}
@@ -295,6 +263,50 @@ export default function SecurityPage() {
           </table>
         </motion.div>
       )}
+
+      {/* Audit Entry Detail Modal */}
+      <Modal
+        isOpen={!!selectedEntry}
+        onClose={() => setSelectedEntry(null)}
+        title={`Audit Entry`}
+        description={`${selectedEntry?.action} on ${selectedEntry?.entityType}`}
+        size="md"
+      >
+        {selectedEntry && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Entity Type</p>
+                <p className="text-sm text-white mt-0.5">{selectedEntry.entityType}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Entity ID</p>
+                <p className="text-sm text-white mt-0.5 font-mono">{selectedEntry.entityId}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Actor</p>
+                <p className="text-sm text-white mt-0.5 font-mono">{selectedEntry.actorId}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Timestamp</p>
+                <p className="text-sm text-white mt-0.5">{new Date(selectedEntry.createdAt).toLocaleString()}</p>
+              </div>
+            </div>
+            {selectedEntry.beforeState && (
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase mb-1">Before State</p>
+                <code className="text-[10px] text-white/30 font-mono">{selectedEntry.beforeState}</code>
+              </div>
+            )}
+            {selectedEntry.afterState && (
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase mb-1">After State</p>
+                <code className="text-[10px] text-white/30 font-mono">{selectedEntry.afterState}</code>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </motion.div>
   );
 }
