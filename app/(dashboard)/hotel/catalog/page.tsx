@@ -12,6 +12,7 @@ import { ProductCard } from "@/components/marketplace/product-card";
 import { getCategoryById } from "@/lib/marketplace/categories";
 import { LoadingPage } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import { useCart } from "@/components/cart/cart-context";
 import { useRouter } from "next/navigation";
 
 interface ApiProduct {
@@ -56,6 +57,7 @@ interface Product {
   shelfLifeDays: number | null;
   temperatureReq: string | null;
   images: string[] | null;
+  supplierId: string;
   supplierName: string;
   supplierTier: string;
   supplierRating: number;
@@ -80,6 +82,7 @@ function mapApiProduct(p: ApiProduct): Product {
     shelfLifeDays: p.shelfLifeDays,
     temperatureReq: p.temperatureReq,
     images: p.images,
+    supplierId: p.supplier?.id || "",
     supplierName: p.supplier?.name || "Unknown",
     supplierTier: p.supplier?.tier || "STANDARD",
     supplierRating: p.supplier?.rating || 4.0,
@@ -95,7 +98,7 @@ export default function HotelCatalogPage() {
   const [sortBy, setSortBy] = useState("relevance");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
-  const [cart, setCart] = useState<Record<string, number>>({});
+  const { addItem, openCart } = useCart();
 
   const { data: catalogData, loading, error } = useApi<{ products: ApiProduct[]; pagination: { total: number } }>(
     "/api/v1/hotel/catalog?page=1&limit=100"
@@ -172,10 +175,23 @@ export default function HotelCatalogPage() {
   };
 
   const handleAddToCart = (id: string, qty: number) => {
-    setCart((prev) => ({ ...prev, [id]: (prev[id] || 0) + qty }));
+    const product = products.find((p) => p.id === id);
+    if (!product) return;
+    addItem(
+      {
+        productId: product.id,
+        name: product.name,
+        sku: product.sku,
+        unitPrice: product.unitPrice,
+        supplierId: product.supplierId,
+        supplierName: product.supplierName,
+        image: product.images?.[0] || undefined,
+      },
+      qty
+    );
+    openCart();
   };
 
-  const totalCartItems = Object.values(cart).reduce((s, q) => s + q, 0);
   const activeCategoryLabel = activeCategory ? getCategoryById(activeCategory)?.label : null;
 
   if (loading) {
@@ -248,9 +264,7 @@ export default function HotelCatalogPage() {
               {activeCategoryLabel && (
                 <span className="px-2 py-0.5 rounded-md bg-[#022349]/15 border border-[#022349]/25 text-[#022349] text-xs font-medium">{activeCategoryLabel}</span>
               )}
-              {totalCartItems > 0 && (
-                <span className="px-2.5 py-0.5 rounded-full bg-[#022349]/20 border border-[#022349]/30 text-[#022349] text-xs font-medium">{totalCartItems} in cart</span>
-              )}
+
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">

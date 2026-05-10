@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Bell, Settings, SlidersHorizontal, Menu } from "lucide-react";
+import { Search, Bell, Settings, SlidersHorizontal, Menu, ShoppingCart } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
+import { useCart } from "@/components/cart/cart-context";
 
 interface DashboardHeaderProps {
   role: string;
@@ -20,6 +21,7 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 
 export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
+  const { totalItems, toggleCart } = useCart();
 
   return (
     <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#121212]/80 backdrop-blur-xl border-b border-white/[0.06]">
@@ -68,6 +70,18 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
 
         <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
           <Settings size={18} />
+        </button>
+
+        <button
+          onClick={toggleCart}
+          className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all"
+        >
+          <ShoppingCart size={18} />
+          {totalItems > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#022349] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
+              {totalItems > 99 ? "99+" : totalItems}
+            </span>
+          )}
         </button>
 
         <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all">

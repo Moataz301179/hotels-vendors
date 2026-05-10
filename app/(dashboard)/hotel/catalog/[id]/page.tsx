@@ -16,6 +16,7 @@ import { ProductCard } from "@/components/marketplace/product-card";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingPage } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import { useCart } from "@/components/cart/cart-context";
 
 interface ApiProduct {
   id: string;
@@ -60,6 +61,7 @@ interface Product {
   shelfLifeDays: number | null;
   temperatureReq: string | null;
   images: string[] | null;
+  supplierId: string;
   supplierName: string;
   supplierTier: string;
   supplierRating: number;
@@ -84,6 +86,7 @@ function mapProduct(p: ApiProduct): Product {
     shelfLifeDays: p.shelfLifeDays,
     temperatureReq: p.temperatureReq,
     images: p.images,
+    supplierId: p.supplier?.id || "",
     supplierName: p.supplier?.name || "Unknown",
     supplierTier: p.supplier?.tier || "STANDARD",
     supplierRating: p.supplier?.rating || 4.0,
@@ -115,9 +118,9 @@ export default function ProductDetailPage() {
 
   const [qty, setQty] = useState(product?.minOrderQty || 1);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
 
-  const { addItem, removeItem, isInCompare } = useCompare();
+  const { addItem: addToCompare, removeItem: removeFromCompare, isInCompare } = useCompare();
+  const { addItem: addToCart, lastAdded, openCart } = useCart();
 
   // Reset qty when product loads
   const effectiveQty = product ? Math.max(qty, product.minOrderQty) : qty;
@@ -166,9 +169,25 @@ export default function ProductDetailPage() {
 
   const inCompare = isInCompare(product.id);
 
+  const addProductToCart = (p: Product, quantity: number) => {
+    addToCart(
+      {
+        productId: p.id,
+        name: p.name,
+        sku: p.sku,
+        unitPrice: p.unitPrice,
+        supplierId: p.supplierId || p.supplierName,
+        supplierName: p.supplierName,
+        image: p.images?.[0] || undefined,
+      },
+      quantity
+    );
+    openCart();
+  };
+
   const handleAddToCart = () => {
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
+    if (!product) return;
+    addProductToCart(product, effectiveQty);
   };
 
   const formatPrice = (price: number) =>
@@ -280,7 +299,7 @@ export default function ProductDetailPage() {
                 disabled={product.stockQuantity === 0}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#022349] hover:bg-[#022349]/80 disabled:bg-white/[0.05] disabled:text-white/20 text-white font-medium transition-all active:scale-[0.98]"
               >
-                {addedToCart ? <><Check className="w-5 h-5" /><span>Added to Cart</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
+                {lastAdded === product?.id ? <><Check className="w-5 h-5" /><span>Added to Cart</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
               </button>
 
               <button onClick={() => setIsWishlisted(!isWishlisted)} className={`p-3 rounded-xl border transition-colors ${isWishlisted ? "bg-[#022349] border-[#022349] text-white" : "border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/[0.14]"}`}>
@@ -288,7 +307,7 @@ export default function ProductDetailPage() {
               </button>
 
               <button
-                onClick={() => inCompare ? removeItem(product.id) : addItem({
+                onClick={() => inCompare ? removeFromCompare(product.id) : addToCompare({
                   id: product.id, name: product.name, category: product.category,
                   unitPrice: product.unitPrice, currency: product.currency,
                   supplierName: product.supplierName, supplierRating: product.supplierRating,
@@ -407,6 +426,10 @@ export default function ProductDetailPage() {
                     supplierRating={p.supplierRating}
                     supplierReviewCount={p.supplierReviewCount}
                     supplierCity={p.supplierCity}
+                    onAddToCart={(id, qty) => {
+                      const p = relatedProducts.find((rp) => rp.id === id);
+                      if (p) addProductToCart(p, qty);
+                    }}
                     onViewDetails={(id) => router.push(`/hotel/catalog/${id}`)}
                     compareData={{
                       id: p.id, name: p.name, category: p.category,
