@@ -80,6 +80,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: BarChart3, label: "Analytics", href: "/analytics" },
         { icon: Bot, label: "AI Agents", href: "/ai-agents" },
         { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
+        { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
       ],
