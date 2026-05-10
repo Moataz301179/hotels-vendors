@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FileCheck, AlertTriangle, CheckCircle2, Clock, XCircle,
   RefreshCw, Shield, FileText, Search, ArrowUpRight, ArrowDownRight,
-  QrCode, Printer, Download, Eye,
+  QrCode, Printer, Download, Eye, Loader2, Send, X,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
@@ -75,6 +75,12 @@ export default function ETACenterPage() {
   const [activeTab, setActiveTab] = useState("invoices");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [submitStep, setSubmitStep] = useState<"select" | "submitting" | "success">("select");
+  const [submitInvoice, setSubmitInvoice] = useState<Invoice | null>(null);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitResult, setSubmitResult] = useState<any>(null);
 
   const { data: invoicesData, loading, error } = useApi<{ data: Invoice[]; meta: { total: number } }>(
     "/api/eta?page=1&limit=20"
@@ -94,6 +100,39 @@ export default function ETACenterPage() {
       inv.hotel?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       inv.invoiceNumber?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  async function handleETASubmit(invoice: Invoice) {
+    setSubmitLoading(true);
+    setSubmitError("");
+    setSubmitStep("submitting");
+    try {
+      const res = await fetch(`/api/v1/invoices/${invoice.id}/eta-submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSubmitResult(json.data);
+        setSubmitStep("success");
+      } else {
+        setSubmitError(json.error || "Submission failed");
+        setSubmitStep("select");
+      }
+    } catch {
+      setSubmitError("Network error during submission");
+      setSubmitStep("select");
+    } finally {
+      setSubmitLoading(false);
+    }
+  }
+
+  function closeSubmitModal() {
+    setSubmitModalOpen(false);
+    setSubmitStep("select");
+    setSubmitInvoice(null);
+    setSubmitError("");
+    setSubmitResult(null);
+  }
 
   return (
     <motion.div
@@ -116,7 +155,10 @@ export default function ETACenterPage() {
             <RefreshCw size={14} />
             Sync with ETA
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all">
+          <button
+            onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all"
+          >
             <FileCheck size={14} />
             Submit Invoice
           </button>
@@ -179,7 +221,10 @@ export default function ETACenterPage() {
               title="No invoices found"
               description="Invoices will appear here once submitted to ETA."
               action={
-                <button className="px-4 py-2 rounded-lg bg-[#022349] text-xs text-white font-medium">
+                <button
+                  onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
+                  className="px-4 py-2 rounded-lg bg-[#022349] text-xs text-white font-medium"
+                >
                   Submit Invoice
                 </button>
               }
@@ -323,8 +368,6 @@ export default function ETACenterPage() {
         isOpen={!!selectedInvoice}
         onClose={() => setSelectedInvoice(null)}
         title={`Invoice ${selectedInvoice?.invoiceNumber}`}
-        description={`ETA UUID: ${selectedInvoice?.etaUuid}`}
-        size="md"
       >
         {selectedInvoice && (
           <div className="space-y-4">
@@ -353,6 +396,87 @@ export default function ETACenterPage() {
           </div>
         )}
       </Modal>
+
+      {/* ETA Submit Modal */}
+      {submitModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeSubmitModal}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1a1a1a] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+              <h3 className="text-lg font-semibold text-white">Submit to ETA</h3>
+              <button onClick={closeSubmitModal} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors"><X size={18} /></button>
+            </div>
+            <div className="p-6">
+              <AnimatePresence mode="wait">
+                {submitStep === "select" && (
+                  <motion.div key="select" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                    <p className="text-sm text-white/40 mb-4">Select an invoice to submit to the Egyptian Tax Authority:</p>
+                    {error ? (
+                      <EmptyState title="Error" description={error} />
+                    ) : filteredInvoices.filter((i) => !i.etaUuid || i.etaStatus === "PENDING").length === 0 ? (
+                      <EmptyState title="No eligible invoices" description="All invoices have already been submitted to ETA." />
+                    ) : (
+                      <div className="space-y-2">
+                        {filteredInvoices.filter((i) => !i.etaUuid || i.etaStatus === "PENDING").map((inv) => (
+                          <button
+                            key={inv.id}
+                            onClick={() => { setSubmitInvoice(inv); handleETASubmit(inv); }}
+                            disabled={submitLoading}
+                            className="w-full flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-all text-left"
+                          >
+                            <div className="flex items-center gap-3">
+                              <FileText size={16} className="text-white/20" />
+                              <div>
+                                <p className="text-xs font-medium text-white">{inv.invoiceNumber}</p>
+                                <p className="text-[10px] text-white/25">{inv.hotel?.name}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
+                              <Send size={14} className="text-white/20 inline-block mt-0.5" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {submitError && (
+                      <div className="mt-4 p-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-xs flex items-center gap-2">
+                        <AlertTriangle size={14} /> {submitError}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {submitStep === "submitting" && (
+                  <motion.div key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-12 flex flex-col items-center gap-3">
+                    <Loader2 size={28} className="animate-spin text-[#022349]" />
+                    <p className="text-sm text-white/40">Submitting to Egyptian Tax Authority...</p>
+                    <p className="text-xs text-white/20">This may take a few moments</p>
+                  </motion.div>
+                )}
+
+                {submitStep === "success" && submitResult && (
+                  <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6 space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                      <CheckCircle2 size={32} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-white">Submitted Successfully</h4>
+                      <p className="text-sm text-white/40 mt-1">The invoice has been submitted to ETA for validation.</p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-left space-y-2">
+                      <div className="flex justify-between text-xs"><span className="text-white/30">Invoice</span><span className="text-white font-medium">{submitResult.invoiceNumber || submitInvoice?.invoiceNumber}</span></div>
+                      <div className="flex justify-between text-xs"><span className="text-white/30">ETA UUID</span><span className="text-emerald-400 font-mono">{submitResult.etaUuid || "Pending generation"}</span></div>
+                      <div className="flex justify-between text-xs"><span className="text-white/30">Status</span><span className="text-blue-400">{submitResult.etaStatus || "SUBMITTED"}</span></div>
+                    </div>
+                    <button onClick={closeSubmitModal} className="px-5 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors">Done</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

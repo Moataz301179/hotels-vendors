@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Landmark, FileCheck, AlertTriangle, TrendingUp,
   ArrowUpRight, ArrowDownRight, Plus, Search, Eye,
-  Wallet, Receipt, CheckCircle2, Clock,
+  Wallet, Receipt, CheckCircle2, Clock, Loader2,
+  ArrowRight, X, Building2, Package, Check, AlertCircle,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
@@ -81,6 +82,13 @@ function formatCurrency(amount: number, currency = "EGP") {
 export default function FinanceDashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRequest, setSelectedRequest] = useState<FactoringRequest | null>(null);
+  const [newModalOpen, setNewModalOpen] = useState(false);
+  const [modalStep, setModalStep] = useState<"select" | "offers" | "confirm" | "success">("select");
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [offers, setOffers] = useState<any[]>([]);
+  const [selectedOffer, setSelectedOffer] = useState<any>(null);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalError, setModalError] = useState("");
 
   const { data: facilitiesData, loading: facilitiesLoading, error: facilitiesError } = useApi<Facility[]>(
     "/api/factoring/facilities"
@@ -120,6 +128,68 @@ export default function FinanceDashboardPage() {
 
   const isLoading = facilitiesLoading || requestsLoading || invoicesLoading;
 
+  // ── New Factoring Request Flow ──
+  async function fetchOffers(invoice: Invoice) {
+    setModalLoading(true);
+    setModalError("");
+    try {
+      const res = await fetch("/api/v1/factoring/inquire", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ invoiceId: invoice.id }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setOffers(json.allOffers || []);
+        setSelectedOffer(json.bestOffer || null);
+        setModalStep("offers");
+      } else {
+        setModalError(json.error || "Failed to get offers");
+      }
+    } catch {
+      setModalError("Network error fetching offers");
+    } finally {
+      setModalLoading(false);
+    }
+  }
+
+  async function executeFunding() {
+    if (!selectedInvoice || !selectedOffer) return;
+    setModalLoading(true);
+    setModalError("");
+    try {
+      const res = await fetch("/api/v1/factoring/fund", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          invoiceId: selectedInvoice.id,
+          factoringCompanyId: selectedOffer.factoringCompanyId,
+          advanceRate: selectedOffer.advanceRate,
+          discountRate: selectedOffer.discountRate,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setModalStep("success");
+      } else {
+        setModalError(json.error || "Funding failed");
+      }
+    } catch {
+      setModalError("Network error during funding");
+    } finally {
+      setModalLoading(false);
+    }
+  }
+
+  function closeModal() {
+    setNewModalOpen(false);
+    setModalStep("select");
+    setSelectedInvoice(null);
+    setOffers([]);
+    setSelectedOffer(null);
+    setModalError("");
+  }
+
   return (
     <motion.div
       className="max-w-[1600px] mx-auto space-y-6"
@@ -133,7 +203,10 @@ export default function FinanceDashboardPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Finance Dashboard</h1>
           <p className="text-sm text-white/40 mt-0.5">Liquidity overview, factoring requests, and credit facilities</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all">
+        <button
+          onClick={() => { setNewModalOpen(true); setModalStep("select"); setModalError(""); }}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all"
+        >
           <Plus size={14} />
           New Factoring Request
         </button>
@@ -320,8 +393,6 @@ export default function FinanceDashboardPage() {
         isOpen={!!selectedRequest}
         onClose={() => setSelectedRequest(null)}
         title={`Factoring Request`}
-        description={`Invoice: ${selectedRequest?.invoice?.invoiceNumber}`}
-        size="md"
       >
         {selectedRequest && (
           <div className="space-y-4">
@@ -361,6 +432,257 @@ export default function FinanceDashboardPage() {
           </div>
         )}
       </Modal>
+
+      {/* New Factoring Request Modal */}
+      <NewFactoringModal
+        isOpen={newModalOpen}
+        onClose={closeModal}
+        step={modalStep}
+        setStep={setModalStep}
+        selectedInvoice={selectedInvoice}
+        setSelectedInvoice={setSelectedInvoice}
+        offers={offers}
+        selectedOffer={selectedOffer}
+        setSelectedOffer={setSelectedOffer}
+        loading={modalLoading}
+        error={modalError}
+        onFetchOffers={fetchOffers}
+        onExecuteFunding={executeFunding}
+      />
     </motion.div>
+  );
+}
+
+/* ─── New Factoring Request Modal Component ─── */
+function NewFactoringModal({
+  isOpen,
+  onClose,
+  step,
+  setStep,
+  selectedInvoice,
+  setSelectedInvoice,
+  offers,
+  selectedOffer,
+  setSelectedOffer,
+  loading,
+  error,
+  onFetchOffers,
+  onExecuteFunding,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  step: "select" | "offers" | "confirm" | "success";
+  setStep: (s: "select" | "offers" | "confirm" | "success") => void;
+  selectedInvoice: Invoice | null;
+  setSelectedInvoice: (i: Invoice | null) => void;
+  offers: any[];
+  selectedOffer: any;
+  setSelectedOffer: (o: any) => void;
+  loading: boolean;
+  error: string;
+  onFetchOffers: (invoice: Invoice) => void;
+  onExecuteFunding: () => void;
+}) {
+  const [eligibleInvoices, setEligibleInvoices] = useState<Invoice[]>([]);
+  const [invLoading, setInvLoading] = useState(false);
+
+  useState(() => {
+    if (isOpen && step === "select") {
+      setInvLoading(true);
+      fetch("/api/v1/factoring/invoices")
+        .then((r) => r.json())
+        .then((json) => {
+          if (json.success) setEligibleInvoices(json.data || []);
+        })
+        .finally(() => setInvLoading(false));
+    }
+  });
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1a1a1a] shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+          <div>
+            <h3 className="text-lg font-semibold text-white">
+              {step === "select" && "Select Invoice"}
+              {step === "offers" && "Factoring Offers"}
+              {step === "confirm" && "Confirm Funding"}
+              {step === "success" && "Funding Complete"}
+            </h3>
+            <p className="text-xs text-white/30 mt-0.5">
+              {step === "select" && "Choose an eligible invoice to factor"}
+              {step === "offers" && "Review offers from factoring partners"}
+              {step === "confirm" && "Review terms before executing"}
+              {step === "success" && "Your factoring request has been processed"}
+            </p>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="p-6">
+          <AnimatePresence mode="wait">
+            {step === "select" && (
+              <motion.div key="select" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                {invLoading ? (
+                  <div className="py-8"><LoadingTable rows={3} /></div>
+                ) : eligibleInvoices.length === 0 ? (
+                  <EmptyState title="No eligible invoices" description="Invoices must have VALIDATED ETA status to be eligible for factoring." />
+                ) : (
+                  <div className="space-y-2">
+                    {eligibleInvoices.map((inv) => (
+                      <button
+                        key={inv.id}
+                        onClick={() => { setSelectedInvoice(inv); onFetchOffers(inv); }}
+                        className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all text-left ${
+                          selectedInvoice?.id === inv.id
+                            ? "bg-[#022349]/10 border-[#022349]/30"
+                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                            <Receipt size={16} className="text-white/30" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-white">{inv.invoiceNumber}</p>
+                            <p className="text-[10px] text-white/25">{inv.hotel?.name} · {inv.supplier?.name}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
+                          <ArrowRight size={14} className="text-white/20 inline-block mt-0.5" />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {step === "offers" && (
+              <motion.div key="offers" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                {loading ? (
+                  <div className="py-12 flex flex-col items-center gap-3">
+                    <Loader2 size={24} className="animate-spin text-[#022349]" />
+                    <p className="text-sm text-white/40">Getting offers from partners...</p>
+                  </div>
+                ) : offers.length === 0 ? (
+                  <EmptyState title="No offers available" description="No factoring partners returned offers for this invoice." />
+                ) : (
+                  <div className="space-y-3">
+                    {offers.map((offer: any, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedOffer(offer)}
+                        className={`w-full p-4 rounded-xl border text-left transition-all ${
+                          selectedOffer === offer
+                            ? "bg-[#022349]/10 border-[#022349]/30"
+                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-white">{offer.companyName || "Partner"}</span>
+                          {selectedOffer === offer && <Check size={16} className="text-[#022349]" />}
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 text-xs">
+                          <div>
+                            <p className="text-white/20">Advance</p>
+                            <p className="text-white font-medium">{((offer.advanceRate || 0.9) * 100).toFixed(0)}%</p>
+                          </div>
+                          <div>
+                            <p className="text-white/20">Discount</p>
+                            <p className="text-white font-medium">{((offer.discountRate || 0.02) * 100).toFixed(1)}%</p>
+                          </div>
+                          <div>
+                            <p className="text-white/20">You Receive</p>
+                            <p className="text-emerald-400 font-medium">
+                              {formatCurrency(Math.round((selectedInvoice?.total || 0) * (offer.advanceRate || 0.9) * (1 - (offer.discountRate || 0.02))), selectedInvoice?.currency)}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                    <div className="flex gap-3 pt-2">
+                      <button onClick={() => setStep("select")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
+                      <button
+                        onClick={() => setStep("confirm")}
+                        disabled={!selectedOffer}
+                        className="flex-1 px-4 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 disabled:opacity-30 text-white text-sm font-medium transition-colors"
+                      >
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {step === "confirm" && selectedInvoice && selectedOffer && (
+              <motion.div key="confirm" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Invoice</h4>
+                    <div className="flex justify-between text-sm"><span className="text-white/30">Number</span><span className="text-white">{selectedInvoice.invoiceNumber}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Amount</span><span className="text-white">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Hotel</span><span className="text-white">{selectedInvoice.hotel?.name}</span></div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Terms</h4>
+                    <div className="flex justify-between text-sm"><span className="text-white/30">Partner</span><span className="text-white">{selectedOffer.companyName || "Partner"}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Advance Rate</span><span className="text-white">{((selectedOffer.advanceRate || 0.9) * 100).toFixed(0)}%</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Discount Rate</span><span className="text-white">{((selectedOffer.discountRate || 0.02) * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Platform Fee</span><span className="text-white">1.5%</span></div>
+                    <div className="pt-2 mt-2 border-t border-white/[0.06] flex justify-between">
+                      <span className="text-sm font-medium text-white">Net Disbursement</span>
+                      <span className="text-sm font-bold text-emerald-400">
+                        {formatCurrency(Math.round(selectedInvoice.total * (selectedOffer.advanceRate || 0.9) * (1 - (selectedOffer.discountRate || 0.02) - 0.015)), selectedInvoice.currency)}
+                      </span>
+                    </div>
+                  </div>
+                  {error && (
+                    <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-xs flex items-center gap-2">
+                      <AlertCircle size={14} /> {error}
+                    </div>
+                  )}
+                  <div className="flex gap-3">
+                    <button onClick={() => setStep("offers")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
+                    <button
+                      onClick={onExecuteFunding}
+                      disabled={loading}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 disabled:opacity-50 text-white text-sm font-medium transition-colors"
+                    >
+                      {loading ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+                      {loading ? "Processing..." : "Confirm & Fund"}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {step === "success" && (
+              <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={32} className="text-emerald-400" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-white">Funding Executed</h4>
+                  <p className="text-sm text-white/40 mt-1">The factoring request has been submitted and funds will be disbursed within 24 hours.</p>
+                </div>
+                <button onClick={onClose} className="px-5 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors">Done</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }

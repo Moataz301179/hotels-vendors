@@ -31,6 +31,7 @@ import {
   CreditCard,
   Calendar,
   ShoppingBag,
+  HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -83,6 +84,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
+        { icon: HeartPulse, label: "Health", href: "/admin/health" },
       ],
     },
     {
