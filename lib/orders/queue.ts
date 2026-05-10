@@ -15,6 +15,8 @@ import { prisma } from "@/lib/prisma";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
 import type { UserRole } from "@prisma/client";
 import { recordSwarmEvent } from "@/lib/swarm/monitoring";
+import { orderApprovedTemplate } from "@/lib/notifications/email";
+import { addEmailJob } from "@/lib/notifications/queue";
 
 // ── Queue ──
 export const orderQueue = new Queue("order-processing", {
