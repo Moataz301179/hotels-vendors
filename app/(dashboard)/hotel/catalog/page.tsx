@@ -1,15 +1,44 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, Grid3X3, LayoutList, ArrowUpDown, Package } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
 import { CompareProvider } from "@/components/marketplace/compare-context";
 import { CompareDrawer } from "@/components/marketplace/compare-drawer";
 import { SearchBar, type SearchFilters } from "@/components/marketplace/search-bar";
 import { CategoryNav } from "@/components/marketplace/category-nav";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { getCategoryById } from "@/lib/marketplace/categories";
+import { LoadingPage } from "@/components/dashboards/shared/loading-card";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
 import { useRouter } from "next/navigation";
+
+interface ApiProduct {
+  id: string;
+  sku: string;
+  name: string;
+  description: string | null;
+  category: string;
+  subcategory: string | null;
+  unitPrice: number;
+  currency: string;
+  stockQuantity: number;
+  minOrderQty: number;
+  unitOfMeasure: string;
+  leadTimeDays: number;
+  shelfLifeDays: number | null;
+  temperatureReq: string | null;
+  images: string[] | null;
+  supplier: {
+    id: string;
+    name: string;
+    tier: string;
+    city: string;
+    rating?: number;
+    reviewCount?: number;
+  };
+}
 
 interface Product {
   id: string;
@@ -34,16 +63,30 @@ interface Product {
   supplierCity: string;
 }
 
-// Load products from generated catalog data
-import catalogData from "@/data/catalog-products.json";
-
-const CATALOG_PRODUCTS: Product[] = (catalogData as { products: Product[] }).products;
-
-// Compute category counts
-const CATEGORY_COUNTS = CATALOG_PRODUCTS.reduce((acc, p) => {
-  acc[p.category] = (acc[p.category] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>);
+function mapApiProduct(p: ApiProduct): Product {
+  return {
+    id: p.id,
+    sku: p.sku,
+    name: p.name,
+    description: p.description,
+    category: p.category,
+    subcategory: p.subcategory,
+    unitPrice: p.unitPrice,
+    currency: p.currency,
+    stockQuantity: p.stockQuantity,
+    minOrderQty: p.minOrderQty,
+    unitOfMeasure: p.unitOfMeasure,
+    leadTimeDays: p.leadTimeDays,
+    shelfLifeDays: p.shelfLifeDays,
+    temperatureReq: p.temperatureReq,
+    images: p.images,
+    supplierName: p.supplier?.name || "Unknown",
+    supplierTier: p.supplier?.tier || "STANDARD",
+    supplierRating: p.supplier?.rating || 4.0,
+    supplierReviewCount: p.supplier?.reviewCount || 0,
+    supplierCity: p.supplier?.city || "",
+  };
+}
 
 export default function HotelCatalogPage() {
   const router = useRouter();
@@ -54,21 +97,33 @@ export default function HotelCatalogPage() {
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
   const [cart, setCart] = useState<Record<string, number>>({});
 
+  const { data: catalogData, loading, error } = useApi<{ products: ApiProduct[]; pagination: { total: number } }>(
+    "/api/v1/hotel/catalog?page=1&limit=100"
+  );
+
+  const apiProducts = catalogData?.products ?? [];
+  const products = useMemo(() => apiProducts.map(mapApiProduct), [apiProducts]);
+
+  // Compute category counts
+  const CATEGORY_COUNTS = useMemo(() => {
+    return products.reduce((acc, p) => {
+      acc[p.category] = (acc[p.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [products]);
+
   // Apply all filters
   const filteredProducts = useMemo(() => {
-    let filtered = [...CATALOG_PRODUCTS];
+    let filtered = [...products];
 
-    // Category filter from nav
     if (activeCategory) {
       filtered = filtered.filter((p) => p.category === activeCategory);
     }
 
-    // Category filter from search filters
     if (searchFilters.category) {
       filtered = filtered.filter((p) => p.category === searchFilters.category);
     }
 
-    // Text search
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -80,7 +135,6 @@ export default function HotelCatalogPage() {
       );
     }
 
-    // Price filters
     if (searchFilters.priceMin !== undefined) {
       filtered = filtered.filter((p) => p.unitPrice >= searchFilters.priceMin!);
     }
@@ -88,17 +142,14 @@ export default function HotelCatalogPage() {
       filtered = filtered.filter((p) => p.unitPrice <= searchFilters.priceMax!);
     }
 
-    // Rating filter
     if (searchFilters.minRating !== undefined) {
       filtered = filtered.filter((p) => p.supplierRating >= searchFilters.minRating!);
     }
 
-    // Tier filter
     if (searchFilters.supplierTier && searchFilters.supplierTier !== "ALL") {
       filtered = filtered.filter((p) => p.supplierTier === searchFilters.supplierTier);
     }
 
-    // Sort
     if (sortBy === "price_low") {
       filtered.sort((a, b) => a.unitPrice - b.unitPrice);
     } else if (sortBy === "price_high") {
@@ -110,12 +161,11 @@ export default function HotelCatalogPage() {
     }
 
     return filtered;
-  }, [activeCategory, searchQuery, searchFilters, sortBy]);
+  }, [activeCategory, searchQuery, searchFilters, sortBy, products]);
 
   const handleSearch = (query: string, filters: SearchFilters) => {
     setSearchQuery(query);
     setSearchFilters(filters);
-    // If a category filter is set in search, also update activeCategory
     if (filters.category) {
       setActiveCategory(filters.category);
     }
@@ -126,185 +176,178 @@ export default function HotelCatalogPage() {
   };
 
   const totalCartItems = Object.values(cart).reduce((s, q) => s + q, 0);
-
-  // Get active category label for display
   const activeCategoryLabel = activeCategory ? getCategoryById(activeCategory)?.label : null;
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <EmptyState title="Error loading catalog" description={error} />
+      </div>
+    );
+  }
 
   return (
     <CompareProvider>
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero */}
-      <div className="relative overflow-hidden border-b border-white/[0.06]">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#022349]/10 via-transparent to-[#022349]/5" />
-        <div className="relative max-w-[1600px] mx-auto px-6 py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-2xl"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Package className="w-5 h-5 text-[#022349]" />
-              <span className="text-xs font-medium text-[#022349] uppercase tracking-wider">
-                Procurement Marketplace
-              </span>
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight mb-2">
-              {activeCategoryLabel ? `${activeCategoryLabel} Products` : "One-Stop Hotel Procurement"}
-            </h1>
-            <p className="text-white/50 text-sm mb-6">
-              {activeCategoryLabel
-                ? `Browse ${CATEGORY_COUNTS[activeCategory] ?? 0}+ verified products in ${activeCategoryLabel.toLowerCase()}. Fixed pricing, no bidding, ETA-ready.`
-                : `Browse ${CATALOG_PRODUCTS.length}+ verified products from 57 Egyptian suppliers across 10 hotel procurement categories. Fixed pricing, no bidding, ETA-ready.`}
-            </p>
-            <SearchBar
-              onSearch={handleSearch}
-              placeholder="Search products, suppliers, SKUs..."
-              suggestions={["Olive Oil", "Bed Sheets", "HVAC Filters", "Cleaning Chemicals"]}
-              recentSearches={["Beef Cuts", "Bath Amenities", "Fresh Produce"]}
-              trending={["Rice 25kg", "Salmon Fillet", "Deep Fryer", "Kitchen Equipment"]}
+      <div className="min-h-screen bg-black text-white">
+        {/* Hero */}
+        <div className="relative overflow-hidden border-b border-white/[0.06]">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#022349]/10 via-transparent to-[#022349]/5" />
+          <div className="relative max-w-[1600px] mx-auto px-6 py-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-2xl"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Package className="w-5 h-5 text-[#022349]" />
+                <span className="text-xs font-medium text-[#022349] uppercase tracking-wider">Procurement Marketplace</span>
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight mb-2">
+                {activeCategoryLabel ? `${activeCategoryLabel} Products` : "One-Stop Hotel Procurement"}
+              </h1>
+              <p className="text-white/50 text-sm mb-6">
+                {activeCategoryLabel
+                  ? `Browse ${CATEGORY_COUNTS[activeCategory] ?? 0}+ verified products in ${activeCategoryLabel.toLowerCase()}. Fixed pricing, no bidding, ETA-ready.`
+                  : `Browse ${products.length}+ verified products from Egyptian suppliers. Fixed pricing, no bidding, ETA-ready.`}
+              </p>
+              <SearchBar
+                onSearch={handleSearch}
+                placeholder="Search products, suppliers, SKUs..."
+                suggestions={["Olive Oil", "Bed Sheets", "HVAC Filters", "Cleaning Chemicals"]}
+                recentSearches={["Beef Cuts", "Bath Amenities", "Fresh Produce"]}
+                trending={["Rice 25kg", "Salmon Fillet", "Deep Fryer", "Kitchen Equipment"]}
+              />
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Category Nav */}
+        <div className="border-b border-white/[0.06] bg-[#0a0a0a]/50 backdrop-blur-sm">
+          <div className="max-w-[1600px] mx-auto px-6">
+            <CategoryNav
+              activeCategory={activeCategory}
+              onSelectCategory={(id) => {
+                setActiveCategory(id);
+                setSearchQuery("");
+              }}
+              counts={CATEGORY_COUNTS}
             />
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Category Nav */}
-      <div className="border-b border-white/[0.06] bg-[#0a0a0a]/50 backdrop-blur-sm">
-        <div className="max-w-[1600px] mx-auto px-6">
-          <CategoryNav
-            activeCategory={activeCategory}
-            onSelectCategory={(id) => {
-              setActiveCategory(id);
-              setSearchQuery("");
-            }}
-            counts={CATEGORY_COUNTS}
-          />
-        </div>
-      </div>
-
-      {/* Toolbar */}
-      <div className="border-b border-white/[0.06]">
-        <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-white/40">
-              {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
-            </span>
-            {activeCategoryLabel && (
-              <span className="px-2 py-0.5 rounded-md bg-[#022349]/15 border border-[#022349]/25 text-[#022349] text-xs font-medium">
-                {activeCategoryLabel}
-              </span>
-            )}
-            {totalCartItems > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full bg-[#022349]/20 border border-[#022349]/30 text-[#022349] text-xs font-medium">
-                {totalCartItems} in cart
-              </span>
-            )}
           </div>
-          <div className="flex items-center gap-3">
-            {/* Sort */}
-            <div className="flex items-center gap-2">
-              <ArrowUpDown className="w-3.5 h-3.5 text-white/30" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent text-sm text-white/60 outline-none cursor-pointer"
-              >
-                <option value="relevance" className="bg-[#0a0a0a]">Relevance</option>
-                <option value="price_low" className="bg-[#0a0a0a]">Price: Low to High</option>
-                <option value="price_high" className="bg-[#0a0a0a]">Price: High to Low</option>
-                <option value="rating" className="bg-[#0a0a0a]">Top Rated</option>
-                <option value="lead_time" className="bg-[#0a0a0a]">Fastest Delivery</option>
-              </select>
+        </div>
+
+        {/* Toolbar */}
+        <div className="border-b border-white/[0.06]">
+          <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-white/40">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}</span>
+              {activeCategoryLabel && (
+                <span className="px-2 py-0.5 rounded-md bg-[#022349]/15 border border-[#022349]/25 text-[#022349] text-xs font-medium">{activeCategoryLabel}</span>
+              )}
+              {totalCartItems > 0 && (
+                <span className="px-2.5 py-0.5 rounded-full bg-[#022349]/20 border border-[#022349]/30 text-[#022349] text-xs font-medium">{totalCartItems} in cart</span>
+              )}
             </div>
-            {/* View Toggle */}
-            <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#022349] text-white" : "text-white/40 hover:text-white/70"}`}
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#022349] text-white" : "text-white/40 hover:text-white/70"}`}
-              >
-                <LayoutList className="w-4 h-4" />
-              </button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="w-3.5 h-3.5 text-white/30" />
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-sm text-white/60 outline-none cursor-pointer">
+                  <option value="relevance" className="bg-[#0a0a0a]">Relevance</option>
+                  <option value="price_low" className="bg-[#0a0a0a]">Price: Low to High</option>
+                  <option value="price_high" className="bg-[#0a0a0a]">Price: High to Low</option>
+                  <option value="rating" className="bg-[#0a0a0a]">Top Rated</option>
+                  <option value="lead_time" className="bg-[#0a0a0a]">Fastest Delivery</option>
+                </select>
+              </div>
+              <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">
+                <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[#022349] text-white" : "text-white/40 hover:text-white/70"}`}>
+                  <Grid3X3 className="w-4 h-4" />
+                </button>
+                <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "bg-[#022349] text-white" : "text-white/40 hover:text-white/70"}`}>
+                  <LayoutList className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Product Grid */}
-      <div className="max-w-[1600px] mx-auto px-6 py-8">
-        {filteredProducts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-white/30">
-            <SlidersHorizontal className="w-12 h-12 mb-4" />
-            <p className="text-lg font-medium">No products found</p>
-            <p className="text-sm mt-1">Try adjusting your search or filters</p>
-            {activeCategory && (
-              <button
-                onClick={() => setActiveCategory("")}
-                className="mt-4 px-4 py-2 rounded-lg bg-[#022349] text-white text-sm font-medium hover:bg-[#6B0512] transition-colors"
-              >
-                View All Products
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
-            {filteredProducts.map((product, i) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.02 }}
-              >
-                <ProductCard
-                  id={product.id}
-                  name={product.name}
-                  description={product.description || undefined}
-                  sku={product.sku}
-                  category={product.category}
-                  subcategory={product.subcategory || undefined}
-                  unitPrice={product.unitPrice}
-                  currency={product.currency}
-                  stockQuantity={product.stockQuantity}
-                  minOrderQty={product.minOrderQty}
-                  unitOfMeasure={product.unitOfMeasure}
-                  leadTimeDays={product.leadTimeDays}
-                  shelfLifeDays={product.shelfLifeDays || undefined}
-                  temperatureReq={product.temperatureReq || undefined}
-                  supplierName={product.supplierName}
-                  supplierTier={product.supplierTier}
-                  supplierRating={product.supplierRating}
-                  supplierReviewCount={product.supplierReviewCount}
-                  supplierCity={product.supplierCity}
-                  onAddToCart={handleAddToCart}
-                  onViewDetails={(id) => router.push(`/hotel/catalog/${id}`)}
-                  compareData={{
-                    id: product.id,
-                    name: product.name,
-                    category: product.category,
-                    unitPrice: product.unitPrice,
-                    currency: product.currency,
-                    supplierName: product.supplierName,
-                    supplierRating: product.supplierRating,
-                    supplierTier: product.supplierTier,
-                    supplierCity: product.supplierCity,
-                    stockQuantity: product.stockQuantity,
-                    leadTimeDays: product.leadTimeDays,
-                    minOrderQty: product.minOrderQty,
-                    unitOfMeasure: product.unitOfMeasure,
-                  }}
-                />
-              </motion.div>
-            ))}
-          </div>
-        )}
+        {/* Product Grid */}
+        <div className="max-w-[1600px] mx-auto px-6 py-8">
+          {filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24">
+              <EmptyState
+                title="No products found"
+                description="Try adjusting your search or filters"
+                action={
+                  activeCategory && (
+                    <button
+                      onClick={() => setActiveCategory("")}
+                      className="mt-4 px-4 py-2 rounded-lg bg-[#022349] text-white text-sm font-medium hover:bg-[#022349]/80 transition-colors"
+                    >
+                      View All Products
+                    </button>
+                  )
+                }
+              />
+            </div>
+          ) : (
+            <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
+              {filteredProducts.map((product, i) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.02 }}
+                >
+                  <ProductCard
+                    id={product.id}
+                    name={product.name}
+                    description={product.description || undefined}
+                    sku={product.sku}
+                    category={product.category}
+                    subcategory={product.subcategory || undefined}
+                    unitPrice={product.unitPrice}
+                    currency={product.currency}
+                    stockQuantity={product.stockQuantity}
+                    minOrderQty={product.minOrderQty}
+                    unitOfMeasure={product.unitOfMeasure}
+                    leadTimeDays={product.leadTimeDays}
+                    shelfLifeDays={product.shelfLifeDays || undefined}
+                    temperatureReq={product.temperatureReq || undefined}
+                    supplierName={product.supplierName}
+                    supplierTier={product.supplierTier}
+                    supplierRating={product.supplierRating}
+                    supplierReviewCount={product.supplierReviewCount}
+                    supplierCity={product.supplierCity}
+                    onAddToCart={handleAddToCart}
+                    onViewDetails={(id) => router.push(`/hotel/catalog/${id}`)}
+                    compareData={{
+                      id: product.id,
+                      name: product.name,
+                      category: product.category,
+                      unitPrice: product.unitPrice,
+                      currency: product.currency,
+                      supplierName: product.supplierName,
+                      supplierRating: product.supplierRating,
+                      supplierTier: product.supplierTier,
+                      supplierCity: product.supplierCity,
+                      stockQuantity: product.stockQuantity,
+                      leadTimeDays: product.leadTimeDays,
+                      minOrderQty: product.minOrderQty,
+                      unitOfMeasure: product.unitOfMeasure,
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+        <CompareDrawer />
       </div>
-      <CompareDrawer />
-    </div>
     </CompareProvider>
   );
 }
