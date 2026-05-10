@@ -160,7 +160,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.worker
-    container_name: hv-swarm-worker
     restart: unless-stopped
     environment:
       - NODE_ENV=production
