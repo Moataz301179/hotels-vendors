@@ -4,8 +4,16 @@ import { verifyPassword } from "@/lib/auth";
 import { createSession } from "@/lib/session";
 import { LoginSchema } from "@/lib/zod";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
+import { checkRateLimit } from "@/lib/redis";
 
 export const POST = apiRoute(async (request: NextRequest) => {
+  // Rate limit: 5 attempts per minute per IP
+  const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+  const rateLimit = await checkRateLimit(`login:${clientIp}`, 60, 5);
+  if (!rateLimit.allowed) {
+    return error("Too many login attempts. Please try again later.", 429);
+  }
+
   const body = await request.json();
   const data = validateBody(LoginSchema, body);
 

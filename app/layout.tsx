@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { NotificationProvider } from "@/components/notifications/notification-context";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -130,6 +131,23 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#121212" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                      console.warn('SW registration failed:', err);
+                    });
+                  });
+                }
+              }
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -168,7 +186,9 @@ export default function RootLayout({
           color: "var(--text-primary)",
         }}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <NotificationProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </NotificationProvider>
       </body>
     </html>
   );

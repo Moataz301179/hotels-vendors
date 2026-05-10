@@ -3,9 +3,17 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { createSession } from "@/lib/session";
 import { BusinessRegisterSchema } from "@/lib/zod";
-import { apiRoute, validateBody, success, audit } from "@/lib/api-utils";
+import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
+import { checkRateLimit } from "@/lib/redis";
 
 export const POST = apiRoute(async (request: NextRequest) => {
+  // Rate limit: 3 registrations per hour per IP
+  const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+  const rateLimit = await checkRateLimit(`register:${clientIp}`, 3600, 3);
+  if (!rateLimit.allowed) {
+    return error("Too many registration attempts. Please try again later.", 429);
+  }
+
   const body = await request.json();
   const data = validateBody(BusinessRegisterSchema, body);
 

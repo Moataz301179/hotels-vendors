@@ -5,6 +5,10 @@
 
 import { initializeSwarmWorkers, setupScheduledJobs } from "./scheduler";
 import { recordSwarmEvent } from "./monitoring";
+import { createEtaWorker, createEtaDeadLetterWorker } from "@/lib/eta/queue";
+import { createOrderWorker } from "@/lib/orders/queue";
+import { createFactoringWorker } from "@/lib/factoring/queue";
+import { createEmailWorker } from "@/lib/notifications/queue";
 
 async function main() {
   console.log("[SwarmWorker] 🐝 Starting worker...");
@@ -12,6 +16,16 @@ async function main() {
   // Initialize all squad workers
   const workers = initializeSwarmWorkers();
   console.log(`[SwarmWorker] ✅ ${workers.length} squad workers initialized`);
+
+  // Initialize business-logic workers
+  const etaWorker = createEtaWorker();
+  const etaDlqWorker = createEtaDeadLetterWorker();
+  const orderWorker = createOrderWorker();
+  const factoringWorker = createFactoringWorker();
+  const emailWorker = createEmailWorker();
+
+  workers.push(etaWorker, etaDlqWorker, orderWorker, factoringWorker, emailWorker);
+  console.log(`[SwarmWorker] ✅ 5 business workers initialized (eta, orders, factoring, email)`);
 
   // Setup scheduled cron jobs
   await setupScheduledJobs();

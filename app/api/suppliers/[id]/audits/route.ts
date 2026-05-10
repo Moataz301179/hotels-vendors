@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SupplierAuditCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(
   _request: NextRequest,
@@ -57,9 +58,10 @@ export async function POST(
       );
     }
 
+    const auth = await authenticate(request);
     const audit = await prisma.supplierAudit.create({
       data: {
-          tenantId: "system", // TODO: add authentication and use auth.tenantId
+        tenantId: auth.tenantId,
         supplierId: id,
         auditorName: validated.auditorName,
         auditDate: new Date(validated.auditDate),

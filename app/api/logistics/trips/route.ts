@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,9 +42,10 @@ export async function POST(request: NextRequest) {
     const validated = TripCreateSchema.parse(body);
 
     const tripNumber = `TRIP-${Date.now()}`;
+    const auth = await authenticate(request);
     const trip = await prisma.trip.create({
       data: {
-          tenantId: "system", // TODO: add authentication and use auth.tenantId
+        tenantId: auth.tenantId,
         ...validated,
         tripNumber,
         scheduledDate: new Date(validated.scheduledDate),

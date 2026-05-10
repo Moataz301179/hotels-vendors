@@ -32,6 +32,7 @@ import {
   Calendar,
   ShoppingBag,
   HeartPulse,
+  FileEdit,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -85,6 +86,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
         { icon: HeartPulse, label: "Health", href: "/admin/health" },
+        { icon: FileEdit, label: "Content Editor", href: "/admin/cms" },
       ],
     },
     {

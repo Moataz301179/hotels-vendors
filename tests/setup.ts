@@ -33,12 +33,14 @@ vi.mock("@sentry/nextjs", () => ({
 
 // Mock Prisma adapter-pg for tests
 vi.mock("@prisma/adapter-pg", () => ({
-  PrismaPg: vi.fn().mockImplementation(() => ({})),
+  PrismaPg: class MockPrismaPg {
+    constructor(_pool: unknown) {}
+  },
 }));
 
 vi.mock("pg", () => ({
-  Pool: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue({ rows: [] }),
-    end: vi.fn().mockResolvedValue(undefined),
-  })),
+  Pool: class MockPool {
+    query = vi.fn().mockResolvedValue({ rows: [] });
+    end = vi.fn().mockResolvedValue(undefined);
+  },
 }));

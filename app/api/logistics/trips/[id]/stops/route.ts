@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripStopCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function POST(
   request: NextRequest,
@@ -25,9 +26,10 @@ export async function POST(
       );
     }
 
+    const auth = await authenticate(request);
     const stop = await prisma.tripStop.create({
       data: {
-          tenantId: "system", // TODO: add authentication and use auth.tenantId
+        tenantId: auth.tenantId,
         tripId: id,
         hotelId: trip.hubId, // fallback; in real use case, derive from order
         orderId: validated.orderId,

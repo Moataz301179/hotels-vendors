@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -72,9 +73,10 @@ export async function POST(request: NextRequest) {
     const vatAmount = subtotal * 0.14;
     const total = subtotal + vatAmount;
 
+    const auth = await authenticate(request);
     const order = await prisma.order.create({
       data: {
-          tenantId: "system", // TODO: add authentication and use auth.tenantId
+        tenantId: auth.tenantId,
         ...orderData,
         subtotal,
         vatAmount,

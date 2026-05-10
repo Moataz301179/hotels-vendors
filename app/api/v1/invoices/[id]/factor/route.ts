@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { inquireAll, fundThroughPartner } from "@/lib/fintech/factoring-bridge";
+import { inquireAll } from "@/lib/fintech/factoring-bridge";
 import { validateForFactoring } from "@/lib/eta/validator";
 import { assessRisk } from "@/lib/fintech/risk-engine";
 import { calculateHubRevenue } from "@/lib/fintech/hub-revenue";
+import { addFactoringJob } from "@/lib/factoring/queue";
 import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
@@ -57,43 +58,14 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     advanceRate: bestOffer.maxAdvanceRate,
   });
 
-  // Execute funding
-  const funding = await fundThroughPartner(bestOffer.partnerId, {
-    eligibilityResponseId: bestOffer.responseId,
-    invoiceId: id,
-    etaUuid: invoice.etaUuid || "",
-    grossAmount: invoice.total,
-    platformFee: hubRev.netPlatformFee,
-    netDisbursement: hubRev.supplierDisbursement,
-    supplierBankAccount: invoice.supplier.bankAccount || "",
-    supplierBankName: invoice.supplier.bankName || "",
-    supplierTaxId: invoice.supplier.taxId,
-    hotelTaxId: invoice.hotel.taxId,
-  });
-
-  if (!funding.success) {
-    return error("Funding execution failed", 502);
-  }
-
-  // Update invoice
-  await prisma.invoice.update({
-    where: { id },
+  // Create factoring request record (queued for background processing)
+  const factoringRequest = await prisma.factoringRequest.create({
     data: {
-      factoringStatus: "ACCEPTED",
-      factoringCompanyId: bestOffer.partnerId,
-      factoringAmount: funding.disbursedAmount,
-      paymentStatus: "FACTORED",
-    },
-  });
-
-  // Create factoring request record
-  await prisma.factoringRequest.create({
-    data: {
-          tenantId: auth.tenantId,
+      tenantId: auth.tenantId,
       invoiceId: id,
       factoringCompanyId: bestOffer.partnerId,
       requestedAmount: invoice.total,
-      status: "DISBURSED",
+      status: "APPROVED",
       riskScore: risk.compositeScore,
       riskTier: risk.riskTier,
       advanceRate: bestOffer.maxAdvanceRate,
@@ -103,22 +75,37 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
       platformFee: hubRev.netPlatformFee,
       netPlatformFee: hubRev.netPlatformFee,
       factoringFee: hubRev.factoringFee,
-      disbursedAmount: funding.disbursedAmount,
-      disbursedAt: funding.disbursedAt,
-      partnerResponse: JSON.stringify(funding.partnerResponse || {}),
+    },
+  });
+
+  // Queue funding execution
+  const job = await addFactoringJob({
+    factoringRequestId: factoringRequest.id,
+    tenantId: auth.tenantId,
+    userId: auth.userId,
+    action: "FUND",
+  });
+
+  // Update invoice
+  await prisma.invoice.update({
+    where: { id },
+    data: {
+      factoringStatus: "ACCEPTED",
+      factoringCompanyId: bestOffer.partnerId,
     },
   });
 
   await audit({
     entityType: "INVOICE",
     entityId: id,
-    action: "FACTORING_FUNDED",
+    action: "FACTORING_QUEUED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: {
       partnerId: bestOffer.partnerId,
-      disbursedAmount: funding.disbursedAmount,
+      factoringRequestId: factoringRequest.id,
+      jobId: job.id,
       platformFee: hubRev.netPlatformFee,
       factoringFee: hubRev.factoringFee,
     },
@@ -129,8 +116,9 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   completeIdempotency(idempotencyKey, id);
 
   return success({
-    message: "Factoring funded successfully",
-    funding,
+    message: "Factoring queued for disbursement",
+    factoringRequestId: factoringRequest.id,
+    jobId: job.id,
     hubRevenue: hubRev,
     offers: allOffers,
   });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { HotelCreateSchema, HotelUpdateSchema, PaginationSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -61,8 +62,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = HotelCreateSchema.parse(body);
 
+    const auth = await authenticate(request);
     const hotel = await prisma.hotel.create({
-      data: { ...validated, tenantId: "system" }, // TODO: add authentication and use auth.tenantId
+      data: { ...validated, tenantId: auth.tenantId },
     });
 
     return NextResponse.json({ success: true, data: hotel }, { status: 201 });

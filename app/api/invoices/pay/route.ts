@@ -19,6 +19,22 @@ export async function POST(req: NextRequest) {
       data: { paymentStatus: "PAID" as any },
     });
 
+    // Create Payment record
+    const payment = await prisma.payment.create({
+      data: {
+        tenantId: inv.hotel.tenantId,
+        invoiceId: inv.id,
+        hotelId: inv.hotelId,
+        paymentNumber: `PAY-${inv.invoiceNumber}-${Date.now()}`,
+        amount: inv.total,
+        currency: "EGP",
+        method: "BANK_TRANSFER",
+        status: "PAID",
+        referenceCode: `REF-${Date.now()}`,
+        paidAt: new Date(),
+      },
+    });
+
     // Auto-post payment journal: Dr AP / Cr Bank
     const lines = [
       { accountCode: "2100", accountName: "Accounts Payable", debit: inv.total, credit: 0 },
@@ -27,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     await prisma.journalEntry.create({
       data: {
-          tenantId: inv.hotel.tenantId,
+        tenantId: inv.hotel.tenantId,
         entryNumber: `JE-PAY-${inv.invoiceNumber}`,
         date: new Date(),
         sourceType: "PAYMENT",
@@ -41,7 +57,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, data: { paymentId: payment.id } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

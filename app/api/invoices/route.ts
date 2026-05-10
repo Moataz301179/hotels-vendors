@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { InvoiceCreateSchema, PaginationSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,8 +52,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = InvoiceCreateSchema.parse(body);
 
+    const auth = await authenticate(request);
     const invoice = await prisma.invoice.create({
-      data: { ...validated, tenantId: "system" }, // TODO: add authentication and use auth.tenantId
+      data: { ...validated, tenantId: auth.tenantId },
       include: {
         order: { select: { id: true, orderNumber: true } },
         hotel: { select: { id: true, name: true } },

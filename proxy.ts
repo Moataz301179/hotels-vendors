@@ -21,15 +21,27 @@ const PUBLIC_PATHS = [
   "/",
   "/login",
   "/register",
+  "/forgot-password",
+  "/verify-email",
   "/catalog",
   "/eta-demo",
   "/hotels",
   "/marketplace",
   "/suppliers",
   "/about",
+  "/pricing",
+  "/solutions",
+  "/contact",
+  "/become-supplier",
+  "/social-media",
+  "/offline",
+  "/help",
   "/api/v1/auth/login",
   "/api/v1/auth/register",
   "/api/v1/auth/refresh",
+  "/api/v1/auth/verify",
+  "/api/v1/supplier/onboard",
+  "/api/v1/cms/content",
   "/api/health",
 ];
 
@@ -39,11 +51,16 @@ const PUBLIC_PREFIXES = [
   "/favicon",
   "/logo",
   "/uploads",
+  "/videos",
   "/api/webhooks",
+  "/manifest.json",
+  "/sw.js",
+  "/robots.txt",
+  "/sitemap",
 ];
 
 const ROLE_ROUTES: Record<string, string[]> = {
-  ADMIN: ["/admin"],
+  ADMIN: ["/admin", "/hotel", "/supplier", "/factoring", "/shipping", "/marketing", "/analytics", "/ai-agents", "/procurement", "/orders", "/payments", "/scheduler", "/security", "/dispute", "/settings", "/eta"],
   HOTEL: ["/hotel"],
   SUPPLIER: ["/supplier"],
   FACTORING: ["/factoring"],
@@ -69,19 +86,27 @@ function isPublicPath(path: string): boolean {
 
 function isProtectedPath(path: string): boolean {
   return (
-    path.startsWith("/hotel/") ||
-    path === "/hotel" ||
-    path.startsWith("/supplier/") ||
-    path === "/supplier" ||
-    path.startsWith("/factoring/") ||
-    path === "/factoring" ||
-    path.startsWith("/shipping/") ||
-    path === "/shipping" ||
-    path.startsWith("/admin/") ||
-    path === "/admin" ||
-    path.startsWith("/marketing/") ||
-    path === "/marketing"
+    path.startsWith("/hotel") ||
+    path.startsWith("/supplier") ||
+    path.startsWith("/factoring") ||
+    path.startsWith("/shipping") ||
+    path.startsWith("/admin") ||
+    path.startsWith("/marketing") ||
+    path.startsWith("/analytics") ||
+    path.startsWith("/ai-agents") ||
+    path.startsWith("/procurement") ||
+    path.startsWith("/orders") ||
+    path.startsWith("/payments") ||
+    path.startsWith("/scheduler") ||
+    path.startsWith("/security") ||
+    path.startsWith("/dispute") ||
+    path.startsWith("/settings") ||
+    path.startsWith("/eta")
   );
+}
+
+function isApiPath(path: string): boolean {
+  return path.startsWith("/api/");
 }
 
 async function verifySession(token: string) {
@@ -111,6 +136,23 @@ export async function proxy(request: NextRequest) {
 
   // Read session cookie
   const token = request.cookies.get(SESSION_COOKIE)?.value;
+
+  // ── API routes: require valid session ──
+  if (isApiPath(pathname)) {
+    if (!token) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    const session = await verifySession(token);
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Invalid or expired session" }, { status: 401 });
+    }
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", session.userId);
+    requestHeaders.set("x-tenant-id", session.tenantId);
+    requestHeaders.set("x-platform-role", session.platformRole);
+    requestHeaders.set("x-session-token", token);
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
 
   // No token on protected route → redirect to login
   if (!token && isProtectedPath(pathname)) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CreditFacilityCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { authenticate } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,9 +37,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = CreditFacilityCreateSchema.parse(body);
 
+    const auth = await authenticate(request);
     const facility = await prisma.creditFacility.create({
       data: {
-          tenantId: "system", // TODO: add authentication and use auth.tenantId
+        tenantId: auth.tenantId,
         ...validated,
         status: "PENDING",
         utilized: 0,

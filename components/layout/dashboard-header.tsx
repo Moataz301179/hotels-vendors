@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Bell, Settings, SlidersHorizontal, Menu, ShoppingCart } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useCart } from "@/components/cart/cart-context";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 interface DashboardHeaderProps {
   role: string;
@@ -84,10 +85,7 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
           )}
         </button>
 
-        <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all">
-          <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#022349] ring-2 ring-[#121212]" />
-        </button>
+        <NotificationBell />
 
         <button className="flex items-center gap-2 pl-1">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#022349] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10 flex-shrink-0">

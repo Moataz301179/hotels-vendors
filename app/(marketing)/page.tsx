@@ -26,12 +26,19 @@ import {
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { HeroCarousel } from "@/components/marketing/hero-carousel";
+import { getCmsPage } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Hotels Vendors — Egypt's First AI-Powered Hospitality Procurement Hub",
-  description:
-    "The intelligent procurement platform for Egyptian hospitality. Cut costs by up to 30%. 48-hour delivery. Guaranteed payments. Full ETA compliance.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getCmsPage("home");
+  return {
+    title:
+      cms?.metaTitle ||
+      "Hotels Vendors — Egypt's First AI-Powered Hospitality Procurement Hub",
+    description:
+      cms?.metaDescription ||
+      "The intelligent procurement platform for Egyptian hospitality. Cut costs by up to 30%. 48-hour delivery. Guaranteed payments. Full ETA compliance.",
+  };
+}
 
 const STATS = [
   { value: "1,200+", label: "Verified Suppliers", sub: "Vetted & ETA-certified" },
@@ -113,7 +120,8 @@ const STEPS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cms = await getCmsPage("home");
   return (
     <main className="min-h-screen bg-[#050505]">
       <MarketingNav />
@@ -135,13 +143,12 @@ export default function HomePage() {
 
             {/* Headline */}
             <h1 className="text-[42px] md:text-[64px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
-              Egypt's First AI-Powered Hospitality Procurement Hub
+              {cms?.heroTitle || "Egypt's First AI-Powered Hospitality Procurement Hub"}
             </h1>
 
             {/* Subtitle */}
             <p className="mt-5 text-[16px] md:text-[18px] text-white/60 leading-relaxed max-w-lg">
-              The Intelligent Procurement Platform for Egyptian Hospitality.
-              Cut costs by up to 30%, 48-hour delivery, Guaranteed payments. Full ETA compliance.
+              {cms?.heroDescription || "The Intelligent Procurement Platform for Egyptian Hospitality. Cut costs by up to 30%, 48-hour delivery, Guaranteed payments. Full ETA compliance."}
             </p>
 
             {/* CTAs */}
@@ -282,10 +289,10 @@ export default function HomePage() {
 
             <div className="relative z-10">
               <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
-                Ready to Transform Your Hotel's Procurement?
+                {cms?.ctaTitle || "Ready to Transform Your Hotel's Procurement?"}
               </h2>
               <p className="mt-4 text-[15px] text-white/40 max-w-xl mx-auto">
-                Join hundreds of hotels and suppliers already benefiting from smarter, faster, more transparent procurement across Egypt.
+                {cms?.ctaDescription || "Join hundreds of hotels and suppliers already benefiting from smarter, faster, more transparent procurement across Egypt."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

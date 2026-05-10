@@ -6,9 +6,9 @@ on:
 
 jobs:
   deploy:
-    name: Build & Deploy to Hostinger
+    name: Build & Deploy to Hostinger (Docker Compose)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -25,37 +25,37 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to VPS
+      - name: Deploy to VPS (Docker Compose)
         run: |
           ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
             set -e
             echo "═══════════════════════════════════════════"
             echo "  Hotels Vendors — Auto Deploy Started"
             echo "  Commit: ${{ github.sha }}"
+            echo "  Method: Docker Compose"
             echo "═══════════════════════════════════════════"
 
             cd /var/www/hotelsvendors
 
-            echo "[1/6] Pulling latest code..."
+            echo "[1/5] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
 
-            echo "[2/6] Installing dependencies..."
-            npm ci --legacy-peer-deps
+            echo "[2/5] Running Prisma migrations..."
+            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
 
-            echo "[3/6] Building..."
-            npm run build
+            echo "[3/5] Building all services..."
+            docker compose -f docker-compose.swarm.yml build --no-cache
 
-            echo "[4/6] Ensuring PM2 is installed..."
-            if ! command -v pm2 &> /dev/null; then
-              sudo npm install -g pm2
-            fi
+            echo "[4/5] Starting full stack..."
+            docker compose -f docker-compose.swarm.yml up -d
 
-            echo "[5/6] Reloading app with PM2..."
-            pm2 reload hotelsvendors-production --update-env || pm2 start deploy/pm2-config.json
-
-            echo "[6/6] Saving PM2 process list..."
-            pm2 save
+            echo "[5/5] Health checks..."
+            sleep 10
+            APP_STATUS=$(docker inspect --format='{{.State.Status}}' hv-app 2>/dev/null || echo "unknown")
+            WORKER_STATUS=$(docker inspect --format='{{.State.Status}}' hv-swarm-worker 2>/dev/null || echo "unknown")
+            echo "  App:     $APP_STATUS"
+            echo "  Worker:  $WORKER_STATUS"
 
             echo "═══════════════════════════════════════════"
             echo "  Deploy Complete"
@@ -64,5 +64,5 @@ jobs:
 
       - name: Verify deployment
         run: |
-          sleep 5
-          curl -sfI http://${{ secrets.HOSTINGER_IP }}:3000 || echo "Health check skipped — server may use different port"
+          sleep 10
+          curl -sfI https://www.hotelsvendors.com/api/health || echo "Health check failed — check server logs"
