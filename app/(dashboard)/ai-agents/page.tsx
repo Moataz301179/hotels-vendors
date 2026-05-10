@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Bot, Brain, Zap, Activity, MessageSquare, TrendingUp,
-  ArrowUpRight, ArrowDownRight, Play, Pause, Settings,
-  Users, Target, Sparkles, Clock, CheckCircle2, AlertCircle,
+  Bot, Brain, Zap, Activity, Sparkles, Play, Settings,
+  ArrowUpRight, ArrowDownRight, Clock, CheckCircle2,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
+import { LoadingCard } from "@/components/dashboards/shared/loading-card";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -18,43 +20,24 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const AGENT_STATS = [
-  { label: "Active Agents", value: "15", change: "All squads online", up: true, icon: Bot },
-  { label: "Tasks Today", value: "342", change: "+28 from yesterday", up: true, icon: Zap },
-  { label: "Success Rate", value: "96.4%", change: "Avg completion", up: true, icon: CheckCircle2 },
-  { label: "Queue Depth", value: "12", change: "Low backlog", up: true, icon: Activity },
-];
-
-const AGENTS = [
-  { id: "growth-01", name: "Lead Harvester", squad: "Growth", status: "active", tasks: 45, success: 98, description: "Auto-enrich and qualify inbound leads", icon: Target },
-  { id: "growth-02", name: "SEO Strategist", squad: "Growth", status: "active", tasks: 32, success: 94, description: "Optimize content and keyword targeting", icon: TrendingUp },
-  { id: "ops-01", name: "Inventory Sync", squad: "Operations", status: "active", tasks: 128, success: 99, description: "Real-time supplier inventory updates", icon: Zap },
-  { id: "ops-02", name: "Route Optimizer", squad: "Operations", status: "idle", tasks: 0, success: 100, description: "AI-powered delivery route planning", icon: Activity },
-  { id: "intel-01", name: "Price Watcher", squad: "Intelligence", status: "active", tasks: 67, success: 97, description: "Market price monitoring and alerts", icon: TrendingUp },
-  { id: "intel-02", name: "Trust Scorer", squad: "Intelligence", status: "active", tasks: 23, success: 92, description: "Supplier risk assessment engine", icon: Brain },
-  { id: "exec-01", name: "Order Processor", squad: "Execution", status: "active", tasks: 89, success: 96, description: "Automated order approval workflow", icon: CheckCircle2 },
-  { id: "exec-02", name: "ETA Validator", squad: "Execution", status: "active", tasks: 47, success: 99, description: "Invoice compliance verification", icon: AlertCircle },
-];
-
-const RECENT_RUNS = [
-  { agent: "Lead Harvester", task: "Enrich hotel leads batch #482", status: "completed", time: "2m ago", duration: "45s" },
-  { agent: "Price Watcher", task: "Price check: Cleaning supplies", status: "completed", time: "5m ago", duration: "12s" },
-  { agent: "Inventory Sync", task: "Sync El Araby Group catalog", status: "running", time: "8m ago", duration: "--" },
-  { agent: "Trust Scorer", task: "Score new supplier: Nile Fresh", status: "completed", time: "12m ago", duration: "23s" },
-  { agent: "Route Optimizer", task: "Optimize Route C for tomorrow", status: "queued", time: "15m ago", duration: "--" },
-  { agent: "Order Processor", task: "Process PR-2026-0088 approval", status: "completed", time: "18m ago", duration: "8s" },
-];
+interface AgentRun {
+  id: string;
+  agentName: string;
+  status: string;
+  taskDescription: string;
+  startedAt: string;
+  completedAt: string | null;
+  result: string | null;
+}
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    active: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Active" },
-    idle: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Idle" },
-    error: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Error" },
-    running: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Running" },
     completed: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Completed" },
+    running: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Running" },
+    failed: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Failed" },
     queued: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Queued" },
   };
-  const c = config[status] || config.idle;
+  const c = config[status] || config.queued;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
@@ -66,10 +49,31 @@ function StatusBadge({ status }: { status: string }) {
 export default function AIAgentsPage() {
   const [selectedSquad, setSelectedSquad] = useState("all");
 
-  const filteredAgents = AGENTS.filter(
-    (a) => selectedSquad === "all" || a.squad === selectedSquad
+  const { data: runsData, loading: runsLoading, error: runsError } = useApi<{ data: AgentRun[] }>(
+    "/api/intelligence/agent-runs?page=1&limit=20"
   );
 
+  const runs = runsData?.data ?? [];
+
+  const stats = [
+    { label: "Active Agents", value: "15", change: "All squads online", up: true, icon: Bot },
+    { label: "Tasks Today", value: runs.filter((r) => new Date(r.startedAt).toDateString() === new Date().toDateString()).length.toString(), change: "+28 from yesterday", up: true, icon: Zap },
+    { label: "Success Rate", value: runs.length > 0 ? `${Math.round((runs.filter((r) => r.status === "completed").length / runs.length) * 100)}%` : "—", change: "Avg completion", up: true, icon: CheckCircle2 },
+    { label: "Queue Depth", value: runs.filter((r) => r.status === "queued").length.toString(), change: "Low backlog", up: true, icon: Activity },
+  ];
+
+  const AGENTS = [
+    { id: "growth-01", name: "Lead Harvester", squad: "Growth", status: "active", tasks: 45, success: 98, description: "Auto-enrich and qualify inbound leads", icon: "Target" },
+    { id: "growth-02", name: "SEO Strategist", squad: "Growth", status: "active", tasks: 32, success: 94, description: "Optimize content and keyword targeting", icon: "TrendingUp" },
+    { id: "ops-01", name: "Inventory Sync", squad: "Operations", status: "active", tasks: 128, success: 99, description: "Real-time supplier inventory updates", icon: "Zap" },
+    { id: "ops-02", name: "Route Optimizer", squad: "Operations", status: "idle", tasks: 0, success: 100, description: "AI-powered delivery route planning", icon: "Activity" },
+    { id: "intel-01", name: "Price Watcher", squad: "Intelligence", status: "active", tasks: 67, success: 97, description: "Market price monitoring and alerts", icon: "TrendingUp" },
+    { id: "intel-02", name: "Trust Scorer", squad: "Intelligence", status: "active", tasks: 23, success: 92, description: "Supplier risk assessment engine", icon: "Brain" },
+    { id: "exec-01", name: "Order Processor", squad: "Execution", status: "active", tasks: 89, success: 96, description: "Automated order approval workflow", icon: "CheckCircle2" },
+    { id: "exec-02", name: "ETA Validator", squad: "Execution", status: "active", tasks: 47, success: 99, description: "Invoice compliance verification", icon: "Activity" },
+  ];
+
+  const filteredAgents = AGENTS.filter((a) => selectedSquad === "all" || a.squad === selectedSquad);
   const squads = ["all", "Growth", "Operations", "Intelligence", "Execution"];
 
   return (
@@ -102,7 +106,7 @@ export default function AIAgentsPage() {
 
       {/* Stats */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {AGENT_STATS.map((s) => (
+        {stats.map((s) => (
           <motion.div
             key={s.label}
             variants={fadeInUp}
@@ -130,9 +134,7 @@ export default function AIAgentsPage() {
             key={squad}
             onClick={() => setSelectedSquad(squad)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              selectedSquad === squad
-                ? "bg-white/[0.06] text-white border border-white/[0.08]"
-                : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+              selectedSquad === squad ? "bg-white/[0.06] text-white border border-white/[0.08]" : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
             }`}
           >
             {squad === "all" ? "All Squads" : squad}
@@ -143,13 +145,10 @@ export default function AIAgentsPage() {
       {/* Agents Grid */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
         {filteredAgents.map((agent) => (
-          <div
-            key={agent.id}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.025] transition-colors group"
-          >
+          <div key={agent.id} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.025] transition-colors group">
             <div className="flex items-start justify-between mb-3">
               <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
-                <agent.icon size={16} className="text-white/40" />
+                <Bot size={16} className="text-white/40" />
               </div>
               <StatusBadge status={agent.status} />
             </div>
@@ -167,12 +166,10 @@ export default function AIAgentsPage() {
             </div>
             <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/[0.04]">
               <button className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] text-[10px] text-white/40 hover:text-white/60 transition-colors">
-                <Play size={11} />
-                Run
+                <Play size={11} /> Run
               </button>
               <button className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] text-[10px] text-white/40 hover:text-white/60 transition-colors">
-                <Settings size={11} />
-                Config
+                <Settings size={11} /> Config
               </button>
             </div>
           </div>
@@ -187,38 +184,38 @@ export default function AIAgentsPage() {
             Recent Agent Runs
           </h3>
         </div>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-white/[0.06]">
-              <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Agent</th>
-              <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Task</th>
-              <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-              <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">When</th>
-              <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Duration</th>
-            </tr>
-          </thead>
-          <tbody>
-            {RECENT_RUNS.map((run, i) => (
-              <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                <td className="px-4 py-2.5">
-                  <span className="text-xs font-medium text-white">{run.agent}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className="text-[11px] text-white/40">{run.task}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <StatusBadge status={run.status} />
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className="text-[11px] text-white/30">{run.time}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className="text-[11px] text-white/30 font-mono">{run.duration}</span>
-                </td>
-              </tr>
+        {runsLoading ? (
+          <div className="p-4 space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-10 bg-white/[0.02] rounded-lg animate-pulse" />
             ))}
-          </tbody>
-        </table>
+          </div>
+        ) : runsError ? (
+          <div className="p-4"><EmptyState title="Error loading runs" description={runsError} /></div>
+        ) : runs.length === 0 ? (
+          <div className="p-4"><EmptyState title="No runs yet" description="Agent runs will appear here once executed." /></div>
+        ) : (
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-white/[0.06]">
+                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Agent</th>
+                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Task</th>
+                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
+                <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-white/30 uppercase tracking-wider">When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {runs.slice(0, 8).map((run) => (
+                <tr key={run.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <td className="px-4 py-2.5"><span className="text-xs font-medium text-white">{run.agentName}</span></td>
+                  <td className="px-4 py-2.5"><span className="text-[11px] text-white/40">{run.taskDescription?.slice(0, 40)}...</span></td>
+                  <td className="px-4 py-2.5"><StatusBadge status={run.status} /></td>
+                  <td className="px-4 py-2.5"><span className="text-[11px] text-white/30">{new Date(run.startedAt).toLocaleDateString()}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </motion.div>
     </motion.div>
   );
