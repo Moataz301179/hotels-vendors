@@ -123,31 +123,31 @@ const STEPS = [
 export default async function HomePage() {
   const cms = await getCmsPage("home");
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="home-main min-h-screen bg-[#050505]">
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
           HERO SECTION — Full bleed carousel
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center">
+      <section className="home-hero relative min-h-screen flex items-center">
         <HeroCarousel />
 
         {/* Hero content overlay */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-[100px] pb-20 w-full">
           <div className="max-w-2xl">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e11d48]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="home-hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e11d48]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               AI-Powered Platform
             </div>
 
             {/* Headline */}
-            <h1 className="text-[42px] md:text-[64px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
+            <h1 className="home-hero-h1 text-[42px] md:text-[64px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
               {cms?.heroTitle || "Egypt's First AI-Powered Hospitality Procurement Hub"}
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-5 text-[16px] md:text-[18px] text-white/60 leading-relaxed max-w-lg">
+            <p className="home-hero-p mt-5 text-[16px] md:text-[18px] text-white/60 leading-relaxed max-w-lg">
               {cms?.heroDescription || "The Intelligent Procurement Platform for Egyptian Hospitality. Cut costs by up to 30%, 48-hour delivery, Guaranteed payments. Full ETA compliance."}
             </p>
 
@@ -175,18 +175,18 @@ export default async function HomePage() {
       {/* ═══════════════════════════════════════════
           STATS BAR
           ═══════════════════════════════════════════ */}
-      <section className="relative z-10 -mt-16 mx-auto max-w-6xl px-6">
-        <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl p-6 md:p-8">
+      <section className="home-stats-section relative z-10 -mt-16 mx-auto max-w-6xl px-6">
+        <div className="home-stats bg-[#0f0f0f] border border-white/[0.06] rounded-2xl p-6 md:p-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {STATS.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-[28px] md:text-[32px] font-bold text-white tracking-tight">
+                <div className="home-stats-value text-[28px] md:text-[32px] font-bold text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium text-[#e11d48] uppercase tracking-wide">
+                <div className="home-stats-label mt-1 text-[11px] font-medium text-[#e11d48] uppercase tracking-wide">
                   {stat.label}
                 </div>
-                <div className="text-[11px] text-white/30 mt-0.5">{stat.sub}</div>
+                <div className="home-stats-sub text-[11px] text-white/30 mt-0.5">{stat.sub}</div>
               </div>
             ))}
           </div>
@@ -198,7 +198,7 @@ export default async function HomePage() {
           ═══════════════════════════════════════════ */}
       <section className="py-10">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-[12px] font-medium text-white/30 uppercase tracking-[0.15em]">
+          <p className="home-trusted text-[12px] font-medium text-white/30 uppercase tracking-[0.15em]">
             Trusted by{" "}
             <span className="text-white/50">
               {TRUSTED_BY.join(", ")}
@@ -213,10 +213,10 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="home-section-label text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
               Platform Capabilities
             </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
+            <h2 className="home-section-heading text-[32px] md:text-[40px] font-bold text-white tracking-tight">
               Everything Your Hotel Needs.
               <br />
               <span className="text-white/40">In One Platform.</span>
@@ -227,13 +227,13 @@ export default async function HomePage() {
             {CAPABILITIES.map((cap) => (
               <div
                 key={cap.title}
-                className="group p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all"
+                className="home-card group p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all"
               >
-                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:bg-[#e11d48]/10 group-hover:border-[#e11d48]/20 transition-all">
-                  <cap.icon className="w-5 h-5 text-[#e11d48]" />
+                <div className="home-card-icon-bg w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:bg-[#e11d48]/10 group-hover:border-[#e11d48]/20 transition-all">
+                  <cap.icon className="home-card-icon w-5 h-5 text-[#e11d48]" />
                 </div>
-                <h3 className="text-[16px] font-semibold text-white mb-2">{cap.title}</h3>
-                <p className="text-[13px] text-white/40 leading-relaxed">{cap.desc}</p>
+                <h3 className="home-card-title text-[16px] font-semibold text-white mb-2">{cap.title}</h3>
+                <p className="home-card-desc text-[13px] text-white/40 leading-relaxed">{cap.desc}</p>
               </div>
             ))}
           </div>
@@ -243,13 +243,13 @@ export default async function HomePage() {
       {/* ═══════════════════════════════════════════
           HOW IT WORKS
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/[0.04]">
+      <section className="py-20 border-t border-white/[0.04] home-section-border">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="home-section-label text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
               How It Works
             </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
+            <h2 className="home-section-heading text-[32px] md:text-[40px] font-bold text-white tracking-tight">
               From Sign-Up to Delivery
               <br />
               <span className="text-white/40">in 4 Simple Steps</span>
@@ -259,18 +259,18 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {STEPS.map((step, i) => (
               <div key={step.num} className="relative">
-                <div className="p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] h-full">
-                  <div className="text-[48px] font-bold text-white/[0.06] leading-none mb-4">
+                <div className="home-step-card p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] h-full">
+                  <div className="home-step-num text-[48px] font-bold text-white/[0.06] leading-none mb-4">
                     {step.num}
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-[#e11d48]/10 flex items-center justify-center mb-4">
-                    <step.icon className="w-5 h-5 text-[#e11d48]" />
+                  <div className="home-step-icon-bg w-10 h-10 rounded-xl bg-[#e11d48]/10 flex items-center justify-center mb-4">
+                    <step.icon className="home-step-icon w-5 h-5 text-[#e11d48]" />
                   </div>
-                  <h3 className="text-[16px] font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
+                  <h3 className="home-step-title text-[16px] font-semibold text-white mb-2">{step.title}</h3>
+                  <p className="home-step-desc text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/[0.08]" />
+                  <div className="home-step-line hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/[0.08]" />
                 )}
               </div>
             ))}
@@ -283,28 +283,28 @@ export default async function HomePage() {
           ═══════════════════════════════════════════ */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#0f0f0f] border border-white/[0.06] p-10 md:p-16 text-center">
+          <div className="home-cta relative overflow-hidden rounded-3xl bg-[#0f0f0f] border border-white/[0.06] p-10 md:p-16 text-center">
             {/* Background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#e11d48]/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="home-cta-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#e11d48]/5 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="relative z-10">
-              <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
+              <h2 className="home-cta-h2 text-[32px] md:text-[44px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Ready to Transform Your Hotel's Procurement?"}
               </h2>
-              <p className="mt-4 text-[15px] text-white/40 max-w-xl mx-auto">
+              <p className="home-cta-p mt-4 text-[15px] text-white/40 max-w-xl mx-auto">
                 {cms?.ctaDescription || "Join hundreds of hotels and suppliers already benefiting from smarter, faster, more transparent procurement across Egypt."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="home-cta-btn-primary inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
+                  className="home-cta-btn-ghost inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
                 >
                   Book a Demo
                 </Link>

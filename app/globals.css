@@ -541,3 +541,407 @@ body {
 @media (max-width: 768px) {
   .step-line::after { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT THEME OVERRIDES
+   Toggle via html[data-theme="light"]
+   ═══════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] {
+  --bg-canvas: #f8f9fa;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f1f5f9;
+  --bg-surface-3: #e2e8f0;
+
+  --background: #f8f9fa;
+  --background-void: #f1f5f9;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --surface-hover: #e2e8f0;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --foreground: #0f172a;
+  --foreground-secondary: #475569;
+  --foreground-tertiary: #64748b;
+  --foreground-muted: #94a3b8;
+  --foreground-faint: rgba(15,23,42,0.25);
+  --foreground-dim: rgba(15,23,42,0.15);
+  --foreground-inverse: #ffffff;
+
+  --border-invisible: rgba(0, 0, 0, 0.06);
+  --border-subtle: rgba(0, 0, 0, 0.10);
+  --border-visible: rgba(0, 0, 0, 0.15);
+  --border-accent: rgba(2, 35, 73, 0.30);
+
+  --border-default: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.12);
+  --border-subtle-legacy: rgba(0,0,0,0.05);
+
+  --glass-bg: rgba(255,255,255,0.85);
+  --glass-border: rgba(0,0,0,0.08);
+
+  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(0, 0, 0, 0.04);
+  --shadow-crimson-glow: 0 0 20px rgba(2, 35, 73, 0.10);
+  --shadow-glow-accent: 0 0 40px rgba(2,35,73,0.10);
+  --shadow-glow-white: 0 0 30px rgba(0,0,0,0.03);
+}
+
+html[data-theme="light"] body {
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] ::selection {
+  background: rgba(2,35,73,0.20);
+  color: #0f172a;
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+}
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.20);
+}
+
+/* Light theme surface utilities */
+html[data-theme="light"] .surface-card {
+  background: linear-gradient(180deg, rgba(0,0,0,0.01) 0%, transparent 8%, var(--bg-surface-1) 100%);
+  border: 1px solid var(--border-invisible);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.80);
+}
+html[data-theme="light"] .surface-card:hover {
+  border-color: var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.80);
+}
+
+html[data-theme="light"] .surface-elevated {
+  background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, transparent 10%, var(--bg-surface-2) 100%);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.80);
+}
+
+html[data-theme="light"] .surface-input {
+  background: linear-gradient(180deg, rgba(0,0,0,0.01) 0%, transparent 5%, rgba(0,0,0,0.005) 100%);
+  border: 1px solid var(--border-invisible);
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+}
+html[data-theme="light"] .surface-input:focus {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 3px rgba(2,35,73,0.08), inset 0 1px 0 rgba(0,0,0,0.02);
+}
+
+html[data-theme="light"] .glass-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.95) 100%);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+html[data-theme="light"] .glass-card-interactive {
+  background: linear-gradient(180deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.95) 100%);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+html[data-theme="light"] .glass-card-interactive:hover {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.10);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .glass-floating {
+  background: rgba(255,255,255,0.90);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .glass-input {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--text-primary);
+}
+html[data-theme="light"] .glass-input::placeholder {
+  color: var(--text-muted);
+}
+html[data-theme="light"] .glass-input:focus {
+  border-color: var(--accent-500);
+  box-shadow: 0 0 0 3px rgba(2,35,73,0.08);
+}
+
+html[data-theme="light"] .btn-ghost {
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--foreground-secondary);
+}
+html[data-theme="light"] .btn-ghost:hover {
+  background: rgba(0,0,0,0.03);
+  color: #0f172a;
+  border-color: rgba(0,0,0,0.14);
+}
+
+html[data-theme="light"] .data-table-row {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+html[data-theme="light"] .data-table-row:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+html[data-theme="light"] .frame {
+  border: 1px solid rgba(0,0,0,0.06);
+}
+html[data-theme="light"] .frame-strong {
+  border: 1px solid rgba(0,0,0,0.10);
+}
+html[data-theme="light"] .surface-fill {
+  background: rgba(0,0,0,0.015);
+}
+html[data-theme="light"] .surface-fill-hover:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+html[data-theme="light"] .step-line::after {
+  background: rgba(0,0,0,0.06);
+}
+
+html[data-theme="light"] .animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MARKETING NAV — Light Theme
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="light"] .marketing-nav {
+  background: rgba(255,255,255,0.95) !important;
+  border-bottom-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-nav-transparent {
+  background: transparent !important;
+}
+html[data-theme="light"] .marketing-nav-scrolled {
+  background: rgba(255,255,255,0.95) !important;
+  border-bottom-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-nav-logo-text {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-nav-logo-sub {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-nav-link {
+  color: #475569 !important;
+}
+html[data-theme="light"] .marketing-nav-link:hover {
+  color: #0f172a !important;
+  background: rgba(0,0,0,0.04) !important;
+}
+html[data-theme="light"] .marketing-nav-link-marketplace {
+  color: #ca8a04 !important;
+}
+html[data-theme="light"] .marketing-nav-icon {
+  color: #94a3b8 !important;
+}
+html[data-theme="light"] .marketing-nav-icon:hover {
+  color: #0f172a !important;
+  background: rgba(0,0,0,0.04) !important;
+}
+html[data-theme="light"] .marketing-nav-signin {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-nav-signin:hover {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-nav-mobile {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-nav-mobile:hover {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-nav-mobile-menu {
+  background: #ffffff !important;
+  border-top-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-nav-mobile-link {
+  color: #475569 !important;
+}
+html[data-theme="light"] .marketing-nav-mobile-link:hover {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-nav-mobile-border {
+  border-top-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-nav-mobile-btn-ghost {
+  color: #64748b !important;
+  border-color: rgba(0,0,0,0.10) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MARKETING FOOTER — Light Theme
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="light"] .marketing-footer {
+  background: #ffffff !important;
+  border-top-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-footer-logo-text {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-footer-logo-sub {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-footer-desc {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-footer-heading {
+  color: #94a3b8 !important;
+}
+html[data-theme="light"] .marketing-footer-link {
+  color: #64748b !important;
+}
+html[data-theme="light"] .marketing-footer-link:hover {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .marketing-footer-bottom-border {
+  border-top-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .marketing-footer-copyright {
+  color: #94a3b8 !important;
+}
+html[data-theme="light"] .marketing-footer-social {
+  color: #94a3b8 !important;
+}
+html[data-theme="light"] .marketing-footer-social:hover {
+  color: #0f172a !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HOMEPAGE — Light Theme Overrides
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Main background */
+html[data-theme="light"] .home-main {
+  background: #f8f9fa !important;
+}
+
+/* Hero section */
+html[data-theme="light"] .home-hero {
+  background: transparent !important;
+}
+html[data-theme="light"] .home-hero h1 {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-hero p {
+  color: #475569 !important;
+}
+html[data-theme="light"] .home-hero-badge {
+  background: #e11d48 !important;
+  color: #ffffff !important;
+}
+
+/* Stats bar */
+html[data-theme="light"] .home-stats {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .home-stats-value {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-stats-label {
+  color: #e11d48 !important;
+}
+html[data-theme="light"] .home-stats-sub {
+  color: #94a3b8 !important;
+}
+
+/* Trusted by */
+html[data-theme="light"] .home-trusted {
+  color: #94a3b8 !important;
+}
+
+/* Capabilities section */
+html[data-theme="light"] .home-section-heading {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-section-heading span {
+  color: #94a3b8 !important;
+}
+html[data-theme="light"] .home-section-label {
+  color: #e11d48 !important;
+}
+html[data-theme="light"] .home-card {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .home-card:hover {
+  border-color: rgba(0,0,0,0.12) !important;
+}
+html[data-theme="light"] .home-card-icon-bg {
+  background: rgba(2,35,73,0.05) !important;
+  border-color: rgba(2,35,73,0.08) !important;
+}
+html[data-theme="light"] .home-card-icon-bg:hover {
+  background: rgba(225,29,72,0.08) !important;
+  border-color: rgba(225,29,72,0.15) !important;
+}
+html[data-theme="light"] .home-card-icon {
+  color: #e11d48 !important;
+}
+html[data-theme="light"] .home-card-title {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-card-desc {
+  color: #64748b !important;
+}
+
+/* Steps section */
+html[data-theme="light"] .home-step-card {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .home-step-num {
+  color: rgba(15,23,42,0.06) !important;
+}
+html[data-theme="light"] .home-step-icon-bg {
+  background: rgba(225,29,72,0.08) !important;
+}
+html[data-theme="light"] .home-step-icon {
+  color: #e11d48 !important;
+}
+html[data-theme="light"] .home-step-title {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-step-desc {
+  color: #64748b !important;
+}
+html[data-theme="light"] .home-step-line {
+  background: rgba(0,0,0,0.06) !important;
+}
+
+/* CTA section */
+html[data-theme="light"] .home-cta {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .home-cta h2 {
+  color: #0f172a !important;
+}
+html[data-theme="light"] .home-cta p {
+  color: #64748b !important;
+}
+html[data-theme="light"] .home-cta-btn-primary {
+  background: #e11d48 !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] .home-cta-btn-primary:hover {
+  background: #be123c !important;
+}
+html[data-theme="light"] .home-cta-btn-ghost {
+  border-color: rgba(0,0,0,0.15) !important;
+  color: #475569 !important;
+}
+html[data-theme="light"] .home-cta-btn-ghost:hover {
+  background: rgba(0,0,0,0.03) !important;
+}
+html[data-theme="light"] .home-cta-glow {
+  background: rgba(225,29,72,0.04) !important;
+}
+
+/* Section borders */
+html[data-theme="light"] .home-section-border {
+  border-color: rgba(0,0,0,0.04) !important;
+}

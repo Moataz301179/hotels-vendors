@@ -132,19 +132,29 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#121212" />
+        <meta name="theme-color" content="#121212" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
-                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                  window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                      console.warn('SW registration failed:', err);
+              (function() {
+                try {
+                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
+                  if (mode === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    var meta = document.getElementById('theme-color-meta');
+                    if (meta) meta.setAttribute('content', '#f8f9fa');
+                  }
+                } catch (e) {}
+                if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                    window.addEventListener('load', function() {
+                      navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                        console.warn('SW registration failed:', err);
+                      });
                     });
-                  });
+                  }
                 }
-              }
+              })();
             `,
           }}
         />
