@@ -1,7 +1,7 @@
 "use client";
 
 import { Sun, Moon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const STORAGE_KEY = "hv-theme-mode";
 
@@ -29,6 +29,11 @@ export function setThemeMode(mode: "dark" | "light") {
   } catch {
     // ignore
   }
+  // Update meta theme-color
+  const meta = document.getElementById("theme-color-meta") as HTMLMetaElement | null;
+  if (meta) {
+    meta.setAttribute("content", mode === "light" ? "#f8f9fa" : "#121212");
+  }
 }
 
 export function initThemeMode() {
@@ -51,18 +56,11 @@ export function ThemeModeToggle({ variant = "icon", className = "" }: ThemeModeT
     setMode(getStoredMode());
   }, []);
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     const next = mode === "dark" ? "light" : "dark";
     setMode(next);
     setThemeMode(next);
-  };
-
-  if (!mounted) {
-    // Render a placeholder to avoid layout shift
-    return (
-      <div className={`w-8 h-8 rounded-lg ${variant === "button" ? "w-auto px-3" : ""} ${className}`} />
-    );
-  }
+  }, [mode]);
 
   const isLight = mode === "light";
 
