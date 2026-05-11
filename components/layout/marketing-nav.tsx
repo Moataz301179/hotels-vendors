@@ -46,6 +46,7 @@ export function MarketingNav() {
 
   const primaryNav = [
     { label: "Platform", href: "/solutions" },
+    { label: "Marketplace", href: "/marketplace", isMarketplace: true },
     { label: "Solutions", href: "#", hasDropdown: true },
     { label: "Pricing", href: "/pricing" },
     { label: "About", href: "/about" },
@@ -68,7 +69,7 @@ export function MarketingNav() {
           <div className="flex items-center gap-5">
             <span className="flex items-center gap-1.5">
               <Phone className="w-3 h-3" />
-              +20 100 000 0000
+              +201060001828
             </span>
             <span className="hidden sm:flex items-center gap-1.5">
               <Mail className="w-3 h-3" />
@@ -156,9 +157,11 @@ export function MarketingNav() {
                   key={item.label}
                   href={item.href}
                   className={`px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
-                    isLight
-                      ? "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
-                      : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+                    item.isMarketplace
+                      ? (isLight ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5" : "text-[#C9A227] hover:text-[#D4AF37] hover:bg-[#C9A227]/5")
+                      : (isLight
+                          ? "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
+                          : "text-white/60 hover:text-white hover:bg-white/[0.04]")
                   }`}
                 >
                   {item.label}
@@ -235,7 +238,9 @@ export function MarketingNav() {
                 <Link
                   href={item.href}
                   className={`block py-2.5 text-[14px] font-medium transition-colors ${
-                    isLight ? "text-gray-700 hover:text-[#8B0000]" : "text-white/70 hover:text-white"
+                    item.isMarketplace
+                      ? (isLight ? "text-[#C9A227] hover:text-[#B8921F]" : "text-[#C9A227] hover:text-[#D4AF37]")
+                      : (isLight ? "text-gray-700 hover:text-[#8B0000]" : "text-white/70 hover:text-white")
                   }`}
                   onClick={() => setMobileOpen(false)}
                 >
