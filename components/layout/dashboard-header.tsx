@@ -3,16 +3,27 @@
 import Link from "next/link";
 import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
+import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  platformRole: string;
+  tenantName?: string;
+}
+
 interface DashboardHeaderProps {
   role: string;
+  user?: UserData | null;
   onMenuClick?: () => void;
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-[#022349]" },
+  admin: { label: "Platform Admin", badgeColor: "bg-[#8B0000]" },
   hotel: { label: "Hotel Buyer", badgeColor: "bg-emerald-500" },
   supplier: { label: "Supplier", badgeColor: "bg-blue-500" },
   factoring: { label: "Factoring Partner", badgeColor: "bg-amber-500" },
@@ -20,7 +31,7 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
   marketing: { label: "Marketing", badgeColor: "bg-purple-500" },
 };
 
-export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
+export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
   const { totalItems, toggleCart } = useCart();
 
@@ -49,11 +60,11 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
       {/* Center: Search */}
       <div className="flex-1 max-w-xl mx-2 sm:mx-4 lg:mx-8">
         <div className="relative group flex items-center">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#022349] transition-colors z-10" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#8B0000] transition-colors z-10" />
           <input
             type="text"
             placeholder="Search orders, suppliers, products..."
-            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 focus:ring-1 focus:ring-[#022349]/10 transition-all"
+            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40 focus:ring-1 focus:ring-[#8B0000]/10 transition-all"
           />
           <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
             <SlidersHorizontal size={11} />
@@ -79,23 +90,14 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
         >
           <ShoppingCart size={18} />
           {totalItems > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#022349] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}
         </button>
 
         <NotificationBell />
-
-        <button className="flex items-center gap-2 pl-1">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#022349] to-[#cc4700] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10 flex-shrink-0">
-            MZ
-          </div>
-          <div className="hidden md:block text-left">
-            <p className="text-xs font-medium text-white leading-tight">Moataz</p>
-            <p className="text-[10px] text-white/30 leading-tight">CEO</p>
-          </div>
-        </button>
+        <UserDropdown user={user} />
       </div>
     </header>
   );

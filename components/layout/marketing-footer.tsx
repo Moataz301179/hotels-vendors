@@ -1,117 +1,103 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ShieldCheck, FileCheck, Zap } from "lucide-react";
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-[#050505] border-t border-white/[0.06]">
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
+    <footer className="bg-gray-50 border-t border-gray-200">
+      {/* Trust bar */}
+      <div className="border-b border-gray-200">
+        <div className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-[#8B0000]" />
+              Bank-grade security & encryption
+            </span>
+            <span className="flex items-center gap-1.5">
+              <FileCheck className="w-4 h-4 text-[#8B0000]" />
+              Full ETA e-invoicing compliance
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Zap className="w-4 h-4 text-[#8B0000]" />
+              99.9% uptime SLA
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main footer */}
+      <div className="mx-auto max-w-7xl px-6 py-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <Image
-                src="/logo-icon-white.png"
-                alt="Hotels Vendors"
-                width={32}
-                height={44}
-                className="object-contain"
-                priority
-              />
-              <div>
-                <span className="text-[14px] font-bold text-white tracking-tight block">
-                  Hotels Vendors
-                </span>
-                <span className="text-[9px] font-medium text-white/30 uppercase tracking-[0.1em]">
-                  Smarter Together
-                </span>
+          <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-8 h-8 rounded-md bg-[#8B0000] flex items-center justify-center">
+                <span className="text-white font-bold text-xs">HV</span>
               </div>
+              <span className="text-[15px] font-bold text-gray-900">Hotels Vendors</span>
             </div>
-            <p className="text-[12px] text-white/30 leading-relaxed max-w-xs">
-              Egypt's first AI-powered digital procurement hub built exclusively for the hospitality sector.
+            <p className="text-[13px] text-gray-500 leading-relaxed max-w-xs">
+              Egypt's first integrated procurement operating system for hospitality. SaaS-powered, AI-driven, fully compliant.
             </p>
           </div>
 
           {/* Platform */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              Platform
-            </h4>
-            <ul className="space-y-2.5">
-              {["How it Works", "Features", "Security", "API Docs"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Platform</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/solutions" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Solutions</Link>
+              <Link href="/pricing" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Pricing</Link>
+              <Link href="/marketplace" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Marketplace</Link>
+              <Link href="/register" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Get Started</Link>
+            </div>
           </div>
 
-          {/* Marketplace */}
+          {/* For Stakeholders */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              Marketplace
-            </h4>
-            <ul className="space-y-2.5">
-              {["Browse Products", "Categories", "Top Suppliers", "Deals & Offers"].map((item) => (
-                <li key={item}>
-                  <Link href="/marketplace" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Stakeholders</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/register?role=hotel" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Hotels</Link>
+              <Link href="/become-supplier" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Suppliers</Link>
+              <Link href="/register?role=shipping" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Logistics</Link>
+              <Link href="/register?role=factoring" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Factoring</Link>
+            </div>
           </div>
 
           {/* Company */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              Company
-            </h4>
-            <ul className="space-y-2.5">
-              {["About Us", "Careers", "Press", "Partners", "Contact"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Company</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/about" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">About Us</Link>
+              <Link href="/about" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Careers</Link>
+              <Link href="/social-media" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Press Kit</Link>
+              <Link href="/help" className="text-[13px] text-gray-600 hover:text-[#8B0000] transition-colors">Contact</Link>
+            </div>
           </div>
 
           {/* Legal */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              Legal
-            </h4>
-            <ul className="space-y-2.5">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-white/30 hover:text-white/70 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Legal</p>
+            <div className="flex flex-col gap-2">
+              <span className="text-[13px] text-gray-400">Privacy Policy</span>
+              <span className="text-[13px] text-gray-400">Terms of Service</span>
+              <span className="text-[13px] text-gray-400">Cookie Policy</span>
+              <span className="text-[13px] text-gray-400">Compliance</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] text-white/20">
-            &copy; 2026 Hotels Vendors. All rights reserved. Cairo, Egypt.
+      {/* Bottom bar */}
+      <div className="border-t border-gray-200">
+        <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[12px] text-gray-400">
+            &copy; 2026 Hotels Vendors. Cairo, Egypt. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            {["LinkedIn", "Twitter", "Facebook"].map((social) => (
-              <a
-                key={social}
-                href="#"
-                className="text-[11px] text-white/20 hover:text-white/50 transition-colors"
-              >
-                {social}
-              </a>
-            ))}
+          <div className="flex items-center gap-4">
+            <span className="text-[12px] text-gray-400 hover:text-[#8B0000] cursor-pointer transition-colors">LinkedIn</span>
+            <span className="text-[12px] text-gray-400 hover:text-[#8B0000] cursor-pointer transition-colors">Twitter</span>
+            <span className="text-[12px] text-gray-400 hover:text-[#8B0000] cursor-pointer transition-colors">Facebook</span>
           </div>
         </div>
       </div>

@@ -79,14 +79,25 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "PLATFORM",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+        { icon: BrainCircuit, label: "Orchestrator", href: "/admin/orchestrator" },
         { icon: BarChart3, label: "Analytics", href: "/analytics" },
         { icon: Bot, label: "AI Agents", href: "/ai-agents" },
-        { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
-        { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
+        { icon: Users, label: "Users", href: "/admin/users" },
+        { icon: ShieldCheck, label: "Suppliers", href: "/admin/suppliers/pipeline" },
+        { icon: Store, label: "Review", href: "/admin/suppliers/review" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
         { icon: HeartPulse, label: "Health", href: "/admin/health" },
         { icon: FileEdit, label: "Content Editor", href: "/admin/cms" },
+      ],
+    },
+    {
+      section: "MARKETPLACE",
+      items: [
+        { icon: PackageSearch, label: "Products", href: "/admin/marketplace/products" },
+        { icon: ShoppingBag, label: "Orders", href: "/admin/marketplace/orders" },
+        { icon: Building2, label: "Hotels", href: "/admin/marketplace/hotels" },
+        { icon: BarChart3, label: "Reports", href: "/admin/reports" },
       ],
     },
     {
@@ -206,7 +217,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                   href={item.href}
                   className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
                     isActive
-                      ? "bg-[rgba(128,0,0,0.15)] text-white"
+                      ? "bg-[#8B0000]/15 text-white"
                       : "text-[rgba(255,255,255,0.35)] hover:text-white hover:bg-[rgba(255,255,255,0.04)]"
                   }`}
                   title={item.label}
@@ -263,14 +274,14 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                     href={item.href}
                     className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
                       isActive
-                        ? "bg-[rgba(128,0,0,0.12)] text-white font-medium"
+                        ? "bg-[#8B0000]/12 text-white font-medium"
                         : "text-[rgba(255,255,255,0.50)] hover:text-white hover:bg-[rgba(255,255,255,0.03)]"
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#022349] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#8B0000] rounded-r-full shadow-[0_0_8px_rgba(139,0,0,0.40)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#022349]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-[#8B0000]" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );

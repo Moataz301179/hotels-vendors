@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
 import { ChatbotWidget } from "@/components/ai-assistant/chatbot";
+import { prisma } from "@/lib/prisma";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
@@ -31,9 +32,11 @@ export default async function DashboardLayout({
   }
 
   let role: string | null = null;
+  let userId: string | null = null;
   try {
     const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
     role = (payload.platformRole as string)?.toLowerCase() || null;
+    userId = payload.userId as string || null;
   } catch {
     redirect("/login");
   }
@@ -42,10 +45,33 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  // Fetch user data for header
+  let userData = null;
+  if (userId) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { tenant: { select: { name: true } } },
+      });
+      if (user) {
+        userData = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          platformRole: user.platformRole,
+          tenantName: user.tenant?.name,
+        };
+      }
+    } catch {
+      // Silently fail — header will show generic user
+    }
+  }
+
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <DashboardShell role={validRole}>
+    <DashboardShell role={validRole} user={userData}>
       <DashboardCartWrapper>
         {children}
       </DashboardCartWrapper>

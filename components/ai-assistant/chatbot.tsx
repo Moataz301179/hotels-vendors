@@ -34,7 +34,7 @@ const ROLE_CONFIG: Record<RoleMode, { label: string; color: string; icon: React.
       "Forecast demand for next month",
       "Which products need price adjustment?",
       "Summarize my pending orders",
-      "Generate invoice from delivered orders",
+      "How does non-recourse factoring work?",
     ],
   },
   factoring: {
@@ -61,7 +61,7 @@ const ROLE_CONFIG: Record<RoleMode, { label: string; color: string; icon: React.
   },
   admin: {
     label: "Admin Mode",
-    color: "text-[#022349]",
+    color: "text-[#8B0000]",
     icon: ShieldCheck,
     prompts: [
       "System health summary",
@@ -88,7 +88,7 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Welcome to Hotels Vendors. I'm your Intelligence Engine. Ask me anything about your workspace, orders, or market insights.",
+      content: "Welcome to Hotels Vendors. I'm your Intelligence Engine. Ask me anything about procurement, suppliers, orders, or market insights.",
       timestamp: new Date(),
     },
   ]);
@@ -143,8 +143,8 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#022349] shadow-lg shadow-black/20 hover:bg-[#022349] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
-          title="Smart Assistant"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#8B0000] text-white shadow-lg shadow-black/30 hover:bg-[#6B0000] transition-all flex items-center justify-center hover:scale-110 border border-[#8B0000]/40"
+          title="HotelsVendors Intelligence Engine"
         >
           <Sparkles size={22} />
         </button>
@@ -156,11 +156,11 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#022349]/15 flex items-center justify-center">
-                <Bot size={16} className="text-white" />
+              <div className="w-8 h-8 rounded-full bg-[#8B0000]/20 flex items-center justify-center">
+                <Bot size={16} className="text-[#C9A227]" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Smart Assistant</p>
+                <p className="text-sm font-semibold text-white">Intelligence Engine</p>
                 <p className="text-[10px] text-white/40 flex items-center gap-1">
                   <span className={`w-1.5 h-1.5 rounded-full ${config.color.replace("text-", "bg-")}`} />
                   {config.label}
@@ -180,13 +180,13 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
             {messages.map((m, i) => (
               <div key={i} className={`flex gap-2.5 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                  m.role === "user" ? "bg-[#022349]" : "bg-white/[0.04] border border-white/[0.08]"
+                  m.role === "user" ? "bg-[#8B0000]" : "bg-white/[0.04] border border-white/[0.08]"
                 }`}>
-                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[#022349]" />}
+                  {m.role === "user" ? <User size={12} className="text-white" /> : <Bot size={12} className="text-[#C9A227]" />}
                 </div>
                 <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "bg-[#022349] text-white rounded-tr-sm"
+                    ? "bg-[#8B0000] text-white rounded-tr-sm"
                     : "bg-white/[0.04] border border-white/[0.08] text-white/70 rounded-tl-sm"
                 }`}>
                   {m.content}
@@ -196,7 +196,7 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
             {loading && (
               <div className="flex gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-                  <Bot size={12} className="text-[#022349]" />
+                  <Bot size={12} className="text-[#C9A227]" />
                 </div>
                 <div className="bg-white/[0.04] border border-white/[0.08] px-3 py-2 rounded-xl rounded-tl-sm">
                   <Loader2 size={16} className="animate-spin text-white/30" />
@@ -226,18 +226,18 @@ export function ChatbotWidget({ mode = "hotel" }: { mode?: RoleMode }) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask anything about your workspace..."
-                className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/40 transition-colors"
+                placeholder="Ask about procurement, suppliers, orders..."
+                className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/40 transition-colors"
               />
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-lg bg-[#022349] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-10 h-10 rounded-lg bg-[#8B0000] text-white flex items-center justify-center hover:bg-[#6B0000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Send size={16} />
               </button>
             </div>
-            <p className="text-[9px] text-white/15 text-center mt-1.5">Powered by Hotels Vendors Intelligence Engine</p>
+            <p className="text-[9px] text-white/15 text-center mt-1.5">HotelsVendors Intelligence Engine — Smarter Together</p>
           </div>
         </div>
       )}

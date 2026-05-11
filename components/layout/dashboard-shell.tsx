@@ -4,12 +4,22 @@ import { ReactNode, useState, useEffect } from "react";
 import { PulseSidebar } from "./pulse-sidebar";
 import { DashboardHeader } from "./dashboard-header";
 
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  platformRole: string;
+  tenantName?: string;
+}
+
 interface DashboardShellProps {
   children: ReactNode;
   role: "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
+  user?: UserData | null;
 }
 
-export function DashboardShell({ children, role }: DashboardShellProps) {
+export function DashboardShell({ children, role, user }: DashboardShellProps) {
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -57,6 +67,7 @@ export function DashboardShell({ children, role }: DashboardShellProps) {
       <div className="flex flex-col flex-1 min-w-0">
         <DashboardHeader
           role={role}
+          user={user}
           onMenuClick={() => setMobileOpen(true)}
         />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
