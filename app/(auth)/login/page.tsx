@@ -109,7 +109,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@hotel.com"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
               />
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
               />
               <button
                 type="button"
@@ -148,13 +148,13 @@ export default function LoginPage() {
             <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
               <input
                 type="checkbox"
-                className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.04] accent-[#022349]"
+                className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.04] accent-[#8B0000]"
               />
               <span>Remember me</span>
             </label>
             <Link
               href="/forgot-password"
-              className="text-[#1a4a7c] hover:text-[#3a6a9c] transition-colors font-medium"
+              className="text-[#A52A2A] hover:text-[#3a6a9c] transition-colors font-medium"
             >
               Forgot password?
             </Link>
@@ -164,7 +164,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#022349] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(2,35,73,0.2)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8B0000] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(2,35,73,0.2)]"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -238,7 +238,7 @@ export default function LoginPage() {
         Don&apos;t have an account?{" "}
         <Link
           href="/register"
-          className="text-[#1a4a7c] hover:text-[#3a6a9c] font-medium transition-colors"
+          className="text-[#A52A2A] hover:text-[#3a6a9c] font-medium transition-colors"
         >
           Create account
         </Link>

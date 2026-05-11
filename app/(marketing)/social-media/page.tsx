@@ -45,7 +45,7 @@ export default function SocialMediaPage() {
             className="max-w-3xl"
           >
             <motion.div variants={fadeUp}>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
                 <Megaphone className="w-3 h-3" />
                 Marketing Hub
               </span>
@@ -56,7 +56,7 @@ export default function SocialMediaPage() {
             >
               The Story of
               <br />
-              <span className="text-[#022349]">Smarter Procurement</span>
+              <span className="text-[#8B0000]">Smarter Procurement</span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
@@ -69,7 +69,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="group px-6 py-3.5 text-[14px] font-medium bg-[#022349] text-white hover:bg-[#01305e] rounded-lg transition-colors flex items-center gap-2"
+                className="group px-6 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
                 Join the Platform
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -94,7 +94,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
               Brand Pillars
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -150,7 +150,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
               Content
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -218,7 +218,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#022349]/10 border border-[#022349]/20 text-[11px] font-semibold text-[#022349] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
               Connect With Us
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -275,7 +275,7 @@ export default function SocialMediaPage() {
                 <p className="text-[13px] text-white/50 mb-4">{channel.desc}</p>
                 <a
                   href="#"
-                  className="inline-flex items-center gap-1 text-[12px] font-medium text-[#022349] hover:text-[#b91c1c] transition-colors"
+                  className="inline-flex items-center gap-1 text-[12px] font-medium text-[#8B0000] hover:text-[#b91c1c] transition-colors"
                 >
                   Follow <ExternalLink className="w-3 h-3" />
                 </a>
@@ -295,11 +295,11 @@ export default function SocialMediaPage() {
           >
             <div className="relative w-14 h-14 mx-auto mb-8">
               <BrandLogo variant="dark" size="xl" className="relative z-10" />
-              <div className="absolute inset-0 bg-[#022349]/8 blur-2xl rounded-full" />
+              <div className="absolute inset-0 bg-[#8B0000]/8 blur-2xl rounded-full" />
             </div>
             <h2 className="text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
               Be part of the{" "}
-              <span className="text-[#022349]">procurement revolution</span>
+              <span className="text-[#8B0000]">procurement revolution</span>
             </h2>
             <p className="mt-4 text-[17px] text-white/50 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider — there is
@@ -308,7 +308,7 @@ export default function SocialMediaPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="group px-7 py-3.5 text-[14px] font-medium bg-[#022349] text-white hover:bg-[#01305e] rounded-lg transition-colors flex items-center gap-2"
+                className="group px-7 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
                 Get Started
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

@@ -96,7 +96,7 @@ export const metadata: Metadata = {
     google: "google-site-verification-placeholder",
   },
   other: {
-    "msapplication-TileColor": "#022349",
+    "msapplication-TileColor": "#8B0000",
     "msapplication-TileImage": "/logo-icon-white.png",
     "theme-color": "#050505",
   },

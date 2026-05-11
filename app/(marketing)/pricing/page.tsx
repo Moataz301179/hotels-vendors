@@ -135,7 +135,7 @@ export default async function PricingPage() {
           ═══════════════════════════════════════════ */}
       <section className="relative pt-32 pb-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e11d48]/10 border border-[#e11d48]/20 text-[#e11d48] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
             <Sparkles className="w-3 h-3" />
             Simple, Transparent Pricing
           </div>
@@ -159,13 +159,13 @@ export default async function PricingPage() {
                 key={tier.name}
                 className={`relative flex flex-col rounded-2xl border p-6 md:p-8 transition-all ${
                   tier.popular
-                    ? "bg-[#0f0f0f] border-[#e11d48]/30 shadow-[0_0_40px_-12px_rgba(225,29,72,0.15)]"
+                    ? "bg-[#0f0f0f] border-[#8B0000]/30 shadow-[0_0_40px_-12px_rgba(225,29,72,0.15)]"
                     : "bg-[#0f0f0f] border-white/[0.06] hover:border-white/[0.12]"
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e11d48] text-white text-[11px] font-semibold uppercase tracking-wider">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8B0000] text-white text-[11px] font-semibold uppercase tracking-wider">
                       <Sparkles className="w-3 h-3" />
                       Most Popular
                     </span>
@@ -174,7 +174,7 @@ export default async function PricingPage() {
 
                 <div className="mb-6">
                   <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4">
-                    <tier.icon className="w-5 h-5 text-[#e11d48]" />
+                    <tier.icon className="w-5 h-5 text-[#8B0000]" />
                   </div>
                   <h3 className="text-[18px] font-semibold text-white">
                     {tier.name}
@@ -194,7 +194,7 @@ export default async function PricingPage() {
                   {tier.features.map((f) => (
                     <div key={f.label} className="flex items-start gap-3">
                       {f.included ? (
-                        <Check className="w-4 h-4 text-[#e11d48] shrink-0 mt-0.5" />
+                        <Check className="w-4 h-4 text-[#8B0000] shrink-0 mt-0.5" />
                       ) : (
                         <X className="w-4 h-4 text-white/20 shrink-0 mt-0.5" />
                       )}
@@ -213,7 +213,7 @@ export default async function PricingPage() {
                   href={tier.href}
                   className={`inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-lg transition-colors ${
                     tier.popular
-                      ? "bg-[#e11d48] hover:bg-[#be123c] text-white"
+                      ? "bg-[#8B0000] hover:bg-[#6B0000] text-white"
                       : "border border-white/20 text-white hover:bg-white/5"
                   }`}
                 >
@@ -232,7 +232,7 @@ export default async function PricingPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Compare Plans
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -250,7 +250,7 @@ export default async function PricingPage() {
                   <th className="py-4 px-4 text-center text-[13px] font-semibold text-white/50 uppercase tracking-wider min-w-[120px]">
                     Starter
                   </th>
-                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-[#e11d48] uppercase tracking-wider min-w-[120px]">
+                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-[#8B0000] uppercase tracking-wider min-w-[120px]">
                     Growth
                   </th>
                   <th className="py-4 px-4 text-center text-[13px] font-semibold text-white/50 uppercase tracking-wider min-w-[120px]">
@@ -274,7 +274,7 @@ export default async function PricingPage() {
                       return (
                         <td key={tier.name} className="py-3.5 px-4 text-center">
                           {f?.included ? (
-                            <Check className="w-4 h-4 text-[#e11d48] mx-auto" />
+                            <Check className="w-4 h-4 text-[#8B0000] mx-auto" />
                           ) : (
                             <X className="w-4 h-4 text-white/15 mx-auto" />
                           )}
@@ -295,7 +295,7 @@ export default async function PricingPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-3xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               FAQ
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -311,7 +311,7 @@ export default async function PricingPage() {
               >
                 <summary className="flex items-center justify-between gap-4 cursor-pointer p-5 list-none">
                   <span className="text-[14px] font-medium text-white flex items-center gap-3">
-                    <HelpCircle className="w-4 h-4 text-[#e11d48] shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-[#8B0000] shrink-0" />
                     {faq.question}
                   </span>
                   <span className="text-white/30 group-open:rotate-180 transition-transform shrink-0">
@@ -349,7 +349,7 @@ export default async function PricingPage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#0f0f0f] border border-white/[0.06] p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#e11d48]/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Still have questions?"}
@@ -360,7 +360,7 @@ export default async function PricingPage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Create Free Account
                   <ArrowRight className="w-4 h-4" />

@@ -23,7 +23,7 @@ const SLIDES: BannerSlide[] = [
     cta: "Browse New Suppliers",
     href: "/suppliers",
     bg: "linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 50%, #1a0a0a 100%)",
-    accent: "#022349",
+    accent: "#8B0000",
   },
   {
     id: 2,

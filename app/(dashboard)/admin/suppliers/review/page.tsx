@@ -182,7 +182,7 @@ export default function SupplierReviewPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, email, city, or tax ID..."
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm"
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm"
           />
         </div>
       </div>
@@ -299,7 +299,7 @@ export default function SupplierReviewPage() {
             {/* Company */}
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
               <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Building2 size={13} className="text-[#022349]" /> Company
+                <Building2 size={13} className="text-[#8B0000]" /> Company
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <DetailField label="Name" value={selectedSupplier.name} />
@@ -313,7 +313,7 @@ export default function SupplierReviewPage() {
             {/* Contact */}
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
               <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <MapPin size={13} className="text-[#022349]" /> Contact
+                <MapPin size={13} className="text-[#8B0000]" /> Contact
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <DetailField label="Address" value={selectedSupplier.address || "—"} colSpan={2} />
@@ -328,7 +328,7 @@ export default function SupplierReviewPage() {
             {/* Banking */}
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
               <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Landmark size={13} className="text-[#022349]" /> Banking
+                <Landmark size={13} className="text-[#8B0000]" /> Banking
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <DetailField label="Bank Name" value={selectedSupplier.bankName || "—"} />
@@ -340,7 +340,7 @@ export default function SupplierReviewPage() {
             {selectedSupplier.certifications && (
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
                 <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <ShieldCheck size={13} className="text-[#022349]" /> Certifications
+                  <ShieldCheck size={13} className="text-[#8B0000]" /> Certifications
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedSupplier.certifications.split(",").map((cert) => (
@@ -364,7 +364,7 @@ export default function SupplierReviewPage() {
               <button
                 onClick={() => handleApprove(selectedSupplier.id, "CORE")}
                 disabled={actionLoading === selectedSupplier.id}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors"
               >
                 {actionLoading === selectedSupplier.id ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                 Approve as CORE

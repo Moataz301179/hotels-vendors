@@ -47,8 +47,8 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
-    CONFIRMED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Confirmed" },
-    IN_TRANSIT: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "In Transit" },
+    CONFIRMED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Confirmed" },
+    IN_TRANSIT: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
     DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
@@ -121,7 +121,7 @@ export default function SupplierDashboardPage() {
             <FileText size={14} />
             Reports
           </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
             <Plus size={14} />
             Add Product
           </button>
@@ -169,7 +169,7 @@ export default function SupplierDashboardPage() {
                 placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50 w-56"
+                className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-56"
               />
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function SupplierDashboardPage() {
               {[
                 { label: "Pending", count: orders.filter((o) => o.status === "PENDING_APPROVAL").length, color: "bg-amber-500" },
                 { label: "Approved", count: orders.filter((o) => o.status === "APPROVED").length, color: "bg-blue-500" },
-                { label: "In Transit", count: orders.filter((o) => o.status === "IN_TRANSIT").length, color: "bg-[#022349]" },
+                { label: "In Transit", count: orders.filter((o) => o.status === "IN_TRANSIT").length, color: "bg-[#8B0000]" },
                 { label: "Delivered", count: orders.filter((o) => o.status === "DELIVERED").length, color: "bg-emerald-500" },
               ].map((stage) => (
                 <div key={stage.label} className="flex items-center gap-3">

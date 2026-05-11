@@ -55,10 +55,10 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  chemicals: "#022349",
+  chemicals: "#8B0000",
   food_ingredients: "#1a5d1a",
   poultry: "#b8860b",
-  meat: "#022349",
+  meat: "#8B0000",
   seafood: "#1e6091",
   dairy: "#4a7c59",
   beverages: "#8B4513",
@@ -97,7 +97,7 @@ export function SuppliersDirectory() {
     <div className="max-w-7xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="mb-10">
-        <p className="text-[11px] font-semibold text-[#022349] tracking-[0.18em] uppercase mb-3">
+        <p className="text-[11px] font-semibold text-[#8B0000] tracking-[0.18em] uppercase mb-3">
           Verified Supplier Network
         </p>
         <h1 className="text-[28px] md:text-[32px] font-bold text-black tracking-[-0.02em]">
@@ -159,7 +159,7 @@ export function SuppliersDirectory() {
           placeholder="Search suppliers by name, city, or industrial zone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] bg-black/[0.02] text-sm text-black placeholder:text-black/30 outline-none focus:border-[#022349]/40 transition-all"
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] bg-black/[0.02] text-sm text-black placeholder:text-black/30 outline-none focus:border-[#8B0000]/40 transition-all"
         />
       </div>
 
@@ -171,7 +171,7 @@ export function SuppliersDirectory() {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
               activeCategory === cat
-                ? "bg-[#022349] text-white"
+                ? "bg-[#8B0000] text-white"
                 : "bg-white text-black/50 border border-black/[0.08] hover:text-black hover:border-black/[0.15]"
             }`}
           >
@@ -211,7 +211,7 @@ export function SuppliersDirectory() {
               </span>
             </div>
 
-            <h3 className="text-[14px] font-semibold text-black leading-snug mb-1 group-hover:text-[#022349] transition-colors">
+            <h3 className="text-[14px] font-semibold text-black leading-snug mb-1 group-hover:text-[#8B0000] transition-colors">
               {supplier.name}
             </h3>
 

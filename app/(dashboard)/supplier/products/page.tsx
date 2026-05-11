@@ -102,7 +102,7 @@ export default function SupplierProductsPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Product Catalog</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage your inventory and product listings</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all self-start">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all self-start">
           <Plus size={14} />
           Add Product
         </button>
@@ -138,7 +138,7 @@ export default function SupplierProductsPage() {
             placeholder="Search by name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50 w-full"
+            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-full"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export default function SupplierProductsPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="pl-9 pr-8 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#022349]/50 appearance-none cursor-pointer"
+              className="pl-9 pr-8 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50 appearance-none cursor-pointer"
             >
               {categories.map((c) => (
                 <option key={c} value={c} className="bg-[#121212]">

@@ -192,7 +192,7 @@ export default function SupplierOrdersPage() {
             placeholder="Search by order ID or hotel..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50 w-full"
+            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-full"
           />
         </div>
       </motion.div>
@@ -350,7 +350,7 @@ export default function SupplierOrdersPage() {
               </button>
               <button
                 onClick={() => setUpdateOrder(null)}
-                className="px-4 py-2 rounded-lg bg-[#022349] text-xs text-white font-medium hover:bg-[#022349]/80 transition-colors"
+                className="px-4 py-2 rounded-lg bg-[#8B0000] text-xs text-white font-medium hover:bg-[#8B0000]/80 transition-colors"
               >
                 Update
               </button>

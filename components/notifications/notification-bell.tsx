@@ -21,7 +21,7 @@ const TYPE_ICON: Record<NotificationType, React.ReactNode> = {
   success: <CheckCircle2 size={14} className="text-emerald-400" />,
   warning: <AlertTriangle size={14} className="text-amber-400" />,
   error: <AlertCircle size={14} className="text-red-400" />,
-  order: <ShoppingCart size={14} className="text-[#022349]" />,
+  order: <ShoppingCart size={14} className="text-[#8B0000]" />,
   message: <MessageSquare size={14} className="text-cyan-400" />,
 };
 
@@ -30,7 +30,7 @@ const TYPE_BG: Record<NotificationType, string> = {
   success: "bg-emerald-400/10",
   warning: "bg-amber-400/10",
   error: "bg-red-400/10",
-  order: "bg-[#022349]/20",
+  order: "bg-[#8B0000]/20",
   message: "bg-cyan-400/10",
 };
 
@@ -75,7 +75,7 @@ function NotificationItem({
     >
       {/* Unread indicator */}
       {!notification.read && (
-        <span className="absolute top-3.5 left-3 w-1.5 h-1.5 rounded-full bg-[#022349] ring-2 ring-[#1a1a1a]" />
+        <span className="absolute top-3.5 left-3 w-1.5 h-1.5 rounded-full bg-[#8B0000] ring-2 ring-[#1a1a1a]" />
       )}
 
       <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${TYPE_BG[notification.type]}`}>
@@ -151,7 +151,7 @@ export function NotificationBell() {
       >
         <Bell size={18} />
         {/* Demo red dot */}
-        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#022349] ring-2 ring-[#121212]" />
+        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#8B0000] ring-2 ring-[#121212]" />
         {/* Unread badge */}
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
@@ -176,7 +176,7 @@ export function NotificationBell() {
                 <Bell size={14} className="text-white/40" />
                 <span className="text-sm font-semibold text-white">Notifications</span>
                 {unreadCount > 0 && (
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-[#022349]/30 text-[#022349] border border-[#022349]/20">
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-[#8B0000]/30 text-[#8B0000] border border-[#8B0000]/20">
                     {unreadCount} new
                   </span>
                 )}

@@ -70,7 +70,7 @@ export function SearchBar({
         <div
           className={`flex items-center gap-3 rounded-xl border bg-white/[0.03] px-4 py-3 transition-all duration-200 ${
             isFocused
-              ? "border-[#022349]/50 shadow-[0_0_20px_rgba(139,10,30,0.15)]"
+              ? "border-[#8B0000]/50 shadow-[0_0_20px_rgba(139,10,30,0.15)]"
               : "border-white/[0.08] hover:border-white/[0.12]"
           }`}
         >
@@ -97,19 +97,19 @@ export function SearchBar({
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`relative p-1.5 rounded-lg transition-colors ${
-              showFilters ? "bg-[#022349]/20 text-[#ff7a33]" : "text-white/30 hover:text-white/60"
+              showFilters ? "bg-[#8B0000]/20 text-[#ff7a33]" : "text-white/30 hover:text-white/60"
             }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
             {activeFilterCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#022349] text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#8B0000] text-white text-[9px] font-bold flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
           </button>
           <button
             type="submit"
-            className="px-4 py-1.5 rounded-lg bg-[#022349] hover:bg-[#6B0512] text-white text-sm font-medium transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-[#8B0000] hover:bg-[#6B0512] text-white text-sm font-medium transition-colors"
           >
             Search
           </button>
@@ -155,7 +155,7 @@ export function SearchBar({
                       <button
                         key={s}
                         onClick={() => handleSuggestionClick(s)}
-                        className="px-2.5 py-1 rounded-lg bg-[#022349]/10 border border-[#022349]/20 text-xs text-[#ff7a33]/80 hover:text-[#ff7a33] hover:border-[#022349]/40 transition-colors"
+                        className="px-2.5 py-1 rounded-lg bg-[#8B0000]/10 border border-[#8B0000]/20 text-xs text-[#ff7a33]/80 hover:text-[#ff7a33] hover:border-[#8B0000]/40 transition-colors"
                       >
                         {s}
                       </button>
@@ -215,7 +215,7 @@ function FilterField({ label, type, value, onChange }: { label: string; type: st
         type={type}
         value={value || ""}
         onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/50 transition-colors"
+        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/50 transition-colors"
       />
     </div>
   );
@@ -243,7 +243,7 @@ function FilterSelect({
       <select
         value={value || ""}
         onChange={(e) => onChange(e.target.value === "" ? undefined : e.target.value)}
-        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white outline-none focus:border-[#022349]/50 transition-colors appearance-none"
+        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white outline-none focus:border-[#8B0000]/50 transition-colors appearance-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
           backgroundRepeat: "no-repeat",

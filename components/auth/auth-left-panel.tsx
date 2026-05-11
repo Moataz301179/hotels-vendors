@@ -66,7 +66,7 @@ export function AuthLeftPanel() {
         <h2 className="text-3xl xl:text-4xl font-bold text-white leading-tight tracking-tight">
           The Amazon of
           <br />
-          <span className="text-[#022349]">Egyptian Hospitality</span>
+          <span className="text-[#8B0000]">Egyptian Hospitality</span>
         </h2>
         <p className="mt-4 text-sm text-white/40 leading-relaxed max-w-sm">
           Connect hotels, suppliers, logistics providers, and factoring companies on one
@@ -82,8 +82,8 @@ export function AuthLeftPanel() {
               transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
               className="flex items-start gap-4 group"
             >
-              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:border-[#022349]/30 group-hover:bg-[#022349]/10 transition-colors">
-                <prop.icon className="w-4 h-4 text-[#022349]" />
+              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:border-[#8B0000]/30 group-hover:bg-[#8B0000]/10 transition-colors">
+                <prop.icon className="w-4 h-4 text-[#8B0000]" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white/80">{prop.title}</p>

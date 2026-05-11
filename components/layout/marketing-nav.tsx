@@ -76,7 +76,7 @@ export function MarketingNav() {
               href={item.href}
               className={`px-4 py-2 text-[13px] font-medium transition-colors rounded-lg hover:bg-white/[0.04] ${
                 item.isMarketplace
-                  ? "marketing-nav-link-marketplace text-[#facc15]"
+                  ? "marketing-nav-link-marketplace text-[#C9A227]"
                   : "marketing-nav-link text-white/60 hover:text-white"
               }`}
             >
@@ -96,7 +96,7 @@ export function MarketingNav() {
           </button>
           <Link
             href="/register"
-            className="px-5 py-2.5 text-[13px] font-semibold bg-[#e11d48] text-white hover:bg-[#be123c] rounded-lg transition-colors"
+            className="px-5 py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white hover:bg-[#6B0000] rounded-lg transition-colors"
           >
             Get Started
           </Link>
@@ -126,7 +126,7 @@ export function MarketingNav() {
               href={item.href}
               className={`block py-2.5 text-[14px] font-medium transition-colors ${
                 item.isMarketplace
-                  ? "text-[#facc15]"
+                  ? "text-[#C9A227]"
                   : "marketing-nav-mobile-link text-white/60 hover:text-white"
               }`}
               onClick={() => setMobileOpen(false)}
@@ -143,7 +143,7 @@ export function MarketingNav() {
             </Link>
             <Link
               href="/register"
-              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#e11d48] text-white rounded-lg hover:bg-[#be123c] transition-colors"
+              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
             >
               Get Started
             </Link>

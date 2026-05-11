@@ -29,7 +29,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 const ALL_PRODUCTS: any[] = (catalogData as { products: any[] }).products;
 
-const RED = "#022349";
+const RED = "#8B0000";
 const RED_DIM = "rgba(139,10,30,0.15)";
 const RED_GLOW = "rgba(139,10,30,0.25)";
 const GOLD = "#e1a95f";

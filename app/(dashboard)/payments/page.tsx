@@ -36,7 +36,7 @@ const TRANSACTIONS = [
 ];
 
 const METHOD_COLORS: Record<string, string> = {
-  Factoring: "bg-[#022349]/10 text-[#022349]",
+  Factoring: "bg-[#8B0000]/10 text-[#8B0000]",
   Credit: "bg-amber-500/10 text-amber-400",
   "Bank Transfer": "bg-blue-500/10 text-blue-400",
 };
@@ -122,7 +122,7 @@ export default function PaymentsPage() {
           {[45, 62, 38, 55, 78, 42, 68, 85, 50, 72, 90, 65].map((h, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1">
               <div
-                className="w-full rounded-t-md bg-[#022349]/30 hover:bg-[#022349]/50 transition-colors"
+                className="w-full rounded-t-md bg-[#8B0000]/30 hover:bg-[#8B0000]/50 transition-colors"
                 style={{ height: `${h}%` }}
               />
             </div>
@@ -145,7 +145,7 @@ export default function PaymentsPage() {
               placeholder="Search transactions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50"
             />
           </div>
           <select

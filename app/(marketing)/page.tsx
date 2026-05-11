@@ -136,7 +136,7 @@ export default async function HomePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-[100px] pb-20 w-full">
           <div className="max-w-2xl">
             {/* Badge */}
-            <div className="home-hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e11d48]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="home-hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               AI-Powered Platform
             </div>
@@ -155,7 +155,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Book a Demo
                 <span className="text-white/70">/</span>
@@ -183,7 +183,7 @@ export default async function HomePage() {
                 <div className="home-stats-value text-[28px] md:text-[32px] font-bold text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="home-stats-label mt-1 text-[11px] font-medium text-[#e11d48] uppercase tracking-wide">
+                <div className="home-stats-label mt-1 text-[11px] font-medium text-[#8B0000] uppercase tracking-wide">
                   {stat.label}
                 </div>
                 <div className="home-stats-sub text-[11px] text-white/30 mt-0.5">{stat.sub}</div>
@@ -213,7 +213,7 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="home-section-label text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="home-section-label text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Platform Capabilities
             </p>
             <h2 className="home-section-heading text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -229,8 +229,8 @@ export default async function HomePage() {
                 key={cap.title}
                 className="home-card group p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all"
               >
-                <div className="home-card-icon-bg w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:bg-[#e11d48]/10 group-hover:border-[#e11d48]/20 transition-all">
-                  <cap.icon className="home-card-icon w-5 h-5 text-[#e11d48]" />
+                <div className="home-card-icon-bg w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 transition-all">
+                  <cap.icon className="home-card-icon w-5 h-5 text-[#8B0000]" />
                 </div>
                 <h3 className="home-card-title text-[16px] font-semibold text-white mb-2">{cap.title}</h3>
                 <p className="home-card-desc text-[13px] text-white/40 leading-relaxed">{cap.desc}</p>
@@ -246,7 +246,7 @@ export default async function HomePage() {
       <section className="py-20 border-t border-white/[0.04] home-section-border">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="home-section-label text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="home-section-label text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               How It Works
             </p>
             <h2 className="home-section-heading text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -263,8 +263,8 @@ export default async function HomePage() {
                   <div className="home-step-num text-[48px] font-bold text-white/[0.06] leading-none mb-4">
                     {step.num}
                   </div>
-                  <div className="home-step-icon-bg w-10 h-10 rounded-xl bg-[#e11d48]/10 flex items-center justify-center mb-4">
-                    <step.icon className="home-step-icon w-5 h-5 text-[#e11d48]" />
+                  <div className="home-step-icon-bg w-10 h-10 rounded-xl bg-[#8B0000]/10 flex items-center justify-center mb-4">
+                    <step.icon className="home-step-icon w-5 h-5 text-[#8B0000]" />
                   </div>
                   <h3 className="home-step-title text-[16px] font-semibold text-white mb-2">{step.title}</h3>
                   <p className="home-step-desc text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
@@ -285,7 +285,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="home-cta relative overflow-hidden rounded-3xl bg-[#0f0f0f] border border-white/[0.06] p-10 md:p-16 text-center">
             {/* Background glow */}
-            <div className="home-cta-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#e11d48]/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="home-cta-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="relative z-10">
               <h2 className="home-cta-h2 text-[32px] md:text-[44px] font-bold text-white tracking-tight">
@@ -297,7 +297,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="home-cta-btn-primary inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="home-cta-btn-primary inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4" />

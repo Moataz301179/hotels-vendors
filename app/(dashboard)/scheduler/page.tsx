@@ -43,7 +43,7 @@ const ROUTES = [
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     SCHEDULED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Scheduled" },
-    IN_PROGRESS: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "In Progress" },
+    IN_PROGRESS: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "In Progress" },
     COMPLETED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Completed" },
     DELAYED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Delayed" },
   };
@@ -80,7 +80,7 @@ export default function SchedulerPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Delivery Scheduler</h1>
           <p className="text-sm text-white/40 mt-0.5">Plan, schedule, and track all delivery routes and assignments</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
           <Plus size={14} />
           New Route
         </button>
@@ -116,7 +116,7 @@ export default function SchedulerPage() {
             key={route.name}
             className={`rounded-xl border p-4 cursor-pointer transition-all ${
               selectedRoute === route.name
-                ? "border-[#022349]/30 bg-[#022349]/5"
+                ? "border-[#8B0000]/30 bg-[#8B0000]/5"
                 : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.03]"
             }`}
             onClick={() => setSelectedRoute(selectedRoute === route.name ? "all" : route.name)}
@@ -142,7 +142,7 @@ export default function SchedulerPage() {
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${route.status === "delayed" ? "bg-red-500" : "bg-[#022349]"}`}
+                  className={`h-full rounded-full ${route.status === "delayed" ? "bg-red-500" : "bg-[#8B0000]"}`}
                   style={{ width: `${route.progress}%` }}
                 />
               </div>
@@ -178,7 +178,7 @@ export default function SchedulerPage() {
               placeholder="Search deliveries..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50"
             />
           </div>
         </div>

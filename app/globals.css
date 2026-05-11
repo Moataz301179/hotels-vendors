@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --brand-red: #022349;
+  --brand-red: #8B0000;
   --header-bg: var(--brand-red);
   /* ── Background Layers ──
      Blue-purple undertone. Never pure black (#000000).
@@ -56,19 +56,19 @@
 
   /* ── Crimson Accent Scale ──
      Brand color. NOT for errors — reserve #ff4444 for errors. */
-  --crimson-base: #022349;
+  --crimson-base: #8B0000;
   --crimson-light: #1a4a7c;
   --crimson-dark: #011e3a;
   --crimson-muted: rgba(2, 35, 73, 0.15);
   --crimson-glow: rgba(2, 35, 73, 0.25);
 
   /* Legacy aliases */
-  --accent-500: #022349;
+  --accent-500: #8B0000;
   --accent-600: #01305e;
   --accent-700: #011e3a;
   --accent-glow: rgba(2,35,73,0.35);
   --accent-glow-strong: rgba(2,35,73,0.50);
-  --brand-500: #022349;
+  --brand-500: #8B0000;
   --brand-400: #1a4a7c;
   --brand-600: #01305e;
   --brand-700: #011e3a;
@@ -79,7 +79,7 @@
   --gold-base: #e1a95f;
   --gold-light: #f0c987;
   --gold-muted: rgba(225, 169, 95, 0.15);
-  --accent-gold: #fbbf24;
+  --accent-gold: #C9A227;
 
   /* ── Semantic Colors ── */
   --error: #ff4444;
@@ -829,7 +829,7 @@ html[data-theme="light"] .home-hero p {
   color: #475569 !important;
 }
 html[data-theme="light"] .home-hero-badge {
-  background: #e11d48 !important;
+  background: #8B0000 !important;
   color: #ffffff !important;
 }
 
@@ -842,7 +842,7 @@ html[data-theme="light"] .home-stats-value {
   color: #0f172a !important;
 }
 html[data-theme="light"] .home-stats-label {
-  color: #e11d48 !important;
+  color: #8B0000 !important;
 }
 html[data-theme="light"] .home-stats-sub {
   color: #94a3b8 !important;
@@ -861,7 +861,7 @@ html[data-theme="light"] .home-section-heading span {
   color: #94a3b8 !important;
 }
 html[data-theme="light"] .home-section-label {
-  color: #e11d48 !important;
+  color: #8B0000 !important;
 }
 html[data-theme="light"] .home-card {
   background: #ffffff !important;
@@ -879,7 +879,7 @@ html[data-theme="light"] .home-card-icon-bg:hover {
   border-color: rgba(225,29,72,0.15) !important;
 }
 html[data-theme="light"] .home-card-icon {
-  color: #e11d48 !important;
+  color: #8B0000 !important;
 }
 html[data-theme="light"] .home-card-title {
   color: #0f172a !important;
@@ -900,7 +900,7 @@ html[data-theme="light"] .home-step-icon-bg {
   background: rgba(225,29,72,0.08) !important;
 }
 html[data-theme="light"] .home-step-icon {
-  color: #e11d48 !important;
+  color: #8B0000 !important;
 }
 html[data-theme="light"] .home-step-title {
   color: #0f172a !important;
@@ -924,11 +924,11 @@ html[data-theme="light"] .home-cta p {
   color: #64748b !important;
 }
 html[data-theme="light"] .home-cta-btn-primary {
-  background: #e11d48 !important;
+  background: #8B0000 !important;
   color: #ffffff !important;
 }
 html[data-theme="light"] .home-cta-btn-primary:hover {
-  background: #be123c !important;
+  background: #6B0000 !important;
 }
 html[data-theme="light"] .home-cta-btn-ghost {
   border-color: rgba(0,0,0,0.15) !important;

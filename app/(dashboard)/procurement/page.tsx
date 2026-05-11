@@ -50,7 +50,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
     DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
-    CONFIRMED: { bg: "bg-[#022349]/10", text: "text-[#022349]", dot: "bg-[#022349]", label: "Confirmed" },
+    CONFIRMED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Confirmed" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -119,7 +119,7 @@ export default function ProcurementPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Procurement Hub</h1>
           <p className="text-sm text-white/40 mt-0.5">Purchase requests, approvals, and order management across all properties</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
           <Plus size={14} />
           New Request
         </button>
@@ -216,7 +216,7 @@ export default function ProcurementPage() {
               placeholder="Search by ID or hotel..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#022349]/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50"
             />
           </div>
           <select

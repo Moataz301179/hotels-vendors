@@ -76,8 +76,8 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#022349]/20 flex items-center justify-center">
-                  <ShoppingBag size={18} className="text-[#022349]" />
+                <div className="w-9 h-9 rounded-lg bg-[#8B0000]/20 flex items-center justify-center">
+                  <ShoppingBag size={18} className="text-[#8B0000]" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white">Your Cart</h3>
@@ -114,7 +114,7 @@ export function CartDrawer() {
                       closeCart();
                       router.push("/hotel/catalog");
                     }}
-                    className="px-4 py-2 rounded-lg bg-[#022349] hover:bg-[#022349]/80 text-white text-xs font-medium transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-xs font-medium transition-colors"
                   >
                     Browse Catalog
                   </button>
@@ -219,7 +219,7 @@ export function CartDrawer() {
                     closeCart();
                     router.push("/hotel/order");
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight size={16} />

@@ -14,8 +14,8 @@ export default function AuthLayout({
       <div className="flex-1 flex items-center justify-center relative overflow-hidden">
         {/* Ambient background effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#022349]/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#022349]/3 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#8B0000]/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#8B0000]/3 rounded-full blur-[100px]" />
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02]" />
         </div>
 

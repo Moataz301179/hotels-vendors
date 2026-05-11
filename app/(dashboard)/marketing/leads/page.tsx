@@ -132,7 +132,7 @@ export default function LeadsPage() {
             <Sparkles size={13} />
             Enrich All
           </button>
-          <button className="px-4 py-2 text-xs font-semibold bg-[#022349] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2">
+          <button className="px-4 py-2 text-xs font-semibold bg-[#8B0000] hover:bg-[#b91c1c] text-white rounded-lg transition-colors flex items-center gap-2">
             <Plus size={13} />
             Add Lead
           </button>
@@ -154,7 +154,7 @@ export default function LeadsPage() {
               onClick={() => setFilterType(t.key)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
                 filterType === t.key
-                  ? "bg-[#022349]/15 text-[#022349] border border-[#022349]/25"
+                  ? "bg-[#8B0000]/15 text-[#8B0000] border border-[#8B0000]/25"
                   : "bg-white/[0.03] text-white/50 border border-white/[0.06] hover:bg-white/[0.05]"
               }`}
             >
@@ -172,7 +172,7 @@ export default function LeadsPage() {
               placeholder="Search leads..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#022349]/40 transition-all w-full sm:w-56"
+              className="h-8 pl-8 pr-3 rounded-lg text-xs text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40 transition-all w-full sm:w-56"
             />
           </div>
           <button className="h-8 px-2.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.03] transition-colors">
@@ -294,7 +294,7 @@ export default function LeadsPage() {
                 </div>
               </div>
               <div className="pt-4 border-t border-white/[0.06] space-y-2">
-                <button className="w-full py-2.5 rounded-lg bg-[#022349] hover:bg-[#b91c1c] text-white text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                <button className="w-full py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#b91c1c] text-white text-sm font-medium transition-colors flex items-center justify-center gap-2">
                   <Sparkles size={14} />
                   Enrich with AI
                 </button>

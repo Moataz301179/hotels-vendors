@@ -132,7 +132,7 @@ export default async function AboutPage() {
       <section className="relative pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e11d48]/10 border border-[#e11d48]/20 text-[#e11d48] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <Target className="w-3 h-3" />
               Our Mission
             </div>
@@ -145,7 +145,7 @@ export default async function AboutPage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Join the Platform
                 <ArrowRight className="w-4 h-4" />
@@ -172,7 +172,7 @@ export default async function AboutPage() {
                 <div className="text-[28px] md:text-[32px] font-bold text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium text-[#e11d48] uppercase tracking-wide">
+                <div className="mt-1 text-[11px] font-medium text-[#8B0000] uppercase tracking-wide">
                   {stat.label}
                 </div>
                 <div className="text-[11px] text-white/30 mt-0.5">{stat.sub}</div>
@@ -188,7 +188,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Our Journey
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -209,7 +209,7 @@ export default async function AboutPage() {
                   }`}
                 >
                   {/* dot */}
-                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[#e11d48] -translate-x-1/2 mt-2" />
+                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[#8B0000] -translate-x-1/2 mt-2" />
 
                   {/* content */}
                   <div className="ml-10 md:ml-0 md:w-1/2 md:text-right">
@@ -218,7 +218,7 @@ export default async function AboutPage() {
                         i % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-left"
                       }`}
                     >
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e11d48]/10 text-[#e11d48] text-[11px] font-semibold uppercase tracking-wider mb-3">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/10 text-[#8B0000] text-[11px] font-semibold uppercase tracking-wider mb-3">
                         <Clock className="w-3 h-3" />
                         {item.year}
                       </div>
@@ -244,7 +244,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Leadership
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -258,13 +258,13 @@ export default async function AboutPage() {
                 key={member.name}
                 className="group p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all"
               >
-                <div className="w-14 h-14 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 text-white/30 text-[11px] font-bold tracking-widest group-hover:bg-[#e11d48]/10 group-hover:border-[#e11d48]/20 group-hover:text-[#e11d48] transition-all">
+                <div className="w-14 h-14 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-4 text-white/30 text-[11px] font-bold tracking-widest group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 group-hover:text-[#8B0000] transition-all">
                   {member.initials}
                 </div>
                 <h3 className="text-[16px] font-semibold text-white mb-0.5">
                   {member.name}
                 </h3>
-                <p className="text-[11px] font-medium text-[#e11d48] uppercase tracking-wide mb-3">
+                <p className="text-[11px] font-medium text-[#8B0000] uppercase tracking-wide mb-3">
                   {member.role}
                 </p>
                 <p className="text-[13px] text-white/40 leading-relaxed">
@@ -282,7 +282,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               What Drives Us
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -296,7 +296,7 @@ export default async function AboutPage() {
                 key={item.title}
                 className="flex gap-4 p-6 rounded-2xl border border-white/[0.06] bg-[#0f0f0f]"
               >
-                <CheckCircle2 className="w-5 h-5 text-[#e11d48] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-[#8B0000] shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-[15px] font-semibold text-white mb-1">
                     {item.title}
@@ -317,7 +317,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-[#e11d48] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Trusted By
             </p>
             <h2 className="text-[24px] md:text-[32px] font-bold text-white tracking-tight">
@@ -345,7 +345,7 @@ export default async function AboutPage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#0f0f0f] border border-white/[0.06] p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#e11d48]/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Ready to Transform Your Procurement?"}
@@ -356,7 +356,7 @@ export default async function AboutPage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#e11d48] hover:bg-[#be123c] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4" />

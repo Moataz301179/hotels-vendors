@@ -47,7 +47,7 @@ function StatusBadge({ status }: { status: string }) {
 
 function PermCell({ perm }: { perm: string }) {
   const colors: Record<string, string> = {
-    all: "bg-[#022349]/10 text-[#022349]",
+    all: "bg-[#8B0000]/10 text-[#8B0000]",
     write: "bg-blue-500/10 text-blue-400",
     read: "bg-white/10 text-white/40",
     none: "bg-red-500/10 text-red-400/50",

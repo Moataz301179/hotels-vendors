@@ -172,13 +172,13 @@ export default function SupplierOnboardingPage() {
           </div>
           <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] text-left space-y-2">
             <p className="text-xs text-white/30 uppercase tracking-wider">What happens next?</p>
-            <div className="flex items-start gap-3"><ShieldCheck size={16} className="text-[#022349] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Document verification by our compliance team</p></div>
-            <div className="flex items-start gap-3"><Factory size={16} className="text-[#022349] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Factory/site visit for PREMIER tier applicants</p></div>
-            <div className="flex items-start gap-3"><Truck size={16} className="text-[#022349] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Onboarding call to set up your product catalog</p></div>
+            <div className="flex items-start gap-3"><ShieldCheck size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Document verification by our compliance team</p></div>
+            <div className="flex items-start gap-3"><Factory size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Factory/site visit for PREMIER tier applicants</p></div>
+            <div className="flex items-start gap-3"><Truck size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-white/60">Onboarding call to set up your product catalog</p></div>
           </div>
           <div className="flex gap-3 justify-center">
             <Link href="/" className="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-white text-sm font-medium hover:bg-white/[0.08] transition-colors">Back to Home</Link>
-            <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-5 py-2.5 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors">Apply Another</button>
+            <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-5 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors">Apply Another</button>
           </div>
         </motion.div>
       </div>
@@ -194,7 +194,7 @@ export default function SupplierOnboardingPage() {
           <span className="text-sm">Back to Home</span>
         </Link>
         <Link href="/" className="flex items-center gap-2">
-          <Store size={18} className="text-[#022349]" />
+          <Store size={18} className="text-[#8B0000]" />
           <span className="text-sm font-semibold text-white">Hotels Vendors</span>
         </Link>
       </div>
@@ -213,7 +213,7 @@ export default function SupplierOnboardingPage() {
           return (
             <div key={s.id} className="flex items-center flex-1">
               <div className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isActive ? "bg-[#022349] text-white ring-2 ring-[#022349]/30" : isCompleted ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.03] text-white/25 border border-white/[0.06]"}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isActive ? "bg-[#8B0000] text-white ring-2 ring-[#8B0000]/30" : isCompleted ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.03] text-white/25 border border-white/[0.06]"}`}>
                   {isCompleted ? <CheckCircle2 size={18} /> : <Icon size={18} />}
                 </div>
                 <span className={`text-[10px] mt-1.5 font-medium ${isActive ? "text-white" : isCompleted ? "text-emerald-400/60" : "text-white/20"}`}>{s.label}</span>
@@ -230,27 +230,27 @@ export default function SupplierOnboardingPage() {
           <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }} className="p-6">
             {step === 1 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Building2 size={16} className="text-[#022349]" />Company Information</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Building2 size={16} className="text-[#8B0000]" />Company Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Company Name <span className="text-red-400">*</span></label>
-                    <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Nile Fresh Foods" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Nile Fresh Foods" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Legal Name</label>
-                    <input type="text" value={form.legalName} onChange={(e) => updateField("legalName", e.target.value)} placeholder="Registered legal entity name" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.legalName} onChange={(e) => updateField("legalName", e.target.value)} placeholder="Registered legal entity name" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Tax ID <span className="text-red-400">*</span></label>
-                    <input type="text" value={form.taxId} onChange={(e) => updateField("taxId", e.target.value.replace(/\D/g, ""))} placeholder="9-digit Egyptian tax ID" maxLength={9} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.taxId} onChange={(e) => updateField("taxId", e.target.value.replace(/\D/g, ""))} placeholder="9-digit Egyptian tax ID" maxLength={9} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Commercial Reg. No.</label>
-                    <input type="text" value={form.commercialReg} onChange={(e) => updateField("commercialReg", e.target.value)} placeholder="Commercial registration number" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.commercialReg} onChange={(e) => updateField("commercialReg", e.target.value)} placeholder="Commercial registration number" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Company Description</label>
-                    <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Briefly describe your company, products, and target market..." rows={3} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm resize-none" />
+                    <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Briefly describe your company, products, and target market..." rows={3} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm resize-none" />
                   </div>
                 </div>
               </div>
@@ -258,19 +258,19 @@ export default function SupplierOnboardingPage() {
 
             {step === 2 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><MapPin size={16} className="text-[#022349]" />Location & Contact</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><MapPin size={16} className="text-[#8B0000]" />Location & Contact</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Street Address</label>
-                    <input type="text" value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="Full street address" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="Full street address" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">City <span className="text-red-400">*</span></label>
-                    <input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} placeholder="e.g. 6th of October" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} placeholder="e.g. 6th of October" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Governorate <span className="text-red-400">*</span></label>
-                    <select value={form.governorate} onChange={(e) => updateField("governorate", e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white focus:border-[#022349]/40 focus:outline-none transition-colors text-sm appearance-none">
+                    <select value={form.governorate} onChange={(e) => updateField("governorate", e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm appearance-none">
                       <option value="" className="bg-[#1a1a1a]">Select governorate</option>
                       {GOVERNORATES.map((g) => (<option key={g} value={g} className="bg-[#1a1a1a]">{g}</option>))}
                     </select>
@@ -279,21 +279,21 @@ export default function SupplierOnboardingPage() {
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Phone <span className="text-red-400">*</span></label>
                     <div className="relative">
                       <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-                      <input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="+20 1XX XXX XXXX" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                      <input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="+20 1XX XXX XXXX" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                     </div>
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Email <span className="text-red-400">*</span></label>
                     <div className="relative">
                       <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-                      <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} placeholder="contact@company.com" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                      <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} placeholder="contact@company.com" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                     </div>
                   </div>
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Website</label>
                     <div className="relative">
                       <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-                      <input type="url" value={form.website} onChange={(e) => updateField("website", e.target.value)} placeholder="https://www.company.com" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                      <input type="url" value={form.website} onChange={(e) => updateField("website", e.target.value)} placeholder="https://www.company.com" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                     </div>
                   </div>
                 </div>
@@ -302,18 +302,18 @@ export default function SupplierOnboardingPage() {
 
             {step === 3 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Landmark size={16} className="text-[#022349]" />Banking Details</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Landmark size={16} className="text-[#8B0000]" />Banking Details</h3>
                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 mb-4">
                   <p className="text-xs text-amber-400/70 flex items-start gap-2"><AlertCircle size={14} className="mt-0.5 shrink-0" />This information is encrypted and only used for payment processing. We never share your banking details with third parties.</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Bank Name <span className="text-red-400">*</span></label>
-                    <input type="text" value={form.bankName} onChange={(e) => updateField("bankName", e.target.value)} placeholder="e.g. National Bank of Egypt" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.bankName} onChange={(e) => updateField("bankName", e.target.value)} placeholder="e.g. National Bank of Egypt" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">IBAN / Account Number <span className="text-red-400">*</span></label>
-                    <input type="text" value={form.bankAccount} onChange={(e) => updateField("bankAccount", e.target.value)} placeholder="EGXXXXXXXXXXXXXXXXXXXXXXXX" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                    <input type="text" value={form.bankAccount} onChange={(e) => updateField("bankAccount", e.target.value)} placeholder="EGXXXXXXXXXXXXXXXXXXXXXXXX" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                   </div>
                 </div>
               </div>
@@ -321,13 +321,13 @@ export default function SupplierOnboardingPage() {
 
             {step === 4 && (
               <div className="space-y-5">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Package size={16} className="text-[#022349]" />Product Capabilities</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Package size={16} className="text-[#8B0000]" />Product Capabilities</h3>
                 <div>
                   <label className="text-[11px] text-white/40 uppercase tracking-wider mb-2 block">Product Categories <span className="text-red-400">*</span></label>
                   <div className="flex flex-wrap gap-2">
                     {CATEGORIES.map((cat) => {
                       const selected = form.categories.includes(cat);
-                      return (<button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selected ? "bg-[#022349]/20 text-[#022349] border border-[#022349]/30" : "bg-white/[0.03] text-white/40 border border-white/[0.06] hover:border-white/[0.12]"}`}>{cat}</button>);
+                      return (<button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selected ? "bg-[#8B0000]/20 text-[#8B0000] border border-[#8B0000]/30" : "bg-white/[0.03] text-white/40 border border-white/[0.06] hover:border-white/[0.12]"}`}>{cat}</button>);
                     })}
                   </div>
                 </div>
@@ -351,14 +351,14 @@ export default function SupplierOnboardingPage() {
                 </div>
                 <div>
                   <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Minimum Order Value (EGP)</label>
-                  <input type="number" value={form.minOrderValue} onChange={(e) => updateField("minOrderValue", e.target.value)} placeholder="e.g. 5000" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#022349]/40 focus:outline-none transition-colors text-sm" />
+                  <input type="number" value={form.minOrderValue} onChange={(e) => updateField("minOrderValue", e.target.value)} placeholder="e.g. 5000" className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-[#8B0000]/40 focus:outline-none transition-colors text-sm" />
                 </div>
               </div>
             )}
 
             {step === 5 && (
               <div className="space-y-5">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><FileText size={16} className="text-[#022349]" />Review Your Application</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><FileText size={16} className="text-[#8B0000]" />Review Your Application</h3>
                 <div className="space-y-3">
                   <ReviewSection title="Company" icon={Building2}>
                     <ReviewRow label="Name" value={form.name} />
@@ -388,8 +388,8 @@ export default function SupplierOnboardingPage() {
                 </div>
                 <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
                   <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/[0.12] bg-white/[0.04] text-[#022349] focus:ring-[#022349]/20" />
-                    <span className="text-xs text-white/40">I confirm that all information provided is accurate and I agree to the <a href="#" className="text-[#022349] hover:underline">Terms of Service</a> and <a href="#" className="text-[#022349] hover:underline">Supplier Agreement</a>.</span>
+                    <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/[0.12] bg-white/[0.04] text-[#8B0000] focus:ring-[#8B0000]/20" />
+                    <span className="text-xs text-white/40">I confirm that all information provided is accurate and I agree to the <a href="#" className="text-[#8B0000] hover:underline">Terms of Service</a> and <a href="#" className="text-[#8B0000] hover:underline">Supplier Agreement</a>.</span>
                   </label>
                 </div>
               </div>
@@ -410,11 +410,11 @@ export default function SupplierOnboardingPage() {
             <ArrowLeft size={16} />Back
           </button>
           {step < 5 ? (
-            <button onClick={nextStep} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 text-white text-sm font-medium transition-colors">
+            <button onClick={nextStep} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors">
               Continue<ArrowRight size={16} />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#022349] hover:bg-[#022349]/80 disabled:opacity-50 text-white text-sm font-medium transition-colors">
+            <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 disabled:opacity-50 text-white text-sm font-medium transition-colors">
               {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
               {submitting ? "Submitting..." : "Submit Application"}
             </button>
@@ -429,7 +429,7 @@ export default function SupplierOnboardingPage() {
 function ReviewSection({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
     <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-      <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2"><Icon size={13} className="text-[#022349]" />{title}</h4>
+      <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2"><Icon size={13} className="text-[#8B0000]" />{title}</h4>
       <div className="space-y-2">{children}</div>
     </div>
   );

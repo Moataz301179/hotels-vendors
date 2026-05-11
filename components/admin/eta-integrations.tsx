@@ -191,7 +191,7 @@ function IntegrationGroup({
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all border ${
                   item.status === "connected"
                     ? "bg-white/[0.03] border-white/[0.08] text-white/50 hover:text-white/80"
-                    : "bg-[#022349]/15 border-[#022349]/25 text-[#022349] hover:bg-[#022349]/25"
+                    : "bg-[#8B0000]/15 border-[#8B0000]/25 text-[#8B0000] hover:bg-[#8B0000]/25"
                 }`}
               >
                 {connecting === item.id ? (

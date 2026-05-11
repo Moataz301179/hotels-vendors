@@ -140,7 +140,7 @@ export default function RegisterPage() {
                     step > s.id
                       ? "bg-emerald-500 text-white"
                       : step === s.id
-                      ? "bg-[#022349] text-white shadow-[0_0_12px_rgba(2,35,73,0.3)]"
+                      ? "bg-[#8B0000] text-white shadow-[0_0_12px_rgba(2,35,73,0.3)]"
                       : "bg-white/[0.04] text-white/30 border border-white/[0.08]"
                   }`}
                 >
@@ -163,7 +163,7 @@ export default function RegisterPage() {
             <div className="absolute top-4 left-0 right-0 h-px -translate-y-1/2 z-0">
               <div className="mx-[12.5%] h-full bg-white/[0.06] relative">
                 <motion.div
-                  className="absolute inset-y-0 left-0 bg-[#022349] rounded-full"
+                  className="absolute inset-y-0 left-0 bg-[#8B0000] rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${stepProgress}%` }}
                   transition={{ duration: 0.3 }}
@@ -213,7 +213,7 @@ export default function RegisterPage() {
                     value={form.name}
                     onChange={(e) => updateForm("name", e.target.value)}
                     placeholder="Omar El-Sayed"
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                 </div>
               </div>
@@ -228,7 +228,7 @@ export default function RegisterPage() {
                     value={form.email}
                     onChange={(e) => updateForm("email", e.target.value)}
                     placeholder="omar@nilegrand.com"
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                 </div>
               </div>
@@ -243,7 +243,7 @@ export default function RegisterPage() {
                     value={form.password}
                     onChange={(e) => updateForm("password", e.target.value)}
                     placeholder="Min 8 characters"
-                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                   <button
                     type="button"
@@ -282,7 +282,7 @@ export default function RegisterPage() {
                     value={form.phone}
                     onChange={(e) => updateForm("phone", e.target.value)}
                     placeholder="+20 1XX XXX XXXX"
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default function RegisterPage() {
                       onClick={() => updateForm("role", role.value)}
                       className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
                         form.role === role.value
-                          ? "bg-[#022349]/15 border-[#022349]/40 text-[#1a4a7c]"
+                          ? "bg-[#8B0000]/15 border-[#8B0000]/40 text-[#A52A2A]"
                           : "bg-white/[0.02] border-white/[0.06] text-white/50 hover:text-white/80 hover:border-white/[0.12]"
                       }`}
                     >
@@ -331,7 +331,7 @@ export default function RegisterPage() {
                   value={form.companyName}
                   onChange={(e) => updateForm("companyName", e.target.value)}
                   placeholder="Nile Grand Hotel"
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                 />
               </div>
               <div className="space-y-2">
@@ -343,7 +343,7 @@ export default function RegisterPage() {
                   value={form.taxId}
                   onChange={(e) => updateForm("taxId", e.target.value)}
                   placeholder="123456789"
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -356,7 +356,7 @@ export default function RegisterPage() {
                     value={form.city}
                     onChange={(e) => updateForm("city", e.target.value)}
                     placeholder="Cairo"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                 </div>
                 <div className="space-y-2">
@@ -368,7 +368,7 @@ export default function RegisterPage() {
                     value={form.governorate}
                     onChange={(e) => updateForm("governorate", e.target.value)}
                     placeholder="Cairo"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#022349]/60 focus:ring-1 focus:ring-[#022349]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
                   />
                 </div>
               </div>
@@ -430,7 +430,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#022349] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(2,35,73,0.2)]"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8B0000] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(2,35,73,0.2)]"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4 h-4" />
@@ -440,7 +440,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#022349] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(2,35,73,0.2)]"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8B0000] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(2,35,73,0.2)]"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -466,7 +466,7 @@ export default function RegisterPage() {
         Already have an account?{" "}
         <Link
           href="/login"
-          className="text-[#1a4a7c] hover:text-[#3a6a9c] font-medium transition-colors"
+          className="text-[#A52A2A] hover:text-[#3a6a9c] font-medium transition-colors"
         >
           Sign in
         </Link>
