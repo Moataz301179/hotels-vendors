@@ -76,7 +76,7 @@ interface OrchestratorData {
 }
 
 const SQUAD_COLORS: Record<string, string> = {
-  director: "#8B0000",
+  director: "#e11d48",
   platform: "#6366f1",
   fintech: "#f59e0b",
   supplier: "#10b981",
@@ -120,7 +120,7 @@ export default function OrchestratorPage() {
     { label: "Products", value: data?.metrics.products ?? 0, icon: Package, color: "#8b5cf6" },
     { label: "Orders", value: data?.metrics.orders ?? 0, icon: Wallet, color: "#f59e0b" },
     { label: "Users", value: data?.metrics.users ?? 0, icon: Users, color: "#06b6d4" },
-    { label: "Monthly GMV", value: `EGP ${((data?.metrics.monthlyGmv ?? 0) / 1000000).toFixed(1)}M`, icon: TrendingUp, color: "#8B0000" },
+    { label: "Monthly GMV", value: `EGP ${((data?.metrics.monthlyGmv ?? 0) / 1000000).toFixed(1)}M`, icon: TrendingUp, color: "#e11d48" },
   ];
 
   return (
@@ -130,8 +130,8 @@ export default function OrchestratorPage() {
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-                <BrainCircuit className="w-4.5 h-4.5 text-[#8B0000]" />
+              <div className="w-8 h-8 rounded-lg bg-[#e11d48]/15 flex items-center justify-center">
+                <BrainCircuit className="w-4.5 h-4.5 text-[#e11d48]" />
               </div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">AI Command Center</h1>
             </div>
@@ -141,7 +141,7 @@ export default function OrchestratorPage() {
             <button
               onClick={handleTriggerPlan}
               disabled={planning}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#8B0000] hover:bg-[#6B0000] disabled:opacity-50 text-white text-[13px] font-semibold rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#e11d48] hover:bg-[#be123c] disabled:opacity-50 text-white text-[13px] font-semibold rounded-lg transition-colors"
             >
               {planning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
               Run Director Cycle
@@ -192,7 +192,7 @@ export default function OrchestratorPage() {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <BrainCircuit className="w-4 h-4 text-[#C9A227]" />
+                <BrainCircuit className="w-4 h-4 text-[#e11d48]" />
                 <h2 className="text-[14px] font-semibold text-white">Current Battle Plan</h2>
               </div>
               {data?.battlePlan && (
@@ -205,7 +205,7 @@ export default function OrchestratorPage() {
               <div className="space-y-3">
                 <p className="text-[13px] text-white/60 leading-relaxed">{data.battlePlan.content}</p>
                 <div className="flex items-center gap-3 pt-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-medium text-[#C9A227]">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e11d48]/10 border border-[#e11d48]/20 text-[11px] font-medium text-[#e11d48]">
                     <Activity className="w-3 h-3" />
                     Confidence: {Math.round((data.battlePlan.confidence || 0) * 100)}%
                   </span>
@@ -268,7 +268,7 @@ export default function OrchestratorPage() {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
                 activeTab === tab
-                  ? "bg-[#8B0000] text-white"
+                  ? "bg-[#e11d48] text-white"
                   : "text-white/40 hover:text-white/70"
               }`}
             >
@@ -277,7 +277,7 @@ export default function OrchestratorPage() {
                 <span className="flex items-center gap-1.5">
                   Approvals
                   {data && data.pendingApprovals.length > 0 && (
-                    <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#C9A227] text-[10px] font-bold text-[#050505] flex items-center justify-center">
+                    <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#e11d48] text-[10px] font-bold text-[#050505] flex items-center justify-center">
                       {data.pendingApprovals.length}
                     </span>
                   )}
@@ -297,7 +297,7 @@ export default function OrchestratorPage() {
           >
             <div className="px-5 py-3 border-b border-white/[0.06] flex items-center justify-between">
               <h3 className="text-[13px] font-semibold text-white">Recent Agent Jobs</h3>
-              <Link href="/admin/swarm" className="text-[11px] text-[#8B0000] hover:text-[#A52A2A] flex items-center gap-1 transition-colors">
+              <Link href="/admin/swarm" className="text-[11px] text-[#e11d48] hover:text-[#be123c] flex items-center gap-1 transition-colors">
                 View All <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
@@ -398,7 +398,7 @@ export default function OrchestratorPage() {
           >
             <div className="px-5 py-3 border-b border-white/[0.06] flex items-center justify-between">
               <h3 className="text-[13px] font-semibold text-white">Recent Events & Alerts</h3>
-              <Link href="/admin/health" className="text-[11px] text-[#8B0000] hover:text-[#A52A2A] flex items-center gap-1 transition-colors">
+              <Link href="/admin/health" className="text-[11px] text-[#e11d48] hover:text-[#be123c] flex items-center gap-1 transition-colors">
                 System Health <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
@@ -418,7 +418,7 @@ export default function OrchestratorPage() {
                         {event.severity}
                       </span>
                       {!event.acknowledgedAt && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C9A227] animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#e11d48] animate-pulse" />
                       )}
                     </div>
                     <p className="text-[12px] text-white/50 mt-0.5">{event.message}</p>
@@ -447,11 +447,11 @@ export default function OrchestratorPage() {
               href={link.to}
               className="group flex items-center gap-4 p-4 rounded-xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all"
             >
-              <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 flex items-center justify-center">
-                <link.icon className="w-5 h-5 text-[#8B0000]" />
+              <div className="w-10 h-10 rounded-xl bg-[#e11d48]/10 flex items-center justify-center">
+                <link.icon className="w-5 h-5 text-[#e11d48]" />
               </div>
               <div className="flex-1">
-                <h4 className="text-[13px] font-semibold text-white group-hover:text-[#C9A227] transition-colors">{link.label}</h4>
+                <h4 className="text-[13px] font-semibold text-white group-hover:text-[#e11d48] transition-colors">{link.label}</h4>
                 <p className="text-[11px] text-white/30">{link.desc}</p>
               </div>
               <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />

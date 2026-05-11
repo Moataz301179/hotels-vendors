@@ -34,8 +34,8 @@ export default function AdminProductsPage() {
       <div className="border-b border-white/[0.06]">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-              <Package className="w-4 h-4 text-[#8B0000]" />
+            <div className="w-8 h-8 rounded-lg bg-[#e11d48]/15 flex items-center justify-center">
+              <Package className="w-4 h-4 text-[#e11d48]" />
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">Product Catalog</h1>

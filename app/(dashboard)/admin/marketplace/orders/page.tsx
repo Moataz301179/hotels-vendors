@@ -52,8 +52,8 @@ export default function AdminOrdersPage() {
       <div className="border-b border-white/[0.06]">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-              <ClipboardList className="w-4 h-4 text-[#8B0000]" />
+            <div className="w-8 h-8 rounded-lg bg-[#e11d48]/15 flex items-center justify-center">
+              <ClipboardList className="w-4 h-4 text-[#e11d48]" />
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">Order Oversight</h1>
@@ -70,7 +70,7 @@ export default function AdminOrdersPage() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40"
+            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#e11d48]/40"
           >
             <option value="">All Statuses</option>
             <option value="PENDING">Pending</option>

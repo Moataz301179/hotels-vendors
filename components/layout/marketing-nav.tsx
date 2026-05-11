@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Search, ShoppingCart, ChevronDown, Phone, Mail, Building2, Truck, Landmark, ArrowRight } from "lucide-react";
+import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [solutionsOpen, setSolutionsOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -16,157 +15,110 @@ export function MarketingNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const primaryNav = [
-    { label: "Platform", href: "/solutions" },
-    { label: "Solutions", href: "#", hasDropdown: true },
-    { label: "Pricing", href: "/pricing" },
-    { label: "About", href: "/about" },
-  ];
-
-  const solutionLinks = [
-    { label: "For Hotels", href: "/register?role=hotel", desc: "Procurement OS & spend optimization", icon: Building2 },
-    { label: "For Suppliers", href: "/become-supplier", desc: "Grow your B2B hospitality business", icon: ShoppingCart },
-    { label: "For Logistics", href: "/register?role=shipping", desc: "Route optimization & delivery network", icon: Truck },
-    { label: "For Factoring", href: "/register?role=factoring", desc: "Embedded liquidity & credit solutions", icon: Landmark },
+  const navItems = [
+    { label: "Marketplace", href: "/marketplace" },
+    { label: "Hotel Solutions", href: "/register?role=hotel" },
+    { label: "Hotel Dashboard", href: "/login" },
+    { label: "Supplier Portal", href: "/login" },
+    { label: "ETA Compliance", href: "/eta-demo" },
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}>
-      {/* ═══ Top Bar — Burgundy utility bar ═══ */}
-      <div className="bg-[#8B0000] text-white/90">
-        <div className="mx-auto max-w-7xl px-6 h-8 flex items-center justify-between text-[11px] tracking-wide">
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3 h-3" />
-              +20 100 000 0000
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-[#050505]/95 backdrop-blur-md border-b border-white/[0.06]" : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-6 h-[72px] flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 relative z-10">
+          <Image
+            src="/logo-icon-white.png"
+            alt="Hotels Vendors"
+            width={36}
+            height={50}
+            className="object-contain"
+            priority
+          />
+          <div className="flex flex-col">
+            <span className="text-[15px] font-bold text-white tracking-tight leading-none">
+              Hotels Vendors
             </span>
-            <span className="hidden sm:flex items-center gap-1.5">
-              <Mail className="w-3 h-3" />
-              hello@hotelsvendors.com
+            <span className="text-[9px] font-medium text-white/40 uppercase tracking-[0.1em] leading-none mt-0.5">
+              Smarter Together
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
-            <span className="text-white/30">|</span>
-            <Link href="/register" className="hover:text-white transition-colors">Register</Link>
-          </div>
-        </div>
-      </div>
+        </Link>
 
-      {/* ═══ Main Nav — White institutional ═══ */}
-      <div className={`transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md border-b border-gray-200" : "bg-white border-b border-gray-100"}`}>
-        <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 relative z-10 group">
-            <div className="w-10 h-10 rounded-lg bg-[#8B0000] flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm tracking-tight">HV</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[16px] font-bold text-gray-900 tracking-tight leading-none">
-                Hotels Vendors
-              </span>
-              <span className="text-[10px] font-semibold text-[#8B0000] uppercase tracking-[0.12em] leading-none mt-0.5">
-                Smarter Together
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-0.5">
-            {primaryNav.map((item) =>
-              item.hasDropdown ? (
-                <div
-                  key={item.label}
-                  className="relative"
-                  onMouseEnter={() => setSolutionsOpen(true)}
-                  onMouseLeave={() => setSolutionsOpen(false)}
-                >
-                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium text-gray-600 hover:text-[#8B0000] transition-colors rounded-lg hover:bg-gray-50">
-                    {item.label}
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? "rotate-180" : ""}`} />
-                  </button>
-                  {solutionsOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-72 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden animate-fade-in-up">
-                      <div className="p-3 bg-gray-50/50 border-b border-gray-100">
-                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Stakeholder Solutions</p>
-                      </div>
-                      {solutionLinks.map((link) => (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-[#8B0000]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <link.icon className="w-4 h-4 text-[#8B0000]" />
-                          </div>
-                          <div>
-                            <div className="text-[13px] font-semibold text-gray-900">{link.label}</div>
-                            <div className="text-[11px] text-gray-400 mt-0.5">{link.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="px-4 py-2 text-[14px] font-medium text-gray-600 hover:text-[#8B0000] transition-colors rounded-lg hover:bg-gray-50"
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
-          </nav>
-
-          {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <button className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-              <Search className="w-4 h-4" />
-            </button>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white hover:bg-[#6B0000] rounded-lg transition-colors shadow-sm"
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className={`px-4 py-2 text-[13px] font-medium transition-colors rounded-lg hover:bg-white/[0.04] ${
+                item.label === "Marketplace" ? "text-[#e11d48]" : "text-white/60 hover:text-white"
+              }`}
             >
-              Get Started
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-          {/* Mobile Toggle */}
-          <button
-            className="lg:hidden p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        {/* Right Actions */}
+        <div className="hidden lg:flex items-center gap-3">
+          <button className="p-2 text-white/40 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">
+            <Search className="w-4 h-4" />
           </button>
+          <button className="p-2 text-white/40 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">
+            <ShoppingCart className="w-4 h-4" />
+          </button>
+          <Link
+            href="/register"
+            className="px-5 py-2.5 text-[13px] font-semibold bg-[#e11d48] text-white hover:bg-[#be123c] rounded-lg transition-colors"
+          >
+            Get Started
+          </Link>
+          <Link
+            href="/login"
+            className="text-[13px] font-medium text-white/50 hover:text-white px-4 py-2 transition-colors"
+          >
+            Sign In
+          </Link>
         </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="lg:hidden p-2 text-white/60 hover:text-white rounded-lg hover:bg-white/[0.04] transition-colors"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 px-6 py-5 shadow-xl animate-fade-in-up">
-          {primaryNav.map((item) => (
-            <Link
+        <div className="lg:hidden bg-[#050505] border-t border-white/[0.06] px-6 py-5 shadow-xl">
+          {navItems.map((item) => (
+            <a
               key={item.label}
               href={item.href}
-              className="block py-2.5 text-[14px] font-medium text-gray-600 hover:text-[#8B0000] transition-colors"
+              className="block py-2.5 text-[14px] font-medium text-white/60 hover:text-white transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
-          <div className="pt-4 mt-2 border-t border-gray-100 flex gap-3">
+          <div className="pt-4 mt-2 border-t border-white/[0.06] flex gap-3">
             <Link
               href="/login"
-              className="flex-1 text-center py-2.5 text-[13px] font-medium border border-gray-200 text-gray-600 hover:text-gray-900 rounded-lg transition-colors"
+              className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/[0.10] text-white/60 hover:text-white rounded-lg transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/register"
-              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
+              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#e11d48] text-white rounded-lg hover:bg-[#be123c] transition-colors"
             >
               Get Started
             </Link>

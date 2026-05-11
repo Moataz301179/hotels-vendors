@@ -65,8 +65,8 @@ export default function AdminUsersPage() {
       <div className="border-b border-white/[0.06]">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-              <Users className="w-4 h-4 text-[#8B0000]" />
+            <div className="w-8 h-8 rounded-lg bg-[#e11d48]/15 flex items-center justify-center">
+              <Users className="w-4 h-4 text-[#e11d48]" />
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">User Management</h1>
@@ -95,13 +95,13 @@ export default function AdminUsersPage() {
               placeholder="Search by name or email..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40 transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#e11d48]/40 transition-all"
             />
           </div>
           <select
             value={roleFilter}
             onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40"
+            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#e11d48]/40"
           >
             <option value="">All Roles</option>
             <option value="ADMIN">Admin</option>
@@ -113,7 +113,7 @@ export default function AdminUsersPage() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40"
+            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#e11d48]/40"
           >
             <option value="">All Status</option>
             <option value="ACTIVE">Active</option>
@@ -158,7 +158,7 @@ export default function AdminUsersPage() {
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8B0000] to-[#5C0000] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#e11d48] to-[#be123c] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
                           {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                         </div>
                         <div>

@@ -1,39 +1,22 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — LUXURY DARK DESIGN SYSTEM v4
-   Brand: Deep Burgundy #8B0000  |  Gold accent #C9A227
+   HOTELS VENDORS — LUXURY DARK DESIGN SYSTEM v3
    Research-backed: Linear, Raycast, Stripe, Mercury patterns
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Brand Colors ──
-     Deep Burgundy — authority, heritage, Egyptian hospitality */
-  --burgundy-base: #8B0000;
-  --burgundy-light: #A52A2A;
-  --burgundy-dark: #5C0000;
-  --burgundy-muted: rgba(139, 0, 0, 0.12);
-  --burgundy-glow: rgba(139, 0, 0, 0.20);
-  --burgundy-subtle: rgba(139, 0, 0, 0.08);
-
-  /* Legacy crimson → burgundy aliases for backward compat */
-  --crimson-base: #8B0000;
-  --crimson-light: #A52A2A;
-  --crimson-dark: #5C0000;
-  --crimson-muted: rgba(139, 0, 0, 0.12);
-  --crimson-glow: rgba(139, 0, 0, 0.20);
-
-  --brand-red: #8B0000;
+  --brand-red: #022349;
   --header-bg: var(--brand-red);
-
   /* ── Background Layers ──
-     Never pure black (#000000). Creates atmospheric depth. */
+     Blue-purple undertone. Never pure black (#000000).
+     Creates atmospheric depth like a dimly lit room. */
   --bg-canvas: #050505;
   --bg-surface-1: #0a0a0a;
   --bg-surface-2: #101010;
   --bg-surface-3: #1a1a1a;
 
-  /* Legacy aliases */
+  /* Legacy aliases (backward compat) */
   --background: #050505;
   --background-void: #080808;
   --surface: #0a0a0a;
@@ -41,6 +24,7 @@
   --surface-hover: #1a1a1a;
 
   /* ── Text Hierarchy ──
+     Never pure white (#ffffff) — creates halation on dark.
      Stepped grays for eye comfort and scan hierarchy. */
   --text-primary: #f0f0f0;
   --text-secondary: #a0a0a0;
@@ -57,34 +41,45 @@
   --foreground-dim: rgba(255,255,255,0.15);
   --foreground-inverse: #050505;
 
-  /* ── Borders ── */
+  /* ── Borders ──
+     Edge definition, not dividers. Simulate light catching
+     on raised surfaces with a consistent top-left light source. */
   --border-invisible: rgba(255, 255, 255, 0.06);
   --border-subtle: rgba(255, 255, 255, 0.10);
   --border-visible: rgba(255, 255, 255, 0.15);
-  --border-accent: rgba(139, 0, 0, 0.40);
+  --border-accent: rgba(2, 35, 73, 0.40);
 
   /* Legacy aliases */
   --border-default: rgba(255,255,255,0.08);
   --border-strong: rgba(255,255,255,0.12);
   --border-subtle-legacy: rgba(255,255,255,0.05);
 
-  /* ── Accent / Brand Scale ── */
-  --accent-500: #8B0000;
-  --accent-600: #6B0000;
-  --accent-700: #5C0000;
-  --accent-glow: rgba(139,0,0,0.30);
-  --accent-glow-strong: rgba(139,0,0,0.45);
-  --brand-500: #8B0000;
-  --brand-400: #A52A2A;
-  --brand-600: #6B0000;
-  --brand-700: #5C0000;
-  --brand-800: #3D0000;
+  /* ── Crimson Accent Scale ──
+     Brand color. NOT for errors — reserve #ff4444 for errors. */
+  --crimson-base: #022349;
+  --crimson-light: #1a4a7c;
+  --crimson-dark: #011e3a;
+  --crimson-muted: rgba(2, 35, 73, 0.15);
+  --crimson-glow: rgba(2, 35, 73, 0.25);
 
-  /* ── Complementary Gold ── */
-  --gold-base: #C9A227;
-  --gold-light: #E4C76B;
-  --gold-muted: rgba(201, 162, 39, 0.15);
-  --accent-gold: #D4AF37;
+  /* Legacy aliases */
+  --accent-500: #022349;
+  --accent-600: #01305e;
+  --accent-700: #011e3a;
+  --accent-glow: rgba(2,35,73,0.35);
+  --accent-glow-strong: rgba(2,35,73,0.50);
+  --brand-500: #022349;
+  --brand-400: #1a4a7c;
+  --brand-600: #01305e;
+  --brand-700: #011e3a;
+  --brand-800: #01142a;
+
+  /* ── Complementary Gold ──
+     Shifts crimson perception from "warning" to "premium". */
+  --gold-base: #e1a95f;
+  --gold-light: #f0c987;
+  --gold-muted: rgba(225, 169, 95, 0.15);
+  --accent-gold: #fbbf24;
 
   /* ── Semantic Colors ── */
   --error: #ff4444;
@@ -95,11 +90,13 @@
   --accent-emerald: #34d399;
   --accent-amber: #f59e0b;
 
-  /* ── Shadows ── */
+  /* ── Shadows ──
+     White inner shadows = elevation on dark.
+     Dark shadows = deep elevation only. */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --shadow-crimson-glow: 0 0 20px rgba(139, 0, 0, 0.15);
-  --shadow-glow-accent: 0 0 40px rgba(139,0,0,0.18);
+  --shadow-crimson-glow: 0 0 20px rgba(2, 35, 73, 0.15);
+  --shadow-glow-accent: 0 0 40px rgba(2,35,73,0.20);
   --shadow-glow-white: 0 0 30px rgba(255,255,255,0.04);
 
   /* ── Layout ── */
@@ -155,7 +152,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-::selection { background: rgba(139,0,0,0.40); color: #fff; }
+::selection { background: rgba(2,35,73,0.40); color: #fff; }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
@@ -183,7 +180,7 @@ body {
 .bg-noise > * { position: relative; z-index: 2; }
 
 /* ═══════════════════════════════════════════════════════════════
-   AURORA BACKGROUND — pure CSS mesh gradient (burgundy tones)
+   AURORA BACKGROUND — pure CSS mesh gradient
    ═══════════════════════════════════════════════════════════════ */
 .bg-aurora {
   position: relative;
@@ -194,9 +191,9 @@ body {
   position: absolute;
   inset: -50%;
   background:
-    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(139,0,0,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 30% 70%, rgba(30,30,30,0.50) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(60,20,20,0.08) 0%, transparent 50%);
+    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(2,35,73,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 30% 70%, rgba(30,30,60,0.50) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(60,20,40,0.08) 0%, transparent 50%);
   animation: aurora-shift 20s ease-in-out infinite alternate;
   pointer-events: none;
 }
@@ -239,7 +236,7 @@ body {
 .surface-input:focus {
   outline: none;
   border-color: var(--border-accent);
-  box-shadow: 0 0 0 3px var(--burgundy-muted), var(--shadow-inner-light);
+  box-shadow: 0 0 0 3px var(--crimson-muted), var(--shadow-inner-light);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -282,7 +279,7 @@ body {
 .glass-input:focus {
   outline: none;
   border-color: var(--accent-500);
-  box-shadow: 0 0 0 3px rgba(139,0,0,0.12);
+  box-shadow: 0 0 0 3px rgba(2,35,73,0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -342,26 +339,26 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background: var(--burgundy-base);
+  background: var(--crimson-base);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
-  border: 1px solid rgba(139,0,0,0.60);
-  box-shadow: 0 4px 14px rgba(139,0,0,0.25), 0 1px 2px rgba(139,0,0,0.30);
+  border: 1px solid rgba(2,35,73,0.60);
+  box-shadow: 0 4px 14px rgba(2,35,73,0.25), 0 1px 2px rgba(2,35,73,0.30);
   transition: all 0.2s var(--ease-out-expo);
   cursor: pointer;
 }
 .btn-crimson:hover {
-  background: var(--burgundy-light);
-  border-color: rgba(139,0,0,0.80);
-  box-shadow: 0 6px 24px rgba(139,0,0,0.35), 0 1px 2px rgba(139,0,0,0.40);
+  background: var(--crimson-light);
+  border-color: rgba(2,35,73,0.80);
+  box-shadow: 0 6px 24px rgba(2,35,73,0.35), 0 1px 2px rgba(2,35,73,0.40);
   transform: translateY(-1px);
 }
 .btn-crimson:active {
-  background: var(--burgundy-dark);
+  background: var(--crimson-dark);
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(139,0,0,0.20);
+  box-shadow: 0 2px 8px rgba(2,35,73,0.20);
 }
 
 .btn-gold {
@@ -375,14 +372,14 @@ body {
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
-  border: 1px solid rgba(201,162,39,0.50);
-  box-shadow: 0 4px 14px rgba(201,162,39,0.15);
+  border: 1px solid rgba(225,169,95,0.50);
+  box-shadow: 0 4px 14px rgba(225,169,95,0.15);
   transition: all 0.2s var(--ease-out-expo);
   cursor: pointer;
 }
 .btn-gold:hover {
   background: var(--gold-light);
-  box-shadow: 0 6px 24px rgba(201,162,39,0.25);
+  box-shadow: 0 6px 24px rgba(225,169,95,0.25);
   transform: translateY(-1px);
 }
 
@@ -398,14 +395,14 @@ body {
   font-size: 13px;
   font-weight: 500;
   border-radius: 8px;
-  border: 1px solid rgba(139,0,0,0.60);
+  border: 1px solid rgba(2,35,73,0.60);
   transition: all 0.2s var(--ease-out-expo);
   cursor: pointer;
 }
 .btn-primary:hover {
-  background: var(--accent-600);
-  border-color: rgba(139,0,0,0.80);
-  box-shadow: 0 0 24px rgba(139,0,0,0.25);
+  background: #01305e;
+  border-color: rgba(2,35,73,0.80);
+  box-shadow: 0 0 24px rgba(2,35,73,0.30);
   transform: translateY(-1px);
 }
 .btn-ghost {
@@ -489,8 +486,8 @@ body {
   100% { background-position: 0% center; }
 }
 @keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(139,0,0,0.18); }
-  50% { box-shadow: 0 0 30px rgba(139,0,0,0.30); }
+  0%, 100% { box-shadow: 0 0 20px rgba(2,35,73,0.20); }
+  50% { box-shadow: 0 0 30px rgba(2,35,73,0.35); }
 }
 @keyframes dotPulse {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -543,22 +540,4 @@ body {
 }
 @media (max-width: 768px) {
   .step-line::after { display: none; }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   TOAST / NOTIFICATION (custom, until shadcn sonner installed)
-   ═══════════════════════════════════════════════════════════════ */
-.toast-enter {
-  animation: toastIn 0.3s var(--ease-out-expo) both;
-}
-.toast-exit {
-  animation: toastOut 0.2s ease-in both;
-}
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes toastOut {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(-8px) scale(0.96); }
 }

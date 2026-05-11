@@ -17,7 +17,6 @@ import {
   MapPin,
   PieChart,
   Bell,
-  BrainCircuit,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -68,7 +67,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <button className="relative p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#8B0000]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#e11d48]" />
             </button>
             <Link
               href="/admin/settings"
@@ -140,14 +139,20 @@ export default function AdminDashboardPage() {
         <div className="mt-12 p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-[16px] font-semibold text-white">Need to dive deeper?</h3>
-            <p className="text-[13px] text-white/40 mt-1">Access the Swarm Mission Control or OpenClaw automation panel.</p>
+            <p className="text-[13px] text-white/40 mt-1">Access the AI Command Center, Swarm Mission Control, or OpenClaw automation panel.</p>
           </div>
           <div className="flex gap-3">
             <Link
               href="/admin/orchestrator"
-              className="px-5 py-2.5 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors"
+              className="px-5 py-2.5 bg-[#e11d48] hover:bg-[#be123c] text-white text-[13px] font-semibold rounded-lg transition-colors"
             >
               AI Command Center
+            </Link>
+            <Link
+              href="/admin/swarm"
+              className="px-5 py-2.5 border border-white/20 text-white text-[13px] font-medium rounded-lg hover:bg-white/5 transition-colors"
+            >
+              Swarm Control
             </Link>
             <Link
               href="/admin/openclaw"
