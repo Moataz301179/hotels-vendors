@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Shield, FileCheck, Zap } from "lucide-react";
 
 export function MarketingFooter() {
   const [isLight, setIsLight] = useState(false);
@@ -20,7 +21,23 @@ export function MarketingFooter() {
   const logoSrc = isLight ? "/logo-icon.png" : "/logo-icon-white.png";
 
   return (
-    <footer className="marketing-footer bg-[#050505] border-t border-white/[0.06]">
+    <footer className={`${isLight ? "bg-gray-50 border-t border-gray-100" : "bg-white border-t border-gray-100"}`}>
+      {/* Trust Bar */}
+      <div className="border-b border-gray-100">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+          {[
+            { icon: Shield, text: "Bank-grade security & encryption" },
+            { icon: FileCheck, text: "Full ETA e-invoicing compliance" },
+            { icon: Zap, text: "99.9% uptime SLA" },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2 text-[12px] text-gray-500">
+              <item.icon className="w-4 h-4 text-[#8B0000]" />
+              {item.text}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
@@ -35,28 +52,28 @@ export function MarketingFooter() {
                 priority
               />
               <div>
-                <span className="marketing-footer-logo-text text-[14px] font-bold text-white tracking-tight block">
+                <span className="text-[14px] font-bold text-gray-900 tracking-tight block">
                   Hotels Vendors
                 </span>
-                <span className="marketing-footer-logo-sub text-[9px] font-medium text-white/30 uppercase tracking-[0.1em]">
+                <span className="text-[9px] font-semibold text-[#8B0000] uppercase tracking-[0.1em]">
                   Smarter Together
                 </span>
               </div>
             </div>
-            <p className="marketing-footer-desc text-[12px] text-white/30 leading-relaxed max-w-xs">
-              Egypt's first AI-powered digital procurement hub built exclusively for the hospitality sector.
+            <p className="text-[12px] text-gray-400 leading-relaxed max-w-xs">
+              Egypt's first integrated procurement operating system for hospitality. SaaS-powered, AI-driven, fully compliant.
             </p>
           </div>
 
           {/* Platform */}
           <div>
-            <h4 className="marketing-footer-heading text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+            <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
               Platform
             </h4>
             <ul className="space-y-2.5">
-              {["How it Works", "Features", "Security", "API Docs"].map((item) => (
+              {["Solutions", "Pricing", "Marketplace", "Get Started"].map((item) => (
                 <li key={item}>
-                  <Link href="/" className="marketing-footer-link text-[13px] text-white/30 hover:text-white/70 transition-colors">
+                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -64,15 +81,15 @@ export function MarketingFooter() {
             </ul>
           </div>
 
-          {/* Marketplace */}
+          {/* Stakeholders */}
           <div>
-            <h4 className="marketing-footer-heading text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              Marketplace
+            <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              Stakeholders
             </h4>
             <ul className="space-y-2.5">
-              {["Browse Products", "Categories", "Top Suppliers", "Deals & Offers"].map((item) => (
+              {["Hotels", "Suppliers", "Logistics", "Factoring"].map((item) => (
                 <li key={item}>
-                  <Link href="/marketplace" className="marketing-footer-link text-[13px] text-white/30 hover:text-white/70 transition-colors">
+                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -82,13 +99,13 @@ export function MarketingFooter() {
 
           {/* Company */}
           <div>
-            <h4 className="marketing-footer-heading text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+            <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
               Company
             </h4>
             <ul className="space-y-2.5">
-              {["About Us", "Careers", "Press", "Partners", "Contact"].map((item) => (
+              {["About Us", "Careers", "Press Kit", "Contact"].map((item) => (
                 <li key={item}>
-                  <Link href="/" className="marketing-footer-link text-[13px] text-white/30 hover:text-white/70 transition-colors">
+                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -98,13 +115,13 @@ export function MarketingFooter() {
 
           {/* Legal */}
           <div>
-            <h4 className="marketing-footer-heading text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+            <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
               Legal
             </h4>
             <ul className="space-y-2.5">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
+              {["Privacy Policy", "Terms of Service", "Cookie Policy", "Compliance"].map((item) => (
                 <li key={item}>
-                  <Link href="/" className="marketing-footer-link text-[13px] text-white/30 hover:text-white/70 transition-colors">
+                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -113,16 +130,16 @@ export function MarketingFooter() {
           </div>
         </div>
 
-        <div className="marketing-footer-bottom-border pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="marketing-footer-copyright text-[11px] text-white/20">
-            &copy; 2026 Hotels Vendors. All rights reserved. Cairo, Egypt.
+        <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] text-gray-400">
+            &copy; 2026 Hotels Vendors. Cairo, Egypt. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             {["LinkedIn", "Twitter", "Facebook"].map((social) => (
               <a
                 key={social}
                 href="#"
-                className="marketing-footer-social text-[11px] text-white/20 hover:text-white/50 transition-colors"
+                className="text-[11px] text-gray-400 hover:text-[#8B0000] transition-colors"
               >
                 {social}
               </a>
