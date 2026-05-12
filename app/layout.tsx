@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
+import { LanguageProvider } from "@/lib/i18n/language-context";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -196,9 +197,11 @@ export default function RootLayout({
           color: "var(--text-primary)",
         }}
       >
-        <NotificationProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </NotificationProvider>
+        <LanguageProvider>
+          <NotificationProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </NotificationProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

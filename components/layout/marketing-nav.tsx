@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Image from "next/image";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -149,6 +150,7 @@ export function MarketingNav() {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
+            <LanguageSwitcher />
             <button className="p-2 rounded-lg transition-colors text-gray-400 hover:text-gray-700 hover:bg-gray-50">
               <Search className="w-4 h-4" />
             </button>
@@ -215,19 +217,25 @@ export function MarketingNav() {
               )}
             </div>
           ))}
-          <div className="pt-4 mt-2 border-t border-gray-100 flex gap-3">
-            <Link
-              href="/login"
-              className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
-            >
-              Get Started
-            </Link>
+          <div className="pt-4 mt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs text-gray-500">Language</span>
+              <LanguageSwitcher />
+            </div>
+            <div className="flex gap-3">
+              <Link
+                href="/login"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
         </div>
       )}
