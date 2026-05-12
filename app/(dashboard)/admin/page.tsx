@@ -1,22 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  LayoutDashboard,
-  ShieldCheck,
-  Wallet,
-  Users,
-  Brain,
-  Truck,
-  CalendarClock,
-  ScanBarcode,
-  Store,
-  BarChart3,
-  ArrowRight,
-  Settings,
-  MapPin,
-  PieChart,
-  Bell,
+  LayoutDashboard, ShieldCheck, Wallet, Users, Brain, Truck,
+  CalendarClock, ScanBarcode, Store, BarChart3, ArrowRight,
+  Settings, MapPin, PieChart, Bell, Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -47,14 +36,51 @@ const MODULES = [
   },
 ];
 
-const QUICK_STATS = [
-  { label: "Pending Approvals", value: 12, color: "#f59e0b" },
-  { label: "Active Orders", value: 48, color: "#3b82f6" },
-  { label: "ETA Invoices", value: 156, color: "#10b981" },
-  { label: "Credit Lines", value: 8, color: "#8b5cf6" },
-];
+interface PulseData {
+  pendingApprovals: number;
+  activeOrders: number;
+  etaInvoices: number;
+  creditLines: number;
+  totalUsers: number;
+  totalHotels: number;
+  totalSuppliers: number;
+  totalProducts: number;
+  recentOrders: number;
+  monthlySpend: number;
+}
 
 export default function AdminDashboardPage() {
+  const [pulse, setPulse] = useState<PulseData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/v1/admin/pulse")
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) {
+          setPulse(json.data);
+        } else {
+          setError(json.error || "Failed to load metrics");
+        }
+      })
+      .catch(() => setError("Connection failed"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const stats = pulse
+    ? [
+        { label: "Pending Approvals", value: pulse.pendingApprovals, color: "#f59e0b" },
+        { label: "Active Orders", value: pulse.activeOrders, color: "#3b82f6" },
+        { label: "ETA Invoices", value: pulse.etaInvoices, color: "#10b981" },
+        { label: "Credit Lines", value: pulse.creditLines, color: "#8b5cf6" },
+        { label: "Total Users", value: pulse.totalUsers, color: "#ec4899" },
+        { label: "Hotels", value: pulse.totalHotels, color: "#06b6d4" },
+        { label: "Suppliers", value: pulse.totalSuppliers, color: "#f59e0b" },
+        { label: "Products", value: pulse.totalProducts, color: "#10b981" },
+      ]
+    : [];
+
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       {/* Header */}
@@ -67,7 +93,9 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <button className="relative p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#8B0000]" />
+              {pulse && pulse.pendingApprovals > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#8B0000]" />
+              )}
             </button>
             <Link
               href="/admin/settings"
@@ -81,21 +109,57 @@ export default function AdminDashboardPage() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          {QUICK_STATS.map((stat) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06]"
-            >
-              <div className="text-[32px] font-bold text-white" style={{ color: stat.color }}>
-                {stat.value}
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] animate-pulse">
+                <div className="h-8 bg-white/5 rounded w-16 mb-2" />
+                <div className="h-3 bg-white/5 rounded w-24" />
               </div>
-              <div className="text-[12px] text-white/40 mt-1">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="mb-10 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">
+            {error}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            {stats.map((stat) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06]"
+              >
+                <div className="text-[28px] font-bold" style={{ color: stat.color }}>
+                  {stat.value.toLocaleString()}
+                </div>
+                <div className="text-[11px] text-white/40 mt-1">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Monthly Spend Banner */}
+        {pulse && (
+          <div className="mb-10 p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-between">
+            <div>
+              <p className="text-[11px] text-white/40 uppercase tracking-wider">Last 30 Days GMV</p>
+              <p className="text-[24px] font-bold text-white mt-1">
+                EGP {pulse.monthlySpend.toLocaleString()}
+              </p>
+              <p className="text-[12px] text-white/30 mt-0.5">
+                {pulse.recentOrders} orders in the last 30 days
+              </p>
+            </div>
+            <Link
+              href="/admin/reports"
+              className="px-4 py-2 bg-white/[0.04] border border-white/[0.08] text-white/60 text-[12px] font-medium rounded-lg hover:bg-white/[0.08] transition-colors"
+            >
+              View Reports
+            </Link>
+          </div>
+        )}
 
         {/* Module Groups */}
         <div className="space-y-10">
@@ -133,34 +197,6 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="mt-12 p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-[16px] font-semibold text-white">Need to dive deeper?</h3>
-            <p className="text-[13px] text-white/40 mt-1">Access the AI Command Center, Swarm Mission Control, or OpenClaw automation panel.</p>
-          </div>
-          <div className="flex gap-3">
-            <Link
-              href="/admin/orchestrator"
-              className="px-5 py-2.5 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors"
-            >
-              AI Command Center
-            </Link>
-            <Link
-              href="/admin/swarm"
-              className="px-5 py-2.5 border border-white/20 text-white text-[13px] font-medium rounded-lg hover:bg-white/5 transition-colors"
-            >
-              Swarm Control
-            </Link>
-            <Link
-              href="/admin/openclaw"
-              className="px-5 py-2.5 border border-white/20 text-white text-[13px] font-medium rounded-lg hover:bg-white/5 transition-colors"
-            >
-              OpenClaw
-            </Link>
-          </div>
         </div>
       </div>
     </div>
