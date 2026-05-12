@@ -1,140 +1,235 @@
+/**
+ * AI Financial Analysis Agent for Credit Line Applications
+ * Uses Hotels Vendors proprietary scoring engine + Grok 4.1 for narrative synthesis
+ */
+
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { executeLLM } from "@/lib/swarm/model-router";
+import { HotelScoreEngine } from "@/lib/fintech/scoring/hotel-score-engine";
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+const FINANCIAL_ANALYST_PROMPT = `You are the Hotels Vendors Credit Underwriting AI — an institutional-grade financial analyst specialized in Egyptian hospitality sector credit risk.
 
+Your job: Analyze the provided hotel financial data and produce a rigorous, bank-quality credit assessment.
+
+SCORING FRAMEWORK (Hotels Vendors Proprietary):
+- Financial Health (18%): Revenue scale, asset base, runway
+- Liquidity Position (18%): Current ratio, quick ratio, cash buffer
+- Leverage Profile (12%): Debt ratios, payment discipline
+- Profitability (12%): Margins, ROA, asset turnover
+- Collateral Strength (10%): Property deeds, guarantees, deposits
+- Market Position (12%): Brand strength, scale, location quality
+- Platform Behavior (10%): Payment history, order volume (if available)
+- Sector Risk (8%): Inflation, payment delay trends, seasonality
+
+OUTPUT FORMAT — JSON:
+{
+  "report": "Detailed 3-paragraph narrative assessment...",
+  "riskFlags": [
+    { "severity": "RED|AMBER|GREEN", "category": "LIQUIDITY|LEVERAGE|PROFITABILITY|COLLATERAL|MARKET", "description": "...", "mitigation": "..." }
+  ],
+  "recommendedLimit": 500000, // EGP
+  "creditScore": 650, // 0-1000 Hotels Vendors scale
+  "grade": "BBB", // AAA to D
+  "riskLevel": "MEDIUM", // LOW, MEDIUM, HIGH, VERY_HIGH
+  "maxTenorDays": 60,
+  "factoringFee": 4.5, // %
+  "approvalProbability": 75, // 0-100
+  "peerComparison": "Above average among Egyptian hospitality groups",
+  "trendDirection": "STABLE|IMPROVING|DECLINING",
+  "keyRisks": ["..."],
+  "mitigationSuggestions": ["..."]
+}`;
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const app = await prisma.creditLineApplication.findUnique({ where: { id } });
-    if (!app) return Response.json({ success: false, error: "Not found" }, { status: 404 });
+    const { id } = await params;
+    
+    const app = await prisma.creditLineApplication.findUnique({
+      where: { id },
+    });
+    if (!app) {
+      return Response.json({ success: false, error: "Application not found" }, { status: 404 });
+    }
 
+    // Update status to AI_ANALYZING
     await prisma.creditLineApplication.update({
       where: { id },
       data: { status: "AI_ANALYZING" },
     });
 
-    const rev = app.annualRevenue || 0;
-    const profit = app.netProfit || 0;
-    const assets = app.totalAssets || 1;
-    const liabilities = app.totalLiabilities || 1;
-    const currentAssets = app.currentAssets || 0;
-    const currentLiab = app.currentLiabilities || 1;
-    const bankBal = app.bankBalance || 0;
-    const debt = app.existingDebt || 0;
-    const monthlyPurch = app.monthlyPurchases || rev * 0.3;
+    // ── STEP 1: Run proprietary scoring engine ────────────────────
+    const financials = {
+      annualRevenue: app.annualRevenue || 0,
+      netProfit: app.netProfit || 0,
+      totalAssets: app.totalAssets || 0,
+      currentAssets: app.currentAssets || 0,
+      totalLiabilities: app.totalLiabilities || 0,
+      currentLiabilities: app.currentLiabilities || 0,
+      bankBalance: app.bankBalance || 0,
+      monthlyPurchases: app.monthlyPurchases || 0,
+      avgPaymentDays: app.avgPaymentDays || 0,
+      existingDebt: app.existingDebt || 0,
+    };
 
-    const margin = rev > 0 ? (profit / rev) * 100 : 0;
-    const currentRatio = currentAssets / currentLiab;
-    const debtRatio = debt / assets;
-    const debtToEquity = liabilities / (assets - liabilities + 0.001);
-    const runway = rev > 0 ? (bankBal / (rev / 12)) : 0;
+    const profile = {
+      properties: app.properties || 1,
+      rooms: app.rooms || 0,
+      governorate: app.governorate || "Unknown",
+      brand: app.brand,
+      yearsInOperation: 5, // Default — would be from application
+    };
 
-    const prompt = `You are a senior credit risk analyst at a factoring company reviewing a hotel group for a non-recourse factoring facility in Egypt.
+    const collateral = {
+      propertyDeed: app.propertyDeed,
+      bankGuarantee: app.bankGuarantee,
+      personalGuarantee: app.personalGuarantee,
+      equipmentCollateral: app.equipmentCollateral,
+      depositAmount: app.depositAmount || 0,
+    };
 
-Analyze the following hotel and provide a structured credit risk assessment. Be professional, precise, and conservative.
+    const market = {
+      sectorInflation: 12,
+      avgPaymentDelayTrend: 5,
+      tourismOccupancyRate: 65,
+      seasonalFactor: 1.0,
+    };
 
-HOTEL PROFILE:
-- Name: ${app.hotelName}
-- Brand: ${app.brand || "Independent"}
-- Properties: ${app.properties || "N/A"}
-- Rooms: ${app.rooms || "N/A"}
-- Location: ${app.governorate || "N/A"}
-- CR: ${app.crNumber}
-- Tax ID: ${app.taxId}
+    const engineScore = HotelScoreEngine.calculateScore(financials, profile, collateral, market);
 
-FINANCIAL METRICS:
-- Annual Revenue: EGP ${rev.toLocaleString()}
-- Net Profit: EGP ${profit.toLocaleString()} (${margin.toFixed(1)}% margin)
-- Total Assets: EGP ${assets.toLocaleString()}
-- Current Assets: EGP ${currentAssets.toLocaleString()}
-- Total Liabilities: EGP ${liabilities.toLocaleString()}
-- Current Liabilities: EGP ${currentLiab.toLocaleString()}
-- Bank Balance: EGP ${bankBal.toLocaleString()}
-- Monthly Procurement: EGP ${monthlyPurch.toLocaleString()}
-- Existing Debt: EGP ${debt.toLocaleString()}
-- Avg Payment Days: ${app.avgPaymentDays || "N/A"}
+    // ── STEP 2: Build financial prompt for AI narrative synthesis ──
+    const financialPrompt = `HOTEL: ${app.hotelName}
+BRAND: ${app.brand || "Independent"}
+PROPERTIES: ${app.properties || 1} | ROOMS: ${app.rooms || "N/A"}
+LOCATION: ${app.governorate || "Unknown"}
 
-DERIVED RATIOS:
-- Current Ratio: ${currentRatio.toFixed(2)}
-- Debt-to-Assets: ${(debtRatio * 100).toFixed(1)}%
-- Debt-to-Equity: ${debtToEquity.toFixed(2)}
-- Cash Runway (months): ${runway.toFixed(1)}
+FINANCIAL SNAPSHOT:
+- Annual Revenue: EGP ${(app.annualRevenue || 0).toLocaleString()}
+- Net Profit: EGP ${(app.netProfit || 0).toLocaleString()} (${app.annualRevenue ? ((app.netProfit || 0) / app.annualRevenue * 100).toFixed(1) : "N/A"}% margin)
+- Total Assets: EGP ${(app.totalAssets || 0).toLocaleString()}
+- Total Liabilities: EGP ${(app.totalLiabilities || 0).toLocaleString()}
+- Current Ratio: ${(app.currentLiabilities || 0) > 0 ? ((app.currentAssets || 0) / (app.currentLiabilities || 1)).toFixed(2) : "N/A"}
+- Bank Balance: EGP ${(app.bankBalance || 0).toLocaleString()}
+- Monthly Purchases: EGP ${(app.monthlyPurchases || 0).toLocaleString()}
+- Average Payment Days: ${app.avgPaymentDays || "N/A"}
+- Existing Debt: EGP ${(app.existingDebt || 0).toLocaleString()}
 
 COLLATERAL:
-- Property Deed: ${app.propertyDeed ? "Yes" : "No"}
-- Bank Guarantee: ${app.bankGuarantee ? "Yes" : "No"}
-- Personal Guarantee: ${app.personalGuarantee ? "Yes" : "No"}
-- Equipment Collateral: ${app.equipmentCollateral ? "Yes" : "No"}
+- Property Deed: ${app.propertyDeed ? "YES" : "NO"}
+- Bank Guarantee: ${app.bankGuarantee ? "YES" : "NO"}
+- Personal Guarantee: ${app.personalGuarantee ? "YES" : "NO"}
+- Equipment Collateral: ${app.equipmentCollateral ? "YES" : "NO"}
 - Cash Deposit: EGP ${(app.depositAmount || 0).toLocaleString()}
 
-EGYPTIAN HOSPITALITY CONTEXT:
-- Peak season: Red Sea (Oct-Apr), North Coast (Jun-Sep)
-- Major chains: Marriott, Hilton, Accor, Jaz, Steigenberger
-- Factoring rates in Egypt: 3.5-6.5% for 60 days non-recourse
-- Hotel sector is considered medium-high risk by Egyptian banks
+PROPRIETARY ENGINE SCORE: ${engineScore.overallScore}/1000
+GRADE: ${engineScore.grade} | RISK: ${engineScore.riskLevel}
+RECOMMENDED LIMIT: EGP ${engineScore.recommendedLimit.toLocaleString()}
+MAX TENOR: ${engineScore.maxTenorDays} days | FACTORING FEE: ${engineScore.factoringFee}%
 
-Provide your analysis in this exact format:
+COMPONENT SCORES:
+- Financial Health: ${engineScore.financialHealth}/100
+- Liquidity: ${engineScore.liquidityPosition}/100
+- Leverage: ${engineScore.leverageProfile}/100
+- Profitability: ${engineScore.profitability}/100
+- Collateral: ${engineScore.collateralStrength}/100
+- Market Position: ${engineScore.marketPosition}/100
+- Sector Risk: ${engineScore.sectorRisk}/100
 
-## CREDIT RISK SUMMARY
-[One-paragraph executive summary: overall risk level and key concerns]
+Use the engine scores as your baseline. Your task is to write the narrative report and validate/refine the risk flags.`;
 
-## STRENGTHS
-- [List 3-5 strengths]
+    // ── STEP 3: Call Grok 4.1 for narrative synthesis ──────────────
+    let aiResult: Record<string, unknown>;
+    try {
+      const llmResult = await executeLLM(FINANCIAL_ANALYST_PROMPT, financialPrompt, {
+        temperature: 0.2,
+        maxTokens: 3000,
+        preferredModel: "xai",
+      });
+      aiResult = JSON.parse(llmResult.content.replace(/```json?\s*|```/g, "").trim());
+    } catch (llmError) {
+      // Fallback to engine scores if AI fails
+      aiResult = {
+        report: `Credit analysis for ${app.hotelName} completed using Hotels Vendors proprietary scoring engine. Overall score: ${engineScore.overallScore}/1000 (${engineScore.grade}). ${engineScore.riskLevel === "LOW" ? "Low risk profile recommended for standard terms." : engineScore.riskLevel === "MEDIUM" ? "Moderate risk — recommend standard terms with monitoring." : "Elevated risk — recommend enhanced due diligence and collateral requirements."}`,
+        riskFlags: engineScore.redFlags.map((f) => ({ severity: "RED", category: "GENERAL", description: f, mitigation: "Review with underwriting team" })).concat(
+          engineScore.amberFlags.map((f) => ({ severity: "AMBER", category: "GENERAL", description: f, mitigation: "Monitor closely" }))
+        ),
+        recommendedLimit: engineScore.recommendedLimit,
+        creditScore: engineScore.overallScore,
+        grade: engineScore.grade,
+        riskLevel: engineScore.riskLevel,
+        maxTenorDays: engineScore.maxTenorDays,
+        factoringFee: engineScore.factoringFee,
+        approvalProbability: engineScore.approvalProbability,
+        peerComparison: engineScore.peerComparison,
+        trendDirection: engineScore.trendDirection,
+        keyRisks: engineScore.keyRisks,
+        mitigationSuggestions: engineScore.mitigationSuggestions,
+      };
+    }
 
-## WEAKNESSES / RED FLAGS
-- [List 3-5 weaknesses or red flags]
+    // ── STEP 4: Merge engine scores with AI narrative ──────────────
+    const finalScore = Number(aiResult.creditScore) || engineScore.overallScore;
+    const finalLimit = Number(aiResult.recommendedLimit) || engineScore.recommendedLimit;
+    const finalGrade = (aiResult.grade as string) || engineScore.grade;
 
-## KEY RATIOS ANALYSIS
-- [Interpret each ratio in plain language]
-
-## RECOMMENDED CREDIT LINE
-- Suggested Limit: EGP [amount]
-- Justification: [Why this amount]
-- Risk Grade: [A/B/C/D]
-
-## CONDITIONS FOR APPROVAL
-- [List specific conditions]
-
-## FINAL RECOMMENDATION
-[APPROVE / APPROVE WITH CONDITIONS / REJECT — with explanation]`;
-
-    const result = await executeLLM(prompt, "Analyze this hotel for credit line approval", {
-      maxTokens: 1200,
-      temperature: 0.3,
-      preferredModel: "auto",
-    });
-
-    const report = result.content;
-    let riskGrade = "C";
-    if (report.includes("Risk Grade: A")) riskGrade = "A";
-    else if (report.includes("Risk Grade: B")) riskGrade = "B";
-    else if (report.includes("Risk Grade: D")) riskGrade = "D";
-
-    const flags: string[] = [];
-    if (currentRatio < 1) flags.push("Low current ratio — liquidity risk");
-    if (debtRatio > 0.6) flags.push("High debt load");
-    if (margin < 5) flags.push("Thin profit margins");
-    if (runway < 2) flags.push("Low cash reserves");
-    if (!app.propertyDeed && !app.bankGuarantee) flags.push("No tangible collateral");
-    if (app.avgPaymentDays && app.avgPaymentDays > 90) flags.push("History of late payments");
-
-    await prisma.creditLineApplication.update({
+    // ── STEP 5: Persist results ────────────────────────────────────
+    const updated = await prisma.creditLineApplication.update({
       where: { id },
       data: {
         status: "FACTORING_REVIEW",
-        aiAnalysisReport: report,
-        aiRiskFlags: flags.join(", "),
+        creditScore: finalScore,
+        recommendedLimit: finalLimit,
+        aiAnalysisReport: JSON.stringify({
+          report: aiResult.report,
+          riskFlags: aiResult.riskFlags,
+          peerComparison: aiResult.peerComparison,
+          trendDirection: aiResult.trendDirection,
+          keyRisks: aiResult.keyRisks,
+          mitigationSuggestions: aiResult.mitigationSuggestions,
+          engineScores: {
+            financialHealth: engineScore.financialHealth,
+            liquidityPosition: engineScore.liquidityPosition,
+            leverageProfile: engineScore.leverageProfile,
+            profitability: engineScore.profitability,
+            collateralStrength: engineScore.collateralStrength,
+            marketPosition: engineScore.marketPosition,
+            sectorRisk: engineScore.sectorRisk,
+          },
+        }),
+        aiRiskFlags: JSON.stringify({
+          redFlags: engineScore.redFlags,
+          amberFlags: engineScore.amberFlags,
+          greenFlags: engineScore.greenFlags,
+        }),
       },
     });
 
-    return Response.json({ success: true, data: { report, riskGrade, flags } });
+    return Response.json({
+      success: true,
+      data: {
+        id: updated.id,
+        status: updated.status,
+        creditScore: updated.creditScore,
+        grade: finalGrade,
+        recommendedLimit: updated.recommendedLimit,
+        riskLevel: aiResult.riskLevel || engineScore.riskLevel,
+        approvalProbability: aiResult.approvalProbability || engineScore.approvalProbability,
+        maxTenorDays: aiResult.maxTenorDays || engineScore.maxTenorDays,
+        factoringFee: aiResult.factoringFee || engineScore.factoringFee,
+        analysis: aiResult.report,
+        riskFlags: aiResult.riskFlags,
+        keyRisks: aiResult.keyRisks,
+        mitigationSuggestions: aiResult.mitigationSuggestions,
+      },
+    });
   } catch (error) {
-    console.error("[AI Credit Analysis] Error:", error);
-    await prisma.creditLineApplication.update({
-      where: { id },
-      data: { status: "PENDING_REVIEW", aiRiskFlags: "Analysis failed — manual review required" },
-    }).catch(() => {});
-    return Response.json({ success: false, error: "Analysis failed" }, { status: 500 });
+    console.error("Credit analysis error:", error);
+    return Response.json(
+      { success: false, error: error instanceof Error ? error.message : "Analysis failed" },
+      { status: 500 }
+    );
   }
 }

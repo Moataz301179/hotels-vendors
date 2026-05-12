@@ -2205,9 +2205,34 @@ enum PostStatus {
   FAILED
 }
 
-// End of Schema
+// ─────────────────────────────────────────
+// 25. CASHFLOW COMPASS — Daily market intelligence
+// ─────────────────────────────────────────
 
-// Credit Line Application — Hotel onboarding for factoring
+model CompassReading {
+  id                    String   @id @default(cuid())
+  date                  DateTime @unique @default(now())
+  
+  marketDirection       String   @default("STABLE") // INFLATIONARY, RECESSIONARY, STABLE, VOLATILE
+  confidence            Int      @default(60)
+  
+  // Component data (JSON)
+  priceVelocity         String?  // JSON
+  paymentDynamics       String?  // JSON
+  macroIndicators       String?  // JSON
+  platformMetrics       String?  // JSON
+  alerts                String?  // JSON array
+  pricingAdjustments    String?  // JSON array
+  creditRecommendations String?  // JSON
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// 26. CREDIT LINE APPLICATION — Hotel factoring onboarding
+// ─────────────────────────────────────────
+
 model CreditLineApplication {
   id                   String   @id @default(cuid())
   status               String   @default("PENDING_REVIEW") // PENDING_REVIEW, AI_ANALYZING, FACTORING_REVIEW, APPROVED, REJECTED
