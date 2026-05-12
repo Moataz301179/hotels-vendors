@@ -2206,3 +2206,63 @@ enum PostStatus {
 }
 
 // End of Schema
+
+// Credit Line Application — Hotel onboarding for factoring
+model CreditLineApplication {
+  id                   String   @id @default(cuid())
+  status               String   @default("PENDING_REVIEW") // PENDING_REVIEW, AI_ANALYZING, FACTORING_REVIEW, APPROVED, REJECTED
+  
+  // Hotel Identity
+  hotelName            String
+  brand                String?
+  properties           Int?
+  rooms                Int?
+  governorate          String?
+  address              String?
+  crNumber             String
+  taxId                String
+  tourismLicense       String?
+  gmName               String?
+  gmPhone              String?
+  gmEmail              String?
+  cfoName              String?
+  cfoPhone             String?
+  
+  // Financials
+  annualRevenue        Float?
+  netProfit            Float?
+  totalAssets          Float?
+  currentAssets        Float?
+  totalLiabilities     Float?
+  currentLiabilities   Float?
+  bankBalance          Float?
+  monthlyPurchases     Float?
+  avgPaymentDays       Float?
+  existingDebt         Float?
+  
+  // Collateral
+  propertyDeed         Boolean  @default(false)
+  bankGuarantee        Boolean  @default(false)
+  personalGuarantee    Boolean  @default(false)
+  equipmentCollateral  Boolean  @default(false)
+  depositAmount        Float?
+  
+  // AI Analysis
+  creditScore          Int?
+  recommendedLimit     Float?
+  aiAnalysisReport     String?  @db.Text
+  aiRiskFlags          String?
+  
+  // Factoring Company Review
+  factoringCompanyId   String?
+  approvedLimit        Float?
+  approvedInterestRate Float?
+  approvedAt           DateTime?
+  rejectedReason       String?
+  
+  // Document URLs (JSON array)
+  documents            String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
