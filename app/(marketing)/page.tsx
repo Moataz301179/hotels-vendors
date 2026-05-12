@@ -274,7 +274,7 @@ export default async function HomePage() {
                   <h3 className="text-[16px] font-semibold text-white mb-2">{step.title}</h3>
                   <p className="text-[13px] text-gray-400 leading-relaxed">{step.desc}</p>
                 </div>
-                {i < STEPS.length - 1 && (
+                {i < WORKFLOW.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
                 )}
               </div>
