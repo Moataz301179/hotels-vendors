@@ -27,22 +27,32 @@ function cleanExpired(map: Map<string, { expiresAt: number }>) {
 
 export { redis as redis };
 
+const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" || process.env.CI === "true";
+
 export function getRedis(): Redis | null {
   if (!REDIS_URL) return null;
   if (!redis) {
-    redis = new Redis(REDIS_URL, {
-      retryStrategy: (times) => Math.min(times * 50, 2000),
-      maxRetriesPerRequest: 1,
-      connectTimeout: 5000,
-    });
-    redis.on("connect", () => {
-      redisAvailable = true;
-    });
-    redis.on("error", (err) => {
+    try {
+      redis = new Redis(REDIS_URL, {
+        retryStrategy: (times) => Math.min(times * 50, 2000),
+        maxRetriesPerRequest: 1,
+        connectTimeout: 5000,
+        lazyConnect: true,
+      });
+      redis.on("connect", () => {
+        redisAvailable = true;
+      });
+      redis.on("error", (err) => {
+        redisAvailable = false;
+        if (!isBuildTime) {
+          // eslint-disable-next-line no-console
+          console.error("[Redis] Connection error:", err.message);
+        }
+      });
+    } catch {
+      redis = null;
       redisAvailable = false;
-      // eslint-disable-next-line no-console
-      console.error("[Redis] Connection error:", err.message);
-    });
+    }
   }
   return redis;
 }
