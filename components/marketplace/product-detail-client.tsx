@@ -7,14 +7,12 @@ import {
   Package,
   Star,
   MapPin,
-  Truck,
   ShieldCheck,
   ArrowLeft,
   Minus,
   Plus,
   ShoppingCart,
   Check,
-  ArrowRight,
   Crown,
   ShoppingBag,
 } from "lucide-react";
@@ -23,6 +21,8 @@ import { getProductImage } from "@/lib/marketplace/product-images";
 import catalogData from "@/data/catalog-products.json";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useCart } from "@/components/cart/cart-context";
 
 const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
@@ -60,6 +60,9 @@ function ProductImage({ product }: { product: any }) {
 }
 
 export default function ProductDetailClient({ productId }: { productId: string }) {
+  const { t } = useTranslation("marketplace");
+  const { t: tc } = useTranslation("common");
+
   const product = ALL_PRODUCTS.find((p) => p.id === productId);
   const [qty, setQty] = useState(product?.minOrderQty || 1);
   const [added, setAdded] = useState(false);
@@ -70,9 +73,9 @@ export default function ProductDetailClient({ productId }: { productId: string }
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center gap-4">
         <Package className="w-12 h-12 text-white/10" />
-        <h1 className="text-xl font-semibold text-white">Product Not Found</h1>
+        <h1 className="text-xl font-semibold text-white">{t("productNotFound")}</h1>
         <Link href="/marketplace" className="px-4 py-2 rounded-xl text-sm text-white bg-[#8B0000] hover:bg-[#6B0000] transition-colors">
-          Back to Marketplace
+          {t("backToMarketplace")}
         </Link>
       </div>
     );
@@ -100,6 +103,12 @@ export default function ProductDetailClient({ productId }: { productId: string }
     setTimeout(() => setAdded(false), 2000);
   };
 
+  const stockLabel = (qty: number) => {
+    if (qty === 0) return tc("outOfStock");
+    if (qty < 20) return tc("lowStock");
+    return tc("inStock");
+  };
+
   return (
     <div className="min-h-screen bg-[#050505]">
       <MarketingNav />
@@ -109,9 +118,10 @@ export default function ProductDetailClient({ productId }: { productId: string }
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/marketplace" className="inline-flex items-center gap-2 text-[12px] text-white/30 hover:text-white/60 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Marketplace</span>
+            <span>{t("backToMarketplace")}</span>
           </Link>
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
@@ -119,7 +129,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
               }`}
             >
               <Crown className="w-3 h-3" />
-              Member
+              {t("memberPrices")}
               {memberMode && <Check className="w-3 h-3" />}
             </button>
             <button
@@ -155,11 +165,11 @@ export default function ProductDetailClient({ productId }: { productId: string }
                       : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
                   }`}
                 >
-                  {product.stockQuantity === 0 ? "Out of Stock" : product.stockQuantity < 20 ? "Low Stock" : "In Stock"}
+                  {stockLabel(product.stockQuantity)}
                 </span>
                 {product.supplierTier === "PREMIER" && (
                   <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/10 text-white border-white/20">
-                    Premier
+                    {t("premier")}
                   </span>
                 )}
               </div>
@@ -215,23 +225,23 @@ export default function ProductDetailClient({ productId }: { productId: string }
                 disabled={product.stockQuantity === 0}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-medium transition-all disabled:bg-white/[0.03] disabled:text-white/20 bg-[#8B0000] hover:bg-[#6B0000]"
               >
-                {added ? <><Check className="w-5 h-5" /><span>Added to Cart</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
+                {added ? <><Check className="w-5 h-5" /><span>{t("addedToCart")}</span></> : <><ShoppingCart className="w-5 h-5" /><span>{t("addToCart")}</span></>}
               </button>
             </div>
 
             {added && (
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-white/60">
-                Added to cart. <button onClick={openCart} className="underline font-medium">View cart</button> or <Link href="/login" className="underline font-medium">sign in</Link> to checkout.
+                {t("addedToCart")} <button onClick={openCart} className="underline font-medium">{t("viewCart")}</button> {tc("or")} <Link href="/login" className="underline font-medium">{tc("signIn")}</Link> {t("toCheckout")}
               </motion.p>
             )}
 
             <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs text-emerald-400">ETA E-Invoicing Compliant</span>
+              <span className="text-xs text-emerald-400">{t("etaCompliant")}</span>
             </div>
 
             <div className="p-5 rounded-xl border border-white/[0.06] bg-[#0a0a0a]">
-              <p className="text-xs font-semibold text-white/30 uppercase mb-3">Supplier</p>
+              <p className="text-xs font-semibold text-white/30 uppercase mb-3">{t("supplier")}</p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-sm font-bold text-white">
                   {product.supplierName.charAt(0)}
@@ -254,17 +264,17 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
         {/* Specs */}
         <div className="mt-12">
-          <h2 className="text-lg font-semibold text-white mb-4">Specifications</h2>
+          <h2 className="text-lg font-semibold text-white mb-4">{t("specifications")}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-xl overflow-hidden border border-white/[0.06]">
             {[
-              { label: "SKU", value: product.sku },
-              { label: "Category", value: cat?.label || product.category },
-              { label: "Unit", value: product.unitOfMeasure },
-              { label: "Min Order", value: `${product.minOrderQty} ${product.unitOfMeasure}` },
-              { label: "Stock", value: `${product.stockQuantity} ${product.unitOfMeasure}` },
-              { label: "Lead Time", value: `${product.leadTimeDays} days` },
-              { label: "Shelf Life", value: product.shelfLifeDays ? `${product.shelfLifeDays} days` : "N/A" },
-              { label: "Storage", value: product.temperatureReq || "Room Temp" },
+              { label: t("sku"), value: product.sku },
+              { label: t("category"), value: cat?.label || product.category },
+              { label: t("unit"), value: product.unitOfMeasure },
+              { label: t("minOrder"), value: `${product.minOrderQty} ${product.unitOfMeasure}` },
+              { label: t("stock"), value: `${product.stockQuantity} ${product.unitOfMeasure}` },
+              { label: t("leadTime"), value: `${product.leadTimeDays} ${tc("days")}` },
+              { label: t("shelfLife"), value: product.shelfLifeDays ? `${product.shelfLifeDays} ${tc("days")}` : "N/A" },
+              { label: t("storage"), value: product.temperatureReq || "Room Temp" },
             ].map((s) => (
               <div key={s.label} className="p-4 bg-[#0a0a0a]">
                 <p className="text-[10px] uppercase tracking-wider text-white/25 font-semibold mb-1">{s.label}</p>
@@ -277,7 +287,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
         {/* Related */}
         {related.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-lg font-semibold text-white mb-4">More from {cat?.label || product.category}</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">{t("moreFrom")} {cat?.label || product.category}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {related.map((p) => (
                 <Link
