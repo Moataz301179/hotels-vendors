@@ -135,14 +135,14 @@ export default async function PricingPage() {
           ═══════════════════════════════════════════ */}
       <section className="relative pt-32 pb-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
             <Sparkles className="w-3 h-3" />
             Simple, Transparent Pricing
           </div>
-          <h1 className="text-[30px] md:text-[44px] font-bold text-gray-900 leading-[1.05] tracking-[-0.02em]">
+          <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
             {cms?.heroTitle || "Plans built for every stage of growth."}
           </h1>
-          <p className="mt-5 text-[16px] md:text-[18px] text-gray-500 leading-relaxed max-w-2xl mx-auto">
+          <p className="mt-5 text-[16px] md:text-[18px] text-gray-400 leading-relaxed max-w-2xl mx-auto">
             {cms?.heroDescription || "No hidden fees. No long-term contracts. Start free and scale as your procurement volume grows."}
           </p>
         </div>
@@ -174,7 +174,7 @@ export default async function PricingPage() {
 
                 <div className="mb-6">
                   <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-                    <tier.icon className="w-5 h-5 text-[#8B0000]" />
+                    <tier.icon className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-[18px] font-semibold text-white">
                     {tier.name}
@@ -194,7 +194,7 @@ export default async function PricingPage() {
                   {tier.features.map((f) => (
                     <div key={f.label} className="flex items-start gap-3">
                       {f.included ? (
-                        <Check className="w-4 h-4 text-[#8B0000] shrink-0 mt-0.5" />
+                        <Check className="w-4 h-4 text-white shrink-0 mt-0.5" />
                       ) : (
                         <X className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" />
                       )}
@@ -232,7 +232,7 @@ export default async function PricingPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Compare Plans
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -250,7 +250,7 @@ export default async function PricingPage() {
                   <th className="py-4 px-4 text-center text-[13px] font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
                     Starter
                   </th>
-                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-[#8B0000] uppercase tracking-wider min-w-[120px]">
+                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-white uppercase tracking-wider min-w-[120px]">
                     Growth
                   </th>
                   <th className="py-4 px-4 text-center text-[13px] font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
@@ -274,7 +274,7 @@ export default async function PricingPage() {
                       return (
                         <td key={tier.name} className="py-3.5 px-4 text-center">
                           {f?.included ? (
-                            <Check className="w-4 h-4 text-[#8B0000] mx-auto" />
+                            <Check className="w-4 h-4 text-white mx-auto" />
                           ) : (
                             <X className="w-4 h-4 text-gray-600 mx-auto" />
                           )}
@@ -295,7 +295,7 @@ export default async function PricingPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-3xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               FAQ
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -311,7 +311,7 @@ export default async function PricingPage() {
               >
                 <summary className="flex items-center justify-between gap-4 cursor-pointer p-5 list-none">
                   <span className="text-[14px] font-medium text-white flex items-center gap-3">
-                    <HelpCircle className="w-4 h-4 text-[#8B0000] shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-white shrink-0" />
                     {faq.question}
                   </span>
                   <span className="text-gray-600 group-open:rotate-180 transition-transform shrink-0">

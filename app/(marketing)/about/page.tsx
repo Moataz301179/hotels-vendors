@@ -119,7 +119,7 @@ export default async function AboutPage() {
       <section className="relative pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <Eye className="w-3 h-3" />
               Our Story
             </div>
@@ -157,13 +157,13 @@ export default async function AboutPage() {
             {/* Left — Quote */}
             <div className="lg:col-span-4">
               <div className="sticky top-28">
-                <Quote className="w-10 h-10 text-[#8B0000] mb-6" />
+                <Quote className="w-10 h-10 text-white mb-6" />
                 <blockquote className="text-[20px] md:text-[24px] font-medium text-white leading-snug tracking-tight">
                   "An auditor does not simply check the numbers. An auditor sees the gaps between what is happening and what should be happening. That is exactly what Hotels Vendors does for procurement."
                 </blockquote>
                 <div className="mt-6">
                   <p className="text-[15px] font-semibold text-white">Moataz Abdel Ghani</p>
-                  <p className="text-[13px] text-[#8B0000]">Founder & Chief Executive Officer</p>
+                  <p className="text-[13px] text-white/60">Founder & Chief Executive Officer</p>
                 </div>
               </div>
             </div>
@@ -233,7 +233,7 @@ export default async function AboutPage() {
                 <div className="text-[26px] md:text-[30px] font-bold text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium text-[#8B0000] uppercase tracking-wide">
+                <div className="mt-1 text-[11px] font-medium text-white/60 uppercase tracking-wide">
                   {stat.label}
                 </div>
                 <div className="text-[11px] text-gray-500 mt-0.5">{stat.sub}</div>
@@ -249,7 +249,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/10 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Our Journey
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -279,7 +279,7 @@ export default async function AboutPage() {
                         i % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-left"
                       }`}
                     >
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/10 text-[#8B0000] text-[11px] font-semibold uppercase tracking-wider mb-3">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 text-white/80 text-[11px] font-semibold uppercase tracking-wider mb-3">
                         <Clock className="w-3 h-3" />
                         {item.year}
                       </div>
@@ -305,7 +305,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               What Drives Us
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -319,7 +319,7 @@ export default async function AboutPage() {
                 key={item.title}
                 className="flex gap-4 p-6 rounded-2xl border border-white/10 bg-[#111] shadow-sm"
               >
-                <CheckCircle2 className="w-5 h-5 text-[#8B0000] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-[15px] font-semibold text-white mb-1">
                     {item.title}
@@ -340,7 +340,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/10 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Leadership
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -354,13 +354,13 @@ export default async function AboutPage() {
                 key={member.name}
                 className="group p-6 rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all shadow-sm"
               >
-                <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-gray-500 text-[11px] font-bold tracking-widest group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 group-hover:text-[#8B0000] transition-all">
+                <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-gray-500 text-[11px] font-bold tracking-widest group-hover:bg-white/10 group-hover:border-white/20 group-hover:text-white transition-all">
                   {member.initials}
                 </div>
                 <h3 className="text-[16px] font-semibold text-white mb-0.5">
                   {member.name}
                 </h3>
-                <p className="text-[11px] font-medium text-[#8B0000] uppercase tracking-wide mb-3">
+                <p className="text-[11px] font-medium text-white/60 uppercase tracking-wide mb-3">
                   {member.role}
                 </p>
                 <p className="text-[13px] text-gray-400 leading-relaxed">
@@ -378,7 +378,7 @@ export default async function AboutPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Industry Coverage
             </p>
             <h2 className="text-[22px] md:text-[28px] font-bold text-white tracking-tight">

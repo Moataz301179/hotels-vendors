@@ -133,7 +133,7 @@ export default async function SolutionsPage() {
       <section className="relative pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <Globe className="w-3 h-3" />
               End-to-End Platform
             </div>
@@ -175,7 +175,7 @@ export default async function SolutionsPage() {
               >
                 <div className="flex items-start justify-between mb-6">
                   <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 transition-all">
-                    <solution.icon className="w-6 h-6 text-[#8B0000]" />
+                    <solution.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-right">
                     <div className="text-[24px] font-bold text-white tracking-tight">
@@ -190,7 +190,7 @@ export default async function SolutionsPage() {
                 <h3 className="text-[20px] font-semibold text-white mb-1">
                   {solution.title}
                 </h3>
-                <p className="text-[13px] font-medium text-[#8B0000] mb-4">
+                <p className="text-[13px] font-medium text-white/60 mb-4">
                   {solution.tagline}
                 </p>
                 <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
@@ -203,7 +203,7 @@ export default async function SolutionsPage() {
                       key={benefit}
                       className="flex items-start gap-2.5 text-[13px] text-gray-400"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#8B0000] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
                       {benefit}
                     </li>
                   ))}
@@ -220,7 +220,7 @@ export default async function SolutionsPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               How It Works
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -254,7 +254,7 @@ export default async function SolutionsPage() {
               <div key={step.title} className="relative">
                 <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full">
                   <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 flex items-center justify-center mb-4">
-                    <step.icon className="w-5 h-5 text-[#8B0000]" />
+                    <step.icon className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-[16px] font-semibold text-white mb-2">
                     {step.title}
@@ -278,7 +278,7 @@ export default async function SolutionsPage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Projected Impact
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
@@ -307,7 +307,7 @@ export default async function SolutionsPage() {
                       key={result}
                       className="flex items-center gap-2 text-[13px] text-gray-400"
                     >
-                      <TrendingUp className="w-4 h-4 text-[#8B0000] shrink-0" />
+                      <TrendingUp className="w-4 h-4 text-white shrink-0" />
                       {result}
                     </div>
                   ))}
@@ -351,7 +351,7 @@ export default async function SolutionsPage() {
                 className="p-6 rounded-2xl bg-[#111] border border-white/10"
               >
                 <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-                  <cap.icon className="w-5 h-5 text-[#8B0000]" />
+                  <cap.icon className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-[15px] font-semibold text-white mb-2">
                   {cap.title}

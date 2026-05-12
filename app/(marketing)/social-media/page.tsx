@@ -52,7 +52,7 @@ export default function SocialMediaPage() {
             className="max-w-3xl"
           >
             <motion.div variants={fadeUp}>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
                 <Megaphone className="w-3 h-3" />
                 Beta Launch — May 2026
               </span>
@@ -101,14 +101,14 @@ export default function SocialMediaPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
                 <Rocket className="w-3 h-3" />
                 Limited Beta Access
               </span>
               <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em] leading-tight">
                 1-Week Beta Launch
                 <br />
-                <span className="text-[#8B0000]">May 18 — May 25, 2026</span>
+                <span className="text-white/60">May 18 — May 25, 2026</span>
               </h2>
               <p className="mt-4 text-[16px] text-white/50 leading-relaxed max-w-lg">
                 We are opening Hotels Vendors to a select group of early adopters. 
@@ -125,7 +125,7 @@ export default function SocialMediaPage() {
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-[#8B0000]/20 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-[#8B0000]" />
+                      <Check className="w-3 h-3 text-white" />
                     </div>
                     <span className="text-[14px] text-white/70">{item}</span>
                   </div>
@@ -160,7 +160,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
               Brand Pillars
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -216,7 +216,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
               Content
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -284,7 +284,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
               Connect With Us
             </span>
             <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
@@ -345,7 +345,7 @@ export default function SocialMediaPage() {
                   </div>
                 </div>
                 <p className="text-[13px] text-white/50 mb-4">{channel.desc}</p>
-                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-[#8B0000] group-hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-white/60 group-hover:text-white transition-colors">
                   Follow <ExternalLink className="w-3 h-3" />
                 </span>
               </motion.a>
@@ -363,7 +363,7 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
               <Calendar className="w-3 h-3" />
               Campaign Timeline
             </span>
@@ -412,7 +412,7 @@ export default function SocialMediaPage() {
                 className="flex gap-4 p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 border border-[#8B0000]/20 flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-[#8B0000]" />
+                  <item.icon className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
@@ -425,7 +425,7 @@ export default function SocialMediaPage() {
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-[12px] text-[#8B0000] font-medium mb-1">{item.date}</p>
+                  <p className="text-[12px] text-white/50 font-medium mb-1">{item.date}</p>
                   <p className="text-[13px] text-white/50">{item.desc}</p>
                 </div>
               </motion.div>
@@ -447,8 +447,7 @@ export default function SocialMediaPage() {
               <div className="absolute inset-0 bg-[#8B0000]/8 blur-2xl rounded-full" />
             </div>
             <h2 className="text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
-              Be part of the{" "}
-              <span className="text-[#8B0000]">procurement revolution</span>
+              Be Part of the Procurement Revolution
             </h2>
             <p className="mt-4 text-[17px] text-white/50 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider — there is
@@ -541,7 +540,7 @@ function BetaWaitingListForm() {
               onClick={() => setRole(r)}
               className={`px-3 py-2.5 rounded-lg text-[12px] font-medium border transition-colors ${
                 role === r
-                  ? "bg-[#8B0000]/20 border-[#8B0000]/40 text-[#8B0000]"
+                  ? "bg-white/10 border-white/20 text-white"
                   : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
               }`}
             >

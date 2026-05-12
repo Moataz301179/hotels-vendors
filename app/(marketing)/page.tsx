@@ -178,7 +178,7 @@ export default async function HomePage() {
                 <div className="text-[26px] md:text-[30px] font-bold text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium text-[#8B0000] uppercase tracking-wide">
+                <div className="mt-1 text-[11px] font-medium text-white/60 uppercase tracking-wide">
                   {stat.label}
                 </div>
                 <div className="text-[11px] text-gray-500 mt-0.5">{stat.sub}</div>
@@ -194,7 +194,7 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Platform Preview
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -221,7 +221,7 @@ export default async function HomePage() {
       <section className="py-14 border-y border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Network Coverage
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -231,7 +231,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {CITIES.map((city) => (
               <div key={city.name} className="p-5 rounded-xl bg-[#111] border border-white/[0.08] text-center hover:border-[#8B0000]/30 transition-colors">
-                <MapPin className="w-5 h-5 text-[#8B0000] mx-auto mb-3" />
+                <MapPin className="w-5 h-5 text-white mx-auto mb-3" />
                 <p className="text-[15px] font-semibold text-white">{city.name}</p>
                 <p className="text-[22px] font-bold text-white mt-1">{city.properties}</p>
                 <p className="text-[11px] text-gray-500 mt-1">{city.region}</p>
@@ -247,7 +247,7 @@ export default async function HomePage() {
       <section className="py-20 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Platform Capabilities
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
@@ -275,7 +275,7 @@ export default async function HomePage() {
                 </div>
                 <div className="relative z-10 p-6">
                   <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 border border-[#8B0000]/20 flex items-center justify-center mb-4 group-hover:bg-[#8B0000]/15 group-hover:border-[#8B0000]/30 transition-all">
-                    <cap.icon className="w-5 h-5 text-[#8B0000]" />
+                    <cap.icon className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-[16px] font-semibold text-white mb-2">{cap.title}</h3>
                   <p className="text-[13px] text-gray-400 leading-relaxed">{cap.desc}</p>
@@ -292,7 +292,7 @@ export default async function HomePage() {
       <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
+            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               How It Works
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">

@@ -174,9 +174,9 @@ export default function SupplierOnboardingPage() {
           </div>
           <div className="p-4 rounded-xl bg-[#111] border border-white/10 text-left space-y-2">
             <p className="text-xs text-gray-500 uppercase tracking-wider">What happens next?</p>
-            <div className="flex items-start gap-3"><ShieldCheck size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Document verification by our compliance team</p></div>
-            <div className="flex items-start gap-3"><Factory size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Factory/site visit for PREMIER tier applicants</p></div>
-            <div className="flex items-start gap-3"><Truck size={16} className="text-[#8B0000] mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Onboarding call to set up your product catalog</p></div>
+            <div className="flex items-start gap-3"><ShieldCheck size={16} className="text-white mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Document verification by our compliance team</p></div>
+            <div className="flex items-start gap-3"><Factory size={16} className="text-white mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Factory/site visit for PREMIER tier applicants</p></div>
+            <div className="flex items-start gap-3"><Truck size={16} className="text-white mt-0.5 shrink-0" /><p className="text-sm text-gray-400">Onboarding call to set up your product catalog</p></div>
           </div>
           <div className="flex gap-3 justify-center">
             <Link href="/" className="px-5 py-2.5 rounded-xl bg-[#111] border border-white/10 text-white text-sm font-medium hover:bg-white/5 transition-colors">Back to Home</Link>
@@ -196,7 +196,7 @@ export default function SupplierOnboardingPage() {
           <span className="text-sm">Back to Home</span>
         </Link>
         <Link href="/" className="flex items-center gap-2">
-          <Store size={18} className="text-[#8B0000]" />
+          <Store size={18} className="text-white" />
           <span className="text-sm font-semibold text-white">Hotels Vendors</span>
         </Link>
       </div>
@@ -238,7 +238,7 @@ export default function SupplierOnboardingPage() {
           <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }} className="p-6">
             {step === 1 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Building2 size={16} className="text-[#8B0000]" />Company Information</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Building2 size={16} className="text-white" />Company Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-gray-400 uppercase tracking-wider mb-1.5 block">Company Name <span className="text-red-400">*</span></label>
@@ -266,7 +266,7 @@ export default function SupplierOnboardingPage() {
 
             {step === 2 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><MapPin size={16} className="text-[#8B0000]" />Location & Contact</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><MapPin size={16} className="text-white" />Location & Contact</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="text-[11px] text-gray-400 uppercase tracking-wider mb-1.5 block">Street Address</label>
@@ -310,7 +310,7 @@ export default function SupplierOnboardingPage() {
 
             {step === 3 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Landmark size={16} className="text-[#8B0000]" />Banking Details</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Landmark size={16} className="text-white" />Banking Details</h3>
                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 mb-4">
                   <p className="text-xs text-amber-400/70 flex items-start gap-2"><AlertCircle size={14} className="mt-0.5 shrink-0" />This information is encrypted and only used for payment processing. We never share your banking details with third parties.</p>
                 </div>
@@ -329,13 +329,13 @@ export default function SupplierOnboardingPage() {
 
             {step === 4 && (
               <div className="space-y-5">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Package size={16} className="text-[#8B0000]" />Product Capabilities</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Package size={16} className="text-white" />Product Capabilities</h3>
                 <div>
                   <label className="text-[11px] text-gray-400 uppercase tracking-wider mb-2 block">Product Categories <span className="text-red-400">*</span></label>
                   <div className="flex flex-wrap gap-2">
                     {CATEGORIES.map((cat) => {
                       const selected = form.categories.includes(cat);
-                      return (<button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selected ? "bg-[#8B0000]/20 text-[#8B0000] border border-[#8B0000]/30" : "bg-white/5 text-gray-400 border border-white/10 hover:border-white/15"}`}>{cat}</button>);
+                      return (<button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selected ? "bg-white/10 text-white border border-white/20" : "bg-white/5 text-gray-400 border border-white/10 hover:border-white/15"}`}>{cat}</button>);
                     })}
                   </div>
                 </div>
@@ -366,7 +366,7 @@ export default function SupplierOnboardingPage() {
 
             {step === 5 && (
               <div className="space-y-5">
-                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><FileText size={16} className="text-[#8B0000]" />Review Your Application</h3>
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><FileText size={16} className="text-white" />Review Your Application</h3>
                 <div className="space-y-3">
                   <ReviewSection title="Company" icon={Building2}>
                     <ReviewRow label="Name" value={form.name} />
@@ -396,8 +396,8 @@ export default function SupplierOnboardingPage() {
                 </div>
                 <div className="p-3 rounded-lg bg-white/5 border border-white/10">
                   <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-[#8B0000] focus:ring-[#8B0000]/20" />
-                    <span className="text-xs text-gray-400">I confirm that all information provided is accurate and I agree to the <span className="text-[#8B0000] underline cursor-pointer">Terms of Service</span> and <span className="text-[#8B0000] underline cursor-pointer">Supplier Agreement</span>.</span>
+                    <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-white focus:ring-white/20" />
+                    <span className="text-xs text-gray-400">I confirm that all information provided is accurate and I agree to the <span className="text-white underline cursor-pointer">Terms of Service</span> and <span className="text-white underline cursor-pointer">Supplier Agreement</span>.</span>
                   </label>
                 </div>
               </div>
@@ -449,7 +449,7 @@ function MobileBenefitsToggle() {
     <div className="lg:hidden mb-6">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-[#8B0000]/5 border border-[#8B0000]/10 text-[#8B0000] text-sm font-semibold"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-semibold"
       >
         <span>Why join as a Supplier?</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -476,7 +476,7 @@ function MobileBenefitsToggle() {
 function ReviewSection({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Icon size={13} className="text-[#8B0000]" />{title}</h4>
+      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Icon size={13} className="text-white" />{title}</h4>
       <div className="space-y-2">{children}</div>
     </div>
   );
