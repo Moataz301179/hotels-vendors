@@ -137,10 +137,10 @@ export default async function SolutionsPage() {
               <Globe className="w-3 h-3" />
               End-to-End Platform
             </div>
-            <h1 className="text-[30px] md:text-[44px] font-bold text-gray-900 leading-[1.05] tracking-[-0.02em]">
+            <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
               {cms?.heroTitle || "Built for Egyptian Hospitality."}
             </h1>
-            <p className="mt-6 text-[16px] md:text-[18px] text-gray-500 leading-relaxed max-w-xl">
+            <p className="mt-6 text-[16px] md:text-[18px] text-gray-400 leading-relaxed max-w-xl">
               {cms?.heroDescription || "Four integrated solutions — procurement, supplier growth, logistics, and factoring — designed to transform how Egypt's hospitality sector buys, sells, and moves goods."}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -153,7 +153,7 @@ export default async function SolutionsPage() {
               </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-900 text-[14px] font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
               >
                 Back to Home
               </Link>
