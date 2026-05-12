@@ -21,9 +21,11 @@ export function ConversationSidebar({ activeId, onSelect, onNew }: ConversationS
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const apiBase = process.env.NEXT_PUBLIC_VPS_API_URL || "/api/v1";
+
   const loadConversations = useCallback(async () => {
     try {
-      const res = await fetch("/api/v1/ai/conversations");
+      const res = await fetch(`${apiBase}/ai/conversations`);
       const json = await res.json();
       if (json.success) {
         setConversations(json.data.conversations);
@@ -43,7 +45,7 @@ export function ConversationSidebar({ activeId, onSelect, onNew }: ConversationS
     e.stopPropagation();
     if (!confirm("Delete this conversation?")) return;
     try {
-      await fetch(`/api/v1/ai/conversations/${id}`, { method: "DELETE" });
+      await fetch(`${apiBase}/ai/conversations/${id}`, { method: "DELETE" });
       setConversations((prev) => prev.filter((c) => c.id !== id));
       if (activeId === id) {
         onNew();

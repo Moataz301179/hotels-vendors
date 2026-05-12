@@ -166,7 +166,11 @@ export function WorkspaceChatbot({ mode, userId }: WorkspaceChatbotProps) {
       abortRef.current = controller;
 
       try {
-        const res = await fetch("/api/v1/ai/assistant", {
+        const apiUrl = process.env.NEXT_PUBLIC_VPS_API_URL
+        ? `${process.env.NEXT_PUBLIC_VPS_API_URL}/ai/assistant`
+        : "/api/v1/ai/assistant";
+
+      const res = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

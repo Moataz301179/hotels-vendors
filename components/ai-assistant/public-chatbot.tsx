@@ -42,7 +42,11 @@ export function PublicChatbot() {
       setLoading(true);
 
       try {
-        const res = await fetch("/api/v1/ai/public", {
+        const apiUrl = process.env.NEXT_PUBLIC_VPS_API_URL
+          ? `${process.env.NEXT_PUBLIC_VPS_API_URL}/ai/public`
+          : "/api/v1/ai/public";
+
+        const res = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: msg.trim() }),
