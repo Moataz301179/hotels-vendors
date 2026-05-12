@@ -126,26 +126,54 @@ export default async function HomePage() {
             src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80"
             alt="Luxury hotel lobby"
             fill
-            className="object-cover opacity-40"
+            className="object-cover opacity-30"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-[120px] pb-20 w-full">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              Procurement OS for Egyptian Hospitality
+              Now Operating in Egypt
             </div>
 
-            <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
-              {cms?.heroTitle || "The AI Procurement Operating System Egypt's Hotels Actually Needed"}
+            <h1 className="text-[28px] md:text-[48px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
+              The AI-Powered Procurement Ecosystem for Hospitality
             </h1>
 
-            <p className="mt-5 text-[14px] md:text-[16px] text-white/70 leading-relaxed max-w-lg">
-              {cms?.heroDescription || "Not a marketplace. Not a directory. Hotels Vendors is an AI-native procurement operating system that predicts demand across your properties, automates purchasing workflows, secures cashflow through embedded factoring, and enforces full ETA compliance — before problems ever reach your desk."}
+            <p className="mt-6 text-[14px] md:text-[17px] text-white/80 leading-relaxed max-w-2xl">
+              <span className="text-white font-semibold">We are not another marketplace.</span> Hotels Vendors is your AI agentic procurement module — operating 24 hours to manage your spendings, estimated costs, cashflow, inventory, invoicing, and payments in one framework.
+            </p>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <FileCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[13px] font-semibold text-white">ETA Automation</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Compliance built into every transaction</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <Banknote className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[13px] font-semibold text-white">Embedded Factoring</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Payment friction removed at source</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <BrainCircuit className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[13px] font-semibold text-white">AI Agentic Core</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Demand sensing, ordering, optimizing</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-6 text-[13px] text-white/50 italic">
+              One Framework. Zero Friction. Full Transparency. Each layer pays for the next.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -157,10 +185,10 @@ export default async function HomePage() {
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/register"
+                href="/marketplace"
                 className="inline-flex items-center gap-2 px-6 py-3 border border-white/25 text-white text-[14px] font-medium rounded-lg hover:bg-white/10 transition-colors"
               >
-                Schedule Executive Briefing
+                Browse the Marketplace
               </Link>
             </div>
           </div>
