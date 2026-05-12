@@ -2047,4 +2047,162 @@ enum SampleStatus {
   CANCELLED
 }
 
+// ─────────────────────────────────────────
+// 23. WAITING LIST — Beta launch pre-registrations
+// ─────────────────────────────────────────
+
+model WaitingListEntry {
+  id          String   @id @default(cuid())
+  email       String
+  role        String   // HOTEL, SUPPLIER, LOGISTICS, FACTORING
+  source      String   @default("beta-launch") // campaign identifier
+  status      WaitingListStatus @default(PENDING)
+  
+  // Metadata
+  referrer    String?  // UTM / referral source
+  notes       String?
+  
+  // Timestamps
+  invitedAt   DateTime?
+  convertedAt DateTime? // When they registered
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([email, source])
+  @@index([status, role])
+  @@index([createdAt])
+}
+
+enum WaitingListStatus {
+  PENDING
+  INVITED
+  CONVERTED
+  DECLINED
+}
+
+// ─────────────────────────────────────────
+// 24. SOCIAL MEDIA CAMPAIGNS
+// ─────────────────────────────────────────
+
+model SocialCampaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  
+  // Campaign config
+  objective   CampaignObjective // AWARENESS, ENGAGEMENT, CONVERSION, RETENTION
+  targetRoles String[] // [HOTEL, SUPPLIER, LOGISTICS]
+  platforms   SocialPlatform[] // [FACEBOOK, INSTAGRAM, LINKEDIN, X]
+  
+  // Budget & timeline
+  budgetEgp   Float?   // Optional budget tracking
+  startDate   DateTime
+  endDate     DateTime?
+  
+  // Status
+  status      CampaignStatus @default(DRAFT)
+  
+  // Content strategy (JSON)
+  contentStrategy String? // JSON: { themes, tone, hashtags, postingFrequency }
+  
+  // Results
+  metrics     String?  // JSON: { impressions, clicks, conversions }
+  
+  // Relations
+  posts       SocialPost[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, objective])
+  @@index([startDate])
+}
+
+model SocialPost {
+  id          String   @id @default(cuid())
+  campaignId  String
+  campaign    SocialCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  
+  // Content
+  platform    SocialPlatform
+  content     String   // Post text/content
+  mediaUrls   String?  // JSON array of image/video URLs
+  hashtags    String?  // Comma-separated or JSON
+  
+  // Scheduling
+  scheduledAt DateTime
+  publishedAt DateTime?
+  
+  // Status
+  status      PostStatus @default(DRAFT)
+  
+  // Engagement (updated after publish)
+  engagement  String?  // JSON: { likes, shares, comments, clicks }
+  
+  // OpenClaw / Swarm
+  swarmJobId  String?  // Reference to the job that created/scheduled this
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, scheduledAt])
+  @@index([campaignId])
+  @@index([platform])
+}
+
+model SocialAudience {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "Cairo Hotel Managers"
+  description String?
+  
+  // Targeting criteria
+  platforms   SocialPlatform[]
+  roles       String[] // [HOTEL, SUPPLIER]
+  locations   String[] // [Cairo, Alexandria, Hurghada]
+  interests   String[] // [procurement, hospitality, F&B]
+  
+  // Estimated reach
+  estimatedReach Int?
+  
+  // Active campaigns using this audience
+  campaignIds String[] // SocialCampaign IDs
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum CampaignObjective {
+  AWARENESS
+  ENGAGEMENT
+  CONVERSION
+  RETENTION
+  LEAD_GENERATION
+}
+
+enum SocialPlatform {
+  FACEBOOK
+  INSTAGRAM
+  LINKEDIN
+  X
+  YOUTUBE
+  TIKTOK
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_APPROVAL
+  SCHEDULED
+  PUBLISHED
+  FAILED
+}
+
 // End of Schema

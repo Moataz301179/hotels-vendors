@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -11,6 +12,12 @@ import {
   Camera,
   Briefcase,
   ExternalLink,
+  Rocket,
+  Users,
+  Calendar,
+  TrendingUp,
+  Sparkles,
+  Check,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
@@ -47,7 +54,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp}>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
                 <Megaphone className="w-3 h-3" />
-                Marketing Hub
+                Beta Launch — May 2026
               </span>
             </motion.div>
             <motion.h1
@@ -63,15 +70,15 @@ export default function SocialMediaPage() {
               className="mt-6 text-[18px] text-white/50 max-w-xl leading-[1.7]"
             >
               Hotels Vendors is building the digital infrastructure for Egyptian
-              hospitality. Follow our journey, join the conversation, and see how
-              technology is reshaping B2B supply chains.
+              hospitality. We are entering a limited 1-week beta on May 18, 2026. 
+              Join the waiting list to be among the first to experience it.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href="/register"
+                href="#beta-waiting-list"
                 className="group px-6 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
-                Join the Platform
+                Join the Waiting List
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <a
@@ -85,8 +92,67 @@ export default function SocialMediaPage() {
         </div>
       </section>
 
+      {/* Beta Launch Announcement */}
+      <section id="beta-waiting-list" className="py-20 border-y border-white/[0.06] bg-gradient-to-b from-[#8B0000]/5 to-transparent">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+                <Rocket className="w-3 h-3" />
+                Limited Beta Access
+              </span>
+              <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em] leading-tight">
+                1-Week Beta Launch
+                <br />
+                <span className="text-[#8B0000]">May 18 — May 25, 2026</span>
+              </h2>
+              <p className="mt-4 text-[16px] text-white/50 leading-relaxed max-w-lg">
+                We are opening Hotels Vendors to a select group of early adopters. 
+                Get priority access, direct support from our team, and lifetime 
+                benefits as a founding member.
+              </p>
+
+              <div className="mt-8 space-y-3">
+                {[
+                  "Priority onboarding & dedicated support",
+                  "Lifetime 50% discount on platform fees",
+                  "Direct input on product roadmap",
+                  "Exclusive beta badge on your profile",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#8B0000]/20 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-[#8B0000]" />
+                    </div>
+                    <span className="text-[14px] text-white/70">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02]"
+            >
+              <h3 className="text-[18px] font-semibold text-white mb-1">
+                Join the Waiting List
+              </h3>
+              <p className="text-[13px] text-white/40 mb-6">
+                Limited spots available. We will notify you when beta access opens.
+              </p>
+              <BetaWaitingListForm />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Brand Pillars */}
-      <section className="py-20 border-y border-white/[0.06] bg-white/[0.02]">
+      <section className="py-20 border-b border-white/[0.06]">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -176,9 +242,9 @@ export default function SocialMediaPage() {
                 desc: "Hotel and supplier spotlights, success stories, and industry events.",
               },
               {
-                icon: Zap,
-                title: "Product Updates",
-                desc: "New features, platform improvements, and roadmap previews.",
+                icon: Sparkles,
+                title: "Beta Updates",
+                desc: "Real-time progress on our beta launch, feature previews, and early adopter stories.",
               },
             ].map((item, i) => (
               <motion.div
@@ -233,6 +299,7 @@ export default function SocialMediaPage() {
                 icon: Briefcase,
                 desc: "B2B insights, case studies, and industry news.",
                 color: "#0A66C2",
+                href: "https://www.linkedin.com/company/hotelsvendors",
               },
               {
                 name: "Instagram",
@@ -240,6 +307,7 @@ export default function SocialMediaPage() {
                 icon: Camera,
                 desc: "Behind the scenes, supplier spotlights, and product showcases.",
                 color: "#E4405F",
+                href: "https://www.instagram.com/hotelsvendors",
               },
               {
                 name: "Facebook",
@@ -247,16 +315,20 @@ export default function SocialMediaPage() {
                 icon: MessageSquare,
                 desc: "Community updates, events, and live Q&As.",
                 color: "#1877F2",
+                href: "https://www.facebook.com/hotelsvendors",
               },
             ].map((channel, i) => (
-              <motion.div
+              <motion.a
                 key={channel.name}
+                href={channel.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-6 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] hover:border-black/[0.12] hover:-translate-y-1 transition-all duration-300"
+                className="group p-6 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] hover:border-white/[0.18] hover:-translate-y-1 transition-all duration-300 block"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div
@@ -273,12 +345,89 @@ export default function SocialMediaPage() {
                   </div>
                 </div>
                 <p className="text-[13px] text-white/50 mb-4">{channel.desc}</p>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-1 text-[12px] font-medium text-[#8B0000] hover:text-[#b91c1c] transition-colors"
-                >
+                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-[#8B0000] group-hover:text-white transition-colors">
                   Follow <ExternalLink className="w-3 h-3" />
-                </a>
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Campaign Timeline */}
+      <section className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-14"
+          >
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[11px] font-semibold text-[#8B0000] tracking-widest uppercase">
+              <Calendar className="w-3 h-3" />
+              Campaign Timeline
+            </span>
+            <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
+              Beta Launch Roadmap
+            </h2>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            {[
+              {
+                date: "May 12 — May 17",
+                title: "Pre-Launch Buzz",
+                desc: "Social media countdown, waiting list promotion, influencer outreach",
+                status: "In Progress",
+                icon: Megaphone,
+              },
+              {
+                date: "May 18",
+                title: "Beta Launch Day",
+                desc: "Platform opens to waiting list members. Live stream, press release",
+                status: "Upcoming",
+                icon: Rocket,
+              },
+              {
+                date: "May 19 — May 24",
+                title: "Daily Engagement",
+                desc: "User spotlights, feature deep-dives, community Q&As",
+                status: "Upcoming",
+                icon: Users,
+              },
+              {
+                date: "May 25",
+                title: "Post-Beta Review",
+                desc: "Results sharing, feedback collection, public launch announcement",
+                status: "Upcoming",
+                icon: TrendingUp,
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="flex gap-4 p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 border border-[#8B0000]/20 flex items-center justify-center shrink-0">
+                  <item.icon className="w-5 h-5 text-[#8B0000]" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-[15px] font-semibold text-white">{item.title}</h3>
+                    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                      item.status === "In Progress"
+                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                        : "bg-white/5 text-white/40 border border-white/10"
+                    }`}>
+                      {item.status}
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-[#8B0000] font-medium mb-1">{item.date}</p>
+                  <p className="text-[13px] text-white/50">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -286,7 +435,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-28">
+      <section className="py-28 border-t border-white/[0.06]">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -307,17 +456,17 @@ export default function SocialMediaPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
-                href="/register"
+                href="#beta-waiting-list"
                 className="group px-7 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
-                Get Started
+                Join Beta Waiting List
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
-                href="/marketplace"
+                href="/register"
                 className="px-7 py-3.5 text-[14px] font-medium text-white/50 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-colors"
               >
-                Explore Catalog
+                Create Account
               </Link>
             </div>
           </motion.div>
@@ -328,3 +477,90 @@ export default function SocialMediaPage() {
     </main>
   );
 }
+
+function BetaWaitingListForm() {
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<"HOTEL" | "SUPPLIER" | "LOGISTICS" | "">("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || !role) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/v1/waiting-list", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role, source: "beta-launch" }),
+      });
+      if (res.ok) setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="text-center py-8">
+        <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-4">
+          <Check className="w-6 h-6 text-green-400" />
+        </div>
+        <h4 className="text-[16px] font-semibold text-white mb-2">You are on the list!</h4>
+        <p className="text-[13px] text-white/50">
+          We will email you when beta access opens on May 18, 2026.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-[12px] font-medium text-white/60 mb-2">
+          Email Address
+        </label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          required
+          className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 focus:ring-1 focus:ring-[#8B0000]/20 transition-colors"
+        />
+      </div>
+      <div>
+        <label className="block text-[12px] font-medium text-white/60 mb-2">
+          I am a...
+        </label>
+        <div className="grid grid-cols-3 gap-2">
+          {(["HOTEL", "SUPPLIER", "LOGISTICS"] as const).map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRole(r)}
+              className={`px-3 py-2.5 rounded-lg text-[12px] font-medium border transition-colors ${
+                role === r
+                  ? "bg-[#8B0000]/20 border-[#8B0000]/40 text-[#8B0000]"
+                  : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
+              }`}
+            >
+              {r === "LOGISTICS" ? "Logistics" : r.charAt(0) + r.slice(1).toLowerCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+      <button
+        type="submit"
+        disabled={loading || !email || !role}
+        className="w-full py-3 text-[14px] font-semibold bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? "Joining..." : "Join Waiting List"}
+      </button>
+      <p className="text-[11px] text-white/30 text-center">
+        No spam. Unsubscribe anytime. We respect your privacy.
+      </p>
+    </form>
+  );
+}
+

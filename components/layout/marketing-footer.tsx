@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { Shield, FileCheck, Zap } from "lucide-react";
+import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-icons";
 
 export function MarketingFooter() {
   return (
@@ -28,14 +29,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <Image
-                src="/logo-icon.png"
-                alt="Hotels Vendors"
-                width={32}
-                height={44}
-                className="object-contain"
-                priority
-              />
+              <BrandLogo variant="light" size="sm" />
               <div>
                 <span className="text-[14px] font-bold text-gray-900 tracking-tight block">
                   Hotels Vendors
@@ -119,16 +113,34 @@ export function MarketingFooter() {
           <p className="text-[11px] text-gray-400">
             &copy; 2026 Hotels Vendors. Cairo, Egypt. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            {["LinkedIn", "Twitter", "Facebook"].map((social) => (
-              <a
-                key={social}
-                href="#"
-                className="text-[11px] text-gray-400 hover:text-[#8B0000] transition-colors"
-              >
-                {social}
-              </a>
-            ))}
+          <div className="flex items-center gap-4">
+            <a
+              href="https://www.facebook.com/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-[#1877F2] transition-colors"
+            >
+              <FacebookIcon className="w-3.5 h-3.5" />
+              Facebook
+            </a>
+            <a
+              href="https://www.instagram.com/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-[#E4405F] transition-colors"
+            >
+              <InstagramIcon className="w-3.5 h-3.5" />
+              Instagram
+            </a>
+            <a
+              href="https://www.linkedin.com/company/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-[#0A66C2] transition-colors"
+            >
+              <LinkedInIcon className="w-3.5 h-3.5" />
+              LinkedIn
+            </a>
           </div>
         </div>
       </div>

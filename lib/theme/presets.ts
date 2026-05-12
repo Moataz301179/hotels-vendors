@@ -255,10 +255,19 @@ export function applyPreset(preset: ThemePreset) {
   root.style.setProperty("--font-size-scale", String(preset.fontSizeScale));
   root.style.setProperty("--density", preset.density);
 
-  // Body bg
-  document.body.style.backgroundColor = preset.bg.background;
-  document.body.style.color = preset.fg.primary;
-  document.body.style.fontFamily = preset.fontFamily;
+  // Body bg — scoped to dashboard/marketplace only; marketing pages control their own
+  const isMarketing = typeof window !== "undefined" && (
+    window.location.pathname === "/" ||
+    window.location.pathname.startsWith("/about") ||
+    window.location.pathname.startsWith("/pricing") ||
+    window.location.pathname.startsWith("/solutions") ||
+    window.location.pathname.startsWith("/become-supplier")
+  );
+  if (!isMarketing) {
+    document.body.style.backgroundColor = preset.bg.background;
+    document.body.style.color = preset.fg.primary;
+    document.body.style.fontFamily = preset.fontFamily;
+  }
 }
 
 export function applyCustomAccent(hex: string) {

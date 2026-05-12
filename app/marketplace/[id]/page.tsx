@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ProductDetailClient from "@/components/marketplace/product-detail-client";
+import catalogData from "@/data/catalog-products.json";
+
+const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
 
 export async function generateMetadata({
   params,
@@ -7,16 +11,37 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
+  const product = ALL_PRODUCTS.find((p) => p.id === id);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+
   return {
-    title: `Product ${id}`,
-    description: "View product details, specifications, and supplier information on Hotels Vendors marketplace.",
+    title: `${product.name} — ${product.supplierName}`,
+    description: `${product.description} Available on Hotels Vendors marketplace. ${product.unitPrice} EGP per ${product.unitOfMeasure}.`,
+    openGraph: {
+      title: `${product.name} — Hotels Vendors Marketplace`,
+      description: product.description,
+      images: ["/hotelsvendors-logo.png"],
+    },
   };
 }
 
-export default function ProductDetailPage({
+export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  return <ProductDetailClient />;
+  const { id } = await params;
+  const product = ALL_PRODUCTS.find((p) => p.id === id);
+
+  if (!product) {
+    notFound();
+  }
+
+  return <ProductDetailClient productId={id} />;
 }

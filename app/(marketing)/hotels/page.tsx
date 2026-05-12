@@ -11,19 +11,19 @@ export const metadata: Metadata = {
 
 export default function HotelsPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-black">
       <MarketingNav />
 
-      <div className="pt-[140px] pb-8 bg-white">
+      <div className="pt-[140px] pb-8">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
             <p className="text-[11px] font-semibold text-[#8B0000] tracking-[0.18em] uppercase mb-3">
               Partner Network
             </p>
-            <h1 className="text-[28px] md:text-[36px] font-bold text-gray-900 tracking-[-0.02em]">
+            <h1 className="text-[28px] md:text-[36px] font-bold text-white tracking-[-0.02em]">
               Hotels Operating on Our Platform
             </h1>
-            <p className="mt-2 text-[14px] text-gray-500 max-w-lg">
+            <p className="mt-2 text-[14px] text-gray-400 max-w-lg">
               52+ properties across 12 governorates — from luxury resorts on the Red Sea
               to heritage properties on the Nile. All connected to verified Egyptian suppliers.
             </p>

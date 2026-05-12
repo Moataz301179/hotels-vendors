@@ -194,7 +194,6 @@ export default function RootLayout({
         style={{
           fontFamily: "var(--font-body), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           background: "var(--bg-canvas)",
-          color: "var(--text-primary)",
         }}
       >
         <LanguageProvider>

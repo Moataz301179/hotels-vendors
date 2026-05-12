@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Package,
@@ -18,10 +16,13 @@ import {
   Check,
   ArrowRight,
   Crown,
+  ShoppingBag,
 } from "lucide-react";
 import { getCategoryById } from "@/lib/marketplace/categories";
+import { getProductImage } from "@/lib/marketplace/product-images";
 import catalogData from "@/data/catalog-products.json";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { useCart } from "@/components/cart/cart-context";
 
 const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
 
@@ -30,27 +31,50 @@ const RED_DIM = "rgba(139,10,30,0.15)";
 const GOLD = "#e1a95f";
 const GOLD_DIM = "rgba(225,169,95,0.15)";
 
-const PRODUCT_IMAGES = [
-  "https://images.unsplash.com/photo-1544025162-d76690b68f11?w=800&q=80",
-  "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80",
-  "https://images.unsplash.com/photo-1563729768-6af784d6df1d?w=800&q=80",
-  "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&q=80",
-  "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&q=80",
-  "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=80",
-  "https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?w=800&q=80",
-  "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
-];
+function ProductImage({ product }: { product: any }) {
+  const [error, setError] = useState(false);
+  const resolved = getProductImage(product);
 
-function getProductImage(index: number) {
-  return PRODUCT_IMAGES[index % PRODUCT_IMAGES.length];
+  if (resolved.type === "url" && !error) {
+    return (
+      <img
+        src={resolved.src}
+        alt={product.name}
+        className="w-full h-full object-cover"
+        loading="eager"
+        onError={() => setError(true)}
+      />
+    );
+  }
+
+  const colors = resolved.type === "gradient" ? resolved.colors : ["#1a1a2e", "#2a2a4a", "#4a4a7a"];
+  const initials = resolved.type === "gradient" ? resolved.initials : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
+
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={{
+        background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 50%, ${colors[2]} 100%)`,
+      }}
+    >
+      <div className="text-center">
+        <span className="text-[32px] font-bold text-white/20 tracking-tight">
+          {initials}
+        </span>
+        <p className="text-[10px] text-white/15 uppercase tracking-wider mt-1">
+          {product.category.toUpperCase()}
+        </p>
+      </div>
+    </div>
+  );
 }
 
-export default function PublicProductDetailPage() {
-  const params = useParams();
-  const product = ALL_PRODUCTS.find((p) => p.id === params.id);
+export default function ProductDetailClient({ productId }: { productId: string }) {
+  const product = ALL_PRODUCTS.find((p) => p.id === productId);
   const [qty, setQty] = useState(product?.minOrderQty || 1);
   const [added, setAdded] = useState(false);
   const [memberMode, setMemberMode] = useState(false);
+  const { addItem, openCart, totalItems } = useCart();
 
   if (!product) {
     return (
@@ -69,13 +93,24 @@ export default function PublicProductDetailPage() {
     (p) => p.category === product.category && p.id !== product.id
   ).slice(0, 4);
 
-  const productIndex = ALL_PRODUCTS.findIndex((p) => p.id === product.id);
-  const mainImage = getProductImage(productIndex);
-
   const formatPrice = (p: number, c: string) =>
     new Intl.NumberFormat("en-EG", { style: "currency", currency: c, minimumFractionDigits: 0 }).format(p);
 
   const memberPrice = Math.round(product.unitPrice * 0.92);
+
+  const handleAddToCart = () => {
+    addItem({
+      productId: product.id,
+      name: product.name,
+      sku: product.sku,
+      unitPrice: memberMode ? memberPrice : product.unitPrice,
+      supplierId: product.id,
+      supplierName: product.supplierName,
+      image: getProductImage(product).type === "url" ? (getProductImage(product) as any).src : undefined,
+    }, qty);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -99,6 +134,17 @@ export default function PublicProductDetailPage() {
               {memberMode && <Check className="w-3 h-3" style={{ color: RED }} />}
             </button>
             <Link href="/marketplace" className="text-[12px] text-white/50 hover:text-white transition-colors">Marketplace</Link>
+            <button
+              onClick={openCart}
+              className="relative flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/60 hover:text-white hover:border-white/[0.12] transition-all"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
             <Link href="/login" className="px-4 py-2 rounded-xl text-[12px] font-medium text-white" style={{ background: RED }}>
               Sign In
             </Link>
@@ -118,7 +164,7 @@ export default function PublicProductDetailPage() {
           {/* Image */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
             <div className="relative aspect-square rounded-2xl border border-white/[0.06] overflow-hidden">
-              <img src={mainImage} alt={product.name} className="w-full h-full object-cover" />
+              <ProductImage product={product} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 <span
@@ -192,18 +238,18 @@ export default function PublicProductDetailPage() {
                 </button>
               </div>
               <button
-                onClick={() => setAdded(true)}
+                onClick={handleAddToCart}
                 disabled={product.stockQuantity === 0}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-medium transition-all disabled:bg-white/[0.03] disabled:text-white/20"
                 style={product.stockQuantity > 0 ? { background: RED } : {}}
               >
-                {added ? <><Check className="w-5 h-5" /><span>Sign in to Order</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
+                {added ? <><Check className="w-5 h-5" /><span>Added to Cart</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
               </button>
             </div>
 
             {added && (
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm" style={{ color: RED }}>
-                Please <Link href="/login" className="underline font-medium">sign in</Link> to place orders
+                Added to cart. <button onClick={openCart} className="underline font-medium">View cart</button> or <Link href="/login" className="underline font-medium">sign in</Link> to checkout.
               </motion.p>
             )}
 
@@ -261,14 +307,14 @@ export default function PublicProductDetailPage() {
           <div className="mt-12">
             <h2 className="text-lg font-semibold text-white mb-4">More from {cat?.label || product.category}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {related.map((p, i) => (
+              {related.map((p) => (
                 <Link
                   key={p.id}
                   href={`/marketplace/${p.id}`}
                   className="group p-3 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.10] transition-colors"
                 >
                   <div className="h-24 rounded-lg overflow-hidden mb-3">
-                    <img src={getProductImage(ALL_PRODUCTS.findIndex((prod) => prod.id === p.id))} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <ProductImage product={p} />
                   </div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: RED_DIM, color: RED }}>{p.sku}</span>

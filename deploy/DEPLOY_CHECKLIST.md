@@ -442,7 +442,7 @@ docker exec hv-app nc -zv postgres 5432
 ## Post-Deploy Verification
 
 - [ ] Homepage loads at `https://your-domain.com`
-- [ ] `/marketplace-v2` shows products
+- [ ] `/marketplace` shows products with real images and working cart
 - [ ] Product detail pages work
 - [ ] Registration flow works
 - [ ] Login works

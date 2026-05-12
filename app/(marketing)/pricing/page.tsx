@@ -127,7 +127,7 @@ export default async function PricingPage() {
       answer: f.answer || (f as unknown as { a: string }).a || "",
     })) || FAQS.map((f) => ({ question: f.q, answer: f.a }));
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-black">
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
@@ -159,8 +159,8 @@ export default async function PricingPage() {
                 key={tier.name}
                 className={`relative flex flex-col rounded-2xl border p-6 md:p-8 transition-all ${
                   tier.popular
-                    ? "bg-[#f8f9fa] border-[#8B0000]/30 shadow-[0_0_40px_-12px_rgba(225,29,72,0.15)]"
-                    : "bg-[#f8f9fa] border-gray-100 hover:border-gray-200"
+                    ? "bg-[#111] border-[#8B0000]/30 shadow-[0_0_40px_-12px_rgba(139,0,0,0.25)]"
+                    : "bg-[#111] border-white/10 hover:border-white/15"
                 }`}
               >
                 {tier.popular && (
@@ -173,19 +173,19 @@ export default async function PricingPage() {
                 )}
 
                 <div className="mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
                     <tier.icon className="w-5 h-5 text-[#8B0000]" />
                   </div>
-                  <h3 className="text-[18px] font-semibold text-gray-900">
+                  <h3 className="text-[18px] font-semibold text-white">
                     {tier.name}
                   </h3>
                   <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-[32px] font-bold text-gray-900 tracking-tight">
+                    <span className="text-[32px] font-bold text-white tracking-tight">
                       {tier.price}
                     </span>
                     <span className="text-[13px] text-gray-500">{tier.sub}</span>
                   </div>
-                  <p className="mt-3 text-[13px] text-gray-500 leading-relaxed">
+                  <p className="mt-3 text-[13px] text-gray-400 leading-relaxed">
                     {tier.description}
                   </p>
                 </div>
@@ -196,11 +196,11 @@ export default async function PricingPage() {
                       {f.included ? (
                         <Check className="w-4 h-4 text-[#8B0000] shrink-0 mt-0.5" />
                       ) : (
-                        <X className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                        <X className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" />
                       )}
                       <span
                         className={`text-[13px] ${
-                          f.included ? "text-gray-600" : "text-gray-400"
+                          f.included ? "text-gray-300" : "text-gray-600"
                         }`}
                       >
                         {f.label}
@@ -214,7 +214,7 @@ export default async function PricingPage() {
                   className={`inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-lg transition-colors ${
                     tier.popular
                       ? "bg-[#8B0000] hover:bg-[#6B0000] text-white"
-                      : "border border-gray-200 text-gray-900 hover:bg-gray-50"
+                      : "border border-white/15 text-white hover:bg-white/5"
                   }`}
                 >
                   {tier.cta}
@@ -229,13 +229,13 @@ export default async function PricingPage() {
       {/* ═══════════════════════════════════════════
           FEATURE COMPARISON TABLE
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-gray-100">
+      <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Compare Plans
             </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-gray-900 tracking-tight">
+            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
               Full Feature Comparison
             </h2>
           </div>
@@ -243,7 +243,7 @@ export default async function PricingPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className="border-b border-white/10">
                   <th className="py-4 pr-6 text-[13px] font-semibold text-gray-500 uppercase tracking-wider">
                     Feature
                   </th>
@@ -263,10 +263,10 @@ export default async function PricingPage() {
                   <tr
                     key={feature.label}
                     className={
-                      idx % 2 === 0 ? "bg-gray-50" : "bg-transparent"
+                      idx % 2 === 0 ? "bg-white/[0.03]" : "bg-transparent"
                     }
                   >
-                    <td className="py-3.5 pr-6 text-[13px] text-gray-600">
+                    <td className="py-3.5 pr-6 text-[13px] text-gray-400">
                       {feature.label}
                     </td>
                     {TIERS.map((tier) => {
@@ -276,7 +276,7 @@ export default async function PricingPage() {
                           {f?.included ? (
                             <Check className="w-4 h-4 text-[#8B0000] mx-auto" />
                           ) : (
-                            <X className="w-4 h-4 text-gray-400 mx-auto" />
+                            <X className="w-4 h-4 text-gray-600 mx-auto" />
                           )}
                         </td>
                       );
@@ -292,13 +292,13 @@ export default async function PricingPage() {
       {/* ═══════════════════════════════════════════
           FAQ ACCORDION
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-gray-100">
+      <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-3xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               FAQ
             </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-gray-900 tracking-tight">
+            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
               Frequently Asked Questions
             </h2>
           </div>
@@ -307,14 +307,14 @@ export default async function PricingPage() {
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-xl bg-[#f8f9fa] border border-gray-100 open:border-gray-200 transition-colors"
+                className="group rounded-xl bg-[#111] border border-white/10 open:border-white/15 transition-colors"
               >
                 <summary className="flex items-center justify-between gap-4 cursor-pointer p-5 list-none">
-                  <span className="text-[14px] font-medium text-gray-900 flex items-center gap-3">
+                  <span className="text-[14px] font-medium text-white flex items-center gap-3">
                     <HelpCircle className="w-4 h-4 text-[#8B0000] shrink-0" />
                     {faq.question}
                   </span>
-                  <span className="text-gray-400 group-open:rotate-180 transition-transform shrink-0">
+                  <span className="text-gray-600 group-open:rotate-180 transition-transform shrink-0">
                     <svg
                       width="12"
                       height="8"
@@ -333,7 +333,7 @@ export default async function PricingPage() {
                   </span>
                 </summary>
                 <div className="px-5 pb-5 pl-12">
-                  <p className="text-[13px] text-gray-500 leading-relaxed">
+                  <p className="text-[13px] text-gray-400 leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>
@@ -348,13 +348,13 @@ export default async function PricingPage() {
           ═══════════════════════════════════════════ */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#f8f9fa] border border-gray-100 p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
-              <h2 className="text-[32px] md:text-[44px] font-bold text-gray-900 tracking-tight">
+              <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Still have questions?"}
               </h2>
-              <p className="mt-4 text-[15px] text-gray-500 max-w-xl mx-auto">
+              <p className="mt-4 text-[15px] text-gray-400 max-w-xl mx-auto">
                 {cms?.ctaDescription || "Our team is here to help you choose the right plan and get your properties set up in under 10 minutes."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -367,7 +367,7 @@ export default async function PricingPage() {
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-900 text-[14px] font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
                 >
                   Back to Home
                 </Link>

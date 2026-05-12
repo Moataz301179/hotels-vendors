@@ -112,11 +112,11 @@ export function CartDrawer() {
                   <button
                     onClick={() => {
                       closeCart();
-                      router.push("/hotel/catalog");
+                      router.push("/marketplace");
                     }}
                     className="px-4 py-2 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-xs font-medium transition-colors"
                   >
-                    Browse Catalog
+                    Browse Marketplace
                   </button>
                 </div>
               ) : (
@@ -133,6 +133,7 @@ export function CartDrawer() {
                             src={item.image}
                             alt={item.name}
                             className="w-full h-full object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                           />
                         ) : (
                           <Package size={18} className="text-white/15" />
@@ -217,18 +218,18 @@ export function CartDrawer() {
                 <button
                   onClick={() => {
                     closeCart();
-                    router.push("/hotel/order");
+                    router.push("/login?redirect=/hotel/order");
                   }}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors"
                 >
-                  <span>Proceed to Checkout</span>
+                  <span>Sign In to Checkout</span>
                   <ArrowRight size={16} />
                 </button>
 
                 <button
                   onClick={() => {
                     closeCart();
-                    router.push("/hotel/catalog");
+                    router.push("/marketplace");
                   }}
                   className="w-full text-center text-xs text-white/30 hover:text-white/60 transition-colors py-1"
                 >

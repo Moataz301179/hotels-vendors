@@ -196,21 +196,21 @@ export function OurClientsSection() {
   const totalGmv = LOCAL_HOTELS.reduce((s, h) => s + h.monthly_gmv_egp, 0);
 
   return (
-    <section className="py-16 bg-[#f5f5f7] border-y border-black/[0.06]">
+    <section className="py-16 bg-[#0a0a0a] border-y border-white/[0.06]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10">
           <p className="text-[11px] font-semibold text-[#8B0000] tracking-[0.18em] uppercase mb-3">
             Egyptian Hotel Partners
           </p>
-          <h2 className="text-[24px] md:text-[28px] font-bold text-black tracking-[-0.02em]">
+          <h2 className="text-[24px] md:text-[28px] font-bold text-white tracking-[-0.02em]">
             Local Chains, Real Properties
           </h2>
-          <p className="mt-2 text-[14px] text-black/40 max-w-xl">
+          <p className="mt-2 text-[14px] text-gray-400 max-w-xl">
             {LOCAL_HOTELS.length}+ Egyptian-owned properties across the Red Sea,
             South Sinai, Nile Valley, and Mediterranean coast.
             No international franchises — just local groups powering local hospitality.
           </p>
-          <div className="mt-4 flex items-center gap-4 text-[11px] text-black/30">
+          <div className="mt-4 flex items-center gap-4 text-[11px] text-gray-500">
             <span className="flex items-center gap-1">
               <Building2 className="w-3 h-3" />
               {LOCAL_HOTELS.length} properties
@@ -233,7 +233,7 @@ export function OurClientsSection() {
             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all border ${
               activeChain === "all"
                 ? "bg-[#8B0000] text-white border-[#8B0000]"
-                : "bg-white text-black/50 border-black/[0.08] hover:text-black"
+                : "bg-[#111] text-gray-400 border-white/10 hover:text-white"
             }`}
           >
             All Groups
@@ -245,11 +245,11 @@ export function OurClientsSection() {
               className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all border ${
                 activeChain === chain
                   ? "bg-[#8B0000] text-white border-[#8B0000]"
-                  : "bg-white text-black/50 border-black/[0.08] hover:text-black"
+                  : "bg-[#111] text-gray-400 border-white/10 hover:text-white"
               }`}
             >
               {chain}
-              <span className="ml-1 text-black/30">
+              <span className="ml-1 text-gray-600">
                 ({CHAIN_COUNTS[chain]})
               </span>
             </button>
@@ -264,8 +264,8 @@ export function OurClientsSection() {
               onClick={() => setActiveTier(tier)}
               className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${
                 activeTier === tier
-                  ? "bg-black text-white"
-                  : "bg-white/60 text-black/40 border border-black/[0.06] hover:text-black"
+                  ? "bg-white text-black"
+                  : "bg-white/5 text-gray-500 border border-white/10 hover:text-white"
               }`}
             >
               {tier === "all" ? "All Tiers" : TIER_LABELS[tier] || tier}
@@ -282,7 +282,7 @@ export function OurClientsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: i * 0.02 }}
-              className="group p-4 rounded-xl bg-white border border-black/[0.08] hover:border-black/[0.15] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-300"
+              className="group p-4 rounded-xl bg-[#111] border border-white/10 hover:border-white/15 transition-all duration-300"
             >
               <div className="flex items-start justify-between mb-3">
                 <div
@@ -300,7 +300,7 @@ export function OurClientsSection() {
                   style={{
                     background:
                       (TIER_COLORS[hotel.tier] || TIER_COLORS.midscale) +
-                      "15",
+                      "25",
                     color: TIER_COLORS[hotel.tier] || TIER_COLORS.midscale,
                   }}
                 >
@@ -308,18 +308,18 @@ export function OurClientsSection() {
                 </span>
               </div>
 
-              <h3 className="text-[13px] font-semibold text-black leading-snug mb-1 group-hover:text-[#8B0000] transition-colors">
+              <h3 className="text-[13px] font-semibold text-white leading-snug mb-1 group-hover:text-[#8B0000] transition-colors">
                 {hotel.name}
               </h3>
 
-              <p className="text-[11px] text-black/30 mb-2">{hotel.chain}</p>
+              <p className="text-[11px] text-gray-500 mb-2">{hotel.chain}</p>
 
-              <div className="flex items-center gap-1 text-[11px] text-black/35 mb-2">
+              <div className="flex items-center gap-1 text-[11px] text-gray-500 mb-2">
                 <MapPin className="w-3 h-3" />
                 {hotel.city}, {hotel.governorate}
               </div>
 
-              <div className="flex items-center gap-3 text-[11px] text-black/40">
+              <div className="flex items-center gap-3 text-[11px] text-gray-500">
                 <span className="flex items-center gap-1">
                   <Building2 className="w-3 h-3" />
                   {hotel.rooms} rooms
@@ -334,7 +334,7 @@ export function OurClientsSection() {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-[13px] text-black/30">
+          <div className="text-center py-16 text-[13px] text-gray-600">
             No properties match the selected filters.
           </div>
         )}

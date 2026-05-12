@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function SuppliersPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-black">
       <MarketingNav />
       <div className="pt-[88px]">
         <SuppliersDirectory />

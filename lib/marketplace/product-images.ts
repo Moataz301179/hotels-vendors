@@ -466,6 +466,17 @@ export function getProductImage(product: { name: string; category: string }): { 
     }
   }
 
+  // 1b) Try singularized keyword match (strip trailing 's' / 'es')
+  const singularName = name
+    .replace(/ies\b/g, "y")
+    .replace(/es\b/g, "")
+    .replace(/s\b/g, "");
+  for (const [keyword, url] of Object.entries(KEYWORD_MAP)) {
+    if (singularName.includes(keyword)) {
+      return { type: "url", src: url };
+    }
+  }
+
   // 2) Try category default image
   const catDefault = CATEGORY_DEFAULTS[category];
   if (catDefault) {

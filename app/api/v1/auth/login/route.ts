@@ -17,8 +17,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = validateBody(LoginSchema, body);
 
+  // Allow "admin" as a username alias for the admin account
+  const email = data.email === "admin" ? "admin@hotelsvendors.com" : data.email;
+
   const user = await prisma.user.findUnique({
-    where: { email: data.email },
+    where: { email },
     include: { hotel: true },
   });
 
@@ -40,7 +43,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: user.tenantId || user.hotelId || "legacy",
     actorId: user.id,
     actorRole: user.platformRole,
-    afterState: { email: user.email, platformRole: user.platformRole },
+    afterState: { email: user.email, platformRole: user.platformRole, loginAlias: data.email === "admin" ? "admin" : undefined },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });

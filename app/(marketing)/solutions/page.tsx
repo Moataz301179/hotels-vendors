@@ -43,10 +43,10 @@ const SOLUTIONS = [
       "Automated purchase orders with multi-level approvals",
       "Real-time ETA e-invoicing compliance",
       "Consolidated dashboards across all properties",
-      "30% average cost savings across categories",
+      "Embedded invoice factoring for smart cashflow",
     ],
-    stat: "30%",
-    statLabel: "Avg Cost Savings",
+    stat: "All-in-One",
+    statLabel: "Procurement OS",
   },
   {
     icon: Store,
@@ -124,7 +124,7 @@ const CASE_STUDIES = [
 export default async function SolutionsPage() {
   const cms = await getCmsPage("solutions");
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-black">
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
@@ -171,29 +171,29 @@ export default async function SolutionsPage() {
             {SOLUTIONS.map((solution) => (
               <div
                 key={solution.title}
-                className="group p-6 md:p-8 rounded-2xl bg-[#f8f9fa] border border-gray-100 hover:border-gray-200 transition-all"
+                className="group p-6 md:p-8 rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all"
               >
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 transition-all">
                     <solution.icon className="w-6 h-6 text-[#8B0000]" />
                   </div>
                   <div className="text-right">
-                    <div className="text-[24px] font-bold text-gray-900 tracking-tight">
+                    <div className="text-[24px] font-bold text-white tracking-tight">
                       {solution.stat}
                     </div>
-                    <div className="text-[11px] text-gray-400 uppercase tracking-wide">
+                    <div className="text-[11px] text-gray-500 uppercase tracking-wide">
                       {solution.statLabel}
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-[20px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[20px] font-semibold text-white mb-1">
                   {solution.title}
                 </h3>
                 <p className="text-[13px] font-medium text-[#8B0000] mb-4">
                   {solution.tagline}
                 </p>
-                <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
+                <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
                   {solution.description}
                 </p>
 
@@ -201,7 +201,7 @@ export default async function SolutionsPage() {
                   {solution.benefits.map((benefit) => (
                     <li
                       key={benefit}
-                      className="flex items-start gap-2.5 text-[13px] text-gray-600"
+                      className="flex items-start gap-2.5 text-[13px] text-gray-400"
                     >
                       <CheckCircle2 className="w-4 h-4 text-[#8B0000] shrink-0 mt-0.5" />
                       {benefit}
@@ -217,13 +217,13 @@ export default async function SolutionsPage() {
       {/* ═══════════════════════════════════════════
           HOW IT WORKS — FLOW
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-gray-100">
+      <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               How It Works
             </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-gray-900 tracking-tight">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
               One Platform. Four Stakeholders. Zero Friction.
             </h2>
           </div>
@@ -252,19 +252,19 @@ export default async function SolutionsPage() {
               },
             ].map((step, i) => (
               <div key={step.title} className="relative">
-                <div className="p-6 rounded-2xl bg-[#f8f9fa] border border-gray-100 h-full">
+                <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full">
                   <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 flex items-center justify-center mb-4">
                     <step.icon className="w-5 h-5 text-[#8B0000]" />
                   </div>
-                  <h3 className="text-[16px] font-semibold text-gray-900 mb-2">
+                  <h3 className="text-[16px] font-semibold text-white mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-[13px] text-gray-500 leading-relaxed">
+                  <p className="text-[13px] text-gray-400 leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
                 {i < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-gray-100" />
+                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
                 )}
               </div>
             ))}
@@ -275,13 +275,13 @@ export default async function SolutionsPage() {
       {/* ═══════════════════════════════════════════
           CASE STUDIES
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-gray-100">
+      <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
               Case Studies
             </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-gray-900 tracking-tight">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
               Real Results from Real Partners
             </h2>
           </div>
@@ -290,22 +290,22 @@ export default async function SolutionsPage() {
             {CASE_STUDIES.map((cs) => (
               <div
                 key={cs.title}
-                className="p-6 md:p-8 rounded-2xl bg-[#f8f9fa] border border-gray-100"
+                className="p-6 md:p-8 rounded-2xl bg-[#111] border border-white/10"
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-4">
                   {cs.industry}
                 </div>
-                <h3 className="text-[18px] font-semibold text-gray-900 mb-3">
+                <h3 className="text-[18px] font-semibold text-white mb-3">
                   {cs.title}
                 </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
+                <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
                   {cs.desc}
                 </p>
                 <div className="space-y-2">
                   {cs.results.map((result) => (
                     <div
                       key={result}
-                      className="flex items-center gap-2 text-[13px] text-gray-600"
+                      className="flex items-center gap-2 text-[13px] text-gray-400"
                     >
                       <TrendingUp className="w-4 h-4 text-[#8B0000] shrink-0" />
                       {result}
@@ -321,7 +321,7 @@ export default async function SolutionsPage() {
       {/* ═══════════════════════════════════════════
           CAPABILITY HIGHLIGHTS
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-gray-100">
+      <section className="py-20 border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
@@ -348,15 +348,15 @@ export default async function SolutionsPage() {
             ].map((cap) => (
               <div
                 key={cap.title}
-                className="p-6 rounded-2xl bg-[#f8f9fa] border border-gray-100"
+                className="p-6 rounded-2xl bg-[#111] border border-white/10"
               >
-                <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
                   <cap.icon className="w-5 h-5 text-[#8B0000]" />
                 </div>
-                <h3 className="text-[15px] font-semibold text-gray-900 mb-2">
+                <h3 className="text-[15px] font-semibold text-white mb-2">
                   {cap.title}
                 </h3>
-                <p className="text-[13px] text-gray-500 leading-relaxed">
+                <p className="text-[13px] text-gray-400 leading-relaxed">
                   {cap.desc}
                 </p>
               </div>
@@ -370,16 +370,15 @@ export default async function SolutionsPage() {
           ═══════════════════════════════════════════ */}
       <section className="py-10">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#f8f9fa] border border-gray-100 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
-                <h3 className="text-[24px] md:text-[28px] font-bold text-gray-900 tracking-tight">
+                <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">
                   Are you a hotel buyer?
                 </h3>
-                <p className="mt-2 text-[14px] text-gray-500 leading-relaxed">
-                  Join 450+ properties already cutting procurement costs by 30%
-                  and reducing admin work by 80%.
+                <p className="mt-2 text-[14px] text-gray-400 leading-relaxed">
+                  Join hotels across Egypt running their entire procurement lifecycle — from AI sourcing and ordering to payments, factoring, and ETA compliance — on one unified platform.
                 </p>
               </div>
               <Link
@@ -399,21 +398,21 @@ export default async function SolutionsPage() {
           ═══════════════════════════════════════════ */}
       <section className="py-10 pb-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#f8f9fa] border border-gray-100 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/5 rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
-                <h3 className="text-[24px] md:text-[28px] font-bold text-gray-900 tracking-tight">
+                <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">
                   Are you a supplier?
                 </h3>
-                <p className="mt-2 text-[14px] text-gray-500 leading-relaxed">
+                <p className="mt-2 text-[14px] text-gray-400 leading-relaxed">
                   Access 450+ verified hotel buyers, get paid early via factoring,
                   and reduce logistics costs with shared-route delivery.
                 </p>
               </div>
               <Link
                 href="/register?role=supplier"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-900 text-[14px] font-semibold rounded-lg transition-colors shrink-0"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[14px] font-semibold rounded-lg transition-colors shrink-0"
               >
                 Register as Supplier
                 <ArrowRight className="w-4 h-4" />

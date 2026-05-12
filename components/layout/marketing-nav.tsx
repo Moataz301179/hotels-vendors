@@ -15,8 +15,9 @@ import {
   Landmark,
   ArrowRight,
 } from "lucide-react";
+import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-icons";
 import Image from "next/image";
-import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -75,16 +76,9 @@ export function MarketingNav() {
           : "bg-white border-b border-gray-100"
       }`}>
         <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo — horse icon + text */}
           <Link href="/" className="flex items-center gap-3 relative z-10 group">
-            <Image
-              src="/logo-icon.png"
-              alt="Hotels Vendors"
-              width={36}
-              height={50}
-              className="object-contain"
-              priority
-            />
+            <BrandLogo variant="light" size="sm" />
             <div className="flex flex-col">
               <span className="text-[15px] font-bold tracking-tight leading-none text-gray-900">
                 Hotels Vendors
@@ -150,10 +144,36 @@ export function MarketingNav() {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher />
             <button className="p-2 rounded-lg transition-colors text-gray-400 hover:text-gray-700 hover:bg-gray-50">
               <Search className="w-4 h-4" />
             </button>
+            <a
+              href="https://www.facebook.com/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#1877F2] hover:bg-gray-50"
+              aria-label="Facebook"
+            >
+              <FacebookIcon className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#E4405F] hover:bg-gray-50"
+              aria-label="Instagram"
+            >
+              <InstagramIcon className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/hotelsvendors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#0A66C2] hover:bg-gray-50"
+              aria-label="LinkedIn"
+            >
+              <LinkedInIcon className="w-4 h-4" />
+            </a>
             <Link
               href="/register"
               className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white hover:bg-[#6B0000] rounded-lg transition-colors shadow-sm"
@@ -218,10 +238,6 @@ export function MarketingNav() {
             </div>
           ))}
           <div className="pt-4 mt-2 border-t border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-gray-500">Language</span>
-              <LanguageSwitcher />
-            </div>
             <div className="flex gap-3">
               <Link
                 href="/login"
@@ -235,6 +251,17 @@ export function MarketingNav() {
               >
                 Get Started
               </Link>
+            </div>
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#1877F2] transition-colors">
+                <FacebookIcon className="w-4 h-4" />
+              </a>
+              <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#E4405F] transition-colors">
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+              <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0A66C2] transition-colors">
+                <LinkedInIcon className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>

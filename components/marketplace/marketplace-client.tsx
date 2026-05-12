@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import {
   Search,
   ShoppingCart,
+  ShoppingBag,
   Package,
   Star,
   MapPin,
@@ -20,12 +21,14 @@ import {
   Filter,
   Check,
 } from "lucide-react";
+import { useCart } from "@/components/cart/cart-context";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
 import { MarketplaceBanner } from "./marketplace-banner";
 import { SupplierShowcase } from "./supplier-showcase";
 import catalogData from "@/data/catalog-products.json";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 const ALL_PRODUCTS: any[] = (catalogData as { products: any[] }).products;
 
@@ -45,30 +48,35 @@ const COUNTS = ALL_PRODUCTS.reduce((acc, p) => {
    ═══════════════════════════════════════════ */
 
 function ProductImage({ product }: { product: any }) {
+  const [error, setError] = useState(false);
   const resolved = getProductImage(product);
 
-  if (resolved.type === "url") {
+  if (resolved.type === "url" && !error) {
     return (
       <img
         src={resolved.src}
         alt={product.name}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
+        onError={() => setError(true)}
       />
     );
   }
 
   // Gradient fallback with initials
+  const colors = resolved.type === "gradient" ? resolved.colors : ["#1a1a2e", "#2a2a4a", "#4a4a7a"];
+  const initials = resolved.type === "gradient" ? resolved.initials : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
+
   return (
     <div
       className="w-full h-full flex items-center justify-center"
       style={{
-        background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)`,
+        background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 50%, ${colors[2]} 100%)`,
       }}
     >
       <div className="text-center">
         <span className="text-[32px] font-bold text-white/20 tracking-tight">
-          {resolved.initials}
+          {initials}
         </span>
         <p className="text-[10px] text-white/15 uppercase tracking-wider mt-1">
           {product.category.toUpperCase()}
@@ -179,8 +187,20 @@ export default function MarketplacePage() {
     );
   };
 
-  const handleAdd = (id: string) => {
-    setShowLoginPrompt(id);
+  const { addItem, openCart, totalItems } = useCart();
+
+  const handleAdd = (product: any) => {
+    const resolved = getProductImage(product);
+    addItem({
+      productId: product.id,
+      name: product.name,
+      sku: product.sku,
+      unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
+      supplierId: product.id,
+      supplierName: product.supplierName,
+      image: resolved.type === "url" ? resolved.src : undefined,
+    });
+    setShowLoginPrompt(product.id);
     setTimeout(() => setShowLoginPrompt(null), 2000);
   };
 
@@ -226,6 +246,9 @@ export default function MarketplacePage() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
             {/* Member Toggle */}
             <button
               onClick={() => setMemberMode(!memberMode)}
@@ -239,6 +262,19 @@ export default function MarketplacePage() {
               <Crown className="w-3.5 h-3.5" style={{ color: memberMode ? RED : "currentColor" }} />
               <span>Member Prices</span>
               {memberMode && <Check className="w-3 h-3" style={{ color: RED }} />}
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={openCart}
+              className="relative flex items-center justify-center px-3 py-2 rounded-xl border border-white/[0.06] text-white/50 hover:text-white hover:border-white/[0.12] transition-all"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </button>
 
             <Link
@@ -442,15 +478,30 @@ export default function MarketplacePage() {
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-white/30">
-              <Package className="w-12 h-12 mb-4 text-white/10" />
-              <p className="text-lg font-medium text-white/50">No products found</p>
-              <button
-                onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
-                className="mt-4 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-colors"
-                style={{ background: RED }}
-              >
-                View All Products
-              </button>
+              <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-5">
+                <Package className="w-7 h-7 text-white/15" />
+              </div>
+              <h3 className="text-lg font-semibold text-white/60 mb-1">No products found</h3>
+              <p className="text-sm text-white/25 max-w-sm text-center mb-6">
+                Try adjusting your search, filters, or category selection. New suppliers join weekly.
+              </p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-colors"
+                  style={{ background: RED }}
+                >
+                  View All Products
+                </button>
+                {activeCategory && (
+                  <button
+                    onClick={() => setActiveCategory("")}
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:text-white border border-white/[0.06] hover:border-white/[0.12] transition-all"
+                  >
+                    Clear Category
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <div
@@ -555,7 +606,7 @@ export default function MarketplacePage() {
                         <ArrowRight className="w-3 h-3" />
                       </Link>
                       <button
-                        onClick={() => handleAdd(product.id)}
+                        onClick={() => handleAdd(product)}
                         className="flex items-center justify-center px-3 py-2.5 rounded-xl text-white transition-all btn-crimson h-auto"
                       >
                         <ShoppingCart className="w-4 h-4" />
@@ -569,7 +620,7 @@ export default function MarketplacePage() {
                         className="text-[11px] text-center"
                         style={{ color: RED }}
                       >
-                        Please <Link href="/login" className="underline font-medium">sign in</Link> to order
+                        Added to cart. <button onClick={openCart} className="underline font-medium">View cart</button> or <Link href="/login" className="underline font-medium">sign in</Link> to checkout.
                       </motion.p>
                     )}
 
@@ -588,6 +639,55 @@ export default function MarketplacePage() {
         </div>
         </div>
       </div>
+
+      {/* Dark Footer */}
+      <footer className="border-t border-white/[0.06] bg-[#0a0a0a]">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2.5 mb-4">
+                <BrandLogo variant="dark" size="sm" />
+                <span className="text-[14px] font-semibold text-white tracking-tight">Hotels Vendors</span>
+              </div>
+              <p className="text-[12px] text-gray-500 leading-relaxed max-w-xs">
+                Egypt&apos;s first integrated procurement operating system for hospitality. AI-powered, fully compliant, built for scale.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">Platform</h4>
+              <ul className="space-y-2.5">
+                {["Marketplace", "Solutions", "Pricing", "Become a Supplier"].map((item) => (
+                  <li key={item}><Link href={item === "Become a Supplier" ? "/become-supplier" : "/"} className="text-[13px] text-gray-400 hover:text-white transition-colors">{item}</Link></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">Support</h4>
+              <ul className="space-y-2.5">
+                {["Help Center", "Contact Us", "FAQ", "Terms of Service"].map((item) => (
+                  <li key={item}><span className="text-[13px] text-gray-400 cursor-default">{item}</span></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">Legal</h4>
+              <ul className="space-y-2.5">
+                {["Privacy Policy", "Cookie Policy", "Supplier Agreement"].map((item) => (
+                  <li key={item}><span className="text-[13px] text-gray-400 cursor-default">{item}</span></li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[11px] text-gray-600">&copy; 2026 Hotels Vendors. Cairo, Egypt. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              {["LinkedIn", "Twitter", "Facebook"].map((social) => (
+                <span key={social} className="text-[11px] text-gray-600 cursor-default">{social}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

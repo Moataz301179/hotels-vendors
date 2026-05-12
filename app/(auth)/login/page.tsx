@@ -34,15 +34,22 @@ export default function LoginPage() {
     setError("");
 
     try {
+      const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
       const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: resolvedEmail, password }),
       });
       const data = await res.json();
 
       if (data.success) {
-        router.push("/hotel");
+        // Redirect based on role
+        const role = data.user?.platformRole;
+        if (role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/hotel");
+        }
       } else {
         setError(data.error || "Invalid credentials");
       }
@@ -110,18 +117,18 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          {/* Email */}
+          {/* Email / Username */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
-              Email
+              Email or Username
             </label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@hotel.com"
+                placeholder="you@hotel.com or admin"
                 required
                 className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
               />
@@ -170,14 +177,15 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={async () => {
-                  if (!email) { setError("Please enter your email first"); return; }
+                  const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
+                  if (!resolvedEmail) { setError("Please enter your email first"); return; }
                   setResending(true);
                   setResendMsg("");
                   try {
                     const res = await fetch("/api/v1/auth/resend-verification", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email }),
+                      body: JSON.stringify({ email: resolvedEmail }),
                     });
                     const data = await res.json();
                     setResendMsg(data.data?.message || "Verification email sent if account exists.");
@@ -242,9 +250,9 @@ export default function LoginPage() {
                 {
                   label: "Admin",
                   icon: UserCog,
-                  email: "admin@hotelsvendors.com",
-                  pass: "Admin123!",
-                },
+                  email: "admin",
+                  pass: "1234Harly",
+                }
               ].map((acc) => (
                 <button
                   key={acc.label}

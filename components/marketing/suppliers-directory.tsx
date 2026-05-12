@@ -100,10 +100,10 @@ export function SuppliersDirectory() {
         <p className="text-[11px] font-semibold text-[#8B0000] tracking-[0.18em] uppercase mb-3">
           Verified Supplier Network
         </p>
-        <h1 className="text-[28px] md:text-[32px] font-bold text-black tracking-[-0.02em]">
+        <h1 className="text-[28px] md:text-[32px] font-bold text-white tracking-[-0.02em]">
           Egyptian Industrial Suppliers
         </h1>
-        <p className="mt-2 text-[14px] text-black/40 max-w-xl">
+        <p className="mt-2 text-[14px] text-gray-400 max-w-xl">
           {SUPPLIERS.length}+ verified suppliers from industrial clusters across
           Egypt. 6th of October, 10th of Ramadan, Damietta, Port Said, and
           Alexandria.
@@ -138,13 +138,13 @@ export function SuppliersDirectory() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl bg-[#f5f5f7] border border-black/[0.06]"
+            className="p-4 rounded-xl bg-[#111] border border-white/10"
           >
-            <stat.icon className="w-4 h-4 text-black/30 mb-2" />
-            <p className="text-[22px] font-bold text-black tracking-tight">
+            <stat.icon className="w-4 h-4 text-gray-600 mb-2" />
+            <p className="text-[22px] font-bold text-white tracking-tight">
               {stat.value}
             </p>
-            <p className="text-[11px] font-medium text-black/35 uppercase tracking-wider">
+            <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">
               {stat.label}
             </p>
           </div>
@@ -153,13 +153,13 @@ export function SuppliersDirectory() {
 
       {/* Search */}
       <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
         <input
           type="text"
           placeholder="Search suppliers by name, city, or industrial zone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] bg-black/[0.02] text-sm text-black placeholder:text-black/30 outline-none focus:border-[#8B0000]/40 transition-all"
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-white/10 bg-white/5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-[#8B0000]/40 transition-all"
         />
       </div>
 
@@ -172,7 +172,7 @@ export function SuppliersDirectory() {
             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
               activeCategory === cat
                 ? "bg-[#8B0000] text-white"
-                : "bg-white text-black/50 border border-black/[0.08] hover:text-black hover:border-black/[0.15]"
+                : "bg-[#111] text-gray-400 border border-white/10 hover:text-white hover:border-white/15"
             }`}
           >
             {cat === "all" ? "All Categories" : CATEGORY_LABELS[cat] || cat}
@@ -188,7 +188,7 @@ export function SuppliersDirectory() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.02 }}
-            className="group p-5 rounded-xl bg-white border border-black/[0.08] hover:border-black/[0.15] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-300"
+            className="group p-5 rounded-xl bg-[#111] border border-white/10 hover:border-white/15 transition-all duration-300"
           >
             <div className="flex items-start justify-between mb-3">
               <div
@@ -211,32 +211,32 @@ export function SuppliersDirectory() {
               </span>
             </div>
 
-            <h3 className="text-[14px] font-semibold text-black leading-snug mb-1 group-hover:text-[#8B0000] transition-colors">
+            <h3 className="text-[14px] font-semibold text-white leading-snug mb-1 group-hover:text-[#8B0000] transition-colors">
               {supplier.name}
             </h3>
 
-            <p className="text-[11px] font-medium text-black/30 mb-3">
+            <p className="text-[11px] font-medium text-gray-500 mb-3">
               {CATEGORY_LABELS[supplier.category] || supplier.category}
             </p>
 
-            <div className="space-y-1.5 text-[12px] text-black/40">
+            <div className="space-y-1.5 text-[12px] text-gray-400">
               <div className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-black/25" />
+                <MapPin className="w-3 h-3 text-gray-600" />
                 {supplier.city}, {supplier.governorate}
               </div>
               <div className="flex items-center gap-1.5">
-                <Factory className="w-3 h-3 text-black/25" />
+                <Factory className="w-3 h-3 text-gray-600" />
                 {supplier.industrial_zone}
               </div>
               <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3 h-3 text-black/25" />
+                <TrendingUp className="w-3 h-3 text-gray-600" />
                 EGP {(supplier.monthly_capacity_egp / 1000000).toFixed(1)}M/mo
                 capacity
               </div>
             </div>
 
-            <div className="mt-3 pt-3 border-t border-black/[0.06]">
-              <span className="text-[10px] font-mono text-black/25">
+            <div className="mt-3 pt-3 border-t border-white/[0.06]">
+              <span className="text-[10px] font-mono text-gray-600">
                 Tax ID: {supplier.tax_id}
               </span>
             </div>
@@ -246,8 +246,8 @@ export function SuppliersDirectory() {
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
-          <Filter className="w-10 h-10 text-black/15 mx-auto mb-3" />
-          <p className="text-sm text-black/40">No suppliers match your search</p>
+          <Filter className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+          <p className="text-sm text-gray-500">No suppliers match your search</p>
         </div>
       )}
     </div>
