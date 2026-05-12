@@ -19,7 +19,7 @@ export default function AuthLayout({
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02]" />
         </div>
 
-        <div className="relative z-10 w-full max-w-md mx-6 py-8">
+        <div className="relative z-10 w-full max-w-xl mx-6 py-8">
           {children}
         </div>
       </div>

@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
-import { ChatbotWidget } from "@/components/ai-assistant/chatbot";
+import { WorkspaceChatbot } from "@/components/ai-assistant/workspace-chatbot";
 import { prisma } from "@/lib/prisma";
 
 const SESSION_COOKIE = "hv_session";
@@ -75,7 +75,7 @@ export default async function DashboardLayout({
       <DashboardCartWrapper>
         {children}
       </DashboardCartWrapper>
-      <ChatbotWidget mode={validRole} />
+      <WorkspaceChatbot mode={validRole} userId={userId || ""} />
     </DashboardShell>
   );
 }

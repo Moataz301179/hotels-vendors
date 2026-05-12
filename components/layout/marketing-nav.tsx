@@ -14,34 +14,19 @@ import {
   Truck,
   Landmark,
   ArrowRight,
-  Shield,
-  FileCheck,
-  Zap,
 } from "lucide-react";
 import Image from "next/image";
-import { ThemeModeToggle } from "@/components/theme/mode-toggle";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
-  const [isLight, setIsLight] = useState(false);
 
+  // Scroll listener
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
-
-    const sync = () => {
-      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
-    };
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      observer.disconnect();
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const primaryNav = [
@@ -58,8 +43,6 @@ export function MarketingNav() {
     { label: "For Logistics", href: "/register?role=shipping", desc: "Route optimization & delivery network", icon: Truck },
     { label: "For Factoring", href: "/register?role=factoring", desc: "Embedded liquidity & credit solutions", icon: Landmark },
   ];
-
-  const logoSrc = isLight ? "/logo-icon.png" : "/logo-icon-white.png";
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}>
@@ -84,17 +67,17 @@ export function MarketingNav() {
         </div>
       </div>
 
-      {/* ═══ Main Nav — White institutional ═══ */}
+      {/* ═══ Main Nav — White institutional (always light) ═══ */}
       <div className={`transition-all duration-300 ${
-        isLight
-          ? (scrolled ? "bg-white/95 backdrop-blur-md border-b border-gray-200" : "bg-white border-b border-gray-100")
-          : (scrolled ? "bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/[0.06]" : "bg-[#0a0a0a] border-b border-white/[0.04]")
+        scrolled
+          ? "bg-white/95 backdrop-blur-md border-b border-gray-200"
+          : "bg-white border-b border-gray-100"
       }`}>
         <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 relative z-10 group">
             <Image
-              src={logoSrc}
+              src="/logo-icon.png"
               alt="Hotels Vendors"
               width={36}
               height={50}
@@ -102,7 +85,7 @@ export function MarketingNav() {
               priority
             />
             <div className="flex flex-col">
-              <span className={`text-[15px] font-bold tracking-tight leading-none ${isLight ? "text-gray-900" : "text-white"}`}>
+              <span className="text-[15px] font-bold tracking-tight leading-none text-gray-900">
                 Hotels Vendors
               </span>
               <span className="text-[9px] font-semibold text-[#8B0000] uppercase tracking-[0.12em] leading-none mt-0.5">
@@ -121,11 +104,7 @@ export function MarketingNav() {
                   onMouseEnter={() => setSolutionsOpen(true)}
                   onMouseLeave={() => setSolutionsOpen(false)}
                 >
-                  <button className={`flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
-                    isLight
-                      ? "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
-                      : "text-white/60 hover:text-white hover:bg-white/[0.04]"
-                  }`}>
+                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#8B0000] hover:bg-gray-50">
                     {item.label}
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? "rotate-180" : ""}`} />
                   </button>
@@ -158,10 +137,8 @@ export function MarketingNav() {
                   href={item.href}
                   className={`px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
                     item.isMarketplace
-                      ? (isLight ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5" : "text-[#C9A227] hover:text-[#D4AF37] hover:bg-[#C9A227]/5")
-                      : (isLight
-                          ? "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
-                          : "text-white/60 hover:text-white hover:bg-white/[0.04]")
+                      ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5"
+                      : "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
                   }`}
                 >
                   {item.label}
@@ -172,10 +149,7 @@ export function MarketingNav() {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <ThemeModeToggle />
-            <button className={`p-2 rounded-lg transition-colors ${
-              isLight ? "text-gray-400 hover:text-gray-700 hover:bg-gray-50" : "text-white/40 hover:text-white hover:bg-white/[0.04]"
-            }`}>
+            <button className="p-2 rounded-lg transition-colors text-gray-400 hover:text-gray-700 hover:bg-gray-50">
               <Search className="w-4 h-4" />
             </button>
             <Link
@@ -189,9 +163,7 @@ export function MarketingNav() {
 
           {/* Mobile Toggle */}
           <button
-            className={`lg:hidden p-2 rounded-lg transition-colors ${
-              isLight ? "text-gray-600 hover:text-gray-900 hover:bg-gray-50" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
-            }`}
+            className="lg:hidden p-2 rounded-lg transition-colors text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -201,18 +173,14 @@ export function MarketingNav() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className={`lg:hidden border-t px-6 py-5 shadow-xl animate-fade-in-up ${
-          isLight ? "bg-white border-gray-100" : "bg-[#0a0a0a] border-white/[0.06]"
-        }`}>
+        <div className="lg:hidden border-t px-6 py-5 shadow-xl animate-fade-in-up bg-white border-gray-100">
           {primaryNav.map((item) => (
             <div key={item.label}>
               {item.hasDropdown ? (
                 <div>
                   <button
                     onClick={() => setSolutionsOpen(!solutionsOpen)}
-                    className={`flex items-center justify-between w-full py-2.5 text-[14px] font-medium transition-colors ${
-                      isLight ? "text-gray-700" : "text-white/70"
-                    }`}
+                    className="flex items-center justify-between w-full py-2.5 text-[14px] font-medium transition-colors text-gray-700"
                   >
                     {item.label}
                     <ChevronDown className={`w-4 h-4 transition-transform ${solutionsOpen ? "rotate-180" : ""}`} />
@@ -223,9 +191,7 @@ export function MarketingNav() {
                         <Link
                           key={link.label}
                           href={link.href}
-                          className={`block py-2 text-[13px] transition-colors ${
-                            isLight ? "text-gray-500 hover:text-[#8B0000]" : "text-white/40 hover:text-white/70"
-                          }`}
+                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#8B0000]"
                           onClick={() => setMobileOpen(false)}
                         >
                           {link.label}
@@ -239,8 +205,8 @@ export function MarketingNav() {
                   href={item.href}
                   className={`block py-2.5 text-[14px] font-medium transition-colors ${
                     item.isMarketplace
-                      ? (isLight ? "text-[#C9A227] hover:text-[#B8921F]" : "text-[#C9A227] hover:text-[#D4AF37]")
-                      : (isLight ? "text-gray-700 hover:text-[#8B0000]" : "text-white/70 hover:text-white")
+                      ? "text-[#C9A227] hover:text-[#B8921F]"
+                      : "text-gray-700 hover:text-[#8B0000]"
                   }`}
                   onClick={() => setMobileOpen(false)}
                 >
@@ -249,14 +215,10 @@ export function MarketingNav() {
               )}
             </div>
           ))}
-          <div className={`pt-4 mt-2 border-t flex gap-3 ${isLight ? "border-gray-100" : "border-white/[0.06]"}`}>
+          <div className="pt-4 mt-2 border-t border-gray-100 flex gap-3">
             <Link
               href="/login"
-              className={`flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg transition-colors ${
-                isLight
-                  ? "border-gray-200 text-gray-600 hover:text-gray-900"
-                  : "border-white/[0.10] text-white/60 hover:text-white"
-              }`}
+              className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors"
             >
               Sign In
             </Link>

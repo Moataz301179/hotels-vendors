@@ -255,10 +255,11 @@ export const BusinessRegisterSchema = z.object({
   city: z.string().min(1),
   governorate: z.string().min(1),
   address: z.string().optional(),
-  taxId: z.string().min(3),
+  taxId: z.string().optional(),
   commercialReg: z.string().optional(),
   crDocumentUrl: z.string().optional(),
   taxDocumentUrl: z.string().optional(),
+  accountType: z.enum(["individual", "business"]).default("business"),
 });
 
 export const LoginSchema = z.object({

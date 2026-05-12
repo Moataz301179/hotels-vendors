@@ -98,7 +98,7 @@ export const metadata: Metadata = {
   other: {
     "msapplication-TileColor": "#8B0000",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#050505",
+    "theme-color": "#ffffff",
   },
 };
 
@@ -110,7 +110,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "dark",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -132,17 +132,17 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#121212" id="theme-color-meta" />
+        <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
+                  var mode = localStorage.getItem('hv-theme-mode') || 'light';
                   if (mode === 'light') {
                     document.documentElement.setAttribute('data-theme', 'light');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#f8f9fa');
+                    if (meta) meta.setAttribute('content', '#ffffff');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

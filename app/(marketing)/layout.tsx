@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ChatbotWidget } from "@/components/ai-assistant/chatbot";
+import { PublicChatbot } from "@/components/ai-assistant/public-chatbot";
 
 export const metadata: Metadata = {
   title: "Hotels Vendors — Digital Procurement Hub for Egyptian Hospitality",
@@ -13,7 +13,7 @@ export default function MarketingLayout({
   return (
     <>
       {children}
-      <ChatbotWidget mode="marketing" />
+      <PublicChatbot />
     </>
   );
 }

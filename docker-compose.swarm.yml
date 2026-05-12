@@ -196,10 +196,11 @@ services:
     container_name: hv-ollama
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"   # ← Bind to localhost ONLY (never expose to internet)
     volumes:
       - ollama_data:/root/.ollama
     environment:
+      - OLLAMA_HOST=0.0.0.0        # ← CRITICAL: accept connections from Docker network
       - OLLAMA_KEEP_ALIVE=24h
       - OLLAMA_NUM_PARALLEL=2
     networks:

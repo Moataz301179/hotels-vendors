@@ -1,15 +1,34 @@
-import { NextRequest } from "next/server";
+/**
+ * Workspace AI Endpoint — Streaming
+ * Authenticated users only. Quota-enforced. Persistent conversations.
+ * Uses Ollama via Vercel AI SDK with fallback to xAI Groq.
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import { streamText } from "ai";
+import { createOllama } from "ollama-ai-provider";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, validateBody, success, error } from "@/lib/api-utils";
-import { verifyTenantOwnership } from "@/lib/tenant/scope";
-import { executeLLM } from "@/lib/swarm/model-router";
+import { authenticate, validateBody, success } from "@/lib/api-utils";
+import { enforceQuota, incrementUsage } from "@/lib/ai/quota";
 import { buildSystemPrompt, type AssistantRole } from "@/components/ai-assistant/prompts";
+import { verifyTenantOwnership } from "@/lib/tenant/scope";
 import { z } from "zod";
+import { executeLLM } from "@/lib/swarm/model-router";
 
 const AskSchema = z.object({
-  question: z.string().min(1).max(2000),
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string(),
+        id: z.string().optional(),
+      })
+    )
+    .optional(),
+  question: z.string().min(1).max(2000).optional(),
   hotelId: z.string().optional(),
-  role: z.enum(["hotel", "supplier", "factoring", "shipping", "admin", "marketing"] as const).optional(),
+  role: z.enum(["hotel", "supplier", "factoring", "shipping", "admin"] as const).optional(),
+  conversationId: z.string().optional(),
 });
 
 async function getHotelContext(hotelId: string, tenantId: string) {
@@ -18,7 +37,10 @@ async function getHotelContext(hotelId: string, tenantId: string) {
       where: { hotelId, tenantId },
       orderBy: { createdAt: "desc" },
       take: 10,
-      include: { supplier: { select: { name: true } }, items: { include: { product: { select: { name: true } } } } },
+      include: {
+        supplier: { select: { name: true } },
+        items: { include: { product: { select: { name: true } } } },
+      },
     }),
     prisma.order.aggregate({
       where: { hotelId, tenantId, status: { in: ["DELIVERED", "CONFIRMED"] } },
@@ -56,58 +78,150 @@ async function getHotelContext(hotelId: string, tenantId: string) {
   };
 }
 
-export const POST = apiRoute(async (request: NextRequest) => {
-  const auth = await authenticate(request);
-  const body = await request.json();
-  const data = validateBody(AskSchema, body);
+async function getConversationHistory(conversationId: string) {
+  const messages = await prisma.chatMessage.findMany({
+    where: { conversationId },
+    orderBy: { createdAt: "asc" },
+    select: { role: true, content: true },
+  });
+  return messages.map((m) => ({
+    role: m.role as "user" | "assistant",
+    content: m.content,
+  }));
+}
 
-  // Determine role: server-side auth takes precedence over client-sent role
-  const role: AssistantRole = (() => {
-    const authRole = auth.platformRole?.toLowerCase() as AssistantRole | undefined;
-    if (authRole && ["hotel", "supplier", "factoring", "shipping", "admin", "marketing"].includes(authRole)) {
-      return authRole;
-    }
-    const clientRole = data.role?.toLowerCase() as AssistantRole | undefined;
-    if (clientRole && ["hotel", "supplier", "factoring", "shipping", "admin", "marketing"].includes(clientRole)) {
-      return clientRole;
-    }
-    return "hotel";
-  })();
+async function createConversation(userId: string, tenantId: string, role: string, title?: string) {
+  const conv = await prisma.conversation.create({
+    data: { userId, tenantId, role, title: title || "New Conversation" },
+  });
+  return conv.id;
+}
 
-  let context = "";
-
-  // Build live context for hotel users
-  if (auth.platformRole === "HOTEL" && data.hotelId) {
-    const owns = await verifyTenantOwnership(auth, "hotel", data.hotelId);
-    if (!owns) return error("Hotel not found", 404);
-    const ctx = await getHotelContext(data.hotelId, auth.tenantId);
-    context = `Recent orders: ${JSON.stringify(ctx.recentOrders)}. Total spend: ${ctx.totalSpend} EGP. Top suppliers: ${JSON.stringify(ctx.topSuppliers)}.`;
-  }
-
-  const systemPrompt = buildSystemPrompt(role, context || undefined);
-
+export async function POST(request: NextRequest) {
   try {
-    const result = await executeLLM(systemPrompt, data.question, { maxTokens: 800, temperature: 0.4 });
-    return success({ answer: result.content, model: result.model, latencyMs: result.latencyMs });
-  } catch (err) {
-    // Fallback to rule-based if all LLMs fail
-    const q = data.question.toLowerCase();
-    let answer = "I'm your HotelsVendors Intelligence Engine. I can help with procurement, suppliers, orders, and market insights. What would you like to know?";
+    const auth = await authenticate(request);
+    const body = await request.json();
+    const data = validateBody(AskSchema, body);
 
-    if (q.includes("spend") || q.includes("budget") || q.includes("cost")) {
-      answer = "Your spend analytics are available in the dashboard under Spend Intelligence. I can help interpret category breakdowns, month-over-month trends, and identify consolidation opportunities. Would you like me to guide you to a specific report?";
-    } else if (q.includes("supplier") || q.includes("vendor")) {
-      answer = "Our verified supplier network spans 50+ hospitality categories. I can help you discover suppliers by location, compare ratings and tiers, or evaluate alternative sources. What category are you sourcing for?";
-    } else if (q.includes("order") || q.includes("purchase")) {
-      answer = "Orders flow through: DRAFT → PENDING → APPROVED → CONFIRMED → IN_TRANSIT → DELIVERED. The Authority Matrix governs approvals based on value thresholds and user roles. Would you like to check a specific order status?";
-    } else if (q.includes("eta") || q.includes("invoice") || q.includes("tax")) {
-      answer = "All invoices issued through HotelsVendors are automatically submitted to the Egyptian Tax Authority (ETA) e-invoicing system in real time. Each invoice receives a UUID and digital signature. You can track submission status in the Invoices tab.";
-    } else if (q.includes("factoring") || q.includes("payment") || q.includes("cash flow")) {
-      answer = "Our embedded non-recourse factoring allows suppliers to receive early payment while hotels maintain their standard net-30/60 terms. The platform fee is always deducted first. Would you like to understand the factoring inquiry process?";
-    } else if (q.includes("delivery") || q.includes("logistics") || q.includes("route")) {
-      answer = "We offer shared-route logistics with a 48-hour delivery guarantee across Egypt. Coastal clusters (Red Sea, North Coast) are optimized for seasonal demand. I can help you track shipments or understand delivery windows.";
+    // ── 1. Quota check ──
+    const quota = await enforceQuota(auth.userId);
+    if (!quota.allowed) {
+      return NextResponse.json({ success: false, error: quota.message }, { status: 429 });
     }
 
-    return success({ answer, source: "rule-based-fallback" });
+    // ── 2. Extract question ──
+    let question = "";
+    if (data.messages && data.messages.length > 0) {
+      const lastUserMsg = [...data.messages].reverse().find((m) => m.role === "user");
+      question = lastUserMsg?.content || "";
+    } else if (data.question) {
+      question = data.question;
+    }
+    if (!question) {
+      return NextResponse.json({ success: false, error: "No question provided" }, { status: 400 });
+    }
+
+    // ── 3. Determine role ──
+    const role: AssistantRole = (() => {
+      const authRole = auth.platformRole?.toLowerCase() as AssistantRole | undefined;
+      if (authRole && ["hotel", "supplier", "factoring", "shipping", "admin"].includes(authRole)) {
+        return authRole;
+      }
+      const clientRole = data.role?.toLowerCase() as AssistantRole | undefined;
+      if (clientRole && ["hotel", "supplier", "factoring", "shipping", "admin"].includes(clientRole)) {
+        return clientRole;
+      }
+      return "hotel";
+    })();
+
+    // ── 4. Build context ──
+    let context = "";
+    if (auth.platformRole === "HOTEL" && data.hotelId) {
+      const owns = await verifyTenantOwnership(auth, "hotel", data.hotelId);
+      if (!owns) {
+        return NextResponse.json({ success: false, error: "Hotel not found" }, { status: 404 });
+      }
+      const ctx = await getHotelContext(data.hotelId, auth.tenantId);
+      context = `Recent orders: ${JSON.stringify(ctx.recentOrders)}. Total spend: ${ctx.totalSpend} EGP. Top suppliers: ${JSON.stringify(ctx.topSuppliers)}.`;
+    }
+
+    const systemPrompt = buildSystemPrompt(role, context || undefined);
+
+    // ── 5. Get or create conversation ──
+    let conversationId = data.conversationId;
+    if (!conversationId) {
+      const title = question.slice(0, 30) + (question.length > 30 ? "..." : "");
+      conversationId = await createConversation(auth.userId, auth.tenantId, role, title);
+    }
+
+    // ── 6. Save user message ──
+    await prisma.chatMessage.create({
+      data: { conversationId, role: "user", content: question },
+    });
+
+    // ── 7. Get history ──
+    const history = await getConversationHistory(conversationId);
+
+    // ── 8. Try Ollama streaming ──
+    const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+    const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
+
+    try {
+      const ollama = createOllama({ baseURL: `${ollamaUrl}/api` });
+
+      const result = await streamText({
+        model: ollama(ollamaModel),
+        system: systemPrompt,
+        messages: [...history, { role: "user" as const, content: question }],
+        temperature: 0.4,
+        maxTokens: 800,
+        onFinish: async ({ text, usage }) => {
+          await prisma.chatMessage.create({
+            data: {
+              conversationId,
+              role: "assistant",
+              content: text,
+              model: ollamaModel,
+              tokensUsed: usage?.totalTokens,
+            },
+          });
+          await incrementUsage(auth.userId, usage?.totalTokens || 0);
+        },
+      });
+
+      return result.toDataStreamResponse();
+    } catch (err) {
+      console.error("[Workspace AI] Ollama streaming failed:", err);
+
+      // ── Fallback: non-streaming ──
+      const fallbackResult = await executeLLM(systemPrompt, question, {
+        maxTokens: 800,
+        temperature: 0.4,
+        preferredModel: "xai",
+      });
+
+      await prisma.chatMessage.create({
+        data: {
+          conversationId,
+          role: "assistant",
+          content: fallbackResult.content,
+          model: fallbackResult.model,
+          tokensUsed: fallbackResult.tokensUsed,
+        },
+      });
+      await incrementUsage(auth.userId, fallbackResult.tokensUsed || 0);
+
+      return success({
+        answer: fallbackResult.content,
+        model: fallbackResult.model,
+        provider: fallbackResult.provider,
+        fallback: true,
+        conversationId,
+      });
+    }
+  } catch (error) {
+    console.error("[Workspace AI] Error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
-});
+}

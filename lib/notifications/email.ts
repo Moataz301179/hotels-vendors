@@ -141,3 +141,80 @@ export function smartFixTemplate(params: {
   `;
   return { subject, html };
 }
+
+// ── Template: Welcome Email ──
+export function welcomeTemplate(params: {
+  name: string;
+  loginUrl: string;
+}): { subject: string; html: string } {
+  const subject = "Welcome to Hotels Vendors — Your Procurement Advantage Starts Now";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
+      <h2 style="color: #8B0000;">Welcome aboard, ${params.name}</h2>
+      <p>You have successfully joined Hotels Vendors — Egypt's smartest procurement platform for hospitality.</p>
+      <div style="background: #fef2f2; border-left: 4px solid #8B0000; padding: 16px; margin: 16px 0;">
+        <strong>What is next?</strong><br/>
+        1. Verify your email address<br/>
+        2. Complete your profile<br/>
+        3. Start browsing 1,200+ verified suppliers
+      </div>
+      <a href="${params.loginUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Log In to Your Account</a>
+      <p style="margin-top: 24px; font-size: 12px; color: #666;">Need help? Reply to this email or contact us at hello@hotelsvendors.com</p>
+    </div>
+  `;
+  return { subject, html };
+}
+
+// ── Template: Email Verification ──
+export function emailVerificationTemplate(params: {
+  name: string;
+  verificationUrl: string;
+}): { subject: string; html: string } {
+  const subject = "Verify your email — Hotels Vendors";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
+      <h2 style="color: #8B0000;">Verify your email address</h2>
+      <p>Hello ${params.name},</p>
+      <p>Please confirm your email address to activate your Hotels Vendors account.</p>
+      <a href="${params.verificationUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Verify Email Address</a>
+      <p style="margin-top: 16px; font-size: 13px; color: #666;">This link expires in 24 hours. If you did not create an account, you can safely ignore this email.</p>
+      <p style="margin-top: 8px; font-size: 12px; color: #666;">If the button does not work, copy and paste this link:<br/>${params.verificationUrl}</p>
+    </div>
+  `;
+  return { subject, html };
+}
+
+// ── Template: Password Reset ──
+export function passwordResetTemplate(params: {
+  name: string;
+  resetUrl: string;
+}): { subject: string; html: string } {
+  const subject = "Reset your Hotels Vendors password";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
+      <h2 style="color: #8B0000;">Password reset requested</h2>
+      <p>Hello ${params.name},</p>
+      <p>We received a request to reset your password. Click the button below to set a new password. This link expires in 24 hours.</p>
+      <a href="${params.resetUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Reset Password</a>
+      <p style="margin-top: 16px; font-size: 13px; color: #666;">If you did not request this reset, your account is secure — no changes have been made.</p>
+      <p style="margin-top: 8px; font-size: 12px; color: #666;">If the button does not work, copy and paste this link:<br/>${params.resetUrl}</p>
+    </div>
+  `;
+  return { subject, html };
+}
+
+// ── Template: Password Reset Confirmation ──
+export function passwordResetConfirmationTemplate(params: {
+  name: string;
+}): { subject: string; html: string } {
+  const subject = "Your password has been reset";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
+      <h2 style="color: #8B0000;">Password updated successfully</h2>
+      <p>Hello ${params.name},</p>
+      <p>Your Hotels Vendors password has been changed. You can now log in with your new password.</p>
+      <p style="margin-top: 16px; font-size: 13px; color: #666;">If you did not make this change, please contact us immediately at hello@hotelsvendors.com.</p>
+    </div>
+  `;
+  return { subject, html };
+}

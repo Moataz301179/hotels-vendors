@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Hotel,
   UserCog,
+  MailCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
@@ -24,6 +25,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resendMsg, setResendMsg] = useState("");
+  const [resending, setResending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +99,17 @@ export default function LoginPage() {
             </motion.div>
           )}
 
+          {resendMsg && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="flex items-center gap-2.5 px-4 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-400"
+            >
+              <MailCheck className="w-4 h-4 flex-shrink-0" />
+              <span>{resendMsg}</span>
+            </motion.div>
+          )}
+
           {/* Email */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
@@ -152,12 +166,39 @@ export default function LoginPage() {
               />
               <span>Remember me</span>
             </label>
-            <Link
-              href="/forgot-password"
-              className="text-[#A52A2A] hover:text-[#3a6a9c] transition-colors font-medium"
-            >
-              Forgot password?
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!email) { setError("Please enter your email first"); return; }
+                  setResending(true);
+                  setResendMsg("");
+                  try {
+                    const res = await fetch("/api/v1/auth/resend-verification", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email }),
+                    });
+                    const data = await res.json();
+                    setResendMsg(data.data?.message || "Verification email sent if account exists.");
+                  } catch {
+                    setResendMsg("Failed to send. Please try again.");
+                  } finally {
+                    setResending(false);
+                  }
+                }}
+                disabled={resending}
+                className="text-white/30 hover:text-white/60 transition-colors font-medium disabled:opacity-50"
+              >
+                {resending ? "Sending..." : "Resend verification"}
+              </button>
+              <Link
+                href="/forgot-password"
+                className="text-[#ff6b6b] hover:text-[#ff9999] transition-colors font-medium"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
           {/* Submit */}
@@ -252,7 +293,7 @@ export default function LoginPage() {
         className="flex items-center justify-center gap-2 mt-4 text-[10px] text-white/20"
       >
         <Shield className="w-3 h-3" />
-        <span>Secured with JWT + RBAC + ETA Compliance</span>
+        <span>Secured with JWT + RBAC + Email Verification</span>
       </motion.div>
     </div>
   );

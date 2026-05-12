@@ -2,26 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { Shield, FileCheck, Zap } from "lucide-react";
 
 export function MarketingFooter() {
-  const [isLight, setIsLight] = useState(false);
-
-  useEffect(() => {
-    const sync = () => {
-      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
-    };
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
-
-  const logoSrc = isLight ? "/logo-icon.png" : "/logo-icon-white.png";
-
   return (
-    <footer className={`${isLight ? "bg-gray-50 border-t border-gray-100" : "bg-white border-t border-gray-100"}`}>
+    <footer className="bg-white border-t border-gray-100">
       {/* Trust Bar */}
       <div className="border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-6 py-4 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
@@ -44,7 +29,7 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <Image
-                src={logoSrc}
+                src="/logo-icon.png"
                 alt="Hotels Vendors"
                 width={32}
                 height={44}
@@ -119,7 +104,7 @@ export function MarketingFooter() {
               Legal
             </h4>
             <ul className="space-y-2.5">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy", "Compliance"].map((item) => (
+              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
                 <li key={item}>
                   <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
                     {item}

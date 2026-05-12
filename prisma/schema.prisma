@@ -21,7 +21,7 @@ model Tenant {
   slug         String       @unique
   type         TenantType   @default(HOTEL_GROUP)
   status       TenantStatus @default(ACTIVE)
-  taxId        String       @unique
+  taxId        String?      @unique
   logoUrl      String?
   primaryColor String?
 
@@ -254,6 +254,23 @@ model User {
   // Session tracking
   lastActive DateTime?
   orders     Order[]
+
+  // Account type (individual vs business)
+  accountType     AccountType @default(BUSINESS)
+  emailVerifiedAt DateTime?
+
+  // AI Chat
+  conversations   Conversation[]
+  aiUsage         AiUsage?
+
+  // Saved Addresses
+  addresses       UserAddress[]
+
+  // Reviews
+  reviews         ProductReview[]
+
+  // Sample Requests
+  sampleRequests  SampleRequest[]
 }
 
 enum UserRole {
@@ -279,6 +296,11 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+
+enum AccountType {
+  INDIVIDUAL
+  BUSINESS
 }
 
 // ─────────────────────────────────────────
@@ -417,6 +439,9 @@ model Product {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   cartItems CartItem[]
+
+  // Reviews
+  reviews   ProductReview[]
 }
 
 enum ProductCategory {
@@ -489,6 +514,17 @@ model Order {
   paymentGuaranteed      Boolean   @default(false)
   paymentGuaranteeMethod String? // FACTORING, DEPOSIT, SPLIT, DIRECT, WAIVED
   paymentGuaranteeSetAt  DateTime?
+
+  // Multi-supplier checkout
+  checkoutGroupId   String?
+  shippingMethod    String?     // "express", "standard", "self"
+  shippingCost      Float?      @default(0)
+  estimatedDelivery DateTime?
+
+  // B2B fields
+  poNumber          String?     // Purchase Order number
+  costCenter        String?     // Cost center / department
+  deliveryAddress   String?     // JSON: { lat, lng, formatted, building, floor, apt }
 
   // Audit
   createdAt          DateTime            @default(now())
@@ -1060,6 +1096,7 @@ model CartItem {
   quantity  Int
   unitPrice Float
   total     Float
+  notes     String?  // Per-item notes (e.g., "No onions", "Halal certified")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -1863,6 +1900,151 @@ enum ModelStatus {
   DEGRADED
   UNAVAILABLE
   DISABLED
+}
+
+// ─────────────────────────────────────────
+// AUTH TOKENS — Email verification & Password reset
+// ─────────────────────────────────────────
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// USER ADDRESSES — Saved delivery addresses
+// ─────────────────────────────────────────
+
+model UserAddress {
+  id          String @id @default(cuid())
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String // "Home", "Work", "Hotel Main"
+  address     String
+  city        String
+  governorate String
+  lat         Float?
+  lng         Float?
+  isDefault   Boolean @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─────────────────────────────────────────
+// AI CHAT — Conversation persistence
+// ─────────────────────────────────────────
+
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId  String
+  role      String   // hotel, supplier, factoring, shipping, admin
+  title     String?  // Auto-generated from first user message
+  messages  ChatMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+  @@index([tenantId])
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String   // user, assistant
+  content        String
+  model          String?  // which model generated this
+  tokensUsed     Int?     // estimated tokens for this message
+  latencyMs      Int?     // response latency
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+// ─────────────────────────────────────────
+// AI USAGE QUOTA — Per-user daily limits
+// ─────────────────────────────────────────
+
+model AiUsage {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messagesToday Int      @default(0)
+  tokensToday   Int      @default(0)
+  messagesTotal Int      @default(0)
+  tokensTotal   Int      @default(0)
+  quotaResetAt  DateTime @default(now())
+  plan          AiPlan   @default(FREE)
+  updatedAt     DateTime @updatedAt
+}
+
+enum AiPlan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+// ─────────────────────────────────────────
+// PRODUCT REVIEWS — Ratings & feedback
+// ─────────────────────────────────────────
+
+model ProductReview {
+  id        String @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int    // 1-5
+  title     String?
+  comment   String?
+  images    String? // JSON array of image URLs
+  verified  Boolean @default(false) // Verified purchase
+  helpful   Int    @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId, createdAt])
+  @@unique([userId, productId])
+}
+
+// ─────────────────────────────────────────
+// SAMPLE REQUESTS — Product sampling
+// ─────────────────────────────────────────
+
+model SampleRequest {
+  id              String @id @default(cuid())
+  productId       String
+  userId          String
+  user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelId         String?
+  status          SampleStatus @default(PENDING)
+  quantity        Int @default(1)
+  notes           String?
+  deliveryAddress String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum SampleStatus {
+  PENDING
+  APPROVED
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
 
 // End of Schema
