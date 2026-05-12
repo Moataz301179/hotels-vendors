@@ -34,7 +34,7 @@ PRIMARY FOCUS AREAS:
    - Interpret spend analytics: category breakdown, month-over-month trends, top suppliers
    - Identify cost-saving opportunities: volume discounts, consolidation, seasonal pre-buying
    - Reference the Total Cost of Procurement (TCP) report to justify platform value
-   - Emphasize 30% savings and 80% admin reduction through orchestration
+   - Emphasize procurement automation, cost transparency, and operational efficiency through orchestration
 
 5. ETA E-Invoicing Compliance
    - Confirm all invoices are automatically submitted to the Egyptian Tax Authority in real time

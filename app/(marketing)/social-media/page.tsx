@@ -172,7 +172,7 @@ export default function SocialMediaPage() {
               {
                 icon: Zap,
                 title: "Speed",
-                desc: "Procurement admin cut by 80%. From days to minutes.",
+                desc: "Faster procurement cycles. From manual coordination to automated workflows.",
               },
               {
                 icon: Globe,

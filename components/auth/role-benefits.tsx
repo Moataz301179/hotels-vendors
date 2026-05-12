@@ -17,7 +17,7 @@ const ROLE_CONTENT: Record<StakeholderRole, RoleContent> = {
   HOTEL: {
     headline: "Stop Overpaying. Start Controlling.",
     subheadline:
-      "The average Egyptian hotel group loses 20–30% on procurement due to fragmented processes. We fix that.",
+      "The average Egyptian hotel group bleeds procurement value through fragmented processes, invisible cashflow, and compliance gaps. We fix that.",
     pains: [
       "Purchasing scattered across WhatsApp, Excel, and phone calls — zero audit trail",
       "Paying inflated prices because every property negotiates alone",
@@ -27,9 +27,9 @@ const ROLE_CONTENT: Record<StakeholderRole, RoleContent> = {
     ],
     benefits: [
       {
-        title: "30% Average Cost Savings",
+        title: "Measurable Procurement Efficiency",
         description:
-          "Consolidated purchasing power + AI price benchmarking across 1,200+ suppliers means you pay less for the same quality.",
+          "Consolidated purchasing power + AI price benchmarking across verified suppliers means you pay market rates with full transparency.",
       },
       {
         title: "48-Hour Delivery Guarantee",
@@ -57,7 +57,7 @@ const ROLE_CONTENT: Record<StakeholderRole, RoleContent> = {
           "Our AI analyzes historical consumption patterns and predicts what you will need before you run out. Never over-order. Never stock out.",
       },
     ],
-    stat: { value: "30%", label: "Average savings for hotel groups on the platform" },
+    stat: { value: "Verified", label: "Supplier network with transparent pricing" },
   },
 
   SUPPLIER: {

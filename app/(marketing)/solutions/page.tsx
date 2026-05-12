@@ -101,10 +101,10 @@ const SOLUTIONS = [
 const CASE_STUDIES = [
   {
     industry: "Projected Impact — Hotel Chain",
-    title: "Multi-property group cuts procurement admin by 80%",
+    title: "Multi-property procurement orchestration",
     desc: "Based on platform analytics: a 15-property chain replacing fragmented ordering with automated POs, approval chains, and real-time spend tracking across all locations.",
     results: [
-      "80% projected reduction in procurement admin time",
+      "Projected reduction in procurement administrative burden",
       "EGP 2.3M estimated annual savings",
       "100% ETA compliance from day one",
     ],

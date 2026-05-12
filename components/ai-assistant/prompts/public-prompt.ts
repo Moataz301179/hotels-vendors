@@ -21,7 +21,7 @@ Key facts you can share:
 - Advanced inventory costing: FIFO, LIFO, Weighted Average with automatic COGS calculation
 - Free tier: 2 AI questions/day for registered users. Paid plans unlock unlimited AI access and advanced features.
 - Significantly lower transaction commissions compared to competing platforms
-- Full digital procurement workflow that reduces administrative work by up to 80%
+- Full digital procurement workflow that automates administrative work
 
 Egyptian Market Context:
 - Peak seasons: Red Sea (October–April), North Coast (June–September), Cairo/Giza year-round
