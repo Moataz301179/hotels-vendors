@@ -50,10 +50,15 @@ export function MarketingFooter() {
               Platform
             </h4>
             <ul className="space-y-2.5">
-              {["Solutions", "Pricing", "Marketplace", "Get Started"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
-                    {item}
+              {[
+                { label: "Solutions", href: "/solutions" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "Marketplace", href: "/marketplace" },
+                { label: "Get Started", href: "/register" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -66,10 +71,15 @@ export function MarketingFooter() {
               Stakeholders
             </h4>
             <ul className="space-y-2.5">
-              {["Hotels", "Suppliers", "Logistics", "Factoring"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
-                    {item}
+              {[
+                { label: "Hotels", href: "/hotels" },
+                { label: "Suppliers", href: "/suppliers" },
+                { label: "Logistics", href: "/solutions" },
+                { label: "Factoring", href: "/solutions" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -82,13 +92,18 @@ export function MarketingFooter() {
               Company
             </h4>
             <ul className="space-y-2.5">
-              {["About Us", "Careers", "Press Kit", "Contact"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
-                    {item}
+              {[
+                { label: "About Us", href: "/about" },
+                { label: "Social Media", href: "/social-media" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
+              <li><span className="text-[13px] text-gray-400">Careers</span></li>
+              <li><span className="text-[13px] text-gray-400">Contact</span></li>
             </ul>
           </div>
 
@@ -98,13 +113,9 @@ export function MarketingFooter() {
               Legal
             </h4>
             <ul className="space-y-2.5">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                <li key={item}>
-                  <Link href="/" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li><span className="text-[13px] text-gray-400">Privacy Policy</span></li>
+              <li><span className="text-[13px] text-gray-400">Terms of Service</span></li>
+              <li><span className="text-[13px] text-gray-400">Cookie Policy</span></li>
             </ul>
           </div>
         </div>

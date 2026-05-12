@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   verification: {
-    google: "google-site-verification-placeholder",
+    google: "google-site-verification-code",
   },
   other: {
     "msapplication-TileColor": "#8B0000",

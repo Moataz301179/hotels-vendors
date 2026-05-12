@@ -51,7 +51,7 @@ const SOLUTIONS = [
   {
     icon: Store,
     title: "Supplier Growth",
-    tagline: "Reach 450+ hotel buyers. Get paid faster.",
+    tagline: "Reach 52+ hotel properties. Get paid faster.",
     description:
       "Join Egypt's largest hospitality supplier network. List your catalog, receive guaranteed orders, and unlock early payments through embedded factoring.",
     benefits: [
@@ -61,7 +61,7 @@ const SOLUTIONS = [
       "Shared-route logistics to reduce delivery costs",
       "Demand forecasting to optimize inventory",
     ],
-    stat: "1,200+",
+    stat: "68",
     statLabel: "Verified Suppliers",
   },
   {
@@ -100,23 +100,23 @@ const SOLUTIONS = [
 
 const CASE_STUDIES = [
   {
-    industry: "Hotel Chain",
+    industry: "Projected Impact — Hotel Chain",
     title: "Multi-property group cuts procurement admin by 80%",
-    desc: "A 15-property chain replaced WhatsApp ordering with automated POs, approval chains, and real-time spend tracking across all locations.",
+    desc: "Based on platform analytics: a 15-property chain replacing fragmented ordering with automated POs, approval chains, and real-time spend tracking across all locations.",
     results: [
-      "80% reduction in procurement admin time",
-      "EGP 2.3M saved in first 12 months",
+      "80% projected reduction in procurement admin time",
+      "EGP 2.3M estimated annual savings",
       "100% ETA compliance from day one",
     ],
   },
   {
-    industry: "SME Supplier",
+    industry: "Projected Impact — SME Supplier",
     title: "Factory supplier scales to 50+ hotel clients",
-    desc: "A linens manufacturer in 6th of October City joined the platform and leveraged shared logistics to cut delivery costs by 40%.",
+    desc: "Analyzed scenario: a linens manufacturer in 6th of October City leveraging the platform's shared logistics network to cut delivery costs and access factoring liquidity.",
     results: [
-      "50+ active hotel buyers within 6 months",
-      "40% reduction in per-delivery logistics cost",
-      "Cash flow improved via invoice factoring",
+      "50+ potential hotel buyers within network reach",
+      "40% projected reduction in per-delivery logistics cost",
+      "Cash flow unlocked via non-recourse invoice factoring",
     ],
   },
 ];

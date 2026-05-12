@@ -41,82 +41,82 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const STATS = [
-  { value: "All-in-One", label: "Procurement OS", sub: "Sourcing to payment" },
-  { value: "AI-Powered", label: "Smart Sourcing", sub: "Demand forecasting & auto-reorder" },
+  { value: "52", label: "Hotel Properties", sub: "Across 8 governorates" },
+  { value: "68", label: "Verified Suppliers", sub: "1,200+ SKU categories" },
   { value: "100%", label: "ETA Compliant", sub: "E-invoicing & tax authority integration" },
-  { value: "Smart", label: "Cashflow Engine", sub: "Invoice factoring & payment guarantees" },
-  { value: "Risk", label: "Mitigation", sub: "Credit scoring & authority matrix" },
-  { value: "48hr", label: "Delivery Network", sub: "Nationwide logistics coverage" },
+  { value: "EGP 86M", label: "Monthly GMV", sub: "Procurement volume tracked" },
+  { value: "6", label: "Coastal Clusters", sub: "Cairo, Alexandria, Red Sea, Sinai, Luxor, Aswan" },
+  { value: "48hr", label: "Delivery SLA", sub: "From order to dock receipt" },
 ];
 
-const TRUSTED_BY = [
-  "Pickalbatros",
-  "Hilton",
-  "Marriott",
-  "Accor",
-  "Four Seasons",
-  "InterContinental",
-  "Steigenberger",
-  "Sunrise Resorts",
+const NETWORK_PROPERTIES = [
+  { name: "Four Seasons Cairo at Nile Plaza", city: "Cairo", rooms: 365 },
+  { name: "Marriott Mena House", city: "Giza", rooms: 331 },
+  { name: "Fairmont Nile City", city: "Cairo", rooms: 540 },
+  { name: "Conrad Cairo", city: "Cairo", rooms: 617 },
+  { name: "Steigenberger Al Dau Beach Hotel", city: "Hurghada", rooms: 388 },
+  { name: "Rixos Sharm El Sheikh", city: "Sharm El-Sheikh", rooms: 695 },
+  { name: "Jaz Aquamarine Hurghada", city: "Hurghada", rooms: 1001 },
+  { name: "Sofitel Winter Palace Luxor", city: "Luxor", rooms: 86 },
 ];
 
 const CAPABILITIES = [
   {
-    icon: Plug,
-    title: "Easy System Integration",
-    desc: "Plug into your existing PMS, ERP or POS in minutes. Pre-built connectors. No IT team required.",
+    icon: Bot,
+    title: "Predictive Demand Intelligence",
+    desc: "Our AI engine analyzes consumption velocity across your properties, anticipates seasonal spikes, and auto-generates purchase orders before stockouts occur — not after.",
   },
   {
     icon: Receipt,
-    title: "ETA e-Invoicing Platform",
-    desc: "Fully compliant with Egyptian Tax Authority. Automated e-invoice generation, signing and submission module.",
-  },
-  {
-    icon: Bot,
-    title: "AI-Powered Sourcing",
-    desc: "Smart demand forecasting and automated reordering trained on hospitality data. Four seasons of optimization.",
-  },
-  {
-    icon: Store,
-    title: "Procurement Hub",
-    desc: "50+ hospitality categories, 1,200+ verified suppliers — linens, F&B, electronics and more in one seamless platform.",
+    title: "Native ETA E-Invoicing",
+    desc: "Every invoice is digitally signed, UUID-tagged, and submitted to the Egyptian Tax Authority in real time. Compliance is not a module — it is the foundation.",
   },
   {
     icon: Banknote,
-    title: "Invoice Factoring",
-    desc: "Unlock cash flow with invoice factoring. Suppliers get paid early; hotels keep their net-30/60 payment terms.",
+    title: "Embedded Cashflow Architecture",
+    desc: "Invoice factoring, payment guarantees, and credit-line management are woven into the transaction flow. Suppliers get liquidity; hotels preserve working capital.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Authority Matrix Governance",
+    desc: "Multi-level approval chains enforced at the database layer. No PO can be approved above its threshold without the required signatures — bypassing is technically impossible.",
+  },
+  {
+    icon: Store,
+    title: "Verified Supplier Network",
+    desc: "Every supplier is audited for commercial registration, tax compliance, and delivery track record. Not a directory — a vetted ecosystem.",
   },
   {
     icon: TrendingUp,
-    title: "Spend Analytics",
-    desc: "Real-time dashboards and procurement intelligence across all properties. Track, analyze, optimize.",
+    title: "Procurement Intelligence Layer",
+    desc: "Cross-property spend analysis, price benchmarking against market indices, and anomaly detection that flags unusual pricing or delivery patterns before they become problems.",
   },
 ];
 
-const STEPS = [
+const WORKFLOW = [
   {
     num: "01",
-    icon: UserPlus,
-    title: "Create Your Account",
-    desc: "Sign up as a hotel or supplier. Get verified and onboarded in under 24 hours.",
+    icon: BrainCircuit,
+    title: "Intelligent Demand Sensing",
+    desc: "The system ingests historical consumption, seasonal patterns, and property-specific events to forecast exactly what each outlet needs and when.",
   },
   {
     num: "02",
-    icon: Search,
-    title: "Source & Compare",
-    desc: "Browse products, compare supplier prices, and let AI recommend the best matches.",
+    icon: GitCompare,
+    title: "Autonomous Sourcing & Negotiation",
+    desc: "AI evaluates supplier bids against quality scores, delivery SLAs, and historical pricing. The optimal vendor is selected automatically — or flagged for human review.",
   },
   {
     num: "03",
     icon: ClipboardList,
-    title: "Place Orders",
-    desc: "Order with guaranteed pricing, automated ETA e-invoicing, and secure escrow payments.",
+    title: "Governed Order Execution",
+    desc: "Purchase orders route through your authority matrix automatically. ETA-compliant invoices generate at order confirmation. Payments execute per contracted terms.",
   },
   {
     num: "04",
-    icon: Package,
-    title: "Receive in 48 Hours",
-    desc: "Track deliveries in real-time anywhere in Egypt with our nationwide compliance network.",
+    icon: BarChart3,
+    title: "Continuous Optimization",
+    desc: "Post-delivery analytics feed back into the demand model. Price deviations, quality issues, and delivery failures automatically adjust future sourcing decisions.",
   },
 ];
 
@@ -194,16 +194,21 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          TRUSTED BY
+          NETWORK COVERAGE
           ═══════════════════════════════════════════ */}
-      <section className="py-10">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-[12px] font-medium text-gray-500 uppercase tracking-[0.15em]">
-            Trusted by{" "}
-            <span className="text-gray-400">
-              {TRUSTED_BY.join(", ")}
-            </span>
+      <section className="py-14 border-y border-white/[0.06]">
+        <div className="mx-auto max-w-7xl px-6">
+          <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-6 text-center">
+            Properties on the Network
           </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {NETWORK_PROPERTIES.map((prop) => (
+              <div key={prop.name} className="p-4 rounded-xl bg-[#111] border border-white/[0.08]">
+                <p className="text-[13px] font-semibold text-white truncate">{prop.name}</p>
+                <p className="text-[11px] text-gray-500 mt-1">{prop.city} · {prop.rooms} rooms</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -217,9 +222,9 @@ export default async function HomePage() {
               Platform Capabilities
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              Everything Your Hotel Needs.
+              One Operating System.
               <br />
-              <span className="text-gray-500">In One Platform.</span>
+              <span className="text-gray-500">Six Critical Capabilities.</span>
             </h2>
           </div>
 
@@ -250,14 +255,14 @@ export default async function HomePage() {
               How It Works
             </p>
             <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              From Sign-Up to Delivery
+              Autonomous Procurement
               <br />
-              <span className="text-gray-500">in 4 Simple Steps</span>
+              <span className="text-gray-500">From Signal to Settlement</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {STEPS.map((step, i) => (
+            {WORKFLOW.map((step, i) => (
               <div key={step.num} className="relative">
                 <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full shadow-sm">
                   <div className="text-[44px] font-bold text-white/10 leading-none mb-4">
@@ -299,14 +304,14 @@ export default async function HomePage() {
                   href="/register"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
-                  Get Started Free
+                  Request Platform Access
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/register"
                   className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
                 >
-                  Book a Demo
+                  Schedule Executive Briefing
                 </Link>
               </div>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-[12px] text-gray-500">

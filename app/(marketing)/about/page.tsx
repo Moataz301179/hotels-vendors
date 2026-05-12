@@ -39,9 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
 const STATS = [
   { value: "$21.5B", label: "Addressable Market", sub: "Egyptian hospitality 2026" },
   { value: "7.12%", label: "CAGR", sub: "Annual growth rate" },
-  { value: "1,200+", label: "Verified Suppliers", sub: "Vetted & ETA-certified" },
-  { value: "450+", label: "Hotel Buyers", sub: "Properties nationwide" },
-  { value: "48hr", label: "Delivery Guarantee", sub: "Nationwide Egypt" },
+  { value: "68", label: "Verified Suppliers", sub: "Vetted & ETA-certified" },
+  { value: "52", label: "Hotel Properties", sub: "Across 8 governorates" },
+  { value: "180+", label: "Product Categories", sub: "Hospitality SKUs" },
   { value: "100%", label: "ETA Compliant", sub: "Full e-invoicing" },
 ];
 
@@ -59,7 +59,7 @@ const TIMELINE = [
   {
     year: "2026",
     title: "AI & Ecosystem Expansion",
-    desc: "Embedded artificial intelligence across sourcing, demand forecasting, and cashflow optimization. Launched shared-route logistics and non-recourse invoice factoring. Scaled to 1,200+ suppliers and 450+ hotel properties — each with full audit-grade transaction history.",
+    desc: "Embedded artificial intelligence across sourcing, demand forecasting, and cashflow optimization. Launched shared-route logistics and non-recourse invoice factoring. Active network spans 52 hotel properties and 68 verified suppliers across Egypt's key hospitality corridors — each with full audit-grade transaction history.",
   },
   {
     year: "2027",
@@ -74,24 +74,6 @@ const TEAM = [
     name: "Moataz Abdel Ghani",
     role: "Founder & Chief Executive Officer",
     bio: "Professional auditor with deep expertise in internal controls, risk governance, and hospitality financial operations. Built Hotels Vendors after witnessing firsthand how fragmented procurement was destroying value across Egyptian hotel groups.",
-  },
-  {
-    initials: "CTO",
-    name: "Chief Technology Officer",
-    role: "Engineering & Architecture",
-    bio: "15+ years building fintech and B2B platforms at scale. Leads the AI engine, ETA integration, and real-time procurement intelligence systems.",
-  },
-  {
-    initials: "CPO",
-    name: "Chief Product Officer",
-    role: "Product Strategy & UX",
-    bio: "Hospitality operations veteran translating real-world procurement pain points into intuitive, high-performance digital workflows.",
-  },
-  {
-    initials: "COO",
-    name: "Chief Operating Officer",
-    role: "Operations & Network Growth",
-    bio: "Supply chain and logistics expert scaling supplier networks and shared-route fulfillment across Egypt's key hospitality corridors.",
   },
 ];
 
