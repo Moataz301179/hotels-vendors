@@ -116,14 +116,14 @@ export default async function AboutPage() {
       {/* ═══════════════════════════════════════════
           HERO — The Founder's Vision
           ═══════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-20 bg-[#f8f9fa]">
+      <section className="relative pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/10 border border-[#8B0000]/20 text-[#8B0000] text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
               <Eye className="w-3 h-3" />
               Our Story
             </div>
-            <h1 className="text-[30px] md:text-[44px] font-bold text-gray-900 leading-[1.1] tracking-[-0.02em]">
+            <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
               {cms?.heroTitle || "We Do Not Just See the Market. We See Through It."}
             </h1>
             <p className="mt-6 text-[14px] md:text-[16px] text-gray-500 leading-relaxed max-w-xl">
@@ -139,7 +139,7 @@ export default async function AboutPage() {
               </Link>
               <Link
                 href="/marketplace"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 text-[14px] font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
               >
                 Explore the Marketplace
               </Link>
@@ -379,10 +379,10 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
-              Trusted By
+              Industry Coverage
             </p>
             <h2 className="text-[22px] md:text-[28px] font-bold text-white tracking-tight">
-              Partners & Industry Leaders
+              Hotel Chains in Our Dataset
             </h2>
           </div>
 
@@ -412,7 +412,7 @@ export default async function AboutPage() {
                 {cms?.ctaTitle || "Ready to See What We See?"}
               </h2>
               <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 max-w-xl mx-auto">
-                {cms?.ctaDescription || "Join the hospitality groups that have replaced procurement chaos with audit-grade control, AI-powered intelligence, and measurable cost savings."}
+                {cms?.ctaDescription || "Join the hospitality groups that have replaced procurement chaos with audit-grade control, AI-powered intelligence, and real-time spend visibility."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

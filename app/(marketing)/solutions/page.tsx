@@ -279,10 +279,10 @@ export default async function SolutionsPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-[#8B0000] uppercase tracking-[0.2em] mb-3">
-              Case Studies
+              Projected Impact
             </p>
             <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
-              Real Results from Real Partners
+              What Our Architecture Is Designed to Deliver
             </h2>
           </div>
 
@@ -406,7 +406,7 @@ export default async function SolutionsPage() {
                   Are you a supplier?
                 </h3>
                 <p className="mt-2 text-[14px] text-gray-400 leading-relaxed">
-                  Access 450+ verified hotel buyers, get paid early via factoring,
+                  Access 52+ verified hotel properties, get paid early via factoring,
                   and reduce logistics costs with shared-route delivery.
                 </p>
               </div>
