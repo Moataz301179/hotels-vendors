@@ -128,6 +128,32 @@ export const openclawSmartNavigateTool: ToolDefinition = {
   },
 };
 
+export const openclawUseSkillTool: ToolDefinition = {
+  name: "openclaw_use_skill",
+  description: "Execute an OpenClaw AfrexAI skill to run a pre-built browser automation procedure. Skills available: afrexai-business-automation (supplier discovery, competitor price tracking, hotel enrichment), afrexai-prospect-research (research hotels/suppliers from a name), afrexai-competitor-analysis (analyze competitor digital presence and pricing), afrexai-crm (lead nurturing, reorder reminders, churn prevention), afrexai-daily-briefing (platform pulse, market compass). Use this when you need a multi-step structured procedure rather than a single action.",
+  parameters: {
+    type: "object",
+    properties: {
+      skill: { type: "string", description: "Skill name: afrexai-business-automation | afrexai-prospect-research | afrexai-competitor-analysis | afrexai-crm | afrexai-daily-briefing" },
+      procedure: { type: "string", description: "Procedure name within the skill (optional — defaults to first procedure)" },
+      params: { type: "object", description: "Parameters for the skill procedure — e.g. {name: 'Fairmont Nile City', city: 'Cairo'} or {url: 'https://suplyd.app'}" },
+      sessionId: { type: "string", description: "Session ID for persistent browser state (optional)" },
+      screenshot: { type: "boolean", description: "Take screenshots during execution (default false)" },
+    },
+    required: ["skill"],
+  },
+  handler: async (args) => {
+    const { skill, procedure, params, sessionId, screenshot } = args as Record<string, unknown>;
+    return callOpenClaw("/skills/execute", {
+      skill,
+      procedure: procedure || undefined,
+      params: params || {},
+      session_id: sessionId || undefined,
+      screenshot: screenshot ?? false,
+    });
+  },
+};
+
 // ── Database Query Tools ───────────────────────────────────────
 
 export const dbQueryTool: ToolDefinition = {
@@ -533,6 +559,7 @@ export function buildStandardToolRegistry(): ToolRegistry {
   registry.register(openclawExtractTool);
   registry.register(openclawDeepScrapeTool);
   registry.register(openclawSmartNavigateTool);
+  registry.register(openclawUseSkillTool);
 
   // Database
   registry.register(dbQueryTool);
