@@ -859,3 +859,247 @@ async def health():
 async def screenshot(req: NavigateRequest):
     req.screenshot = True
     return await navigate(req)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SKILLS SYSTEM — AfrexAI Business Automation Skills
+# ═══════════════════════════════════════════════════════════════
+
+from skills_registry import registry, SkillsRegistry
+
+class SkillExecuteRequest(BaseModel):
+    skill: str
+    procedure: Optional[str] = None
+    params: dict[str, Any] = Field(default_factory=dict)
+    session_id: Optional[str] = None
+    screenshot: bool = False
+    timeout: int = DEFAULT_TIMEOUT
+
+class SkillExecuteResponse(BaseModel):
+    success: bool
+    skill: str
+    procedure: str
+    steps_completed: int
+    results: list[dict]
+    data: Optional[dict] = None
+    duration_ms: int = 0
+    error: Optional[str] = None
+
+@app.get("/skills")
+async def list_skills():
+    """List all installed skills with their procedures"""
+    return {
+        "success": True,
+        "skills": registry.list(),
+        "count": len(registry.skills),
+    }
+
+@app.get("/skills/{skill_name}")
+async def get_skill(skill_name: str):
+    """Get a specific skill's full content"""
+    skill = registry.get(skill_name)
+    if not skill:
+        raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
+    return {
+        "success": True,
+        "skill": {
+            "name": skill.name,
+            "description": skill.description,
+            "purpose": skill.purpose,
+            "when_to_use": skill.when_to_use,
+            "procedures": [
+                {"name": p.name, "steps": p.steps, "notes": p.notes}
+                for p in skill.procedures
+            ],
+            "content": skill.content,
+        },
+    }
+
+@app.get("/skills/search")
+async def search_skills(query: str):
+    """Search skills by keyword"""
+    results = registry.search(query)
+    return {"success": True, "query": query, "results": results}
+
+@app.post("/skills/reload")
+async def reload_skills():
+    """Reload all skills from disk"""
+    registry.reload()
+    return {"success": True, "skills_loaded": len(registry.skills)}
+
+@app.post("/skills/execute")
+async def execute_skill(req: SkillExecuteRequest):
+    """
+    Execute a skill procedure as an automated browser workflow.
+    Skills define structured procedures; this endpoint runs them.
+    """
+    start = time.time()
+    skill = registry.get(req.skill)
+    if not skill:
+        return SkillExecuteResponse(
+            success=False, skill=req.skill, procedure=req.procedure or "default",
+            steps_completed=0, results=[], error=f"Skill '{req.skill}' not found"
+        )
+    
+    procedure = registry.get_procedure(req.skill, req.procedure)
+    if not procedure:
+        return SkillExecuteResponse(
+            success=False, skill=req.skill, procedure=req.procedure or "default",
+            steps_completed=0, results=[], error=f"Procedure not found in skill '{req.skill}'"
+        )
+    
+    page, ctx = None, None
+    results = []
+    session_id = req.session_id or f"skill_{req.skill}_{int(time.time())}"
+    
+    try:
+        page, ctx = await pool.get_page(session_id)
+        await pool.load_session(page, ctx, session_id)
+        
+        for i, step in enumerate(procedure.steps):
+            step_start = time.time()
+            result = {"step": i + 1, "instruction": step.get("instruction", ""), "success": True, "data": {}}
+            
+            try:
+                action = step.get("action", "text")
+                instruction = step.get("instruction", "")
+                
+                # Template substitution from params
+                for key, val in req.params.items():
+                    instruction = instruction.replace(f"{{{key}}}", str(val))
+                
+                if action == "navigate" or ("navigate" in instruction.lower() and "http" in instruction):
+                    # Extract URL from instruction
+                    urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]]+', instruction)
+                    if urls:
+                        await page.goto(urls[0], wait_until="networkidle", timeout=req.timeout)
+                        result["data"] = {"url": page.url, "title": await page.title()}
+                
+                elif action == "extract" or "extract" in instruction.lower():
+                    # Parse extract instruction: "Extract {field} using {selector}"
+                    selectors = {}
+                    # Try to find JSON selectors in params
+                    if "selectors" in req.params:
+                        selectors = req.params["selectors"]
+                    else:
+                        # Simple heuristic: look for "X using Y" pattern
+                        matches = re.findall(r'(\w+)\s+(?:using|with|via)\s+`?([^`]+)`?', instruction, re.IGNORECASE)
+                        for field, selector in matches:
+                            selectors[field] = selector
+                    
+                    data = {}
+                    for field, selector in selectors.items():
+                        try:
+                            elem = await page.query_selector(selector)
+                            if elem:
+                                text = await elem.text_content()
+                                data[field] = text.strip() if text else ""
+                        except Exception:
+                            data[field] = ""
+                    result["data"] = data
+                
+                elif action == "click" or "click" in instruction.lower():
+                    # Extract selector from instruction
+                    selector_match = re.search(r'`([^`]+)`|\"([^\"]+)\"', instruction)
+                    if selector_match:
+                        selector = selector_match.group(1) or selector_match.group(2)
+                        await _human_click(page, selector)
+                        await _human_delay(500, 1500)
+                        result["data"] = {"clicked": selector}
+                
+                elif action == "fill" or "fill" in instruction.lower() or "type" in instruction.lower():
+                    # Extract field and value
+                    selector_match = re.search(r'`([^`]+)`|\"([^\"]+)\"', instruction)
+                    if selector_match:
+                        selector = selector_match.group(1) or selector_match.group(2)
+                        # Look for value in params or instruction
+                        value = req.params.get("value", "")
+                        if not value:
+                            value_match = re.search(r'with\s+["\']?([^"\']+)["\']?', instruction)
+                            if value_match:
+                                value = value_match.group(1)
+                        if value:
+                            await _human_type(page, selector, value)
+                            result["data"] = {"filled": selector, "value": value}
+                
+                elif action == "scroll" or "scroll" in instruction.lower():
+                    await _scroll_like_human(page, req.params.get("pixels", 800))
+                    result["data"] = {"scrolled": True}
+                
+                elif action == "wait" or "wait" in instruction.lower():
+                    ms = req.params.get("ms", 2000)
+                    await asyncio.sleep(ms / 1000)
+                    result["data"] = {"waited_ms": ms}
+                
+                elif action == "screenshot" or req.screenshot:
+                    result["data"]["screenshot_b64"] = await _take_screenshot(page)
+                
+                else:
+                    # For text steps, try smart interpretation via LLM
+                    result["data"] = {"interpreted": instruction, "note": "Text instruction — use smart-navigate for full LLM guidance"}
+                
+                result["duration_ms"] = int((time.time() - step_start) * 1000)
+                
+            except Exception as e:
+                result["success"] = False
+                result["error"] = str(e)
+            
+            results.append(result)
+            if req.screenshot:
+                result["data"]["screenshot_b64"] = await _take_screenshot(page)
+        
+        # Save session
+        await pool.save_session(page, ctx, session_id)
+        
+        # Extract final data if this is a research/analysis skill
+        final_data = None
+        if req.skill in ["afrexai-prospect-research", "afrexai-competitor-analysis"]:
+            final_data = {
+                "url": page.url,
+                "title": await page.title(),
+                "extracted": results[-1].get("data", {}) if results else {},
+            }
+        
+        return SkillExecuteResponse(
+            success=all(r["success"] for r in results),
+            skill=req.skill,
+            procedure=procedure.name,
+            steps_completed=len(results),
+            results=results,
+            data=final_data,
+            duration_ms=int((time.time() - start) * 1000),
+        )
+        
+    except Exception as e:
+        return SkillExecuteResponse(
+            success=False, skill=req.skill, procedure=procedure.name,
+            steps_completed=len(results), results=results,
+            error=str(e), duration_ms=int((time.time() - start) * 1000)
+        )
+    finally:
+        if page:
+            await pool.release_page(page)
+
+@app.post("/skills/{skill_name}/run")
+async def run_skill(skill_name: str, req: SkillExecuteRequest):
+    """Shortcut: POST /skills/{name}/run with params in body"""
+    req.skill = skill_name
+    return await execute_skill(req)
+
+# Update health endpoint to include skills info
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "version": "3.1.0",
+        "browser_pool_size": len(pool.contexts),
+        "sessions": len(session_store.list()),
+        "skills_installed": len(registry.skills),
+        "skills": list(registry.skills.keys()),
+        "capabilities": [
+            "navigation", "form_filling", "data_extraction",
+            "deep_scraping", "account_creation", "workflow_automation",
+            "session_persistence", "human_like_behavior", "llm_guidance",
+            "export", "skills_execution",
+        ],
+    }
