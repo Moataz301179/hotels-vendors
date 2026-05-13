@@ -34,6 +34,12 @@ const MODULES = [
       { label: "Demand Forecast", desc: "AI-powered category predictions & pre-order recommendations", icon: Brain, to: "/admin", color: "#14b8a6" },
     ],
   },
+  {
+    group: "AI Agent Core",
+    items: [
+      { label: "Grok Brain", desc: "Real-time agent execution monitor — watch tools, screenshots & results", icon: Brain, to: "/admin/grok-brain", color: "#ef4444" },
+    ],
+  },
 ];
 
 interface PulseData {

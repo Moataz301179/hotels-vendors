@@ -107,6 +107,30 @@ export function MarketingFooter() {
             </ul>
           </div>
 
+          {/* Admin */}
+          <div>
+            <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              Platform
+            </h4>
+            <ul className="space-y-2.5">
+              <li>
+                <Link href="/admin" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                  Command Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/grok-brain" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                  Grok Brain
+                </Link>
+              </li>
+              <li>
+                <Link href="/factoring/credit-lines/review" className="text-[13px] text-gray-500 hover:text-[#8B0000] transition-colors">
+                  Credit Review
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Legal */}
           <div>
             <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
