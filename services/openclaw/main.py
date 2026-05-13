@@ -890,7 +890,7 @@ async def list_skills():
     """List all installed skills with their procedures"""
     return {
         "success": True,
-        "skills": registry.list(),
+        "skills": registry.list_skills(),
         "count": len(registry.skills),
     }
 

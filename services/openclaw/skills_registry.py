@@ -150,7 +150,7 @@ class SkillsRegistry:
             procedures=procedures,
         )
 
-    def list(self) -> list[dict]:
+    def list_skills(self) -> list[dict]:
         return [
             {
                 "name": s.name,
