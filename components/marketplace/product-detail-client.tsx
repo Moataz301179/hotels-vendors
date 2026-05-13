@@ -18,16 +18,14 @@ import {
 } from "lucide-react";
 import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
-import catalogData from "@/data/catalog-products.json";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useCart } from "@/components/cart/cart-context";
+import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
 
-const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
-
-function ProductImage({ product }: { product: any }) {
+function ProductImage({ product }: { product: MarketplaceProduct }) {
   const [error, setError] = useState(false);
   const resolved = getProductImage(product);
 
@@ -44,7 +42,9 @@ function ProductImage({ product }: { product: any }) {
   }
 
   const colors = resolved.type === "gradient" ? resolved.colors : ["#1a1a2e", "#2a2a4a", "#4a4a7a"];
-  const initials = resolved.type === "gradient" ? resolved.initials : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
+  const initials = resolved.type === "gradient"
+    ? resolved.initials
+    : product.name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
   return (
     <div
@@ -59,83 +59,62 @@ function ProductImage({ product }: { product: any }) {
   );
 }
 
-export default function ProductDetailClient({ productId }: { productId: string }) {
+export default function ProductDetailClient({ product }: { product: MarketplaceProduct }) {
   const { t } = useTranslation("marketplace");
   const { t: tc } = useTranslation("common");
 
-  const product = ALL_PRODUCTS.find((p) => p.id === productId);
-  const [qty, setQty] = useState(product?.minOrderQty || 1);
+  const [qty, setQty] = useState(product.minOrderQty || 1);
   const [added, setAdded] = useState(false);
   const [memberMode, setMemberMode] = useState(false);
   const { addItem, openCart, totalItems } = useCart();
 
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center gap-4">
-        <Package className="w-12 h-12 text-white/10" />
-        <h1 className="text-xl font-semibold text-white">{t("productNotFound")}</h1>
-        <Link href="/marketplace" className="px-4 py-2 rounded-xl text-sm text-white bg-[#8B0000] hover:bg-[#6B0000] transition-colors">
-          {t("backToMarketplace")}
-        </Link>
-      </div>
-    );
-  }
+  const memberDiscount = (price: number) => Math.round(price * 0.92);
 
-  const cat = getCategoryById(product.category);
-  const related = ALL_PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
-
-  const formatPrice = (p: number, c: string) =>
-    new Intl.NumberFormat("en-EG", { style: "currency", currency: c, minimumFractionDigits: 0 }).format(p);
-
-  const memberPrice = Math.round(product.unitPrice * 0.92);
-
-  const handleAddToCart = () => {
+  const handleAdd = () => {
+    const resolved = getProductImage(product);
     addItem({
       productId: product.id,
       name: product.name,
       sku: product.sku,
-      unitPrice: memberMode ? memberPrice : product.unitPrice,
-      supplierId: product.id,
+      unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
+      supplierId: product.supplierId,
       supplierName: product.supplierName,
-      image: getProductImage(product).type === "url" ? (getProductImage(product) as any).src : undefined,
-    }, qty);
+      image: resolved.type === "url" ? resolved.src : undefined,
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const stockLabel = (qty: number) => {
-    if (qty === 0) return tc("outOfStock");
-    if (qty < 20) return tc("lowStock");
-    return tc("inStock");
-  };
+  const cat = getCategoryById(product.category);
+  const inStock = product.stockQuantity > 0;
+  const lowStock = product.stockQuantity > 0 && product.stockQuantity < 20;
 
   return (
-    <div className="min-h-screen bg-[#050505]">
+    <div className="min-h-screen bg-[#050505] text-white">
       <MarketingNav />
 
-      {/* Sub-header */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/marketplace" className="inline-flex items-center gap-2 text-[12px] text-white/30 hover:text-white/60 transition-colors">
+      {/* Breadcrumb + Actions */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-4 pb-2">
+        <div className="flex items-center justify-between">
+          <Link
+            href="/marketplace"
+            className="flex items-center gap-1.5 text-[12px] text-white/40 hover:text-white/70 transition-colors"
+          >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>{t("backToMarketplace")}</span>
+            {t("backToMarketplace")}
           </Link>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
             <button
               onClick={() => setMemberMode(!memberMode)}
-              className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
                 memberMode ? "bg-[#8B0000] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
               }`}
             >
               <Crown className="w-3 h-3" />
               {t("memberPrices")}
-              {memberMode && <Check className="w-3 h-3" />}
             </button>
-            <button
-              onClick={openCart}
-              className="relative flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/60 hover:text-white hover:border-white/[0.12] transition-all"
-            >
+            <button onClick={openCart} className="relative flex items-center justify-center px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/50 hover:text-white transition-all">
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold flex items-center justify-center">
@@ -147,168 +126,171 @@ export default function ProductDetailClient({ productId }: { productId: string }
         </div>
       </div>
 
+      {/* Product Detail */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
-        {/* Product */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-            <div className="relative aspect-square rounded-2xl border border-white/[0.06] overflow-hidden">
-              <ProductImage product={product} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                    product.stockQuantity === 0
-                      ? "text-red-400 bg-red-500/10 border-red-500/20"
-                      : product.stockQuantity < 20
-                      ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                      : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-                  }`}
-                >
-                  {stockLabel(product.stockQuantity)}
+          <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0a0a0a]">
+            <ProductImage product={product} />
+          </div>
+
+          {/* Info */}
+          <div className="flex flex-col gap-5">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] uppercase tracking-wider font-bold text-white/40 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06]">
+                  {cat?.code || product.category}
                 </span>
                 {product.supplierTier === "PREMIER" && (
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/10 text-white border-white/20">
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-amber-400 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20">
                     {t("premier")}
                   </span>
                 )}
               </div>
-            </div>
-          </motion.div>
-
-          {/* Info */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <span className="px-2.5 py-1 rounded-md text-xs font-semibold border bg-white/5 text-white/60 border-white/10">
-                {cat?.label || product.category}
-              </span>
-              <span className="text-xs text-white/20 font-mono">{product.sku}</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">{product.name}</h1>
-            <p className="text-sm text-white/40">{product.description}</p>
-
-            <div className="flex items-center gap-3">
-              <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <span className="text-sm font-medium text-white">{product.supplierRating.toFixed(1)}</span>
-              <span className="text-xs text-white/25">({product.supplierReviewCount})</span>
-              <span className="w-1 h-1 rounded-full bg-white/10" />
-              <MapPin className="w-3.5 h-3.5 text-white/20" />
-              <span className="text-xs text-white/30">{product.supplierCity}</span>
-            </div>
-
-            <div className="p-5 rounded-xl border border-white/[0.06] bg-[#0a0a0a]">
-              {memberMode ? (
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-white">EGP {memberPrice.toLocaleString()}</span>
-                  <span className="text-lg text-white/25 line-through">{formatPrice(product.unitPrice, product.currency)}</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full text-white bg-[#8B0000]">-8%</span>
-                </div>
-              ) : (
-                <span className="text-3xl font-bold text-white">{formatPrice(product.unitPrice, product.currency)}</span>
-              )}
-              <span className="text-sm text-white/30 ml-2">/ {product.unitOfMeasure}</span>
+              <h1 className="text-2xl font-bold text-white tracking-tight">{product.name}</h1>
+              <p className="text-sm text-white/40 mt-1">{product.description}</p>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex items-center rounded-xl border border-white/[0.08] bg-[#0a0a0a] overflow-hidden">
-                <button onClick={() => setQty(Math.max(product.minOrderQty, qty - 1))} className="px-4 py-3 text-white/40 hover:text-white transition-colors">
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="px-4 text-sm font-medium text-white min-w-[4rem] text-center">{qty}</span>
-                <button onClick={() => setQty(Math.min(product.stockQuantity, qty + 1))} className="px-4 py-3 text-white/40 hover:text-white transition-colors">
-                  <Plus className="w-4 h-4" />
-                </button>
+              <div className="flex items-center gap-1.5">
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <span className="text-sm font-medium text-white/70">{product.supplierRating.toFixed(1)}</span>
+                <span className="text-xs text-white/25">({product.supplierReviewCount} reviews)</span>
               </div>
+              <span className="w-px h-4 bg-white/10" />
+              <div className="flex items-center gap-1 text-xs text-white/30">
+                <MapPin className="w-3 h-3" />
+                {product.supplierCity}
+              </div>
+              <span className="w-px h-4 bg-white/10" />
+              <div className="flex items-center gap-1 text-xs text-white/30">
+                <ShieldCheck className="w-3 h-3" />
+                {t("verifiedSupplier")}
+              </div>
+            </div>
+
+            <div className="flex items-baseline gap-3">
+              {memberMode ? (
+                <>
+                  <span className="text-3xl font-bold text-white tracking-tight">
+                    EGP {memberDiscount(product.unitPrice).toLocaleString()}
+                  </span>
+                  <span className="text-sm text-white/25 line-through">
+                    EGP {product.unitPrice.toLocaleString()}
+                  </span>
+                  <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                    -8% {t("memberPrice")}
+                  </span>
+                </>
+              ) : (
+                <span className="text-3xl font-bold text-white tracking-tight">
+                  EGP {product.unitPrice.toLocaleString()}
+                </span>
+              )}
+              <span className="text-xs text-white/25">/ {product.unitOfMeasure}</span>
+            </div>
+
+            {/* Stock Status */}
+            <div className="flex items-center gap-2">
+              {!inStock ? (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 bg-red-500/10 border border-red-500/20">
+                  {tc("outOfStock")}
+                </span>
+              ) : lowStock ? (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20">
+                  {tc("lowStock")} — {product.stockQuantity} {t("unitsLeft")}
+                </span>
+              ) : (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                  {tc("inStock")} — {product.stockQuantity} {t("unitsAvailable")}
+                </span>
+              )}
+              <span className="text-xs text-white/25">{t("moq")}: {product.minOrderQty} {product.unitOfMeasure}</span>
+            </div>
+
+            {/* Quantity */}
+            {inStock && (
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-white/50">{t("quantity")}</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setQty(Math.max(product.minOrderQty, qty - 1))}
+                    className="w-9 h-9 rounded-lg border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="w-12 text-center text-sm font-medium text-white">{qty}</span>
+                  <button
+                    onClick={() => setQty(qty + 1)}
+                    className="w-9 h-9 rounded-lg border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-2">
               <button
-                onClick={handleAddToCart}
-                disabled={product.stockQuantity === 0}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-medium transition-all disabled:bg-white/[0.03] disabled:text-white/20 bg-[#8B0000] hover:bg-[#6B0000]"
+                onClick={handleAdd}
+                disabled={!inStock}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium transition-all"
               >
-                {added ? <><Check className="w-5 h-5" /><span>{t("addedToCart")}</span></> : <><ShoppingCart className="w-5 h-5" /><span>{t("addToCart")}</span></>}
+                {added ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    {t("addedToCart")}
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-4 h-4" />
+                    {t("addToCart")}
+                  </>
+                )}
               </button>
             </div>
 
-            {added && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-white/60">
-                {t("addedToCart")} <button onClick={openCart} className="underline font-medium">{t("viewCart")}</button> {tc("or")} <Link href="/login" className="underline font-medium">{tc("signIn")}</Link> {t("toCheckout")}
-              </motion.p>
-            )}
-
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs text-emerald-400">{t("etaCompliant")}</span>
-            </div>
-
-            <div className="p-5 rounded-xl border border-white/[0.06] bg-[#0a0a0a]">
-              <p className="text-xs font-semibold text-white/30 uppercase mb-3">{t("supplier")}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-sm font-bold text-white">
-                  {product.supplierName.charAt(0)}
-                </div>
+            {/* Supplier */}
+            <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <p className="text-[10px] text-white/20 uppercase tracking-wider mb-2">{t("supplier")}</p>
+              <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-white">{product.supplierName}</p>
-                  <div className="flex items-center gap-2 text-xs text-white/30">
-                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                    <span>{product.supplierRating.toFixed(1)}</span>
-                    <span>({product.supplierReviewCount})</span>
-                    <span className="w-1 h-1 rounded-full bg-white/10" />
-                    <MapPin className="w-3 h-3" />
-                    <span>{product.supplierCity}</span>
-                  </div>
+                  <p className="text-xs text-white/30">{product.supplierCity}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                  <span className="text-sm text-white/60">{product.supplierRating.toFixed(1)}</span>
                 </div>
               </div>
             </div>
-          </motion.div>
-        </div>
 
-        {/* Specs */}
-        <div className="mt-12">
-          <h2 className="text-lg font-semibold text-white mb-4">{t("specifications")}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-xl overflow-hidden border border-white/[0.06]">
-            {[
-              { label: t("sku"), value: product.sku },
-              { label: t("category"), value: cat?.label || product.category },
-              { label: t("unit"), value: product.unitOfMeasure },
-              { label: t("minOrder"), value: `${product.minOrderQty} ${product.unitOfMeasure}` },
-              { label: t("stock"), value: `${product.stockQuantity} ${product.unitOfMeasure}` },
-              { label: t("leadTime"), value: `${product.leadTimeDays} ${tc("days")}` },
-              { label: t("shelfLife"), value: product.shelfLifeDays ? `${product.shelfLifeDays} ${tc("days")}` : "N/A" },
-              { label: t("storage"), value: product.temperatureReq || "Room Temp" },
-            ].map((s) => (
-              <div key={s.label} className="p-4 bg-[#0a0a0a]">
-                <p className="text-[10px] uppercase tracking-wider text-white/25 font-semibold mb-1">{s.label}</p>
-                <p className="text-sm text-white/80 font-medium">{s.value}</p>
+            {/* Specs */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">{t("leadTime")}</p>
+                <p className="text-sm text-white mt-0.5">{product.leadTimeDays} {t("days")}</p>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Related */}
-        {related.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-lg font-semibold text-white mb-4">{t("moreFrom")} {cat?.label || product.category}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {related.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/marketplace/${p.id}`}
-                  className="group p-3 rounded-xl border border-white/[0.06] bg-[#0a0a0a] hover:border-white/[0.10] transition-colors"
-                >
-                  <div className="h-24 rounded-lg overflow-hidden mb-3">
-                    <ProductImage product={p} />
-                  </div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-white/40">{p.sku}</span>
-                    <span className="text-[9px] text-white/20">{getCategoryById(p.category)?.label || p.category}</span>
-                  </div>
-                  <p className="text-sm font-medium text-white line-clamp-1 group-hover:text-white/80 transition-colors">{p.name}</p>
-                  <p className="text-sm text-white/40 mt-1">{formatPrice(p.unitPrice, p.currency)}</p>
-                </Link>
-              ))}
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">{t("sku")}</p>
+                <p className="text-sm text-white mt-0.5 font-mono">{product.sku}</p>
+              </div>
+              {product.shelfLifeDays && (
+                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                  <p className="text-[10px] text-white/20 uppercase">{t("shelfLife")}</p>
+                  <p className="text-sm text-white mt-0.5">{product.shelfLifeDays} {t("days")}</p>
+                </div>
+              )}
+              {product.temperatureReq && (
+                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                  <p className="text-[10px] text-white/20 uppercase">{t("storage")}</p>
+                  <p className="text-sm text-white mt-0.5">{product.temperatureReq}</p>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       <MarketingFooter />

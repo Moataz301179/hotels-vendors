@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Package,
@@ -56,7 +57,7 @@ export default function SupplierProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const { data, loading, error } = useApi<ProductsApiResponse>("/api/products");
+  const { data, loading, error } = useApi<ProductsApiResponse>("/api/v1/products");
 
   const products = useMemo(() => data?.products ?? [], [data]);
 
@@ -102,10 +103,13 @@ export default function SupplierProductsPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Product Catalog</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage your inventory and product listings</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all self-start">
+        <Link
+          href="/supplier/products/new"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all self-start"
+        >
           <Plus size={14} />
           Add Product
-        </button>
+        </Link>
       </motion.div>
 
       {/* Stats */}

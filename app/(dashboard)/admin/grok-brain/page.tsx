@@ -6,6 +6,7 @@ import {
   Brain, Send, Loader2, Terminal, CheckCircle2, XCircle,
   Eye, Database, Globe, Mail, MemoryStick, Sparkles,
   Clock, Zap, ArrowLeft, RefreshCw, ChevronDown, ChevronUp,
+  Image as ImageIcon, X, Maximize2, Camera,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,6 +29,13 @@ interface ToolResultEvent {
   success: boolean;
   output: unknown;
   error?: string;
+}
+
+interface ScreenshotEvent {
+  round: number;
+  tool: string;
+  imageBase64: string | null;
+  note: string;
 }
 
 const TOOL_ICONS: Record<string, React.ReactNode> = {
@@ -65,6 +73,115 @@ function formatDuration(ms: number): string {
   return `${(ms / 1000).toFixed(1)}s`;
 }
 
+/** Screenshot Thumbnail Component */
+function ScreenshotThumbnail({
+  imageBase64,
+  note,
+  onClick,
+}: {
+  imageBase64: string | null;
+  note: string;
+  onClick: () => void;
+}) {
+  if (!imageBase64) {
+    return (
+      <div className="ml-8 flex items-center gap-2 p-2 rounded-lg bg-blue-500/[0.05] border border-blue-500/10">
+        <Camera className="w-3.5 h-3.5 text-blue-400/50" />
+        <span className="text-[11px] text-blue-300/40">{note}</span>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="ml-8 group cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="relative rounded-xl border border-blue-500/20 bg-blue-500/[0.03] overflow-hidden hover:border-blue-500/40 transition-colors">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-blue-500/10">
+          <Camera className="w-3.5 h-3.5 text-blue-400" />
+          <span className="text-[11px] text-blue-300/60">Screenshot captured</span>
+          <Maximize2 className="w-3 h-3 text-blue-400/40 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+        <div className="p-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`data:image/png;base64,${imageBase64}`}
+            alt="Browser screenshot"
+            className="w-full max-h-48 object-contain rounded-lg bg-black/20"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/** Screenshot Modal / Lightbox */
+function ScreenshotModal({
+  imageBase64,
+  note,
+  onClose,
+}: {
+  imageBase64: string;
+  note: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="relative max-w-5xl w-full max-h-[90vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-4 py-3 bg-[#0a0a0a] border border-white/[0.08] rounded-t-xl">
+          <div className="flex items-center gap-2">
+            <Camera className="w-4 h-4 text-blue-400" />
+            <span className="text-[13px] text-white/70 font-medium">Browser Screenshot</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            <X className="w-4 h-4 text-white/50" />
+          </button>
+        </div>
+        <div className="bg-[#050505] border-x border-b border-white/[0.08] rounded-b-xl overflow-auto max-h-[calc(90vh-60px)]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`data:image/png;base64,${imageBase64}`}
+            alt="Full browser screenshot"
+            className="w-full h-auto"
+          />
+        </div>
+        {note && (
+          <div className="mt-2 text-center">
+            <span className="text-[11px] text-white/30">{note}</span>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function GrokBrainDashboardPage() {
   const [prompt, setPrompt] = useState("");
   const [events, setEvents] = useState<ExecutionEvent[]>([]);
@@ -72,8 +189,8 @@ export default function GrokBrainDashboardPage() {
   const [expandedRounds, setExpandedRounds] = useState<Set<number>>(new Set());
   const [finalAnswer, setFinalAnswer] = useState("");
   const [metadata, setMetadata] = useState<Record<string, unknown> | null>(null);
+  const [modalScreenshot, setModalScreenshot] = useState<{ imageBase64: string; note: string } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
 
   const toggleRound = (round: number) => {
     setExpandedRounds((prev) => {
@@ -168,6 +285,29 @@ export default function GrokBrainDashboardPage() {
     .filter((e) => e.type === "tool_result")
     .map((e) => e.data as unknown as ToolResultEvent);
 
+  // Group events by round for rendering tool_call → tool_result → screenshot together
+  const eventsByRound = new Map<number, ExecutionEvent[]>();
+  const nonRoundEvents: ExecutionEvent[] = [];
+
+  for (const event of events) {
+    if (event.type === "tool_call" || event.type === "tool_result" || event.type === "screenshot") {
+      const round = (event.data.round as number) || 0;
+      if (!eventsByRound.has(round)) eventsByRound.set(round, []);
+      eventsByRound.get(round)!.push(event);
+    } else {
+      nonRoundEvents.push(event);
+    }
+  }
+
+  // Track which rounds have screenshots
+  const screenshotsByRound = new Map<number, ScreenshotEvent>();
+  for (const event of events) {
+    if (event.type === "screenshot") {
+      const round = (event.data.round as number) || 0;
+      screenshotsByRound.set(round, event.data as unknown as ScreenshotEvent);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       {/* Header */}
@@ -242,6 +382,12 @@ export default function GrokBrainDashboardPage() {
                     {events.length} events
                   </span>
                 )}
+                {screenshotsByRound.size > 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400/60 flex items-center gap-1">
+                    <Camera className="w-3 h-3" />
+                    {Array.from(screenshotsByRound.values()).filter((s) => s.imageBase64).length} screenshots
+                  </span>
+                )}
               </div>
               {events.length > 0 && (
                 <button
@@ -254,7 +400,7 @@ export default function GrokBrainDashboardPage() {
               )}
             </div>
 
-            <div ref={scrollRef} className="max-h-[500px] overflow-y-auto p-4 space-y-3">
+            <div ref={scrollRef} className="max-h-[600px] overflow-y-auto p-4 space-y-3">
               <AnimatePresence>
                 {events.length === 0 && !isRunning && (
                   <motion.div
@@ -283,7 +429,8 @@ export default function GrokBrainDashboardPage() {
                   </motion.div>
                 )}
 
-                {events.map((event) => {
+                {/* Render non-round events first (thinking, final_answer, error) */}
+                {nonRoundEvents.map((event) => {
                   if (event.type === "thinking") {
                     return (
                       <motion.div
@@ -294,98 +441,6 @@ export default function GrokBrainDashboardPage() {
                       >
                         <Loader2 className="w-4 h-4 text-[#8B0000] animate-spin" />
                         <span className="text-[12px] text-white/50">{event.data.message as string}</span>
-                      </motion.div>
-                    );
-                  }
-
-                  if (event.type === "tool_call") {
-                    const data = event.data as ToolCallEvent;
-                    const isExpanded = expandedRounds.has(data.round);
-                    return (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="rounded-xl bg-white/[0.03] border border-white/[0.06] overflow-hidden"
-                      >
-                        <button
-                          onClick={() => toggleRound(data.round)}
-                          className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
-                              className="w-7 h-7 rounded-lg flex items-center justify-center"
-                              style={{ backgroundColor: `${getToolColor(data.tool)}15`, color: getToolColor(data.tool) }}
-                            >
-                              {getToolIcon(data.tool)}
-                            </div>
-                            <div className="text-left">
-                              <div className="text-[12px] font-medium text-white/70">{data.tool}</div>
-                              <div className="text-[10px] text-white/30">Round {data.round}</div>
-                            </div>
-                          </div>
-                          {isExpanded ? <ChevronUp className="w-4 h-4 text-white/30" /> : <ChevronDown className="w-4 h-4 text-white/30" />}
-                        </button>
-                        <AnimatePresence>
-                          {isExpanded && (
-                            <motion.div
-                              initial={{ height: 0 }}
-                              animate={{ height: "auto" }}
-                              exit={{ height: 0 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="px-4 pb-3">
-                                <pre className="text-[11px] text-white/40 bg-black/30 rounded-lg p-3 overflow-x-auto">
-                                  {JSON.stringify(data.arguments, null, 2)}
-                                </pre>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    );
-                  }
-
-                  if (event.type === "tool_result") {
-                    const data = event.data as ToolResultEvent;
-                    return (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="ml-8 flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]"
-                      >
-                        {data.success ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                        ) : (
-                          <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                        )}
-                        <div className="min-w-0">
-                          <div className="text-[11px] text-white/50 mb-1">
-                            {data.success ? "Success" : "Failed"} — {data.tool}
-                          </div>
-                          {data.error ? (
-                            <div className="text-[11px] text-red-300/70">{data.error}</div>
-                          ) : (
-                            <pre className="text-[10px] text-white/30 bg-black/20 rounded-lg p-2 overflow-x-auto max-h-32">
-                              {JSON.stringify(data.output, null, 2)}
-                            </pre>
-                          )}
-                        </div>
-                      </motion.div>
-                    );
-                  }
-
-                  if (event.type === "screenshot") {
-                    return (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="ml-8 flex items-center gap-2 p-2 rounded-lg bg-blue-500/[0.05] border border-blue-500/10"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-blue-400" />
-                        <span className="text-[11px] text-blue-300/60">{event.data.note as string}</span>
                       </motion.div>
                     );
                   }
@@ -424,6 +479,114 @@ export default function GrokBrainDashboardPage() {
 
                   return null;
                 })}
+
+                {/* Render round-grouped events (tool_call → tool_result → screenshot) */}
+                {Array.from(eventsByRound.entries())
+                  .sort(([a], [b]) => a - b)
+                  .map(([round, roundEvents]) => {
+                    const toolCall = roundEvents.find((e) => e.type === "tool_call");
+                    const toolResult = roundEvents.find((e) => e.type === "tool_result");
+                    const screenshot = roundEvents.find((e) => e.type === "screenshot");
+
+                    if (!toolCall) return null;
+                    const callData = toolCall.data as unknown as ToolCallEvent;
+                    const isExpanded = expandedRounds.has(callData.round);
+
+                    return (
+                      <div key={round} className="space-y-2">
+                        {/* Tool Call Card */}
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="rounded-xl bg-white/[0.03] border border-white/[0.06] overflow-hidden"
+                        >
+                          <button
+                            onClick={() => toggleRound(callData.round)}
+                            className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                                style={{ backgroundColor: `${getToolColor(callData.tool)}15`, color: getToolColor(callData.tool) }}
+                              >
+                                {getToolIcon(callData.tool)}
+                              </div>
+                              <div className="text-left">
+                                <div className="text-[12px] font-medium text-white/70">{callData.tool}</div>
+                                <div className="text-[10px] text-white/30">Round {callData.round}</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {screenshot && (screenshot.data as unknown as ScreenshotEvent).imageBase64 && (
+                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400/60 flex items-center gap-1">
+                                  <Camera className="w-3 h-3" />
+                                  img
+                                </span>
+                              )}
+                              {isExpanded ? <ChevronUp className="w-4 h-4 text-white/30" /> : <ChevronDown className="w-4 h-4 text-white/30" />}
+                            </div>
+                          </button>
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0 }}
+                                animate={{ height: "auto" }}
+                                exit={{ height: 0 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="px-4 pb-3">
+                                  <pre className="text-[11px] text-white/40 bg-black/30 rounded-lg p-3 overflow-x-auto">
+                                    {JSON.stringify(callData.arguments, null, 2)}
+                                  </pre>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
+
+                        {/* Tool Result */}
+                        {toolResult && (
+                          <motion.div
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="ml-8 flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]"
+                          >
+                            {(toolResult.data as unknown as ToolResultEvent).success ? (
+                              <CheckCircle2 className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                            ) : (
+                              <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                            )}
+                            <div className="min-w-0">
+                              <div className="text-[11px] text-white/50 mb-1">
+                                {(toolResult.data as unknown as ToolResultEvent).success ? "Success" : "Failed"} — {callData.tool}
+                              </div>
+                              {(toolResult.data as unknown as ToolResultEvent).error ? (
+                                <div className="text-[11px] text-red-300/70">{(toolResult.data as unknown as ToolResultEvent).error}</div>
+                              ) : (
+                                <pre className="text-[10px] text-white/30 bg-black/20 rounded-lg p-2 overflow-x-auto max-h-32">
+                                  {JSON.stringify((toolResult.data as unknown as ToolResultEvent).output, null, 2)}
+                                </pre>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {/* Screenshot Thumbnail */}
+                        {screenshot && (
+                          <ScreenshotThumbnail
+                            imageBase64={(screenshot.data as unknown as ScreenshotEvent).imageBase64}
+                            note={(screenshot.data as unknown as ScreenshotEvent).note}
+                            onClick={() => {
+                              const s = screenshot.data as unknown as ScreenshotEvent;
+                              if (s.imageBase64) {
+                                setModalScreenshot({ imageBase64: s.imageBase64, note: s.note });
+                              }
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
               </AnimatePresence>
             </div>
           </div>
@@ -463,6 +626,14 @@ export default function GrokBrainDashboardPage() {
                   <span className="text-white/40">Tokens</span>
                   <span className="text-white/70">{metadata.tokensUsed as number}</span>
                 </div>
+                {screenshotsByRound.size > 0 && (
+                  <div className="flex justify-between text-[12px]">
+                    <span className="text-white/40">Screenshots</span>
+                    <span className="text-blue-400/70">
+                      {Array.from(screenshotsByRound.values()).filter((s) => s.imageBase64).length} captured
+                    </span>
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-[12px] text-white/30">No execution data yet</p>
@@ -523,6 +694,17 @@ export default function GrokBrainDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Screenshot Modal */}
+      <AnimatePresence>
+        {modalScreenshot && (
+          <ScreenshotModal
+            imageBase64={modalScreenshot.imageBase64}
+            note={modalScreenshot.note}
+            onClose={() => setModalScreenshot(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -7,6 +7,7 @@
  */
 
 import type { RiskTier } from "./risk-engine";
+import { OlivFinanceAdapter } from "./oliv-bridge";
 
 // ─────────────────────────────────────────
 // 1. SHARED TYPES
@@ -261,6 +262,7 @@ class ContactHighRiskAdapter implements FactoringPartnerAdapter {
 const PARTNERS: Map<string, FactoringPartnerAdapter> = new Map([
   ["efg_hermes", new EfgHermesAdapter()],
   ["contact_high_risk", new ContactHighRiskAdapter()],
+  ["oliv_finance", new OlivFinanceAdapter()],
 ]);
 
 export function getPartner(id: string): FactoringPartnerAdapter | undefined {

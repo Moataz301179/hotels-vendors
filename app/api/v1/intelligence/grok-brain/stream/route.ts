@@ -2,6 +2,9 @@
  * Grok Brain Streaming API
  * Server-Sent Events (SSE) endpoint that streams execution events in real-time
  * Events: thinking, tool_call, tool_result, screenshot, final_answer, error
+ *
+ * Screenshot handling: Extracts base64 screenshots from OpenClaw tool results
+ * and emits them as screenshot events for inline thumbnail display.
  */
 
 import { NextRequest } from "next/server";
@@ -22,6 +25,44 @@ RULES:
 
 CURRENT DATE: ${new Date().toISOString().split("T")[0]}
 PLATFORM: Hotels Vendors — AI-Powered Procurement Ecosystem for Egyptian Hospitality`;
+
+/**
+ * Extract screenshot data from an OpenClaw tool result.
+ * OpenClaw returns screenshot_b64 at various nesting levels depending on endpoint.
+ */
+function extractScreenshot(output: unknown): string | null {
+  if (!output || typeof output !== "object") return null;
+  const o = output as Record<string, unknown>;
+
+  // Direct screenshot_b64 on navigate/extract response
+  if (o.screenshot_b64 && typeof o.screenshot_b64 === "string") {
+    return o.screenshot_b64;
+  }
+
+  // Nested in data (some OpenClaw endpoints)
+  if (o.data && typeof o.data === "object") {
+    const d = o.data as Record<string, unknown>;
+    if (d.screenshot_b64 && typeof d.screenshot_b64 === "string") {
+      return d.screenshot_b64;
+    }
+  }
+
+  // Skill execution returns results array with screenshot_b64 in each step
+  if (o.results && Array.isArray(o.results)) {
+    // Find the last step that has a screenshot
+    for (let i = o.results.length - 1; i >= 0; i--) {
+      const step = o.results[i] as Record<string, unknown>;
+      if (step.data && typeof step.data === "object") {
+        const sd = step.data as Record<string, unknown>;
+        if (sd.screenshot_b64 && typeof sd.screenshot_b64 === "string") {
+          return sd.screenshot_b64;
+        }
+      }
+    }
+  }
+
+  return null;
+}
 
 export async function POST(request: NextRequest) {
   const encoder = new TextEncoder();
@@ -64,7 +105,7 @@ export async function POST(request: NextRequest) {
             { maxToolRounds: maxRounds, temperature: 0.3, maxTokens: 4096 }
           );
 
-          // Stream each tool call
+          // Stream each tool call with results and screenshots
           for (let i = 0; i < result.toolCalls.length; i++) {
             const tc = result.toolCalls[i];
             const tr = result.toolResults[i];
@@ -86,12 +127,23 @@ export async function POST(request: NextRequest) {
               error: tr.error,
             });
 
-            // If OpenClaw was used, try to include a screenshot reference
-            if (tc.name.startsWith("openclaw_")) {
+            // Extract and emit screenshots from tool results
+            const screenshotB64 = extractScreenshot(tr.output);
+            if (screenshotB64) {
               send("screenshot", {
                 round: i + 1,
                 tool: tc.name,
-                note: "Browser automation completed",
+                imageBase64: screenshotB64,
+                note: "Browser screenshot captured",
+              });
+            } else if (tc.name.startsWith("openclaw_")) {
+              // Fallback: still emit a screenshot event for OpenClaw tools
+              // even if no image was captured (for UI consistency)
+              send("screenshot", {
+                round: i + 1,
+                tool: tc.name,
+                imageBase64: null,
+                note: "Browser automation completed (no screenshot captured)",
               });
             }
           }

@@ -26,13 +26,13 @@ async function callOpenClaw(endpoint: string, payload: unknown): Promise<unknown
 
 export const openclawNavigateTool: ToolDefinition = {
   name: "openclaw_navigate",
-  description: "Navigate a headless browser to a URL and optionally take a screenshot. Use this to visit websites, check competitor pages, verify supplier sites, or extract page content.",
+  description: "Navigate a headless browser to a URL and capture a screenshot. Use this to visit websites, check competitor pages, verify supplier sites, or extract page content. Screenshots are always captured for the dashboard.",
   parameters: {
     type: "object",
     properties: {
       url: { type: "string", description: "The URL to navigate to" },
       waitFor: { type: "string", description: "CSS selector to wait for before considering page loaded" },
-      screenshot: { type: "boolean", description: "Whether to take a screenshot" },
+      screenshot: { type: "boolean", description: "Whether to take a screenshot (default: true)" },
       timeout: { type: "number", description: "Max wait time in milliseconds" },
     },
     required: ["url"],
@@ -42,7 +42,7 @@ export const openclawNavigateTool: ToolDefinition = {
     return callOpenClaw("/navigate", {
       url,
       wait_for_selector: waitFor || "body",
-      take_screenshot: screenshot ?? false,
+      take_screenshot: screenshot !== false, // default true
       timeout_ms: timeout || 30_000,
     });
   },
@@ -50,7 +50,7 @@ export const openclawNavigateTool: ToolDefinition = {
 
 export const openclawExtractTool: ToolDefinition = {
   name: "openclaw_extract",
-  description: "Extract structured data from a webpage using CSS selectors. Use this to scrape prices, product listings, contact info, or any structured data from a page.",
+  description: "Extract structured data from a webpage using CSS selectors and capture a screenshot. Use this to scrape prices, product listings, contact info, or any structured data from a page.",
   parameters: {
     type: "object",
     properties: {
@@ -61,23 +61,25 @@ export const openclawExtractTool: ToolDefinition = {
       },
       listSelector: { type: "string", description: "If extracting a list, the CSS selector for each item container" },
       maxItems: { type: "number", description: "Maximum number of list items to extract" },
+      screenshot: { type: "boolean", description: "Whether to take a screenshot (default: true)" },
     },
     required: ["url", "selectors"],
   },
   handler: async (args) => {
-    const { url, selectors, listSelector, maxItems } = args as Record<string, unknown>;
+    const { url, selectors, listSelector, maxItems, screenshot } = args as Record<string, unknown>;
     return callOpenClaw("/extract", {
       url,
       selectors,
       list_selector: listSelector,
       max_items: maxItems || 50,
+      screenshot: screenshot !== false,
     });
   },
 };
 
 export const openclawDeepScrapeTool: ToolDefinition = {
   name: "openclaw_deep_scrape",
-  description: "Deep scrape a paginated or infinite-scroll listing page. Use this for competitor catalog scraping, hotel directory harvesting, or supplier list building.",
+  description: "Deep scrape a paginated or infinite-scroll listing page with screenshot capture. Use this for competitor catalog scraping, hotel directory harvesting, or supplier list building.",
   parameters: {
     type: "object",
     properties: {
@@ -89,24 +91,26 @@ export const openclawDeepScrapeTool: ToolDefinition = {
         type: "object",
         description: "Map of field names to CSS selectors within each item",
       },
+      screenshot: { type: "boolean", description: "Whether to take a screenshot (default: true)" },
     },
     required: ["url", "itemSelector", "fields"],
   },
   handler: async (args) => {
-    const { url, itemSelector, nextButtonSelector, maxPages, fields } = args as Record<string, unknown>;
+    const { url, itemSelector, nextButtonSelector, maxPages, fields, screenshot } = args as Record<string, unknown>;
     return callOpenClaw("/deep-scrape", {
       url,
       item_selector: itemSelector,
       next_button_selector: nextButtonSelector,
       max_pages: maxPages || 10,
       fields,
+      screenshot: screenshot !== false,
     });
   },
 };
 
 export const openclawSmartNavigateTool: ToolDefinition = {
   name: "openclaw_smart_navigate",
-  description: "LLM-guided browser automation. Describe a goal (e.g. 'Find the pricing page and extract all plan prices') and the browser will navigate, click, and extract autonomously. Use for complex multi-step web tasks.",
+  description: "LLM-guided browser automation with screenshot capture. Describe a goal (e.g. 'Find the pricing page and extract all plan prices') and the browser will navigate, click, and extract autonomously. Use for complex multi-step web tasks.",
   parameters: {
     type: "object",
     properties: {
@@ -114,23 +118,25 @@ export const openclawSmartNavigateTool: ToolDefinition = {
       goal: { type: "string", description: "High-level goal description in natural language" },
       maxSteps: { type: "number", description: "Maximum browser actions (default 15)" },
       returnData: { type: "boolean", description: "Whether to return extracted data (default true)" },
+      screenshot: { type: "boolean", description: "Whether to take screenshots (default: true)" },
     },
     required: ["url", "goal"],
   },
   handler: async (args) => {
-    const { url, goal, maxSteps, returnData } = args as Record<string, unknown>;
+    const { url, goal, maxSteps, returnData, screenshot } = args as Record<string, unknown>;
     return callOpenClaw("/smart-navigate", {
       url,
       goal,
       max_steps: maxSteps || 15,
       return_data: returnData ?? true,
+      screenshot: screenshot !== false,
     });
   },
 };
 
 export const openclawUseSkillTool: ToolDefinition = {
   name: "openclaw_use_skill",
-  description: "Execute an OpenClaw AfrexAI skill to run a pre-built browser automation procedure. Skills available: afrexai-business-automation (supplier discovery, competitor price tracking, hotel enrichment), afrexai-prospect-research (research hotels/suppliers from a name), afrexai-competitor-analysis (analyze competitor digital presence and pricing), afrexai-crm (lead nurturing, reorder reminders, churn prevention), afrexai-daily-briefing (platform pulse, market compass). Use this when you need a multi-step structured procedure rather than a single action.",
+  description: "Execute an OpenClaw AfrexAI skill to run a pre-built browser automation procedure with screenshot capture. Skills available: afrexai-business-automation (supplier discovery, competitor price tracking, hotel enrichment), afrexai-prospect-research (research hotels/suppliers from a name), afrexai-competitor-analysis (analyze competitor digital presence and pricing), afrexai-crm (lead nurturing, reorder reminders, churn prevention), afrexai-daily-briefing (platform pulse, market compass). Use this when you need a multi-step structured procedure rather than a single action.",
   parameters: {
     type: "object",
     properties: {
@@ -138,7 +144,7 @@ export const openclawUseSkillTool: ToolDefinition = {
       procedure: { type: "string", description: "Procedure name within the skill (optional — defaults to first procedure)" },
       params: { type: "object", description: "Parameters for the skill procedure — e.g. {name: 'Fairmont Nile City', city: 'Cairo'} or {url: 'https://suplyd.app'}" },
       sessionId: { type: "string", description: "Session ID for persistent browser state (optional)" },
-      screenshot: { type: "boolean", description: "Take screenshots during execution (default false)" },
+      screenshot: { type: "boolean", description: "Take screenshots during execution (default: true)" },
     },
     required: ["skill"],
   },
@@ -149,7 +155,7 @@ export const openclawUseSkillTool: ToolDefinition = {
       procedure: procedure || undefined,
       params: params || {},
       session_id: sessionId || undefined,
-      screenshot: screenshot ?? false,
+      screenshot: screenshot !== false, // default true
     });
   },
 };

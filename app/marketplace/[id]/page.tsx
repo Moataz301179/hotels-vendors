@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "@/components/marketplace/product-detail-client";
-import catalogData from "@/data/catalog-products.json";
-
-const ALL_PRODUCTS = (catalogData as { products: any[] }).products;
+import { transformToMarketplaceProduct } from "@/lib/marketplace/category-mapper";
+import { prisma } from "@/lib/prisma";
 
 export async function generateMetadata({
   params,
@@ -11,7 +10,15 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const product = ALL_PRODUCTS.find((p) => p.id === id);
+
+  const product = await prisma.product.findUnique({
+    where: { id, status: "ACTIVE" },
+    include: {
+      supplier: {
+        select: { id: true, name: true, tier: true, rating: true, reviewCount: true, city: true },
+      },
+    },
+  });
 
   if (!product) {
     return {
@@ -20,12 +27,14 @@ export async function generateMetadata({
     };
   }
 
+  const mp = transformToMarketplaceProduct(product);
+
   return {
-    title: `${product.name} — ${product.supplierName}`,
-    description: `${product.description} Available on Hotels Vendors marketplace. ${product.unitPrice} EGP per ${product.unitOfMeasure}.`,
+    title: `${mp.name} — ${mp.supplierName}`,
+    description: `${mp.description || ""} Available on Hotels Vendors marketplace. ${mp.unitPrice} EGP per ${mp.unitOfMeasure}.`,
     openGraph: {
-      title: `${product.name} — Hotels Vendors Marketplace`,
-      description: product.description,
+      title: `${mp.name} — Hotels Vendors Marketplace`,
+      description: mp.description || "",
       images: ["/hotelsvendors-logo.png"],
     },
   };
@@ -37,11 +46,28 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = ALL_PRODUCTS.find((p) => p.id === id);
+
+  const product = await prisma.product.findUnique({
+    where: { id, status: "ACTIVE" },
+    include: {
+      supplier: {
+        select: {
+          id: true,
+          name: true,
+          tier: true,
+          rating: true,
+          reviewCount: true,
+          city: true,
+        },
+      },
+    },
+  });
 
   if (!product) {
     notFound();
   }
 
-  return <ProductDetailClient productId={id} />;
+  const marketplaceProduct = transformToMarketplaceProduct(product);
+
+  return <ProductDetailClient product={marketplaceProduct} />;
 }

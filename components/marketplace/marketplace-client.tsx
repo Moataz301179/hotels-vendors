@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Crown,
   Check,
+  Loader2,
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
@@ -27,14 +28,7 @@ import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
-import catalogData from "@/data/catalog-products.json";
-
-const ALL_PRODUCTS: any[] = (catalogData as { products: any[] }).products;
-
-const COUNTS = ALL_PRODUCTS.reduce((acc, p) => {
-  acc[p.category] = (acc[p.category] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>);
+import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
 
 const CAT_IMAGES: Record<string, string> = {
   fb: getCategoryImage("fb"),
@@ -49,7 +43,7 @@ const CAT_IMAGES: Record<string, string> = {
   sec: getCategoryImage("sec"),
 };
 
-function ProductImage({ product }: { product: any }) {
+function ProductImage({ product }: { product: MarketplaceProduct }) {
   const [error, setError] = useState(false);
   const resolved = getProductImage(product);
 
@@ -66,7 +60,9 @@ function ProductImage({ product }: { product: any }) {
   }
 
   const colors = resolved.type === "gradient" ? resolved.colors : ["#1a1a2e", "#2a2a4a", "#4a4a7a"];
-  const initials = resolved.type === "gradient" ? resolved.initials : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
+  const initials = resolved.type === "gradient"
+    ? resolved.initials
+    : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
 
   return (
     <div
@@ -82,26 +78,10 @@ function ProductImage({ product }: { product: any }) {
 }
 
 const FILTER_OPTIONS = [
-  {
-    label: "Brand",
-    options: ["Al-Waha", "Delta Fresh", "CleanMax", "Cotton House", "Nile Fresh"],
-  },
-  {
-    label: "Price",
-    options: ["Under 100 EGP", "100-500 EGP", "500-1K EGP", "1K+ EGP"],
-  },
-  {
-    label: "Rating",
-    options: ["4.5+ Stars", "4.0+ Stars", "3.5+ Stars"],
-  },
-  {
-    label: "Delivery",
-    options: ["Same Day", "24 Hours", "48 Hours", "3-5 Days"],
-  },
-  {
-    label: "Stock",
-    options: ["In Stock", "Low Stock", "Pre-Order"],
-  },
+  { label: "Price", options: ["Under 100 EGP", "100-500 EGP", "500-1K EGP", "1K+ EGP"] },
+  { label: "Rating", options: ["4.5+ Stars", "4.0+ Stars", "3.5+ Stars"] },
+  { label: "Delivery", options: ["Same Day", "24 Hours", "48 Hours", "3-5 Days"] },
+  { label: "Stock", options: ["In Stock", "Low Stock", "Pre-Order"] },
 ];
 
 export default function MarketplacePage() {
@@ -118,18 +98,58 @@ export default function MarketplacePage() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [expandedFilter, setExpandedFilter] = useState<string | null>(null);
 
-  const filtered = useMemo(() => {
-    let list = [...ALL_PRODUCTS];
-    if (activeCategory) list = list.filter((p) => p.category === activeCategory);
-    if (search) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.sku.toLowerCase().includes(q) ||
-          p.supplierName.toLowerCase().includes(q)
-      );
+  // Real product data from API
+  const [products, setProducts] = useState<MarketplaceProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      if (activeCategory) params.set("category", activeCategory);
+      params.set("status", "ACTIVE");
+      params.set("limit", "48");
+      params.set("page", "1");
+
+      const res = await fetch(`/api/v1/products?${params.toString()}`);
+      const json = await res.json();
+
+      if (!json.success) {
+        throw new Error(json.error || "Failed to load products");
+      }
+
+      setProducts(json.data.products);
+      setTotalProducts(json.data.pagination.total);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load products");
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
+  }, [search, activeCategory]);
+
+  // Debounced fetch
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [fetchProducts]);
+
+  // Category counts from fetched products
+  const COUNTS = useMemo(() => {
+    return products.reduce((acc, p) => {
+      acc[p.category] = (acc[p.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [products]);
+
+  const filtered = useMemo(() => {
+    let list = [...products];
     if (activeFilters.includes("In Stock")) list = list.filter((p) => p.stockQuantity > 0);
     if (activeFilters.includes("Low Stock")) list = list.filter((p) => p.stockQuantity > 0 && p.stockQuantity < 20);
     if (activeFilters.includes("Pre-Order")) list = list.filter((p) => p.stockQuantity === 0);
@@ -144,17 +164,12 @@ export default function MarketplacePage() {
     if (activeFilters.includes("24 Hours")) list = list.filter((p) => p.leadTimeDays <= 1);
     if (activeFilters.includes("48 Hours")) list = list.filter((p) => p.leadTimeDays <= 2);
     if (activeFilters.includes("3-5 Days")) list = list.filter((p) => p.leadTimeDays >= 3 && p.leadTimeDays <= 5);
-    const brandFilters = ["Al-Waha", "Delta Fresh", "CleanMax", "Cotton House", "Nile Fresh"];
-    const activeBrands = activeFilters.filter((f) => brandFilters.includes(f));
-    if (activeBrands.length > 0) {
-      list = list.filter((p) => activeBrands.some((b) => p.supplierName.includes(b)));
-    }
     if (sortBy === "price_low") list.sort((a, b) => a.unitPrice - b.unitPrice);
     else if (sortBy === "price_high") list.sort((a, b) => b.unitPrice - a.unitPrice);
     else if (sortBy === "rating") list.sort((a, b) => b.supplierRating - a.supplierRating);
     else if (sortBy === "lead") list.sort((a, b) => a.leadTimeDays - b.leadTimeDays);
     return list;
-  }, [activeCategory, search, sortBy, activeFilters]);
+  }, [products, activeFilters, sortBy]);
 
   const toggleFilter = (filter: string) => {
     setActiveFilters((prev) =>
@@ -164,14 +179,14 @@ export default function MarketplacePage() {
 
   const { addItem, openCart, totalItems } = useCart();
 
-  const handleAdd = (product: any) => {
+  const handleAdd = (product: MarketplaceProduct) => {
     const resolved = getProductImage(product);
     addItem({
       productId: product.id,
       name: product.name,
       sku: product.sku,
       unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
-      supplierId: product.id,
+      supplierId: product.supplierId, // FIXED: was product.id
       supplierName: product.supplierName,
       image: resolved.type === "url" ? resolved.src : undefined,
     });
@@ -345,11 +360,12 @@ export default function MarketplacePage() {
               >
                 <Package className="w-4 h-4" />
                 {t("allCategories")}
-                <span className="ml-auto text-[10px] text-white/25">{ALL_PRODUCTS.length}</span>
+                <span className="ml-auto text-[10px] text-white/25">{totalProducts}</span>
               </button>
 
               {HOTEL_CATEGORIES.map((cat) => {
                 const isActive = activeCategory === cat.id;
+                const count = COUNTS[cat.id] || 0;
                 return (
                   <button
                     key={cat.id}
@@ -362,7 +378,7 @@ export default function MarketplacePage() {
                       <img src={CAT_IMAGES[cat.id] || CAT_IMAGES.fb} alt={cat.label} className="w-full h-full object-cover" />
                     </div>
                     <span className="text-left">{cat.label}</span>
-                    <span className="ml-auto text-[10px] text-white/25">{COUNTS[cat.id] || 0}</span>
+                    <span className="ml-auto text-[10px] text-white/25">{count}</span>
                   </button>
                 );
               })}
@@ -373,8 +389,17 @@ export default function MarketplacePage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-4">
               <span className="text-[13px] text-white/40">
-                {filtered.length} {filtered.length !== 1 ? t("results") : t("result")}
-                {activeCategory && ` ${t("in")} ${getCategoryById(activeCategory)?.label}`}
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Loading products...
+                  </span>
+                ) : (
+                  <>
+                    {filtered.length} {filtered.length !== 1 ? t("results") : t("result")}
+                    {activeCategory && ` ${t("in")} ${getCategoryById(activeCategory)?.label}`}
+                  </>
+                )}
               </span>
               {memberMode && (
                 <span className="flex items-center gap-1.5 text-[11px] text-white/60">
@@ -383,7 +408,21 @@ export default function MarketplacePage() {
               )}
             </div>
 
-            {filtered.length === 0 ? (
+            {error ? (
+              <div className="flex flex-col items-center justify-center py-24 text-white/30">
+                <div className="w-16 h-16 rounded-2xl bg-red-500/5 border border-red-500/10 flex items-center justify-center mb-5">
+                  <Package className="w-7 h-7 text-red-400/30" />
+                </div>
+                <h3 className="text-lg font-semibold text-white/60 mb-1">Failed to load products</h3>
+                <p className="text-sm text-white/25 max-w-sm text-center mb-6">{error}</p>
+                <button
+                  onClick={fetchProducts}
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8B0000] hover:bg-[#6B0000] transition-colors"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : filtered.length === 0 && !loading ? (
               <div className="flex flex-col items-center justify-center py-24 text-white/30">
                 <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-5">
                   <Package className="w-7 h-7 text-white/15" />
