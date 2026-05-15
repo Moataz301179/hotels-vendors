@@ -33,6 +33,8 @@ import {
   ShoppingBag,
   HeartPulse,
   FileEdit,
+  Search,
+  Brain,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -76,19 +78,23 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
   ],
   admin: [
     {
-      section: "PLATFORM",
+      section: "COMMAND CENTER",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-        { icon: BrainCircuit, label: "Orchestrator", href: "/admin/orchestrator" },
-        { icon: BarChart3, label: "Analytics", href: "/analytics" },
-        { icon: Bot, label: "AI Agents", href: "/ai-agents" },
+        { icon: Search, label: "Data Explorer", href: "/admin/explorer" },
+        { icon: Brain, label: "AI Insights", href: "/admin/ai-insights" },
         { icon: Users, label: "Users", href: "/admin/users" },
-        { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
-        { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
+        { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+      ],
+    },
+    {
+      section: "AI & AUTOMATION",
+      items: [
+        { icon: BrainCircuit, label: "Orchestrator", href: "/admin/orchestrator" },
+        { icon: BrainCircuit, label: "Grok Brain", href: "/admin/grok-brain" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
-        { icon: HeartPulse, label: "Health", href: "/admin/health" },
-        { icon: FileEdit, label: "Content Editor", href: "/admin/cms" },
+        { icon: Bot, label: "AI Agents", href: "/ai-agents" },
       ],
     },
     {
@@ -97,7 +103,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: PackageSearch, label: "Products", href: "/admin/marketplace/products" },
         { icon: ShoppingBag, label: "Orders", href: "/admin/marketplace/orders" },
         { icon: Building2, label: "Hotels", href: "/admin/marketplace/hotels" },
-        { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+        { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
+        { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
       ],
     },
     {
@@ -118,8 +125,10 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       ],
     },
     {
-      section: "GOVERNANCE",
+      section: "PLATFORM",
       items: [
+        { icon: HeartPulse, label: "Health", href: "/admin/health" },
+        { icon: FileEdit, label: "Content Editor", href: "/admin/cms" },
         { icon: Scale, label: "Disputes", href: "/dispute" },
         { icon: Shield, label: "Security", href: "/security" },
         { icon: Settings, label: "Settings", href: "/settings" },

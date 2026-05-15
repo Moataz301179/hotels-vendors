@@ -184,6 +184,10 @@ export function handleApiError(err: unknown): NextResponse {
     const messages = err.issues.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
     return error(`Validation error: ${messages}`, 400);
   }
+  // Permission denied → 403 (PermissionDeniedError extends Error but has name="PermissionDeniedError")
+  if (err instanceof Error && err.name === "PermissionDeniedError") {
+    return error(err.message, 403);
+  }
   if (err instanceof Error) {
     return error(err.message, 500);
   }

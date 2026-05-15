@@ -139,11 +139,15 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'light';
+                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
                   if (mode === 'light') {
                     document.documentElement.setAttribute('data-theme', 'light');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#ffffff');
+                    if (meta) meta.setAttribute('content', '#f8f9fa');
+                  } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    var meta = document.getElementById('theme-color-meta');
+                    if (meta) meta.setAttribute('content', '#121212');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

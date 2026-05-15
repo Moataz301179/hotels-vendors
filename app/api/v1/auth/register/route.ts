@@ -33,10 +33,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const isIndividual = data.accountType === "individual";
   const accountType = isIndividual ? "INDIVIDUAL" : "BUSINESS";
 
-  // Generate tenant slug
-  const tenantSlug = isIndividual
-    ? `individual-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    : `${data.type}-${data.taxId || Date.now()}`;
+  // Generate tenant slug — no longer depends on taxId
+  const tenantSlug = `${data.type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const uniquePlaceholder = `PENDING-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
   // 1. Create Tenant first — every entity belongs to a tenant
   const tenant = await prisma.tenant.create({
@@ -71,13 +70,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
     accountType: accountType as "INDIVIDUAL" | "BUSINESS",
   };
 
-  if (!isIndividual && data.type === "hotel") {
+  if (data.type === "hotel") {
     hotel = await prisma.hotel.create({
       data: {
         name: data.name,
-        taxId: data.taxId || "PENDING",
-        city: data.city,
-        governorate: data.governorate,
+        taxId: data.taxId || uniquePlaceholder,
+        city: data.city || "Cairo",
+        governorate: data.governorate || "Cairo",
         address: data.address,
         commercialReg: data.commercialReg,
         email: data.email,
@@ -87,38 +86,41 @@ export const POST = apiRoute(async (request: NextRequest) => {
     await prisma.user.create({
       data: { ...userBase, hotelId: hotel.id },
     });
-  } else if (!isIndividual && data.type === "supplier") {
+  } else if (data.type === "supplier") {
     supplier = await prisma.supplier.create({
       data: {
         name: data.name,
-        taxId: data.taxId || "PENDING",
+        taxId: data.taxId || uniquePlaceholder,
         email: data.email,
-        city: data.city,
-        governorate: data.governorate,
+        city: data.city || "Cairo",
+        governorate: data.governorate || "Cairo",
         address: data.address,
         commercialReg: data.commercialReg,
         phone: data.phone,
         tenantId: tenant.id,
+        status: "ACTIVE", // Auto-approve for testing
+        tier: "CORE",
       },
     });
     await prisma.user.create({
       data: { ...userBase, supplierId: supplier.id },
     });
-  } else if (!isIndividual && data.type === "factoring") {
+  } else if (data.type === "factoring") {
     factoringCompany = await prisma.factoringCompany.create({
       data: {
         name: data.name,
-        taxId: data.taxId || "PENDING",
+        taxId: data.taxId || uniquePlaceholder,
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
+        status: "ACTIVE",
       },
     });
     await prisma.user.create({
       data: { ...userBase, factoringCompanyId: factoringCompany.id },
     });
   } else {
-    // Individual or shipping — create user only, no entity yet
+    // Shipping or individual — create user only, no entity yet
     await prisma.user.create({
       data: userBase,
     });

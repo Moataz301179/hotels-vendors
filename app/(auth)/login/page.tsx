@@ -34,7 +34,8 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
+      // "admin" / "Admin" alias → Admin account
+      const resolvedEmail = email.toLowerCase() === "admin" ? "Admin" : email;
       const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,6 +48,12 @@ export default function LoginPage() {
         const role = data.user?.platformRole;
         if (role === "ADMIN") {
           router.push("/admin");
+        } else if (role === "SUPPLIER") {
+          router.push("/supplier");
+        } else if (role === "FACTORING") {
+          router.push("/factoring");
+        } else if (role === "SHIPPING") {
+          router.push("/shipping");
         } else {
           router.push("/hotel");
         }

@@ -1,15 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
-  Search,
-  Eye,
-  RefreshCw,
-  Package,
-  Truck,
-  DollarSign,
-  Clock,
+  Search, Eye, RefreshCw, Package, Truck, DollarSign, Clock, Loader2,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
@@ -47,11 +41,6 @@ interface Order {
   createdAt: string;
 }
 
-interface OrdersApiResponse {
-  orders: Order[];
-  pagination?: { total: number };
-}
-
 type StatusTab = "all" | "pending" | "processing" | "shipped" | "delivered";
 
 const STATUS_TABS: { key: StatusTab; label: string }[] = [
@@ -62,6 +51,17 @@ const STATUS_TABS: { key: StatusTab; label: string }[] = [
   { key: "delivered", label: "Delivered" },
 ];
 
+// Valid status transitions for suppliers
+const SUPPLIER_ACTIONS: Record<string, { label: string; nextStatus: string; color: string }[]> = {
+  APPROVED: [{ label: "Confirm Order", nextStatus: "CONFIRMED", color: "bg-blue-500" }],
+  CONFIRMED: [{ label: "Mark In Transit", nextStatus: "IN_TRANSIT", color: "bg-cyan-500" }],
+  IN_TRANSIT: [
+    { label: "Mark Delivered", nextStatus: "DELIVERED", color: "bg-emerald-500" },
+    { label: "Partial Delivery", nextStatus: "PARTIALLY_DELIVERED", color: "bg-amber-500" },
+  ],
+  PARTIALLY_DELIVERED: [{ label: "Mark Delivered", nextStatus: "DELIVERED", color: "bg-emerald-500" }],
+};
+
 function formatCurrency(amount: number, currency = "EGP") {
   return `${currency} ${amount.toLocaleString("en-EG")}`;
 }
@@ -71,7 +71,7 @@ function statusMatchesTab(status: string, tab: StatusTab): boolean {
   const s = status.toLowerCase().replace(/_/g, " ");
   if (tab === "pending") return s.includes("pending") || s.includes("draft");
   if (tab === "processing") return s.includes("processing") || s.includes("approved") || s.includes("confirmed");
-  if (tab === "shipped") return s.includes("shipped") || s.includes("transit");
+  if (tab === "shipped") return s.includes("shipped") || s.includes("transit") || s.includes("partially");
   if (tab === "delivered") return s.includes("delivered");
   return false;
 }
@@ -81,8 +81,10 @@ export default function SupplierOrdersPage() {
   const [activeTab, setActiveTab] = useState<StatusTab>("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [updateOrder, setUpdateOrder] = useState<Order | null>(null);
+  const [updating, setUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState("");
 
-  const { data, loading, error, refetch } = useApi<OrdersApiResponse>("/api/orders");
+  const { data, loading, error, refetch } = useApi<{ orders: Order[]; pagination?: { total: number } }>("/api/v1/supplier/orders");
 
   const orders = useMemo(() => data?.orders ?? [], [data]);
 
@@ -97,103 +99,100 @@ export default function SupplierOrdersPage() {
   }, [orders, searchQuery, activeTab]);
 
   const stats = useMemo(() => {
-    const newOrders = orders.filter((o) =>
-      statusMatchesTab(o.status, "pending")
-    ).length;
-    const processing = orders.filter((o) =>
-      statusMatchesTab(o.status, "processing")
-    ).length;
-    const shipped = orders.filter((o) =>
-      statusMatchesTab(o.status, "shipped")
-    ).length;
-    const revenue = orders
-      .filter((o) => !o.status.toLowerCase().includes("cancel"))
-      .reduce((sum, o) => sum + o.total, 0);
-
-    return [
-      { label: "New Orders", value: newOrders.toString(), icon: Clock, color: "text-amber-400" },
-      { label: "Processing", value: processing.toString(), icon: Package, color: "text-purple-400" },
-      { label: "Shipped", value: shipped.toString(), icon: Truck, color: "text-cyan-400" },
-      { label: "Revenue", value: formatCurrency(revenue), icon: DollarSign, color: "text-emerald-400" },
-    ];
+    const newOrders = orders.filter((o) => o.status === "PENDING_APPROVAL" || o.status === "APPROVED").length;
+    const processing = orders.filter((o) => o.status === "CONFIRMED" || o.status === "IN_TRANSIT").length;
+    const delivered = orders.filter((o) => o.status === "DELIVERED").length;
+    const revenue = orders.filter((o) => o.status === "DELIVERED").reduce((sum, o) => sum + (o.total || 0), 0);
+    return { newOrders, processing, delivered, revenue };
   }, [orders]);
+
+  const handleStatusUpdate = useCallback(async (orderId: string, nextStatus: string) => {
+    setUpdating(true);
+    setUpdateError("");
+    try {
+      const res = await fetch(`/api/v1/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: nextStatus }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        setUpdateError(json.error || "Update failed");
+      } else {
+        setUpdateOrder(null);
+        refetch();
+      }
+    } catch (err: any) {
+      setUpdateError(err.message || "Network error");
+    } finally {
+      setUpdating(false);
+    }
+  }, [refetch]);
+
+  const availableActions = updateOrder ? SUPPLIER_ACTIONS[updateOrder.status] || [] : [];
 
   return (
     <motion.div
-      className="max-w-[1600px] mx-auto space-y-6"
+      className="space-y-6"
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
     >
       {/* Header */}
-      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Order Fulfillment</h1>
-          <p className="text-sm text-white/40 mt-0.5">Track and manage incoming orders from hotels</p>
+          <h1 className="text-xl font-bold text-white">Order Fulfillment</h1>
+          <p className="text-sm text-white/40 mt-0.5">Manage and fulfill incoming orders</p>
         </div>
-        <button
-          onClick={refetch}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all self-start"
-        >
-          <RefreshCw size={14} />
-          Refresh
-        </button>
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => <LoadingCard key={i} />)
-          : stats.map((s) => (
-              <motion.div
-                key={s.label}
-                variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className={s.color} />
-                  </div>
-                </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
-              </motion.div>
-            ))}
+      <motion.div variants={fadeInUp} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "New Orders", value: stats.newOrders, icon: Package, color: "text-amber-400" },
+          { label: "Processing", value: stats.processing, icon: Clock, color: "text-blue-400" },
+          { label: "Delivered", value: stats.delivered, icon: Truck, color: "text-emerald-400" },
+          { label: "Revenue", value: formatCurrency(stats.revenue), icon: DollarSign, color: "text-cyan-400" },
+        ].map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.label} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+              <div className="flex items-center gap-2 mb-2">
+                <Icon size={14} className={stat.color} />
+                <span className="text-[10px] text-white/30 uppercase tracking-wider">{stat.label}</span>
+              </div>
+              <p className="text-lg font-semibold text-white">{stat.value}</p>
+            </div>
+          );
+        })}
       </motion.div>
 
-      {/* Tabs + Search */}
-      <motion.div variants={fadeInUp} className="flex flex-col lg:flex-row lg:items-center gap-3">
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 lg:pb-0">
-          {STATUS_TABS.map((tab) => {
-            const count = orders.filter((o) => statusMatchesTab(o.status, tab.key)).length;
-            const isActive = activeTab === tab.key;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                  isActive
-                    ? "bg-white/[0.06] text-white border border-white/[0.08]"
-                    : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
-                }`}
-              >
-                {tab.label}
-                <span className={`ml-1.5 text-[10px] ${isActive ? "text-white/50" : "text-white/15"}`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-        <div className="relative flex-1 lg:max-w-xs lg:ml-auto">
+      {/* Search & Tabs */}
+      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
           <input
             type="text"
-            placeholder="Search by order ID or hotel..."
+            placeholder="Search orders..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-full"
+            className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-white/12"
           />
+        </div>
+        <div className="flex gap-1">
+          {STATUS_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                activeTab === tab.key
+                  ? "bg-[#8B0000]/20 text-[#ff6b6b] border border-[#8B0000]/30"
+                  : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </motion.div>
 
@@ -255,13 +254,15 @@ export default function SupplierOrdersPage() {
                         >
                           <Eye size={14} />
                         </button>
-                        <button
-                          onClick={() => setUpdateOrder(order)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                          title="Update Status"
-                        >
-                          <RefreshCw size={14} />
-                        </button>
+                        {SUPPLIER_ACTIONS[order.status]?.length > 0 && (
+                          <button
+                            onClick={() => setUpdateOrder(order)}
+                            className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                            title="Update Status"
+                          >
+                            <RefreshCw size={14} />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -306,54 +307,49 @@ export default function SupplierOrdersPage() {
                 )}
               </div>
             </div>
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-[10px] text-white/20 uppercase">Order Date</p>
-              <p className="text-sm text-white mt-0.5">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
-            </div>
           </div>
         )}
       </Modal>
 
-      {/* Update Status Modal (placeholder) */}
+      {/* Update Status Modal */}
       <Modal
         isOpen={!!updateOrder}
-        onClose={() => setUpdateOrder(null)}
+        onClose={() => { setUpdateOrder(null); setUpdateError(""); }}
         title="Update Order Status"
         description={`Order ${updateOrder?.orderNumber}`}
         size="sm"
       >
         {updateOrder && (
           <div className="space-y-3">
-            <p className="text-xs text-white/40">Current status:</p>
             <div className="flex items-center gap-2">
+              <span className="text-xs text-white/40">Current:</span>
               <StatusPill status={updateOrder.status} />
             </div>
-            <div className="pt-2">
-              <p className="text-xs text-white/40 mb-2">Select new status:</p>
-              <div className="grid grid-cols-2 gap-2">
-                {["Pending", "Processing", "Shipped", "Delivered"].map((s) => (
+
+            {updateError && (
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+                {updateError}
+              </div>
+            )}
+
+            <div className="pt-1">
+              <p className="text-xs text-white/40 mb-2">Select action:</p>
+              <div className="grid gap-2">
+                {availableActions.map((action) => (
                   <button
-                    key={s}
-                    className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 hover:bg-white/[0.04] hover:text-white transition-colors text-left"
+                    key={action.nextStatus}
+                    disabled={updating}
+                    onClick={() => handleStatusUpdate(updateOrder.id, action.nextStatus)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white/80 hover:bg-white/[0.04] hover:border-white/[0.10] transition-all disabled:opacity-50 ${action.color.replace("bg-", "hover:bg-")}`}
                   >
-                    {s}
+                    <span>{action.label}</span>
+                    {updating && <Loader2 size={14} className="animate-spin text-white/30" />}
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setUpdateOrder(null)}
-                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setUpdateOrder(null)}
-                className="px-4 py-2 rounded-lg bg-[#8B0000] text-xs text-white font-medium hover:bg-[#8B0000]/80 transition-colors"
-              >
-                Update
-              </button>
+              {availableActions.length === 0 && (
+                <p className="text-xs text-white/20">No actions available for this status.</p>
+              )}
             </div>
           </div>
         )}

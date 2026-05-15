@@ -3,6 +3,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import { PulseSidebar } from "./pulse-sidebar";
 import { DashboardHeader } from "./dashboard-header";
+import { CartProvider } from "@/components/cart/cart-context";
 
 interface UserData {
   id: string;
@@ -64,16 +65,18 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
       )}
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1 min-w-0">
-        <DashboardHeader
-          role={role}
-          user={user}
-          onMenuClick={() => setMobileOpen(true)}
-        />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          {children}
-        </main>
-      </div>
+      <CartProvider>
+        <div className="flex flex-col flex-1 min-w-0">
+          <DashboardHeader
+            role={role}
+            user={user}
+            onMenuClick={() => setMobileOpen(true)}
+          />
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+            {children}
+          </main>
+        </div>
+      </CartProvider>
     </div>
   );
 }

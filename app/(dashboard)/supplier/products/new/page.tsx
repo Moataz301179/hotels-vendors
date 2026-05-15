@@ -39,7 +39,7 @@ export default function NewProductPage() {
     leadTimeDays: "1",
     shelfLifeDays: "",
     temperatureReq: "",
-    supplierId: "", // TODO: derive from auth session
+    // supplierId is derived from auth session server-side
   });
 
   const handleChange = (field: string, value: string) => {
@@ -298,19 +298,6 @@ export default function NewProductPage() {
               <option value="Dry Storage" className="bg-[#121212]">Dry Storage</option>
             </select>
           </div>
-        </div>
-
-        {/* Supplier ID (temporary — should come from auth) */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-          <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Supplier ID * (temporary field)</label>
-          <input
-            required
-            value={form.supplierId}
-            onChange={(e) => handleChange("supplierId", e.target.value)}
-            placeholder="Enter your supplier ID"
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
-          />
-          <p className="text-[10px] text-white/20 mt-1.5">In production, this is auto-filled from your login session.</p>
         </div>
 
         {/* Actions */}

@@ -252,8 +252,8 @@ export const BusinessRegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   phone: z.string().optional(),
-  city: z.string().min(1),
-  governorate: z.string().min(1),
+  city: z.string().optional(),
+  governorate: z.string().optional(),
   address: z.string().optional(),
   taxId: z.string().optional(),
   commercialReg: z.string().optional(),
@@ -263,7 +263,7 @@ export const BusinessRegisterSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-  email: z.string().email("Valid email is required"),
+  email: z.string().min(1, "Username or email is required"),
   password: z.string().min(1, "Password is required"),
 });
 

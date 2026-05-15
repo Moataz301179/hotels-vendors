@@ -945,3 +945,5 @@ html[data-theme="light"] .home-cta-glow {
 html[data-theme="light"] .home-section-border {
   border-color: rgba(0,0,0,0.04) !important;
 }
+.card { @apply bg-gradient-to-r from-slate-900 shadow-2xl ring-1 ring-white/10 backdrop-blur p-6 rounded-2xl hover:scale-105 transition-all; }
+.gallery-grid { @apply grid grid-cols-2 md:grid-cols-3 gap-4; }

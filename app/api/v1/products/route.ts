@@ -117,8 +117,27 @@ const CreateProductSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add proper auth check for supplier role
-    // For now, accept supplierId in body for development
+    // Read auth context from middleware-injected headers
+    const userId = request.headers.get("x-user-id");
+    const platformRole = request.headers.get("x-platform-role");
+    const tenantId = request.headers.get("x-tenant-id");
+
+    // Reject if not authenticated
+    if (!userId || !platformRole) {
+      return NextResponse.json(
+        { success: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Only suppliers and admins can create products
+    if (platformRole !== "SUPPLIER" && platformRole !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Only suppliers can create products" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const parsed = CreateProductSchema.safeParse(body);
 
@@ -143,22 +162,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify supplier exists
-    if (!data.supplierId) {
+    // Derive supplierId from auth session if not provided
+    let supplierId = data.supplierId;
+    if (!supplierId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { supplierId: true },
+      });
+      supplierId = user?.supplierId || undefined;
+    }
+
+    if (!supplierId) {
       return NextResponse.json(
-        { success: false, error: "supplierId is required" },
+        { success: false, error: "Supplier profile not found. Please complete supplier onboarding first." },
         { status: 400 }
       );
     }
 
+    // Verify supplier exists and belongs to user's tenant (if not admin)
     const supplier = await prisma.supplier.findUnique({
-      where: { id: data.supplierId },
+      where: { id: supplierId },
     });
 
     if (!supplier) {
       return NextResponse.json(
         { success: false, error: "Supplier not found" },
         { status: 404 }
+      );
+    }
+
+    // Non-admin users can only create products for their own supplier
+    if (platformRole !== "ADMIN" && tenantId && supplier.tenantId !== tenantId) {
+      return NextResponse.json(
+        { success: false, error: "You can only create products for your own supplier" },
+        { status: 403 }
       );
     }
 
@@ -184,7 +221,7 @@ export async function POST(request: NextRequest) {
         images: data.images ? JSON.stringify(data.images) : null,
         specs: data.specs ? JSON.stringify(data.specs) : null,
         status: "ACTIVE",
-        supplierId: data.supplierId,
+        supplierId: supplierId,
         tenantId: supplier.tenantId,
       },
       include: {
@@ -211,7 +248,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const marketplaceProduct = transformManyToMarketplace([product])[0];
+    const marketplaceProduct = transformManyToMarketplace([product as Parameters<typeof transformManyToMarketplace>[0][0]])[0];
 
     return NextResponse.json(
       { success: true, data: marketplaceProduct },

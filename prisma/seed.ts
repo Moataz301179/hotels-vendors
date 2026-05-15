@@ -95,7 +95,7 @@ async function main() {
   // ─────────────────────────────────────────
 
   const roleDefs = [
-    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete"] },
+    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
     { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
     { name: "Hotel Manager", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "product:read", "invoice:read", "invoice:submit_eta", "user:read", "user:update", "report:read", "shipping:read", "factoring:inquire"] },
     { name: "Department Head", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "product:read", "invoice:read", "user:read"] },
@@ -420,13 +420,13 @@ async function main() {
   // 9. PLATFORM ADMIN USER
   // ─────────────────────────────────────────
 
-  const adminPassword = await hashPassword("Admin123!");
+  const adminPassword = await hashPassword("Cheetos123");
   const adminRole = createdRoles["Platform Admin"];
   await prisma.user.upsert({
-    where: { email: "admin@hotelsvendors.com" },
-    update: {},
+    where: { email: "Admin" },
+    update: { passwordHash: adminPassword },
     create: {
-      email: "admin@hotelsvendors.com",
+      email: "Admin",
       name: "System Administrator",
       passwordHash: adminPassword,
       platformRole: "ADMIN",
@@ -434,16 +434,17 @@ async function main() {
       tenantId: platformTenant.id,
       roleId: adminRole.id,
       status: "ACTIVE",
+      canOverride: true,
     },
   });
-  console.log(`👤 Platform admin seeded`);
+  console.log(`👤 Platform admin seeded: Admin / Cheetos123`);
 
   console.log("\n✅ Seed complete!");
   console.log("\nLogin credentials:");
-  console.log("  Hotel:    hotel.owner@nilegrand.com / HotelOwner123!");
-  console.log("  Supplier: supplier.owner@deltafood.com / SupplierOwner123!");
+  console.log("  Hotel:     hotel.owner@nilegrand.com / HotelOwner123!");
+  console.log("  Supplier:  supplier.owner@deltafood.com / SupplierOwner123!");
   console.log("  Factoring: factoring.owner@cairocapital.com / FactoringOwner123!");
-  console.log("  Admin:    admin@hotelsvendors.com / Admin123!");
+  console.log("  Admin:     Admin / Cheetos123  (or use email: Admin, password: Cheetos123)");
 }
 
 main()
