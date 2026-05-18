@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Package, Box, Settings, Cpu, ShieldCheck, Database, CheckCircle2, ChevronRight, Filter } from "lucide-react";
 
-// Mock B2B Trading Matrix Data strictly adhering to hospitality procurement categories
+// Mock B2B Trading Matrix Data
 const PROCUREMENT_CATEGORIES = [
   { id: "fb", label: "Food & Beverage (F&B)", icon: Package },
   { id: "linens", label: "Guest Linens & Amenities", icon: Box },
@@ -57,17 +58,17 @@ const MOCK_MATRIX_DATA = [
   }
 ];
 
-export default function CatalogWorkspace() {
+export default function HighUtilityMarketplace() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   return (
-    <div className="bg-[#050505] text-[#f0f0f0] p-6 font-sans min-h-screen">
+    <div className="min-h-screen bg-[#050505] text-[#f0f0f0] p-6 font-sans">
       <div className="max-w-[1600px] mx-auto space-y-6">
         
         {/* Header Section */}
         <div className="flex items-end justify-between border-b border-white/[0.08] pb-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white mb-1">Procurement Catalog Matrix</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white mb-1">Marketplace Trading Matrix</h1>
             <p className="text-xs text-[#a0a0a0] max-w-2xl">
               High-density procurement gateway. All assets enforce strict minimum order quantities (MOQs) and integrate seamlessly with our Tier-1 Factoring liquidity pools.
             </p>

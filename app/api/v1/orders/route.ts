@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency, requirePermission, ApiError } from "@/lib/api-utils";
+import { checkCreditLimit } from "@/lib/credit-gate";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -45,6 +46,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const vatRate = 14;
   const vatAmount = subtotal * (vatRate / 100);
   const total = subtotal + vatAmount;
+
+  // Real-time Credit Gate check
+  const creditCheck = await checkCreditLimit(data.hotelId, total);
+  if (!creditCheck.allowed) {
+    throw new ApiError(creditCheck.reason || "Credit limit exceeded", 402);
+  }
 
   const order = await prisma.order.create({
     data: {

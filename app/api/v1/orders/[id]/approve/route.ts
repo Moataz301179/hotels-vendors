@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { recordApproval } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission, ApiError } from "@/lib/api-utils";
 import { z } from "zod";
+import { checkCreditLimit } from "@/lib/credit-gate";
 
 const ApproveSchema = z.object({
   action: z.enum(["APPROVED", "REJECTED", "ESCALATED"]),
@@ -18,8 +19,8 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   const body = await request.json();
   const data = ApproveSchema.parse(body);
 
-  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
-  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
+  const order = await prisma.order.findUnique({ where: { id }, select: { tenantId: true, hotelId: true, total: true } });
+  if (!order || order.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const user = await prisma.user.findUnique({ where: { id: auth.userId } });
   if (!user) {
@@ -30,6 +31,14 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   const canApprove = ["OWNER", "REGIONAL_GM", "GM", "FINANCIAL_CONTROLLER", "DEPARTMENT_HEAD"].includes(user.role);
   if (!canApprove && !user.canOverride) {
     return error("Insufficient permissions to approve orders", 403);
+  }
+
+  if (data.action === "APPROVED") {
+    // Real-time Credit Gate check on approval
+    const creditCheck = await checkCreditLimit(order.hotelId, order.total ?? 0);
+    if (!creditCheck.allowed) {
+      throw new ApiError(creditCheck.reason || "Credit limit exceeded", 402);
+    }
   }
 
   await recordApproval(id, auth.userId, auth.tenantId, data.action, data.reason);

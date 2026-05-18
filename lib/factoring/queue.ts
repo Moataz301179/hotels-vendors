@@ -66,6 +66,9 @@ export function createFactoringWorker(): Worker {
       }
 
       const { invoice } = request;
+      if (!invoice) {
+        return { success: true, message: "Consolidated factoring request handled synchronously" };
+      }
 
       switch (action) {
         case "INQUIRE": {

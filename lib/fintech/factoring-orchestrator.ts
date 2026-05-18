@@ -15,7 +15,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
-import type { FactoringRequestStatus, RiskTier } from "@prisma/client";
+import { Prisma, type FactoringRequestStatus, type RiskTier } from "@prisma/client";
 import { validateForFactoring } from "@/lib/eta/validator";
 import { assessRisk, type RiskAssessment } from "@/lib/fintech/risk-engine";
 import { calculateHubRevenue, type HubRevenueResult } from "@/lib/fintech/hub-revenue";
@@ -28,6 +28,7 @@ import {
   type FundingResponse,
   type SettlementStatus,
 } from "@/lib/fintech/factoring-bridge";
+import { recordDisbursementJournal } from "@/lib/fintech/accounting-ledger";
 
 // ─────────────────────────────────────────
 // 1. TYPES
@@ -67,16 +68,18 @@ export interface OrchestrationResult {
     hubRevenue?: HubRevenueResult;
     fundingResponse?: FundingResponse;
     settlementStatus?: SettlementStatus;
+    childInvoiceId?: string;
+    approvalsCount?: number;
   };
 }
 
 export interface FactoringPipelineState {
   factoringRequestId: string;
   stage: OrchestrationStage;
-  orderId: string;
-  invoiceId: string;
+  orderId: string | null;
+  invoiceId: string | null;
   hotelId: string;
-  supplierId: string;
+  supplierId: string | null;
   tenantId: string;
   status: FactoringRequestStatus;
   createdAt: Date;
@@ -380,22 +383,31 @@ export async function getActivePipelines(tenantId: string): Promise<FactoringPip
       tenantId,
       status: { in: ["PENDING", "UNDER_REVIEW", "APPROVED", "DISBURSED"] },
     },
-    include: { invoice: { select: { orderId: true, hotelId: true, supplierId: true } } },
+    include: {
+      invoice: { select: { orderId: true, hotelId: true, supplierId: true } },
+      consolidatedInvoice: { select: { hotelId: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
 
-  return requests.map((r) => ({
-    factoringRequestId: r.id,
-    stage: mapStatusToStage(r.status),
-    orderId: r.invoice.orderId,
-    invoiceId: r.invoiceId,
-    hotelId: r.invoice.hotelId,
-    supplierId: r.invoice.supplierId,
-    tenantId: r.tenantId,
-    status: r.status,
-    createdAt: r.createdAt,
-    updatedAt: r.updatedAt,
-  }));
+  return requests.map((r) => {
+    const invoiceId = r.invoiceId || null;
+    const orderId = r.invoice?.orderId || null;
+    const hotelId = r.invoice?.hotelId || r.consolidatedInvoice?.hotelId || "";
+    const supplierId = r.invoice?.supplierId || null;
+    return {
+      factoringRequestId: r.id,
+      stage: mapStatusToStage(r.status),
+      orderId,
+      invoiceId,
+      hotelId,
+      supplierId,
+      tenantId: r.tenantId,
+      status: r.status,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+    };
+  });
 }
 
 function mapStatusToStage(status: FactoringRequestStatus): OrchestrationStage {
@@ -479,10 +491,468 @@ export async function cancelFactoringRequest(
   });
 
   // Revert invoice status
-  await prisma.invoice.update({
-    where: { id: fr.invoiceId },
-    data: { factoringStatus: "AVAILABLE" },
-  });
+  if (fr.invoiceId) {
+    await prisma.invoice.update({
+      where: { id: fr.invoiceId },
+      data: { factoringStatus: "AVAILABLE" },
+    });
+  } else if (fr.consolidatedInvoiceId) {
+    await prisma.consolidatedInvoice.update({
+      where: { id: fr.consolidatedInvoiceId },
+      data: { status: "DRAFT" },
+    });
+    // Also release all underlying child invoices from the master lock
+    const childInvoices = await prisma.invoice.findMany({
+      where: { consolidatedInvoiceId: fr.consolidatedInvoiceId },
+      select: { id: true },
+    });
+    await prisma.invoice.updateMany({
+      where: { id: { in: childInvoices.map((c) => c.id) } },
+      data: { factoringStatus: "AVAILABLE" },
+    });
+  }
 
   return { success: true };
+}
+
+// ─────────────────────────────────────────
+// 7. CONSOLIDATED REVERSE FACTORING LIFE-CYCLE
+// ─────────────────────────────────────────
+
+export interface ConsolidatedFactoringInput {
+  consolidatedInvoiceId: string;
+  triggeredBy: string;
+  tenantId: string;
+  preferredPartnerId?: string;
+}
+
+export async function orchestrateConsolidatedFactoring(
+  input: ConsolidatedFactoringInput
+): Promise<OrchestrationResult> {
+  const { consolidatedInvoiceId, triggeredBy, tenantId, preferredPartnerId } = input;
+
+  // 1. Fetch Consolidated Invoice details with child invoices
+  const ci = await prisma.consolidatedInvoice.findUnique({
+    where: { id: consolidatedInvoiceId, tenantId },
+    include: {
+      hotel: true,
+      invoices: {
+        include: { supplier: true, order: true }
+      }
+    }
+  });
+
+  if (!ci) {
+    return { success: false, stage: "FAILED", error: "Consolidated Invoice not found", errorCode: "CONSOLIDATED_NOT_FOUND", details: {} };
+  }
+
+  if (ci.status === "DISBURSED" || ci.status === "APPROVED_BY_FACTOR") {
+    return { success: false, stage: "FAILED", error: "Consolidated Invoice already factored", errorCode: "ALREADY_FACTORED", details: {} };
+  }
+
+  // ── "FOUR-EYES" DUAL AUTHORIZATION GATE: Enforce FRA Guidelines ──
+  const approvals = await prisma.auditLog.findMany({
+    where: {
+      entityType: "CONSOLIDATED_INVOICE",
+      entityId: consolidatedInvoiceId,
+      action: "CONSOLIDATED_INVOICE_APPROVED",
+      tenantId,
+    },
+    select: { actorId: true },
+  });
+
+  const distinctApprovers = new Set(approvals.map((a) => a.actorId).filter(Boolean));
+  const isDevBypass = process.env.NODE_ENV === "development" && process.env.BYPASS_FOUR_EYES === "true";
+
+  if (distinctApprovers.size < 2 && !isDevBypass) {
+    return {
+      success: false,
+      stage: "FAILED",
+      error: "FRA Guideline Violation: Consolidated invoice factoring requires 'Four-Eyes' dual authorization from two distinct authorized users.",
+      errorCode: "FOUR_EYES_APPROVAL_REQUIRED",
+      details: { approvalsCount: distinctApprovers.size },
+    };
+  }
+
+  // ── INVARIANT LOCK: Detect and prevent double-factoring vectors ──
+  const invoiceIds = ci.invoices.map((inv) => inv.id);
+
+  if (invoiceIds.length > 0) {
+    try {
+      await prisma.$transaction(async (tx) => {
+        // 1. Instantly isolate all underlying supplier child invoices and apply a PostgreSQL pessimistic row-level lock
+        const lockedChildInvoices = await tx.$queryRawUnsafe<any[]>(
+          `SELECT id, "invoiceNumber", "factoringStatus" FROM "Invoice" WHERE id IN (${invoiceIds.map((id) => `'${id}'`).join(',')}) FOR UPDATE`
+        );
+        
+        // 2. Validate double-factoring attempt
+        for (const lockedInv of lockedChildInvoices) {
+          if (
+            lockedInv.factoringStatus === "LOCKED_BY_MASTER" ||
+            lockedInv.factoringStatus === "ACCEPTED" ||
+            lockedInv.factoringStatus === "PAID"
+          ) {
+            // Log a 'FRAUDULENT_DOUBLE_FACTOR_ATTEMPT' security event to our append-only AuditLog
+            await tx.auditLog.create({
+              data: {
+                action: "FRAUDULENT_DOUBLE_FACTOR_ATTEMPT",
+                entityType: "CONSOLIDATED_INVOICE",
+                entityId: consolidatedInvoiceId,
+                actorId: triggeredBy,
+                afterState: JSON.stringify({
+                  message: `Security Breach: Fraudulent double-factoring attempt detected. Invoice ${lockedInv.invoiceNumber} (ID: ${lockedInv.id}) has a conflicting factoring status: ${lockedInv.factoringStatus}.`,
+                  invoiceId: lockedInv.id,
+                  invoiceNumber: lockedInv.invoiceNumber,
+                  status: lockedInv.factoringStatus,
+                }),
+                tenantId,
+              }
+            });
+            
+            throw new Error(`FRAUDULENT_DOUBLE_FACTOR_ATTEMPT: Conflicting status on invoice ${lockedInv.invoiceNumber}. Liquidation aborted to prevent double factoring.`);
+          }
+        }
+        
+        // 3. Atomically transition the state of these underlying child records to 'LOCKED_BY_MASTER'
+        await tx.invoice.updateMany({
+          where: { id: { in: invoiceIds } },
+          data: { factoringStatus: "LOCKED_BY_MASTER" },
+        });
+      });
+    } catch (err) {
+      return {
+        success: false,
+        stage: "FAILED",
+        error: err instanceof Error ? err.message : String(err),
+        errorCode: "DOUBLE_FACTORING_DETECTED",
+        details: {},
+      };
+    }
+  }
+
+  // Lock release helper for graceful rollbacks on failure
+  const releaseLock = async () => {
+    await prisma.invoice.updateMany({
+      where: { id: { in: invoiceIds } },
+      data: { factoringStatus: "AVAILABLE" },
+    });
+  };
+
+  const hotel = ci.hotel;
+  const grossAmount = ci.total;
+
+  // ── Stage 1: Risk Assessment ───────────────────────────────
+  let riskAssessment;
+  try {
+    riskAssessment = await assessRisk(hotel.id, tenantId);
+  } catch (err) {
+    await releaseLock();
+    return {
+      success: false,
+      stage: "FAILED",
+      error: `Risk assessment failed: ${err instanceof Error ? err.message : String(err)}`,
+      errorCode: "RISK_ASSESSMENT_FAILED",
+      details: {},
+    };
+  }
+
+  if (riskAssessment.riskTier === "CRITICAL") {
+    await releaseLock();
+    return {
+      success: false,
+      stage: "FAILED",
+      error: "Hotel risk tier is CRITICAL. Factoring not available.",
+      errorCode: "CRITICAL_RISK",
+      details: { riskAssessment },
+    };
+  }
+
+  // ── Stage 2: ETA Validation (COMPLIANCE GATE for each supplier invoice) ──────────────
+  for (const invoice of ci.invoices) {
+    const etaResult = await validateForFactoring(invoice.id);
+    if (!etaResult.valid) {
+      await prisma.consolidatedInvoice.update({
+        where: { id: consolidatedInvoiceId },
+        data: { status: "DRAFT" },
+      });
+      await releaseLock();
+      return {
+        success: false,
+        stage: "FAILED",
+        error: `ETA validation failed for Invoice ${invoice.invoiceNumber}: ${etaResult.message}`,
+        errorCode: etaResult.code,
+        details: { riskAssessment, etaValid: false, etaError: etaResult.message },
+      };
+    }
+  }
+
+  // ── Stage 3: Create FactoringRequest ───
+  const factoringRequest = await prisma.factoringRequest.create({
+    data: {
+      consolidatedInvoiceId,
+      requestedAmount: grossAmount,
+      factoringCompanyId: preferredPartnerId || "efg_hermes",
+      status: "UNDER_REVIEW",
+      riskScore: riskAssessment.compositeScore,
+      riskTier: riskAssessment.riskTier,
+      tenantId,
+    },
+  });
+
+  // ── Stage 4: Partner Inquiry (shop for best rate) ──────────
+  const { bestOffer, allOffers } = await inquireAll({
+    hotelTaxId: hotel.taxId,
+    hotelName: hotel.name,
+    hotelRiskScore: riskAssessment.compositeScore,
+    hotelRiskTier: riskAssessment.riskTier,
+    invoiceAmount: grossAmount,
+    invoiceCurrency: ci.currency,
+    invoiceDueDate: ci.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    etaUuid: ci.invoices[0]?.etaUuid || "CONSOLIDATED_ETA_CLUSTER",
+  });
+
+  if (!bestOffer) {
+    await prisma.factoringRequest.update({
+      where: { id: factoringRequest.id },
+      data: { status: "REJECTED", partnerResponse: JSON.stringify(allOffers) },
+    });
+    await releaseLock();
+    return {
+      success: false,
+      stage: "FAILED",
+      factoringRequestId: factoringRequest.id,
+      error: "No factoring partner approved this consolidated invoice. All partners rejected.",
+      errorCode: "NO_PARTNER_APPROVAL",
+      details: { riskAssessment, etaValid: true, partnerOffers: allOffers, bestOffer: null },
+    };
+  }
+
+  // Update factoring request with chosen partner
+  await prisma.factoringRequest.update({
+    where: { id: factoringRequest.id },
+    data: {
+      factoringCompanyId: bestOffer.partnerId!,
+      advanceRate: bestOffer.maxAdvanceRate,
+      discountRate: bestOffer.discountRate,
+      status: "APPROVED",
+      partnerResponse: JSON.stringify({ bestOffer, allOffers }),
+    },
+  });
+
+  // ── Stage 5: Tri-Tier Margins & Programmatic Split Calculation ───────────────────────
+  const advanceRate = bestOffer.maxAdvanceRate;
+  const factorDiscountRate = bestOffer.discountRate;
+  const factoringFee = grossAmount * factorDiscountRate;
+
+  // Stream 1: Fintech Commission from Factor
+  const factoringCommissionRate = 0.015;
+  const factoringCommissionAmount = (grossAmount * advanceRate) * factoringCommissionRate;
+
+  // Stream 3: Hotel Admin Fee
+  const hotelAdminFeeRate = ci.hotelAdminFeeRate;
+  const hotelAdminFeeAmount = grossAmount * hotelAdminFeeRate;
+
+  // ── Yield Spread Guard Verification ──
+  const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true";
+  
+  for (const invoice of ci.invoices) {
+    const margin = invoice.supplierDiscountRate - factorDiscountRate;
+    if (margin < 0.015 && !isTreasuryOverridden) {
+      // Log a 'YIELD_SPREAD_BREACH' exception to our append-only AuditLog
+      await prisma.auditLog.create({
+        data: {
+          action: "YIELD_SPREAD_BREACH",
+          entityType: "CONSOLIDATED_INVOICE",
+          entityId: consolidatedInvoiceId,
+          actorId: triggeredBy,
+          afterState: JSON.stringify({
+            message: `Yield Spread Breach: Margin for Invoice ${invoice.invoiceNumber} (${(margin * 100).toFixed(2)}%) fell below the net positive 1.5% platform margin requirement.`,
+            invoiceId: invoice.id,
+            invoiceNumber: invoice.invoiceNumber,
+            supplierDiscountRate: invoice.supplierDiscountRate,
+            factorDiscountRate,
+            margin,
+          }),
+          tenantId,
+        }
+      });
+      
+      await releaseLock();
+      
+      // Update factoring request status to show the breach
+      await prisma.factoringRequest.update({
+        where: { id: factoringRequest.id },
+        data: { status: "REJECTED" },
+      });
+      
+      throw new Error(
+        `YIELD_SPREAD_BREACH: The delta between Supplier Cash-Discount (${(invoice.supplierDiscountRate * 100).toFixed(2)}%) and Factoring Fee (${(factorDiscountRate * 100).toFixed(2)}%) drops below the net positive 1.5% platform margin.`
+      );
+    }
+  }
+
+  // Stream 2: Supplier Cash-Discount Delta
+  let totalSupplierDiscountAmount = 0;
+  let totalSupplierDisbursement = 0;
+
+  for (const invoice of ci.invoices) {
+    const discountRate = invoice.supplierDiscountRate;
+    const discountAmount = invoice.total * discountRate;
+    const cashRate = invoice.total - discountAmount;
+
+    totalSupplierDiscountAmount += discountAmount;
+    totalSupplierDisbursement += cashRate;
+
+    await prisma.invoice.update({
+      where: { id: invoice.id },
+      data: {
+        acceleratedCashRate: cashRate,
+        cashDiscountDelta: discountAmount - (invoice.total * factorDiscountRate),
+      },
+    });
+  }
+
+  // Pocketed Cash-Discount Delta
+  const cashDiscountDelta = Math.max(0, totalSupplierDiscountAmount - factoringFee);
+
+  // Update Consolidated Invoice totals
+  await prisma.consolidatedInvoice.update({
+    where: { id: consolidatedInvoiceId },
+    data: {
+      hotelAdminFeeAmount,
+      status: "APPROVED_BY_FACTOR",
+    },
+  });
+
+  // Persist calculated factoring fees
+  await prisma.factoringRequest.update({
+    where: { id: factoringRequest.id },
+    data: {
+      grossAmount,
+      platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+      netPlatformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+      factoringFee,
+      disbursedAmount: totalSupplierDisbursement,
+      factoringCommissionRate,
+      factoringCommissionAmount,
+    },
+  });
+
+  // ── Stage 6: Partner Funding Request ───
+  const fundingRequest = {
+    eligibilityResponseId: bestOffer.responseId,
+    invoiceId: consolidatedInvoiceId,
+    etaUuid: ci.invoices[0]?.etaUuid || "CONSOLIDATED_ETA_CLUSTER",
+    grossAmount,
+    platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+    netDisbursement: totalSupplierDisbursement,
+    supplierBankAccount: ci.invoices[0]?.supplier?.bankAccount || "ESCROW_CUSTODY",
+    supplierBankName: ci.invoices[0]?.supplier?.bankName || "ESCROW_BANK",
+    supplierTaxId: ci.invoices[0]?.supplier?.taxId || "MULTIPLE",
+    hotelTaxId: hotel.taxId,
+  };
+
+  const fundingResponse = await fundThroughPartner(bestOffer.partnerId!, fundingRequest);
+
+  if (!fundingResponse.success) {
+    await prisma.factoringRequest.update({
+      where: { id: factoringRequest.id },
+      data: { status: "REJECTED" },
+    });
+    await releaseLock();
+    return {
+      success: false,
+      stage: "FAILED",
+      factoringRequestId: factoringRequest.id,
+      error: "Funding request failed at partner level.",
+      errorCode: "FUNDING_FAILED",
+      details: { riskAssessment, etaValid: true, partnerOffers: allOffers, bestOffer, fundingResponse },
+    };
+  }
+
+  // ── Stage 7: Ledger Disbursement Bookkeeping & State Updates ───
+  await prisma.$transaction(async (tx) => {
+    // 1. Record Double-Entry Journal Entry
+    await recordDisbursementJournal(tx, {
+      consolidatedInvoiceId,
+      tenantId,
+      grossAmount,
+      advanceRate,
+      factoringCommissionRate,
+      factoringCommissionAmount,
+      factoringFee,
+      supplierDiscountRate: 0.03, // aggregate representation
+      supplierDiscountAmount: totalSupplierDiscountAmount,
+      hotelAdminFeeRate,
+      hotelAdminFeeAmount,
+      supplierDisbursement: totalSupplierDisbursement,
+    });
+
+    // 2. Mark Factoring Request as Disbursed
+    await tx.factoringRequest.update({
+      where: { id: factoringRequest.id },
+      data: {
+        status: "DISBURSED",
+        disbursedAt: fundingResponse.disbursedAt,
+      },
+    });
+
+    // 3. Mark Consolidated Invoice as Disbursed
+    await tx.consolidatedInvoice.update({
+      where: { id: consolidatedInvoiceId },
+      data: {
+        status: "DISBURSED",
+        paidDate: fundingResponse.disbursedAt,
+      },
+    });
+
+    // 4. Update child Invoices as PAID / FACTORED
+    for (const invoice of ci.invoices) {
+      await tx.invoice.update({
+        where: { id: invoice.id },
+        data: {
+          factoringStatus: "PAID",
+          paymentStatus: "FACTORED",
+          paidDate: fundingResponse.disbursedAt,
+        },
+      });
+
+      // Update order: payment is guaranteed
+      await tx.order.update({
+        where: { id: invoice.orderId },
+        data: {
+          paymentGuaranteed: true,
+          paymentGuaranteeMethod: "FACTORING",
+          paymentGuaranteeSetAt: new Date(),
+        },
+      });
+
+      // Create credit transaction for audit trail
+      await tx.creditTransaction.create({
+        data: {
+          type: "FACTORING_ADVANCE",
+          amount: invoice.total - (invoice.total * invoice.supplierDiscountRate),
+          description: `Disbursement for Invoice ${invoice.invoiceNumber} in Consolidated Cluster ${ci.invoiceNumber}`,
+          hotelId: hotel.id,
+          factoringCompanyId: bestOffer.partnerId,
+          orderId: invoice.orderId,
+          invoiceId: invoice.id,
+          tenantId,
+        },
+      });
+    }
+  });
+
+  return {
+    success: true,
+    stage: "DISBURSED",
+    factoringRequestId: factoringRequest.id,
+    details: {
+      riskAssessment,
+      etaValid: true,
+      partnerOffers: allOffers,
+      bestOffer,
+      fundingResponse,
+    },
+  };
 }
