@@ -27,8 +27,8 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole === "HOTEL" ? "VERIFIER" : "FINANCIAL_CONTROLLER",
-    beforeState: JSON.stringify({ status: record.status }),
-    afterState: JSON.stringify({ status: "APPROVED" }),
+    beforeState: { status: record.status },
+    afterState: { status: "APPROVED" },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });

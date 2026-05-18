@@ -76,3 +76,75 @@ complianceWorker.on("failed", (job, err) => {
 complianceWorker.on("completed", (job) => {
   console.log(`[Swarm Orchestration] Job ${job.id} cleanly executed and removed from memory pool.`);
 });
+
+// ─────────────────────────────────────────
+// BACKWARDS COMPATIBILITY LAYER (DEPRECATED)
+// Maintains API compatibility with old swarm scheduler
+// ─────────────────────────────────────────
+
+/** @deprecated Use IntelligenceQueue or ExecutionQueue directly */
+export const swarmQueues = {
+  director: ExecutionQueue,
+  platform: ExecutionQueue,
+  fintech: ComplianceQueue,
+  supplier: ExecutionQueue,
+  hotel: ExecutionQueue,
+  logistics: ExecutionQueue,
+  intelligence: IntelligenceQueue,
+  growth: ExecutionQueue,
+};
+
+/** @deprecated Legacy job type definitions */
+export type SwarmJobType =
+  | "director_plan" | "director_review"
+  | "schema_design" | "security_audit" | "deploy_pipeline" | "test_automation"
+  | "fee_calculation" | "eta_submission" | "credit_assessment" | "authority_enforcement"
+  | "supplier_onboard" | "catalog_validate" | "trust_assess" | "coastal_mapping"
+  | "procurement_design" | "order_flow" | "spend_analytics" | "multi_property_setup"
+  | "route_optimize" | "delivery_track" | "partner_manage"
+  | "price_benchmark" | "demand_forecast" | "matchmake" | "ai_assistant_train"
+  | "lead_scout" | "lead_enrich" | "outreach_draft" | "outreach_send" | "content_generate"
+  | "seo_optimize" | "social_listen" | "health_check" | "audit_data"
+  | "web_navigate" | "form_fill" | "document_ocr" | "report_generate";
+
+/** @deprecated Legacy payload interface */
+export interface SwarmJobPayload {
+  jobType: string;
+  agentId: string;
+  agentName: string;
+  squad: string;
+  systemPrompt: string;
+  userPrompt: string;
+  context?: Record<string, unknown>;
+  requiresApproval?: boolean;
+  memoryCategory?: string;
+  openclawAction?: {
+    endpoint: string;
+    payload: Record<string, unknown>;
+  };
+}
+
+/** @deprecated Use ExecutionQueue.add or IntelligenceQueue.add directly */
+export async function addSwarmJob(
+  payload: SwarmJobPayload,
+  options: {
+    delay?: number;
+    priority?: number;
+    repeat?: { cron: string; tz?: string };
+    jobId?: string;
+  } = {}
+): Promise<Job> {
+  const queue = swarmQueues[payload.squad as keyof typeof swarmQueues] || ExecutionQueue;
+  
+  const job = await queue.add(payload.jobType, payload, {
+    priority: options.priority || 5,
+    delay: options.delay,
+    repeat: options.repeat,
+    jobId: options.jobId,
+    attempts: 3,
+    backoff: { type: "exponential", delay: 5000 },
+  });
+  
+  console.warn(`[DEPRECATED] addSwarmJob called. Consider migrating to ExecutionQueue.add for: ${payload.jobType}`);
+  return job;
+}

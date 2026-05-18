@@ -9,9 +9,10 @@ export const BulkReceivableSchema = z.object({
   etaUuid: z.string().min(10, "Mandatory ETA Cryptographic UUID is required."),
   totalAmount: z.number().positive("Total asset value must mathematically exceed zero."),
   vatAmount: z.number().min(0, "VAT decimal constraints cannot be negative."),
-  currency: z.literal("EGP", {
-    errorMap: () => ({ message: "STRICT_CURRENCY_CONSTRAINT: Only EGP is authorized for Phase 2 bulk operations." })
-  }),
+  currency: z.string().refine(
+    (val) => val === "EGP",
+    { message: "STRICT_CURRENCY_CONSTRAINT: Only EGP is authorized for Phase 2 bulk operations." }
+  ),
   issueDate: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid ISO-8601 Issue Date."),
   dueDate: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid ISO-8601 Due Date."),
   supplierId: z.string().cuid("Invalid CUID for vendor schema."),
@@ -63,6 +64,18 @@ export class BulkUploader {
         }
 
         // Commit standard Receivable asset
+        // Note: Bulk uploader creates synthetic order placeholder for invoice schema compliance
+        const placeholderOrder = await tx.order.create({
+          data: {
+            orderNumber: `BULK-${record.invoiceNumber}`,
+            status: "DELIVERED",
+            total: record.totalAmount,
+            supplierId: record.supplierId,
+            hotelId: record.hotelId,
+            tenantId: tenantId,
+          }
+        });
+        
         const invoice = await tx.invoice.create({
           data: {
             invoiceNumber: record.invoiceNumber,
@@ -80,6 +93,7 @@ export class BulkUploader {
             supplierId: record.supplierId,
             hotelId: record.hotelId,
             tenantId: tenantId,
+            orderId: placeholderOrder.id,
           }
         });
         

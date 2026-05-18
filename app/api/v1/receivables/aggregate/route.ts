@@ -75,10 +75,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: "ORIGINATOR",
-    afterState: JSON.stringify({
+    afterState: {
       invoiceIds,
       total,
-    }),
+    },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });

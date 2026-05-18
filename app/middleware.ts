@@ -46,8 +46,8 @@ export async function middleware(req: NextRequest) {
     console.warn(`[Edge Guard Exception] Boundary penetration attempted by user ${userId} on path ${path}`);
 
     // Dispatch asynchronous edge-compatible telemetry hook to append AuditLog
-    req.waitUntil(
-      fetch(`${req.nextUrl.origin}/api/v1/telemetry/audit`, {
+    // Using fire-and-forget pattern without waitUntil (not available in NextRequest)
+    void fetch(`${req.nextUrl.origin}/api/v1/telemetry/audit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,12 +56,11 @@ export async function middleware(req: NextRequest) {
           entityId: path,
           actorId: userId,
           tenantId: tenantId,
-          afterState: JSON.stringify({ 
-            message: `Cross-tenant resource access violation. SUPPLIER attempted to penetrate protected boundary: ${path}` 
-          })
+          afterState: { 
+            message: `Cross-tenant resource access violation. SUPPLIER attempted to penetrate protected boundary: ${path}`
+          }
         })
-      }).catch(() => { /* Silent drop if edge logger offline */ })
-    );
+      }).catch(() => { /* Silent drop if edge logger offline */ });
 
     return NextResponse.json(
       { 
