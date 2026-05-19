@@ -1,0 +1,10 @@
+sources:
+  my-vps-db:
+    kind: postgres
+    host: localhost
+    port: 5432
+    user: root
+    password: hotels_vendors_dev
+    database: postgres
+tools: {}
+

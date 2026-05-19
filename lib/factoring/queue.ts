@@ -67,6 +67,10 @@ export function createFactoringWorker(): Worker {
 
       const { invoice } = request;
 
+      if (!invoice) {
+        throw new Error(`Factoring request ${factoringRequestId} does not have an associated individual invoice`);
+      }
+
       switch (action) {
         case "INQUIRE": {
           const risk = await assessRisk(invoice.hotelId, tenantId);
