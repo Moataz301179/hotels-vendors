@@ -298,6 +298,7 @@ export function createFactoringWorker(): Worker {
         default:
           throw new Error(`Unknown factoring action: ${action}`);
       }
+}
 
 // Simple queue operation wrapper for API routes
 export async function queueOperation<T>(name: string, operation: any): Promise<any> {
