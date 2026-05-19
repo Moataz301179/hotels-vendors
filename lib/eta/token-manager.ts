@@ -1,3 +1,5 @@
+import type { EtaTokenResponse } from "@/types/eta";
+
 /**
  * ETA OAuth 2.0 Token Manager
  * Hotels Vendors Secure Integration Layer
@@ -43,7 +45,7 @@ export async function getTenantCredentials(tenantId: string): Promise<EtaCredent
         throw new Error(`Vault API error: ${response.statusText} (${response.status})`);
       }
 
-      const payload: any = await response.json();
+      const payload = await response.json() as { data?: { data?: Record<string, string> } };
       const credentials = payload.data?.data;
 
       if (!credentials?.ETA_CLIENT_ID || !credentials?.ETA_CLIENT_SECRET || !credentials?.ETA_HARDWARE_PIN) {
@@ -123,7 +125,7 @@ export async function getEtaAccessToken(tenantId: string, isProduction: boolean 
       throw new Error(`ETA Identity Server returned status ${response.status}: ${errorText}`);
     }
 
-    const data: any = await response.json();
+    const data = await response.json() as EtaTokenResponse;
 
     if (!data.access_token) {
       throw new Error("ETA Token response did not contain an access_token field.");

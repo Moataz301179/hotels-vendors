@@ -947,3 +947,520 @@ html[data-theme="light"] .home-section-border {
 }
 .card { @apply bg-gradient-to-r from-slate-900 shadow-2xl ring-1 ring-white/10 backdrop-blur p-6 rounded-2xl hover:scale-105 transition-all; }
 .gallery-grid { @apply grid grid-cols-2 md:grid-cols-3 gap-4; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ENTERPRISE OLED-OPTIMIZED DESIGN SYSTEM v4
+   Institutional-Grade Fintech Interface
+   Inspired by: Stripe Dashboard, Linear, Mercury, Notion Enterprise
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── OLED-OPTIMIZED COLOR PALETTE ──
+   Deeper blacks for true OLED contrast, higher accessibility ratios */
+
+:root {
+  /* OLED Blacks - True black and near-blacks for OLED energy efficiency */
+  --oled-pure: #000000;
+  --oled-void: #020202;
+  --oled-deep: #050508;
+  --oled-foundation: #08080c;
+  --oled-base: #0a0a10;
+  --oled-elevated: #0f0f14;
+  --oled-raised: #131318;
+  
+  /* Enterprise Grey Scale - Fine-tuned for readability */
+  --enterprise-100: #ffffff;
+  --enterprise-200: #f5f5f7;
+  --enterprise-300: #e8e8ec;
+  --enterprise-400: #d1d1d6;
+  --enterprise-500: #a1a1aa;
+  --enterprise-600: #71717a;
+  --enterprise-700: #52525b;
+  --enterprise-800: #3f3f46;
+  --enterprise-900: #27272a;
+  --enterprise-950: #18181b;
+  
+  /* Premium Accents - Crimson refined with gold undertones */
+  --crimson-primary: #8B0000;
+  --crimson-deep: #6B0000;
+  --crimson-rich: #9B1010;
+  --crimson-bright: #AB2020;
+  --crimson-glow-soft: rgba(139, 0, 0, 0.15);
+  --crimson-glow-medium: rgba(139, 0, 0, 0.25);
+  --crimson-glow-strong: rgba(139, 0, 0, 0.40);
+  
+  /* Fintech Metallic Gold */
+  --gold-primary: #C9A227;
+  --gold-bright: #E1B93F;
+  --gold-deep: #A8841F;
+  --gold-subtle: rgba(201, 162, 39, 0.12);
+  
+  /* Institutional Border System */
+  --border-enterprise-subtle: rgba(255, 255, 255, 0.03);
+  --border-enterprise-default: rgba(255, 255, 255, 0.06);
+  --border-enterprise-visible: rgba(255, 255, 255, 0.10);
+  --border-enterprise-strong: rgba(255, 255, 255, 0.14);
+  --border-enterprise-premium: rgba(201, 162, 39, 0.20);
+  
+  /* OLED-Optimized Shadows */
+  --shadow-entity: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-entity-hover: 0 4px 12px rgba(0, 0, 0, 0.50);
+  --shadow-entity-elevated: 0 8px 32px rgba(0, 0, 0, 0.60);
+  --shadow-glow-crimson: 0 0 24px rgba(139, 0, 0, 0.30);
+  --shadow-glow-gold: 0 0 24px rgba(201, 162, 39, 0.20);
+  
+  /* Animation Timing - Fintech-grade micro-interactions */
+  --ease-enterprise: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-premium: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-premium: 300ms;
+  --duration-slow: 400ms;
+}
+
+/* ── ENTERPRISE COMPONENT VARIANTS ── */
+
+/* Premium Button - Institutional Primary */
+.btn-enterprise {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.25rem;
+  background: linear-gradient(180deg, var(--crimson-rich) 0%, var(--crimson-primary) 100%);
+  color: var(--enterprise-100);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 10px;
+  border: 1px solid var(--crimson-glow-medium);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    var(--shadow-glow-crimson);
+  transition: all var(--duration-normal) var(--ease-enterprise);
+  overflow: hidden;
+}
+.btn-enterprise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+.btn-enterprise:hover {
+  background: linear-gradient(180deg, var(--crimson-bright) 0%, var(--crimson-rich) 100%);
+  border-color: var(--crimson-glow-strong);
+  box-shadow: 
+    0 4px 16px rgba(139, 0, 0, 0.40),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transform: translateY(-1px);
+}
+.btn-enterprise:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+/* Enterprise Ghost Button */
+.btn-enterprise-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.25rem;
+  background: transparent;
+  color: var(--enterprise-400);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: 10px;
+  border: 1px solid var(--border-enterprise-default);
+  transition: all var(--duration-normal) var(--ease-enterprise);
+}
+.btn-enterprise-ghost:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-enterprise-visible);
+  color: var(--enterprise-200);
+}
+.btn-enterprise-ghost:active {
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(0.98);
+}
+
+/* Premium Card - Bento Grid Ready */
+.card-enterprise {
+  position: relative;
+  background: linear-gradient(
+    180deg, 
+    rgba(255, 255, 255, 0.02) 0%, 
+    transparent 8%, 
+    var(--oled-elevated) 100%
+  );
+  border: 1px solid var(--border-enterprise-default);
+  border-radius: 16px;
+  padding: 24px;
+  overflow: hidden;
+  transition: all var(--duration-premium) var(--ease-enterprise);
+}
+.card-enterprise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%,
+    transparent 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+.card-enterprise:hover {
+  background: linear-gradient(
+    180deg, 
+    rgba(255, 255, 255, 0.03) 0%, 
+    transparent 8%, 
+    var(--oled-raised) 100%
+  );
+  border-color: var(--border-enterprise-visible);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+  transform: translateY(-2px);
+}
+
+/* Premium Glass Card - For Floating UI */
+.card-glass-premium {
+  background: rgba(10, 10, 16, 0.75);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--border-enterprise-default);
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.40),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+/* Enterprise Input - Institutional Forms */
+.input-enterprise {
+  height: 44px;
+  padding: 0 16px;
+  background: var(--oled-elevated);
+  border: 1px solid var(--border-enterprise-default);
+  border-radius: 10px;
+  color: var(--enterprise-200);
+  font-size: 14px;
+  transition: all var(--duration-normal) var(--ease-enterprise);
+}
+.input-enterprise::placeholder {
+  color: var(--enterprise-600);
+}
+.input-enterprise:hover {
+  border-color: var(--border-enterprise-visible);
+}
+.input-enterprise:focus {
+  outline: none;
+  border-color: var(--crimson-glow-medium);
+  box-shadow: 
+    0 0 0 3px var(--crimson-glow-soft),
+    0 0 0 1px var(--crimson-primary) inset;
+}
+
+/* Enterprise Status Badges */
+.status-enterprise {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.status-enterprise::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+.status-enterprise-active {
+  background: rgba(52, 211, 153, 0.10);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.20);
+}
+.status-enterprise-active::before {
+  background: #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.50);
+}
+.status-enterprise-pending {
+  background: rgba(251, 191, 36, 0.10);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.20);
+}
+.status-enterprise-pending::before {
+  background: #fbbf24;
+}
+.status-enterprise-error {
+  background: rgba(248, 113, 113, 0.10);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.20);
+}
+.status-enterprise-error::before {
+  background: #f87171;
+}
+
+/* ── ENHANCED MICRO-ANIMATIONS ── */
+
+/* Premium Fade Up with Spring */
+@keyframes enterpriseFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes enterpriseFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes enterpriseScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes enterpriseSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Glow Pulse Animation */
+@keyframes glowPulsePremium {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--crimson-glow-soft);
+  }
+  50% {
+    box-shadow: 0 0 32px var(--crimson-glow-medium);
+  }
+}
+
+/* Shimmer Effect for Loading */
+@keyframes shimmerPremium {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Number Count Animation */
+@keyframes countUpPremium {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Enterprise Animation Classes */
+.an-enterprise-fade-up {
+  animation: enterpriseFadeUp var(--duration-premium) var(--ease-enterprise) both;
+}
+.an-enterprise-fade-in {
+  animation: enterpriseFadeIn var(--duration-normal) var(--ease-enterprise) both;
+}
+.an-enterprise-scale-in {
+  animation: enterpriseScaleIn var(--duration-premium) var(--ease-spring) both;
+}
+.an-enterprise-slide-in {
+  animation: enterpriseSlideIn var(--duration-normal) var(--ease-enterprise) both;
+}
+.an-glow-pulse {
+  animation: glowPulsePremium 3s ease-in-out infinite;
+}
+.an-shimmer {
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.03) 50%, 
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerPremium 2s infinite;
+}
+.an-count-up {
+  animation: countUpPremium 0.6s var(--ease-enterprise) both;
+}
+
+/* Staggered Children - Enterprise */
+.stagger-enterprise > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-enterprise > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-enterprise > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-enterprise > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-enterprise > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-enterprise > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-enterprise > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-enterprise > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-enterprise > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-enterprise > *:nth-child(10) { animation-delay: 450ms; }
+
+/* ── ENTERPRISE TYPOGRAPHY UTILITIES ── */
+
+.text-enterprise-display {
+  font-size: 4.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+  color: var(--enterprise-100);
+}
+.text-enterprise-h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--enterprise-100);
+}
+.text-enterprise-h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--enterprise-200);
+}
+.text-enterprise-h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--enterprise-200);
+}
+.text-enterprise-body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--enterprise-400);
+}
+.text-enterprise-caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--enterprise-600);
+}
+
+/* ── ENTERPRISE DATA DISPLAY ── */
+
+.metric-enterprise {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
+}
+
+.divider-enterprise {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-enterprise-default) 20%,
+    var(--border-enterprise-default) 80%,
+    transparent 100%
+  );
+}
+
+/* ── OLED ACCESSIBILITY IMPROVEMENTS ── */
+
+/* High contrast focus states */
+:focus-visible {
+  outline: 2px solid var(--crimson-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .an-enterprise-fade-up,
+  .an-enterprise-fade-in,
+  .an-enterprise-scale-in,
+  .an-enterprise-slide-in,
+  .an-glow-pulse,
+  .an-shimmer,
+  .an-count-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .card-enterprise:hover,
+  .btn-enterprise:hover,
+  .btn-enterprise-ghost:hover {
+    transform: none;
+  }
+}
+
+/* ── OLED-SPECIFIC OPTIMIZATIONS ── */
+
+/* Pure black for true OLED power savings on true OLED displays */
+.oled-pure-bg {
+  background: var(--oled-pure);
+}
+.oled-void-bg {
+  background: var(--oled-void);
+}
+
+/* Subtle vignette for OLED displays to reduce edge eye strain */
+.oled-vignette::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  z-index: 9999;
+}
+
+/* Enterprise scrollbar - refined for dark OLED */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-enterprise-visible);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-enterprise-strong);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Selection - Premium contrast */
+::selection {
+  background: rgba(139, 0, 0, 0.40);
+  color: var(--enterprise-100);
+}

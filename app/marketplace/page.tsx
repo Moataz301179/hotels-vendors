@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import MarketplaceClient from "@/components/marketplace/marketplace-client";
+import { PremiumMarketplaceClient } from "@/components/marketplace/premium-marketplace-client";
+import marketData from "@/data/egyptian-market-real.json";
 
 export const metadata: Metadata = {
-  title: "Marketplace — Verified Suppliers for Egyptian Hospitality",
+  title: "Premium Marketplace — Verified Egyptian Hotel Suppliers",
   description:
-    "Browse 10 categories of verified hotel suppliers. Food & Beverage, Housekeeping, Linens, Engineering, Amenities, and more. Fixed pricing. ETA e-invoicing compliant.",
+    "Browse 72 verified products from 14 Egyptian hospitality suppliers. Real wholesale prices in EGP. Kitchen equipment, linens, amenities, cleaning supplies, and more.",
   openGraph: {
-    title: "Hotels Vendors Marketplace",
-    description: "B2B procurement marketplace for Egyptian hotels. 1,200+ verified suppliers.",
+    title: "Hotels Vendors Premium Marketplace",
+    description: "B2B procurement marketplace for Egyptian hotels. Real suppliers, verified prices, contact to negotiate.",
     images: ["/hotelsvendors-logo.png"],
   },
 };
 
 export default function MarketplacePage() {
-  return <MarketplaceClient />;
+  return <PremiumMarketplaceClient data={marketData} />;
 }

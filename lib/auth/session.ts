@@ -1,8 +1,14 @@
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "production-secure-key-rotation-pending"
-);
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error(
+    'FATAL SECURITY ERROR: SESSION_SECRET environment variable is required. ' +
+    'Application cannot start without secure session configuration. ' +
+    'Refer to SECURITY_AUDIT_RISK_REGISTER_P0.md for remediation steps.'
+  );
+}
+const SECRET = new TextEncoder().encode(sessionSecret);
 
 export interface SessionPayload {
   userId: string;

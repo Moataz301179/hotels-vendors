@@ -198,12 +198,16 @@ export function handleApiError(err: unknown): NextResponse {
 // 8. ROUTE WRAPPER
 // ─────────────────────────────────────────
 
+// Next.js 15+ Route Context (params is async/await)
+export interface RouteContext {
+  params: Promise<Record<string, string | string[]>>;
+}
+
+// Wrapper for API routes with consistent error handling
 export function apiRoute(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (request: NextRequest, ctx: any) => Promise<NextResponse>
+  handler: (request: NextRequest, ctx: RouteContext) => Promise<NextResponse>
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (request: NextRequest, ctx: any): Promise<NextResponse> => {
+  return async (request: NextRequest, ctx: RouteContext): Promise<NextResponse> => {
     try {
       return await handler(request, ctx);
     } catch (err) {

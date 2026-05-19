@@ -408,7 +408,7 @@ export const memoryReadTool: ToolDefinition = {
   handler: async (args) => {
     const { key, category, limit = 10 } = args as Record<string, unknown>;
 
-    const where: any = { tenantId: "platform" };
+    const where: Record<string, { tenantId: string } | boolean> = { tenantId: "platform" };
     if (key) where.key = { contains: key as string, mode: "insensitive" };
     if (category) where.category = category as string;
 

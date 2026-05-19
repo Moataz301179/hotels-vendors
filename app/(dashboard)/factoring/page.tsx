@@ -1,688 +1,326 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+/**
+ * Factoring Dashboard Landing Page
+ * 
+ * Entry point for hotels to learn about and apply for
+ * reverse factoring services. Shows benefits, eligibility,
+ * and CTA to start application.
+ */
+
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
-  Landmark, FileCheck, AlertTriangle, TrendingUp,
-  ArrowUpRight, ArrowDownRight, Plus, Search, Eye,
-  Wallet, Receipt, CheckCircle2, Clock, Loader2,
-  ArrowRight, X, Building2, Package, Check, AlertCircle,
+  Building2,
+  TrendingUp,
+  Shield,
+  Clock,
+  ChevronRight,
+  CheckCircle,
+  Wallet,
+  Percent,
+  Zap,
+  ArrowRight,
+  Landmark
 } from "lucide-react";
-import { useApi } from "@/lib/hooks/use-api";
-import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
-import { EmptyState } from "@/components/dashboards/shared/empty-state";
-import { Modal } from "@/components/ui/modal";
+import { ButtonEnterprise } from "@/components/ui/button-enterprise";
+import { CardEnterprise } from "@/components/ui/card-enterprise";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
-};
+const BENEFITS = [
+  {
+    icon: Clock,
+    title: "Get Paid in 24-48 Hours",
+    description: "Instead of waiting 60-90 days for supplier payments, access your working capital immediately.",
+  },
+  {
+    icon: Percent,
+    title: "Low 2.5% Platform Fee",
+    description: "Competitive rates with flexible payment terms. No hidden charges or setup fees.",
+  },
+  {
+    icon: Shield,
+    title: "Zero Risk to Credit Score",
+    description: "Reverse factoring is supplier-led. Doesn't appear as debt on your balance sheet.",
+  },
+  {
+    icon: Zap,
+    title: "Automated Workflows",
+    description: "AI-powered document verification and seamless integration with your procurement process.",
+  },
+];
 
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-};
+const ELIGIBILITY_CRITERIA = [
+  "Monthly procurement of 50,000+ EGP",
+  "Minimum 2 years in operation",
+  "Active commercial registration",
+  "Valid tax card",
+  "Hotel or hospitality establishment",
+  "Operating in Egypt",
+];
 
-interface Facility {
-  id: string;
-  status: string;
-  limit: number;
-  utilized: number;
-  currency: string;
-  hotel: { name: string };
-  factoringCompany: { name: string };
-}
+const PARTNERS = [
+  { name: "National Bank of Egypt", type: "bank" },
+  { name: "CIB", type: "bank" },
+  { name: "QNB", type: "bank" },
+  { name: "Banque Misr", type: "bank" },
+  { name: "Fawry", type: "fintech" },
+  { name: "InstaPay", type: "fintech" },
+];
 
-interface FactoringRequest {
-  id: string;
-  status: string;
-  amount: number;
-  discountRate: number;
-  currency: string;
-  createdAt: string;
-  invoice: { invoiceNumber: string; hotel: { name: string }; supplier: { name: string }; total: number };
-  factoringCompany: { name: string };
-}
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  total: number;
-  currency: string;
-  status: string;
-  etaStatus: string;
-  factoringStatus: string;
-  createdAt: string;
-  hotel: { name: string };
-  supplier: { name: string };
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    ACTIVE: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Active" },
-    PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
-    APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
-    REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
-    FUNDED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Funded" },
-    COMPLETED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Completed" },
-  };
-  const c = config[status] || config.PENDING;
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
-      {c.label}
-    </span>
-  );
-}
-
-function formatCurrency(amount: number, currency = "EGP") {
-  return `${currency} ${amount.toLocaleString("en-EG")}`;
-}
-
-export default function FinanceDashboardPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRequest, setSelectedRequest] = useState<FactoringRequest | null>(null);
-  const [newModalOpen, setNewModalOpen] = useState(false);
-  const [modalStep, setModalStep] = useState<"select" | "offers" | "confirm" | "success">("select");
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [offers, setOffers] = useState<any[]>([]);
-  const [selectedOffer, setSelectedOffer] = useState<any>(null);
-  const [modalLoading, setModalLoading] = useState(false);
-  const [modalError, setModalError] = useState("");
-
-  const { data: facilitiesData, loading: facilitiesLoading, error: facilitiesError } = useApi<Facility[]>(
-    "/api/factoring/facilities"
-  );
-
-  const { data: requestsData, loading: requestsLoading } = useApi<{ requests: FactoringRequest[]; pagination: { total: number } }>(
-    "/api/v1/factoring/requests?page=1&limit=10"
-  );
-
-  const { data: invoicesData, loading: invoicesLoading } = useApi<{ data: Invoice[]; meta: { total: number } }>(
-    "/api/invoices?page=1&limit=10"
-  );
-
-  const facilities = facilitiesData ?? [];
-  const requests = requestsData?.requests ?? [];
-  const invoices = invoicesData?.data ?? [];
-
-  const stats = useMemo(() => {
-    const totalLimit = facilities.reduce((sum, f) => sum + f.limit, 0);
-    const totalUtilized = facilities.reduce((sum, f) => sum + f.utilized, 0);
-    const available = totalLimit - totalUtilized;
-    const pendingRequests = requests.filter((r) => r.status === "PENDING").length;
-
-    return [
-      { label: "Available Credit", value: formatCurrency(available), change: `${formatCurrency(totalLimit)} total limit`, up: true, icon: Wallet },
-      { label: "Outstanding", value: formatCurrency(totalUtilized), change: "Utilized", up: false, icon: Receipt },
-      { label: "Factored Amount", value: formatCurrency(requests.filter((r) => r.status === "FUNDED").reduce((s, r) => s + r.amount, 0)), change: "This month", up: true, icon: Landmark },
-      { label: "Pending Requests", value: pendingRequests.toString(), change: "Awaiting approval", up: pendingRequests === 0, icon: AlertTriangle },
-    ];
-  }, [facilities, requests]);
-
-  const filteredRequests = requests.filter(
-    (r) =>
-      r.invoice?.invoiceNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.invoice?.hotel?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const isLoading = facilitiesLoading || requestsLoading || invoicesLoading;
-
-  // ── New Factoring Request Flow ──
-  async function fetchOffers(invoice: Invoice) {
-    setModalLoading(true);
-    setModalError("");
-    try {
-      const res = await fetch("/api/v1/factoring/inquire", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoiceId: invoice.id }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setOffers(json.allOffers || []);
-        setSelectedOffer(json.bestOffer || null);
-        setModalStep("offers");
-      } else {
-        setModalError(json.error || "Failed to get offers");
-      }
-    } catch {
-      setModalError("Network error fetching offers");
-    } finally {
-      setModalLoading(false);
-    }
-  }
-
-  async function executeFunding() {
-    if (!selectedInvoice || !selectedOffer) return;
-    setModalLoading(true);
-    setModalError("");
-    try {
-      const res = await fetch("/api/v1/factoring/fund", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          invoiceId: selectedInvoice.id,
-          factoringCompanyId: selectedOffer.factoringCompanyId,
-          advanceRate: selectedOffer.advanceRate,
-          discountRate: selectedOffer.discountRate,
-        }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setModalStep("success");
-      } else {
-        setModalError(json.error || "Funding failed");
-      }
-    } catch {
-      setModalError("Network error during funding");
-    } finally {
-      setModalLoading(false);
-    }
-  }
-
-  function closeModal() {
-    setNewModalOpen(false);
-    setModalStep("select");
-    setSelectedInvoice(null);
-    setOffers([]);
-    setSelectedOffer(null);
-    setModalError("");
-  }
+export default function FactoringLandingPage() {
+  const router = useRouter();
 
   return (
-    <motion.div
-      className="max-w-[1600px] mx-auto space-y-6"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header */}
-      <motion.div variants={fadeInUp} className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Finance Dashboard</h1>
-          <p className="text-sm text-white/40 mt-0.5">Liquidity overview, factoring requests, and credit facilities</p>
+    <div className="min-h-screen bg-[#000000] text-white">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent" />
+        
+        <div className="max-w-6xl mx-auto px-4 py-16 relative">
+          <div className="text-center max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm mb-6">
+                <Building2 className="w-4 h-4" />
+                <span>Now Available for Egyptian Hotels</span>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
+                Transform Your
+                <span className="bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
+                  {" "}Working Capital
+                </span>
+              </h1>
+              
+              <p className="text-xl text-white/60 mb-8">
+                Access up to 2,000,000 EGP in reverse factoring. 
+                Get paid in 24-48 hours instead of waiting 60-90 days.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <ButtonEnterprise
+                  variant="primary"
+                  size="lg"
+                  onClick={() => router.push("/factoring/apply")}
+                  className="group"
+                >
+                  Apply Now
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </ButtonEnterprise>
+                <ButtonEnterprise
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => router.push("/factoring/status")}
+                >
+                  Check Application Status
+                </ButtonEnterprise>
+              </div>
+              
+              <p className="text-sm text-white/40 mt-6">
+                Free application. No commitment required. Response within 2-3 business days.
+              </p>
+            </motion.div>
+          </div>
         </div>
-        <button
-          onClick={() => { setNewModalOpen(true); setModalStep("select"); setModalError(""); }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all"
-        >
-          <Plus size={14} />
-          New Factoring Request
-        </button>
-      </motion.div>
+      </section>
 
-      {/* Stats */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => <LoadingCard key={i} />)
-          : stats.map((s) => (
+      {/* Stats Bar */}
+      <section className="border-y border-white/[0.06] bg-[#0a0a10]">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: "2,000,000", label: "EGP Max Facility", suffix: "" },
+              { value: "24", label: "Hour Approval", suffix: "h" },
+              { value: "2.5", label: "Platform Fee", suffix: "%" },
+              { value: "90", label: "Day Terms", suffix: "d" },
+            ].map((stat, index) => (
               <motion.div
-                key={s.label}
-                variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
-                  </div>
+                <div className="text-3xl font-bold text-white mb-1">
+                  {stat.value}
+                  <span className="text-indigo-400">{stat.suffix}</span>
                 </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
-                  <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
-                </div>
+                <div className="text-sm text-white/40">{stat.label}</div>
               </motion.div>
             ))}
-      </motion.div>
-
-      {/* Main Grid */}
-      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Factoring Requests */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <FileCheck size={14} className="text-white/40" />
-              Factoring Requests
-            </h3>
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-              <input
-                type="text"
-                placeholder="Search requests..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-56"
-              />
-            </div>
           </div>
-
-          {requestsLoading ? (
-            <LoadingTable rows={5} />
-          ) : filteredRequests.length === 0 ? (
-            <EmptyState
-              title="No factoring requests"
-              description="Factoring requests will appear here once submitted."
-              action={
-                <button className="px-4 py-2 rounded-lg bg-[#8B0000] text-xs text-white font-medium">
-                  Submit Request
-                </button>
-              }
-            />
-          ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
-              <table className="w-full min-w-[640px]">
-                <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rate</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredRequests.map((req) => (
-                    <tr key={req.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-mono text-white/60">{req.invoice?.invoiceNumber || "—"}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs text-white">{req.invoice?.hotel?.name || "—"}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-semibold text-white">{formatCurrency(req.amount, req.currency)}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-white/40">{(req.discountRate * 100).toFixed(1)}%</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <StatusBadge status={req.status} />
-                      </td>
-                      <td className="px-4 py-3">
-                        <button
-                          onClick={() => setSelectedRequest(req)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                        >
-                          <Eye size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
+      </section>
 
-        {/* Right Column */}
-        <div className="space-y-4">
-          {/* Credit Facilities */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Wallet size={14} className="text-white/40" />
-              Credit Facilities
-            </h3>
-            {facilitiesLoading ? (
-              <LoadingTable rows={3} />
-            ) : facilities.length === 0 ? (
-              <EmptyState title="No facilities" description="Credit facilities will appear here." />
-            ) : (
-              <div className="space-y-3">
-                {facilities.map((facility) => {
-                  const pct = facility.limit > 0 ? (facility.utilized / facility.limit) * 100 : 0;
-                  return (
-                    <div key={facility.id} className="p-3 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs text-white">{facility.hotel?.name}</span>
-                        <StatusBadge status={facility.status} />
-                      </div>
-                      <div className="flex items-center justify-between text-[10px] text-white/20 mb-1.5">
-                        <span>{formatCurrency(facility.utilized, facility.currency)} used</span>
-                        <span>{formatCurrency(facility.limit, facility.currency)}</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${pct > 80 ? "bg-red-500" : pct > 50 ? "bg-amber-500" : "bg-emerald-500"}`}
-                          style={{ width: `${Math.min(pct, 100)}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+      {/* Benefits Section */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Why Hotels Choose Our Factoring</h2>
+            <p className="text-white/60 max-w-2xl mx-auto">
+              Join hundreds of Egyptian hotels already using our reverse factoring platform 
+              to optimize their cash flow and grow their business.
+            </p>
           </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {BENEFITS.map((benefit, index) => {
+              const Icon = benefit.icon;
+              return (
+                <motion.div
+                  key={benefit.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <CardEnterprise variant="glass" className="p-6 h-full">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-6 h-6 text-indigo-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-medium mb-2">{benefit.title}</h3>
+                        <p className="text-white/60">{benefit.description}</p>
+                      </div>
+                    </div>
+                  </CardEnterprise>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-          {/* Recent Invoices */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Receipt size={14} className="text-white/40" />
-              Recent Invoices
-            </h3>
-            {invoicesLoading ? (
-              <LoadingTable rows={3} />
-            ) : invoices.length === 0 ? (
-              <EmptyState title="No invoices" description="Invoices will appear here." />
-            ) : (
-              <div className="space-y-2">
-                {invoices.slice(0, 5).map((inv) => (
-                  <div key={inv.id} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <div>
-                      <p className="text-xs text-white">{inv.invoiceNumber}</p>
-                      <p className="text-[10px] text-white/25">{inv.hotel?.name}</p>
+      {/* How It Works */}
+      <section className="py-16 border-y border-white/[0.06] bg-[#0a0a10]">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+            <p className="text-white/60">Simple 4-step process to access your working capital</p>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { step: "01", title: "Apply", desc: "Submit your application with business documents" },
+              { step: "02", title: "Review", desc: "AI + human verification of your eligibility" },
+              { step: "03", title: "Approve", desc: "Get approved for up to 2M EGP facility" },
+              { step: "04", title: "Use", desc: "Factor invoices and get paid in 24-48h" },
+            ].map((item, index) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <div className="text-5xl font-bold text-indigo-500/20 mb-4">{item.step}</div>
+                <h3 className="text-lg font-medium mb-2">{item.title}</h3>
+                <p className="text-white/60 text-sm">{item.desc}</p>
+                {index < 3 && (
+                  <ChevronRight className="w-6 h-6 text-white/10 absolute -right-3 top-1/2 hidden lg:block" />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Eligibility Section */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold mb-4">Are You Eligible?</h2>
+              <p className="text-white/60 mb-8">
+                Our reverse factoring program is designed for established hotels 
+                and hospitality businesses in Egypt with consistent procurement needs.
+              </p>
+              
+              <div className="space-y-4">
+                {ELIGIBILITY_CRITERIA.map((criteria, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4 text-emerald-400" />
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
-                      <p className={`text-[9px] ${inv.factoringStatus === "FUNDED" ? "text-[#8B0000]" : inv.factoringStatus === "PENDING" ? "text-amber-400" : "text-white/20"}`}>
-                        {inv.factoringStatus || "Unfunded"}
-                      </p>
-                    </div>
+                    <span className="text-white/80">{criteria}</span>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Request Detail Modal */}
-      <Modal
-        isOpen={!!selectedRequest}
-        onClose={() => setSelectedRequest(null)}
-        title={`Factoring Request`}
-      >
-        {selectedRequest && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Amount</p>
-                <p className="text-sm text-white mt-0.5">{formatCurrency(selectedRequest.amount, selectedRequest.currency)}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Discount Rate</p>
-                <p className="text-sm text-white mt-0.5">{(selectedRequest.discountRate * 100).toFixed(1)}%</p>
-              </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
-                <div className="mt-0.5"><StatusBadge status={selectedRequest.status} /></div>
-              </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Factoring Company</p>
-                <p className="text-sm text-white mt-0.5">{selectedRequest.factoringCompany?.name || "—"}</p>
+              
+              <div className="mt-8">
+                <ButtonEnterprise
+                  variant="primary"
+                  size="lg"
+                  onClick={() => router.push("/factoring/apply")}
+                  className="group"
+                >
+                  Start Your Application
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </ButtonEnterprise>
               </div>
             </div>
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-[10px] text-white/20 uppercase mb-1">Invoice Details</p>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40">Hotel:</span>
-                <span className="text-white">{selectedRequest.invoice?.hotel?.name}</span>
+            
+            <CardEnterprise variant="elevated" className="p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <Landmark className="w-6 h-6 text-indigo-400" />
+                <h3 className="text-lg font-medium">Financing Partners</h3>
               </div>
-              <div className="flex items-center justify-between text-xs mt-1">
-                <span className="text-white/40">Supplier:</span>
-                <span className="text-white">{selectedRequest.invoice?.supplier?.name}</span>
+              <div className="grid grid-cols-2 gap-4">
+                {PARTNERS.map((partner) => (
+                  <div
+                    key={partner.name}
+                    className="p-4 rounded-lg bg-white/5 border border-white/10 text-center"
+                  >
+                    <div className="font-medium text-white/80">{partner.name}</div>
+                    <div className="text-xs text-white/40 mt-1 capitalize">{partner.type}</div>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center justify-between text-xs mt-1">
-                <span className="text-white/40">Invoice Total:</span>
-                <span className="text-white">{formatCurrency(selectedRequest.invoice?.total || 0, selectedRequest.currency)}</span>
-              </div>
-            </div>
+              <p className="text-sm text-white/40 mt-6 text-center">
+                Multiple financing partners ensure competitive rates and availability
+              </p>
+            </CardEnterprise>
           </div>
-        )}
-      </Modal>
+        </div>
+      </section>
 
-      {/* New Factoring Request Modal */}
-      <NewFactoringModal
-        isOpen={newModalOpen}
-        onClose={closeModal}
-        step={modalStep}
-        setStep={setModalStep}
-        selectedInvoice={selectedInvoice}
-        setSelectedInvoice={setSelectedInvoice}
-        offers={offers}
-        selectedOffer={selectedOffer}
-        setSelectedOffer={setSelectedOffer}
-        loading={modalLoading}
-        error={modalError}
-        onFetchOffers={fetchOffers}
-        onExecuteFunding={executeFunding}
-      />
-    </motion.div>
-  );
-}
-
-/* ─── New Factoring Request Modal Component ─── */
-function NewFactoringModal({
-  isOpen,
-  onClose,
-  step,
-  setStep,
-  selectedInvoice,
-  setSelectedInvoice,
-  offers,
-  selectedOffer,
-  setSelectedOffer,
-  loading,
-  error,
-  onFetchOffers,
-  onExecuteFunding,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  step: "select" | "offers" | "confirm" | "success";
-  setStep: (s: "select" | "offers" | "confirm" | "success") => void;
-  selectedInvoice: Invoice | null;
-  setSelectedInvoice: (i: Invoice | null) => void;
-  offers: any[];
-  selectedOffer: any;
-  setSelectedOffer: (o: any) => void;
-  loading: boolean;
-  error: string;
-  onFetchOffers: (invoice: Invoice) => void;
-  onExecuteFunding: () => void;
-}) {
-  const [eligibleInvoices, setEligibleInvoices] = useState<Invoice[]>([]);
-  const [invLoading, setInvLoading] = useState(false);
-
-  useState(() => {
-    if (isOpen && step === "select") {
-      setInvLoading(true);
-      fetch("/api/v1/factoring/invoices")
-        .then((r) => r.json())
-        .then((json) => {
-          if (json.success) setEligibleInvoices(json.data || []);
-        })
-        .finally(() => setInvLoading(false));
-    }
-  });
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1a1a1a] shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
-          <div>
-            <h3 className="text-lg font-semibold text-white">
-              {step === "select" && "Select Invoice"}
-              {step === "offers" && "Factoring Offers"}
-              {step === "confirm" && "Confirm Funding"}
-              {step === "success" && "Funding Complete"}
-            </h3>
-            <p className="text-xs text-white/30 mt-0.5">
-              {step === "select" && "Choose an eligible invoice to factor"}
-              {step === "offers" && "Review offers from factoring partners"}
-              {step === "confirm" && "Review terms before executing"}
-              {step === "success" && "Your factoring request has been processed"}
-            </p>
+      {/* CTA Section */}
+      <section className="py-16 border-t border-white/[0.06]">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm mb-6">
+            <Wallet className="w-4 h-4" />
+            <span>10+ Hotels Already Approved</span>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors">
-            <X size={18} />
-          </button>
+          
+          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Cash Flow?</h2>
+          <p className="text-white/60 mb-8 max-w-2xl mx-auto">
+            Join the growing network of Egyptian hotels using Hotels Vendors Factoring 
+            to optimize working capital and focus on what matters most: 
+            delivering exceptional guest experiences.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <ButtonEnterprise
+              variant="primary"
+              size="lg"
+              onClick={() => router.push("/factoring/apply")}
+            >
+              Apply for Factoring
+            </ButtonEnterprise>
+            <ButtonEnterprise
+              variant="secondary"
+              size="lg"
+              onClick={() => window.open("https://wa.me/201002650604", "_blank")}
+            >
+              Contact Sales
+            </ButtonEnterprise>
+          </div>
         </div>
-
-        <div className="p-6">
-          <AnimatePresence mode="wait">
-            {step === "select" && (
-              <motion.div key="select" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                {invLoading ? (
-                  <div className="py-8"><LoadingTable rows={3} /></div>
-                ) : eligibleInvoices.length === 0 ? (
-                  <EmptyState title="No eligible invoices" description="Invoices must have VALIDATED ETA status to be eligible for factoring." />
-                ) : (
-                  <div className="space-y-2">
-                    {eligibleInvoices.map((inv) => (
-                      <button
-                        key={inv.id}
-                        onClick={() => { setSelectedInvoice(inv); onFetchOffers(inv); }}
-                        className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all text-left ${
-                          selectedInvoice?.id === inv.id
-                            ? "bg-[#8B0000]/10 border-[#8B0000]/30"
-                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                            <Receipt size={16} className="text-white/30" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium text-white">{inv.invoiceNumber}</p>
-                            <p className="text-[10px] text-white/25">{inv.hotel?.name} · {inv.supplier?.name}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
-                          <ArrowRight size={14} className="text-white/20 inline-block mt-0.5" />
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {step === "offers" && (
-              <motion.div key="offers" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                {loading ? (
-                  <div className="py-12 flex flex-col items-center gap-3">
-                    <Loader2 size={24} className="animate-spin text-[#8B0000]" />
-                    <p className="text-sm text-white/40">Getting offers from partners...</p>
-                  </div>
-                ) : offers.length === 0 ? (
-                  <EmptyState title="No offers available" description="No factoring partners returned offers for this invoice." />
-                ) : (
-                  <div className="space-y-3">
-                    {offers.map((offer: any, i: number) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedOffer(offer)}
-                        className={`w-full p-4 rounded-xl border text-left transition-all ${
-                          selectedOffer === offer
-                            ? "bg-[#8B0000]/10 border-[#8B0000]/30"
-                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-white">{offer.companyName || "Partner"}</span>
-                          {selectedOffer === offer && <Check size={16} className="text-[#8B0000]" />}
-                        </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs">
-                          <div>
-                            <p className="text-white/20">Advance</p>
-                            <p className="text-white font-medium">{((offer.advanceRate || 0.9) * 100).toFixed(0)}%</p>
-                          </div>
-                          <div>
-                            <p className="text-white/20">Discount</p>
-                            <p className="text-white font-medium">{((offer.discountRate || 0.02) * 100).toFixed(1)}%</p>
-                          </div>
-                          <div>
-                            <p className="text-white/20">You Receive</p>
-                            <p className="text-emerald-400 font-medium">
-                              {formatCurrency(Math.round((selectedInvoice?.total || 0) * (offer.advanceRate || 0.9) * (1 - (offer.discountRate || 0.02))), selectedInvoice?.currency)}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                    <div className="flex gap-3 pt-2">
-                      <button onClick={() => setStep("select")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
-                      <button
-                        onClick={() => setStep("confirm")}
-                        disabled={!selectedOffer}
-                        className="flex-1 px-4 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 disabled:opacity-30 text-white text-sm font-medium transition-colors"
-                      >
-                        Continue
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {step === "confirm" && selectedInvoice && selectedOffer && (
-              <motion.div key="confirm" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Invoice</h4>
-                    <div className="flex justify-between text-sm"><span className="text-white/30">Number</span><span className="text-white">{selectedInvoice.invoiceNumber}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Amount</span><span className="text-white">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Hotel</span><span className="text-white">{selectedInvoice.hotel?.name}</span></div>
-                  </div>
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Terms</h4>
-                    <div className="flex justify-between text-sm"><span className="text-white/30">Partner</span><span className="text-white">{selectedOffer.companyName || "Partner"}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Advance Rate</span><span className="text-white">{((selectedOffer.advanceRate || 0.9) * 100).toFixed(0)}%</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Discount Rate</span><span className="text-white">{((selectedOffer.discountRate || 0.02) * 100).toFixed(1)}%</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Platform Fee</span><span className="text-white">1.5%</span></div>
-                    <div className="pt-2 mt-2 border-t border-white/[0.06] flex justify-between">
-                      <span className="text-sm font-medium text-white">Net Disbursement</span>
-                      <span className="text-sm font-bold text-emerald-400">
-                        {formatCurrency(Math.round(selectedInvoice.total * (selectedOffer.advanceRate || 0.9) * (1 - (selectedOffer.discountRate || 0.02) - 0.015)), selectedInvoice.currency)}
-                      </span>
-                    </div>
-                  </div>
-                  {error && (
-                    <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-xs flex items-center gap-2">
-                      <AlertCircle size={14} /> {error}
-                    </div>
-                  )}
-                  <div className="flex gap-3">
-                    <button onClick={() => setStep("offers")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
-                    <button
-                      onClick={onExecuteFunding}
-                      disabled={loading}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 disabled:opacity-50 text-white text-sm font-medium transition-colors"
-                    >
-                      {loading ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-                      {loading ? "Processing..." : "Confirm & Fund"}
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {step === "success" && (
-              <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
-                  <CheckCircle2 size={32} className="text-emerald-400" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-white">Funding Executed</h4>
-                  <p className="text-sm text-white/40 mt-1">The factoring request has been submitted and funds will be disbursed within 24 hours.</p>
-                </div>
-                <button onClick={onClose} className="px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors">Done</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

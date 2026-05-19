@@ -28,7 +28,7 @@ const SETTINGS_SECTIONS = [
   { id: "appearance", label: "Appearance", icon: Palette },
 ];
 
-function TabButton({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: any; label: string }) {
+function TabButton({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: React.ComponentType<{ className?: string }>; label: string }) {
   return (
     <button
       onClick={onClick}

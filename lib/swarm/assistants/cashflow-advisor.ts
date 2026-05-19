@@ -53,7 +53,7 @@ export async function executeCashflowAnalysis(params: {
       throw new Error(`Failed to fetch invoices: ${response.statusText}`);
     }
 
-    const data: any = await response.json();
+    const data = await response.json() as Record<string, unknown>;
     const requests = data.requests || [];
 
     let totalOutstanding = 0;

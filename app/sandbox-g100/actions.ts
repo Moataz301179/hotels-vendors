@@ -17,7 +17,7 @@ export async function verifyDeliveryHandshake(poNumber: string, otpCode: string,
 
   try {
     // Atomic Double-Entry State Transition
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // 1. Resolve Asset
       const order = await tx.order.findUnique({
         where: { orderNumber: poNumber }
@@ -49,7 +49,7 @@ export async function verifyDeliveryHandshake(poNumber: string, otpCode: string,
 
     revalidatePath("/dashboard/hotel");
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return { success: false, error: err.message };
   }
 }
@@ -62,7 +62,7 @@ export async function authorizeSettlement(assetId: string, railId: string, tenan
   try {
     if (railId === "WALLET") {
       // Execute strict Internal Wallet Deduction
-      await prisma.$transaction(async (tx: any) => {
+      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const wallet = await tx.wallet.findUnique({ where: { tenantId } });
         if (!wallet) throw new Error("WALLET_NOT_FOUND: Tenant Treasury Wallet is inactive.");
         
@@ -96,7 +96,7 @@ export async function authorizeSettlement(assetId: string, railId: string, tenan
     // and wait for the webhook callback to finalize the transaction.
     return { success: true, pendingExternal: true, message: `Payload transmitted to ${railId} infrastructure.` };
     
-  } catch (err: any) {
+  } catch (err: unknown) {
     return { success: false, error: err.message };
   }
 }

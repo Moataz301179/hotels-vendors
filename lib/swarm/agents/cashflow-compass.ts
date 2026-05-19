@@ -376,7 +376,7 @@ Respond ONLY in JSON format.`,
     };
   }
 
-  private deserialize(dbReading: any): CompassReading {
+  private deserialize(dbReading: Prisma.CompassReadingGetPayload<{ include: { priceVelocity: true } }>): CompassReading {
     return {
       timestamp: dbReading.date,
       marketDirection: dbReading.marketDirection,

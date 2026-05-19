@@ -148,7 +148,7 @@ export async function discoverHotelsViaSearch(city: string): Promise<ScrapedHote
     const data = await res.json();
     const results = data.data?.results || [];
 
-    const hotels: ScrapedHotel[] = results.map((r: any) => ({
+    const hotels: ScrapedHotel[] = results.map((r: Record<string, unknown>) => ({
       name: r.title?.replace(/ - Google Search| - Tripadvisor| - Booking\.com/gi, ""),
       city,
       governorate: EGYPTIAN_CITIES.find((c) => c.name === city)?.governorate || city,

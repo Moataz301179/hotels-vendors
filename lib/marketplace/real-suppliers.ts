@@ -1,4 +1,10 @@
 import marketData from "@/data/egyptian-market-v2.json";
+import type {
+  MarketDataV2,
+  RawSupplierData,
+  RawProductData,
+  RawHotelData,
+} from "@/types/market";
 
 export interface RealSupplier {
   id: string;
@@ -31,27 +37,34 @@ export interface RealHotel {
   monthlyGmvEgp: number;
 }
 
-const suppliers: RealSupplier[] = (marketData as any).suppliers.map((s: any) => ({
-  id: s.id,
-  name: s.name,
-  city: s.city,
-  governorate: s.governorate,
-  category: s.category,
-  industrialZone: s.industrial_zone,
-  taxId: s.tax_id,
-  monthlyCapacityEgp: s.monthly_capacity_egp,
-}));
+// Type-safe access to market data
+const typedMarketData = marketData as MarketDataV2;
 
-const products: RealProduct[] = (marketData as any).product_catalog.map((p: any) => ({
-  sku: p.sku,
-  name: p.name,
-  category: p.category,
-  unit: p.unit,
-  basePriceEgp: p.base_price_egp,
-  supplierId: p.supplier_id,
-}));
+const suppliers: RealSupplier[] = typedMarketData.suppliers.map(
+  (s: RawSupplierData) => ({
+    id: s.id,
+    name: s.name,
+    city: s.city,
+    governorate: s.governorate,
+    category: s.category,
+    industrialZone: s.industrial_zone,
+    taxId: s.tax_id,
+    monthlyCapacityEgp: s.monthly_capacity_egp,
+  })
+);
 
-const hotels: RealHotel[] = (marketData as any).hotels.map((h: any) => ({
+const products: RealProduct[] = typedMarketData.product_catalog.map(
+  (p: RawProductData) => ({
+    sku: p.sku,
+    name: p.name,
+    category: p.category,
+    unit: p.unit,
+    basePriceEgp: p.base_price_egp,
+    supplierId: p.supplier_id,
+  })
+);
+
+const hotels: RealHotel[] = typedMarketData.hotels.map((h: RawHotelData) => ({
   id: h.id,
   name: h.name,
   city: h.city,

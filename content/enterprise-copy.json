@@ -1,0 +1,339 @@
+{
+  "_version": "1.0.0",
+  "_description": "Enterprise-grade professional copy for Hotels Vendors B2B platform",
+  "_last_updated": "2026-05-19",
+  
+  "navigation": {
+    "brand_name": "Hotels Vendors",
+    "brand_tagline": "Institutional-Grade Procurement Infrastructure",
+    "nav_marketplace": "Marketplace",
+    "nav_suppliers": "Suppliers",
+    "nav_factoring": "Working Capital",
+    "nav_dashboard": "Dashboard",
+    "nav_orders": "Orders",
+    "nav_inventory": "Inventory",
+    "nav_analytics": "Analytics",
+    "nav_settings": "Settings",
+    "nav_support": "Support Center",
+    "nav_signin": "Sign In",
+    "nav_getstarted": "Initialize Procurement"
+  },
+  
+  "hero": {
+    "badge_live": "Operational in Egypt",
+    "badge_new": "Enhanced Procurement Engine",
+    "heading_primary": "Transform Hospitality Procurement",
+    "heading_secondary": "with Enterprise Intelligence",
+    "description": "Streamline vendor relationships, optimize procurement workflows, and access working capital solutions purpose-built for hospitality operations across Egypt.",
+    "cta_primary": "Initialize Procurement",
+    "cta_secondary": "Platform Demonstration",
+    "cta_catalog": "Browse Catalog",
+    "trust_statement": "Trusted by Leading Hospitality Groups"
+  },
+  
+  "metrics": {
+    "hotels_onboarded": {
+      "value": "2,400+",
+      "label": "Properties Onboarded",
+      "sublabel": "Across Egypt"
+    },
+    "suppliers_verified": {
+      "value": "850+",
+      "label": "Verified Suppliers",
+      "sublabel": "Quality Assured"
+    },
+    "procurement_volume": {
+      "value": "EGP 2.8B",
+      "label": "Annual Procurement",
+      "sublabel": "Transaction Volume"
+    },
+    "time_saved": {
+      "value": "78%",
+      "label": "Administrative Reduction",
+      "sublabel": "Time Savings"
+    }
+  },
+  
+  "features": {
+    "section_label": "Platform Capabilities",
+    "section_heading": "Comprehensive Procurement Infrastructure",
+    "section_description": "End-to-end procurement management designed for hospitality scale and complexity.",
+    
+    "unified_catalog": {
+      "title": "Unified Procurement Catalog",
+      "description": "Access thousands of verified hospitality products through a single, centralized interface with real-time availability and competitive pricing intelligence."
+    },
+    "supplier_intelligence": {
+      "title": "Supplier Intelligence Engine",
+      "description": "AI-powered vendor assessment and selection tools with real-time performance metrics, compliance verification, and automated procurement recommendations."
+    },
+    "order_management": {
+      "title": "Order Orchestration",
+      "description": "Streamline order placement, tracking, and fulfillment with automated workflows, ETA compliance monitoring, and exception management."
+    },
+    "factoring": {
+      "title": "Working Capital Solutions",
+      "description": "Accelerate cash flow with integrated invoice factoring and payment optimization tools designed specifically for hospitality procurement cycles."
+    },
+    "inventory": {
+      "title": "Inventory Intelligence",
+      "description": "Optimize stock levels with predictive analytics, automated reordering, and intelligent consumption forecasting for hospitality operations."
+    },
+    "eta_compliance": {
+      "title": "ETA Compliance Framework",
+      "description": "Ensure regulatory adherence with automated documentation, audit trails, and compliance validation for all procurement activities."
+    }
+  },
+  
+  "how_it_works": {
+    "section_label": "Implementation Process",
+    "section_heading": "Three-Phased Onboarding",
+    "section_description": "Accelerate time-to-value with our structured implementation methodology.",
+    
+    "step_1": {
+      "number": "01",
+      "title": "Platform Initialization",
+      "description": "Complete organizational setup with tenant provisioning, user role configuration, and system integration preparation."
+    },
+    "step_2": {
+      "number": "02",
+      "title": "Supplier Network Activation",
+      "description": "Connect your existing vendors or discover new suppliers through our verified marketplace with automated onboarding workflows."
+    },
+    "step_3": {
+      "number": "03",
+      "title": "Operational Deployment",
+      "description": "Launch procurement workflows with team training, process validation, and ongoing optimization support."
+    }
+  },
+  
+  "testimonials": {
+    "section_label": "Client Experiences",
+    "section_heading": "Operational Excellence",
+    
+    "quote_1": {
+      "text": "The procurement automation has fundamentally transformed our operational efficiency. We've reduced vendor management overhead by 65% while improving compliance visibility.",
+      "author": "Amr Hassan",
+      "role": "Chief Operating Officer",
+      "company": "Coastal Hospitality Group"
+    },
+    "quote_2": {
+      "text": "Access to working capital through the integrated factoring solution has improved our cash flow management significantly. The platform pays for itself.",
+      "author": "Sherine Ezzat",
+      "role": "Finance Director",
+      "company": "Nile View Resorts"
+    },
+    "quote_3": {
+      "text": "The supplier intelligence capabilities have given us unprecedented visibility into vendor performance. We've optimized our supply base and reduced procurement costs.",
+      "author": "Mohamed Khalil",
+      "role": "Procurement Manager",
+      "company": "Pyramid Hotels & Resorts"
+    }
+  },
+  
+  "cta": {
+    "heading": "Ready to Transform Your Procurement Operations?",
+    "description": "Join Egypt's leading hospitality groups in optimizing vendor relationships and accelerating operational efficiency.",
+    "primary_action": "Schedule Consultation",
+    "secondary_action": "Platform Demonstration",
+    "microcopy": "No commitment required • Implementation specialists available • Enterprise-grade security"
+  },
+  
+  "buttons": {
+    "primary": {
+      "default": "Initialize",
+      "submit": "Submit Request",
+      "continue": "Proceed",
+      "confirm": "Confirm Action",
+      "save": "Save Configuration",
+      "create": "Create Record",
+      "add": "Add Item",
+      "invite": "Send Invitation",
+      "connect": "Establish Connection",
+      "complete": "Complete Setup"
+    },
+    "secondary": {
+      "cancel": "Cancel Operation",
+      "back": "Return",
+      "skip": "Skip Step",
+      "close": "Close Dialog",
+      "dismiss": "Dismiss Notification"
+    },
+    "tertiary": {
+      "learn_more": "View Documentation",
+      "contact_sales": "Contact Solutions Team",
+      "watch_demo": "View Demonstration",
+      "read_case": "Read Case Study"
+    }
+  },
+  
+  "form_labels": {
+    "email": "Corporate Email Address",
+    "password": "Secure Password",
+    "company_name": "Organization Legal Name",
+    "company_size": "Property Count",
+    "phone": "Primary Contact Number",
+    "role": "Professional Title",
+    "industry": "Industry Segment",
+    "address": "Registered Address",
+    "tax_id": "Tax Identification Number",
+    "contact_name": "Primary Contact Name",
+    "message": "Inquiry Details"
+  },
+  
+  "form_placeholders": {
+    "email": "operations@company.com",
+    "company_name": "Enter registered organization name",
+    "phone": "+20",
+    "contact_name": "Full name",
+    "message": "Describe your procurement requirements or questions...",
+    "search_catalog": "Search products, suppliers, or categories...",
+    "search_orders": "Search order numbers or suppliers...",
+    "filter_date": "Select date range"
+  },
+  
+  "validation": {
+    "required": "This field requires completion",
+    "email_invalid": "Please enter a valid corporate email address",
+    "password_weak": "Password must contain at least 8 characters with mixed case, numbers, and symbols",
+    "phone_invalid": "Please enter a valid phone number",
+    "tax_id_invalid": "Please enter a valid tax identification number"
+  },
+  
+  "errors": {
+    "generic": "An unexpected condition has occurred. Please retry your request.",
+    "network": "Connection to services interrupted. Verifying connectivity...",
+    "auth": "Authentication credential mismatch. Please verify your credentials.",
+    "session_expired": "Session authentication expired. Please authenticate again.",
+    "permission_denied": "Insufficient privileges for this operation. Contact your system administrator.",
+    "not_found": "Requested resource unavailable or removed.",
+    "server_error": "Service temporarily unavailable. Our operations team has been notified.",
+    "rate_limited": "Request frequency exceeds capacity. Please wait before retrying.",
+    "maintenance": "System maintenance in progress. Services will resume shortly.",
+    "validation": "Submitted data requires correction. Review highlighted fields."
+  },
+  
+  "empty_states": {
+    "no_orders": {
+      "title": "No Active Orders",
+      "description": "Your procurement pipeline is currently empty. Initialize your first order to begin.",
+      "action": "Browse Catalog"
+    },
+    "no_suppliers": {
+      "title": "Supplier Network Empty",
+      "description": "Connect verified suppliers to unlock procurement capabilities.",
+      "action": "Discover Suppliers"
+    },
+    "no_results": {
+      "title": "No Matching Results",
+      "description": "Adjust your search criteria or filters to find relevant items.",
+      "action": "Clear Filters"
+    },
+    "no_notifications": {
+      "title": "No Active Notifications",
+      "description": "All systems operational. New alerts will appear here."
+    }
+  },
+  
+  "status": {
+    "pending": "Pending Review",
+    "processing": "Processing",
+    "approved": "Approved",
+    "shipped": "In Transit",
+    "delivered": "Delivered",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "disputed": "Under Review",
+    "active": "Active",
+    "inactive": "Inactive",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Synchronizing"
+  },
+  
+  "tooltip": {
+    "info": "Additional Information",
+    "help": "Click for assistance",
+    "copy": "Copy to clipboard",
+    "copied": "Copied",
+    "external": "Opens external resource",
+    "new_window": "Opens in new window",
+    "filter": "Filter results",
+    "sort": "Sort by",
+    "refresh": "Refresh data",
+    "expand": "Expand view",
+    "collapse": "Collapse view"
+  },
+  
+  "loading": {
+    "default": "Processing request...",
+    "data": "Retrieving data...",
+    "saving": "Persisting changes...",
+    "uploading": "Transmitting files...",
+    "authenticating": "Verifying credentials...",
+    "generating": "Generating insights...",
+    "syncing": "Synchronizing systems...",
+    "please_wait": "This operation may require a moment..."
+  },
+  
+  "success": {
+    "saved": "Configuration updated successfully",
+    "created": "Record created successfully",
+    "updated": "Changes applied successfully",
+    "deleted": "Record removed successfully",
+    "submitted": "Request submitted for processing",
+    "invited": "Invitation dispatched successfully",
+    "connected": "Connection established",
+    "synced": "Synchronization completed",
+    "copied": "Copied to clipboard"
+  },
+  
+  "alerts": {
+    "info_title": "Information",
+    "success_title": "Operation Successful",
+    "warning_title": "Attention Required",
+    "error_title": "Operation Failed",
+    "dismiss": "Dismiss Alert"
+  },
+  
+  "modals": {
+    "confirm_title": "Confirm Action",
+    "delete_title": "Confirm Removal",
+    "unsaved_title": "Unsaved Changes",
+    "cancel_message": "Disregard pending changes and exit?",
+    "delete_message": "This action cannot be reversed. Proceed with removal?",
+    "confirm_button": "Confirm",
+    "cancel_button": "Cancel Operation",
+    "save_button": "Save Changes",
+    "discard_button": "Discard Changes"
+  },
+  
+  "accessibility": {
+    "skip_to_content": "Skip to main content",
+    "menu_toggle": "Toggle navigation menu",
+    "search_toggle": "Toggle search",
+    "close_dialog": "Close dialog",
+    "expand_menu": "Expand menu",
+    "collapse_menu": "Collapse menu",
+    "required_field": "Required field",
+    "loading_indicator": "Content loading",
+    "error_indicator": "Error condition present",
+    "success_indicator": "Operation succeeded"
+  },
+  
+  "footer": {
+    "company_description": "Institutional-grade procurement infrastructure for Egypt's hospitality sector.",
+    "product_links": "Platform",
+    "company_links": "Organization",
+    "legal_links": "Legal",
+    "support_links": "Support",
+    "copyright": "© 2026 Hotels Vendors. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "security": "Security Information",
+    "cookies": "Cookie Preferences",
+    "contact": "Contact Solutions Team"
+  }
+}

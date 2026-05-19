@@ -1,3 +1,5 @@
+import type { VaultSecretResponse } from "@/types/vault";
+
 /**
  * HashiCorp Vault KV-v2 Secrets Engine Client
  * Hotels Vendors Secure Fintech Core — Layer 3 Compliance
@@ -40,7 +42,7 @@ export async function fetchTenantVaultCredentials(tenantId: string): Promise<Eph
         throw new Error(`Vault kv-v2 endpoint returned status ${response.status}: ${response.statusText}`);
       }
 
-      const payload: any = await response.json();
+      const payload = await response.json() as VaultSecretResponse;
       const secretData = payload.data?.data;
 
       if (!secretData) {

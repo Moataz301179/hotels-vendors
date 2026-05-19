@@ -9,6 +9,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 export interface LedgerLine {
   accountCode: string;
@@ -46,7 +47,7 @@ export interface SettlementLedgerInput {
  * INVARIANT: Debits must balance Credits EXACTLY. Write-once, append-only.
  */
 export async function recordDisbursementJournal(
-  tx: any,
+  tx: Prisma.TransactionClient,
   input: FactoringLedgerInput
 ): Promise<string> {
   const {
@@ -171,7 +172,7 @@ export async function recordDisbursementJournal(
  * Represents the final payment settlement by the Corporate Hotel Group.
  */
 export async function recordSettlementDisbursalJournal(
-  tx: any,
+  tx: Prisma.TransactionClient,
   input: SettlementLedgerInput
 ): Promise<string> {
   const {
@@ -265,7 +266,7 @@ export async function recordSettlementDisbursalJournal(
  * Excludes direct UPDATE/DELETE operations to maintain FRA regulatory compliance.
  */
 export async function recordCompensatingJournal(
-  tx: any,
+  tx: Prisma.TransactionClient,
   originalEntryId: string,
   tenantId: string,
   reason: string

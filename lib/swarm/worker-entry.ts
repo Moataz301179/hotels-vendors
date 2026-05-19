@@ -12,7 +12,7 @@ import { createEmailWorker } from "@/lib/notifications/queue";
 async function main() {
   console.log("[SwarmWorker] 🐝 Starting worker...");
 
-  const workers: any[] = [];
+  const workers: Record<string, Worker> = [];
 
   // Initialize business-logic workers
   const etaWorker = createEtaWorker();

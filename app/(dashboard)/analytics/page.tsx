@@ -1,5 +1,6 @@
 "use client";
 
+import type { ExplorerHotel, ExplorerSupplier, ExplorerProduct } from "@/types/dashboard";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
@@ -37,8 +38,8 @@ export default function AnalyticsPage() {
     etaAccepted: number;
   }>("/api/analytics?days=30");
 
-  const { data: hotelsData, loading: hotelsLoading } = useApi<{ data: any[] }>("/api/hotels?page=1&limit=5");
-  const { data: suppliersData, loading: suppliersLoading } = useApi<{ data: any[] }>("/api/suppliers?page=1&limit=5");
+  const { data: hotelsData, loading: hotelsLoading } = useApi<{ data: ExplorerHotel[] }>("/api/hotels?page=1&limit=5");
+  const { data: suppliersData, loading: suppliersLoading } = useApi<{ data: ExplorerHotel[] }>("/api/suppliers?page=1&limit=5");
 
   const stats = useMemo(() => {
     if (!analyticsData) return null;
@@ -51,17 +52,17 @@ export default function AnalyticsPage() {
     ];
   }, [analyticsData, hotelsData]);
 
-  const topHotels = hotelsData?.data?.slice(0, 5).map((h: any) => ({
+  const topHotels = hotelsData?.data?.slice(0, 5).map((h: ExplorerHotel) => ({
     name: h.name,
     orders: h._count?.orders || 0,
     spend: formatCurrency(h.totalSpend || 0),
     growth: Math.floor(Math.random() * 20) - 5,
   })) || [];
 
-  const topSuppliers = suppliersData?.data?.slice(0, 5).map((s: any) => ({
+  const topSuppliers = suppliersData?.data?.slice(0, 5).map((s: ExplorerSupplier) => ({
     name: s.name,
     orders: s._count?.orders || 0,
-    revenue: formatCurrency(s.products?.reduce((sum: number, p: any) => sum + (p.unitPrice || 0), 0) || 0),
+    revenue: formatCurrency(s.products?.reduce((sum: number, p: ExplorerProduct) => sum + (p.unitPrice || 0), 0) || 0),
     rating: s.rating || 4.5,
   })) || [];
 

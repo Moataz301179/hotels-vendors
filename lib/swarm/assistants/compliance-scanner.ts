@@ -60,7 +60,7 @@ export async function executeComplianceAudit(params: {
       validationLog.push(`Compliance validation returned status ${response.status}.`);
       remediationSteps.push("Ensure your network is authorized to access the ETA sandbox bridge endpoint.");
     } else {
-      const data: any = await response.json();
+      const data = await response.json() as Record<string, unknown>;
       if (data.valid) {
         validationLog.push("Invoice canonical envelope successfully compiled.");
         validationLog.push("Detached cryptographic digital signature (PKCS#1) verified.");

@@ -3,9 +3,17 @@ import { prisma } from "@/lib/prisma";
 import { IdempotencyGuard } from "@/lib/fintech/idempotency";
 import crypto from "crypto";
 
-const WEBHOOK_SECRET = process.env.FACTOR_WEBHOOK_SECRET || "production-secure-key-rotation-pending";
-
 export async function POST(request: Request) {
+  // SECURITY: Webhook secret must be configured
+  const WEBHOOK_SECRET = process.env.FACTOR_WEBHOOK_SECRET;
+  if (!WEBHOOK_SECRET) {
+    console.error('[FATAL SECURITY ERROR] FACTOR_WEBHOOK_SECRET environment variable is required.');
+    return NextResponse.json(
+      { error: 'SERVICE_UNAVAILABLE', message: 'Webhook not configured - security requirement missing.' },
+      { status: 503 }
+    );
+  }
+
   try {
     const signature = request.headers.get("x-factor-signature");
     const idempotencyKey = request.headers.get("x-idempotency-key");
@@ -98,15 +106,37 @@ export async function POST(request: Request) {
       };
     });
 
-    // 5. Commit Immutable Payload to Idempotency Cache
+    // 5. Cache Success Response for Idempotency
     const successResponse = JSON.stringify(settlementResult);
     await IdempotencyGuard.commitResponse(idempotencyKey, successResponse);
 
-    console.log(`[Settlement Telemetry] Webhook payload cleanly parsed. Asset ${assetId} fully disbursed and locked.`);
-    return new NextResponse(successResponse, { status: 200, headers: { "Content-Type": "application/json" } });
+    return new NextResponse(successResponse, { 
+      status: 200, 
+      headers: { "Content-Type": "application/json" } 
+    });
 
-  } catch (error: any) {
-    console.error("[Webhook Execution Exception]", error);
-    return NextResponse.json({ error: "INTERNAL_SERVER_ERROR", message: error.message }, { status: 500 });
+  } catch (error) {
+    console.error("[Factor Webhook] Critical failure:", error);
+    const errorResponse = JSON.stringify({ 
+      error: "INTERNAL_ERROR", 
+      message: "Settlement lifecycle mutation failed catastrophically." 
+    });
+    return new NextResponse(errorResponse, { 
+      status: 500, 
+      headers: { "Content-Type": "application/json" } 
+    });
   }
+}
+
+// No other HTTP methods allowed
+export function GET() {
+  return NextResponse.json({ error: "METHOD_NOT_ALLOWED" }, { status: 405 });
+}
+
+export function PUT() {
+  return NextResponse.json({ error: "METHOD_NOT_ALLOWED" }, { status: 405 });
+}
+
+export function DELETE() {
+  return NextResponse.json({ error: "METHOD_NOT_ALLOWED" }, { status: 405 });
 }

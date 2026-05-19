@@ -1,5 +1,16 @@
 "use client";
 
+
+import type {
+  ExplorerUser,
+  ExplorerSupplier,
+  ExplorerHotel,
+  ExplorerOrder,
+  ExplorerProduct,
+  ExplorerInvoice,
+  ExplorerFactoring,
+  ExplorerLead,
+} from "@/types/dashboard";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,7 +48,7 @@ export default function AdminExplorerPage() {
   const [activeTab, setActiveTab] = useState<EntityType>("users");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  const [data, setData] = useState<unknown[]>([]);
+  const [data, setData] = useState<ExplorerEntity[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -158,7 +169,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((u: any) => (
+              {data.map((u: ExplorerUser) => (
                 <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{u.name}</td>
                   <td className="py-3 px-4 text-white/50">{u.email}</td>
@@ -187,7 +198,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((s: any) => (
+              {data.map((s: ExplorerSupplier) => (
                 <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{s.name}</td>
                   <td className="py-3 px-4 text-white/40">{s.city || "—"}</td>
@@ -217,7 +228,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((h: any) => (
+              {data.map((h: ExplorerHotel) => (
                 <tr key={h.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{h.name}</td>
                   <td className="py-3 px-4 text-white/40">{h.city || "—"}</td>
@@ -247,7 +258,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((o: any) => (
+              {data.map((o: ExplorerOrder) => (
                 <tr key={o.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{o.orderNumber}</td>
                   <td className="py-3 px-4 text-white/40">{o.hotel?.name || "—"}</td>
@@ -277,7 +288,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((p: any) => (
+              {data.map((p: ExplorerProduct) => (
                 <tr key={p.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-mono text-white/40 text-xs">{p.sku}</td>
                   <td className="py-3 px-4 font-medium text-white/80">{p.name}</td>
@@ -307,7 +318,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((i: any) => (
+              {data.map((i: ExplorerInvoice) => (
                 <tr key={i.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{i.invoiceNumber}</td>
                   <td className="py-3 px-4 text-white/40">{i.order?.orderNumber || "—"}</td>
@@ -337,7 +348,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((f: any) => (
+              {data.map((f: ExplorerFactoring) => (
                 <tr key={f.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 text-white/40">{f.invoice?.invoiceNumber || "—"}</td>
                   <td className="py-3 px-4 font-medium text-white/80">{f.factoringCompany?.name || "—"}</td>
@@ -367,7 +378,7 @@ export default function AdminExplorerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
-              {data.map((l: any) => (
+              {data.map((l: ExplorerLead) => (
                 <tr key={l.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 font-medium text-white/80">{l.name}</td>
                   <td className="py-3 px-4 text-white/40">{l.entityType}</td>
