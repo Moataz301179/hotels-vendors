@@ -32,7 +32,7 @@ export function getTenantClient(prisma: PrismaClient, tenantId: string) {
               if (Array.isArray(args.data)) {
                 // @ts-ignore
                 args.data = args.data.map(d => ({ ...d, tenantId }));
-              } else if (args.data) {
+              } else if ((args as any).data) {
                 // @ts-ignore
                 args.data.tenantId = tenantId;
               }

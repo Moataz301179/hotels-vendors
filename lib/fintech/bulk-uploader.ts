@@ -65,14 +65,18 @@ export class BulkUploader {
 
         // Commit standard Receivable asset
         // Note: Bulk uploader creates synthetic order placeholder for invoice schema compliance
+        const subtotal = record.totalAmount - record.vatAmount;
         const placeholderOrder = await tx.order.create({
           data: {
             orderNumber: `BULK-${record.invoiceNumber}`,
             status: "DELIVERED",
+            subtotal: subtotal,
+            vatAmount: record.vatAmount,
             total: record.totalAmount,
             supplierId: record.supplierId,
             hotelId: record.hotelId,
             tenantId: tenantId,
+            requesterId: "system-bulk-uploader",
           }
         });
         

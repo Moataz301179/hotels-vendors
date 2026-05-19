@@ -3,7 +3,6 @@
  * Runs as a background process to execute queued jobs
  */
 
-import { initializeSwarmWorkers, setupScheduledJobs } from "./scheduler";
 import { recordSwarmEvent } from "./monitoring";
 import { createEtaWorker, createEtaDeadLetterWorker } from "@/lib/eta/queue";
 import { createOrderWorker } from "@/lib/orders/queue";
@@ -13,9 +12,7 @@ import { createEmailWorker } from "@/lib/notifications/queue";
 async function main() {
   console.log("[SwarmWorker] 🐝 Starting worker...");
 
-  // Initialize all squad workers
-  const workers = initializeSwarmWorkers();
-  console.log(`[SwarmWorker] ✅ ${workers.length} squad workers initialized`);
+  const workers: any[] = [];
 
   // Initialize business-logic workers
   const etaWorker = createEtaWorker();
@@ -26,10 +23,6 @@ async function main() {
 
   workers.push(etaWorker, etaDlqWorker, orderWorker, factoringWorker, emailWorker);
   console.log(`[SwarmWorker] ✅ 5 business workers initialized (eta, orders, factoring, email)`);
-
-  // Setup scheduled cron jobs
-  await setupScheduledJobs();
-  console.log("[SwarmWorker] ✅ Scheduled jobs configured");
 
   await recordSwarmEvent("worker_started", "INFO", {
     workerCount: workers.length,
