@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { etaClient } from "@/lib/eta/client";
 import { validateForSubmission } from "@/lib/eta/validator";
@@ -75,7 +76,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       netTotal: item.total,
       itemsDiscount: 0,
       discount: { amount: 0 },
-      taxableItems: [{ taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 }],
+      taxableItems: [{ taxType: "T1" as const, amount: new Prisma.Decimal(item.total).mul(0.14).toNumber(), subType: "V001", rate: 14 }],
     })),
     totalSalesAmount: invoice.subtotal,
     netAmount: invoice.subtotal,

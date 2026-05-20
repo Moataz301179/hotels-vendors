@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function PremiumMarketplacePage() {
   return (
     <main className="min-h-screen bg-black">
-      <PremiumMarketplaceClient marketData={marketData} />
+      <PremiumMarketplaceClient data={marketData} />
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export interface LiquidityStrategyMetrics {
   maturityExtensions: number;
@@ -18,7 +19,7 @@ export class CashflowAdvisor {
     // This file is a sealed read-only telemetry module. 
     // Zero Prisma write mutations, zero ledger creation methods, zero execution hooks.
 
-    const activePackages = await prisma.consolidatedInvoice.findMany({
+    const activePackages = await prisma.masterInvoice.findMany({
       where: { 
         tenantId, 
         status: { notIn: ["DISBURSED", "SETTLED"] } 
@@ -39,7 +40,7 @@ export class CashflowAdvisor {
       drawdownThresholds += pkg.total;
 
       // Retained Treasury Yield: Stream 3 Hotel Admin Fee
-      const adminFee = pkg.total * pkg.hotelAdminFeeRate;
+      const adminFee = new Prisma.Decimal(pkg.total).mul(pkg.hotelAdminFeeRate ?? 0).toNumber();
       retainedTreasuryYield += adminFee;
 
       // Maturity Extensions: Total value of underlying receivables extending Days Payable Outstanding (DPO)

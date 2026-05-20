@@ -10,19 +10,19 @@ export class ComplianceScanner {
    * Assembles an immutable data passport for financial underwriters, strictly
    * adhering to FRA Governance Gates and ETA Cryptographic Compliance.
    *
-   * @param consolidatedInvoiceId The asset package identifier.
+   * @param masterInvoiceId The asset package identifier.
    */
-  public async verifyAssetIntegrity(consolidatedInvoiceId: string): Promise<AntiFraudAuditEnvelope> {
+  public async verifyAssetIntegrity(masterInvoiceId: string): Promise<AntiFraudAuditEnvelope> {
     // 1. Resolve the Aggregated Debt Package
-    const pkg = await prisma.consolidatedInvoice.findUnique({
-      where: { id: consolidatedInvoiceId },
+    const pkg = await prisma.masterInvoice.findUnique({
+      where: { id: masterInvoiceId },
       include: {
         invoices: true,
       }
     });
 
     if (!pkg) {
-      throw new Error(`ASSET_NOT_FOUND: Aggregated Debt Package ${consolidatedInvoiceId} could not be resolved.`);
+      throw new Error(`ASSET_NOT_FOUND: Aggregated Debt Package ${masterInvoiceId} could not be resolved.`);
     }
 
     const childInvoices = pkg.invoices;
@@ -39,8 +39,8 @@ export class ComplianceScanner {
     // 3. Verification Gate: Independent User Signature Tokens (FRA Four-Eyes Mandate)
     const approvals = await prisma.auditLog.findMany({
       where: {
-        entityType: "CONSOLIDATED_INVOICE",
-        entityId: consolidatedInvoiceId,
+        entityType: "MASTER_INVOICE",
+        entityId: masterInvoiceId,
         action: "CONSOLIDATED_INVOICE_APPROVED"
       },
       orderBy: { createdAt: "asc" }

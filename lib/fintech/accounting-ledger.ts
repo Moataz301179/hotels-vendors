@@ -9,7 +9,8 @@
  */
 
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export interface LedgerLine {
   accountCode: string;
@@ -19,7 +20,7 @@ export interface LedgerLine {
 }
 
 export interface FactoringLedgerInput {
-  consolidatedInvoiceId: string;
+  masterInvoiceId: string;
   tenantId: string;
   grossAmount: number;
   advanceRate: number;
@@ -34,7 +35,7 @@ export interface FactoringLedgerInput {
 }
 
 export interface SettlementLedgerInput {
-  consolidatedInvoiceId: string;
+  masterInvoiceId: string;
   tenantId: string;
   grossAmount: number;
   hotelAdminFeeAmount: number;
@@ -51,7 +52,7 @@ export async function recordDisbursementJournal(
   input: FactoringLedgerInput
 ): Promise<string> {
   const {
-    consolidatedInvoiceId,
+    masterInvoiceId,
     tenantId,
     grossAmount,
     advanceRate,
@@ -62,19 +63,21 @@ export async function recordDisbursementJournal(
     supplierDisbursement,
   } = input;
 
-  // 1. Fetch Consolidated Invoice details to resolve hotel
-  const ci = await tx.consolidatedInvoice.findUnique({
-    where: { id: consolidatedInvoiceId },
+  // 1. Fetch Master Invoice details to resolve hotel
+  const ci = await tx.masterInvoice.findUnique({
+    where: { id: masterInvoiceId },
     select: { hotelId: true, invoiceNumber: true },
   });
 
   if (!ci) {
-    throw new Error(`Aggregated Debt Package not found for ledger: ${consolidatedInvoiceId}`);
+    throw new Error(`Aggregated Debt Package not found for ledger: ${masterInvoiceId}`);
   }
 
-  // 2. Calculate amounts for double-entry validation
-  const platformEscrowDebit = grossAmount * advanceRate - factoringFee;
-  const cashDiscountDelta = Math.max(0, supplierDiscountAmount - factoringFee);
+  // 2. Calculate amounts for double-entry validation using Decimal precision
+  const grossD = new Prisma.Decimal(grossAmount);
+  const factoringFeeD = new Prisma.Decimal(factoringFee);
+  const platformEscrowDebit = grossD.mul(advanceRate).sub(factoringFeeD);
+  const cashDiscountDelta = Prisma.Decimal.max(0, new Prisma.Decimal(supplierDiscountAmount).sub(factoringFeeD));
 
   // Compile ledger lines conforming to standard Chart of Accounts
   const lines: LedgerLine[] = [
@@ -88,7 +91,7 @@ export async function recordDisbursementJournal(
     {
       accountCode: "1210",
       accountName: "Stream 1: Fintech Commission Receivable from Factor",
-      debit: parseFloat(factoringCommissionAmount.toFixed(2)),
+      debit: parseFloat(new Prisma.Decimal(factoringCommissionAmount).toFixed(2)),
       credit: 0,
     },
     // CREDITS (Liabilities decrease or Revenues increase)
@@ -96,7 +99,7 @@ export async function recordDisbursementJournal(
       accountCode: "4010",
       accountName: "Stream 1: Fintech Commission Revenue",
       debit: 0,
-      credit: parseFloat(factoringCommissionAmount.toFixed(2)),
+      credit: parseFloat(new Prisma.Decimal(factoringCommissionAmount).toFixed(2)),
     },
     {
       accountCode: "4020",
@@ -108,38 +111,50 @@ export async function recordDisbursementJournal(
       accountCode: "4030",
       accountName: "Stream 3: Hotel Treasury Admin Fee Revenue",
       debit: 0,
-      credit: parseFloat(hotelAdminFeeAmount.toFixed(2)),
+      credit: parseFloat(new Prisma.Decimal(hotelAdminFeeAmount).toFixed(2)),
     },
     {
       accountCode: "2010",
       accountName: "Supplier Accounts Payable (Accelerated Capital Liquidation)",
       debit: 0,
-      credit: parseFloat(supplierDisbursement.toFixed(2)),
+      credit: parseFloat(new Prisma.Decimal(supplierDisbursement).toFixed(2)),
     },
   ];
 
-  const totalDebit = parseFloat(lines.reduce((sum, l) => sum + l.debit, 0).toFixed(2));
-  const totalCredit = parseFloat(lines.reduce((sum, l) => sum + l.credit, 0).toFixed(2));
+  let totalDebit = new Prisma.Decimal(0);
+  let totalCredit = new Prisma.Decimal(0);
+  for (const l of lines) {
+    totalDebit = totalDebit.add(l.debit);
+    totalCredit = totalCredit.add(l.credit);
+  }
+  totalDebit = new Prisma.Decimal(parseFloat(totalDebit.toFixed(2)));
+  totalCredit = new Prisma.Decimal(parseFloat(totalCredit.toFixed(2)));
 
   // Assert mathematical balance to prevent decimal rounding anomalies
-  const imbalance = Math.abs(totalDebit - totalCredit);
-  if (imbalance > 0 && imbalance <= 0.05) {
+  const imbalance = totalDebit.sub(totalCredit).abs();
+  if (imbalance.gt(0) && imbalance.lte(0.05)) {
     // Gracefully balance fractional rounding discrepancies against the Platform Bank account
     const platformLine = lines.find((l) => l.accountCode === "1010");
     if (platformLine) {
-      if (totalDebit < totalCredit) {
-        platformLine.debit = parseFloat((platformLine.debit + imbalance).toFixed(2));
+      if (totalDebit.lt(totalCredit)) {
+        platformLine.debit = parseFloat(new Prisma.Decimal(platformLine.debit).add(imbalance).toFixed(2));
       } else {
-        platformLine.debit = parseFloat((platformLine.debit - imbalance).toFixed(2));
+        platformLine.debit = parseFloat(new Prisma.Decimal(platformLine.debit).sub(imbalance).toFixed(2));
       }
     }
   }
 
   // Recalculate and strictly validate balanced totals
-  const finalDebit = parseFloat(lines.reduce((sum, l) => sum + l.debit, 0).toFixed(2));
-  const finalCredit = parseFloat(lines.reduce((sum, l) => sum + l.credit, 0).toFixed(2));
+  let finalDebit = new Prisma.Decimal(0);
+  let finalCredit = new Prisma.Decimal(0);
+  for (const l of lines) {
+    finalDebit = finalDebit.add(l.debit);
+    finalCredit = finalCredit.add(l.credit);
+  }
+  finalDebit = new Prisma.Decimal(parseFloat(finalDebit.toFixed(2)));
+  finalCredit = new Prisma.Decimal(parseFloat(finalCredit.toFixed(2)));
 
-  if (finalDebit !== finalCredit) {
+  if (!finalDebit.eq(finalCredit)) {
     throw new Error(
       `LEDGER_MISMATCH_EXCEPTION: Ledger transaction Debits (${finalDebit}) does not equal Credits (${finalCredit}). Transaction rolled back.`
     );
@@ -153,11 +168,11 @@ export async function recordDisbursementJournal(
       entryNumber,
       date: new Date(),
       sourceType: "INVOICE",
-      sourceId: consolidatedInvoiceId,
+      sourceId: masterInvoiceId,
       description: `Accelerated Capital Liquidation disbursal entry for Aggregated Debt Package: ${ci.invoiceNumber}`,
       lines: JSON.stringify(lines),
-      totalDebit: finalDebit,
-      totalCredit: finalCredit,
+      totalDebit: finalDebit.toNumber(),
+      totalCredit: finalCredit.toNumber(),
       status: "POSTED",
       hotelId: ci.hotelId,
       tenantId,
@@ -176,7 +191,7 @@ export async function recordSettlementDisbursalJournal(
   input: SettlementLedgerInput
 ): Promise<string> {
   const {
-    consolidatedInvoiceId,
+    masterInvoiceId,
     tenantId,
     grossAmount,
     hotelAdminFeeAmount,
@@ -184,21 +199,22 @@ export async function recordSettlementDisbursalJournal(
     factorSettlementAmount,
   } = input;
 
-  const ci = await tx.consolidatedInvoice.findUnique({
-    where: { id: consolidatedInvoiceId },
+  const ci = await tx.masterInvoice.findUnique({
+    where: { id: masterInvoiceId },
     select: { hotelId: true, invoiceNumber: true },
   });
 
   if (!ci) {
-    throw new Error(`Aggregated Debt Package not found for settlement ledger: ${consolidatedInvoiceId}`);
+    throw new Error(`Aggregated Debt Package not found for settlement ledger: ${masterInvoiceId}`);
   }
 
+  const grossD2 = new Prisma.Decimal(grossAmount);
   const lines: LedgerLine[] = [
     // DEBITS (Asset and Receivable accounts increase / Liabilities decrease)
     {
       accountCode: "2020",
       accountName: "Corporate Debt Settlement Payable (Settlement Disbursals)",
-      debit: parseFloat(grossAmount.toFixed(2)),
+      debit: parseFloat(grossD2.toFixed(2)),
       credit: 0,
     },
     // CREDITS (Cash decreases / Platform Escrow decreases)
@@ -206,37 +222,49 @@ export async function recordSettlementDisbursalJournal(
       accountCode: "1020",
       accountName: "Corporate Clearing Cash Pool",
       debit: 0,
-      credit: parseFloat(factorSettlementAmount.toFixed(2)),
+      credit: parseFloat(new Prisma.Decimal(factorSettlementAmount).toFixed(2)),
     },
     {
       accountCode: "1010",
       accountName: "Platform Escrow Bank Account",
       debit: 0,
-      credit: parseFloat((hotelAdminFeeAmount + platformCommissionAmount).toFixed(2)),
+      credit: parseFloat(new Prisma.Decimal(hotelAdminFeeAmount).add(platformCommissionAmount).toFixed(2)),
     },
   ];
 
-  const totalDebit = parseFloat(lines.reduce((sum, l) => sum + l.debit, 0).toFixed(2));
-  const totalCredit = parseFloat(lines.reduce((sum, l) => sum + l.credit, 0).toFixed(2));
+  let totalDebit2 = new Prisma.Decimal(0);
+  let totalCredit2 = new Prisma.Decimal(0);
+  for (const l of lines) {
+    totalDebit2 = totalDebit2.add(l.debit);
+    totalCredit2 = totalCredit2.add(l.credit);
+  }
+  totalDebit2 = new Prisma.Decimal(parseFloat(totalDebit2.toFixed(2)));
+  totalCredit2 = new Prisma.Decimal(parseFloat(totalCredit2.toFixed(2)));
 
-  const imbalance = Math.abs(totalDebit - totalCredit);
-  if (imbalance > 0 && imbalance <= 0.05) {
+  const imbalance2 = totalDebit2.sub(totalCredit2).abs();
+  if (imbalance2.gt(0) && imbalance2.lte(0.05)) {
     const cashLine = lines.find((l) => l.accountCode === "1020");
     if (cashLine) {
-      if (totalDebit < totalCredit) {
-        cashLine.credit = parseFloat((cashLine.credit - imbalance).toFixed(2));
+      if (totalDebit2.lt(totalCredit2)) {
+        cashLine.credit = parseFloat(new Prisma.Decimal(cashLine.credit).sub(imbalance2).toFixed(2));
       } else {
-        cashLine.credit = parseFloat((cashLine.credit + imbalance).toFixed(2));
+        cashLine.credit = parseFloat(new Prisma.Decimal(cashLine.credit).add(imbalance2).toFixed(2));
       }
     }
   }
 
-  const finalDebit = parseFloat(lines.reduce((sum, l) => sum + l.debit, 0).toFixed(2));
-  const finalCredit = parseFloat(lines.reduce((sum, l) => sum + l.credit, 0).toFixed(2));
+  let finalDebit2 = new Prisma.Decimal(0);
+  let finalCredit2 = new Prisma.Decimal(0);
+  for (const l of lines) {
+    finalDebit2 = finalDebit2.add(l.debit);
+    finalCredit2 = finalCredit2.add(l.credit);
+  }
+  finalDebit2 = new Prisma.Decimal(parseFloat(finalDebit2.toFixed(2)));
+  finalCredit2 = new Prisma.Decimal(parseFloat(finalCredit2.toFixed(2)));
 
-  if (finalDebit !== finalCredit) {
+  if (!finalDebit2.eq(finalCredit2)) {
     throw new Error(
-      `LEDGER_MISMATCH_EXCEPTION: Settlement Disbursal Debits (${finalDebit}) does not equal Credits (${finalCredit}). Transaction aborted.`
+      `LEDGER_MISMATCH_EXCEPTION: Settlement Disbursal Debits (${finalDebit2}) does not equal Credits (${finalCredit2}). Transaction aborted.`
     );
   }
 
@@ -247,11 +275,11 @@ export async function recordSettlementDisbursalJournal(
       entryNumber,
       date: new Date(),
       sourceType: "PAYMENT",
-      sourceId: consolidatedInvoiceId,
+      sourceId: masterInvoiceId,
       description: `Settlement Disbursal clearing journal entry for Aggregated Debt Package: ${ci.invoiceNumber}`,
       lines: JSON.stringify(lines),
-      totalDebit: finalDebit,
-      totalCredit: finalCredit,
+      totalDebit: finalDebit.toNumber(),
+      totalCredit: finalCredit.toNumber(),
       status: "POSTED",
       hotelId: ci.hotelId,
       tenantId,
@@ -310,8 +338,8 @@ export async function recordCompensatingJournal(
       sourceId: original.sourceId,
       description: `Compensating Offset Entry for ${original.entryNumber}. Reason: ${reason}`,
       lines: JSON.stringify(reversingLines),
-      totalDebit: finalDebit,
-      totalCredit: finalCredit,
+      totalDebit: finalDebit.toNumber(),
+      totalCredit: finalCredit.toNumber(),
       status: "REVERSED",
       hotelId: original.hotelId,
       tenantId,

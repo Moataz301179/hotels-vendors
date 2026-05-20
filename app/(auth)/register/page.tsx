@@ -20,13 +20,13 @@ import {
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
+type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel },
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store },
   { value: "FACTORING", label: "Factoring Company", icon: Landmark },
-  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck },
+  { value: "SHIPPING", label: "Logistics Provider", icon: Truck },
 ];
 
 export default function RegisterPageWrapper() {
@@ -65,10 +65,12 @@ function RegisterPage() {
     role: "HOTEL" as StakeholderRole,
   });
 
+  const currentRoleLabel = ROLES.find((r) => r.value === form.role)?.label || "Hotel / Property";
+
   // Pre-select role from URL ?role= param
   useEffect(() => {
     const roleParam = searchParams.get("role");
-    const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
+    const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "SHIPPING"];
     if (roleParam && validRoles.includes(roleParam.toUpperCase() as StakeholderRole)) {
       setForm((prev) => ({ ...prev, role: roleParam.toUpperCase() as StakeholderRole }));
     }
@@ -186,30 +188,23 @@ function RegisterPage() {
                 </motion.div>
               )}
 
-              {/* Role Selection */}
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
-                  I am a...
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {ROLES.map((role) => {
-                    const Icon = role.icon;
-                    return (
-                      <button
-                        key={role.value}
-                        type="button"
-                        onClick={() => updateForm("role", role.value)}
-                        className={`flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
-                          form.role === role.value
-                            ? "bg-[#8B0000]/15 border-[#8B0000]/40 text-[#ff6b6b]"
-                            : "bg-white/[0.02] border-white/[0.06] text-white/50 hover:text-white/80 hover:border-white/[0.12]"
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        {role.label}
-                      </button>
-                    );
-                  })}
+              {/* Subtle role switcher */}
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-white/40">
+                  Registering as: <span className="text-white/70 font-medium">{currentRoleLabel}</span>
+                </span>
+                <div className="flex items-center gap-2">
+                  {ROLES.filter((r) => r.value !== form.role).map((role, i, arr) => (
+                    <button
+                      key={role.value}
+                      type="button"
+                      onClick={() => updateForm("role", role.value)}
+                      className="text-[10px] text-white/30 hover:text-[#ff6b6b] transition-colors"
+                    >
+                      {role.label}
+                      {i < arr.length - 1 && <span className="text-white/10 ml-2">|</span>}
+                    </button>
+                  ))}
                 </div>
               </div>
 

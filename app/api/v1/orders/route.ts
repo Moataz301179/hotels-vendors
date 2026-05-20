@@ -4,6 +4,7 @@ import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
 import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency, requirePermission, ApiError } from "@/lib/api-utils";
 import { checkCreditLimit } from "@/lib/credit-gate";
+import { Prisma } from "@prisma/client";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -41,14 +42,17 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CREATE_ORDER", amount: 0 });
 
-  // Calculate totals from items
-  const subtotal = data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  const vatRate = 14;
-  const vatAmount = subtotal * (vatRate / 100);
-  const total = subtotal + vatAmount;
+  // Calculate totals from items using Decimal precision
+  let subtotal = new Prisma.Decimal(0);
+  for (const item of data.items) {
+    subtotal = subtotal.add(new Prisma.Decimal(item.quantity).mul(item.unitPrice));
+  }
+  const vatRate = new Prisma.Decimal(14);
+  const vatAmount = subtotal.mul(vatRate).div(100);
+  const total = subtotal.add(vatAmount);
 
   // Real-time Credit Gate check
-  const creditCheck = await checkCreditLimit(data.hotelId, total);
+  const creditCheck = await checkCreditLimit(data.hotelId, total.toNumber());
   if (!creditCheck.allowed) {
     throw new ApiError(creditCheck.reason || "Credit limit exceeded", 402);
   }
@@ -62,9 +66,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       outletId: data.outletId,
       supplierId: data.supplierId,
       requesterId: data.requesterId,
-      subtotal,
-      vatAmount,
-      total,
+      subtotal: subtotal.toNumber(),
+      vatAmount: vatAmount.toNumber(),
+      total: total.toNumber(),
       currency: "EGP",
       deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
       deliveryInstructions: data.deliveryInstructions,
@@ -74,7 +78,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
           productId: item.productId,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
-          total: item.quantity * item.unitPrice,
+          total: new Prisma.Decimal(item.quantity).mul(item.unitPrice).toNumber(),
           notes: item.notes,
         })),
       },

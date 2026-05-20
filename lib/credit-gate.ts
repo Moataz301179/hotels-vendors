@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { Prisma } from "@prisma/client";
 
 export async function checkCreditLimit(
   hotelId: string,
@@ -26,21 +27,19 @@ export async function checkCreditLimit(
     select: { total: true },
   });
 
-  const uncapturedTotal = uncapturedOrders.reduce(
-    (sum, o) => sum + (o.total ?? 0),
-    0
-  );
+  let uncapturedTotal = new Prisma.Decimal(0);
+  for (const o of uncapturedOrders) {
+    uncapturedTotal = uncapturedTotal.add(o.total ?? 0);
+  }
 
-  const totalExposure = creditUsed + uncapturedTotal;
-  const available = Math.max(0, creditLimit - totalExposure);
+  const totalExposure = new Prisma.Decimal(creditUsed).add(uncapturedTotal);
+  const available = Math.max(0, new Prisma.Decimal(creditLimit).sub(totalExposure).toNumber());
 
-  if (totalExposure + proposedAmount > creditLimit) {
+  if (totalExposure.add(proposedAmount).toNumber() > creditLimit) {
     return {
       allowed: false,
       available,
-      reason: `Credit limit exceeded. Exposure: ${totalExposure.toFixed(
-        2
-      )} / Limit: ${creditLimit.toFixed(2)}`,
+      reason: `Credit limit exceeded. Exposure: ${totalExposure.toFixed(2)} / Limit: ${new Prisma.Decimal(creditLimit).toFixed(2)}`,
     };
   }
 

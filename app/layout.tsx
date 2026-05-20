@@ -147,7 +147,7 @@ export default function RootLayout({
                   } else {
                     document.documentElement.removeAttribute('data-theme');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#121212');
+                    if (meta) meta.setAttribute('content', '#050505');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

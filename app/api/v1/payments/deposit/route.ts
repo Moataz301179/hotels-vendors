@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { createDepositPayment } from "@/lib/payments/paymob";
 import { apiRoute, authenticate, validateBody, success, error, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 
 const DepositSchema = z.object({
   orderId: z.string().min(1),
@@ -29,7 +30,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (!order) return error("Order not found", 404);
   if (order.paymentGuaranteed) return error("Deposit already paid", 400);
 
-  const depositAmount = Math.round(order.total * 0.2 * 100); // 20% in cents
+  const depositAmount = Math.round(new Prisma.Decimal(order.total).mul(0.2).mul(100).toNumber()); // 20% in cents
 
   const { paymentUrl, paymobOrderId } = await createDepositPayment({
     orderId: order.id,

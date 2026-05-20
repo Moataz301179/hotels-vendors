@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     }
 
     // 3. Resolve Asset and Enforce Multi-Tenant State Transitions
-    const asset = await prisma.consolidatedInvoice.findUnique({
+    const asset = await prisma.masterInvoice.findUnique({
       where: { id: assetId }
     });
 
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     // 4. Atomic Double-Entry Settlement Execution
     const settlementResult = await prisma.$transaction(async (tx) => {
       // A. Advance the asset status to fully liquidated
-      await tx.consolidatedInvoice.update({
+      await tx.masterInvoice.update({
         where: { id: asset.id },
         data: {
           status: "DISBURSED",
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       await tx.auditLog.create({
         data: {
           action: "FACTORING_DISBURSED",
-          entityType: "CONSOLIDATED_INVOICE",
+          entityType: "MASTER_INVOICE",
           entityId: asset.id,
           actorId: factorId || "SYSTEM_WEBHOOK",
           tenantId: asset.tenantId,

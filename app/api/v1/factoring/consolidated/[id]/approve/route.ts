@@ -8,20 +8,20 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   const resolved = await params;
   if (!resolved) return error("Missing parameters", 400);
-  const { id } = resolved; // consolidated invoice ID
+  const { id } = resolved; // master invoice ID
 
-  const record = await prisma.consolidatedInvoice.findUnique({
+  const record = await prisma.masterInvoice.findUnique({
     where: { id },
     select: { tenantId: true, total: true, status: true },
   });
 
   if (!record || record.tenantId !== auth.tenantId) {
-    return error("Consolidated Invoice asset not found in this tenant context", 404);
+    return error("Master Invoice asset not found in this tenant context", 404);
   }
 
   // Record Four-Eyes Attestation State Transition to the append-only AuditLog
   await audit({
-    entityType: "CONSOLIDATED_INVOICE",
+    entityType: "MASTER_INVOICE",
     entityId: id,
     action: "CONSOLIDATED_INVOICE_APPROVED",
     tenantId: auth.tenantId,
@@ -35,6 +35,6 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   return success({
     message: "Four-Eyes Attestation State Transition executed successfully and recorded in audit log.",
-    consolidatedInvoiceId: id,
+    masterInvoiceId: id,
   });
 });

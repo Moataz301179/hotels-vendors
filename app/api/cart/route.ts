@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const FALLBACK_USER_ID = "cm6zabc1230001xyz";
@@ -81,10 +82,13 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const subtotal = cart.items.reduce((sum: number, item: { total: number }) => sum + item.total, 0);
-    const vatRate = 0.14;
-    const vatAmount = subtotal * vatRate;
-    const total = subtotal + vatAmount;
+    let subtotal = new Prisma.Decimal(0);
+    for (const item of cart.items) {
+      subtotal = subtotal.add(item.total);
+    }
+    const vatRate = new Prisma.Decimal(0.14);
+    const vatAmount = subtotal.mul(vatRate);
+    const total = subtotal.add(vatAmount);
 
     return NextResponse.json({
       success: true,

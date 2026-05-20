@@ -18,7 +18,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
     take: query.limit,
     include: {
       invoice: { include: { hotel: { select: { id: true, name: true } }, supplier: { select: { id: true, name: true } } } },
-      consolidatedInvoice: { include: { hotel: { select: { id: true, name: true } } } },
+      masterInvoice: { include: { hotel: { select: { id: true, name: true } } } },
       factoringCompany: { select: { id: true, name: true } },
     },
   });

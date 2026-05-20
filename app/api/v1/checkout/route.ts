@@ -7,6 +7,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 
 const CheckoutSchema = z.object({
   items: z.array(
@@ -97,11 +98,14 @@ export const POST = apiRoute(async (request: NextRequest) => {
   for (const [supplierId, items] of supplierGroups) {
     const supplier = productMap.get(items[0].productId)!.supplier;
 
-    // Calculate totals
-    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-    const vatAmount = subtotal * 0.14;
+    // Calculate totals using Decimal precision
+    let subtotal = new Prisma.Decimal(0);
+    for (const item of items) {
+      subtotal = subtotal.add(new Prisma.Decimal(item.quantity).mul(item.unitPrice));
+    }
+    const vatAmount = subtotal.mul(0.14);
     const shippingCost = data.shippingMethod === "express" ? 150 : data.shippingMethod === "standard" ? 75 : 0;
-    const total = subtotal + vatAmount + shippingCost;
+    const total = subtotal.add(vatAmount).add(shippingCost);
 
     // Generate order number with suffix for multi-supplier
     const suffix = String.fromCharCode(65 + orderIndex); // A, B, C...
@@ -111,9 +115,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       data: {
         orderNumber,
         status: "DRAFT",
-        subtotal,
-        vatAmount,
-        total,
+        subtotal: subtotal.toNumber(),
+        vatAmount: vatAmount.toNumber(),
+        total: total.toNumber(),
         currency: "EGP",
         hotelId,
         supplierId,
@@ -130,7 +134,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
           create: items.map((item) => ({
             quantity: item.quantity,
             unitPrice: item.unitPrice,
-            total: item.quantity * item.unitPrice,
+            total: new Prisma.Decimal(item.quantity).mul(item.unitPrice).toNumber(),
             productId: item.productId,
             notes: item.notes,
           })),

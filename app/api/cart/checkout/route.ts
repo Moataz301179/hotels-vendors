@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CartCheckoutSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { Prisma } from "@prisma/client";
 
 const FALLBACK_USER_ID = "cm6zabc1230001xyz";
 
@@ -75,10 +76,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subtotal = cart.items.reduce((sum: number, item: typeof cart.items[0]) => sum + item.total, 0);
-    const vatRate = 0.14;
-    const vatAmount = subtotal * vatRate;
-    const total = subtotal + vatAmount;
+    let subtotal = new Prisma.Decimal(0);
+    for (const item of cart.items) {
+      subtotal = subtotal.add(item.total);
+    }
+    const vatRate = new Prisma.Decimal(0.14);
+    const vatAmount = subtotal.mul(vatRate);
+    const total = subtotal.add(vatAmount);
 
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
@@ -91,9 +95,9 @@ export async function POST(request: NextRequest) {
           propertyId: undefined,
           outletId: validated.outletId,
           status: "DRAFT",
-          subtotal,
-          vatAmount,
-          total,
+          subtotal: subtotal.toNumber(),
+          vatAmount: vatAmount.toNumber(),
+          total: total.toNumber(),
           deliveryDate: validated.deliveryDate ? new Date(validated.deliveryDate) : undefined,
           deliveryInstructions: validated.deliveryInstructions,
           items: {

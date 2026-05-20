@@ -385,7 +385,7 @@ export async function getActivePipelines(tenantId: string): Promise<FactoringPip
     },
     include: {
       invoice: { select: { orderId: true, hotelId: true, supplierId: true } },
-      consolidatedInvoice: { select: { hotelId: true } },
+      masterInvoice: { select: { hotelId: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -393,7 +393,7 @@ export async function getActivePipelines(tenantId: string): Promise<FactoringPip
   return requests.map((r) => {
     const invoiceId = r.invoiceId || null;
     const orderId = r.invoice?.orderId || null;
-    const hotelId = r.invoice?.hotelId || r.consolidatedInvoice?.hotelId || "";
+    const hotelId = r.invoice?.hotelId || r.masterInvoice?.hotelId || "";
     const supplierId = r.invoice?.supplierId || null;
     return {
       factoringRequestId: r.id,
@@ -496,14 +496,14 @@ export async function cancelFactoringRequest(
       where: { id: fr.invoiceId },
       data: { factoringStatus: "AVAILABLE" },
     });
-  } else if (fr.consolidatedInvoiceId) {
-    await prisma.consolidatedInvoice.update({
-      where: { id: fr.consolidatedInvoiceId },
+  } else if (fr.masterInvoiceId) {
+    await prisma.masterInvoice.update({
+      where: { id: fr.masterInvoiceId },
       data: { status: "DRAFT" },
     });
     // Also release all underlying child invoices from the master lock
     const childInvoices = await prisma.invoice.findMany({
-      where: { consolidatedInvoiceId: fr.consolidatedInvoiceId },
+      where: { masterInvoiceId: fr.masterInvoiceId },
       select: { id: true },
     });
     await prisma.invoice.updateMany({
@@ -520,7 +520,7 @@ export async function cancelFactoringRequest(
 // ─────────────────────────────────────────
 
 export interface ConsolidatedFactoringInput {
-  consolidatedInvoiceId: string;
+  masterInvoiceId: string;
   triggeredBy: string;
   tenantId: string;
   preferredPartnerId?: string;
@@ -529,11 +529,11 @@ export interface ConsolidatedFactoringInput {
 export async function orchestrateConsolidatedFactoring(
   input: ConsolidatedFactoringInput
 ): Promise<OrchestrationResult> {
-  const { consolidatedInvoiceId, triggeredBy, tenantId, preferredPartnerId } = input;
+  const { masterInvoiceId, triggeredBy, tenantId, preferredPartnerId } = input;
 
-  // 1. Fetch Consolidated Invoice details with child invoices
-  const ci = await prisma.consolidatedInvoice.findUnique({
-    where: { id: consolidatedInvoiceId, tenantId },
+  // 1. Fetch Master Invoice details with child invoices
+  const ci = await prisma.masterInvoice.findUnique({
+    where: { id: masterInvoiceId, tenantId },
     include: {
       hotel: true,
       invoices: {
@@ -543,18 +543,18 @@ export async function orchestrateConsolidatedFactoring(
   });
 
   if (!ci) {
-    return { success: false, stage: "FAILED", error: "Consolidated Invoice not found", errorCode: "CONSOLIDATED_NOT_FOUND", details: {} };
+    return { success: false, stage: "FAILED", error: "Master Invoice not found", errorCode: "CONSOLIDATED_NOT_FOUND", details: {} };
   }
 
   if (ci.status === "DISBURSED" || ci.status === "APPROVED_BY_FACTOR") {
-    return { success: false, stage: "FAILED", error: "Consolidated Invoice already factored", errorCode: "ALREADY_FACTORED", details: {} };
+    return { success: false, stage: "FAILED", error: "Master Invoice already factored", errorCode: "ALREADY_FACTORED", details: {} };
   }
 
   // ── "FOUR-EYES" DUAL AUTHORIZATION GATE: Enforce FRA Guidelines ──
   const approvals = await prisma.auditLog.findMany({
     where: {
-      entityType: "CONSOLIDATED_INVOICE",
-      entityId: consolidatedInvoiceId,
+      entityType: "MASTER_INVOICE",
+      entityId: masterInvoiceId,
       action: "CONSOLIDATED_INVOICE_APPROVED",
       tenantId,
     },
@@ -596,8 +596,8 @@ export async function orchestrateConsolidatedFactoring(
             await tx.auditLog.create({
               data: {
                 action: "FRAUDULENT_DOUBLE_FACTOR_ATTEMPT",
-                entityType: "CONSOLIDATED_INVOICE",
-                entityId: consolidatedInvoiceId,
+                entityType: "MASTER_INVOICE",
+                entityId: masterInvoiceId,
                 actorId: triggeredBy,
                 afterState: JSON.stringify({
                   message: `Security Breach: Fraudulent double-factoring attempt detected. Invoice ${lockedInv.invoiceNumber} (ID: ${lockedInv.id}) has a conflicting factoring status: ${lockedInv.factoringStatus}.`,
@@ -671,8 +671,8 @@ export async function orchestrateConsolidatedFactoring(
   for (const invoice of ci.invoices) {
     const etaResult = await validateForFactoring(invoice.id);
     if (!etaResult.valid) {
-      await prisma.consolidatedInvoice.update({
-        where: { id: consolidatedInvoiceId },
+      await prisma.masterInvoice.update({
+        where: { id: masterInvoiceId },
         data: { status: "DRAFT" },
       });
       await releaseLock();
@@ -689,7 +689,7 @@ export async function orchestrateConsolidatedFactoring(
   // ── Stage 3: Create FactoringRequest ───
   const factoringRequest = await prisma.factoringRequest.create({
     data: {
-      consolidatedInvoiceId,
+      masterInvoiceId: masterInvoiceId,
       requestedAmount: grossAmount,
       factoringCompanyId: preferredPartnerId || "efg_hermes",
       status: "UNDER_REVIEW",
@@ -721,7 +721,7 @@ export async function orchestrateConsolidatedFactoring(
       success: false,
       stage: "FAILED",
       factoringRequestId: factoringRequest.id,
-      error: "No factoring partner approved this consolidated invoice. All partners rejected.",
+      error: "No factoring partner approved this master invoice. All partners rejected.",
       errorCode: "NO_PARTNER_APPROVAL",
       details: { riskAssessment, etaValid: true, partnerOffers: allOffers, bestOffer: null },
     };
@@ -742,15 +742,16 @@ export async function orchestrateConsolidatedFactoring(
   // ── Stage 5: Tri-Tier Margins & Programmatic Split Calculation ───────────────────────
   const advanceRate = bestOffer.maxAdvanceRate;
   const factorDiscountRate = bestOffer.discountRate;
-  const factoringFee = grossAmount * factorDiscountRate;
+  const grossD = new Prisma.Decimal(grossAmount);
+  const factoringFee = grossD.mul(factorDiscountRate).toNumber();
 
   // Stream 1: Fintech Commission from Factor
   const factoringCommissionRate = 0.015;
-  const factoringCommissionAmount = (grossAmount * advanceRate) * factoringCommissionRate;
+  const factoringCommissionAmount = grossD.mul(advanceRate).mul(factoringCommissionRate).toNumber();
 
   // Stream 3: Hotel Admin Fee
-  const hotelAdminFeeRate = ci.hotelAdminFeeRate;
-  const hotelAdminFeeAmount = grossAmount * hotelAdminFeeRate;
+  const hotelAdminFeeRate = ci.hotelAdminFeeRate ?? 0;
+  const hotelAdminFeeAmount = grossD.mul(hotelAdminFeeRate).toNumber();
 
   // ── Yield Spread Guard Verification ──
   const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true";
@@ -762,8 +763,8 @@ export async function orchestrateConsolidatedFactoring(
       await prisma.auditLog.create({
         data: {
           action: "YIELD_SPREAD_BREACH",
-          entityType: "CONSOLIDATED_INVOICE",
-          entityId: consolidatedInvoiceId,
+          entityType: "MASTER_INVOICE",
+          entityId: masterInvoiceId,
           actorId: triggeredBy,
           afterState: JSON.stringify({
             message: `Yield Spread Breach: Margin for Invoice ${invoice.invoiceNumber} (${(margin * 100).toFixed(2)}%) fell below the net positive 1.5% platform margin requirement.`,
@@ -792,32 +793,33 @@ export async function orchestrateConsolidatedFactoring(
   }
 
   // Stream 2: Supplier Cash-Discount Delta
-  let totalSupplierDiscountAmount = 0;
-  let totalSupplierDisbursement = 0;
+  let totalSupplierDiscountAmount = new Prisma.Decimal(0);
+  let totalSupplierDisbursement = new Prisma.Decimal(0);
 
   for (const invoice of ci.invoices) {
-    const discountRate = invoice.supplierDiscountRate;
-    const discountAmount = invoice.total * discountRate;
-    const cashRate = invoice.total - discountAmount;
+    const discountRate = invoice.supplierDiscountRate ?? 0.03;
+    const invTotal = new Prisma.Decimal(invoice.total);
+    const discountAmount = invTotal.mul(discountRate);
+    const cashRate = invTotal.sub(discountAmount);
 
-    totalSupplierDiscountAmount += discountAmount;
-    totalSupplierDisbursement += cashRate;
+    totalSupplierDiscountAmount = totalSupplierDiscountAmount.add(discountAmount);
+    totalSupplierDisbursement = totalSupplierDisbursement.add(cashRate);
 
     await prisma.invoice.update({
       where: { id: invoice.id },
       data: {
-        acceleratedCashRate: cashRate,
-        cashDiscountDelta: discountAmount - (invoice.total * factorDiscountRate),
+        acceleratedCashRate: cashRate.toNumber(),
+        cashDiscountDelta: discountAmount.sub(invTotal.mul(factorDiscountRate)).toNumber(),
       },
     });
   }
 
   // Pocketed Cash-Discount Delta
-  const cashDiscountDelta = Math.max(0, totalSupplierDiscountAmount - factoringFee);
+  const cashDiscountDelta = Math.max(0, totalSupplierDiscountAmount.sub(factoringFee).toNumber());
 
-  // Update Consolidated Invoice totals
-  await prisma.consolidatedInvoice.update({
-    where: { id: consolidatedInvoiceId },
+  // Update Master Invoice totals
+  await prisma.masterInvoice.update({
+    where: { id: masterInvoiceId },
     data: {
       hotelAdminFeeAmount,
       status: "APPROVED_BY_FACTOR",
@@ -829,10 +831,10 @@ export async function orchestrateConsolidatedFactoring(
     where: { id: factoringRequest.id },
     data: {
       grossAmount,
-      platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
-      netPlatformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+      platformFee: new Prisma.Decimal(factoringCommissionAmount).add(cashDiscountDelta).add(hotelAdminFeeAmount).toNumber(),
+      netPlatformFee: new Prisma.Decimal(factoringCommissionAmount).add(cashDiscountDelta).add(hotelAdminFeeAmount).toNumber(),
       factoringFee,
-      disbursedAmount: totalSupplierDisbursement,
+      disbursedAmount: totalSupplierDisbursement.toNumber(),
       factoringCommissionRate,
       factoringCommissionAmount,
     },
@@ -841,7 +843,7 @@ export async function orchestrateConsolidatedFactoring(
   // ── Stage 6: Partner Funding Request ───
   const fundingRequest = {
     eligibilityResponseId: bestOffer.responseId,
-    invoiceId: consolidatedInvoiceId,
+    invoiceId: masterInvoiceId,
     etaUuid: ci.invoices[0]?.etaUuid || "CONSOLIDATED_ETA_CLUSTER",
     grossAmount,
     platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
@@ -874,7 +876,7 @@ export async function orchestrateConsolidatedFactoring(
   await prisma.$transaction(async (tx) => {
     // 1. Record Double-Entry Journal Entry
     await recordDisbursementJournal(tx, {
-      consolidatedInvoiceId,
+      masterInvoiceId,
       tenantId,
       grossAmount,
       advanceRate,
@@ -897,9 +899,9 @@ export async function orchestrateConsolidatedFactoring(
       },
     });
 
-    // 3. Mark Consolidated Invoice as Disbursed
-    await tx.consolidatedInvoice.update({
-      where: { id: consolidatedInvoiceId },
+    // 3. Mark Master Invoice as Disbursed
+    await tx.masterInvoice.update({
+      where: { id: masterInvoiceId },
       data: {
         status: "DISBURSED",
         paidDate: fundingResponse.disbursedAt,
@@ -931,7 +933,7 @@ export async function orchestrateConsolidatedFactoring(
       await tx.creditTransaction.create({
         data: {
           type: "FACTORING_ADVANCE",
-          amount: invoice.total - (invoice.total * invoice.supplierDiscountRate),
+          amount: new Prisma.Decimal(invoice.total).sub(new Prisma.Decimal(invoice.total).mul(invoice.supplierDiscountRate ?? 0.03)).toNumber(),
           description: `Disbursement for Invoice ${invoice.invoiceNumber} in Consolidated Cluster ${ci.invoiceNumber}`,
           hotelId: hotel.id,
           factoringCompanyId: bestOffer.partnerId,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 async function checkAuthority(
   hotelId: string | null,
@@ -90,14 +91,14 @@ export async function POST(req: NextRequest) {
 
     // Auto-post journal entry on approval
     if (action === "APPROVE") {
-      const totalInventory = order.subtotal;
-      const vatAmount = order.vatAmount;
-      const totalPayable = order.total;
+      const totalInventory = new Prisma.Decimal(order.subtotal);
+      const vatAmount = new Prisma.Decimal(order.vatAmount);
+      const totalPayable = new Prisma.Decimal(order.total);
 
       const lines = [
-        { accountCode: "1300", accountName: "Inventory / Purchases", debit: totalInventory, credit: 0 },
-        { accountCode: "2400", accountName: "VAT Input", debit: vatAmount, credit: 0 },
-        { accountCode: "2100", accountName: "Accounts Payable", debit: 0, credit: totalPayable },
+        { accountCode: "1300", accountName: "Inventory / Purchases", debit: totalInventory.toNumber(), credit: 0 },
+        { accountCode: "2400", accountName: "VAT Input", debit: vatAmount.toNumber(), credit: 0 },
+        { accountCode: "2100", accountName: "Accounts Payable", debit: 0, credit: totalPayable.toNumber() },
       ];
 
       await prisma.journalEntry.create({
@@ -109,8 +110,8 @@ export async function POST(req: NextRequest) {
           sourceId: order.id,
           description: `Auto-posted PO approval — ${order.orderNumber}`,
           lines: JSON.stringify(lines),
-          totalDebit: totalInventory + vatAmount,
-          totalCredit: totalPayable,
+          totalDebit: totalInventory.add(vatAmount).toNumber(),
+          totalCredit: totalPayable.toNumber(),
           status: "POSTED",
           hotelId: order.hotelId,
         },

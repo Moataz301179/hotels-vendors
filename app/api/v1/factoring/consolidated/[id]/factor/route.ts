@@ -8,15 +8,15 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   await requirePermission(auth, "invoice:factor");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
-  const { id } = resolved; // consolidated invoice ID
+  const { id } = resolved; // master invoice ID
 
-  const record = await prisma.consolidatedInvoice.findUnique({ where: { id }, select: { tenantId: true, total: true } });
+  const record = await prisma.masterInvoice.findUnique({ where: { id }, select: { tenantId: true, total: true } });
   if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
   const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CONSOLIDATED_FACTOR", amount: record.total });
 
   const result = await orchestrateConsolidatedFactoring({
-    consolidatedInvoiceId: id,
+    masterInvoiceId: id,
     triggeredBy: auth.userId,
     tenantId: auth.tenantId,
   });
@@ -26,7 +26,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   }
 
   await audit({
-    entityType: "CONSOLIDATED_INVOICE",
+    entityType: "MASTER_INVOICE",
     entityId: id,
     action: "CONSOLIDATED_FACTORING_COMPLETED",
     tenantId: auth.tenantId,

@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       const assetId = searchParams.get("assetId");
       if (!assetId) {
         return NextResponse.json(
-          { error: "MISSING_PARAMETER", message: "assetId (ConsolidatedInvoice ID) parameter is required for the ComplianceScanner." }, 
+          { error: "MISSING_PARAMETER", message: "assetId (MasterInvoice ID) parameter is required for the ComplianceScanner." }, 
           { status: 400 }
         );
       }

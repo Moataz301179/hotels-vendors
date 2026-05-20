@@ -14,7 +14,7 @@ export function getTenantClient(prisma: PrismaClient, tenantId: string) {
           // Strict registry of multi-tenant isolated models
           const tenantModels = [
             "User", "Role", "Hotel", "Supplier", "Invoice",
-            "ConsolidatedInvoice", "AuditLog", "FactoringRequest", "SettlementDisbursal"
+            "MasterInvoice", "AuditLog", "FactoringRequest", "PaymentTransaction"
           ];
           
           if (tenantModels.includes(model)) {

@@ -6,7 +6,7 @@
  * Ensures the platform is paid FIRST from every factoring disbursement.
  */
 
-import { HotelTier } from "@prisma/client";
+import { HotelTier, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { RiskTier } from "./risk-engine";
 
@@ -97,7 +97,7 @@ export async function calculateHubRevenue(params: {
   }
 
   const hotel = invoice.hotel;
-  const grossAmount = invoice.total;
+  const grossAmount = new Prisma.Decimal(invoice.total);
   const hotelTier = hotel.tier;
   const riskTier = hotel.riskTier ?? "MEDIUM";
   const isCoastal = hotel.city.toLowerCase().includes("coast") ||
@@ -114,65 +114,65 @@ export async function calculateHubRevenue(params: {
   const membershipTier = hotelTier === "PREMIER" ? "PREMIER" : "CORE";
 
   // 1. Base platform fee
-  const basePlatformFee = grossAmount * config.basePlatformFeeRate;
+  const basePlatformFee = grossAmount.mul(config.basePlatformFeeRate);
 
   // 2. Membership discount (PREMIER gets 50% off platform fee)
-  let membershipDiscount = 0;
+  let membershipDiscount = new Prisma.Decimal(0);
   if (membershipTier === "PREMIER") {
-    membershipDiscount = basePlatformFee * config.primeDiscountRate;
+    membershipDiscount = basePlatformFee.mul(config.primeDiscountRate);
   }
 
   // 3. Risk surcharge
-  let riskSurcharge = 0;
+  let riskSurcharge = new Prisma.Decimal(0);
   if (riskTier === "HIGH") {
-    riskSurcharge = grossAmount * config.highRiskSurchargeRate;
+    riskSurcharge = grossAmount.mul(config.highRiskSurchargeRate);
   } else if (riskTier === "CRITICAL") {
-    riskSurcharge = grossAmount * config.criticalRiskSurchargeRate;
+    riskSurcharge = grossAmount.mul(config.criticalRiskSurchargeRate);
   }
 
   // 4. Logistics surcharge (coastal)
-  let logisticsSurcharge = 0;
+  let logisticsSurcharge = new Prisma.Decimal(0);
   if (isCoastal) {
-    logisticsSurcharge = grossAmount * config.coastalSurchargeRate;
+    logisticsSurcharge = grossAmount.mul(config.coastalSurchargeRate);
   }
 
   // 5. ETA compliance fee
-  const etaComplianceFee = grossAmount * config.etaComplianceFeeRate;
+  const etaComplianceFee = grossAmount.mul(config.etaComplianceFeeRate);
 
   // 6. Net platform fee
-  const netPlatformFee = basePlatformFee - membershipDiscount + riskSurcharge + logisticsSurcharge + etaComplianceFee;
+  const netPlatformFee = basePlatformFee.sub(membershipDiscount).add(riskSurcharge).add(logisticsSurcharge).add(etaComplianceFee);
 
   // 7. Effective platform fee rate
-  const platformFeeRate = grossAmount > 0 ? netPlatformFee / grossAmount : 0;
+  const platformFeeRate = grossAmount.gt(0) ? netPlatformFee.div(grossAmount).toNumber() : 0;
 
   // 8. Factoring partner fee
-  const factoringFee = grossAmount * partnerDiscountRate;
+  const factoringFee = grossAmount.mul(partnerDiscountRate);
 
   // 9. Gross disbursement (before any fees)
-  const grossDisbursementBeforeFees = grossAmount * advanceRate;
+  const grossDisbursementBeforeFees = grossAmount.mul(advanceRate);
 
   // 10. Net supplier disbursement
   // PLATFORM FEE IS DEDUCTED FIRST
-  const supplierDisbursement = Math.max(0, grossDisbursementBeforeFees - netPlatformFee - factoringFee);
+  const supplierDisbursement = Math.max(0, grossDisbursementBeforeFees.sub(netPlatformFee).sub(factoringFee).toNumber());
 
   return {
-    grossAmount,
+    grossAmount: grossAmount.toNumber(),
     hotelTier,
     riskTier,
     isCoastal,
     partnerDiscountRate,
     advanceRate,
     membershipTier,
-    basePlatformFee,
-    membershipDiscount,
-    riskSurcharge,
-    logisticsSurcharge,
-    etaComplianceFee,
-    netPlatformFee,
+    basePlatformFee: basePlatformFee.toNumber(),
+    membershipDiscount: membershipDiscount.toNumber(),
+    riskSurcharge: riskSurcharge.toNumber(),
+    logisticsSurcharge: logisticsSurcharge.toNumber(),
+    etaComplianceFee: etaComplianceFee.toNumber(),
+    netPlatformFee: netPlatformFee.toNumber(),
     platformFeeRate,
-    factoringFee,
+    factoringFee: factoringFee.toNumber(),
     supplierDisbursement,
-    grossDisbursementBeforeFees,
+    grossDisbursementBeforeFees: grossDisbursementBeforeFees.toNumber(),
     calculatedAt: new Date(),
     configVersion: "1.0",
   };

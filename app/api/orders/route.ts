@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { ZodError } from "zod";
 import { authenticate } from "@/lib/api-utils";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -66,25 +67,25 @@ export async function POST(request: NextRequest) {
 
     const { items, ...orderData } = validated;
 
-    const subtotal = items.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
-      0
-    );
-    const vatAmount = subtotal * 0.14;
-    const total = subtotal + vatAmount;
+    let subtotal = new Prisma.Decimal(0);
+    for (const item of items) {
+      subtotal = subtotal.add(new Prisma.Decimal(item.unitPrice).mul(item.quantity));
+    }
+    const vatAmount = subtotal.mul(0.14);
+    const total = subtotal.add(vatAmount);
 
     const auth = await authenticate(request);
     const order = await prisma.order.create({
       data: {
         tenantId: auth.tenantId,
         ...orderData,
-        subtotal,
-        vatAmount,
-        total,
+        subtotal: subtotal.toNumber(),
+        vatAmount: vatAmount.toNumber(),
+        total: total.toNumber(),
         items: {
           create: items.map((item) => ({
             ...item,
-            total: item.unitPrice * item.quantity,
+            total: new Prisma.Decimal(item.unitPrice).mul(item.quantity).toNumber(),
           })),
         },
       },

@@ -205,7 +205,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
+      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
         <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/10 transition-colors">
           <BrandLogo variant="dark" size="md" />
         </Link>
@@ -251,7 +251,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
+    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#0a0a0a]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(255,255,255,0.04)]">
         <Link href="/" className="flex items-center gap-2.5 group">
