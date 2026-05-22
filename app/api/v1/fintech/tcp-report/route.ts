@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       }
 
       orderTotal = order.total;
-      hotelName = order.hotel.name;
+      hotelName = order.Hotel.name;
       hotelId = order.hotelId;
       orderId = order.id;
     } else if (params.hotelId) {

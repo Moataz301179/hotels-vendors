@@ -20,12 +20,12 @@ export const GET = apiRoute(async (request: NextRequest) => {
   }
 
   return success({
-    id: user.supplier.id,
-    name: user.supplier.name,
-    legalName: user.supplier.legalName,
-    taxId: user.supplier.taxId,
-    status: user.supplier.status,
-    tier: user.supplier.tier,
-    complianceStatus: user.supplier.complianceStatus,
+    id: user.Supplier.id,
+    name: user.Supplier.name,
+    legalName: user.Supplier.legalName,
+    taxId: user.Supplier.taxId,
+    status: user.Supplier.status,
+    tier: user.Supplier.tier,
+    complianceStatus: user.Supplier.complianceStatus,
   });
 });

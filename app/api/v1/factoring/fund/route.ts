@@ -48,9 +48,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
     grossAmount: invoice.total,
     platformFee: hubRev.netPlatformFee,
     netDisbursement: hubRev.supplierDisbursement,
-    supplierBankAccount: invoice.supplier.bankAccount || "",
-    supplierBankName: invoice.supplier.bankName || "",
-    supplierTaxId: invoice.supplier.taxId,
+    supplierBankAccount: invoice.Supplier.bankAccount || "",
+    supplierBankName: invoice.Supplier.bankName || "",
+    supplierTaxId: invoice.Supplier.taxId,
     hotelTaxId: invoice.hotel.taxId,
   });
 

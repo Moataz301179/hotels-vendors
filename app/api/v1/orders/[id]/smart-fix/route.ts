@@ -29,7 +29,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
-    afterState: { fixCount: fixes.length, hotelRiskTier: order.hotel.riskTier },
+    afterState: { fixCount: fixes.length, hotelRiskTier: order.Hotel.riskTier },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });

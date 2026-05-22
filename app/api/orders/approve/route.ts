@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
 
       await prisma.journalEntry.create({
         data: {
-          tenantId: order.hotel.tenantId,
+          tenantId: order.Hotel.tenantId,
           entryNumber: `JE-PO-${order.orderNumber}`,
           date: new Date(),
           sourceType: "ORDER",

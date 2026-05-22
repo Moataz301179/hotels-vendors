@@ -34,12 +34,12 @@ export const GET = apiRoute(async (_request: NextRequest) => {
     hotelId: user.hotelId || null,
     canOverride: user.canOverride,
     permissions,
-    hotel: user.hotel
+    hotel: user.Hotel
       ? {
-          id: user.hotel.id,
-          name: user.hotel.name,
-          tier: user.hotel.tier,
-          city: user.hotel.city,
+          id: user.Hotel.id,
+          name: user.Hotel.name,
+          tier: user.Hotel.tier,
+          city: user.Hotel.city,
         }
       : null,
   });

@@ -37,8 +37,8 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   // Inquire partners
   const { bestOffer, allOffers } = await inquireAll({
-    hotelTaxId: invoice.hotel.taxId,
-    hotelName: invoice.hotel.name,
+    hotelTaxId: invoice.Hotel.taxId,
+    hotelName: invoice.Hotel.name,
     hotelRiskScore: risk.compositeScore,
     hotelRiskTier: risk.riskTier,
     invoiceAmount: invoice.total,
