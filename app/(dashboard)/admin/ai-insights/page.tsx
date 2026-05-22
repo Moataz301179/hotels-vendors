@@ -147,7 +147,7 @@ export default function AdminAiInsightsPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-lg bg-[#8B0000]/10 border border-[#8B0000]/20">
+          <div className="p-2 rounded-lg bg-[#8b5cf6]/10 border border-[#8b5cf6]/20">
             <Brain className="w-5 h-5 text-[#ff6b6b]" />
           </div>
           <h1 className="text-[24px] font-bold tracking-tight text-white">AI Insights</h1>
@@ -229,7 +229,7 @@ export default function AdminAiInsightsPage() {
                   onClick={() => setFilter(f)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     filter === f
-                      ? "bg-[#8B0000]/20 text-[#ff6b6b] border border-[#8B0000]/30"
+                      ? "bg-[#8b5cf6]/20 text-[#ff6b6b] border border-[#8b5cf6]/30"
                       : "text-white/30 hover:text-white/60 hover:bg-white/[0.03]"
                   }`}
                 >

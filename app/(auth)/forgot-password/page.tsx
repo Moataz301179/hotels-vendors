@@ -86,7 +86,7 @@ export default function ForgotPasswordPage() {
               </div>
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#6B0000] text-white text-sm font-medium transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Sign In
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@hotel.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8b5cf6]/60 focus:ring-1 focus:ring-[#8b5cf6]/20 transition-all"
                   />
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8B0000] hover:bg-[#6B0000] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(139,0,0,0.2)]"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(139, 92, 246,0.2)]"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

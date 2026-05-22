@@ -131,6 +131,23 @@ export async function orchestrateFactoring(
     };
   }
 
+  // Blend in supplier composite score if available
+  if (supplier) {
+    try {
+      const { getCompositeScore } = await import("@/lib/compliance/scoring");
+      const supplierScore = await getCompositeScore(supplier.id);
+      // Blend: 70% hotel risk, 30% supplier risk
+      const blended = Math.round(riskAssessment.compositeScore * 0.7 + supplierScore.compositeScore * 0.3);
+      riskAssessment = {
+        ...riskAssessment,
+        compositeScore: blended,
+        riskTier: supplierScore.riskTier === "CRITICAL" ? "CRITICAL" : riskAssessment.riskTier,
+      };
+    } catch {
+      // Supplier score unavailable — continue with hotel-only assessment
+    }
+  }
+
   // CRITICAL risk = auto-reject (no factoring)
   if (riskAssessment.riskTier === "CRITICAL") {
     return {

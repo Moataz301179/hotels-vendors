@@ -133,7 +133,7 @@ export default function PaymentRailSelector({
       <button 
         onClick={handleAuthorize}
         disabled={isPending}
-        className="w-full mt-6 py-3 rounded bg-[#8B0000] text-white text-sm font-bold shadow-lg shadow-black/50 hover:bg-[#a00000] transition-colors border border-[#a00000]/50 flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full mt-6 py-3 rounded bg-[#8b5cf6] text-white text-sm font-bold shadow-lg shadow-black/50 hover:bg-[#a00000] transition-colors border border-[#a00000]/50 flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {isPending && <Loader2 size={16} className="animate-spin" />}
         Authorize {activeRail} Settlement

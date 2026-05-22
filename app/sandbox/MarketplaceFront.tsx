@@ -9,7 +9,7 @@ export default function MarketplaceFront() {
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-white/[0.08] bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-[#8B0000] flex items-center justify-center font-bold text-white tracking-tighter">HV</div>
+          <div className="w-8 h-8 rounded bg-[#8b5cf6] flex items-center justify-center font-bold text-white tracking-tighter">HV</div>
           <span className="text-lg font-black tracking-tight text-white">HotelsVendors</span>
         </div>
         <div className="flex items-center gap-6 text-sm font-medium">
@@ -26,7 +26,7 @@ export default function MarketplaceFront() {
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
         {/* Abstract Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#8B0000]/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#8b5cf6]/20 blur-[120px] rounded-full pointer-events-none" />
 
         <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white max-w-4xl leading-tight mb-6 relative z-10">
           The Financial Operating System for <span className="text-[#e1a95f]">Egyptian Hospitality</span>.
@@ -44,7 +44,7 @@ export default function MarketplaceFront() {
             placeholder="Search SKUs, Factories, or Asset Categories (e.g., 'Luxury Bath Towels 800 GSM')"
             className="flex-1 bg-transparent border-none text-white px-4 py-3 text-sm focus:outline-none focus:ring-0 placeholder-[#505050]"
           />
-          <button className="bg-[#8B0000] text-white px-6 py-3 rounded text-sm font-bold hover:bg-[#a00000] transition-colors">
+          <button className="bg-[#8b5cf6] text-white px-6 py-3 rounded text-sm font-bold hover:bg-[#a00000] transition-colors">
             Query Matrix
           </button>
         </div>

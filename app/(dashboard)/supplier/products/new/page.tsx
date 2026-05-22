@@ -311,7 +311,7 @@ export default function NewProductPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] disabled:opacity-50 text-sm font-medium text-white transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] disabled:opacity-50 text-sm font-medium text-white transition-all"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
             {loading ? "Creating..." : "Create Product"}

@@ -7,16 +7,11 @@ import {
   X,
   Search,
   ChevronDown,
-  Phone,
-  Mail,
   Building2,
   ShoppingCart,
-  Truck,
-  Landmark,
   ArrowRight,
 } from "lucide-react";
 import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-icons";
-import Image from "next/image";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingNav() {
@@ -24,7 +19,6 @@ export function MarketingNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
 
-  // Scroll listener
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
@@ -40,50 +34,36 @@ export function MarketingNav() {
   ];
 
   const solutionLinks = [
-    { label: "For Hotels", href: "/register?role=hotel", desc: "Procurement OS & spend optimization", icon: Building2 },
-    { label: "For Suppliers", href: "/become-supplier", desc: "Grow your B2B hospitality business", icon: ShoppingCart },
-    { label: "For Logistics", href: "/register?role=shipping", desc: "Route optimization & delivery network", icon: Truck },
-    { label: "For Factoring", href: "/register?role=factoring", desc: "Embedded liquidity & credit solutions", icon: Landmark },
+    { label: "For Hotels", href: "/register/hotel", desc: "Procurement OS & spend optimization", icon: Building2 },
+    { label: "For Suppliers", href: "/register/supplier", desc: "Grow your B2B hospitality business", icon: ShoppingCart },
   ];
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}>
-      {/* ═══ Top Bar — Burgundy utility bar ═══ */}
-      <div className="bg-[#8B0000] text-white/90">
-        <div className="mx-auto max-w-7xl px-6 h-8 flex items-center justify-between text-[11px] tracking-wide">
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3 h-3" />
-              +201060001828
-            </span>
-            <span className="hidden sm:flex items-center gap-1.5">
-              <Mail className="w-3 h-3" />
-              hello@hotelsvendors.com
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
-            <span className="text-white/30">|</span>
-            <Link href="/register" className="hover:text-white transition-colors">Register</Link>
-          </div>
+      {/* Burgundy top bar — auth links only */}
+      <div className="bg-[#8b5cf6] text-white/90">
+        <div className="mx-auto max-w-7xl px-6 h-8 flex items-center justify-end text-[11px] tracking-wide gap-3">
+          <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
+          <span className="text-white/30">|</span>
+          <Link href="/register" className="hover:text-white transition-colors">Register</Link>
         </div>
       </div>
 
-      {/* ═══ Main Nav — White institutional (always light) ═══ */}
+      {/* Main Nav */}
       <div className={`transition-all duration-300 ${
         scrolled
           ? "bg-white/95 backdrop-blur-md border-b border-gray-200"
           : "bg-white border-b border-gray-100"
       }`}>
         <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
-          {/* Logo — horse icon + text */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 relative z-10 group">
             <BrandLogo variant="light" size="sm" />
             <div className="flex flex-col">
               <span className="text-[15px] font-bold tracking-tight leading-none text-gray-900">
                 Hotels Vendors
               </span>
-              <span className="text-[9px] font-semibold text-[#8B0000] uppercase tracking-[0.12em] leading-none mt-0.5">
+              <span className="text-[9px] font-semibold text-[#8b5cf6] uppercase tracking-[0.12em] leading-none mt-0.5">
                 Smarter Together
               </span>
             </div>
@@ -99,12 +79,12 @@ export function MarketingNav() {
                   onMouseEnter={() => setSolutionsOpen(true)}
                   onMouseLeave={() => setSolutionsOpen(false)}
                 >
-                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#8B0000] hover:bg-gray-50">
+                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#8b5cf6] hover:bg-gray-50">
                     {item.label}
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? "rotate-180" : ""}`} />
                   </button>
                   {solutionsOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-72 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden animate-fade-in-up">
+                    <div className="absolute top-full left-0 mt-1 w-72 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden">
                       <div className="p-3 bg-gray-50/50 border-b border-gray-100">
                         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Stakeholder Solutions</p>
                       </div>
@@ -114,8 +94,8 @@ export function MarketingNav() {
                           href={link.href}
                           className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
                         >
-                          <div className="w-8 h-8 rounded-lg bg-[#8B0000]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <link.icon className="w-4 h-4 text-[#8B0000]" />
+                          <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <link.icon className="w-4 h-4 text-[#8b5cf6]" />
                           </div>
                           <div>
                             <div className="text-[13px] font-semibold text-gray-900">{link.label}</div>
@@ -133,7 +113,7 @@ export function MarketingNav() {
                   className={`px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
                     item.isMarketplace
                       ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5"
-                      : "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
+                      : "text-gray-600 hover:text-[#8b5cf6] hover:bg-gray-50"
                   }`}
                 >
                   {item.label}
@@ -147,36 +127,18 @@ export function MarketingNav() {
             <button className="p-2 rounded-lg transition-colors text-gray-400 hover:text-gray-700 hover:bg-gray-50">
               <Search className="w-4 h-4" />
             </button>
-            <a
-              href="https://www.facebook.com/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#1877F2] hover:bg-gray-50"
-              aria-label="Facebook"
-            >
+            <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#1877F2] hover:bg-gray-50" aria-label="Facebook">
               <FacebookIcon className="w-4 h-4" />
             </a>
-            <a
-              href="https://www.instagram.com/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#E4405F] hover:bg-gray-50"
-              aria-label="Instagram"
-            >
+            <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#E4405F] hover:bg-gray-50" aria-label="Instagram">
               <InstagramIcon className="w-4 h-4" />
             </a>
-            <a
-              href="https://www.linkedin.com/company/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#0A66C2] hover:bg-gray-50"
-              aria-label="LinkedIn"
-            >
+            <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#0A66C2] hover:bg-gray-50" aria-label="LinkedIn">
               <LinkedInIcon className="w-4 h-4" />
             </a>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white hover:bg-[#6B0000] rounded-lg transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white hover:bg-[#6d28d9] rounded-lg transition-colors shadow-sm"
             >
               Get Started
               <ArrowRight className="w-3.5 h-3.5" />
@@ -195,7 +157,7 @@ export function MarketingNav() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t px-6 py-5 shadow-xl animate-fade-in-up bg-white border-gray-100">
+        <div className="lg:hidden border-t px-6 py-5 shadow-xl bg-white border-gray-100">
           {primaryNav.map((item) => (
             <div key={item.label}>
               {item.hasDropdown ? (
@@ -213,7 +175,7 @@ export function MarketingNav() {
                         <Link
                           key={link.label}
                           href={link.href}
-                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#8B0000]"
+                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#8b5cf6]"
                           onClick={() => setMobileOpen(false)}
                         >
                           {link.label}
@@ -228,7 +190,7 @@ export function MarketingNav() {
                   className={`block py-2.5 text-[14px] font-medium transition-colors ${
                     item.isMarketplace
                       ? "text-[#C9A227] hover:text-[#B8921F]"
-                      : "text-gray-700 hover:text-[#8B0000]"
+                      : "text-gray-700 hover:text-[#8b5cf6]"
                   }`}
                   onClick={() => setMobileOpen(false)}
                 >
@@ -239,29 +201,12 @@ export function MarketingNav() {
           ))}
           <div className="pt-4 mt-2 border-t border-gray-100">
             <div className="flex gap-3">
-              <Link
-                href="/login"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors"
-              >
+              <Link href="/login" className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
                 Sign In
               </Link>
-              <Link
-                href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
-              >
+              <Link href="/register" className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white rounded-lg hover:bg-[#6d28d9] transition-colors">
                 Get Started
               </Link>
-            </div>
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#1877F2] transition-colors">
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-              <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#E4405F] transition-colors">
-                <InstagramIcon className="w-4 h-4" />
-              </a>
-              <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0A66C2] transition-colors">
-                <LinkedInIcon className="w-4 h-4" />
-              </a>
             </div>
           </div>
         </div>

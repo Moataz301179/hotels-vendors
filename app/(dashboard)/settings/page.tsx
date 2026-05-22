@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Settings, Bell, Shield, Users, Building2, CreditCard,
   Globe, Palette, Database, Save, CheckCircle2,
 } from "lucide-react";
+import { useTheme, THEMES, type ThemeName } from "@/components/theme/theme-provider";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -60,12 +61,51 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
   return (
     <button
       onClick={onChange}
-      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-[#8B0000]" : "bg-white/10"}`}
+      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-[#8b5cf6]" : "bg-white/10"}`}
     >
       <span
         className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`}
       />
     </button>
+  );
+}
+
+/* ─── THEME SELECTOR ─── */
+function ThemeSelector() {
+  const { themeName, setTheme, themes } = useTheme();
+
+  return (
+    <div className="space-y-3">
+      {themes.map((t) => {
+        const config = THEMES[t];
+        const active = themeName === t;
+        return (
+          <button
+            key={t}
+            onClick={() => setTheme(t)}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+              active
+                ? "border-white/[0.12] bg-white/[0.04]"
+                : "border-white/[0.04] bg-transparent hover:border-white/[0.08] hover:bg-white/[0.02]"
+            }`}
+          >
+            <div
+              className="w-10 h-10 rounded-lg flex-shrink-0 border border-white/[0.08]"
+              style={{ background: config.accent }}
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] font-medium text-white">{config.name}</span>
+                {active && (
+                  <span className="text-[9px] font-semibold text-[#8b5cf6] bg-[#8b5cf6]/10 px-1.5 py-0.5 rounded">Active</span>
+                )}
+              </div>
+              <p className="text-[11px] text-white/30 truncate">{config.description}</p>
+            </div>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -79,68 +119,73 @@ export default function SettingsPage() {
     marketing: false,
   });
 
+  // Handle URL query param for tab
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab && SETTINGS_SECTIONS.some((s) => s.id === tab)) {
+      setActiveSection(tab);
+    }
+  }, []);
+
+  const toggleNotification = (key: keyof typeof notifications) => {
+    setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <motion.div
-      className="max-w-[1600px] mx-auto space-y-6"
-      variants={staggerContainer}
       initial="hidden"
       animate="visible"
+      variants={staggerContainer}
+      className="max-w-6xl mx-auto"
     >
-      {/* Header */}
-      <motion.div variants={fadeInUp} className="flex items-start justify-between">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage platform configuration, preferences, and integrations</p>
+          <h1 className="text-xl font-bold text-white mb-1">Settings</h1>
+          <p className="text-xs text-white/40">Manage your account, team, and preferences</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 bg-[#8b5cf6] text-white text-xs font-medium rounded-lg hover:bg-[#6d28d9] transition-colors">
           <Save size={14} />
           Save Changes
         </button>
-      </motion.div>
+      </div>
 
       <div className="flex gap-6">
         {/* Sidebar */}
-        <motion.div variants={fadeInUp} className="w-56 flex-shrink-0 space-y-1">
-          {SETTINGS_SECTIONS.map((section) => (
-            <TabButton
-              key={section.id}
-              active={activeSection === section.id}
-              onClick={() => setActiveSection(section.id)}
-              icon={section.icon}
-              label={section.label}
-            />
-          ))}
-        </motion.div>
+        <div className="w-56 flex-shrink-0">
+          <div className="space-y-0.5">
+            {SETTINGS_SECTIONS.map((section) => (
+              <TabButton
+                key={section.id}
+                active={activeSection === section.id}
+                onClick={() => setActiveSection(section.id)}
+                icon={section.icon}
+                label={section.label}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Content */}
         <motion.div variants={fadeInUp} className="flex-1 min-w-0">
           {activeSection === "general" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
               <h3 className="text-sm font-semibold text-white mb-4">General Settings</h3>
-              <SettingRow label="Platform Name" description="Displayed across the application and emails">
-                <input
-                  type="text"
-                  defaultValue="Hotels Vendors"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
-                />
-              </SettingRow>
-              <SettingRow label="Default Currency" description="Primary currency for all transactions">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0a0a0a]">EGP - Egyptian Pound</option>
-                  <option className="bg-[#0a0a0a]">USD - US Dollar</option>
-                  <option className="bg-[#0a0a0a]">EUR - Euro</option>
-                </select>
-              </SettingRow>
-              <SettingRow label="Default Language" description="Interface language for new users">
+              <SettingRow label="Language" description="Interface language">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
                   <option className="bg-[#0a0a0a]">English</option>
                   <option className="bg-[#0a0a0a]">العربية</option>
                 </select>
               </SettingRow>
-              <SettingRow label="Time Zone" description="Default timezone for scheduling and reports">
+              <SettingRow label="Time Zone" description="Your local time zone">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
                   <option className="bg-[#0a0a0a]">Africa/Cairo (GMT+2)</option>
-                  <option className="bg-[#0a0a0a]">UTC</option>
+                </select>
+              </SettingRow>
+              <SettingRow label="Currency" description="Primary currency for transactions">
+                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                  <option className="bg-[#0a0a0a]">EGP (Egyptian Pound)</option>
+                  <option className="bg-[#0a0a0a]">USD (US Dollar)</option>
                 </select>
               </SettingRow>
             </div>
@@ -150,49 +195,38 @@ export default function SettingsPage() {
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Notification Preferences</h3>
               <SettingRow label="Email Notifications" description="Receive updates via email">
-                <Toggle checked={notifications.email} onChange={() => setNotifications({ ...notifications, email: !notifications.email })} />
+                <Toggle checked={notifications.email} onChange={() => toggleNotification("email")} />
               </SettingRow>
               <SettingRow label="Push Notifications" description="Browser push notifications">
-                <Toggle checked={notifications.push} onChange={() => setNotifications({ ...notifications, push: !notifications.push })} />
+                <Toggle checked={notifications.push} onChange={() => toggleNotification("push")} />
               </SettingRow>
-              <SettingRow label="Order Updates" description="Notifications for order status changes">
-                <Toggle checked={notifications.orders} onChange={() => setNotifications({ ...notifications, orders: !notifications.orders })} />
+              <SettingRow label="Order Updates" description="Status changes for your orders">
+                <Toggle checked={notifications.orders} onChange={() => toggleNotification("orders")} />
               </SettingRow>
-              <SettingRow label="Dispute Alerts" description="Notifications for new disputes">
-                <Toggle checked={notifications.disputes} onChange={() => setNotifications({ ...notifications, disputes: !notifications.disputes })} />
+              <SettingRow label="Dispute Alerts" description="When a dispute requires attention">
+                <Toggle checked={notifications.disputes} onChange={() => toggleNotification("disputes")} />
               </SettingRow>
-              <SettingRow label="Marketing Emails" description="Product updates and promotions">
-                <Toggle checked={notifications.marketing} onChange={() => setNotifications({ ...notifications, marketing: !notifications.marketing })} />
+              <SettingRow label="Marketing" description="Product updates and promotions">
+                <Toggle checked={notifications.marketing} onChange={() => toggleNotification("marketing")} />
               </SettingRow>
             </div>
           )}
 
           {activeSection === "security" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Security Settings</h3>
-              <SettingRow label="Two-Factor Authentication" description="Require 2FA for all admin users">
-                <Toggle checked={true} onChange={() => {}} />
+              <h3 className="text-sm font-semibold text-white mb-4">Security</h3>
+              <SettingRow label="Two-Factor Authentication" description="Add an extra layer of security">
+                <button className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white hover:bg-white/[0.06] transition-colors">
+                  Enable
+                </button>
               </SettingRow>
-              <SettingRow label="Session Timeout" description="Auto-logout after inactivity">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0a0a0a]">15 minutes</option>
-                  <option className="bg-[#0a0a0a]">30 minutes</option>
-                  <option className="bg-[#0a0a0a]">1 hour</option>
-                  <option className="bg-[#0a0a0a]">Never</option>
-                </select>
+              <SettingRow label="Session Management" description="Active login sessions">
+                <span className="text-xs text-white/40">1 active session</span>
               </SettingRow>
-              <SettingRow label="Password Policy" description="Minimum requirements for user passwords">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0a0a0a]">Strong (12+ chars)</option>
-                  <option className="bg-[#0a0a0a]">Medium (8+ chars)</option>
-                  <option className="bg-[#0a0a0a]">Basic (6+ chars)</option>
-                </select>
-              </SettingRow>
-              <SettingRow label="API Key" description="Your platform API key for integrations">
-                <div className="flex items-center gap-2">
-                  <code className="px-2 py-1 rounded bg-white/[0.04] text-[10px] text-white/30 font-mono">hv_live_••••••••••••</code>
-                  <button className="text-[10px] text-[#8B0000] hover:underline">Regenerate</button>
-                </div>
+              <SettingRow label="Password" description="Last changed 30 days ago">
+                <button className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white hover:bg-white/[0.06] transition-colors">
+                  Change
+                </button>
               </SettingRow>
             </div>
           )}
@@ -202,142 +236,106 @@ export default function SettingsPage() {
               <h3 className="text-sm font-semibold text-white mb-4">Team Members</h3>
               <div className="space-y-3">
                 {[
-                  { name: "Ahmed Hassan", email: "ahmed@hotelsvendors.com", role: "Admin", status: "active" },
-                  { name: "Sara Mohamed", email: "sara@hotelsvendors.com", role: "Manager", status: "active" },
-                  { name: "Khaled Ali", email: "khaled@hotelsvendors.com", role: "Analyst", status: "active" },
-                  { name: "Laila Ibrahim", email: "laila@hotelsvendors.com", role: "Viewer", status: "pending" },
-                ].map((member, i) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
+                  { name: user?.name || "You", role: "Owner", email: user?.email || "" },
+                  { name: "Ahmed Hassan", role: "Procurement Manager", email: "ahmed@example.com" },
+                  { name: "Sara Mahmoud", role: "Finance Lead", email: "sara@example.com" },
+                ].map((member) => (
+                  <div key={member.email} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-[10px] text-white/40 font-medium">
-                        {member.name.split(" ").map((n) => n[0]).join("")}
+                      <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-[11px] font-bold text-white/60">
+                        {member.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                       </div>
                       <div>
                         <p className="text-xs font-medium text-white">{member.name}</p>
-                        <p className="text-[10px] text-white/25">{member.email}</p>
+                        <p className="text-[10px] text-white/30">{member.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        member.role === "Admin" ? "bg-[#8B0000]/10 text-[#8B0000]" :
-                        member.role === "Manager" ? "bg-blue-500/10 text-blue-400" :
-                        "bg-white/10 text-white/40"
-                      }`}>
-                        {member.role}
-                      </span>
-                      <span className={`w-1.5 h-1.5 rounded-full ${member.status === "active" ? "bg-emerald-400" : "bg-amber-400"}`} />
-                    </div>
+                    <span className="text-[10px] font-medium text-white/40 px-2 py-1 rounded bg-white/[0.04]">{member.role}</span>
                   </div>
                 ))}
               </div>
+              <button className="mt-4 flex items-center gap-2 px-4 py-2 bg-white/[0.04] border border-white/[0.08] text-xs text-white rounded-lg hover:bg-white/[0.06] transition-colors">
+                <Users size={14} />
+                Invite Member
+              </button>
             </div>
           )}
 
           {activeSection === "organization" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Organization Profile</h3>
-              <SettingRow label="Company Name" description="Legal entity name">
-                <input
-                  type="text"
-                  defaultValue="Hotels Vendors Egypt Ltd."
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
-                />
+              <h3 className="text-sm font-semibold text-white mb-4">Organization</h3>
+              <SettingRow label="Company Name" description="Your organization's display name">
+                <span className="text-xs text-white/60">{user?.tenantName || "Not set"}</span>
               </SettingRow>
-              <SettingRow label="Tax ID" description="Egyptian Tax Registration Number">
-                <input
-                  type="text"
-                  defaultValue="123-456-789"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
-                />
+              <SettingRow label="Tax ID" description="Egyptian Tax Authority registration number">
+                <span className="text-xs text-white/40">—</span>
               </SettingRow>
-              <SettingRow label="Address" description="Registered business address">
-                <input
-                  type="text"
-                  defaultValue="123 Nile Corniche, Cairo"
-                  className="w-64 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
-                />
-              </SettingRow>
-              <SettingRow label="Phone" description="Primary contact number">
-                <input
-                  type="text"
-                  defaultValue="+20 2 1234 5678"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
-                />
+              <SettingRow label="Industry" description="Your business category">
+                <span className="text-xs text-white/40">Hospitality</span>
               </SettingRow>
             </div>
           )}
 
           {activeSection === "billing" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Billing & Subscription</h3>
-              <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-4 mb-4">
+              <h3 className="text-sm font-semibold text-white mb-4">Plan &amp; Billing</h3>
+              <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-white/40">Current Plan</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#8B0000]/10 text-[#8B0000]">Enterprise</span>
+                  <span className="text-xs font-medium text-white">Current Plan</span>
+                  <span className="text-[10px] font-semibold text-[#8b5cf6] bg-[#8b5cf6]/10 px-2 py-0.5 rounded">Pro</span>
                 </div>
-                <p className="text-lg font-bold text-white">EGP 25,000 / month</p>
-                <p className="text-[11px] text-white/25 mt-0.5">Next billing: June 8, 2026</p>
+                <p className="text-[24px] font-bold text-white">EGP 4,500<span className="text-[13px] font-normal text-white/40">/month</span></p>
+                <p className="text-[11px] text-white/30 mt-1">Billed monthly. Next billing date: June 15, 2026.</p>
               </div>
-              <SettingRow label="Payment Method" description="Default payment for invoices">
-                <span className="text-xs text-white/60">Visa ending in 4242</span>
+              <SettingRow label="Payment Method" description="Your default payment method">
+                <div className="flex items-center gap-2">
+                  <CreditCard size={14} className="text-white/30" />
+                  <span className="text-xs text-white/40">•••• 4242</span>
+                </div>
               </SettingRow>
-              <SettingRow label="Auto-Renew" description="Automatically renew subscription">
-                <Toggle checked={true} onChange={() => {}} />
+              <SettingRow label="Invoice History" description="Download past invoices">
+                <button className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white hover:bg-white/[0.06] transition-colors">
+                  View
+                </button>
               </SettingRow>
             </div>
           )}
 
           {activeSection === "integrations" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Connected Integrations</h3>
-              <div className="space-y-3">
-                {[
-                  { name: "ETA E-Invoicing", status: "connected", desc: "Egyptian Tax Authority" },
-                  { name: "Paymob", status: "connected", desc: "Payment processing" },
-                  { name: "Google Maps", status: "connected", desc: "Route optimization" },
-                  { name: "Slack", status: "disconnected", desc: "Team notifications" },
-                  { name: "WhatsApp Business", status: "pending", desc: "Customer communication" },
-                ].map((integration, i) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
-                    <div>
-                      <p className="text-xs font-medium text-white">{integration.name}</p>
-                      <p className="text-[10px] text-white/25">{integration.desc}</p>
-                    </div>
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      integration.status === "connected" ? "bg-emerald-500/10 text-emerald-400" :
-                      integration.status === "pending" ? "bg-amber-500/10 text-amber-400" :
-                      "bg-white/10 text-white/40"
-                    }`}>
-                      {integration.status === "connected" ? "Connected" : integration.status === "pending" ? "Pending" : "Disconnected"}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <h3 className="text-sm font-semibold text-white mb-4">Integrations</h3>
+              <SettingRow label="ETA E-Invoicing" description="Egyptian Tax Authority connection">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 size={14} className="text-emerald-500" />
+                  <span className="text-xs text-emerald-400">Connected</span>
+                </div>
+              </SettingRow>
+              <SettingRow label="Slack" description="Team notifications">
+                <button className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white hover:bg-white/[0.06] transition-colors">
+                  Connect
+                </button>
+              </SettingRow>
+              <SettingRow label="Webhooks" description="Custom event endpoints">
+                <button className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white hover:bg-white/[0.06] transition-colors">
+                  Configure
+                </button>
+              </SettingRow>
             </div>
           )}
 
           {activeSection === "appearance" && (
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Appearance</h3>
-              <SettingRow label="Theme" description="Interface color scheme">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0a0a0a]">Dark</option>
-                  <option className="bg-[#0a0a0a]">Light</option>
-                  <option className="bg-[#0a0a0a]">System</option>
-                </select>
-              </SettingRow>
-              <SettingRow label="Accent Color" description="Primary brand color">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#8B0000] border border-white/20" />
-                  <span className="text-[11px] text-white/40">#8B0000</span>
-                </div>
-              </SettingRow>
-              <SettingRow label="Compact Mode" description="Reduce padding and spacing">
-                <Toggle checked={false} onChange={() => {}} />
-              </SettingRow>
-              <SettingRow label="Show Animations" description="Enable motion effects">
-                <Toggle checked={true} onChange={() => {}} />
-              </SettingRow>
+              <p className="text-[11px] text-white/30 mb-4">Select a theme to customize the interface colors.</p>
+              <ThemeSelector />
+              <div className="mt-6 pt-4 border-t border-white/[0.04]">
+                <SettingRow label="Compact Mode" description="Reduce padding and spacing">
+                  <Toggle checked={false} onChange={() => {}} />
+                </SettingRow>
+                <SettingRow label="Show Animations" description="Enable motion effects">
+                  <Toggle checked={true} onChange={() => {}} />
+                </SettingRow>
+              </div>
             </div>
           )}
         </motion.div>

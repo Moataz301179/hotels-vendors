@@ -63,7 +63,7 @@ export default function SocialMediaPage() {
             >
               The Story of
               <br />
-              <span className="text-[#8B0000]">Smarter Procurement</span>
+              <span className="text-[#8b5cf6]">Smarter Procurement</span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
@@ -76,7 +76,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="group px-6 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
+                className="group px-6 py-3.5 text-[14px] font-medium bg-[#8b5cf6] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
                 Join the Waiting List
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -93,7 +93,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* Beta Launch Announcement */}
-      <section id="beta-waiting-list" className="py-20 border-y border-white/[0.06] bg-gradient-to-b from-[#8B0000]/5 to-transparent">
+      <section id="beta-waiting-list" className="py-20 border-y border-white/[0.06] bg-gradient-to-b from-[#8b5cf6]/5 to-transparent">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -124,7 +124,7 @@ export default function SocialMediaPage() {
                   "Exclusive beta badge on your profile",
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#8B0000]/20 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[#8b5cf6]/20 flex items-center justify-center">
                       <Check className="w-3 h-3 text-white" />
                     </div>
                     <span className="text-[14px] text-white/70">{item}</span>
@@ -411,7 +411,7 @@ export default function SocialMediaPage() {
                 transition={{ delay: i * 0.1 }}
                 className="flex gap-4 p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
               >
-                <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 border border-[#8B0000]/20 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center shrink-0">
                   <item.icon className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
@@ -444,7 +444,7 @@ export default function SocialMediaPage() {
           >
             <div className="relative w-14 h-14 mx-auto mb-8">
               <BrandLogo variant="dark" size="xl" className="relative z-10" />
-              <div className="absolute inset-0 bg-[#8B0000]/8 blur-2xl rounded-full" />
+              <div className="absolute inset-0 bg-[#8b5cf6]/8 blur-2xl rounded-full" />
             </div>
             <h2 className="text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
               Be Part of the Procurement Revolution
@@ -456,7 +456,7 @@ export default function SocialMediaPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="group px-7 py-3.5 text-[14px] font-medium bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
+                className="group px-7 py-3.5 text-[14px] font-medium bg-[#8b5cf6] text-white hover:bg-[#7A0000] rounded-lg transition-colors flex items-center gap-2"
               >
                 Join Beta Waiting List
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -525,7 +525,7 @@ function BetaWaitingListForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
           required
-          className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 focus:ring-1 focus:ring-[#8B0000]/20 transition-colors"
+          className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8b5cf6]/50 focus:ring-1 focus:ring-[#8b5cf6]/20 transition-colors"
         />
       </div>
       <div>
@@ -552,7 +552,7 @@ function BetaWaitingListForm() {
       <button
         type="submit"
         disabled={loading || !email || !role}
-        className="w-full py-3 text-[14px] font-semibold bg-[#8B0000] text-white hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 text-[14px] font-semibold bg-[#8b5cf6] text-white hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? "Joining..." : "Join Waiting List"}
       </button>

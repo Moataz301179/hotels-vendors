@@ -186,7 +186,7 @@ export default function SupplierOrdersPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-[#8B0000]/20 text-[#ff6b6b] border border-[#8B0000]/30"
+                  ? "bg-[#8b5cf6]/20 text-[#ff6b6b] border border-[#8b5cf6]/30"
                   : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
               }`}
             >

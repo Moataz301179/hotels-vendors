@@ -323,7 +323,7 @@ export default function GrokBrainDashboardPage() {
             </Link>
             <div className="w-px h-4 bg-white/10" />
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#8B0000] to-[#b91c1c] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-[#b91c1c] flex items-center justify-center">
                 <Brain className="w-4 h-4 text-white" />
               </div>
               <div>
@@ -362,7 +362,7 @@ export default function GrokBrainDashboardPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isRunning || !prompt.trim()}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#8B0000] text-white text-[12px] font-semibold hover:bg-[#a00000] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#8b5cf6] text-white text-[12px] font-semibold hover:bg-[#a00000] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                   {isRunning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                   {isRunning ? "Running..." : "Execute"}
@@ -439,7 +439,7 @@ export default function GrokBrainDashboardPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]"
                       >
-                        <Loader2 className="w-4 h-4 text-[#8B0000] animate-spin" />
+                        <Loader2 className="w-4 h-4 text-[#8b5cf6] animate-spin" />
                         <span className="text-[12px] text-white/50">{event.data.message as string}</span>
                       </motion.div>
                     );
@@ -451,10 +451,10 @@ export default function GrokBrainDashboardPage() {
                         key={event.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-4 rounded-xl bg-gradient-to-br from-[#8B0000]/10 to-transparent border border-[#8B0000]/20"
+                        className="p-4 rounded-xl bg-gradient-to-br from-[#8b5cf6]/10 to-transparent border border-[#8b5cf6]/20"
                       >
                         <div className="flex items-center gap-2 mb-3">
-                          <Sparkles className="w-4 h-4 text-[#8B0000]" />
+                          <Sparkles className="w-4 h-4 text-[#8b5cf6]" />
                           <span className="text-[12px] font-semibold text-white/80">Final Answer</span>
                         </div>
                         <div className="text-[13px] text-white/70 leading-relaxed whitespace-pre-wrap">
@@ -683,7 +683,7 @@ export default function GrokBrainDashboardPage() {
                 { name: "afrexai-daily-briefing", desc: "Executive briefings" },
               ].map((skill) => (
                 <div key={skill.name} className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#8B0000]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
                   <div>
                     <div className="text-[11px] text-white/50">{skill.name}</div>
                     <div className="text-[10px] text-white/25">{skill.desc}</div>

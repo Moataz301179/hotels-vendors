@@ -6,7 +6,7 @@ export function ReloadButton() {
   return (
     <button
       onClick={() => window.location.reload()}
-      className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#8B0000] text-white text-sm font-medium hover:bg-[#033a6d] transition-colors"
+      className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#8b5cf6] text-white text-sm font-medium hover:bg-[#033a6d] transition-colors"
     >
       <RefreshCw size={16} />
       Try Again

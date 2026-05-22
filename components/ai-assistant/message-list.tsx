@@ -31,20 +31,20 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
               m.role === "user"
-                ? "bg-[#8B0000]"
+                ? "bg-[#8b5cf6]"
                 : "bg-white/[0.04] border border-white/[0.08]"
             }`}
           >
             {m.role === "user" ? (
               <User size={12} className="text-white" />
             ) : (
-              <Bot size={12} className="text-[#8B0000]" />
+              <Bot size={12} className="text-[#8b5cf6]" />
             )}
           </div>
           <div
             className={`max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
               m.role === "user"
-                ? "bg-[#8B0000] text-white rounded-tr-sm"
+                ? "bg-[#8b5cf6] text-white rounded-tr-sm"
                 : "bg-white/[0.04] border border-white/[0.08] text-white/70 rounded-tl-sm"
             }`}
           >
@@ -56,7 +56,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
       {isLoading && !messages.some((m) => m.isStreaming) && (
         <div className="flex gap-2.5">
           <div className="w-7 h-7 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-            <Bot size={12} className="text-[#8B0000]" />
+            <Bot size={12} className="text-[#8b5cf6]" />
           </div>
           <div className="bg-white/[0.04] border border-white/[0.08] px-3 py-2 rounded-xl rounded-tl-sm">
             <Loader2 size={16} className="animate-spin text-white/30" />

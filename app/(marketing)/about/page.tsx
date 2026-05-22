@@ -123,16 +123,16 @@ export default async function AboutPage() {
               <Eye className="w-3 h-3" />
               Our Story
             </div>
-            <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
+            <h1 className="text-[32px] md:text-[42px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
               {cms?.heroTitle || "We Do Not Just See the Market. We See Through It."}
             </h1>
-            <p className="mt-6 text-[14px] md:text-[16px] text-gray-500 leading-relaxed max-w-xl">
+            <p className="mt-5 text-[14px] md:text-[15px] text-gray-500 leading-relaxed max-w-xl">
               {cms?.heroDescription || "Founded by a professional auditor who spent years inside the financial machinery of Egyptian hospitality. What we observed was not a lack of suppliers — it was a systemic failure of process, visibility, and control. Hotels Vendors was built to fix what others could not even see."}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Join the Platform
                 <ArrowRight className="w-4 h-4" />
@@ -171,22 +171,22 @@ export default async function AboutPage() {
             {/* Right — Narrative */}
             <div className="lg:col-span-8 space-y-8">
               <div>
-                <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight mb-4">
+                <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Observation
                 </h2>
-                <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
                   As a professional auditor, I spent years inside the financial records of Egypt's largest hospitality groups. I reviewed procurement processes that were supposed to control millions in annual spend. What I found was alarming: purchase orders scattered across WhatsApp threads, supplier invoices reconciled in error-prone Excel files, approval chains that existed on paper but vanished in practice, and cashflow management that was essentially guesswork.
                 </p>
-                <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="mt-3 text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
                   The hotels were not struggling because they lacked suppliers. They were struggling because they lacked a system. There was no visibility. No enforceable controls. No audit trail. And when the Egyptian Tax Authority introduced mandatory e-invoicing, the gap between where these organizations were and where they needed to be became a chasm.
                 </p>
               </div>
 
               <div>
-                <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight mb-4">
+                <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Insight
                 </h2>
-                <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
                   Every audit engagement reinforced the same pattern: the procurement function — the single largest controllable cost center in any hotel — was operating with tools designed for an era that no longer exists. The B2B marketplaces emerging in Egypt were solving the wrong problem. They were connecting buyers to sellers, which is useful, but they were ignoring the fundamental operational and financial infrastructure that makes procurement work at scale.
                 </p>
                 <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
@@ -195,10 +195,10 @@ export default async function AboutPage() {
               </div>
 
               <div>
-                <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight mb-4">
+                <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Build
                 </h2>
-                <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
                   Hotels Vendors was architected from first principles by someone who had seen the inside of enough general ledgers to know exactly where value leaks and where controls fail. We built not a marketplace, but a complete digital procurement module — one that enforces best-practice governance by design, not by policy memo. Every purchase order flows through an authority matrix that cannot be bypassed. Every invoice is ETA-compliant at the moment of creation. Every transaction feeds into a real-time financial intelligence layer that shows exactly where your money is going, when it is going, and how to optimize it.
                 </p>
                 <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
@@ -207,10 +207,10 @@ export default async function AboutPage() {
               </div>
 
               <div>
-                <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight mb-4">
+                <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Difference
                 </h2>
-                <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
                   Other platforms will help you find a supplier. We will transform how your entire organization procures, pays, and optimizes. We see through the transaction to the system beneath it. We see the cashflow implications of every purchase decision. We see the compliance risk before the auditor does — because our founder was that auditor.
                 </p>
                 <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
@@ -252,7 +252,7 @@ export default async function AboutPage() {
             <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Our Journey
             </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
+            <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight">
               Milestones & Timeline
             </h2>
           </div>
@@ -270,7 +270,7 @@ export default async function AboutPage() {
                   }`}
                 >
                   {/* dot */}
-                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[#8B0000] -translate-x-1/2 mt-2" />
+                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[#8b5cf6] -translate-x-1/2 mt-2" />
 
                   {/* content */}
                   <div className="ml-10 md:ml-0 md:w-1/2 md:text-right">
@@ -308,7 +308,7 @@ export default async function AboutPage() {
             <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               What Drives Us
             </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
+            <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight">
               Our Values
             </h2>
           </div>
@@ -343,7 +343,7 @@ export default async function AboutPage() {
             <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
               Leadership
             </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
+            <h2 className="text-[24px] md:text-[30px] font-bold text-white tracking-tight">
               Meet the Team
             </h2>
           </div>
@@ -406,18 +406,18 @@ export default async function AboutPage() {
       <section className="py-20 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center shadow-sm">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/[0.08] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8b5cf6]/[0.08] rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
-              <h2 className="text-[28px] md:text-[38px] font-bold text-white tracking-tight">
+              <h2 className="text-[26px] md:text-[34px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Ready to See What We See?"}
               </h2>
-              <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 max-w-xl mx-auto">
+              <p className="mt-3 text-[14px] md:text-[15px] text-gray-500 max-w-xl mx-auto">
                 {cms?.ctaDescription || "Join the hospitality groups that have replaced procurement chaos with audit-grade control, AI-powered intelligence, and real-time spend visibility."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4" />

@@ -414,7 +414,7 @@ export default function AdminExplorerPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 active
-                  ? "bg-[#8B0000]/20 text-[#ff6b6b] border border-[#8B0000]/30"
+                  ? "bg-[#8b5cf6]/20 text-[#ff6b6b] border border-[#8b5cf6]/30"
                   : "text-white/40 hover:text-white/70 hover:bg-white/[0.03]"
               }`}
             >
@@ -434,7 +434,7 @@ export default function AdminExplorerPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={`Search ${activeTab}...`}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/40 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8b5cf6]/40 transition-all"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
@@ -447,7 +447,7 @@ export default function AdminExplorerPage() {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white outline-none focus:border-[#8B0000]/40 transition-all"
+            className="px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white outline-none focus:border-[#8b5cf6]/40 transition-all"
           >
             <option value="" className="bg-[#1a1a2e]">All Statuses</option>
             {STATUS_OPTIONS[activeTab].map((s) => (

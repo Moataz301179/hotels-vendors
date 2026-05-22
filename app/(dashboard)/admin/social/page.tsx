@@ -117,7 +117,7 @@ export default function SocialAdminPage() {
     SCHEDULED: "bg-blue-500/10 text-blue-400 border-blue-500/20",
     ACTIVE: "bg-green-500/10 text-green-400 border-green-500/20",
     PAUSED: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    COMPLETED: "bg-[#8B0000]/10 text-[#8B0000] border-[#8B0000]/20",
+    COMPLETED: "bg-[#8b5cf6]/10 text-[#8b5cf6] border-[#8b5cf6]/20",
     CANCELLED: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
@@ -135,7 +135,7 @@ export default function SocialAdminPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={processQueue}
-              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-[#8B0000] hover:bg-[#7A0000] rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-[#8b5cf6] hover:bg-[#7A0000] rounded-lg transition-colors"
             >
               <Rocket className="w-4 h-4" />
               Process Queue
@@ -157,7 +157,7 @@ export default function SocialAdminPage() {
             label="Beta Waiting List"
             value={waitingList?.total || 0}
             subtext={`Hotels: ${waitingList?.byRole?.HOTEL || 0} · Suppliers: ${waitingList?.byRole?.SUPPLIER || 0}`}
-            color="#8B0000"
+            color="#8b5cf6"
           />
           <StatCard
             icon={Megaphone}
@@ -270,7 +270,7 @@ export default function SocialAdminPage() {
           {/* Publishing Queue */}
           <section className="border border-white/[0.06] rounded-xl p-6 bg-white/[0.02]">
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-4 h-4 text-[#8B0000]" />
+              <Clock className="w-4 h-4 text-[#8b5cf6]" />
               <h2 className="text-[16px] font-semibold">Publishing Queue</h2>
             </div>
             {queue ? (
@@ -289,7 +289,7 @@ export default function SocialAdminPage() {
           {/* Waiting List Breakdown */}
           <section className="border border-white/[0.06] rounded-xl p-6 bg-white/[0.02]">
             <div className="flex items-center gap-2 mb-4">
-              <Users className="w-4 h-4 text-[#8B0000]" />
+              <Users className="w-4 h-4 text-[#8b5cf6]" />
               <h2 className="text-[16px] font-semibold">Beta Waiting List</h2>
             </div>
             {waitingList ? (

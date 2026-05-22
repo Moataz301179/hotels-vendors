@@ -87,7 +87,7 @@ export function FinancialInsights() {
           value={`EGP ${(totalCapacity / 1_000_000).toFixed(0)}M`}
           sub="Monthly"
           icon={Package}
-          color="#8B0000"
+          color="#8b5cf6"
         />
         <SummaryCard
           label="Hotels"
@@ -138,7 +138,7 @@ export function FinancialInsights() {
               disabled={loading && activeQuery === q.id}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all border ${
                 activeQuery === q.id
-                  ? "bg-[#8B0000]/15 border-[#8B0000]/30 text-[#8B0000]"
+                  ? "bg-[#8b5cf6]/15 border-[#8b5cf6]/30 text-[#8b5cf6]"
                   : "bg-white/[0.02] border-white/[0.06] text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
               }`}
             >
@@ -223,7 +223,7 @@ function generateInsight(
                       className="h-full rounded-full"
                       style={{
                         width: `${(s.monthlyCapacityEgp / top[0].monthlyCapacityEgp) * 100}%`,
-                        backgroundColor: "#8B0000",
+                        backgroundColor: "#8b5cf6",
                       }}
                     />
                   </div>

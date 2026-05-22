@@ -68,7 +68,7 @@ export default function HelpPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-[12px] font-medium text-[#8B0000] tracking-[0.15em] uppercase mb-4">
+            <p className="text-[12px] font-medium text-[#8b5cf6] tracking-[0.15em] uppercase mb-4">
               Support
             </p>
             <h1 className="text-[40px] sm:text-[52px] font-bold text-white tracking-[-0.03em] leading-tight">
@@ -85,7 +85,7 @@ export default function HelpPage() {
         {/* Video Guides */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <PlayCircle size={18} className="text-[#8B0000]" />
+            <PlayCircle size={18} className="text-[#8b5cf6]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Portal Video Guides
             </h2>
@@ -116,7 +116,7 @@ export default function HelpPage() {
         {/* FAQs */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <BookOpen size={18} className="text-[#8B0000]" />
+            <BookOpen size={18} className="text-[#8b5cf6]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Frequently Asked Questions
             </h2>
@@ -145,7 +145,7 @@ export default function HelpPage() {
         {/* Contact */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <MessageCircle size={18} className="text-[#8B0000]" />
+            <MessageCircle size={18} className="text-[#8b5cf6]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Still Need Help?
             </h2>
@@ -153,7 +153,7 @@ export default function HelpPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a
               href="mailto:support@hotelsvendors.com"
-              className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 flex items-center gap-4 hover:border-[#8B0000]/30 transition-colors"
+              className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 flex items-center gap-4 hover:border-[#8b5cf6]/30 transition-colors"
             >
               <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center">
                 <Mail size={18} className="text-white" />

@@ -34,7 +34,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     issuer: {
       type: "B" as const,
       id: invoice.supplier.taxId,
-      name: invoice.supplier.name,
+      name: invoice.supplier.legalNameAr || invoice.supplier.legalName || invoice.supplier.name,
       address: {
         country: "EG",
         governate: invoice.supplier.governorate,
@@ -46,7 +46,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     receiver: {
       type: "B" as const,
       id: invoice.hotel.taxId,
-      name: invoice.hotel.name,
+      name: invoice.hotel.legalNameAr || invoice.hotel.legalName || invoice.hotel.name,
       address: {
         country: "EG",
         governate: invoice.hotel.governorate,

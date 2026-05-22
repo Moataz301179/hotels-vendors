@@ -12,6 +12,7 @@ import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
 import { validateStatusTransition } from "@/lib/auth/state-machine";
+import { orchestrateEtaAutoSubmit } from "@/lib/eta/auto-submit";
 import { z } from "zod";
 
 const UpdateStatusSchema = z.object({
@@ -69,6 +70,16 @@ export const PATCH = apiRoute(async (request: NextRequest) => {
     },
   });
 
+  // ── Auto-trigger ETA submission on delivery ──
+  let etaAutoSubmit = null;
+  if (newStatus === "DELIVERED") {
+    etaAutoSubmit = await orchestrateEtaAutoSubmit(order.id, {
+      userId: auth.userId,
+      tenantId: order.tenantId,
+      platformRole: auth.platformRole,
+    });
+  }
+
   // Audit log
   await audit({
     entityType: "ORDER",
@@ -78,8 +89,8 @@ export const PATCH = apiRoute(async (request: NextRequest) => {
     actorId: auth.userId,
     actorRole: auth.platformRole,
     beforeState: { status: order.status },
-    afterState: { status: newStatus, reason },
+    afterState: { status: newStatus, reason, etaAutoSubmit: etaAutoSubmit?.message },
   });
 
-  return success({ order: updated });
+  return success({ order: updated, etaAutoSubmit });
 });

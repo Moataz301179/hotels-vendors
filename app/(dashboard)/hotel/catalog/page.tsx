@@ -76,7 +76,7 @@ export default function CatalogWorkspace() {
             <button className="px-4 py-2 border border-white/[0.08] bg-[#0a0a0a] rounded text-xs text-[#a0a0a0] flex items-center gap-2 hover:text-white transition-colors">
               <Filter size={14} /> Filter Parameters
             </button>
-            <button className="px-4 py-2 bg-[#8B0000] text-white rounded text-xs font-semibold hover:bg-[#1a4a7c] transition-colors border border-transparent">
+            <button className="px-4 py-2 bg-[#8b5cf6] text-white rounded text-xs font-semibold hover:bg-[#1a4a7c] transition-colors border border-transparent">
               Initialize Bulk PO
             </button>
           </div>

@@ -70,7 +70,7 @@ const CardEnterprise = React.forwardRef<HTMLDivElement, CardEnterpriseProps>(
     
     const glowStyles = {
       none: "",
-      crimson: "shadow-[0_0_40px_rgba(139,0,0,0.15)]",
+      crimson: "shadow-[0_0_40px_rgba(139, 92, 246,0.15)]",
       gold: "shadow-[0_0_40px_rgba(201,162,39,0.12)]",
       subtle: "shadow-[0_0_30px_rgba(255,255,255,0.03)]",
     };

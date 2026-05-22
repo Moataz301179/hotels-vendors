@@ -20,11 +20,11 @@ async function main() {
     where: { slug: "platform" },
     update: {},
     create: {
-      name: "Hotels Vendors Platform",
+      name: "Returants for E-Marketing",
       slug: "platform",
       type: "PLATFORM",
       status: "ACTIVE",
-      taxId: "000-000-000",
+      taxId: "704226146",
     },
   });
   console.log(`🏢 Platform tenant: ${platformTenant.id}`);
@@ -168,6 +168,7 @@ async function main() {
     create: {
       name: "Nile Grand Hotel",
       legalName: "Nile Grand Hotels SAE",
+      legalNameAr: "فنادق النيل جراند",
       taxId: hotelTenant.taxId,
       commercialReg: "CR-2020-001",
       address: "126 Nile Corniche, Cairo",
@@ -230,6 +231,7 @@ async function main() {
     create: {
       name: "Delta Food Supply",
       legalName: "Delta Food Supply Co. SAE",
+      legalNameAr: "شركة دلتا لإمدادات الغذاء",
       taxId: supplierTenant.taxId,
       commercialReg: "CR-2019-045",
       address: "45 Industrial Zone, 6th of October",
@@ -330,7 +332,7 @@ async function main() {
   ];
 
   for (const p of products) {
-    await prisma.product.upsert({
+    const product = await prisma.product.upsert({
       where: { sku: p.sku },
       update: {},
       create: {
@@ -340,6 +342,26 @@ async function main() {
         tenantId: supplierTenant.id,
       },
     });
+
+    // Auto-create EGS code for the product
+    const egsExists = await prisma.egsCode.findFirst({
+      where: { productId: product.id },
+    });
+    if (!egsExists) {
+      await prisma.egsCode.create({
+        data: {
+          codeValue: `EGS-${p.sku.replace(/\D/g, "").padStart(6, "0").slice(0, 8)}`,
+          codeType: "EGS",
+          description: `Auto-generated EGS code for ${p.name}`,
+          activeFrom: new Date(),
+          activeTo: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          supplierId: supplier.id,
+          productId: product.id,
+          tenantId: supplierTenant.id,
+          status: "ACTIVE",
+        },
+      });
+    }
   }
   console.log(`📦 ${products.length} products seeded`);
 

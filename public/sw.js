@@ -6,9 +6,9 @@
   - Navigation: Network-First → Cache → Offline fallback
 */
 
-const STATIC_CACHE = "hv-static-v1";
-const API_CACHE = "hv-api-v1";
-const IMAGE_CACHE = "hv-images-v1";
+const STATIC_CACHE = "hv-static-v2";
+const API_CACHE = "hv-api-v2";
+const IMAGE_CACHE = "hv-images-v2";
 const OFFLINE_PAGE = "/offline";
 
 const PRECACHE_URLS = [

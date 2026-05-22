@@ -247,7 +247,7 @@ export default function MarketplacePage() {
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all ${
-                memberMode ? "bg-[#8B0000] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
+                memberMode ? "bg-[#8b5cf6] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
@@ -258,7 +258,7 @@ export default function MarketplacePage() {
             <button onClick={openCart} className="relative flex items-center justify-center px-3 py-2 rounded-xl border border-white/[0.06] text-white/50 hover:text-white hover:border-white/[0.12] transition-all">
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8b5cf6] text-white text-[10px] font-bold flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
@@ -417,7 +417,7 @@ export default function MarketplacePage() {
                 <p className="text-sm text-white/25 max-w-sm text-center mb-6">{error}</p>
                 <button
                   onClick={fetchProducts}
-                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8B0000] hover:bg-[#6B0000] transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8b5cf6] hover:bg-[#6d28d9] transition-colors"
                 >
                   Retry
                 </button>
@@ -434,7 +434,7 @@ export default function MarketplacePage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
-                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8B0000] hover:bg-[#6B0000] transition-colors"
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8b5cf6] hover:bg-[#6d28d9] transition-colors"
                   >
                     {t("viewAllProducts")}
                   </button>
@@ -540,7 +540,7 @@ export default function MarketplacePage() {
                         </Link>
                         <button
                           onClick={() => handleAdd(product)}
-                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] text-white transition-all"
+                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white transition-all"
                         >
                           <ShoppingCart className="w-4 h-4" />
                         </button>

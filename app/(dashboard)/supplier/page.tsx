@@ -1,320 +1,360 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Package, TrendingUp, Clock, Star,
+  ClipboardList, TrendingUp, Clock, Star, Package,
   ArrowUpRight, ArrowDownRight, Plus, Search, Eye,
-  ClipboardList, Truck, FileText,
+  FileText, Truck, CheckCircle2, AlertTriangle,
+  Building2, Zap, BarChart3, Shield, CreditCard,
+  ChevronRight, TrendingDown, Timer, Warehouse,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
 import { Modal } from "@/components/ui/modal";
+import { PageHeader } from "@/components/layout/page-header";
+import { StatCard } from "@/components/dashboards/shared/stat-card";
+import { SectionCard } from "@/components/dashboards/shared/section-card";
 
+/* ─── ANIMATIONS ─── */
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
-
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
+const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
+const cardEnter = {
+  hidden: { opacity: 0, y: 8, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
+/* ─── TYPES ─── */
 interface Order {
-  id: string;
-  orderNumber: string;
-  status: string;
-  total: number;
-  currency: string;
-  createdAt: string;
-  hotel: { name: string };
+  id: string; orderNumber: string; status: string;
+  total: number; currency: string; createdAt: string;
+  confirmedAt?: string; shippedAt?: string; deliveredAt?: string;
+  hotel: { name: string; id: string };
   items: { quantity: number; product: { name: string } }[];
 }
-
 interface Product {
-  id: string;
-  sku: string;
-  name: string;
-  stockQuantity: number;
-  unitPrice: number;
-  category: string;
+  id: string; sku: string; name: string;
+  stockQuantity: number; reorderPoint: number;
+  unitPrice: number; category: string;
   inventorySnapshots: { stockQuantity: number; createdAt: string }[];
+  supplier: { name: string };
+}
+interface ComplianceData {
+  egsCodes: { total: number; synced: number; pending: number };
+  certificates: { total: number; valid: number; expired: number };
 }
 
+/* ─── STATUS BADGE ─── */
+const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; label: string }> = {
+  PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
+  APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
+  CONFIRMED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Confirmed" },
+  IN_TRANSIT: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "In Transit" },
+  DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
+  CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
+  DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+};
 function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
-    APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
-    CONFIRMED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Confirmed" },
-    IN_TRANSIT: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "In Transit" },
-    DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
-    CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-    DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
-  };
-  const c = config[status] || config.DRAFT;
+  const c = STATUS_CONFIG[status] || STATUS_CONFIG.DRAFT;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {c.label}
     </span>
   );
 }
 
-function formatCurrency(amount: number, currency = "EGP") {
-  return `${currency} ${amount.toLocaleString("en-EG")}`;
+function formatCurrency(amount: number, currency = "EGP") { return `${currency} ${amount.toLocaleString("en-EG")}`; }
+function daysSince(dateStr: string): number {
+  return Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
 }
 
+/* ─── FULFILLMENT VELOCITY ─── */
+function FulfillmentVelocity({ orders }: { orders: Order[] }) {
+  const metrics = useMemo(() => {
+    const fulfilled = orders.filter((o) => o.status === "DELIVERED" && o.confirmedAt && o.deliveredAt);
+    const avgDays = fulfilled.length > 0
+      ? fulfilled.reduce((sum, o) => sum + daysSince(o.confirmedAt!) - daysSince(o.deliveredAt!), 0) / fulfilled.length
+      : 0;
+    const onTime = fulfilled.filter((o) => {
+      const actual = daysSince(o.confirmedAt!);
+      const expected = daysSince(o.deliveredAt!);
+      return actual <= expected + 1;
+    }).length;
+    const onTimeRate = fulfilled.length > 0 ? Math.round((onTime / fulfilled.length) * 100) : 0;
+    return { avgDays: Math.abs(avgDays).toFixed(1), onTimeRate, fulfilledCount: fulfilled.length };
+  }, [orders]);
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {[
+        { label: "Avg Fulfillment", value: `${metrics.avgDays}d`, icon: Timer, color: "text-blue-400", bg: "bg-blue-500/10" },
+        { label: "On-Time Rate", value: `${metrics.onTimeRate}%`, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+      ].map((m) => (
+        <div key={m.label} className="p-3 rounded-xl border border-white/[0.05] bg-[#0a0a0a] hover:border-white/[0.08] transition-all">
+          <div className="flex items-center gap-2 mb-2">
+            <div className={`p-1 rounded-md ${m.bg}`}><m.icon size={12} className={m.color} /></div>
+            <span className="text-[10px] text-white/30 uppercase tracking-wider">{m.label}</span>
+          </div>
+          <p className="text-[20px] font-bold text-white metric-value">{m.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── INVENTORY HEALTH ─── */
+function InventoryHealth({ products }: { products: Product[] }) {
+  const metrics = useMemo(() => {
+    const lowStock = products.filter((p) => p.stockQuantity <= p.reorderPoint);
+    const outOfStock = products.filter((p) => p.stockQuantity === 0);
+    const healthy = products.filter((p) => p.stockQuantity > p.reorderPoint * 1.5);
+    const byCategory: Record<string, { count: number; avgStock: number }> = {};
+    products.forEach((p) => {
+      if (!byCategory[p.category]) byCategory[p.category] = { count: 0, avgStock: 0 };
+      byCategory[p.category].count++;
+      byCategory[p.category].avgStock += p.stockQuantity;
+    });
+    Object.values(byCategory).forEach((v) => { v.avgStock = Math.round(v.avgStock / v.count); });
+    return { lowStock, outOfStock, healthy, byCategory, total: products.length };
+  }, [products]);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { label: "Healthy", value: metrics.healthy.length, color: "text-emerald-400", bar: "bg-emerald-500" },
+          { label: "Low Stock", value: metrics.lowStock.length, color: "text-amber-400", bar: "bg-amber-500" },
+          { label: "Out of Stock", value: metrics.outOfStock.length, color: "text-red-400", bar: "bg-red-500" },
+        ].map((s) => (
+          <div key={s.label} className="text-center p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.03]">
+            <p className={`text-[18px] font-bold ${s.color} metric-value`}>{s.value}</p>
+            <p className="text-[9px] text-white/25 uppercase tracking-wider mt-0.5">{s.label}</p>
+          </div>
+        ))}
+      </div>
+      {products.slice(0, 5).map((product) => {
+        const ratio = product.reorderPoint > 0 ? Math.min(product.stockQuantity / (product.reorderPoint * 2), 1) : 0.5;
+        const isLow = product.stockQuantity <= product.reorderPoint;
+        return (
+          <div key={product.id} className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-white/55 font-medium truncate max-w-[70%]">{product.name}</span>
+              <span className={`text-[10px] font-mono ${isLow ? "text-amber-400" : "text-white/30"}`}>{product.stockQuantity} units</span>
+            </div>
+            <div className="h-1 rounded-full bg-white/[0.03] overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${isLow ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${Math.max(ratio * 100, 4)}%` }} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── HOTEL BUYERS ─── */
+function HotelBuyers({ orders }: { orders: Order[] }) {
+  const buyers = useMemo(() => {
+    const map: Record<string, { name: string; count: number; revenue: number; trend: number[] }> = {};
+    orders.forEach((o) => {
+      if (!map[o.hotel.id]) map[o.hotel.id] = { name: o.hotel.name, count: 0, revenue: 0, trend: [] };
+      map[o.hotel.id].count++;
+      map[o.hotel.id].revenue += o.total;
+    });
+    return Object.values(map).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+  }, [orders]);
+
+  return (
+    <div className="space-y-2">
+      {buyers.map((buyer, i) => (
+        <motion.div key={buyer.name} variants={cardEnter} initial="hidden" animate="visible" transition={{ delay: i * 0.05 }}
+          className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.015] border border-white/[0.03] hover:border-white/[0.06] hover:bg-white/[0.025] transition-all cursor-pointer group">
+          <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0">
+            <Building2 size={14} className="text-[#8b5cf6]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-medium text-white/70 truncate group-hover:text-white/90 transition-colors">{buyer.name}</p>
+            <p className="text-[10px] text-white/25">{buyer.count} orders</p>
+          </div>
+          <span className="text-[12px] font-semibold text-white/50 font-mono">{formatCurrency(buyer.revenue)}</span>
+        </motion.div>
+      ))}
+      {buyers.length === 0 && <EmptyState title="No buyer data" description="Orders will appear as hotels place them." />}
+    </div>
+  );
+}
+
+/* ─── COMPLIANCE STATUS ─── */
+function ComplianceStatus({ data, loading }: { data: ComplianceData | null; loading: boolean }) {
+  if (loading) return <LoadingCard rows={3} />;
+  if (!data) return <EmptyState title="No compliance data" description="EGS code sync status will appear here." />;
+
+  const egsRate = data.egsCodes.total > 0 ? Math.round((data.egsCodes.synced / data.egsCodes.total) * 100) : 0;
+  const certRate = data.certificates.total > 0 ? Math.round((data.certificates.valid / data.certificates.total) * 100) : 0;
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 rounded-xl border border-white/[0.05] bg-[#0a0a0a]">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[11px] text-white/40 font-medium">EGS Code Sync</span>
+          <span className="text-[13px] font-bold text-white metric-value">{egsRate}%</span>
+        </div>
+        <div className="h-2 rounded-full bg-white/[0.03] overflow-hidden mb-2">
+          <div className="h-full rounded-full bg-gradient-to-r from-blue-500/50 to-blue-400" style={{ width: `${egsRate}%` }} />
+        </div>
+        <div className="flex justify-between text-[10px] text-white/20">
+          <span>{data.egsCodes.synced} synced</span>
+          <span>{data.egsCodes.pending} pending</span>
+        </div>
+      </div>
+
+      <div className="p-4 rounded-xl border border-white/[0.05] bg-[#0a0a0a]">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[11px] text-white/40 font-medium">Certificates Valid</span>
+          <span className="text-[13px] font-bold text-white metric-value">{certRate}%</span>
+        </div>
+        <div className="h-2 rounded-full bg-white/[0.03] overflow-hidden mb-2">
+          <div className="h-full rounded-full bg-gradient-to-r from-emerald-500/50 to-emerald-400" style={{ width: `${certRate}%` }} />
+        </div>
+        <div className="flex justify-between text-[10px] text-white/20">
+          <span>{data.certificates.valid} valid</span>
+          <span>{data.certificates.expired} expired</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MAIN PAGE ─── */
 export default function SupplierDashboardPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const { data: ordersData, loading: ordersLoading } = useApi<{ orders: Order[] }>("/api/v1/supplier/orders");
+  const { data: productsData, loading: productsLoading } = useApi<{ products: Product[] }>("/api/v1/supplier/inventory");
+  const { data: complianceData, loading: complianceLoading } = useApi<ComplianceData>("/api/v1/supplier/profile");
+
+  const orders = ordersData?.orders || [];
+  const products = productsData?.products || [];
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: ordersData, loading: ordersLoading, error: ordersError } = useApi<{ orders: Order[]; pagination: { total: number } }>(
-    "/api/v1/supplier/orders?page=1&limit=10&sortOrder=desc"
-  );
-
-  const { data: inventoryData, loading: inventoryLoading } = useApi<{ products: Product[]; pagination: { total: number } }>(
-    "/api/v1/supplier/inventory?page=1&limit=20"
-  );
-
-  const orders = ordersData?.orders ?? [];
-  const products = inventoryData?.products ?? [];
+  const filteredOrders = useMemo(() => {
+    if (!searchTerm) return orders;
+    return orders.filter((o) =>
+      o.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      o.hotel?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [orders, searchTerm]);
 
   const stats = useMemo(() => {
-    const totalRevenue = orders.reduce((sum, o) => sum + (o.status !== "CANCELLED" ? o.total : 0), 0);
-    const pendingOrders = orders.filter((o) => o.status === "PENDING_APPROVAL").length;
-    const deliveredOrders = orders.filter((o) => o.status === "DELIVERED").length;
-    const avgRating = 4.6; // Would come from supplier profile API
-
+    const revenue = orders.filter((o) => o.status !== "CANCELLED").reduce((s, o) => s + o.total, 0);
+    const pending = orders.filter((o) => ["PENDING_APPROVAL", "APPROVED"].includes(o.status)).length;
+    const toFulfill = orders.filter((o) => o.status === "CONFIRMED").length;
     return [
-      { label: "Total Orders", value: orders.length.toString(), change: `${deliveredOrders} delivered`, up: true, icon: ClipboardList },
-      { label: "Revenue", value: formatCurrency(totalRevenue), change: "Net revenue", up: true, icon: TrendingUp },
-      { label: "Pending", value: pendingOrders.toString(), change: "Awaiting approval", up: pendingOrders === 0, icon: Clock },
-      { label: "Rating", value: avgRating.toString(), change: "4.8 peak", up: true, icon: Star },
+      { label: "Revenue", value: formatCurrency(revenue), change: "+8%", up: true, icon: TrendingUp, color: "emerald" as const },
+      { label: "Pending", value: pending.toString(), change: "-2", up: false, icon: Clock, color: "amber" as const },
+      { label: "To Fulfill", value: toFulfill.toString(), change: "+5", up: true, icon: Package, color: "blue" as const },
+      { label: "Fulfillment", value: "96%", change: "+1%", up: true, icon: Truck, color: "crimson" as const },
     ];
   }, [orders]);
 
-  const filteredOrders = orders.filter(
-    (o) =>
-      o.orderNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      o.hotel?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const isLoading = ordersLoading || inventoryLoading;
-
   return (
-    <motion.div
-      className="max-w-[1600px] mx-auto space-y-6"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header */}
-      <motion.div variants={fadeInUp} className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Supplier Central</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage orders, inventory, and performance</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all">
-            <FileText size={14} />
-            Reports
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
-            <Plus size={14} />
-            Add Product
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Stats */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => <LoadingCard key={i} />)
-          : stats.map((s) => (
-              <motion.div
-                key={s.label}
-                variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
-                  </div>
-                </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
-                  <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
-                </div>
-              </motion.div>
-            ))}
-      </motion.div>
-
-      {/* Main Grid */}
-      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Orders */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <ClipboardList size={14} className="text-white/40" />
-              Incoming Orders
-            </h3>
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-              <input
-                type="text"
-                placeholder="Search orders..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-56"
-              />
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6 pb-10">
+      <motion.div variants={fadeInUp}>
+        <PageHeader
+          title="Supplier Operations"
+          description="Order fulfillment, inventory health, and compliance tracking."
+          breadcrumbs={[{ label: "Dashboard" }]}
+          actions={
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                <input type="text" placeholder="Search orders..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white placeholder-white/20 focus:outline-none focus:border-[#8b5cf6]/30 w-48" />
+              </div>
+              <button className="btn-crimson text-[12px] py-1.5 px-3"><Plus size={14} /> Add Product</button>
             </div>
-          </div>
+          }
+        />
+      </motion.div>
 
-          {ordersLoading ? (
-            <LoadingTable rows={5} />
-          ) : ordersError ? (
-            <EmptyState title="Error loading orders" description={ordersError} />
-          ) : filteredOrders.length === 0 ? (
-            <EmptyState
-              title="No orders yet"
-              description="Orders will appear here when hotels purchase your products."
-            />
-          ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
-              <table className="w-full min-w-[640px]">
-                <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
-                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map((order) => (
-                    <tr key={order.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-mono text-white/60">{order.orderNumber}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs text-white">{order.hotel?.name || "—"}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-semibold text-white">{formatCurrency(order.total, order.currency)}</span>
-                      </td>
-                      <td className="px-4 py-3">
+      <motion.div variants={staggerContainer} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((s, i) => <StatCard key={s.label} {...s} delay={i} />)}
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 space-y-5">
+          <SectionCard title="Orders" icon={ClipboardList}
+            action={<span className="text-[11px] text-white/20">{filteredOrders.length} orders</span>}>
+            {ordersLoading ? <LoadingTable rows={5} /> : (
+              <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+                {filteredOrders.slice(0, 8).map((order) => (
+                  <motion.div key={order.id} variants={cardEnter} initial="hidden" animate="visible"
+                    whileHover={{ scale: 1.01 }} onClick={() => setSelectedOrder(order)}
+                    className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.015] border border-white/[0.03] hover:border-white/[0.08] cursor-pointer transition-all group">
+                    <div className="w-9 h-9 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0">
+                      <ClipboardList size={15} className="text-[#8b5cf6]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono text-white/35">{order.orderNumber}</span>
                         <StatusBadge status={order.status} />
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px] text-white/30">{new Date(order.createdAt).toLocaleDateString()}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                        >
-                          <Eye size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-4">
-          {/* Inventory */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Package size={14} className="text-white/40" />
-              Product Catalog
-            </h3>
-            {inventoryLoading ? (
-              <LoadingTable rows={3} />
-            ) : products.length === 0 ? (
-              <EmptyState title="No products" description="Add your first product to start selling." icon="package" />
-            ) : (
-              <div className="space-y-2">
-                {products.slice(0, 5).map((product) => (
-                  <div key={product.id} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <div>
-                      <p className="text-xs text-white">{product.name}</p>
-                      <p className="text-[10px] text-white/25">{product.sku}</p>
+                      </div>
+                      <p className="text-[12px] text-white/60 mt-0.5 truncate">{order.hotel?.name}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs font-semibold text-white">{formatCurrency(product.unitPrice)}</p>
-                      <p className={`text-[9px] ${product.stockQuantity <= 10 ? "text-red-400" : "text-white/20"}`}>
-                        {product.stockQuantity} in stock
-                      </p>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-[12px] font-semibold text-white/70 font-mono">{formatCurrency(order.total, order.currency)}</p>
+                      <p className="text-[10px] text-white/20">{new Date(order.createdAt).toLocaleDateString("en-EG", { day: "numeric", month: "short" })}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-                {products.length > 5 && (
-                  <p className="text-[10px] text-white/20 text-center pt-1">+ {products.length - 5} more products</p>
-                )}
+                {filteredOrders.length === 0 && <EmptyState title="No orders" description="Orders from hotels will appear here." />}
               </div>
             )}
-          </div>
+          </SectionCard>
 
-          {/* Pipeline */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-            <h3 className="text-sm font-semibold text-white mb-3">Order Pipeline</h3>
-            <div className="space-y-3">
-              {[
-                { label: "Pending", count: orders.filter((o) => o.status === "PENDING_APPROVAL").length, color: "bg-amber-500" },
-                { label: "Approved", count: orders.filter((o) => o.status === "APPROVED").length, color: "bg-blue-500" },
-                { label: "In Transit", count: orders.filter((o) => o.status === "IN_TRANSIT").length, color: "bg-[#8B0000]" },
-                { label: "Delivered", count: orders.filter((o) => o.status === "DELIVERED").length, color: "bg-emerald-500" },
-              ].map((stage) => (
-                <div key={stage.label} className="flex items-center gap-3">
-                  <span className={`w-2 h-2 rounded-full ${stage.color}`} />
-                  <span className="text-xs text-white/40 flex-1">{stage.label}</span>
-                  <span className="text-xs font-semibold text-white">{stage.count}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <SectionCard title="Fulfillment Velocity" icon={Zap}>
+            <FulfillmentVelocity orders={orders} />
+          </SectionCard>
         </div>
-      </motion.div>
 
-      {/* Order Detail Modal */}
-      <Modal
-        isOpen={!!selectedOrder}
-        onClose={() => setSelectedOrder(null)}
-        title={`Order ${selectedOrder?.orderNumber}`}
-        description={`From ${selectedOrder?.hotel?.name}`}
-        size="md"
-      >
+        <div className="space-y-5">
+          <SectionCard title="Inventory Health" icon={Package}>
+            {productsLoading ? <LoadingCard rows={4} /> : <InventoryHealth products={products} />}
+          </SectionCard>
+
+          <SectionCard title="Top Buyers" icon={Building2}>
+            <HotelBuyers orders={orders} />
+          </SectionCard>
+
+          <SectionCard title="Compliance" icon={Shield}>
+            <ComplianceStatus data={complianceData ?? null} loading={complianceLoading} />
+          </SectionCard>
+        </div>
+      </div>
+
+      <Modal isOpen={!!selectedOrder} onClose={() => setSelectedOrder(null)} title={`Order ${selectedOrder?.orderNumber || ""}`}>
         {selectedOrder && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Total</p>
-                <p className="text-sm text-white mt-0.5">{formatCurrency(selectedOrder.total, selectedOrder.currency)}</p>
+              <div className="p-3 rounded-lg bg-[#0a0a0a] border border-white/[0.05]">
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Total</p>
+                <p className="text-[16px] font-bold text-white mt-0.5">{formatCurrency(selectedOrder.total, selectedOrder.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-[#0a0a0a] border border-white/[0.05]">
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Hotel</p>
+                <p className="text-[13px] text-white/70 mt-0.5 truncate">{selectedOrder.hotel?.name}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-[#0a0a0a] border border-white/[0.05]">
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Status</p>
                 <div className="mt-0.5"><StatusBadge status={selectedOrder.status} /></div>
               </div>
-            </div>
-            <div>
-              <p className="text-[10px] text-white/20 uppercase mb-2">Items</p>
-              <div className="space-y-1.5">
-                {selectedOrder.items?.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <span className="text-xs text-white/60">{item.product?.name}</span>
-                    <span className="text-xs text-white/40">× {item.quantity}</span>
-                  </div>
-                ))}
+              <div className="p-3 rounded-lg bg-[#0a0a0a] border border-white/[0.05]">
+                <p className="text-[10px] text-white/25 uppercase tracking-wider">Created</p>
+                <p className="text-[13px] text-white/70 mt-0.5">{new Date(selectedOrder.createdAt).toLocaleDateString("en-EG")}</p>
               </div>
             </div>
           </div>

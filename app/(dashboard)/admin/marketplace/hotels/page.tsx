@@ -41,8 +41,8 @@ export default function AdminHotelsPage() {
       <div className="border-b border-white/[0.06]">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-              <Building2 className="w-4 h-4 text-[#8B0000]" />
+            <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/15 flex items-center justify-center">
+              <Building2 className="w-4 h-4 text-[#8b5cf6]" />
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">Hotel Management</h1>
@@ -92,7 +92,7 @@ export default function AdminHotelsPage() {
                       {h.starRating ? (
                         <span className="flex items-center gap-0.5">
                           {Array.from({ length: h.starRating }).map((_, j) => (
-                            <Star key={j} className="w-3 h-3 text-[#8B0000] fill-[#8B0000]" />
+                            <Star key={j} className="w-3 h-3 text-[#8b5cf6] fill-[#8b5cf6]" />
                           ))}
                         </span>
                       ) : <span className="text-[12px] text-white/20">—</span>}

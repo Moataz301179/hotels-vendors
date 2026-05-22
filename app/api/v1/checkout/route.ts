@@ -1,164 +1,56 @@
 /**
- * Multi-Supplier Checkout API
- * Splits cart items by supplier and creates one Order per supplier.
+ * Checkout API
+ * POST — Calculate pricing for all payment lanes and execute checkout
  */
 
 import { NextRequest } from "next/server";
+import { apiRoute, authenticate, success, ApiError } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
-import { z } from "zod";
-import { Prisma } from "@prisma/client";
-
-const CheckoutSchema = z.object({
-  items: z.array(
-    z.object({
-      productId: z.string(),
-      quantity: z.number().min(1),
-      unitPrice: z.number(),
-      notes: z.string().optional(),
-    })
-  ),
-  address: z.object({
-    label: z.string().optional(),
-    address: z.string(),
-    city: z.string(),
-    governorate: z.string(),
-    lat: z.number().optional(),
-    lng: z.number().optional(),
-  }),
-  shippingMethod: z.enum(["express", "standard", "self"]),
-  paymentMethod: z.string(),
-  poNumber: z.string().optional(),
-  costCenter: z.string().optional(),
-  procurementNotes: z.string().optional(),
-});
-
-function generateOrderNumber(): string {
-  const date = new Date();
-  const prefix = "HV";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const random = Math.floor(1000 + Math.random() * 9000);
-  return `${prefix}-${year}${month}${day}-${random}`;
-}
+import { calculateLanePricing, executeCheckout } from "@/lib/payments/lanes";
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+
   const body = await request.json();
-  const data = CheckoutSchema.parse(body);
+  if (!body.orderId || !body.lane) {
+    throw new ApiError("orderId and lane required", 400);
+  }
 
-  // Get product details with supplier info
-  const productIds = data.items.map((i) => i.productId);
-  const products = await prisma.product.findMany({
-    where: { id: { in: productIds } },
-    include: { supplier: { select: { id: true, name: true } } },
+  const result = await executeCheckout({
+    orderId: body.orderId,
+    hotelId: auth.userId, // or get hotelId from user's context
+    lane: body.lane,
+    tenantId: auth.tenantId,
+    masterInvoiceId: body.masterInvoiceId,
   });
 
-  if (products.length !== data.items.length) {
-    return error("Some products were not found", 400);
+  if (!result.success) {
+    throw new ApiError(result.message, 400);
   }
 
-  const productMap = new Map(products.map((p) => [p.id, p]));
+  return success(result);
+});
 
-  // Group items by supplier
-  const supplierGroups = new Map<string, typeof data.items>();
-  for (const item of data.items) {
-    const product = productMap.get(item.productId);
-    if (!product) continue;
-    const sid = product.supplierId;
-    if (!supplierGroups.has(sid)) {
-      supplierGroups.set(sid, []);
-    }
-    supplierGroups.get(sid)!.push(item);
-  }
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
 
-  // Get user details
-  const user = await prisma.user.findUnique({
-    where: { id: auth.userId },
-    include: { hotel: true },
+  const { searchParams } = new URL(request.url);
+  const orderId = searchParams.get("orderId");
+  if (!orderId) throw new ApiError("orderId query param required", 400);
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId, tenantId: auth.tenantId },
+    include: { OrderItem: { include: { Product: true } } },
   });
 
-  if (!user) {
-    return error("User not found", 404);
-  }
+  if (!order) throw new ApiError("Order not found", 404);
 
-  const hotelId = user.hotelId;
-  if (!hotelId) {
-    return error("No hotel associated with user", 400);
-  }
+  const items = order.OrderItem.map((oi) => ({
+    productId: oi.productId,
+    quantity: oi.quantity,
+  }));
 
-  // Generate checkout group ID
-  const checkoutGroupId = `CG-${Date.now()}`;
+  const lanes = await calculateLanePricing(items, order.hotelId);
 
-  // Create orders
-  const createdOrders = [];
-  let orderIndex = 0;
-
-  for (const [supplierId, items] of supplierGroups) {
-    const supplier = productMap.get(items[0].productId)!.supplier;
-
-    // Calculate totals using Decimal precision
-    let subtotal = new Prisma.Decimal(0);
-    for (const item of items) {
-      subtotal = subtotal.add(new Prisma.Decimal(item.quantity).mul(item.unitPrice));
-    }
-    const vatAmount = subtotal.mul(0.14);
-    const shippingCost = data.shippingMethod === "express" ? 150 : data.shippingMethod === "standard" ? 75 : 0;
-    const total = subtotal.add(vatAmount).add(shippingCost);
-
-    // Generate order number with suffix for multi-supplier
-    const suffix = String.fromCharCode(65 + orderIndex); // A, B, C...
-    const orderNumber = `${generateOrderNumber()}-${suffix}`;
-
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        status: "DRAFT",
-        subtotal: subtotal.toNumber(),
-        vatAmount: vatAmount.toNumber(),
-        total: total.toNumber(),
-        currency: "EGP",
-        hotelId,
-        supplierId,
-        requesterId: auth.userId,
-        tenantId: auth.tenantId,
-        checkoutGroupId,
-        shippingMethod: data.shippingMethod,
-        shippingCost,
-        poNumber: data.poNumber,
-        costCenter: data.costCenter,
-        deliveryAddress: JSON.stringify(data.address),
-        deliveryInstructions: data.procurementNotes,
-        items: {
-          create: items.map((item) => ({
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            total: new Prisma.Decimal(item.quantity).mul(item.unitPrice).toNumber(),
-            productId: item.productId,
-            notes: item.notes,
-          })),
-        },
-      },
-      include: {
-        items: { include: { product: { select: { name: true } } } },
-        supplier: { select: { name: true } },
-      },
-    });
-
-    createdOrders.push(order);
-    orderIndex++;
-  }
-
-  return success({
-    orders: createdOrders.map((o) => ({
-      id: o.id,
-      orderNumber: o.orderNumber,
-      supplier: o.supplier.name,
-      total: o.total,
-      status: o.status,
-    })),
-    checkoutGroupId,
-    orderCount: createdOrders.length,
-  });
+  return success(lanes);
 });

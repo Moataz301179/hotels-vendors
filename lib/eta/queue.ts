@@ -63,7 +63,17 @@ export function createEtaWorker(): Worker {
         include: {
           hotel: true,
           supplier: true,
-          order: { include: { items: { include: { product: true } } } },
+          order: {
+            include: {
+              items: {
+                include: {
+                  product: {
+                    include: { EgsCode: true },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -82,7 +92,7 @@ export function createEtaWorker(): Worker {
         issuer: {
           type: "B" as const,
           id: invoice.supplier.taxId,
-          name: invoice.supplier.name,
+          name: invoice.supplier.legalNameAr || invoice.supplier.legalName || invoice.supplier.name,
           address: {
             country: "EG",
             governate: invoice.supplier.governorate,
@@ -94,7 +104,7 @@ export function createEtaWorker(): Worker {
         receiver: {
           type: "B" as const,
           id: invoice.hotel.taxId,
-          name: invoice.hotel.name,
+          name: invoice.hotel.legalNameAr || invoice.hotel.legalName || invoice.hotel.name,
           address: {
             country: "EG",
             governate: invoice.hotel.governorate,
@@ -110,24 +120,29 @@ export function createEtaWorker(): Worker {
         purchaseOrderReference: invoice.order.orderNumber,
         payment: { terms: "Net 30" },
         delivery: { approach: "By Truck", terms: "DAP" },
-        invoiceLines: invoice.order.items.map((item) => ({
-          description: item.product.name,
-          itemType: "EGS" as const,
-          itemCode: item.product.sku,
-          unitType: item.product.unitOfMeasure,
-          quantity: item.quantity,
-          internalCode: item.product.sku,
-          salesTotal: item.total,
-          total: item.total,
-          valueDifference: 0,
-          totalTaxableFees: 0,
-          netTotal: item.total,
-          itemsDiscount: 0,
-          discount: { amount: 0 },
-          taxableItems: [
-            { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
-          ],
-        })),
+        invoiceLines: invoice.order.items.map((item) => {
+          const egs = item.product?.EgsCode;
+          const itemType = egs?.codeType ?? "EGS";
+          const itemCode = egs?.codeValue ?? item.product?.sku ?? "UNKNOWN";
+          return {
+            description: item.product?.name ?? "Unknown item",
+            itemType: itemType as "EGS" | "GS1",
+            itemCode,
+            unitType: item.product?.unitOfMeasure ?? "piece",
+            quantity: item.quantity,
+            internalCode: item.product?.sku ?? "UNKNOWN",
+            salesTotal: item.total,
+            total: item.total,
+            valueDifference: 0,
+            totalTaxableFees: 0,
+            netTotal: item.total,
+            itemsDiscount: 0,
+            discount: { amount: 0 },
+            taxableItems: [
+              { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
+            ],
+          };
+        }),
         totalSalesAmount: invoice.subtotal,
         netAmount: invoice.subtotal,
         taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],

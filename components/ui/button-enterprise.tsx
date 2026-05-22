@@ -18,7 +18,7 @@ const buttonEnterpriseVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-b from-[var(--crimson-rich)] to-[var(--crimson-primary)] text-white border border-[var(--crimson-glow-medium)] shadow-[0_1px_2px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)_inset,0_0_24px_rgba(139,0,0,0.3)] hover:shadow-[0_4px_16px_rgba(139,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.08)_inset] hover:translate-y-[-1px] hover:from-[var(--crimson-bright)] hover:to-[var(--crimson-rich)]",
+          "bg-gradient-to-b from-[var(--crimson-rich)] to-[var(--crimson-primary)] text-white border border-[var(--crimson-glow-medium)] shadow-[0_1px_2px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)_inset,0_0_24px_rgba(139, 92, 246,0.3)] hover:shadow-[0_4px_16px_rgba(139, 92, 246,0.4),0_0_0_1px_rgba(255,255,255,0.08)_inset] hover:translate-y-[-1px] hover:from-[var(--crimson-bright)] hover:to-[var(--crimson-rich)]",
         secondary:
           "bg-[var(--surface-raised)] text-[var(--text-primary)] border border-[var(--border-default)] hover:bg-[var(--surface-hover)] hover:border-[var(--border-subtle)]",
         ghost:

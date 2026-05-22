@@ -39,7 +39,7 @@ function StatusBadge({ status }: { status: string }) {
     OPEN: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Open" },
     UNDER_REVIEW: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Under Review" },
     RESOLVED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Resolved" },
-    ESCALATED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Escalated" },
+    ESCALATED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Escalated" },
   };
   const c = config[status] || config.OPEN;
   return (
@@ -87,7 +87,7 @@ export default function DisputeCenterPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Dispute Resolution Center</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage and resolve conflicts between hotels and suppliers</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 text-xs text-white font-medium transition-all">
           <Plus size={14} />
           New Dispute
         </button>
@@ -148,7 +148,7 @@ export default function DisputeCenterPage() {
               placeholder="Search disputes, hotels, issues..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8b5cf6]/50"
             />
           </div>
           <select

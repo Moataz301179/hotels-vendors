@@ -1,377 +1,280 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  LayoutDashboard, ShieldCheck, Wallet, Users, Brain, Truck,
-  CalendarClock, ScanBarcode, Store, BarChart3, ArrowRight,
-  Settings, MapPin, PieChart, Bell, Loader2, Search,
-  Hotel, Landmark, Package, ShoppingCart, FileText,
-  Activity, TrendingUp, ArrowUpRight, ArrowDownRight,
-} from "lucide-react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import {
+  Shield, Activity, Users, Building2, TrendingUp, AlertTriangle,
+  CheckCircle2, Clock, BarChart3, Zap, Globe, CreditCard,
+  ArrowUpRight, ArrowDownRight, Search, Eye, FileText,
+  Terminal, Settings, Layers, Server, Database, Bell,
+  UserCheck, Truck, Wallet, ArrowRight, RefreshCw,
+} from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
+import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import { PageHeader } from "@/components/layout/page-header";
+import { StatCard } from "@/components/dashboards/shared/stat-card";
+import { SectionCard } from "@/components/dashboards/shared/section-card";
 
-const MODULES = [
-  {
-    group: "Operations",
-    items: [
-      { label: "Procurement Dashboard", desc: "Inventory alerts, consumption trends & restock predictions", icon: LayoutDashboard, to: "/procurement", color: "#3b82f6" },
-      { label: "Approval Matrix", desc: "AI-driven PO evaluation, CFO overrides & payment triggers", icon: ShieldCheck, to: "/admin/suppliers/pipeline", color: "#8b5cf6" },
-      { label: "Bulk Scheduler", desc: "Recurring procurement orders & automated supply runs", icon: CalendarClock, to: "/scheduler", color: "#06b6d4" },
-      { label: "Dock Receiving", desc: "Barcode-scan incoming shipments & log discrepancies", icon: ScanBarcode, to: "/orders", color: "#10b981" },
-    ],
-  },
-  {
-    group: "Finance & Compliance",
-    items: [
-      { label: "Finance & Liquidity", desc: "Credit facilities, factoring pipeline & PO-ETA reconciliation", icon: Wallet, to: "/factoring", color: "#f59e0b" },
-      { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
-      { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
-    ],
-  },
-  {
-    group: "Intelligence",
-    items: [
-      { label: "Data Explorer", desc: "Cross-tenant search across users, suppliers, hotels, orders & products", icon: Search, to: "/admin/explorer", color: "#6366f1" },
-      { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#14b8a6" },
-      { label: "Reports", desc: "Platform-wide analytics, GMV tracking & KPI dashboards", icon: PieChart, to: "/admin/reports", color: "#8b5cf6" },
-    ],
-  },
-  {
-    group: "AI Agent Core",
-    items: [
-      { label: "Grok Brain", desc: "Real-time agent execution monitor — watch tools, screenshots & results", icon: Brain, to: "/admin/grok-brain", color: "#ef4444" },
-      { label: "Orchestrator", desc: "Strategic command center for AI agent squads", icon: BarChart3, to: "/admin/orchestrator", color: "#f59e0b" },
-      { label: "Swarm", desc: "Job queue management, approvals & agent health", icon: Activity, to: "/admin/swarm", color: "#10b981" },
-    ],
-  },
-];
+/* ─── ANIMATIONS ─── */
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
+const cardEnter = {
+  hidden: { opacity: 0, y: 8, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
 
-const PORTAL_SWITCHER = [
-  { label: "Hotel Portal", desc: "Browse as hotel buyer", icon: Hotel, to: "/hotel", color: "#3b82f6", bg: "#3b82f615" },
-  { label: "Supplier Portal", desc: "Browse as supplier", icon: Store, to: "/supplier", color: "#f59e0b", bg: "#f59e0b15" },
-  { label: "Factoring Portal", desc: "Browse as factoring company", icon: Landmark, to: "/factoring", color: "#8b5cf6", bg: "#8b5cf615" },
-  { label: "Shipping Portal", desc: "Browse as logistics provider", icon: Truck, to: "/shipping", color: "#10b981", bg: "#10b98115" },
-];
-
-interface PulseData {
-  pendingApprovals: number;
-  activeOrders: number;
-  etaInvoices: number;
-  creditLines: number;
-  totalUsers: number;
-  totalHotels: number;
-  totalSuppliers: number;
-  totalProducts: number;
-  recentOrders: number;
-  monthlySpend: number;
+/* ─── TYPES ─── */
+interface User { id: string; name: string; email: string; role: string; platformRole: string; tenantName?: string; createdAt: string; lastActive?: string; }
+interface Order { id: string; orderNumber: string; status: string; total: number; hotel: { name: string }; supplier: { name: string }; createdAt: string; }
+interface ActivityLog { id: string; action: string; actor: string; resource: string; createdAt: string; severity: "info" | "warning" | "critical"; }
+interface SystemHealth { status: string; uptime: string; latency: number; errorRate: number; activeConnections: number; }
+interface RevenueMetrics {
+  totalRevenue: number; monthlyGrowth: number;
+  transactionCount: number; averageOrderValue: number;
+  byPortal: Record<string, number>;
 }
 
-interface ActivityItem {
-  id: string;
-  type: string;
-  title: string;
-  description: string;
-  amount?: number;
-  currency?: string;
-  status: string;
-  timestamp: string;
+/* ─── STATUS BADGE ─── */
+const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; label: string }> = {
+  PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
+  CONFIRMED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Confirmed" },
+  DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
+  CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
+};
+function StatusBadge({ status }: { status: string }) {
+  const c = STATUS_CONFIG[status] || STATUS_CONFIG.PENDING;
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />{c.label}
+    </span>
+  );
 }
 
-export default function AdminDashboardPage() {
-  const [pulse, setPulse] = useState<PulseData | null>(null);
-  const [activity, setActivity] = useState<ActivityItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [actLoading, setActLoading] = useState(true);
-  const [error, setError] = useState("");
+function formatCurrency(amount: number, currency = "EGP") { return `${currency} ${amount.toLocaleString("en-EG")}`; }
 
-  useEffect(() => {
-    fetch("/api/v1/admin/pulse")
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success) setPulse(json.data);
-        else setError(json.error || "Failed to load metrics");
-      })
-      .catch(() => setError("Connection failed"))
-      .finally(() => setLoading(false));
+/* ─── SEVERITY CONFIG ─── */
+const SEVERITY_CONFIG: Record<string, { icon: typeof AlertTriangle; color: string; bg: string }> = {
+  info: { icon: CheckCircle2, color: "text-blue-400", bg: "bg-blue-500/10" },
+  warning: { icon: AlertTriangle, color: "text-amber-400", bg: "bg-amber-500/10" },
+  critical: { icon: Zap, color: "text-red-400", bg: "bg-red-500/10" },
+};
 
-    fetch("/api/v1/admin/activity?limit=10")
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success) setActivity(json.data);
-      })
-      .catch(() => {})
-      .finally(() => setActLoading(false));
-  }, []);
-
-  const stats = pulse
-    ? [
-        { label: "Pending Approvals", value: pulse.pendingApprovals, color: "#f59e0b", trend: null },
-        { label: "Active Orders", value: pulse.activeOrders, color: "#3b82f6", trend: null },
-        { label: "ETA Invoices", value: pulse.etaInvoices, color: "#10b981", trend: null },
-        { label: "Credit Lines", value: pulse.creditLines, color: "#8b5cf6", trend: null },
-        { label: "Total Users", value: pulse.totalUsers, color: "#ec4899", trend: null },
-        { label: "Hotels", value: pulse.totalHotels, color: "#06b6d4", trend: null },
-        { label: "Suppliers", value: pulse.totalSuppliers, color: "#f59e0b", trend: null },
-        { label: "Products", value: pulse.totalProducts, color: "#10b981", trend: null },
-      ]
-    : [];
-
-  const statusColor = (s: string) => {
-    const map: Record<string, string> = {
-      ACTIVE: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      PENDING: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      APPROVED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      CONFIRMED: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-      DELIVERED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      IN_TRANSIT: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-      DISPUTED: "bg-red-500/10 text-red-400 border-red-500/20",
-      CANCELLED: "bg-red-500/10 text-red-400 border-red-500/20",
-      COMPLETED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    };
-    return map[s] || "bg-white/5 text-white/50 border-white/10";
-  };
-
-  const typeIcon = (t: string) => {
-    switch (t) {
-      case "ORDER": return <ShoppingCart className="w-3.5 h-3.5 text-blue-400" />;
-      case "USER": return <Users className="w-3.5 h-3.5 text-emerald-400" />;
-      case "INVOICE": return <FileText className="w-3.5 h-3.5 text-amber-400" />;
-      case "AUDIT": return <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />;
-      case "FACTORING": return <Landmark className="w-3.5 h-3.5 text-cyan-400" />;
-      default: return <Activity className="w-3.5 h-3.5 text-white/30" />;
-    }
-  };
-
-  const formatTimeAgo = (date: string) => {
-    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-    if (seconds < 60) return "Just now";
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
-  };
+/* ─── ACTIVITY FEED ─── */
+function ActivityFeed({ logs, loading }: { logs: ActivityLog[]; loading: boolean }) {
+  if (loading) return <LoadingTable rows={4} />;
+  if (!logs.length) return <EmptyState title="No activity" description="System activity will appear here." />;
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="border-b border-white/[0.06] mb-8">
-        <div className="py-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-[24px] font-bold tracking-tight text-white">Command Center</h1>
-            <p className="text-[13px] text-white/40 mt-1">Enterprise admin dashboard — all portals, all data, AI-powered</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="relative p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all">
-              <Bell className="w-5 h-5" />
-              {pulse && pulse.pendingApprovals > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#8B0000]" />
-              )}
-            </button>
-            <Link
-              href="/admin/settings"
-              className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
-            >
-              <Settings className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Portal Switcher */}
-      <div className="mb-8">
-        <h2 className="text-[11px] font-semibold text-white/30 uppercase tracking-wider mb-3">Access Any Portal</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {PORTAL_SWITCHER.map((portal) => {
-            const Icon = portal.icon;
-            return (
-              <Link
-                key={portal.label}
-                href={portal.to}
-                className="flex items-center gap-3 p-4 rounded-xl border border-white/[0.06] bg-[#0f0f0f] hover:border-white/[0.12] hover:bg-white/[0.02] transition-all group"
-              >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: portal.bg }}>
-                  <Icon className="w-5 h-5" style={{ color: portal.color }} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{portal.label}</p>
-                  <p className="text-[11px] text-white/30">{portal.desc}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-white/10 group-hover:text-white/30 ml-auto transition-colors" />
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Quick Stats */}
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] animate-pulse">
-              <div className="h-8 bg-white/5 rounded w-16 mb-2" />
-              <div className="h-3 bg-white/5 rounded w-24" />
+    <div className="space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
+      {logs.map((log) => {
+        const sev = SEVERITY_CONFIG[log.severity] || SEVERITY_CONFIG.info;
+        return (
+          <motion.div key={log.id} variants={cardEnter} initial="hidden" animate="visible"
+            className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.02] transition-colors group cursor-pointer">
+            <div className={`p-1.5 rounded-lg ${sev.bg} flex-shrink-0 mt-0.5`}>
+              <sev.icon size={12} className={sev.color} />
             </div>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">{error}</div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {stats.map((stat) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06]"
-            >
-              <div className="text-[28px] font-bold" style={{ color: stat.color }}>
-                {stat.value.toLocaleString()}
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] text-white/60 group-hover:text-white/80 transition-colors">{log.action}</p>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[10px] text-white/25">{log.actor}</span>
+                <span className="text-white/10">·</span>
+                <span className="text-[10px] text-white/20">{log.resource}</span>
               </div>
-              <div className="text-[11px] text-white/40 mt-1">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {/* Two Column: Activity + GMV */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Activity Feed */}
-        <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-[#0f0f0f]">
-          <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#ff6b6b]" />
-              <h2 className="text-sm font-semibold text-white/80">Live Activity Feed</h2>
             </div>
-            <Link href="/admin/explorer" className="text-[11px] text-white/30 hover:text-white/60 transition-colors">
-              View All →
-            </Link>
-          </div>
-          <div className="divide-y divide-white/[0.04]">
-            {actLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="p-4 animate-pulse">
-                  <div className="h-3 bg-white/5 rounded w-1/3 mb-2" />
-                  <div className="h-2 bg-white/5 rounded w-2/3" />
-                </div>
-              ))
-            ) : activity.length === 0 ? (
-              <div className="p-8 text-center text-white/20 text-sm">No recent activity</div>
-            ) : (
-              activity.map((item) => (
-                <div key={item.id} className="p-4 hover:bg-white/[0.01] transition-colors flex items-start gap-3">
-                  <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.06] mt-0.5">
-                    {typeIcon(item.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-sm font-medium text-white/70">{item.title}</span>
-                      <span className="text-[10px] text-white/20">{formatTimeAgo(item.timestamp)}</span>
-                    </div>
-                    <p className="text-xs text-white/30">{item.description}</p>
-                  </div>
-                  {item.amount && (
-                    <span className="text-xs font-medium text-white/40 whitespace-nowrap">
-                      {item.amount.toLocaleString()} {item.currency || "EGP"}
-                    </span>
-                  )}
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded border ${statusColor(item.status)}`}>
-                    {item.status}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+            <span className="text-[10px] text-white/15 flex-shrink-0">{new Date(log.createdAt).toLocaleTimeString("en-EG", { hour: "2-digit", minute: "2-digit" })}</span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
 
-        {/* Right Column: GMV + Quick Links */}
-        <div className="space-y-6">
-          {/* GMV Card */}
-          {pulse && (
-            <div className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
-              <p className="text-[11px] text-white/40 uppercase tracking-wider">Last 30 Days GMV</p>
-              <p className="text-[28px] font-bold text-white mt-2">
-                EGP {pulse.monthlySpend.toLocaleString()}
-              </p>
-              <div className="flex items-center gap-1 mt-1">
-                <TrendingUp className="w-3 h-3 text-emerald-400" />
-                <span className="text-xs text-emerald-400">{pulse.recentOrders} orders</span>
+/* ─── ENTITY MAP ─── */
+function EntityMap({ users, orders }: { users: User[]; orders: Order[] }) {
+  const counts = useMemo(() => {
+    const hotels = users.filter((u) => u.platformRole === "HOTEL").length;
+    const suppliers = users.filter((u) => u.platformRole === "SUPPLIER").length;
+    const nbfs = users.filter((u) => u.platformRole === "NBFI").length;
+    const logistics = users.filter((u) => u.platformRole === "LOGISTICS").length;
+    return { hotels, suppliers, nbfs, logistics, totalUsers: users.length, totalOrders: orders.length };
+  }, [users, orders]);
+
+  return (
+    <div className="space-y-3">
+      {[
+        { label: "Hotels", count: counts.hotels, icon: Building2, color: "text-[#8b5cf6]", bg: "bg-[#8b5cf6]/10", bar: "bg-[#8b5cf6]" },
+        { label: "Suppliers", count: counts.suppliers, icon: Warehouse, color: "text-blue-400", bg: "bg-blue-500/10", bar: "bg-blue-500" },
+        { label: "NBFI Partners", count: counts.nbfs, icon: CreditCard, color: "text-emerald-400", bg: "bg-emerald-500/10", bar: "bg-emerald-500" },
+        { label: "Logistics", count: counts.logistics, icon: Truck, color: "text-amber-400", bg: "bg-amber-500/10", bar: "bg-amber-500" },
+      ].map((e) => {
+        const maxCount = Math.max(counts.hotels, counts.suppliers, counts.nbfs, counts.logistics, 1);
+        const pct = Math.round((e.count / maxCount) * 100);
+        return (
+          <div key={e.label} className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className={`p-1 rounded-md ${e.bg}`}><e.icon size={11} className={e.color} /></div>
+                <span className="text-[11px] text-white/50 font-medium">{e.label}</span>
               </div>
-              <Link
-                href="/admin/reports"
-                className="mt-4 block text-center px-4 py-2 bg-white/[0.04] border border-white/[0.08] text-white/60 text-[12px] font-medium rounded-lg hover:bg-white/[0.08] transition-colors"
-              >
-                View Full Reports
-              </Link>
+              <span className="text-[12px] font-bold text-white/70 font-mono">{e.count}</span>
             </div>
-          )}
-
-          {/* Quick Links */}
-          <div className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-white/60 mb-3">Quick Actions</h3>
-            <div className="space-y-2">
-              {[
-                { label: "Data Explorer", to: "/admin/explorer", icon: Search },
-                { label: "AI Insights", to: "/admin/ai-insights", icon: Brain },
-                { label: "User Management", to: "/admin/users", icon: Users },
-                { label: "Grok Brain", to: "/admin/grok-brain", icon: Activity },
-              ].map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.to}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] transition-colors group"
-                  >
-                    <Icon className="w-4 h-4 text-white/30 group-hover:text-white/50" />
-                    <span className="text-sm text-white/50 group-hover:text-white/70 transition-colors">{link.label}</span>
-                    <ArrowRight className="w-3 h-3 text-white/10 group-hover:text-white/30 ml-auto transition-colors" />
-                  </Link>
-                );
-              })}
+            <div className="h-1 rounded-full bg-white/[0.03] overflow-hidden">
+              <div className={`h-full rounded-full ${e.bar} opacity-60`} style={{ width: `${Math.max(pct, 4)}%` }} />
             </div>
           </div>
-        </div>
+        );
+      })}
+      <div className="pt-2 border-t border-white/[0.03] flex items-center justify-between">
+        <span className="text-[10px] text-white/25">{counts.totalUsers} users · {counts.totalOrders} orders</span>
       </div>
+    </div>
+  );
+}
 
-      {/* Module Groups */}
-      <div className="space-y-10">
-        {MODULES.map((group, gi) => (
-          <div key={group.group}>
-            <h2 className="text-[14px] font-semibold text-white/50 uppercase tracking-wider mb-4">
-              {group.group}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {group.items.map((item, ii) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: gi * 0.1 + ii * 0.05 }}
-                >
-                  <Link
-                    href={item.to}
-                    className="group block p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all h-full"
-                  >
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                      style={{ backgroundColor: `${item.color}15` }}
-                    >
-                      <item.icon className="w-5 h-5" style={{ color: item.color }} />
-                    </div>
-                    <h3 className="text-[14px] font-semibold text-white mb-1.5 flex items-center gap-2">
-                      {item.label}
-                      <ArrowRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
-                    </h3>
-                    <p className="text-[12px] text-white/30 leading-relaxed">{item.desc}</p>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+/* ─── SYSTEM HEALTH ─── */
+function SystemHealthCard({ health, loading }: { health: SystemHealth | null; loading: boolean }) {
+  if (loading) return <LoadingCard rows={3} />;
+  if (!health) return <EmptyState title="No data" description="System health metrics will appear here." />;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <div className={`w-2 h-2 rounded-full ${health.status === "healthy" ? "bg-emerald-400 animate-pulse" : health.status === "degraded" ? "bg-amber-400" : "bg-red-400"}`} />
+        <span className={`text-[12px] font-semibold ${health.status === "healthy" ? "text-emerald-400" : health.status === "degraded" ? "text-amber-400" : "text-red-400"} uppercase tracking-wider`}>
+          {health.status}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {[
+          { label: "Uptime", value: health.uptime, icon: Clock },
+          { label: "Latency", value: `${health.latency}ms`, icon: Zap },
+          { label: "Error Rate", value: `${(health.errorRate * 100).toFixed(2)}%`, icon: AlertTriangle },
+          { label: "Connections", value: health.activeConnections.toString(), icon: Users },
+        ].map((m) => (
+          <div key={m.label} className="p-2 rounded-lg bg-white/[0.015] border border-white/[0.03]">
+            <p className="text-[9px] text-white/20 uppercase tracking-wider">{m.label}</p>
+            <p className="text-[13px] font-semibold text-white/70 mt-0.5">{m.value}</p>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+/* ─── QUICK ACTIONS ─── */
+function QuickActions() {
+  const actions = [
+    { label: "Approve Supplier", desc: "Review pending applications", icon: UserCheck, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+    { label: "Review Credit App", desc: "NBFI credit line requests", icon: CreditCard, color: "text-[#8b5cf6]", bg: "bg-[#8b5cf6]/10" },
+    { label: "Resolve Dispute", desc: "Open dispute cases", icon: AlertTriangle, color: "text-amber-400", bg: "bg-amber-500/10" },
+    { label: "Broadcast Message", desc: "Send platform notification", icon: Bell, color: "text-blue-400", bg: "bg-blue-500/10" },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {actions.map((a) => (
+        <button key={a.label} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-all group border border-transparent hover:border-white/[0.04] text-left">
+          <div className={`p-1.5 rounded-lg ${a.bg} flex-shrink-0`}><a.icon size={13} className={a.color} /></div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-medium text-white/60 group-hover:text-white/85 transition-colors">{a.label}</p>
+            <p className="text-[10px] text-white/20">{a.desc}</p>
+          </div>
+          <ArrowRight size={12} className="text-white/10 group-hover:text-white/30 transition-colors" />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── MAIN PAGE ─── */
+export default function AdminDashboardPage() {
+  const { data: pulseData, loading: pulseLoading } = useApi<{ stats: { gmv: number; ordersToday: number; activeUsers: number; newSignups: number } }>("/api/v1/admin/pulse");
+  const { data: activityData, loading: activityLoading } = useApi<{ logs: ActivityLog[] }>("/api/v1/admin/activity");
+  const { data: usersData } = useApi<{ users: User[] }>("/api/v1/admin/users");
+  const { data: ordersData } = useApi<{ orders: Order[] }>("/api/v1/admin/orders");
+  const { data: revenueData } = useApi<RevenueMetrics>("/api/v1/factoring/invoices");
+
+  const users = usersData?.users || [];
+  const orders = ordersData?.orders || [];
+  const logs = activityData?.logs || [];
+  const pulse = pulseData?.stats;
+
+  const stats = useMemo(() => {
+    return [
+      { label: "GMV Today", value: pulse ? `EGP ${(pulse.gmv / 1000000).toFixed(1)}M` : "—", change: "+12%", up: true, icon: Wallet, color: "crimson" as const },
+      { label: "Orders Today", value: pulse?.ordersToday?.toString() || "—", change: "+5", up: true, icon: BarChart3, color: "blue" as const },
+      { label: "Active Users", value: pulse?.activeUsers?.toString() || "—", change: "+8%", up: true, icon: Users, color: "emerald" as const },
+      { label: "New Signups", value: pulse?.newSignups?.toString() || "—", change: "+3", up: true, icon: UserCheck, color: "amber" as const },
+    ];
+  }, [pulse]);
+
+  return (
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6 pb-10">
+      <motion.div variants={fadeInUp}>
+        <PageHeader title="Admin Command Center" description="Platform health, activity monitoring, and operational controls."
+          breadcrumbs={[{ label: "Dashboard" }]}
+          actions={
+            <div className="flex items-center gap-2">
+              <button className="btn-ghost text-[12px] py-1.5 px-3"><RefreshCw size={14} /> Refresh</button>
+              <button className="btn-crimson text-[12px] py-1.5 px-3"><Terminal size={14} /> Console</button>
+            </div>
+          }
+        />
+      </motion.div>
+
+      <motion.div variants={staggerContainer} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((s, i) => <StatCard key={s.label} {...s} delay={i} />)}
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 space-y-5">
+          <SectionCard title="Activity Feed" icon={Activity}
+            action={<span className="text-[11px] text-white/20">{logs.length} events</span>}>
+            <ActivityFeed logs={logs} loading={activityLoading} />
+          </SectionCard>
+
+          <SectionCard title="Recent Orders" icon={BarChart3}>
+            <div className="space-y-1.5 max-h-[280px] overflow-y-auto pr-1">
+              {orders.slice(0, 6).map((order) => (
+                <motion.div key={order.id} variants={cardEnter} initial="hidden" animate="visible"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.02] transition-colors group cursor-pointer">
+                  <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0">
+                    <FileText size={13} className="text-[#8b5cf6]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-mono text-white/35">{order.orderNumber}</span>
+                      <StatusBadge status={order.status} />
+                    </div>
+                    <p className="text-[11px] text-white/35 mt-0.5">{order.hotel?.name} · {order.supplier?.name}</p>
+                  </div>
+                  <span className="text-[12px] font-semibold text-white/50 font-mono flex-shrink-0">{formatCurrency(order.total)}</span>
+                </motion.div>
+              ))}
+              {orders.length === 0 && <EmptyState title="No orders" description="Orders will appear here." />}
+            </div>
+          </SectionCard>
+        </div>
+
+        <div className="space-y-5">
+          <SectionCard title="Entity Map" icon={Globe}>
+            <EntityMap users={users} orders={orders} />
+          </SectionCard>
+
+          <SectionCard title="System Health" icon={Server}>
+            <SystemHealthCard health={null} loading={false} />
+          </SectionCard>
+
+          <SectionCard title="Quick Actions" icon={Zap}>
+            <QuickActions />
+          </SectionCard>
+        </div>
+      </div>
+    </motion.div>
   );
 }

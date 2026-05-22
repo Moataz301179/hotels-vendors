@@ -35,6 +35,10 @@ import {
   FileEdit,
   Search,
   Brain,
+  QrCode,
+  Key,
+  Webhook,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -125,6 +129,15 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       ],
     },
     {
+      section: "COMPLIANCE",
+      items: [
+        { icon: ShieldCheck, label: "Score Import", href: "/admin/compliance/scores" },
+        { icon: Key, label: "API Keys", href: "/admin/api-keys" },
+        { icon: Webhook, label: "Webhooks", href: "/admin/webhooks" },
+        { icon: Send, label: "Delivery Logs", href: "/admin/delivery-logs" },
+      ],
+    },
+    {
       section: "PLATFORM",
       items: [
         { icon: HeartPulse, label: "Health", href: "/admin/health" },
@@ -147,6 +160,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: Store, label: "Products", href: "/supplier/products" },
         { icon: ClipboardList, label: "Orders", href: "/supplier/orders" },
         { icon: BarChart3, label: "Analytics", href: "/supplier/analytics" },
+        { icon: QrCode, label: "EGS Codes", href: "/supplier/egs-codes" },
+        { icon: ShieldCheck, label: "Compliance", href: "/supplier/compliance" },
       ],
     },
     {
@@ -232,7 +247,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#8B0000] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#8b5cf6] rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -288,9 +303,9 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#8B0000] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#8b5cf6] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#8B0000]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-[#8b5cf6]" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );

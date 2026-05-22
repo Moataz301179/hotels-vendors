@@ -13,6 +13,7 @@ import type {
   EtaConfig,
   EtaDocumentStatus,
 } from "./types";
+import type { EtaEgsRegistrationPayload, EtaEgsRegistrationResponse } from "@/lib/egs/types";
 
 // ─────────────────────────────────────────
 // 1. CONFIGURATION
@@ -258,7 +259,61 @@ export async function rejectInvoice(uuid: string, reason: string): Promise<void>
 }
 
 // ─────────────────────────────────────────
-// 5. CALLBACK HANDLER
+// 5. EGS CODE APIs (Codification)
+// ─────────────────────────────────────────
+
+/**
+ * Register an EGS code with ETA on behalf of a supplier.
+ * Uses the `onbehalfof` header with the supplier's tax ID.
+ */
+export async function registerEgsCode(
+  payload: EtaEgsRegistrationPayload,
+  supplierTaxId: string
+): Promise<EtaEgsRegistrationResponse> {
+  const response = await etaFetch("/codifications", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      onbehalfof: supplierTaxId,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`ETA EGS registration failed: ${response.status} ${errorText}`);
+  }
+
+  const data = await response.json();
+  return data as EtaEgsRegistrationResponse;
+}
+
+/**
+ * List registered EGS codes for a supplier.
+ */
+export async function listEgsCodes(
+  supplierTaxId: string,
+  pageNo = 1,
+  pageSize = 50
+): Promise<EtaEgsRegistrationResponse[]> {
+  const response = await etaFetch(
+    `/codifications?pageNo=${pageNo}&pageSize=${pageSize}`,
+    {
+      headers: {
+        onbehalfof: supplierTaxId,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`ETA EGS list failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.result || [];
+}
+
+// ─────────────────────────────────────────
+// 6. CALLBACK HANDLER
 // ─────────────────────────────────────────
 
 export interface EtaCallbackPayload {
@@ -328,14 +383,81 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
 }
 
 // ─────────────────────────────────────────
-// 6. EXPORT
+// 6. MOCK MODE SWITCH
+// ─────────────────────────────────────────
+
+const MOCK_MODE = process.env.ETA_MOCK_MODE === "true";
+
+async function mockAwareSubmitInvoice(payload: EtaInvoicePayload): Promise<EtaSubmissionResponse> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.submitInvoice(payload);
+  }
+  return submitInvoice(payload);
+}
+
+async function mockAwareGetInvoice(uuid: string): Promise<EtaSubmissionResponse | null> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.getInvoice(uuid);
+  }
+  return getInvoice(uuid);
+}
+
+async function mockAwareGetInvoiceStatus(uuid: string): Promise<EtaDocumentStatus | null> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.getInvoiceStatus(uuid);
+  }
+  return getInvoiceStatus(uuid);
+}
+
+async function mockAwareCancelInvoice(uuid: string, reason: string): Promise<void> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.cancelInvoice(uuid);
+  }
+  return cancelInvoice(uuid, reason);
+}
+
+async function mockAwareRejectInvoice(uuid: string, reason: string): Promise<void> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.rejectInvoice(uuid);
+  }
+  return rejectInvoice(uuid, reason);
+}
+
+async function mockAwareRegisterEgsCode(
+  payload: EtaEgsRegistrationPayload,
+  supplierTaxId: string
+): Promise<EtaEgsRegistrationResponse> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.registerEgsCode(payload);
+  }
+  return registerEgsCode(payload, supplierTaxId);
+}
+
+async function mockAwareListEgsCodes(supplierTaxId: string): Promise<EtaEgsRegistrationResponse[]> {
+  if (MOCK_MODE) {
+    const { etaMock } = await import("./mock");
+    return etaMock.listEgsCodes();
+  }
+  return listEgsCodes(supplierTaxId);
+}
+
+// ─────────────────────────────────────────
+// 7. EXPORT
 // ─────────────────────────────────────────
 
 export const etaClient = {
-  submitInvoice,
-  getInvoice,
-  getInvoiceStatus,
-  cancelInvoice,
-  rejectInvoice,
+  submitInvoice: mockAwareSubmitInvoice,
+  getInvoice: mockAwareGetInvoice,
+  getInvoiceStatus: mockAwareGetInvoiceStatus,
+  cancelInvoice: mockAwareCancelInvoice,
+  rejectInvoice: mockAwareRejectInvoice,
+  registerEgsCode: mockAwareRegisterEgsCode,
+  listEgsCodes: mockAwareListEgsCodes,
   processCallback,
 };

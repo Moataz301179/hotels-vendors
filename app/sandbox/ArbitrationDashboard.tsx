@@ -20,7 +20,7 @@ export default function ArbitrationDashboard({
       
       <header className="flex justify-between items-center mb-10 pb-6 border-b border-white/[0.08]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#8B0000] rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-[#8b5cf6] rounded-lg flex items-center justify-center">
             <Scale className="text-white" size={20} />
           </div>
           <div>
@@ -121,7 +121,7 @@ export default function ArbitrationDashboard({
 
           <button 
             disabled={liability === "PENDING" || resolution.length < 10}
-            className="w-full py-4 rounded bg-[#8B0000] text-white font-bold shadow-lg disabled:opacity-50 hover:bg-[#a00000] transition-colors"
+            className="w-full py-4 rounded bg-[#8b5cf6] text-white font-bold shadow-lg disabled:opacity-50 hover:bg-[#a00000] transition-colors"
           >
             Execute Ruling & Release Escrow
           </button>

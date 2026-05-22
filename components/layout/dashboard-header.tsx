@@ -23,7 +23,7 @@ interface DashboardHeaderProps {
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-[#8B0000]" },
+  admin: { label: "Platform Admin", badgeColor: "bg-[#8b5cf6]" },
   hotel: { label: "Hotel Buyer", badgeColor: "bg-emerald-500" },
   supplier: { label: "Supplier", badgeColor: "bg-blue-500" },
   factoring: { label: "Factoring Partner", badgeColor: "bg-amber-500" },
@@ -60,11 +60,11 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
       {/* Center: Search */}
       <div className="flex-1 max-w-xl mx-2 sm:mx-4 lg:mx-8">
         <div className="relative group flex items-center">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#8B0000] transition-colors z-10" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#8b5cf6] transition-colors z-10" />
           <input
             type="text"
             placeholder="Search orders, suppliers, products..."
-            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8B0000]/40 focus:ring-1 focus:ring-[#8B0000]/10 transition-all"
+            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#8b5cf6]/40 focus:ring-1 focus:ring-[#8b5cf6]/10 transition-all"
           />
           <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
             <SlidersHorizontal size={11} />
@@ -90,7 +90,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         >
           <ShoppingCart size={18} />
           {totalItems > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8b5cf6] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#121212]">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}

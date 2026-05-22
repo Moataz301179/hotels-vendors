@@ -11,6 +11,7 @@ import {
 import { ButtonEnterprise } from "@/components/ui/button-enterprise";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
+import { ScoreMiniBar } from "@/components/compliance/score-badge";
 import {
   ClipboardCheck,
   Clock,
@@ -972,7 +973,7 @@ export default function AdminFactoringReviewPage() {
                   className={cn(
                     "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
                     filteredStatus === filter.value
-                      ? "bg-[var(--crimson-primary)] text-white shadow-[0_0_16px_rgba(139,0,0,0.3)]"
+                      ? "bg-[var(--crimson-primary)] text-white shadow-[0_0_16px_rgba(139, 92, 246,0.3)]"
                       : "bg-[var(--oled-elevated)] text-[var(--enterprise-500)] hover:bg-[var(--oled-raised)] hover:text-[var(--enterprise-300)]"
                   )}
                 >
@@ -1109,8 +1110,35 @@ export default function AdminFactoringReviewPage() {
                         </div>
                       </div>
 
-                      {/* Status */}
+                      {/* Risk Score */}
                       <div className="w-[140px]">
+                        <p className="text-xs text-[var(--enterprise-600)] uppercase tracking-wider">Risk Score</p>
+                        <div className="mt-1">
+                          <div className="flex items-baseline gap-1">
+                            <span className={cn(
+                              "text-sm font-bold",
+                              (application.riskScore ?? 50) >= 70 ? "text-emerald-400" :
+                              (application.riskScore ?? 50) >= 50 ? "text-amber-400" : "text-rose-400"
+                            )}>
+                              {application.riskScore ?? "—"}
+                            </span>
+                            <span className="text-[10px] text-[var(--enterprise-600)]">/100</span>
+                          </div>
+                          <div className="h-1 rounded-full bg-[var(--border-enterprise-default)] overflow-hidden mt-1">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all",
+                                (application.riskScore ?? 50) >= 70 ? "bg-emerald-500" :
+                                (application.riskScore ?? 50) >= 50 ? "bg-amber-500" : "bg-rose-500"
+                              )}
+                              style={{ width: `${application.riskScore ?? 50}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Status */}
+                      <div className="w-[120px]">
                         <StatusBadge
                           variant={statusConfig.variant}
                           dot
