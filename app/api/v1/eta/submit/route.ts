@@ -18,7 +18,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const invoice = await prisma.invoice.findUnique({
     where: { id: data.invoiceId },
-    include: { hotel: true, supplier: true, order: { include: { items: { include: { product: true } } } } },
+    include: { Hotel: true, Supplier: true, order: { include: { items: { include: { product: true } } } } },
   });
 
   if (!invoice || invoice.tenantId !== auth.tenantId) {

@@ -18,7 +18,7 @@ export const GET = apiRoute(async (request: NextRequest, { params }: { params?: 
       hotel: { select: { id: true, name: true, taxId: true } },
       supplier: { select: { id: true, name: true, taxId: true } },
       order: { include: { items: { include: { product: { select: { id: true, name: true, sku: true } } } } } },
-      factoringCompany: true,
+      FactoringCompany: true,
       payments: true,
     },
   });

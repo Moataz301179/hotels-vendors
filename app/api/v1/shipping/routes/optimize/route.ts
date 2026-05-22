@@ -17,7 +17,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const trip = await prisma.trip.findUnique({
     where: { id: data.tripId },
-    include: { stops: { include: { hotel: true } } },
+    include: { stops: { include: { Hotel: true } } },
   });
 
   if (!trip || trip.tenantId !== auth.tenantId) {

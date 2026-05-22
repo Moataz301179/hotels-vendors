@@ -43,7 +43,7 @@ export const PATCH = apiRoute(async (request: NextRequest) => {
           ? { hotel: { tenantId: auth.tenantId } }
           : {}),
     },
-    include: { hotel: true, supplier: true, items: true },
+    include: { Hotel: true, Supplier: true, items: true },
   });
 
   if (!order) {

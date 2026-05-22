@@ -15,7 +15,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { hotel: true },
+    include: { Hotel: true },
   });
 
   if (!order) return error("Order not found", 404);

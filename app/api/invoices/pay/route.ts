@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
     const inv = await prisma.invoice.findUnique({
       where: { id: invoiceId },
-      include: { hotel: true },
+      include: { Hotel: true },
     });
 
     if (!inv) {

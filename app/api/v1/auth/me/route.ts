@@ -16,7 +16,7 @@ export const GET = apiRoute(async (_request: NextRequest) => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    include: { hotel: true, approvals: { take: 5, orderBy: { createdAt: "desc" } } },
+    include: { Hotel: true, approvals: { take: 5, orderBy: { createdAt: "desc" } } },
   });
 
   if (!user) {

@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      include: { hotel: true, items: { include: { product: true } } },
+      include: { Hotel: true, items: { include: { product: true } } },
     });
 
     if (!order) {

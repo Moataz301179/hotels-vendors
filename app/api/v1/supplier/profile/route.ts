@@ -12,7 +12,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
   const user = await prisma.user.findUnique({
     where: { id: auth.userId },
-    include: { supplier: true },
+    include: { Supplier: true },
   });
 
   if (!user?.supplier) {

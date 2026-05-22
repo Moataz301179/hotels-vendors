@@ -19,7 +19,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
-    include: { hotel: true, supplier: true, order: true },
+    include: { Hotel: true, Supplier: true, order: true },
   });
 
   if (!invoice) return error("Invoice not found", 404);

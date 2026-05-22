@@ -10,8 +10,8 @@ export async function GET(
     const order = await prisma.order.findUnique({
       where: { id },
       include: {
-        hotel: true,
-        supplier: true,
+        Hotel: true,
+        Supplier: true,
         items: {
           include: {
             product: { select: { id: true, name: true, sku: true, unitOfMeasure: true } },

@@ -83,7 +83,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         })),
       },
     },
-    include: { items: { include: { product: true } }, hotel: true, supplier: true },
+    include: { items: { include: { product: true } }, Hotel: true, Supplier: true },
   });
 
   // Trigger Authority Matrix evaluation

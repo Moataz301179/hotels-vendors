@@ -54,7 +54,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       etaStatus: "PENDING",
       factoringStatus: "NOT_FACTORABLE",
     },
-    include: { hotel: true, supplier: true, order: true },
+    include: { Hotel: true, Supplier: true, order: true },
   });
 
   await audit({
