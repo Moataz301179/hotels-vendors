@@ -22,7 +22,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { hotel: true },
+    include: { Hotel: true },
   });
 
   if (!user || !user.passwordHash) {
