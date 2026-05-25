@@ -1,0 +1,22 @@
+{
+  "agent": "kimi-cli",
+  "workspace": "/var/www/hotelsvendors-v2/.workspace/kimi",
+  "role": "devops-executor",
+  "access": {
+    "ssh": true,
+    "docker": true,
+    "pm2": true,
+    "redis": true,
+    "postgres": true
+  },
+  "sync": {
+    "endpoint": "http://187.77.181.3:3000/api/mission-control/sync",
+    "interval": 30,
+    "workspace_id": "kimi"
+  },
+  "scope": [
+    "/var/www/hotelsvendors-v2",
+    "/docker",
+    "/etc/systemd/system"
+  ]
+}

@@ -51,7 +51,14 @@ export default function SwarmDashboard() {
   const [loading, setLoading] = useState(true);
   const [triggering, setTriggering] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"agents" | "jobs" | "health">("agents");
+  const [activeTab, setActiveTab] = useState<"agents" | "jobs" | "health" | "orchestrate">("orchestrate");
+  const [taskInput, setTaskInput] = useState("");
+  const [orchestrateResult, setOrchestrateResult] = useState<{
+    missionId: string;
+    agents: Array<{ id: string; name: string; avatar: string; role: string; squad: string }>;
+    summary: string;
+  } | null>(null);
+  const [orchestrating, setOrchestrating] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -135,6 +142,27 @@ export default function SwarmDashboard() {
     }
   };
 
+  const runOrchestrator = async () => {
+    if (!taskInput.trim()) return;
+    try {
+      setOrchestrating(true);
+      setOrchestrateResult(null);
+      const res = await fetch("/api/v1/swarm/orchestrate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ task: taskInput, skipApproval: true }),
+      });
+      if (!res.ok) throw new Error("Orchestrator failed");
+      const result = await res.json();
+      setOrchestrateResult(result);
+      await fetchData();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Orchestrator failed");
+    } finally {
+      setOrchestrating(false);
+    }
+  };
+
   if (loading && !data) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -183,6 +211,7 @@ export default function SwarmDashboard() {
       <div className="border-b border-white/10">
         <div className="flex gap-1">
           {[
+            { key: "orchestrate" as const, label: "🎯 Orchestrate" },
             { key: "agents" as const, label: `Agents (${data?.agents.length || 0})` },
             { key: "jobs" as const, label: `Jobs (${data?.jobs.length || 0})` },
             { key: "health" as const, label: "Health" },
@@ -205,6 +234,60 @@ export default function SwarmDashboard() {
       {/* Tab Content */}
       {data && (
         <div className="space-y-6">
+          {activeTab === "orchestrate" && (
+            <div className="space-y-6">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                <h2 className="text-lg font-semibold text-white mb-2">Multi-Agent Task Orchestrator</h2>
+                <p className="text-sm text-white/50 mb-4">
+                  Describe a development task. The swarm will analyze it, assign the right specialists,
+                  and dispatch them in parallel.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={taskInput}
+                    onChange={(e) => setTaskInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && runOrchestrator()}
+                    placeholder="e.g., Build authentication flow with JWT, RBAC, and Authority Matrix..."
+                    className="flex-1 px-4 py-2.5 rounded-lg bg-black/30 border border-white/10 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-white/30"
+                  />
+                  <button
+                    onClick={runOrchestrator}
+                    disabled={orchestrating || !taskInput.trim()}
+                    className="px-5 py-2.5 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 text-sm font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
+                  >
+                    {orchestrating ? "⏳ Dispatching..." : "🚀 Dispatch Swarm"}
+                  </button>
+                </div>
+              </div>
+
+              {orchestrateResult && (
+                <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-6 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-400 text-lg">✅</span>
+                    <h3 className="text-white font-semibold">Mission Dispatched: {orchestrateResult.missionId}</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {orchestrateResult.agents.map((agent) => (
+                      <div
+                        key={agent.id}
+                        className="rounded-lg border border-white/10 bg-white/5 p-3 flex items-center gap-3"
+                      >
+                        <span className="text-xl">{agent.avatar}</span>
+                        <div>
+                          <div className="text-white text-sm font-medium">{agent.name}</div>
+                          <div className="text-white/40 text-xs">{agent.role} • {agent.squad}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <pre className="text-xs text-white/60 bg-black/30 rounded-lg p-3 overflow-x-auto">
+                    {orchestrateResult.summary}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
           {activeTab === "agents" && (
             <AgentGrid agents={data.agents} onTriggerAgent={triggerAgent} />
           )}

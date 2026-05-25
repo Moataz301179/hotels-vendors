@@ -31,6 +31,8 @@ const PUBLIC_PATHS = [
   "/images",
   "/sw.js",
   "/preview",
+  "/mission-control",
+  "/api/mission-control",
 ];
 
 const ROLE_PATHS: Record<string, string> = {

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "swarm": "tsx scripts/swarm-dev.ts",
     "build": "next build",
     "build:prod": "next build && bash scripts/fix-standalone.sh",
     "start": "next start",

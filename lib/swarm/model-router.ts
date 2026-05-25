@@ -298,7 +298,7 @@ export interface RouterOptions {
 
 const DEFAULT_TIMEOUTS: Record<string, number> = {
   xai: 30_000,      // 30 sec — fast API
-  ollama: 120_000,  // 2 min — local models can be slow
+  ollama: 300_000,  // 2 min — local models can be slow
   groq: 30_000,
   openrouter: 45_000,
   kimi: 30_000,
