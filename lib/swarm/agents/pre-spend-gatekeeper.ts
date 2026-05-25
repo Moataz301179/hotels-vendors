@@ -1,622 +1,312 @@
 /**
- * Pre-Spend Gatekeeper — Hotels Vendors AI Agent
- * Analyzes cart/checkout before execution to prevent overspend,
- * detect anomalies, enforce budgets, and recommend optimizations.
- *
- * RULES:
- * - Read-only analysis. Never mutates orders, budgets, or carts.
- * - All money uses Prisma.Decimal(12,2).
- * - Every DB query scoped to tenantId.
- * - Returns structured risk score + recommendations.
+ * Pre-Spend Gatekeeper — AI Agent
+ * Analyzes cart before checkout: budget, anomalies, price benchmarks, credit.
+ * Returns a gate decision: APPROVE, WARN, or BLOCK.
  */
 
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import type { ProductCategory } from "@prisma/client";
+import { OrderStatus } from "@prisma/client";
 
-// ─────────────────────────────────────────
-// TYPES
-// ─────────────────────────────────────────
+export interface PreSpendInput {
+  cartId: string;
+  hotelId: string;
+  tenantId: string;
+  userId: string;
+}
 
-export interface CartItemInput {
+export interface PriceBenchmark {
   productId: string;
-  quantity: number;
-  unitPrice: number; // EGP
+  sku: string;
+  name: string;
+  currentUnitPrice: number;
+  marketAvg: number;
+  marketMin: number;
+  marketMax: number;
+  benchmarkDate: string;
 }
 
-export interface PreSpendAnalysis {
-  riskScore: number; // 0-100, higher = riskier
-  riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-  gateOpen: boolean; // false = block checkout
-  cartTotal: number;
-  vatAmount: number;
-  totalWithVat: number;
-  budgetStatus: BudgetCheckResult;
-  priceBenchmark: PriceBenchmarkResult;
-  anomalyFlags: AnomalyFlag[];
-  recommendations: string[];
-  savingsOpportunities: SavingsOpportunity[];
-  authorityRequired: boolean;
-  authorityReason?: string;
+export interface PreSpendResult {
+  decision: "APPROVE" | "WARN" | "BLOCK";
+  score: number; // 0-100
+  reasons: string[];
+  warnings: string[];
+  priceBenchmarks: PriceBenchmark[];
+  budgetStatus: {
+    allocated: number;
+    spent: number;
+    remaining: number;
+    cartTotal: number;
+    projectedRemaining: number;
+  } | null;
+  creditStatus: {
+    creditLimit: number;
+    creditUsed: number;
+    creditAvailable: number;
+    cartTotal: number;
+    projectedUtilization: number;
+  } | null;
+  anomalies: string[];
+  recommendedActions: string[];
 }
 
-interface BudgetCheckResult {
-  hasBudget: boolean;
-  budgetId?: string;
-  allocatedLimit: number;
-  remainingBuffer: number;
-  projectedSpend: number;
-  bufferAfterPurchase: number;
-  bufferRatio: number; // 0-1
-  status: "SAFE" | "WARNING" | "EXCEEDED" | "NO_BUDGET";
-}
+export async function analyzePreSpend(input: PreSpendInput): Promise<PreSpendResult> {
+  const { cartId, hotelId, tenantId } = input;
 
-interface PriceBenchmarkResult {
-  skuCount: number;
-  productsAnalyzed: number;
-  averageVsBenchmark: number; // % difference from market avg
-  cheapestAlternativeSavings: number; // EGP saved if switched to cheapest
-  bestDeals: BestDeal[];
-  overpricedItems: OverpricedItem[];
-}
-
-interface BestDeal {
-  productId: string;
-  productName: string;
-  currentPrice: number;
-  bestPrice: number;
-  bestSupplierId: string;
-  bestSupplierName: string;
-  savings: number;
-}
-
-interface OverpricedItem {
-  productId: string;
-  productName: string;
-  currentPrice: number;
-  marketAverage: number;
-  premium: number;
-  premiumPct: number;
-}
-
-interface AnomalyFlag {
-  type: "QUANTITY_SPIKE" | "PRICE_SPIKE" | "NEW_SUPPLIER" | "CATEGORY_SURGE" | "FREQUENCY_SPIKE" | "UNUSUAL_HOUR";
-  severity: "INFO" | "WARNING" | "CRITICAL";
-  message: string;
-  metadata: Record<string, unknown>;
-}
-
-interface SavingsOpportunity {
-  type: "BULK_DISCOUNT" | "SUPPLIER_SWITCH" | "LANE_SWITCH" | "CONSOLIDATION";
-  description: string;
-  potentialSavings: number;
-  actionRequired: boolean;
-}
-
-// ─────────────────────────────────────────
-// CONFIG
-// ─────────────────────────────────────────
-
-const VAT_RATE = 0.14;
-const RISK_THRESHOLDS = { LOW: 30, MEDIUM: 60, HIGH: 80 };
-const AUTHORITY_THRESHOLD = 50000; // EGP — orders above require approval
-const QUANTITY_SPIKE_MULTIPLIER = 3.0; // 3x avg = spike
-const PRICE_SPIKE_MULTIPLIER = 1.5; // 1.5x avg = spike
-const CATEGORY_SURGE_MULTIPLIER = 2.0; // 2x monthly avg = surge
-
-// ─────────────────────────────────────────
-// MAIN ANALYZER
-// ─────────────────────────────────────────
-
-export class PreSpendGatekeeper {
-  /**
-   * Analyze a cart before checkout.
-   * @param items Cart items with productId, quantity, unitPrice
-   * @param hotelId Hotel placing the order
-   * @param tenantId Tenant isolation
-   * @param userId User placing the order (for frequency checks)
-   */
-  public async analyze(
-    items: CartItemInput[],
-    hotelId: string,
-    tenantId: string,
-    userId: string
-  ): Promise<PreSpendAnalysis> {
-    // Resolve products from DB for accurate pricing/category data
-    const productIds = items.map((i) => i.productId);
-    const products = await prisma.product.findMany({
-      where: { id: { in: productIds }, tenantId },
-      include: { supplier: { select: { id: true, name: true, tier: true } } },
-    });
-
-    const productMap = new Map(products.map((p) => [p.id, p]));
-
-    // Enrich items with DB data
-    const enrichedItems = items
-      .map((item) => {
-        const product = productMap.get(item.productId);
-        if (!product) return null;
-        return {
-          ...item,
-          product,
-          lineTotal: new Prisma.Decimal(item.unitPrice).mul(item.quantity).toNumber(),
-        };
-      })
-      .filter(Boolean) as (CartItemInput & { product: (typeof products)[0]; lineTotal: number })[];
-
-    const cartTotal = enrichedItems.reduce((sum, i) => sum + i.lineTotal, 0);
-    const vatAmount = cartTotal * VAT_RATE;
-    const totalWithVat = cartTotal + vatAmount;
-
-    // Parallel analysis
-    const [budgetStatus, priceBenchmark, anomalyFlags] = await Promise.all([
-      this.checkBudget(hotelId, tenantId, totalWithVat),
-      this.benchmarkPrices(enrichedItems, tenantId),
-      this.detectAnomalies(enrichedItems, hotelId, tenantId, userId),
-    ]);
-
-    // Build recommendations
-    const recommendations = this.buildRecommendations(
-      budgetStatus,
-      priceBenchmark,
-      anomalyFlags,
-      totalWithVat
-    );
-
-    // Savings opportunities
-    const savingsOpportunities = this.findSavings(enrichedItems, priceBenchmark, tenantId);
-
-    // Calculate risk score
-    const riskScore = this.calculateRiskScore(
-      budgetStatus,
-      priceBenchmark,
-      anomalyFlags,
-      totalWithVat
-    );
-
-    const riskLevel = this.scoreToLevel(riskScore);
-    const gateOpen = riskLevel !== "CRITICAL" && budgetStatus.status !== "EXCEEDED";
-    const authorityRequired = totalWithVat >= AUTHORITY_THRESHOLD || riskLevel === "CRITICAL";
-
-    return {
-      riskScore,
-      riskLevel,
-      gateOpen,
-      cartTotal,
-      vatAmount,
-      totalWithVat,
-      budgetStatus,
-      priceBenchmark,
-      anomalyFlags,
-      recommendations,
-      savingsOpportunities,
-      authorityRequired,
-      authorityReason: authorityRequired
-        ? totalWithVat >= AUTHORITY_THRESHOLD
-          ? `Order value EGP ${totalWithVat.toFixed(2)} exceeds authority threshold of EGP ${AUTHORITY_THRESHOLD}`
-          : `Critical risk score (${riskScore}) detected`
-        : undefined,
-    };
-  }
-
-  // ─────────────────────────────────────────
-  // BUDGET CHECK
-  // ─────────────────────────────────────────
-
-  private async checkBudget(
-    hotelId: string,
-    tenantId: string,
-    projectedSpend: number
-  ): Promise<BudgetCheckResult> {
-    const now = new Date();
-    const fiscalYear = now.getFullYear();
-    const quarter = this.getQuarter(now);
-
-    const budget = await prisma.procurementBudget.findFirst({
-      where: { hotelId, tenantId, fiscalYear, quarter },
-    });
-
-    if (!budget) {
-      return {
-        hasBudget: false,
-        allocatedLimit: 0,
-        remainingBuffer: 0,
-        projectedSpend,
-        bufferAfterPurchase: -projectedSpend,
-        bufferRatio: 0,
-        status: "NO_BUDGET",
-      };
-    }
-
-    const allocated = Number(budget.allocatedCashLimit);
-    const remaining = Number(budget.remainingCashBuffer);
-    const bufferAfter = remaining - projectedSpend;
-    const bufferRatio = allocated > 0 ? bufferAfter / allocated : 0;
-
-    let status: BudgetCheckResult["status"] = "SAFE";
-    if (bufferAfter < 0) status = "EXCEEDED";
-    else if (bufferRatio < 0.1) status = "WARNING";
-
-    return {
-      hasBudget: true,
-      budgetId: budget.id,
-      allocatedLimit: allocated,
-      remainingBuffer: remaining,
-      projectedSpend,
-      bufferAfterPurchase: bufferAfter,
-      bufferRatio,
-      status,
-    };
-  }
-
-  // ─────────────────────────────────────────
-  // PRICE BENCHMARK
-  // ─────────────────────────────────────────
-
-  private async benchmarkPrices(
-    items: { productId: string; unitPrice: number; product: { sku?: string | null; name: string; category: ProductCategory } }[],
-    tenantId: string
-  ): Promise<PriceBenchmarkResult> {
-    const bestDeals: BestDeal[] = [];
-    const overpricedItems: OverpricedItem[] = [];
-    let totalVsBenchmark = 0;
-    let analyzedCount = 0;
-    let totalCheapestSavings = 0;
-
-    for (const item of items) {
-      const sku = item.product.sku;
-      if (!sku) continue;
-
-      // Find all products with same/similar SKU
-      const alternatives = await prisma.product.findMany({
-        where: {
-          tenantId,
-          sku: { contains: sku.split("-")[0] }, // Match base SKU
-          id: { not: item.productId },
+  // Fetch cart with items and products
+  const cart = await prisma.cart.findFirst({
+    where: { id: cartId, hotelId, tenantId },
+    include: {
+      CartItem: {
+        include: {
+          Product: {
+            include: { Supplier: true },
+          },
         },
-        orderBy: { unitPrice: "asc" },
-        take: 10,
-        include: { supplier: { select: { id: true, name: true } } },
-      });
-
-      if (alternatives.length === 0) continue;
-
-      analyzedCount++;
-      const prices = alternatives.map((a) => Number(a.unitPrice));
-      const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-      const min = Math.min(...prices);
-      const cheapest = alternatives[0];
-
-      totalVsBenchmark += (item.unitPrice - avg) / avg;
-
-      // Best deal detection
-      if (min < item.unitPrice) {
-        const savings = (item.unitPrice - min); // per unit
-        totalCheapestSavings += savings;
-        bestDeals.push({
-          productId: item.productId,
-          productName: item.product.name,
-          currentPrice: item.unitPrice,
-          bestPrice: min,
-          bestSupplierId: cheapest.supplier.id,
-          bestSupplierName: cheapest.supplier.name,
-          savings,
-        });
-      }
-
-      // Overpriced detection (>20% above average)
-      if (item.unitPrice > avg * 1.2) {
-        overpricedItems.push({
-          productId: item.productId,
-          productName: item.product.name,
-          currentPrice: item.unitPrice,
-          marketAverage: avg,
-          premium: item.unitPrice - avg,
-          premiumPct: ((item.unitPrice - avg) / avg) * 100,
-        });
-      }
-    }
-
-    return {
-      skuCount: items.filter((i) => i.product.sku).length,
-      productsAnalyzed: analyzedCount,
-      averageVsBenchmark: analyzedCount > 0 ? (totalVsBenchmark / analyzedCount) * 100 : 0,
-      cheapestAlternativeSavings: totalCheapestSavings,
-      bestDeals,
-      overpricedItems,
-    };
-  }
-
-  // ─────────────────────────────────────────
-  // ANOMALY DETECTION
-  // ─────────────────────────────────────────
-
-  private async detectAnomalies(
-    items: { productId: string; quantity: number; lineTotal: number; product: { category: ProductCategory; supplierId: string } }[],
-    hotelId: string,
-    tenantId: string,
-    userId: string
-  ): Promise<AnomalyFlag[]> {
-    const flags: AnomalyFlag[] = [];
-
-    // 1. Quantity spikes vs historical avg
-    for (const item of items) {
-      const avgQty = await this.getAverageOrderQuantity(hotelId, item.productId, tenantId);
-      if (avgQty > 0 && item.quantity > avgQty * QUANTITY_SPIKE_MULTIPLIER) {
-        flags.push({
-          type: "QUANTITY_SPIKE",
-          severity: "WARNING",
-          message: `Quantity ${item.quantity} is ${(item.quantity / avgQty).toFixed(1)}x your average order for this product`,
-          metadata: { productId: item.productId, quantity: item.quantity, average: avgQty },
-        });
-      }
-    }
-
-    // 2. Price spikes vs historical avg
-    for (const item of items) {
-      const avgPrice = await this.getAverageUnitPrice(hotelId, item.productId, tenantId);
-      if (avgPrice > 0 && item.lineTotal / item.quantity > avgPrice * PRICE_SPIKE_MULTIPLIER) {
-        flags.push({
-          type: "PRICE_SPIKE",
-          severity: "CRITICAL",
-          message: `Unit price EGP ${(item.lineTotal / item.quantity).toFixed(2)} is ${((item.lineTotal / item.quantity) / avgPrice).toFixed(1)}x your historical average`,
-          metadata: { productId: item.productId, unitPrice: item.lineTotal / item.quantity, average: avgPrice },
-        });
-      }
-    }
-
-    // 3. New supplier detection
-    const supplierIds = [...new Set(items.map((i) => i.product.supplierId))];
-    for (const supplierId of supplierIds) {
-      const previousOrders = await prisma.order.count({
-        where: { hotelId, supplierId, tenantId },
-      });
-      if (previousOrders === 0) {
-        const supplier = await prisma.supplier.findUnique({
-          where: { id: supplierId },
-          select: { name: true },
-        });
-        flags.push({
-          type: "NEW_SUPPLIER",
-          severity: "INFO",
-          message: `First order with ${supplier?.name ?? "new supplier"}. Verify quality and terms.`,
-          metadata: { supplierId, supplierName: supplier?.name },
-        });
-      }
-    }
-
-    // 4. Category surge vs monthly avg
-    const categoryTotals: Record<string, number> = {};
-    for (const item of items) {
-      const cat = item.product.category;
-      categoryTotals[cat] = (categoryTotals[cat] || 0) + item.lineTotal;
-    }
-    for (const [category, total] of Object.entries(categoryTotals)) {
-      const monthlyAvg = await this.getMonthlyCategorySpend(hotelId, category as ProductCategory, tenantId);
-      if (monthlyAvg > 0 && total > monthlyAvg * CATEGORY_SURGE_MULTIPLIER) {
-        flags.push({
-          type: "CATEGORY_SURGE",
-          severity: "WARNING",
-          message: `${category} spend EGP ${total.toFixed(2)} is ${(total / monthlyAvg).toFixed(1)}x your monthly average`,
-          metadata: { category, amount: total, monthlyAverage: monthlyAvg },
-        });
-      }
-    }
-
-    // 5. Frequency spike — too many orders today
-    const todayOrders = await prisma.order.count({
-      where: {
-        hotelId,
-        tenantId,
-        createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
       },
-    });
-    if (todayOrders > 5) {
-      flags.push({
-        type: "FREQUENCY_SPIKE",
-        severity: "INFO",
-        message: `${todayOrders} orders placed in the last 24 hours`,
-        metadata: { orderCount: todayOrders },
-      });
-    }
+    },
+  });
 
-    // 6. Unusual hour (outside 6am-10pm Cairo)
-    const hour = new Date().getHours();
-    if (hour < 6 || hour > 22) {
-      flags.push({
-        type: "UNUSUAL_HOUR",
-        severity: "INFO",
-        message: `Order placed at unusual hour (${hour}:00). Verify authorization.`,
-        metadata: { hour },
-      });
-    }
-
-    return flags;
+  if (!cart) {
+    return blockResult("Cart not found or does not belong to this hotel.");
   }
 
-  // ─────────────────────────────────────────
-  // RECOMMENDATIONS
-  // ─────────────────────────────────────────
-
-  private buildRecommendations(
-    budget: BudgetCheckResult,
-    benchmark: PriceBenchmarkResult,
-    flags: AnomalyFlag[],
-    total: number
-  ): string[] {
-    const recs: string[] = [];
-
-    if (budget.status === "NO_BUDGET") {
-      recs.push("No procurement budget set for this quarter. Set a budget to enable spend tracking.");
-    } else if (budget.status === "EXCEEDED") {
-      recs.push(`Budget exceeded by EGP ${Math.abs(budget.bufferAfterPurchase).toFixed(2)}. Consider deferring non-essential items.`);
-    } else if (budget.status === "WARNING") {
-      recs.push(`Budget buffer low (${(budget.bufferRatio * 100).toFixed(1)}% remaining). Monitor closely.`);
-    }
-
-    if (benchmark.cheapestAlternativeSavings > 0) {
-      recs.push(`Save EGP ${benchmark.cheapestAlternativeSavings.toFixed(2)} by switching to cheaper suppliers for ${benchmark.bestDeals.length} items.`);
-    }
-
-    if (benchmark.overpricedItems.length > 0) {
-      recs.push(`${benchmark.overpricedItems.length} items are priced above market average. Negotiate or switch suppliers.`);
-    }
-
-    const criticalFlags = flags.filter((f) => f.severity === "CRITICAL");
-    for (const flag of criticalFlags) {
-      recs.push(`[CRITICAL] ${flag.message}`);
-    }
-
-    if (total >= AUTHORITY_THRESHOLD) {
-      recs.push(`Order exceeds EGP ${AUTHORITY_THRESHOLD} authority threshold. Manager approval required.`);
-    }
-
-    return recs;
+  if (cart.CartItem.length === 0) {
+    return blockResult("Cart is empty.");
   }
 
-  // ─────────────────────────────────────────
-  // SAVINGS OPPORTUNITIES
-  // ─────────────────────────────────────────
+  const cartTotal = cart.CartItem.reduce((sum, item) => sum + Number(item.total), 0);
+  const reasons: string[] = [];
+  const warnings: string[] = [];
+  const anomalies: string[] = [];
+  const recommendedActions: string[] = [];
 
-  private findSavings(
-    items: { quantity: number; product: { id: string; name: string; category: ProductCategory; supplierId: string } }[],
-    benchmark: PriceBenchmarkResult,
-    tenantId: string
-  ): SavingsOpportunity[] {
-    const ops: SavingsOpportunity[] = [];
-
-    // Supplier switch savings
-    for (const deal of benchmark.bestDeals) {
-      ops.push({
-        type: "SUPPLIER_SWITCH",
-        description: `Switch ${deal.productName} to ${deal.bestSupplierName} at EGP ${deal.bestPrice.toFixed(2)}/unit`,
-        potentialSavings: deal.savings,
-        actionRequired: true,
-      });
+  // ── 1. BUDGET CHECK ──
+  const budgetStatus = await checkBudget(hotelId, tenantId, cartTotal);
+  if (budgetStatus) {
+    if (budgetStatus.projectedRemaining < 0) {
+      anomalies.push(`Cart total (${fmt(cartTotal)}) exceeds remaining budget (${fmt(budgetStatus.remaining)}).`);
+      recommendedActions.push("Request budget increase or remove items.");
+    } else if (budgetStatus.projectedRemaining < budgetStatus.allocated * 0.1) {
+      warnings.push(`Budget nearly depleted after this order. Remaining: ${fmt(budgetStatus.projectedRemaining)}.`);
+    } else {
+      reasons.push(`Within budget. Remaining after order: ${fmt(budgetStatus.projectedRemaining)}.`);
     }
+  }
 
-    // Bulk discount detection
-    const categoryGroups: Record<string, typeof items> = {};
-    for (const item of items) {
-      const cat = item.product.category;
-      if (!categoryGroups[cat]) categoryGroups[cat] = [];
-      categoryGroups[cat].push(item);
+  // ── 2. CREDIT CHECK ──
+  const creditStatus = await checkCredit(hotelId, cartTotal);
+  if (creditStatus) {
+    if (creditStatus.projectedUtilization > 0.95) {
+      anomalies.push(`Credit utilization would reach ${pct(creditStatus.projectedUtilization)}. Limit: ${fmt(creditStatus.creditLimit)}.`);
+      recommendedActions.push("Pay down outstanding balance or request credit line increase.");
+    } else if (creditStatus.projectedUtilization > 0.8) {
+      warnings.push(`Credit utilization would be ${pct(creditStatus.projectedUtilization)}.`);
+    } else {
+      reasons.push(`Credit healthy. Utilization after order: ${pct(creditStatus.projectedUtilization)}.`);
     }
-    for (const [cat, group] of Object.entries(categoryGroups)) {
-      const totalQty = group.reduce((s, i) => s + i.quantity, 0);
-      if (totalQty >= 50) {
-        ops.push({
-          type: "BULK_DISCOUNT",
-          description: `Bulk order ${totalQty} units in ${cat}. Negotiate 5-10% volume discount with supplier.`,
-          potentialSavings: group.reduce((s, i) => s + i.quantity, 0) * 0.05, // rough estimate
-          actionRequired: false,
-        });
-      }
+  }
+
+  // ── 3. PRICE BENCHMARKING ──
+  const priceBenchmarks = await benchmarkPrices(cart.CartItem.map((i) => i.productId), tenantId);
+  for (const pb of priceBenchmarks) {
+    if (pb.currentUnitPrice > pb.marketAvg * 1.2) {
+      warnings.push(`${pb.name} is ${pct(pb.currentUnitPrice / pb.marketAvg - 1)} above market average.`);
+      recommendedActions.push(`Consider alternative supplier for ${pb.sku}.`);
     }
-
-    return ops;
   }
 
-  // ─────────────────────────────────────────
-  // RISK SCORING
-  // ─────────────────────────────────────────
+  // ── 4. ANOMALY DETECTION ──
+  const orderAnomalies = await detectAnomalies(hotelId, tenantId, cart);
+  anomalies.push(...orderAnomalies);
 
-  private calculateRiskScore(
-    budget: BudgetCheckResult,
-    benchmark: PriceBenchmarkResult,
-    flags: AnomalyFlag[],
-    total: number
-  ): number {
-    let score = 0;
-
-    // Budget risk (0-40)
-    if (budget.status === "EXCEEDED") score += 40;
-    else if (budget.status === "WARNING") score += 25;
-    else if (budget.status === "NO_BUDGET") score += 10;
-
-    // Price risk (0-25)
-    if (benchmark.overpricedItems.length > 0) {
-      score += Math.min(25, benchmark.overpricedItems.length * 8);
+  // ── 5. SUPPLIER RISK ──
+  const supplierIds = [...new Set(cart.CartItem.map((i) => i.Product.supplierId))];
+  const suppliers = await prisma.supplier.findMany({
+    where: { id: { in: supplierIds }, tenantId },
+    select: { id: true, name: true, complianceStatus: true, rating: true, status: true },
+  });
+  for (const s of suppliers) {
+    if (s.complianceStatus !== "ACTIVE") {
+      warnings.push(`Supplier ${s.name} compliance status: ${s.complianceStatus}.`);
     }
-
-    // Anomaly risk (0-25)
-    const criticalCount = flags.filter((f) => f.severity === "CRITICAL").length;
-    const warningCount = flags.filter((f) => f.severity === "WARNING").length;
-    score += criticalCount * 15 + warningCount * 5;
-
-    // Value risk (0-10)
-    if (total >= 100000) score += 10;
-    else if (total >= 50000) score += 5;
-    else if (total >= 25000) score += 2;
-
-    return Math.min(100, score);
+    if (s.status !== "ACTIVE" && s.status !== "APPROVED") {
+      anomalies.push(`Supplier ${s.name} is not active (status: ${s.status}).`);
+    }
+    if (s.rating !== null && Number(s.rating) < 2.5) {
+      warnings.push(`Supplier ${s.name} has low rating (${Number(s.rating).toFixed(1)}).`);
+    }
   }
 
-  private scoreToLevel(score: number): PreSpendAnalysis["riskLevel"] {
-    if (score >= RISK_THRESHOLDS.HIGH) return "CRITICAL";
-    if (score >= RISK_THRESHOLDS.MEDIUM) return "HIGH";
-    if (score >= RISK_THRESHOLDS.LOW) return "MEDIUM";
-    return "LOW";
-  }
+  // ── 6. SCORING & DECISION ──
+  let score = 100;
+  score -= anomalies.length * 20;
+  score -= warnings.length * 10;
+  score = Math.max(0, Math.min(100, score));
 
-  // ─────────────────────────────────────────
-  // HISTORICAL HELPERS
-  // ─────────────────────────────────────────
+  let decision: PreSpendResult["decision"] = "APPROVE";
+  if (anomalies.length > 0) decision = "BLOCK";
+  else if (warnings.length > 0) decision = "WARN";
 
-  private async getAverageOrderQuantity(
-    hotelId: string,
-    productId: string,
-    tenantId: string
-  ): Promise<number> {
-    const result = await prisma.orderItem.aggregate({
-      where: {
-        productId,
-        Order: { hotelId, tenantId },
-      },
-      _avg: { quantity: true },
-    });
-    return result._avg.quantity ?? 0;
-  }
-
-  private async getAverageUnitPrice(
-    hotelId: string,
-    productId: string,
-    tenantId: string
-  ): Promise<number> {
-    const result = await prisma.orderItem.aggregate({
-      where: {
-        productId,
-        Order: { hotelId, tenantId },
-      },
-      _avg: { unitPrice: true },
-    });
-    return result._avg.unitPrice ? Number(result._avg.unitPrice) : 0;
-  }
-
-  private async getMonthlyCategorySpend(
-    hotelId: string,
-    category: ProductCategory,
-    tenantId: string
-  ): Promise<number> {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const result = await prisma.orderItem.aggregate({
-      where: {
-        Product: { category },
-        Order: { hotelId, tenantId, createdAt: { gte: thirtyDaysAgo } },
-      },
-      _sum: { total: true },
-    });
-    return result._sum.total ? Number(result._sum.total) : 0;
-  }
-
-  private getQuarter(date: Date): "Q1" | "Q2" | "Q3" | "Q4" {
-    const m = date.getMonth();
-    if (m < 3) return "Q1";
-    if (m < 6) return "Q2";
-    if (m < 9) return "Q3";
-    return "Q4";
-  }
+  return {
+    decision,
+    score,
+    reasons,
+    warnings,
+    priceBenchmarks,
+    budgetStatus,
+    creditStatus,
+    anomalies,
+    recommendedActions,
+  };
 }
 
-// Singleton export
-export const preSpendGatekeeper = new PreSpendGatekeeper();
+// ── Helpers ──
+
+async function checkBudget(hotelId: string, tenantId: string, cartTotal: number) {
+  const now = new Date();
+  const fy = now.getFullYear();
+  const q: Array<"Q1" | "Q2" | "Q3" | "Q4"> = ["Q1", "Q2", "Q3", "Q4"];
+  const quarter = q[Math.floor(now.getMonth() / 3)];
+
+  const budgets = await prisma.procurementBudget.findMany({
+    where: { hotelId, tenantId, fiscalYear: fy, quarter },
+  });
+
+  if (budgets.length === 0) return null;
+
+  const allocated = budgets.reduce((s, b) => s + Number(b.allocatedCashLimit), 0);
+  const spent = budgets.reduce((s, b) => s + Number(b.totalSpend), 0);
+  const remaining = budgets.reduce((s, b) => s + Number(b.remainingCashBuffer), 0);
+
+  return {
+    allocated,
+    spent,
+    remaining,
+    cartTotal,
+    projectedRemaining: remaining - cartTotal,
+  };
+}
+
+async function checkCredit(hotelId: string, cartTotal: number) {
+  const hotel = await prisma.hotel.findUnique({
+    where: { id: hotelId },
+    select: { creditLimit: true, creditUsed: true },
+  });
+  if (!hotel || hotel.creditLimit == null) return null;
+
+  const limit = Number(hotel.creditLimit);
+  const used = Number(hotel.creditUsed ?? 0);
+  const available = limit - used;
+  const projected = limit > 0 ? (used + cartTotal) / limit : 0;
+
+  return {
+    creditLimit: limit,
+    creditUsed: used,
+    creditAvailable: available,
+    cartTotal,
+    projectedUtilization: projected,
+  };
+}
+
+async function benchmarkPrices(productIds: string[], tenantId: string): Promise<PriceBenchmark[]> {
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds }, tenantId },
+    select: { id: true, sku: true, name: true, unitPrice: true, category: true },
+  });
+
+  const results: PriceBenchmark[] = [];
+  for (const p of products) {
+    const peers = await prisma.product.findMany({
+      where: { category: p.category, tenantId, NOT: { id: p.id } },
+      select: { unitPrice: true },
+      take: 50,
+    });
+    const prices = peers.map((x) => Number(x.unitPrice)).filter((x) => x > 0);
+    const current = Number(p.unitPrice);
+
+    if (prices.length === 0) {
+      results.push({
+        productId: p.id,
+        sku: p.sku,
+        name: p.name,
+        currentUnitPrice: current,
+        marketAvg: current,
+        marketMin: current,
+        marketMax: current,
+        benchmarkDate: new Date().toISOString(),
+      });
+      continue;
+    }
+
+    const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+    results.push({
+      productId: p.id,
+      sku: p.sku,
+      name: p.name,
+      currentUnitPrice: current,
+      marketAvg: avg,
+      marketMin: Math.min(...prices),
+      marketMax: Math.max(...prices),
+      benchmarkDate: new Date().toISOString(),
+    });
+  }
+  return results;
+}
+
+async function detectAnomalies(
+  hotelId: string,
+  tenantId: string,
+  cart: { CartItem: Array<{ Product: { supplierId: string }; quantity: number; total: number }> }
+) {
+  const anomalies: string[] = [];
+
+  // Unusual order size
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const recentOrders = await prisma.order.findMany({
+    where: {
+      hotelId,
+      tenantId,
+      createdAt: { gte: thirtyDaysAgo },
+      status: { notIn: [OrderStatus.DRAFT, OrderStatus.CANCELLED, OrderStatus.REJECTED] },
+    },
+    select: { totalAmount: true },
+  });
+
+  const cartTotal = cart.CartItem.reduce((s, i) => s + Number(i.total), 0);
+  if (recentOrders.length > 0) {
+    const avgOrder = recentOrders.reduce((s, o) => s + Number(o.totalAmount), 0) / recentOrders.length;
+    if (cartTotal > avgOrder * 3) {
+      anomalies.push(`Order value (${fmt(cartTotal)}) is >3x your 30-day average (${fmt(avgOrder)}).`);
+    }
+  }
+
+  // Single-supplier concentration
+  const supplierIds = cart.CartItem.map((i) => i.Product.supplierId);
+  const uniqueSuppliers = new Set(supplierIds);
+  if (uniqueSuppliers.size === 1 && cart.CartItem.length > 2) {
+    anomalies.push("High supplier concentration: all items from one supplier.");
+  }
+
+  return anomalies;
+}
+
+function blockResult(reason: string): PreSpendResult {
+  return {
+    decision: "BLOCK",
+    score: 0,
+    reasons: [],
+    warnings: [],
+    priceBenchmarks: [],
+    budgetStatus: null,
+    creditStatus: null,
+    anomalies: [reason],
+    recommendedActions: ["Review cart and try again."],
+  };
+}
+
+function fmt(n: number) {
+  return `${n.toFixed(2)} EGP`;
+}
+function pct(n: number) {
+  return `${(n * 100).toFixed(0)}%`;
+}

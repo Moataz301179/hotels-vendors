@@ -556,6 +556,8 @@ model Hotel {
   loyaltyAccount       LoyaltyAccount?
   creditLine           HotelCreditLine?
   digitalAgreements    DigitalAgreement[]
+  BudgetGates          BudgetGate[]
+  SpendRequests        SpendRequest[]
 }
 
 model InventorySnapshot {
@@ -818,6 +820,7 @@ model Outlet {
   Order          Order[]
   Property       Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   Tenant         Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  SpendRequests  SpendRequest[]
 }
 
 model OutreachLog {
@@ -937,6 +940,7 @@ model Product {
   Tenant            Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   ProductReview     ProductReview[]
   EgsCode           EgsCode?
+  SpendRequestItems SpendRequestItem[]
 }
 
 model ProductReview {
@@ -996,6 +1000,7 @@ model Property {
   Outlet      Outlet[]
   Hotel       Hotel        @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   Tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  SpendRequests SpendRequest[]
 }
 
 model Role {
@@ -1163,6 +1168,7 @@ model Supplier {
   EgsCode                  EgsCode[]
   CompanyScore             CompanyScore[]
   SupplierCertificate      SupplierCertificate[]
+  PreferredSpendRequests   SpendRequest[]
 }
 
 model CompanyScore {
@@ -1374,6 +1380,8 @@ model Tenant {
   hotelCreditLines        HotelCreditLine[]
   creditDraws             CreditDraw[]
   creditRepayments        CreditRepayment[]
+  BudgetGates             BudgetGate[]
+  SpendRequests           SpendRequest[]
 }
 
 model Trip {
@@ -1455,6 +1463,9 @@ model User {
   UserAddress           UserAddress[]
   factoringApplications FactoringApplication[]
   Notification          Notification[]
+  SpendRequests         SpendRequest[]
+  ApprovedSpendRequests SpendRequest[] @relation("SpendRequestApprover")
+  SpendGatekeeperLogs   SpendGatekeeperLog[]
 }
 
 model UserAddress {
@@ -2665,6 +2676,45 @@ enum AgreementStatus {
   VOIDED
 }
 
+// ═══════════════════════════════════════════════════════════════
+// PRE-SPEND GATEKEEPER — Budget control & upstream approval
+// ═══════════════════════════════════════════════════════════════
+
+enum SpendRequestStatus {
+  DRAFT
+  SUBMITTED
+  GATEKEEPER_EVALUATING
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  CONVERTED_TO_ORDER
+  CANCELLED
+}
+
+enum GatekeeperDecision {
+  PASS
+  FLAG_BUDGET_EXCEEDED
+  FLAG_AUTHORITY_MISMATCH
+  FLAG_SUPPLIER_RISK
+  FLAG_DUPLICATE
+  FLAG_SEASONAL_ANOMALY
+  BLOCKED
+}
+
+enum BudgetPeriod {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+  CUSTOM
+}
+
+enum BudgetGateStatus {
+  ACTIVE
+  EXHAUSTED
+  WARNING
+  FROZEN
+}
+
 enum ScoreSource {
   I_SCORE
   DUN_BRADSTREET
@@ -2684,4 +2734,141 @@ enum CertificateStatus {
   EXPIRED
   REVOKED
   PENDING_UPLOAD
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODELS: Pre-Spend Gatekeeper
+// ═══════════════════════════════════════════════════════════════
+
+model BudgetGate {
+  id              String          @id @default(cuid())
+  name            String
+  hotelId         String
+  Hotel           Hotel           @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId        String
+  Tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  // Budget scope
+  period          BudgetPeriod    @default(MONTHLY)
+  periodStart     DateTime
+  periodEnd       DateTime
+  totalBudget     Decimal         @db.Decimal(12, 2)
+  spentAmount     Decimal         @default(0) @db.Decimal(12, 2)
+  reservedAmount  Decimal         @default(0) @db.Decimal(12, 2)
+  
+  // Category-level gates (JSON: { "FOOD_BEVERAGE": 50000, "HOUSEKEEPING": 30000 })
+  categoryBudgets String?
+  categorySpent   String?
+  
+  // Controls
+  status          BudgetGateStatus @default(ACTIVE)
+  warningThreshold Decimal        @default(80) // percentage
+  hardCap         Boolean         @default(true)
+  
+  // Roll-over settings
+  allowRollover   Boolean         @default(false)
+  rolloverFromId  String?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now()) @updatedAt
+  
+  @@index([hotelId, periodStart, periodEnd])
+  @@index([tenantId, status])
+}
+
+model SpendRequest {
+  id                  String             @id @default(cuid())
+  requestNumber       String             @unique
+  status              SpendRequestStatus @default(DRAFT)
+  
+  // Requester
+  hotelId             String
+  Hotel               Hotel              @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  propertyId          String?
+  Property            Property?          @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  outletId            String?
+  Outlet              Outlet?            @relation(fields: [outletId], references: [id], onDelete: SetNull)
+  requesterId         String
+  Requester           User               @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  tenantId            String
+  Tenant              Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  // Financials
+  subtotal            Decimal            @db.Decimal(12, 2)
+  vatAmount           Decimal            @db.Decimal(12, 2)
+  total               Decimal            @db.Decimal(12, 2)
+  currency            String             @default("EGP")
+  
+  // Supplier & delivery
+  preferredSupplierId String?
+  PreferredSupplier   Supplier?          @relation(fields: [preferredSupplierId], references: [id], onDelete: SetNull)
+  deliveryDate        DateTime?
+  deliveryInstructions String?
+  costCenter          String?
+  
+  // Gatekeeper evaluation
+  gatekeeperDecision  GatekeeperDecision?
+  gatekeeperScore     Int?               // 0-100 risk score
+  gatekeeperReasons   String?            // JSON array of flag reasons
+  gatekeeperEvaluatedAt DateTime?
+  
+  // Approval chain
+  requiredApproverRole UserRole?
+  approvedById        String?
+  ApprovedBy          User?              @relation(fields: [approvedById], references: [id], onDelete: SetNull, name: "SpendRequestApprover")
+  approvedAt          DateTime?
+  rejectionReason     String?
+  
+  // Conversion
+  convertedOrderId    String?
+  
+  // Items
+  items               SpendRequestItem[]
+  logs                SpendGatekeeperLog[]
+  
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @default(now()) @updatedAt
+  
+  @@index([hotelId, status])
+  @@index([tenantId, createdAt])
+  @@index([requesterId, status])
+}
+
+model SpendRequestItem {
+  id              String       @id @default(cuid())
+  spendRequestId  String
+  SpendRequest    SpendRequest @relation(fields: [spendRequestId], references: [id], onDelete: Cascade)
+  
+  productId       String?
+  Product         Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+  
+  description     String
+  quantity        Int
+  unitPrice       Decimal      @db.Decimal(12, 2)
+  total           Decimal      @db.Decimal(12, 2)
+  
+  // AI-suggested alternatives
+  aiSuggestions   String?      // JSON: [{ supplierId, unitPrice, savingsPct }]
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
+  
+  @@index([spendRequestId])
+}
+
+model SpendGatekeeperLog {
+  id              String             @id @default(cuid())
+  spendRequestId  String
+  SpendRequest    SpendRequest       @relation(fields: [spendRequestId], references: [id], onDelete: Cascade)
+  
+  event           String             // BUDGET_CHECK, AUTHORITY_CHECK, SUPPLIER_RISK, AI_SCORE, APPROVAL, REJECTION
+  decision        GatekeeperDecision?
+  score           Int?
+  details         String?            // JSON context
+  actorId         String?
+  Actor           User?              @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  
+  createdAt       DateTime           @default(now())
+  
+  @@index([spendRequestId, createdAt])
 }

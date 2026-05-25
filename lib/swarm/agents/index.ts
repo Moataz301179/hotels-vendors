@@ -144,11 +144,53 @@ const LEGACY_AGENTS: SwarmAgentDef[] = [
   },
 ];
 
+
+// TRANSFORMATION AGENTS — Mission Control v3
+const TRANSFORMATION_AGENTS: SwarmAgentDef[] = [
+  {
+    id: "pre-spend-gatekeeper",
+    name: "Pre-Spend Gatekeeper",
+    squad: "intelligence",
+    avatar: "🛡️",
+    role: "Cart analysis & purchase gatekeeper before checkout",
+    systemPrompt: `You are the Pre-Spend Gatekeeper for Hotels Vendors. Before any order is finalized, you analyze the cart for: budget compliance, credit utilization, price benchmarks against market averages, supplier risk (compliance status, rating), and order anomalies (unusual size, supplier concentration). You return a gate decision: APPROVE, WARN, or BLOCK. You provide specific reasons, warnings, and recommended actions.`,
+    capabilities: ["budget_check", "credit_check", "price_benchmarking", "supplier_risk_scan", "anomaly_detection", "gate_decision"],
+    tools: ["database_query", "memory_read", "memory_write"],
+    requiresApproval: false,
+    memoryCategory: "transaction",
+  },
+  {
+    id: "cost-optimizer",
+    name: "Cost Optimizer",
+    squad: "intelligence",
+    avatar: "💰",
+    role: "Cost-saving recommendations & procurement optimization",
+    systemPrompt: `You are the Cost Optimizer for Hotels Vendors. You analyze carts and historical purchases to recommend: cheaper substitute products, bulk discount opportunities, supplier consolidation to reduce shipping overhead, and optimal credit term usage. You quantify every recommendation in EGP savings.`,
+    capabilities: ["substitution_recommendation", "bulk_discount_detection", "supplier_consolidation", "credit_term_optimization", "savings_quantification"],
+    tools: ["database_query", "memory_read", "memory_write"],
+    requiresApproval: false,
+    memoryCategory: "transaction",
+  },
+  {
+    id: "cashflow-planner",
+    name: "Cashflow Planner",
+    squad: "fintech",
+    avatar: "📊",
+    role: "Cashflow forecasting, liquidity gap detection & factoring recommendations",
+    systemPrompt: `You are the Cashflow Planner for Hotels Vendors. You forecast hotel cash positions over 30-90 day horizons. You detect liquidity gaps before they become crises. You identify factoring opportunities on outstanding invoices. You recommend payment timing, credit line usage, and working capital strategies.`,
+    capabilities: ["cashflow_forecast", "liquidity_gap_detection", "factoring_opportunity_scan", "payment_timing_recommendation", "working_capital_strategy"],
+    tools: ["database_query", "memory_read", "memory_write"],
+    requiresApproval: false,
+    memoryCategory: "financial",
+  },
+];
+
 // Build unified registry: sector agents + unique legacy agents
 const sectorIds = new Set(SECTOR_AGENTS.map((a) => a.id));
 const uniqueLegacy = LEGACY_AGENTS.filter((a) => !sectorIds.has(a.id));
 
 export const SWARM_AGENTS: SwarmAgentDef[] = [
+  ...TRANSFORMATION_AGENTS,
   ...SECTOR_AGENTS.map((a: SectorAgentDef): SwarmAgentDef => ({
     id: a.id,
     name: a.name,
