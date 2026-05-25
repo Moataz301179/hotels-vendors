@@ -4,118 +4,122 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Shield, TrendingDown, BarChart3, Activity, CheckCircle2,
-  AlertTriangle, XCircle, RefreshCw, Server, Zap, Clock
+  RefreshCw, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2,
+  XCircle, Clock, Package, Users, Building2, Truck, CreditCard,
+  Shield, BarChart3, Activity, Wallet
 } from "lucide-react";
 
-interface AgentStatus {
-  id: string;
-  name: string;
-  squad: string;
-  avatar: string;
-  status: "online" | "warning" | "offline";
-  capabilities: string[];
-}
-
-interface HealthCheck {
-  name: string;
-  status: "pass" | "warn" | "fail";
-  latencyMs: number;
-}
-
-interface SprintTask {
-  id: string;
-  title: string;
-  agent: string;
-  status: "done" | "in-progress" | "blocked" | "pending";
-  priority: "critical" | "high" | "medium" | "low";
+interface MissionControlData {
+  counts: {
+    hotels: number;
+    suppliers: number;
+    orders: number;
+    pendingOrders: number;
+    spendRequests: number;
+    pendingSpendRequests: number;
+    approvedSpendRequests: number;
+    rejectedSpendRequests: number;
+    budgetGates: number;
+    activeBudgetGates: number;
+    users: number;
+    products: number;
+    factoringRequests: number;
+    creditFacilities: number;
+    invoices: number;
+  };
+  financials: {
+    totalOrderValue: number;
+    spendGatekeeperStats: Array<{ status: string; _count: { id: number }; _sum: { total: number | null } }>;
+  };
+  budgetStatus: Array<{
+    id: string;
+    name: string;
+    totalBudget: number;
+    spentAmount: number;
+    reservedAmount: number;
+    status: string;
+    pctUsed: number;
+  }>;
+  recentOrders: Array<any>;
+  recentSpendRequests: Array<any>;
+  lowStockProducts: Array<any>;
+  pendingApprovals: Array<any>;
+  generatedAt: string;
 }
 
 export default function MissionControlPage() {
-  const [agents, setAgents] = useState<AgentStatus[]>([]);
-  const [health, setHealth] = useState<HealthCheck[]>([]);
-  const [tasks, setTasks] = useState<SprintTask[]>([]);
+  const [data, setData] = useState<MissionControlData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<string>("-");
-  const [activeTab, setActiveTab] = useState<"agents" | "health" | "sprint">("agents");
 
-  const fetchData = async () => {
+  async function fetchData() {
     setLoading(true);
+    setError(null);
     try {
-      const res = await fetch("/api/v1/swarm/agents", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        const mapped: AgentStatus[] = (data.data?.agents || data.agents || []).map((a: any) => ({
-          id: a.id,
-          name: a.name,
-          squad: a.squad,
-          avatar: a.avatar || "🤖",
-          status: "online",
-          capabilities: a.capabilities || [],
-        }));
-        setAgents(mapped);
+      const res = await fetch("/api/v1/mission-control", { credentials: "include" });
+      const json = await res.json();
+      if (json.success) {
+        setData(json.data);
+        setLastRefresh(new Date().toLocaleTimeString());
+      } else {
+        setError(json.error || "Failed to load");
       }
-    } catch { /* silent */ }
+    } catch {
+      setError("Network error — check connection");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-    try {
-      const res = await fetch("/api/health");
-      if (res.ok) {
-        const data = await res.json();
-        setHealth([
-          { name: "API Server", status: "pass", latencyMs: data.latencyMs || 0 },
-          { name: "Database", status: data.checks?.database?.status === "ok" ? "pass" : "fail", latencyMs: data.checks?.database?.latencyMs || 0 },
-          { name: "Redis", status: data.checks?.redis?.status === "ok" ? "pass" : "fail", latencyMs: data.checks?.redis?.latencyMs || 0 },
-        ]);
-      }
-    } catch { /* silent */ }
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Auto-refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
 
-    setTasks([
-      { id: "t1", title: "Pre-Spend Gatekeeper", agent: "pre-spend-gatekeeper", status: "done", priority: "critical" },
-      { id: "t2", title: "Cost Optimizer", agent: "cost-optimizer", status: "done", priority: "critical" },
-      { id: "t3", title: "Cashflow Planner", agent: "cashflow-planner", status: "done", priority: "critical" },
-      { id: "t4", title: "Swarm Integration Layer", agent: "director", status: "in-progress", priority: "high" },
-      { id: "t5", title: "n8n Onboarding Engine", agent: "onboarding", status: "pending", priority: "high" },
-      { id: "t6", title: "Mission Control Dashboard", agent: "reporter", status: "done", priority: "medium" },
-    ]);
+  if (loading && !data) {
+    return (
+      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+        <Skeleton className="h-10 w-64" />
+        <div className="grid grid-cols-4 gap-4">
+          {[1,2,3,4,5,6,7,8].map(i => <Skeleton key={i} className="h-28" />)}
+        </div>
+      </div>
+    );
+  }
 
-    setLastRefresh(new Date().toLocaleTimeString());
-    setLoading(false);
-  };
+  if (error && !data) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto text-center">
+        <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+        <h1 className="text-xl font-bold mb-2">Mission Control Unavailable</h1>
+        <p className="text-muted-foreground mb-4">{error}</p>
+        <Button onClick={fetchData}><RefreshCw className="w-4 h-4 mr-1" /> Retry</Button>
+      </div>
+    );
+  }
 
-  useEffect(() => { fetchData(); }, []);
+  if (!data) return null;
 
-  const squadColor = (squad: string) => {
-    const map: Record<string, string> = {
-      intelligence: "bg-purple-100 text-purple-800",
-      fintech: "bg-emerald-100 text-emerald-800",
-      growth: "bg-blue-100 text-blue-800",
-      supplier: "bg-amber-100 text-amber-800",
-      platform: "bg-slate-100 text-slate-800",
-      director: "bg-rose-100 text-rose-800",
-    };
-    return map[squad] || "bg-gray-100 text-gray-800";
-  };
+  const c = data.counts;
+  const gatekeeperPct = c.spendRequests > 0 ? Math.round((c.approvedSpendRequests / c.spendRequests) * 100) : 0;
 
-  const statusIcon = (status: string) => {
-    if (status === "pass" || status === "online" || status === "done") return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-    if (status === "warn" || status === "warning" || status === "in-progress") return <AlertTriangle className="w-4 h-4 text-amber-500" />;
-    return <XCircle className="w-4 h-4 text-red-500" />;
-  };
-
-  const doneCount = tasks.filter((t) => t.status === "done").length;
-  const progress = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
-
-  const TabButton = ({ id, label, icon: Icon }: { id: typeof activeTab; label: string; icon: any }) => (
-    <Button
-      variant={activeTab === id ? "default" : "outline"}
-      size="sm"
-      onClick={() => setActiveTab(id)}
-      className="gap-1"
-    >
-      <Icon className="w-4 h-4" /> {label}
-    </Button>
+  const StatCard = ({ title, value, sub, icon: Icon, color }: any) => (
+    <Card>
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold mt-1">{value}</p>
+            {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
+          </div>
+          <Icon className={`w-5 h-5 ${color}`} />
+        </div>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -123,7 +127,7 @@ export default function MissionControlPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Mission Control</h1>
-          <p className="text-muted-foreground">Real-time swarm status, health checks, and sprint tracker</p>
+          <p className="text-muted-foreground">Live platform overview — auto-refreshes every 30s</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">Last refresh: {lastRefresh}</span>
@@ -134,123 +138,40 @@ export default function MissionControlPage() {
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Active Agents</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{agents.length}</div>
-            <div className="text-xs text-muted-foreground">{agents.filter((a) => a.status === "online").length} online</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Sprint Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{doneCount}/{tasks.length}</div>
-            <div className="w-full bg-muted rounded-full h-2 mt-2">
-              <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Health Score</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {health.length ? Math.round((health.filter((h) => h.status === "pass").length / health.length) * 100) : 0}%
-            </div>
-            <div className="text-xs text-muted-foreground">{health.filter((h) => h.status === "pass").length}/{health.length} checks passing</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">System Status</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-2">
-            <Server className="w-5 h-5 text-green-500" />
-            <span className="text-lg font-semibold">Operational</span>
-          </CardContent>
-        </Card>
+      {/* Core Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard title="Hotels" value={c.hotels} icon={Building2} color="text-blue-500" />
+        <StatCard title="Suppliers" value={c.suppliers} icon={Truck} color="text-amber-500" />
+        <StatCard title="Orders" value={c.orders} sub={`${c.pendingOrders} pending approval`} icon={Package} color="text-green-500" />
+        <StatCard title="Users" value={c.users} icon={Users} color="text-purple-500" />
+        <StatCard title="Spend Requests" value={c.spendRequests} sub={`${c.pendingSpendRequests} pending`} icon={Shield} color="text-rose-500" />
+        <StatCard title="Gatekeeper Approval Rate" value={`${gatekeeperPct}%`} sub={`${c.approvedSpendRequests} approved · ${c.rejectedSpendRequests} rejected`} icon={CheckCircle2} color="text-emerald-500" />
+        <StatCard title="Active Budget Gates" value={c.activeBudgetGates} sub={`${c.budgetGates} total`} icon={Wallet} color="text-cyan-500" />
+        <StatCard title="Total Order Value" value={`${Number(data.financials.totalOrderValue).toLocaleString("en-GB", { minimumFractionDigits: 0 })} EGP`} icon={BarChart3} color="text-indigo-500" />
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2">
-        <TabButton id="agents" label="Agents" icon={Zap} />
-        <TabButton id="health" label="Health" icon={Activity} />
-        <TabButton id="sprint" label="Sprint" icon={Clock} />
-      </div>
-
-      {activeTab === "agents" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {agents.map((agent) => (
-            <Card key={agent.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{agent.avatar}</span>
-                    <div>
-                      <div className="font-semibold">{agent.name}</div>
-                      <Badge variant="secondary" className={squadColor(agent.squad)}>{agent.squad}</Badge>
-                    </div>
-                  </div>
-                  {statusIcon(agent.status)}
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1">
-                  {agent.capabilities.slice(0, 4).map((c) => (
-                    <span key={c} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{c}</span>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-          {agents.length === 0 && !loading && (
-            <div className="col-span-full text-center text-muted-foreground py-8">No agents returned. Ensure you are authenticated.</div>
-          )}
-        </div>
-      )}
-
-      {activeTab === "health" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {health.map((h) => (
-            <Card key={h.name}>
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <div className="font-semibold">{h.name}</div>
-                  <div className="text-sm text-muted-foreground">{h.latencyMs}ms latency</div>
-                </div>
-                {statusIcon(h.status)}
-              </CardContent>
-            </Card>
-          ))}
-          {health.length === 0 && (
-            <div className="col-span-full text-center text-muted-foreground py-8">Health data unavailable.</div>
-          )}
-        </div>
-      )}
-
-      {activeTab === "sprint" && (
+      {/* Budget Gate Status */}
+      {data.budgetStatus.length > 0 && (
         <Card>
-          <CardContent className="p-4">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Wallet className="w-5 h-5" /> Budget Gate Status</CardTitle></CardHeader>
+          <CardContent>
             <div className="space-y-3">
-              {tasks.map((task) => (
-                <div key={task.id} className="flex items-center justify-between border-b last:border-0 pb-2 last:pb-0">
-                  <div className="flex items-center gap-3">
-                    {statusIcon(task.status)}
-                    <div>
-                      <div className="font-medium">{task.title}</div>
-                      <div className="text-xs text-muted-foreground">{task.agent}</div>
-                    </div>
+              {data.budgetStatus.map((bg) => (
+                <div key={bg.id} className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{bg.name}</span>
+                    <span className={`font-mono ${bg.pctUsed >= 100 ? "text-red-500" : bg.pctUsed >= 80 ? "text-amber-500" : "text-green-500"}`}>
+                      {bg.pctUsed}% used
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={task.priority === "critical" ? "destructive" : task.priority === "high" ? "default" : "secondary"}>
-                      {task.priority}
-                    </Badge>
-                    <Badge variant="outline">{task.status}</Badge>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all ${bg.pctUsed >= 100 ? "bg-red-500" : bg.pctUsed >= 80 ? "bg-amber-500" : "bg-green-500"}`}
+                      style={{ width: `${Math.min(bg.pctUsed, 100)}%` }}
+                    />
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Spent: {Number(bg.spentAmount).toLocaleString()} · Reserved: {Number(bg.reservedAmount).toLocaleString()} · Budget: {Number(bg.totalBudget).toLocaleString()} EGP
                   </div>
                 </div>
               ))}
@@ -259,59 +180,111 @@ export default function MissionControlPage() {
         </Card>
       )}
 
-      {/* Transformation KPI Checklist */}
-      <Card className="border-2 border-purple-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-purple-600" />
-            Transformation KPI Checklist
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Pending Approvals */}
+      {data.pendingApprovals.length > 0 && (
+        <Card className="border-amber-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-700">
+              <AlertTriangle className="w-5 h-5" />
+              Pending Order Approvals ({data.pendingApprovals.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-2">
-              <h4 className="font-semibold flex items-center gap-2"><Shield className="w-4 h-4" /> Pre-Spend Gatekeeper</h4>
-              <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Budget compliance check</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Credit utilization check</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Price benchmarking vs market</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Supplier risk scan</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Anomaly detection</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Gate decision (APPROVE/WARN/BLOCK)</li>
-              </ul>
+              {data.pendingApprovals.map((o: any) => (
+                <div key={o.id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                  <div>
+                    <span className="font-medium">{o.orderNumber}</span>
+                    <span className="text-muted-foreground ml-2">{o.Hotel?.name} · {o.Supplier?.name}</span>
+                    <span className="text-muted-foreground ml-2">by {o.Requester?.name}</span>
+                  </div>
+                  <div className="font-bold">{Number(o.total).toLocaleString("en-GB", { minimumFractionDigits: 2 })} EGP</div>
+                </div>
+              ))}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Two-column: Recent Orders + Recent Spend Requests */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader><CardTitle>Recent Orders</CardTitle></CardHeader>
+          <CardContent>
+            {data.recentOrders.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No orders yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {data.recentOrders.map((o: any) => (
+                  <div key={o.id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                    <div>
+                      <span className="font-medium">{o.orderNumber}</span>
+                      <Badge variant="outline" className="ml-2 text-xs">{o.status}</Badge>
+                      <div className="text-muted-foreground text-xs">{o.Hotel?.name} · {o.Supplier?.name}</div>
+                    </div>
+                    <div className="font-mono">{Number(o.total).toLocaleString("en-GB", { minimumFractionDigits: 2 })}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Recent Spend Requests</CardTitle></CardHeader>
+          <CardContent>
+            {data.recentSpendRequests.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No spend requests yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {data.recentSpendRequests.map((s: any) => (
+                  <div key={s.id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                    <div>
+                      <span className="font-medium">{s.requestNumber}</span>
+                      <Badge variant="error" className={`ml-2 text-xs ${s.status === "APPROVED" ? "border-green-500 text-green-600" : s.status === "REJECTED" ? "border-red-500 text-red-600" : "border-amber-500 text-amber-600"}`}>
+                        {s.status.replace(/_/g, " ")}
+                      </Badge>
+                      <div className="text-muted-foreground text-xs">{s.Hotel?.name} · {s.Requester?.name}</div>
+                    </div>
+                    <div className="font-mono">{Number(s.total).toLocaleString("en-GB", { minimumFractionDigits: 2 })}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Low Stock Alerts */}
+      {data.lowStockProducts.length > 0 && (
+        <Card className="border-red-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-red-700">
+              <AlertTriangle className="w-5 h-5" />
+              Low Stock Alerts ({data.lowStockProducts.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-2">
-              <h4 className="font-semibold flex items-center gap-2"><TrendingDown className="w-4 h-4" /> Cost Optimizer</h4>
-              <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Substitution recommendations</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Bulk discount detection</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Supplier consolidation</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Credit term optimization</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Savings quantification (EGP)</li>
-              </ul>
+              {data.lowStockProducts.map((p: any) => (
+                <div key={p.id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                  <div>
+                    <span className="font-medium">{p.name}</span>
+                    <span className="text-muted-foreground ml-2">{p.sku}</span>
+                    <span className="text-muted-foreground ml-2">Supplier: {p.Supplier?.name}</span>
+                  </div>
+                  <Badge variant="destructive" className="text-xs">{p.stockQuantity} left</Badge>
+                </div>
+              ))}
             </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold flex items-center gap-2"><BarChart3 className="w-4 h-4" /> Cashflow Planner</h4>
-              <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> 90-day cashflow forecast</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Liquidity gap detection</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Factoring opportunity scan</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Payment timing recommendations</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Working capital strategy</li>
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold flex items-center gap-2"><Activity className="w-4 h-4" /> Swarm Integration</h4>
-              <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> Agent registry updated</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-green-500" /> API routes deployed</li>
-                <li className="flex items-center gap-2"><AlertTriangle className="w-3 h-3 text-amber-500" /> Swarm scheduler wiring (in progress)</li>
-                <li className="flex items-center gap-2"><XCircle className="w-3 h-3 text-red-400" /> n8n onboarding engine (pending)</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Footer */}
+      <div className="text-center text-xs text-muted-foreground">
+        Generated at {new Date(data.generatedAt).toLocaleString("en-GB")} · HotelsVendors Mission Control v3
+      </div>
     </div>
   );
 }
