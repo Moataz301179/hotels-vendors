@@ -53,7 +53,7 @@ function PreviewNav({ accent }: { accent: string }) {
               Solutions <ChevronDown className="w-3 h-3" />
             </button>
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-[#0a0a0a] border border-white/[0.06] rounded-xl shadow-2xl overflow-hidden">
+              <div className="absolute top-full left-0 mt-1 w-64 bg-[#000000] border border-white/[0.06] rounded-xl  overflow-hidden">
                 <div className="p-2 bg-white/[0.02] border-b border-white/[0.04]">
                   <p className="text-[10px] font-semibold text-white/20 uppercase tracking-wider px-2 pt-1">Stakeholders</p>
                 </div>
@@ -561,7 +561,7 @@ function DesignStudioButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-[#1a1a1a] border border-white/[0.08] text-white text-[12px] font-medium rounded-xl shadow-2xl hover:bg-white/[0.04] transition-colors"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-[#1a1a1a] border border-white/[0.08] text-white text-[12px] font-medium rounded-xl  hover:bg-white/[0.04] transition-colors"
     >
       <Palette size={14} />
       Design Studio

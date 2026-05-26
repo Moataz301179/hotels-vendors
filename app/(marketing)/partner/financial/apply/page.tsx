@@ -121,11 +121,11 @@ export default function FinancialPartnerApplyPage() {
                       <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
                       <select value={form.capacity} onChange={(e) => update("capacity", e.target.value)} required
                         className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[13px] text-white outline-none focus:border-amber-500/50 transition-all appearance-none">
-                        <option value="" className="bg-[#111]">Select capacity</option>
-                        <option value="10m-50m" className="bg-[#111]">EGP 10M – 50M</option>
-                        <option value="50m-100m" className="bg-[#111]">EGP 50M – 100M</option>
-                        <option value="100m-500m" className="bg-[#111]">EGP 100M – 500M</option>
-                        <option value="500m+" className="bg-[#111]">EGP 500M+</option>
+                        <option value="" className="bg-[#000000]">Select capacity</option>
+                        <option value="10m-50m" className="bg-[#000000]">EGP 10M – 50M</option>
+                        <option value="50m-100m" className="bg-[#000000]">EGP 50M – 100M</option>
+                        <option value="100m-500m" className="bg-[#000000]">EGP 100M – 500M</option>
+                        <option value="500m+" className="bg-[#000000]">EGP 500M+</option>
                       </select>
                     </div>
                   </div>

@@ -1,35 +1,27 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 
 /* ═══════════════════════════════════════════════════════════
-   ANIMATION VARIANTS — Clario-inspired: smooth, subtle
+   ANIMATION VARIANTS
    ═══════════════════════════════════════════════════════════ */
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] } }),
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] } }),
 };
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: (i: number) => ({ opacity: 1, transition: { duration: 0.9, delay: i * 0.1 } }),
+  visible: (i: number) => ({ opacity: 1, transition: { duration: 0.8, delay: i * 0.1 } }),
 };
 const scaleIn = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: (i: number) => ({ opacity: 1, scale: 1, transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] } }),
-};
-const slideInLeft = {
-  hidden: { opacity: 0, x: -60 },
-  visible: (i: number) => ({ opacity: 1, x: 0, transition: { duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] } }),
-};
-const slideInRight = {
-  hidden: { opacity: 0, x: 60 },
-  visible: (i: number) => ({ opacity: 1, x: 0, transition: { duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] } }),
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: (i: number) => ({ opacity: 1, scale: 1, transition: { duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] } }),
 };
 
 /* ═══════════════════════════════════════════════════════════
-   NAVIGATION — Dark, minimal, glassmorphism on scroll
+   NAVIGATION
    ═══════════════════════════════════════════════════════════ */
 function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -41,7 +33,7 @@ function LandingNav() {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      scrolled ? "bg-[#000000]/90 backdrop-blur-2xl border-b border-white/[0.04]" : "bg-transparent border-b border-transparent"
+      scrolled ? "bg-[#000000]/80 backdrop-blur-2xl border-b border-white/[0.04]" : "bg-transparent border-b border-transparent"
     }`}>
       <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -64,19 +56,11 @@ function LandingNav() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HERO SECTION — Clario-style: bold headline, subtle glow, floating UI
+   HERO SECTION
    ═══════════════════════════════════════════════════════════ */
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#000000]">
-      {/* Subtle radial glow behind dashboard — Clario-inspired */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-20%] right-[-5%] w-[60%] h-[70%] rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, rgba(163,230,53,0.25) 0%, transparent 70%)", filter: "blur(100px)" }} />
-        <div className="absolute bottom-[-15%] left-[-5%] w-[50%] h-[50%] rounded-full opacity-8"
-          style={{ background: "radial-gradient(circle, rgba(163,230,53,0.2) 0%, transparent 70%)", filter: "blur(80px)" }} />
-      </div>
-
       <div className="relative z-10 max-w-[1280px] mx-auto px-8 w-full pt-24 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text */}
@@ -84,7 +68,7 @@ function HeroSection() {
             <motion.div custom={0} variants={fadeInUp} initial="hidden" animate="visible"
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 border border-[#a3e635]/20 bg-[#a3e635]/[0.06]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#a3e635] animate-pulse" />
-              <span className="text-[11px] font-medium text-[#a3e635]/80 tracking-wide">Private Beta — Egypt 2026</span>
+              <span className="text-[11px] font-medium text-[#a3e635] tracking-wide">Private Beta — Egypt 2024</span>
             </motion.div>
 
             <motion.h1 custom={1} variants={fadeInUp} initial="hidden" animate="visible"
@@ -126,16 +110,16 @@ function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right: Floating UI mockups — Clario glassmorphism style */}
+          {/* Right: Floating UI mockups */}
           <motion.div custom={2} variants={scaleIn} initial="hidden" animate="visible" className="relative hidden lg:block h-[540px]">
             {/* Main dashboard card */}
-            <div className="absolute top-4 left-4 right-4 bottom-4 rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/80 backdrop-blur-xl"
+            <div className="absolute top-4 left-4 right-4 bottom-4 rounded-2xl overflow-hidden border border-white/[0.06] bg-[#000000]/80 backdrop-blur-xl"
               style={{ transform: "perspective(1200px) rotateY(-8deg) rotateX(4deg)" }}>
               <img src="/intelligence-v2.jpg" alt="AI Procurement Dashboard" className="w-full h-full object-cover opacity-70" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-transparent" />
             </div>
             {/* Floating smaller card */}
-            <div className="absolute -bottom-4 -left-8 w-[260px] rounded-xl overflow-hidden border border-white/[0.06] bg-[#0a0a0a]/90 backdrop-blur-xl"
+            <div className="absolute -bottom-4 -left-8 w-[260px] rounded-xl overflow-hidden border border-white/[0.06] bg-[#000000]/90 backdrop-blur-xl"
               style={{ transform: "perspective(1000px) rotateY(6deg) rotateX(-3deg)" }}>
               <img src="/compliance-v2.jpg" alt="ETA Compliance" className="w-full h-auto opacity-80" />
             </div>
@@ -152,14 +136,14 @@ function HeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PROBLEM SECTION — Visual chaos vs control
+   PROBLEM SECTION
    ═══════════════════════════════════════════════════════════ */
 function ProblemSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-32 bg-[#000000]" ref={ref}>
+    <section className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="text-center mb-20">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">The Problem</span>
@@ -168,7 +152,6 @@ function ProblemSection() {
           </h2>
         </motion.div>
 
-        {/* Three pain point cards in a row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { 
@@ -191,7 +174,7 @@ function ProblemSection() {
             },
           ].map((card, i) => (
             <motion.div key={i} custom={i} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-              className="group relative rounded-2xl border border-white/[0.04] bg-[#0a0a0a] p-8 hover:border-[#a3e635]/20 transition-all duration-500">
+              className="group relative rounded-2xl border border-white/[0.04] bg-[#000000] p-8 hover:border-[#a3e635]/20 transition-all duration-500">
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a3e635]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="text-[42px] font-bold text-[#a3e635]/10 leading-none mb-4" style={{ fontFamily: "monospace" }}>{card.stat}</div>
               <div className="text-[10px] text-[#a3e635]/60 uppercase tracking-wider mb-6">{card.statLabel}</div>
@@ -206,14 +189,14 @@ function ProblemSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PLATFORM SECTION — Editorial bento grid with images
+   PLATFORM SECTION
    ═══════════════════════════════════════════════════════════ */
 function PlatformSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="platform" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="platform" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-16">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Platform</span>
@@ -225,11 +208,9 @@ function PlatformSection() {
           </p>
         </motion.div>
 
-        {/* Bento grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Large card — AI Intelligence */}
           <motion.div custom={0} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-            className="md:col-span-2 group relative rounded-2xl border border-white/[0.04] bg-[#0a0a0a] overflow-hidden hover:border-[#a3e635]/20 transition-all duration-500">
+            className="md:col-span-2 group relative rounded-2xl border border-white/[0.04] bg-[#000000] overflow-hidden hover:border-[#a3e635]/20 transition-all duration-500">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a3e635]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-8 pb-0">
               <span className="text-[10px] font-bold tracking-[0.15em] text-[#a3e635] uppercase">Intelligence</span>
@@ -243,9 +224,8 @@ function PlatformSection() {
             </div>
           </motion.div>
 
-          {/* Tall card — ETA Compliance */}
           <motion.div custom={1} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-            className="group relative rounded-2xl border border-white/[0.04] bg-[#0a0a0a] overflow-hidden hover:border-[#34d399]/20 transition-all duration-500 row-span-2">
+            className="group relative rounded-2xl border border-white/[0.04] bg-[#000000] overflow-hidden hover:border-[#34d399]/20 transition-all duration-500 row-span-2">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#34d399]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-8">
               <span className="text-[10px] font-bold tracking-[0.15em] text-[#34d399] uppercase">Compliance</span>
@@ -259,9 +239,8 @@ function PlatformSection() {
             </div>
           </motion.div>
 
-          {/* Finance card */}
           <motion.div custom={2} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-            className="group relative rounded-2xl border border-white/[0.04] bg-[#0a0a0a] overflow-hidden hover:border-[#60a5fa]/20 transition-all duration-500">
+            className="group relative rounded-2xl border border-white/[0.04] bg-[#000000] overflow-hidden hover:border-[#60a5fa]/20 transition-all duration-500">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#60a5fa]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-8">
               <span className="text-[10px] font-bold tracking-[0.15em] text-[#60a5fa] uppercase">Finance</span>
@@ -275,9 +254,8 @@ function PlatformSection() {
             </div>
           </motion.div>
 
-          {/* Network card */}
           <motion.div custom={3} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-            className="group relative rounded-2xl border border-white/[0.04] bg-[#0a0a0a] overflow-hidden hover:border-[#fbbf24]/20 transition-all duration-500">
+            className="group relative rounded-2xl border border-white/[0.04] bg-[#000000] overflow-hidden hover:border-[#fbbf24]/20 transition-all duration-500">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#fbbf24]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-8">
               <span className="text-[10px] font-bold tracking-[0.15em] text-[#fbbf24] uppercase">Network</span>
@@ -297,7 +275,7 @@ function PlatformSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   WORKFLOW SECTION — Horizontal connected steps
+   WORKFLOW SECTION
    ═══════════════════════════════════════════════════════════ */
 function WorkflowSection() {
   const ref = useRef(null);
@@ -312,14 +290,14 @@ function WorkflowSection() {
       accent: "#bef264" },
     { n: "03", title: "ETA-Compliant Execution", 
       desc: "Goods receipt, GRN matching, and automatic e-invoice submission to the Egyptian Tax Authority — every transaction tracked, every step auditable.",
-      accent: "#a78bfa" },
+      accent: "#a3e635" },
     { n: "04", title: "AI Optimization", 
       desc: "The swarm layer continuously analyzes transaction patterns, detects price anomalies, generates savings reports, and refines supplier performance — without manual data entry.",
-      accent: "#c4b5fd" },
+      accent: "#bef264" },
   ];
 
   return (
-    <section id="workflow" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="workflow" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-20">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Workflow</span>
@@ -329,14 +307,12 @@ function WorkflowSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-0 relative">
-          {/* Connecting line */}
-          <div className="hidden md:block absolute top-[28px] left-[12%] right-[12%] h-px bg-gradient-to-r from-[#a3e635] via-[#bef264] to-[#c4b5fd] opacity-20" />
+          <div className="hidden md:block absolute top-[28px] left-[12%] right-[12%] h-px bg-gradient-to-r from-[#a3e635] via-[#bef264] to-[#a3e635] opacity-20" />
 
           {steps.map((step, i) => (
             <motion.div key={step.n} custom={i} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
               className="relative pl-0 md:pl-6 first:pl-0">
-              {/* Step number */}
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border border-white/[0.05] bg-[#0a0a0a]"
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border border-white/[0.05] bg-[#000000]"
                 style={{ boxShadow: `0 0 20px ${step.accent}15` }}>
                 <span className="text-[16px] font-bold" style={{ color: step.accent, fontFamily: "monospace" }}>{step.n}</span>
               </div>
@@ -351,7 +327,7 @@ function WorkflowSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   NETWORK SECTION — Coverage visualization
+   NETWORK SECTION
    ═══════════════════════════════════════════════════════════ */
 function NetworkSection() {
   const ref = useRef(null);
@@ -367,10 +343,9 @@ function NetworkSection() {
   ];
 
   return (
-    <section id="network" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="network" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left: Text */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Network</span>
             <h2 className="text-[36px] md:text-[44px] font-semibold text-white tracking-[-0.03em] leading-[1.1]">
@@ -382,7 +357,7 @@ function NetworkSection() {
             <div className="mt-10 grid grid-cols-2 gap-4">
               {cities.slice(0, 4).map((city, i) => (
                 <motion.div key={city.name} custom={i} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-                  className="rounded-xl border border-white/[0.04] bg-[#0a0a0a] p-5 hover:border-[#a3e635]/15 transition-all">
+                  className="rounded-xl border border-white/[0.04] bg-[#000000] p-5 hover:border-[#a3e635]/15 transition-all">
                   <div className="flex items-baseline justify-between">
                     <h4 className="text-[14px] font-semibold text-white">{city.name}</h4>
                     <span className="text-[16px] font-bold text-[#a3e635]">{city.hotels}</span>
@@ -393,10 +368,9 @@ function NetworkSection() {
             </div>
           </motion.div>
 
-          {/* Right: City list + image */}
           <motion.div custom={2} variants={scaleIn} initial="hidden" animate={inView ? "visible" : "hidden"}
             className="relative rounded-2xl overflow-hidden border border-white/[0.04] aspect-[4/3]">
-            <img src="/hotel-cairo.jpg" alt="Egypt Hospitality" className="w-full h-full object-cover opacity-60" />
+            <img src="/hero-hotel-drone.jpg" alt="Egypt Hospitality" className="w-full h-full object-cover opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6">
               <div className="flex items-baseline justify-between mb-2">
@@ -413,7 +387,7 @@ function NetworkSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   TRUST SECTION — Enterprise badges + Payment Rails
+   TRUST SECTION
    ═══════════════════════════════════════════════════════════ */
 function TrustSection() {
   const ref = useRef(null);
@@ -426,15 +400,8 @@ function TrustSection() {
     { title: "AI Swarm Layer", desc: "Multi-agent system continuously analyzing spend, compliance, cashflow, and procurement", icon: "M13 10V3L4 14h7v7l9-11h-7z" },
   ];
 
-  const paymentRails = [
-    { name: "InstaPay", desc: "Instant P2P transfers up to EGP 70K per transaction", logo: "/logos/instapay.svg" },
-    { name: "Fawry", desc: "B2B payment rail with nationwide acceptance", logo: "/logos/fawry.svg" },
-    { name: "Oliv", desc: "Invoice factoring — get paid early, repay later", logo: "/logos/oliv.svg" },
-    { name: "ETA", desc: "Real-time e-invoicing compliance with Egyptian Tax Authority", logo: "/logos/eta.svg" },
-  ];
-
   return (
-    <section id="trust" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="trust" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-16">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Trust</span>
@@ -443,10 +410,10 @@ function TrustSection() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {badges.map((badge, i) => (
             <motion.div key={badge.title} custom={i} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-              className="group flex items-start gap-5 rounded-2xl border border-white/[0.04] bg-[#0a0a0a] p-7 hover:border-[#a3e635]/15 transition-all duration-500">
+              className="group flex items-start gap-5 rounded-2xl border border-white/[0.04] bg-[#000000] p-7 hover:border-[#a3e635]/15 transition-all duration-500">
               <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#a3e635]/[0.08] flex items-center justify-center border border-[#a3e635]/10">
                 <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                   <path d={badge.icon} />
@@ -459,34 +426,13 @@ function TrustSection() {
             </motion.div>
           ))}
         </div>
-
-        {/* Payment Rails */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-10">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Payment Rails</span>
-          <h3 className="text-[24px] md:text-[30px] font-semibold text-white tracking-[-0.03em] leading-[1.1]">
-            Integrated with Egypt&apos;s leading payment infrastructure
-          </h3>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {paymentRails.map((rail, i) => (
-            <motion.div key={rail.name} custom={i} variants={fadeInUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-              className="group rounded-2xl border border-white/[0.04] bg-[#0a0a0a] p-6 hover:border-[#a3e635]/15 transition-all duration-500">
-              <div className="flex items-center gap-3 mb-4">
-                <img src={rail.logo} alt={rail.name} className="h-8 w-auto" />
-              </div>
-              <h4 className="text-[14px] font-semibold text-white mb-1">{rail.name}</h4>
-              <p className="text-[12px] text-white/30 leading-relaxed">{rail.desc}</p>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   CTA SECTION — Bold closing with lime glow
+   CTA SECTION
    ═══════════════════════════════════════════════════════════ */
 function CTASection() {
   const ref = useRef(null);
@@ -494,10 +440,6 @@ function CTASection() {
 
   return (
     <section className="py-32 bg-[#000000] relative overflow-hidden" ref={ref}>
-      {/* Background glow — Clario-style lime radial */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-10"
-        style={{ background: "radial-gradient(ellipse, rgba(163,230,53,0.5) 0%, transparent 70%)", filter: "blur(80px)" }} />
-
       <motion.div initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}
         className="relative z-10 max-w-[640px] mx-auto px-8 text-center">
         <h2 className="text-[36px] md:text-[48px] font-semibold text-white tracking-[-0.03em] leading-[1.1]">
@@ -520,7 +462,7 @@ function CTASection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FOOTER — Minimal, dark, with real social links
+   FOOTER
    ═══════════════════════════════════════════════════════════ */
 function Footer() {
   return (
@@ -536,7 +478,7 @@ function Footer() {
           <div>
             <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Company</h5>
             {["About", "Partners"].map((l) => (
-              <a key={l} href="/about" className="block text-[12px] text-white/15 hover:text-white/50 transition-colors mb-3">{l}</a>
+              <a key={l} href="#" className="block text-[12px] text-white/15 hover:text-white/50 transition-colors mb-3">{l}</a>
             ))}
           </div>
           <div>
@@ -554,11 +496,6 @@ function Footer() {
         </div>
         <div className="pt-6 border-t border-white/[0.02] flex flex-col md:flex-row justify-between items-center gap-4">
           <span className="text-[11px] text-white/10">HotelsVendors. All rights reserved.</span>
-          <div className="flex items-center gap-4">
-            <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-[11px] text-white/20 hover:text-[#a3e635] transition-colors">Facebook</a>
-            <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-[11px] text-white/20 hover:text-[#a3e635] transition-colors">Instagram</a>
-            <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-[11px] text-white/20 hover:text-[#a3e635] transition-colors">LinkedIn</a>
-          </div>
           <span className="text-[11px] text-white/10">Cairo, Egypt</span>
         </div>
       </div>
@@ -571,15 +508,22 @@ function Footer() {
    ═══════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#000000]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif" }}>
+    <main className="min-h-screen bg-[#000000]" style={{ fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif" }}>
       <LandingNav />
       <HeroSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <ProblemSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <PlatformSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <WorkflowSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <NetworkSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <TrustSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <CTASection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <Footer />
     </main>
   );

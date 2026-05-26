@@ -30,11 +30,9 @@ const VALUE_PROPS = [
 export function AuthLeftPanel() {
   return (
     <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] relative flex-col justify-between p-10 xl:p-14 overflow-hidden">
-      {/* Background layers */}
-      <div className="absolute inset-0 bg-[#0a0a0a]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(163,230,53,0.25)_0%,_transparent_60%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(185,28,28,0.08)_0%,_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+      {/* Background layers — pure OLED black, no gradients */}
+      <div className="absolute inset-0 bg-[#000000]" />
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02]" />
 
       {/* Top: Brand */}
       <motion.div

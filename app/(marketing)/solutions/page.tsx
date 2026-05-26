@@ -328,7 +328,7 @@ export default async function SolutionsPage() {
                     className="absolute inset-0 opacity-20"
                     style={{ background: `radial-gradient(circle at 30% 30%, ${feature.accent}, transparent 70%)` }}
                   />
-                  <div className="absolute inset-0 bg-[#0a0a0a]" />
+                  <div className="absolute inset-0 bg-[#000000]" />
                   {/* Grid pattern */}
                   <div
                     className="absolute inset-0 opacity-[0.03]"

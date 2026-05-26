@@ -116,7 +116,7 @@ export default function PartnersPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.08 }}
-                className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
+                className="rounded-2xl border border-white/[0.06] bg-[#000000] overflow-hidden"
               >
                 {/* Header */}
                 <div className="px-6 pt-6 pb-5 border-b border-white/[0.04]">

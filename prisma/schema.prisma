@@ -2872,3 +2872,32 @@ model SpendGatekeeperLog {
   
   @@index([spendRequestId, createdAt])
 }
+
+
+// Blog Engine Models
+model BlogPost {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  excerpt   String
+  content   String
+  coverImage String?
+  category  String
+  tags      String[]
+  author    String
+  authorImage String?
+  published Boolean  @default(false)
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  publishedAt DateTime?
+  views     Int      @default(0)
+}
+
+model BlogCategory {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  description String?
+  postCount   Int    @default(0)
+}

@@ -123,11 +123,11 @@ export default function LogisticsPartnerApplyPage() {
                     <label className="text-[11px] font-medium text-white/50 uppercase tracking-wider">Fleet Size *</label>
                     <select value={form.fleetSize} onChange={(e) => update("fleetSize", e.target.value)} required
                       className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[13px] text-white outline-none focus:border-cyan-500/50 transition-all appearance-none">
-                      <option value="" className="bg-[#111]">Select fleet size</option>
-                      <option value="3-10" className="bg-[#111]">3–10 vehicles</option>
-                      <option value="11-25" className="bg-[#111]">11–25 vehicles</option>
-                      <option value="26-50" className="bg-[#111]">26–50 vehicles</option>
-                      <option value="50+" className="bg-[#111]">50+ vehicles</option>
+                      <option value="" className="bg-[#000000]">Select fleet size</option>
+                      <option value="3-10" className="bg-[#000000]">3–10 vehicles</option>
+                      <option value="11-25" className="bg-[#000000]">11–25 vehicles</option>
+                      <option value="26-50" className="bg-[#000000]">26–50 vehicles</option>
+                      <option value="50+" className="bg-[#000000]">50+ vehicles</option>
                     </select>
                   </div>
                 </div>
