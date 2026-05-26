@@ -160,8 +160,8 @@ export default function HotelRegisterPage() {
 
         {registered ? (
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10 text-center space-y-5">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
-              <Check className="w-8 h-8 text-emerald-400" />
+            <div className="w-16 h-16 rounded-full bg-[#a3e635]/10 border border-[#a3e635]/20 flex items-center justify-center mx-auto">
+              <Check className="w-8 h-8 text-[#a3e635]" />
             </div>
             <div>
               <h3 className="text-[16px] font-semibold text-white">Welcome aboard, {form.name}!</h3>
@@ -211,8 +211,8 @@ export default function HotelRegisterPage() {
                       <div className="relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
                         <select value={form.governorate} onChange={(e) => update("governorate", e.target.value)} className={selectCls}>
-                          <option value="" className="bg-[#111]">Select governorate</option>
-                          {GOVERNORATES.map((g) => <option key={g} value={g} className="bg-[#111]">{g}</option>)}
+                          <option value="" className="bg-[#000000]">Select governorate</option>
+                          {GOVERNORATES.map((g) => <option key={g} value={g} className="bg-[#000000]">{g}</option>)}
                         </select>
                       </div>
                     </div>
@@ -239,8 +239,8 @@ export default function HotelRegisterPage() {
                       <div className="relative">
                         <Star className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/15" />
                         <select value={form.starRating} onChange={(e) => update("starRating", e.target.value)} className={selectCls}>
-                          <option value="" className="bg-[#111]">Select rating</option>
-                          {STAR_RATINGS.map((s) => <option key={s.value} value={s.value} className="bg-[#111]">{s.label}</option>)}
+                          <option value="" className="bg-[#000000]">Select rating</option>
+                          {STAR_RATINGS.map((s) => <option key={s.value} value={s.value} className="bg-[#000000]">{s.label}</option>)}
                         </select>
                       </div>
                     </div>
@@ -253,7 +253,7 @@ export default function HotelRegisterPage() {
                     </div>
                   </div>
 
-                  <button type="submit" className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98]">
+                  <button type="submit" className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#bef264] text-white text-[13px] font-medium transition-all active:scale-[0.98]">
                     Continue <ChevronRight className="w-4 h-4" />
                   </button>
                 </motion.div>
@@ -290,7 +290,7 @@ export default function HotelRegisterPage() {
                     <button type="button" onClick={back} className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.08] text-white/40 text-[13px] font-medium hover:bg-white/[0.03] transition-all">
                       <ChevronLeft className="w-4 h-4" /> Back
                     </button>
-                    <button type="submit" disabled={loading} className="flex-[2] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98] disabled:opacity-50">
+                    <button type="submit" disabled={loading} className="flex-[2] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#bef264] text-white text-[13px] font-medium transition-all active:scale-[0.98] disabled:opacity-50">
                       {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><span>Create Hotel Account</span><ArrowRight className="w-4 h-4" /></>}
                     </button>
                   </div>

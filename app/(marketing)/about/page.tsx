@@ -126,7 +126,7 @@ export default async function AboutPage() {
             <h1 className="text-[32px] md:text-[42px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
               {cms?.heroTitle || "We Do Not Just See the Market. We See Through It."}
             </h1>
-            <p className="mt-5 text-[14px] md:text-[15px] text-gray-500 leading-relaxed max-w-xl">
+            <p className="mt-5 text-[14px] md:text-[15px] text-white/40 leading-relaxed max-w-xl">
               {cms?.heroDescription || "Founded by a professional auditor who spent years inside the financial machinery of Egyptian hospitality. What we observed was not a lack of suppliers — it was a systemic failure of process, visibility, and control. Hotels Vendors was built to fix what others could not even see."}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -183,10 +183,10 @@ export default async function AboutPage() {
                 <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Observation
                 </h2>
-                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed">
                   As a professional auditor, I spent years inside the financial records of Egypt's largest hospitality groups. I reviewed procurement processes that were supposed to control millions in annual spend. What I found was alarming: purchase orders scattered across WhatsApp threads, supplier invoices reconciled in error-prone Excel files, approval chains that existed on paper but vanished in practice, and cashflow management that was essentially guesswork.
                 </p>
-                <p className="mt-3 text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
+                <p className="mt-3 text-[13px] md:text-[14px] text-white/40 leading-relaxed">
                   The hotels were not struggling because they lacked suppliers. They were struggling because they lacked a system. There was no visibility. No enforceable controls. No audit trail. And when the Egyptian Tax Authority introduced mandatory e-invoicing, the gap between where these organizations were and where they needed to be became a chasm.
                 </p>
               </div>
@@ -195,10 +195,10 @@ export default async function AboutPage() {
                 <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Insight
                 </h2>
-                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed">
                   Every audit engagement reinforced the same pattern: the procurement function — the single largest controllable cost center in any hotel — was operating with tools designed for an era that no longer exists. The B2B marketplaces emerging in Egypt were solving the wrong problem. They were connecting buyers to sellers, which is useful, but they were ignoring the fundamental operational and financial infrastructure that makes procurement work at scale.
                 </p>
-                <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="mt-4 text-[14px] md:text-[15px] text-white/50 leading-relaxed">
                   A hotel group does not need another place to browse products. It needs a procurement operating system: enforced approval hierarchies, real-time spend analytics, ETA-compliant invoice generation, integrated logistics, embedded factoring for cashflow optimization, and artificial intelligence that learns purchasing patterns to predict demand, negotiate better terms, and flag anomalies before they become losses.
                 </p>
               </div>
@@ -207,10 +207,10 @@ export default async function AboutPage() {
                 <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Build
                 </h2>
-                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed">
                   Hotels Vendors was architected from first principles by someone who had seen the inside of enough general ledgers to know exactly where value leaks and where controls fail. We built not a marketplace, but a complete digital procurement module — one that enforces best-practice governance by design, not by policy memo. Every purchase order flows through an authority matrix that cannot be bypassed. Every invoice is ETA-compliant at the moment of creation. Every transaction feeds into a real-time financial intelligence layer that shows exactly where your money is going, when it is going, and how to optimize it.
                 </p>
-                <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="mt-4 text-[14px] md:text-[15px] text-white/50 leading-relaxed">
                   Then we layered artificial intelligence on top. Not as a chatbot gimmick, but as an embedded intelligence engine that analyzes historical spend, benchmarks supplier pricing, predicts inventory needs, and autonomously generates procurement recommendations that save time and money. This is not automation for automation's sake. This is an AI that knows your operation better than any single employee ever could — because it sees every transaction across every property, every day, in real time.
                 </p>
               </div>
@@ -219,10 +219,10 @@ export default async function AboutPage() {
                 <h2 className="text-[22px] md:text-[26px] font-bold text-white tracking-tight mb-3">
                   The Difference
                 </h2>
-                <p className="text-[13px] md:text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed">
                   Other platforms will help you find a supplier. We will transform how your entire organization procures, pays, and optimizes. We see through the transaction to the system beneath it. We see the cashflow implications of every purchase decision. We see the compliance risk before the auditor does — because our founder was that auditor.
                 </p>
-                <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 leading-relaxed">
+                <p className="mt-4 text-[14px] md:text-[15px] text-white/50 leading-relaxed">
                   Our goal is not to be the biggest B2B marketplace in Egypt. Our goal is to be the most indispensable operating system for hospitality procurement in the region — a platform that pays for itself not by charging fees, but by generating measurable, audit-verifiable savings in cost, time, and working capital. Every property that joins Hotels Vendors gains a procurement intelligence advantage that compounds with every transaction.
                 </p>
               </div>
@@ -235,7 +235,7 @@ export default async function AboutPage() {
           STATS BAR
           ═══════════════════════════════════════════ */}
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-20">
-        <div className="bg-[#000000] border border-white/10 rounded-2xl p-6 md:p-8 shadow-sm">
+        <div className="bg-[#000000] border border-white/10 rounded-2xl p-6 md:p-8 ">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {STATS.map((stat) => (
               <div key={stat.label} className="text-center">
@@ -245,7 +245,7 @@ export default async function AboutPage() {
                 <div className="mt-1 text-[11px] font-medium text-white/60 uppercase tracking-wide">
                   {stat.label}
                 </div>
-                <div className="text-[11px] text-gray-500 mt-0.5">{stat.sub}</div>
+                <div className="text-[11px] text-white/40 mt-0.5">{stat.sub}</div>
               </div>
             ))}
           </div>
@@ -284,7 +284,7 @@ export default async function AboutPage() {
                   {/* content */}
                   <div className="ml-10 md:ml-0 md:w-1/2 md:text-right">
                     <div
-                      className={`p-6 rounded-2xl bg-[#000000] border border-white/10 shadow-sm ${
+                      className={`p-6 rounded-2xl bg-[#000000] border border-white/10  ${
                         i % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-left"
                       }`}
                     >
@@ -295,7 +295,7 @@ export default async function AboutPage() {
                       <h3 className="text-[16px] font-semibold text-white mb-2">
                         {item.title}
                       </h3>
-                      <p className="text-[13px] text-gray-400 leading-relaxed">
+                      <p className="text-[13px] text-white/50 leading-relaxed">
                         {item.desc}
                       </p>
                     </div>
@@ -326,14 +326,14 @@ export default async function AboutPage() {
             {VALUES.map((item) => (
               <div
                 key={item.title}
-                className="flex gap-4 p-6 rounded-2xl border border-white/10 bg-[#000000] shadow-sm"
+                className="flex gap-4 p-6 rounded-2xl border border-white/10 bg-[#000000] "
               >
                 <CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-[15px] font-semibold text-white mb-1">
                     {item.title}
                   </h3>
-                  <p className="text-[13px] text-gray-400 leading-relaxed">
+                  <p className="text-[13px] text-white/50 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -361,9 +361,9 @@ export default async function AboutPage() {
             {TEAM.map((member) => (
               <div
                 key={member.name}
-                className="group p-6 rounded-2xl bg-[#000000] border border-white/10 hover:border-white/15 transition-all shadow-sm"
+                className="group p-6 rounded-2xl bg-[#000000] border border-white/10 hover:border-white/15 transition-all "
               >
-                <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-gray-500 text-[11px] font-bold tracking-widest group-hover:bg-white/10 group-hover:border-white/20 group-hover:text-white transition-all">
+                <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-white/40 text-[11px] font-bold tracking-widest group-hover:bg-white/10 group-hover:border-white/20 group-hover:text-white transition-all">
                   {member.initials}
                 </div>
                 <h3 className="text-[16px] font-semibold text-white mb-0.5">
@@ -372,7 +372,7 @@ export default async function AboutPage() {
                 <p className="text-[11px] font-medium text-white/60 uppercase tracking-wide mb-3">
                   {member.role}
                 </p>
-                <p className="text-[13px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] text-white/50 leading-relaxed">
                   {member.bio}
                 </p>
               </div>
@@ -399,9 +399,9 @@ export default async function AboutPage() {
             {PARTNERS.map((partner) => (
               <span
                 key={partner}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#000000] border border-white/10 text-[13px] text-gray-400 hover:border-white/15 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#000000] border border-white/10 text-[13px] text-white/50 hover:border-white/15 transition-colors "
               >
-                <Briefcase className="w-3.5 h-3.5 text-gray-600" />
+                <Briefcase className="w-3.5 h-3.5 text-white/30" />
                 {partner}
               </span>
             ))}
@@ -414,13 +414,13 @@ export default async function AboutPage() {
           ═══════════════════════════════════════════ */}
       <section className="py-20 bg-[#000000]">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#000000] border border-white/10 p-10 md:p-16 text-center shadow-sm">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#bef264]/[0.08] rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#000000] border border-white/10 p-10 md:p-16 text-center ">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#a3e635]/[0.03] rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[26px] md:text-[34px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Ready to See What We See?"}
               </h2>
-              <p className="mt-3 text-[14px] md:text-[15px] text-gray-500 max-w-xl mx-auto">
+              <p className="mt-3 text-[14px] md:text-[15px] text-white/40 max-w-xl mx-auto">
                 {cms?.ctaDescription || "Join the hospitality groups that have replaced procurement chaos with audit-grade control, AI-powered intelligence, and real-time spend visibility."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
