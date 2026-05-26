@@ -26,12 +26,12 @@ export function ChatInput({ input, onChange, onSend, disabled, placeholder }: Ch
           }}
           placeholder={placeholder || "Ask anything..."}
           disabled={disabled}
-          className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8b5cf6]/40 transition-colors disabled:opacity-50"
+          className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#bef264]/40 transition-colors disabled:opacity-50"
         />
         <button
           onClick={onSend}
           disabled={!input.trim() || disabled}
-          className="w-10 h-10 rounded-lg bg-[#8b5cf6] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="w-10 h-10 rounded-lg bg-[#bef264] text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <Send size={16} />
         </button>

@@ -68,11 +68,11 @@ export default function RegisterGatewayPage() {
           >
             <Link
               href={`/register/${role.slug}`}
-              className="group block h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[#8b5cf6]/30 hover:bg-white/[0.03] transition-all duration-300"
+              className="group block h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[#bef264]/30 hover:bg-white/[0.03] transition-all duration-300"
             >
               <div className="flex items-start justify-between mb-5">
-                <div className="w-11 h-11 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/15 flex items-center justify-center group-hover:bg-[#8b5cf6]/15 transition-colors">
-                  <role.icon size={22} className="text-[#8b5cf6]" />
+                <div className="w-11 h-11 rounded-xl bg-[#bef264]/10 border border-[#bef264]/15 flex items-center justify-center group-hover:bg-[#bef264]/15 transition-colors">
+                  <role.icon size={22} className="text-[#bef264]" />
                 </div>
                 <span className="text-[11px] text-white/25 bg-white/[0.04] px-2.5 py-1 rounded-full border border-white/[0.05]">
                   {role.stats}
@@ -80,10 +80,10 @@ export default function RegisterGatewayPage() {
               </div>
 
               <h3 className="text-[16px] font-semibold text-white mb-1">{role.label}</h3>
-              <p className="text-[12px] text-[#8b5cf6]/70 font-medium mb-3">{role.tagline}</p>
+              <p className="text-[12px] text-[#bef264]/70 font-medium mb-3">{role.tagline}</p>
               <p className="text-[12px] text-white/30 leading-relaxed mb-5">{role.desc}</p>
 
-              <div className="flex items-center gap-2 text-[13px] font-medium text-white/50 group-hover:text-[#8b5cf6] transition-colors">
+              <div className="flex items-center gap-2 text-[13px] font-medium text-white/50 group-hover:text-[#bef264] transition-colors">
                 {role.cta}
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
               </div>
@@ -100,7 +100,7 @@ export default function RegisterGatewayPage() {
         className="text-center text-[13px] text-white/25 mt-8"
       >
         Already have an account?{" "}
-        <Link href="/login" className="text-[#8b5cf6] hover:text-[#ff6b6b] font-medium transition-colors">
+        <Link href="/login" className="text-[#bef264] hover:text-[#ff6b6b] font-medium transition-colors">
           Sign in
         </Link>
       </motion.p>

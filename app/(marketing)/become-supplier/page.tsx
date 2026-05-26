@@ -161,7 +161,7 @@ export default function SupplierOnboardingPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#050505]">
+      <div className="min-h-screen bg-[#000000]">
         <MarketingNav />
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -191,7 +191,7 @@ export default function SupplierOnboardingPage() {
 
             <div className="flex gap-4 justify-center">
               <Link href="/" className="px-6 py-3 rounded-xl bg-[#0a0a0a] border border-white/[0.08] text-white text-sm font-medium hover:bg-white/5 transition-colors">Back to Home</Link>
-              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors">Apply Another Business</button>
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
         </div>
@@ -201,7 +201,7 @@ export default function SupplierOnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505]">
+    <div className="min-h-screen bg-[#000000]">
       <MarketingNav />
 
       {/* Hero */}
@@ -238,7 +238,7 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-[#8b5cf6] text-white" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/5 text-white/30 border border-white/10"
+                          isActive ? "bg-[#bef264] text-white" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/5 text-white/30 border border-white/10"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
@@ -627,7 +627,7 @@ export default function SupplierOnboardingPage() {
                 {step < 5 ? (
                   <button
                     onClick={nextStep}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-colors"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-colors"
                   >
                     Continue<ArrowRight size={16} />
                   </button>
@@ -635,7 +635,7 @@ export default function SupplierOnboardingPage() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] disabled:opacity-50 text-white text-[13px] font-medium transition-colors"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] disabled:opacity-50 text-white text-[13px] font-medium transition-colors"
                   >
                     {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                     {submitting ? "Submitting..." : "Submit Application"}

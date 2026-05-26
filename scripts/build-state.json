@@ -1,0 +1,38 @@
+{
+  "project": "HotelsVendors",
+  "last_session": "2026-05-25T06:00:00Z",
+  "deployed_agents": [],
+  "incomplete_items": [
+    "Phase 1: Project Essentials (10 documents)",
+    "Phase 2: 5 Portals (Hotel, Supplier, Shipping, Financing, Admin)",
+    "Phase 3: Oliv Integration (reversed factoring)",
+    "Phase 4: AI Swarm Enhancements",
+    "Phase 5: UI/UX refinements",
+    "Phase 6: Pre-production + Pre-launch simulations",
+    "Payment rails: credit card, bank transfer, generated links, Paymob, Fawry",
+    "n8n onboarding engine: pending"
+  ],
+  "completed_items": [
+    "Landing page with dark theme (#050508, #7c3aed)",
+    "Marketplace page at /marketplace (dynamic, themed)",
+    "Mission Control Dashboard at /mission-control (live monitor)",
+    "Hermes container fixed: TERMINAL_ENV=local, Docker/SSH/file access restored",
+    "Health monitor systemd service (hv-health-monitor.service)",
+    "Database backups cron job",
+    "ETA integration code (mock mode, needs credentials)",
+    "Ollama swarm workers (Execution + Intelligence)",
+    "Next.js 16.2.4 app builds and runs via PM2"
+  ],
+  "health_endpoint": "http://187.77.181.3:3000/api/health",
+  "mission_control": "http://187.77.181.3:3000/mission-control",
+  "hermes_terminal": "http://187.77.181.3:32768",
+  "theme_locked": {
+    "bg_primary": "#050508",
+    "bg_card": "#0a0a12",
+    "accent_primary": "#7c3aed",
+    "accent_hover": "#8b5cf6",
+    "text_primary": "white",
+    "text_muted": "white/30",
+    "border_subtle": "border-white/[0.04]"
+  }
+}

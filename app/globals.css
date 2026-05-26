@@ -6,19 +6,19 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --brand-red: #8b5cf6;
+  --brand-red: #bef264;
   --header-bg: var(--brand-red);
   /* ── Background Layers ──
      Blue-purple undertone. Never pure black (#000000).
      Creates atmospheric depth like a dimly lit room. */
-  --bg-canvas: #050505;
+  --bg-canvas: #000000;
   --bg-surface-1: #0a0a0a;
   --bg-surface-2: #101010;
   --bg-surface-3: #1a1a1a;
 
   /* Legacy aliases (backward compat) */
-  --background: #050505;
-  --background-void: #080808;
+  --background: #000000;
+  --background-void: #000000;
   --surface: #0a0a0a;
   --surface-raised: #101010;
   --surface-hover: #1a1a1a;
@@ -30,7 +30,7 @@
   --text-secondary: #a0a0a0;
   --text-tertiary: #707070;
   --text-muted: #505050;
-  --text-inverse: #050505;
+  --text-inverse: #000000;
 
   /* Legacy aliases */
   --foreground: #f0f0f0;
@@ -39,7 +39,7 @@
   --foreground-muted: #505050;
   --foreground-faint: rgba(255,255,255,0.25);
   --foreground-dim: rgba(255,255,255,0.15);
-  --foreground-inverse: #050505;
+  --foreground-inverse: #000000;
 
   /* ── Borders ──
      Edge definition, not dividers. Simulate light catching
@@ -47,7 +47,7 @@
   --border-invisible: rgba(255, 255, 255, 0.06);
   --border-subtle: rgba(255, 255, 255, 0.10);
   --border-visible: rgba(255, 255, 255, 0.15);
-  --border-accent: rgba(2, 35, 73, 0.40);
+  --border-accent: rgba(163,230,53,0.40);
 
   /* Legacy aliases */
   --border-default: rgba(255,255,255,0.08);
@@ -56,23 +56,23 @@
 
   /* ── Crimson Accent Scale ──
      Brand color. NOT for errors — reserve #ff4444 for errors. */
-  --crimson-base: #8b5cf6;
-  --crimson-light: #1a4a7c;
-  --crimson-dark: #011e3a;
-  --crimson-muted: rgba(2, 35, 73, 0.15);
-  --crimson-glow: rgba(2, 35, 73, 0.25);
+  --crimson-base: #bef264;
+  --crimson-light: #bef264;
+  --crimson-dark: #a3e635;
+  --crimson-muted: rgba(163,230,53,0.15);
+  --crimson-glow: rgba(163,230,53,0.25);
 
   /* Legacy aliases */
-  --accent-500: #8b5cf6;
-  --accent-600: #01305e;
-  --accent-700: #011e3a;
-  --accent-glow: rgba(2,35,73,0.35);
-  --accent-glow-strong: rgba(2,35,73,0.50);
-  --brand-500: #8b5cf6;
-  --brand-400: #1a4a7c;
-  --brand-600: #01305e;
-  --brand-700: #011e3a;
-  --brand-800: #01142a;
+  --accent-500: #bef264;
+  --accent-600: #a3e635;
+  --accent-700: #a3e635;
+  --accent-glow: rgba(163,230,53,0.35);
+  --accent-glow-strong: rgba(163,230,53,0.50);
+  --brand-500: #bef264;
+  --brand-400: #bef264;
+  --brand-600: #a3e635;
+  --brand-700: #a3e635;
+  --brand-800: #a3e635;
 
   /* ── Complementary Gold ──
      Shifts crimson perception from "warning" to "premium". */
@@ -95,8 +95,8 @@
      Dark shadows = deep elevation only. */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --shadow-crimson-glow: 0 0 20px rgba(2, 35, 73, 0.15);
-  --shadow-glow-accent: 0 0 40px rgba(2,35,73,0.20);
+  --shadow-crimson-glow: 0 0 20px rgba(163,230,53,0.15);
+  --shadow-glow-accent: 0 0 40px rgba(163,230,53,0.20);
   --shadow-glow-white: 0 0 30px rgba(255,255,255,0.04);
 
   /* ── Layout ── */
@@ -279,7 +279,7 @@ body {
 .glass-input:focus {
   outline: none;
   border-color: var(--accent-500);
-  box-shadow: 0 0 0 3px rgba(2,35,73,0.15);
+  box-shadow: 0 0 0 3px rgba(163,230,53,0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -345,20 +345,20 @@ body {
   font-weight: 600;
   border-radius: 10px;
   border: 1px solid rgba(2,35,73,0.60);
-  box-shadow: 0 4px 14px rgba(2,35,73,0.25), 0 1px 2px rgba(2,35,73,0.30);
+  box-shadow: 0 4px 14px rgba(163,230,53,0.25), 0 1px 2px rgba(2,35,73,0.30);
   transition: all 0.2s var(--ease-out-expo);
   cursor: pointer;
 }
 .btn-crimson:hover {
   background: var(--crimson-light);
   border-color: rgba(2,35,73,0.80);
-  box-shadow: 0 6px 24px rgba(2,35,73,0.35), 0 1px 2px rgba(2,35,73,0.40);
+  box-shadow: 0 6px 24px rgba(163,230,53,0.35), 0 1px 2px rgba(2,35,73,0.40);
   transform: translateY(-1px);
 }
 .btn-crimson:active {
   background: var(--crimson-dark);
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(2,35,73,0.20);
+  box-shadow: 0 2px 8px rgba(163,230,53,0.20);
 }
 
 .btn-gold {
@@ -400,7 +400,7 @@ body {
   cursor: pointer;
 }
 .btn-primary:hover {
-  background: #01305e;
+  background: #a3e635;
   border-color: rgba(2,35,73,0.80);
   box-shadow: 0 0 24px rgba(2,35,73,0.30);
   transform: translateY(-1px);
@@ -486,8 +486,8 @@ body {
   100% { background-position: 0% center; }
 }
 @keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(2,35,73,0.20); }
-  50% { box-shadow: 0 0 30px rgba(2,35,73,0.35); }
+  0%, 100% { box-shadow: 0 0 20px rgba(163,230,53,0.20); }
+  50% { box-shadow: 0 0 30px rgba(163,230,53,0.35); }
 }
 @keyframes dotPulse {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -598,7 +598,7 @@ html[data-theme="light"] body {
 }
 
 html[data-theme="light"] ::selection {
-  background: rgba(2,35,73,0.20);
+  background: rgba(163,230,53,0.20);
   color: #0f172a;
 }
 
@@ -829,7 +829,7 @@ html[data-theme="light"] .home-hero p {
   color: #475569 !important;
 }
 html[data-theme="light"] .home-hero-badge {
-  background: #8b5cf6 !important;
+  background: #bef264 !important;
   color: #ffffff !important;
 }
 
@@ -842,7 +842,7 @@ html[data-theme="light"] .home-stats-value {
   color: #0f172a !important;
 }
 html[data-theme="light"] .home-stats-label {
-  color: #8b5cf6 !important;
+  color: #bef264 !important;
 }
 html[data-theme="light"] .home-stats-sub {
   color: #94a3b8 !important;
@@ -861,7 +861,7 @@ html[data-theme="light"] .home-section-heading span {
   color: #94a3b8 !important;
 }
 html[data-theme="light"] .home-section-label {
-  color: #8b5cf6 !important;
+  color: #bef264 !important;
 }
 html[data-theme="light"] .home-card {
   background: #ffffff !important;
@@ -879,7 +879,7 @@ html[data-theme="light"] .home-card-icon-bg:hover {
   border-color: rgba(139,92,246,0.15) !important;
 }
 html[data-theme="light"] .home-card-icon {
-  color: #8b5cf6 !important;
+  color: #bef264 !important;
 }
 html[data-theme="light"] .home-card-title {
   color: #0f172a !important;
@@ -900,7 +900,7 @@ html[data-theme="light"] .home-step-icon-bg {
   background: rgba(139,92,246,0.08) !important;
 }
 html[data-theme="light"] .home-step-icon {
-  color: #8b5cf6 !important;
+  color: #bef264 !important;
 }
 html[data-theme="light"] .home-step-title {
   color: #0f172a !important;
@@ -924,7 +924,7 @@ html[data-theme="light"] .home-cta p {
   color: #64748b !important;
 }
 html[data-theme="light"] .home-cta-btn-primary {
-  background: #8b5cf6 !important;
+  background: #bef264 !important;
   color: #ffffff !important;
 }
 html[data-theme="light"] .home-cta-btn-primary:hover {
@@ -961,7 +961,7 @@ html[data-theme="light"] .home-section-border {
   /* OLED Blacks - True black and near-blacks for OLED energy efficiency */
   --oled-pure: #000000;
   --oled-void: #020202;
-  --oled-deep: #050508;
+  --oled-deep: #000000;
   --oled-foundation: #08080c;
   --oled-base: #0a0a10;
   --oled-elevated: #0f0f14;
@@ -980,7 +980,7 @@ html[data-theme="light"] .home-section-border {
   --enterprise-950: #18181b;
   
   /* Premium Accents - Crimson refined with gold undertones */
-  --crimson-primary: #8b5cf6;
+  --crimson-primary: #bef264;
   --crimson-deep: #6d28d9;
   --crimson-rich: #9333ea;
   --crimson-bright: #a78bfa;
@@ -1530,8 +1530,8 @@ html[data-theme="light"] .home-section-border {
 }
 
 [data-theme="plum"] {
-  --brand-red: #7c3aed;
-  --header-bg: #7c3aed;
+  --brand-red: #a3e635;
+  --header-bg: #a3e635;
   --bg-canvas: #0d0a12;
   --bg-surface-1: #151220;
   --bg-surface-2: #1e1a2e;
@@ -1541,15 +1541,15 @@ html[data-theme="light"] .home-section-border {
   --surface: #151220;
   --surface-raised: #1e1a2e;
   --surface-hover: #282238;
-  --crimson-base: #7c3aed;
+  --crimson-base: #a3e635;
   --crimson-light: #a78bfa;
   --crimson-dark: #4c1d95;
   --crimson-muted: rgba(124,58,237,0.15);
   --crimson-glow: rgba(124,58,237,0.25);
-  --accent-500: #7c3aed;
+  --accent-500: #a3e635;
   --accent-600: #6d28d9;
   --accent-700: #4c1d95;
-  --brand-500: #7c3aed;
+  --brand-500: #a3e635;
   --brand-400: #a78bfa;
   --brand-600: #6d28d9;
   --brand-700: #4c1d95;

@@ -105,7 +105,7 @@ export default function SupplierProductsPage() {
         </div>
         <Link
           href="/supplier/products/new"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 text-xs text-white font-medium transition-all self-start"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#bef264] hover:bg-[#bef264]/80 text-xs text-white font-medium transition-all self-start"
         >
           <Plus size={14} />
           Add Product
@@ -142,7 +142,7 @@ export default function SupplierProductsPage() {
             placeholder="Search by name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8b5cf6]/50 w-full"
+            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#bef264]/50 w-full"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function SupplierProductsPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="pl-9 pr-8 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8b5cf6]/50 appearance-none cursor-pointer"
+              className="pl-9 pr-8 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#bef264]/50 appearance-none cursor-pointer"
             >
               {categories.map((c) => (
                 <option key={c} value={c} className="bg-[#121212]">

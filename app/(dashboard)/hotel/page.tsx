@@ -111,8 +111,8 @@ const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; lab
   DRAFT: { bg: "bg-white/[0.06]", text: "text-white/40", dot: "bg-white/40", label: "Draft", columnBg: "bg-white/[0.01]" },
   PENDING_APPROVAL: { bg: "bg-amber-500/[0.08]", text: "text-amber-400/80", dot: "bg-amber-400", label: "Pending", columnBg: "bg-amber-500/[0.02]" },
   APPROVED: { bg: "bg-blue-500/[0.08]", text: "text-blue-400/80", dot: "bg-blue-400", label: "Approved", columnBg: "bg-blue-500/[0.02]" },
-  CONFIRMED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]/80", dot: "bg-[#8b5cf6]", label: "Confirmed", columnBg: "bg-[#8b5cf6]/[0.03]" },
-  IN_TRANSIT: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]/80", dot: "bg-[#8b5cf6]", label: "In Transit", columnBg: "bg-[#8b5cf6]/[0.03]" },
+  CONFIRMED: { bg: "bg-[#bef264]/10", text: "text-[#bef264]/80", dot: "bg-[#bef264]", label: "Confirmed", columnBg: "bg-[#bef264]/[0.03]" },
+  IN_TRANSIT: { bg: "bg-[#bef264]/10", text: "text-[#bef264]/80", dot: "bg-[#bef264]", label: "In Transit", columnBg: "bg-[#bef264]/[0.03]" },
   DELIVERED: { bg: "bg-emerald-500/[0.08]", text: "text-emerald-400/80", dot: "bg-emerald-400", label: "Delivered", columnBg: "bg-emerald-500/[0.02]" },
   CANCELLED: { bg: "bg-red-500/[0.08]", text: "text-red-400/80", dot: "bg-red-400", label: "Cancelled", columnBg: "bg-red-500/[0.02]" },
 };
@@ -231,7 +231,7 @@ function SpendOverview({ data, loading }: { data: SpendData | null; loading: boo
             return (
               <div key={record.month} className="flex-1 flex flex-col items-center gap-1.5 group">
                 <div className="relative w-full flex justify-center">
-                  <div className="w-full max-w-[28px] rounded-t bg-gradient-to-t from-[#8b5cf6]/40 to-[#8b5cf6]/70 hover:from-[#8b5cf6]/60 hover:to-[#8b5cf6] transition-all" style={{ height: `${height}%` }} />
+                  <div className="w-full max-w-[28px] rounded-t bg-gradient-to-t from-[#bef264]/40 to-[#bef264]/70 hover:from-[#bef264]/60 hover:to-[#bef264] transition-all" style={{ height: `${height}%` }} />
                   <div className="absolute -top-7 opacity-0 group-hover:opacity-100 transition-opacity bg-[#1a1a1a] border border-white/[0.06] rounded-lg px-2.5 py-1 text-[10px] text-white/70 whitespace-nowrap z-10 shadow-xl">
                     {formatCurrency(record.amount)}
                   </div>
@@ -258,7 +258,7 @@ function SpendOverview({ data, loading }: { data: SpendData | null; loading: boo
                   </div>
                 </div>
                 <div className="h-1.5 rounded-full bg-white/[0.03] overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6]/40 to-[#8b5cf6]/70 transition-all" style={{ width: `${pct}%` }} />
+                  <div className="h-full rounded-full bg-gradient-to-r from-[#bef264]/40 to-[#bef264]/70 transition-all" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
@@ -385,7 +385,7 @@ function FactoringCard({ facility, loading }: { facility: CreditFacility | null;
       <div className="relative">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-md bg-[#8b5cf6]/10"><CreditCard size={13} className="text-[#8b5cf6]" /></div>
+            <div className="p-1.5 rounded-md bg-[#bef264]/10"><CreditCard size={13} className="text-[#bef264]" /></div>
             <span className="text-[12px] font-semibold text-white/70">Credit Line</span>
           </div>
           <span className="text-[10px] text-white/25 uppercase tracking-wider">{facility.status}</span>
@@ -401,11 +401,11 @@ function FactoringCard({ facility, loading }: { facility: CreditFacility | null;
           </div>
         </div>
         <div className="h-2 rounded-full bg-white/[0.03] overflow-hidden mb-3">
-          <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6]/50 to-[#8b5cf6] transition-all" style={{ width: `${utilization}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-[#bef264]/50 to-[#bef264] transition-all" style={{ width: `${utilization}%` }} />
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-white/20">{facility.interestRate}% APR</span>
-          <button className="text-[11px] font-medium text-[#8b5cf6] hover:text-white transition-colors">Apply &rarr;</button>
+          <button className="text-[11px] font-medium text-[#bef264] hover:text-white transition-colors">Apply &rarr;</button>
         </div>
       </div>
     </div>
@@ -463,7 +463,7 @@ export default function HotelDashboardPage() {
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
                 <input
                   type="text" placeholder="Search orders..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white placeholder-white/20 focus:outline-none focus:border-[#8b5cf6]/30 w-48"
+                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white placeholder-white/20 focus:outline-none focus:border-[#bef264]/30 w-48"
                 />
               </div>
               <button className="btn-crimson text-[12px] py-1.5 px-3">

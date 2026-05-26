@@ -139,7 +139,7 @@ export function TrustedByMarquee() {
   const duplicated = [...LOCAL_CHAINS, ...LOCAL_CHAINS];
 
   return (
-    <section className="py-5 bg-[#050505] border-y border-white/[0.04]">
+    <section className="py-5 bg-[#000000] border-y border-white/[0.04]">
       <div className="max-w-7xl mx-auto px-6 mb-3">
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-medium text-white/25 uppercase tracking-[0.15em]">
@@ -158,8 +158,8 @@ export function TrustedByMarquee() {
       </div>
 
       <div className="relative overflow-hidden">
-        <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#000000] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#000000] to-transparent z-10 pointer-events-none" />
 
         <motion.div
           className="flex gap-4"

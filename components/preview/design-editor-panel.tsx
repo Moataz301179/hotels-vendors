@@ -41,7 +41,7 @@ function Slider({ label, value, min, max, onChange, unit = "" }: { label: string
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         className="w-full h-1 bg-white/[0.08] rounded-full appearance-none cursor-pointer"
-        style={{ accentColor: "var(--preview-accent, #8b5cf6)" }}
+        style={{ accentColor: "var(--preview-accent, #bef264)" }}
       />
     </div>
   );
@@ -78,7 +78,7 @@ export function DesignEditorPanel({
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
         <div className="flex items-center gap-2">
-          <Wand2 size={14} className="text-[var(--preview-accent,#8b5cf6)]" />
+          <Wand2 size={14} className="text-[var(--preview-accent,#bef264)]" />
           <span className="text-[13px] font-semibold text-white">Design Studio</span>
         </div>
         <div className="flex items-center gap-1">
@@ -105,7 +105,7 @@ export function DesignEditorPanel({
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium transition-colors ${
-              activeTab === tab.id ? "text-white border-b-2 border-[var(--preview-accent,#8b5cf6)]" : "text-white/30 hover:text-white/60"
+              activeTab === tab.id ? "text-white border-b-2 border-[var(--preview-accent,#bef264)]" : "text-white/30 hover:text-white/60"
             }`}
           >
             <tab.icon size={12} />

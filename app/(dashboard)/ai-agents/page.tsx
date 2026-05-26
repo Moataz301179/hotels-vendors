@@ -33,7 +33,7 @@ interface AgentRun {
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     completed: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Completed" },
-    running: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Running" },
+    running: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "Running" },
     failed: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Failed" },
     queued: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Queued" },
   };
@@ -88,7 +88,7 @@ export default function AIAgentsPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl font-bold tracking-tight text-white">AI Agent Swarm</h1>
-            <Sparkles size={18} className="text-[#8b5cf6]" />
+            <Sparkles size={18} className="text-[#bef264]" />
           </div>
           <p className="text-sm text-white/40 mt-0.5">Autonomous agent orchestration, task execution, and swarm intelligence</p>
         </div>
@@ -97,7 +97,7 @@ export default function AIAgentsPage() {
             <Settings size={14} />
             Configure
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 text-xs text-white font-medium transition-all">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#bef264] hover:bg-[#bef264]/80 text-xs text-white font-medium transition-all">
             <Play size={14} />
             Run All
           </button>

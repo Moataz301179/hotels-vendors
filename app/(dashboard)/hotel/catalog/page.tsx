@@ -61,7 +61,7 @@ export default function CatalogWorkspace() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   return (
-    <div className="bg-[#050505] text-[#f0f0f0] p-6 font-sans min-h-screen">
+    <div className="bg-[#000000] text-[#f0f0f0] p-6 font-sans min-h-screen">
       <div className="max-w-[1600px] mx-auto space-y-6">
         
         {/* Header Section */}
@@ -76,7 +76,7 @@ export default function CatalogWorkspace() {
             <button className="px-4 py-2 border border-white/[0.08] bg-[#0a0a0a] rounded text-xs text-[#a0a0a0] flex items-center gap-2 hover:text-white transition-colors">
               <Filter size={14} /> Filter Parameters
             </button>
-            <button className="px-4 py-2 bg-[#8b5cf6] text-white rounded text-xs font-semibold hover:bg-[#1a4a7c] transition-colors border border-transparent">
+            <button className="px-4 py-2 bg-[#bef264] text-white rounded text-xs font-semibold hover:bg-[#bef264] transition-colors border border-transparent">
               Initialize Bulk PO
             </button>
           </div>
@@ -133,7 +133,7 @@ export default function CatalogWorkspace() {
                     <td className="py-3 px-4 text-xs font-medium text-right text-[#e1a95f]">{row.pricePerUnit}</td>
                     <td className="py-3 px-4 text-center">
                       {row.factoringEligible ? (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#011e3a] border border-[#1a4a7c] text-[9px] font-bold uppercase tracking-wider text-[#55b3ff]">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#a3e635] border border-[#bef264] text-[9px] font-bold uppercase tracking-wider text-[#55b3ff]">
                           <CheckCircle2 size={10} className="text-[#55b3ff]" /> Factoring Eligible
                         </span>
                       ) : (

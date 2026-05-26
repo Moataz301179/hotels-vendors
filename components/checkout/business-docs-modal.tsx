@@ -66,8 +66,8 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center">
-                  <FileCheck className="w-4 h-4 text-[#8b5cf6]" />
+                <div className="w-8 h-8 rounded-lg bg-[#bef264]/10 border border-[#bef264]/20 flex items-center justify-center">
+                  <FileCheck className="w-4 h-4 text-[#bef264]" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white">Business Verification Required</h3>
@@ -99,7 +99,7 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
                   </div>
                   <button
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-lg bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors"
+                    className="px-5 py-2.5 rounded-lg bg-[#bef264] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors"
                   >
                     Continue
                   </button>
@@ -123,8 +123,8 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
 
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-white/60 uppercase tracking-wider flex items-center gap-2">
-                      <Building2 className="w-3.5 h-3.5 text-[#8b5cf6]" />
-                      Tax ID <span className="text-[#8b5cf6]">*</span>
+                      <Building2 className="w-3.5 h-3.5 text-[#bef264]" />
+                      Tax ID <span className="text-[#bef264]">*</span>
                     </label>
                     <input
                       type="text"
@@ -132,21 +132,21 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
                       onChange={(e) => setTaxId(e.target.value.replace(/\D/g, ""))}
                       placeholder="9-digit Egyptian tax ID"
                       maxLength={9}
-                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8b5cf6]/60 focus:ring-1 focus:ring-[#8b5cf6]/20 transition-all"
+                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#bef264]/60 focus:ring-1 focus:ring-[#bef264]/20 transition-all"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-white/60 uppercase tracking-wider flex items-center gap-2">
-                      <FileCheck className="w-3.5 h-3.5 text-[#8b5cf6]" />
-                      Commercial Registration <span className="text-[#8b5cf6]">*</span>
+                      <FileCheck className="w-3.5 h-3.5 text-[#bef264]" />
+                      Commercial Registration <span className="text-[#bef264]">*</span>
                     </label>
                     <input
                       type="text"
                       value={commercialReg}
                       onChange={(e) => setCommercialReg(e.target.value)}
                       placeholder="Commercial registration number"
-                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8b5cf6]/60 focus:ring-1 focus:ring-[#8b5cf6]/20 transition-all"
+                      className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#bef264]/60 focus:ring-1 focus:ring-[#bef264]/20 transition-all"
                     />
                   </div>
 
@@ -155,7 +155,7 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
                       type="checkbox"
                       checked={saveForFuture}
                       onChange={(e) => setSaveForFuture(e.target.checked)}
-                      className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/[0.04] text-[#8b5cf6] focus:ring-[#8b5cf6]/20"
+                      className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/[0.04] text-[#bef264] focus:ring-[#bef264]/20"
                     />
                     <span className="text-xs text-white/40 leading-relaxed">
                       Save these details for future transactions. You can update them anytime in your account settings.
@@ -165,7 +165,7 @@ export function BusinessDocsModal({ isOpen, onClose, onSubmit, entityName = "you
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(139, 92, 246,0.2)]"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#bef264] hover:bg-[#6d28d9] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(139, 92, 246,0.2)]"
                   >
                     {loading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

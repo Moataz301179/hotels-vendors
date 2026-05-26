@@ -87,7 +87,7 @@ export default function CreditLineReviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#000000] text-white">
       <div className="border-b border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -93,7 +93,7 @@ export function PublicChatbot() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#8b5cf6] shadow-lg shadow-black/20 hover:bg-[#8b5cf6] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#bef264] shadow-lg shadow-black/20 hover:bg-[#bef264] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
           title="HotelsVendors Guide"
         >
           <Sparkles size={22} />

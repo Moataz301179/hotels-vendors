@@ -52,8 +52,8 @@ interface ComplianceData {
 const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; label: string }> = {
   PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
   APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
-  CONFIRMED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Confirmed" },
-  IN_TRANSIT: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "In Transit" },
+  CONFIRMED: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "Confirmed" },
+  IN_TRANSIT: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "In Transit" },
   DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
   CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
   DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
@@ -173,8 +173,8 @@ function HotelBuyers({ orders }: { orders: Order[] }) {
       {buyers.map((buyer, i) => (
         <motion.div key={buyer.name} variants={cardEnter} initial="hidden" animate="visible" transition={{ delay: i * 0.05 }}
           className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.015] border border-white/[0.03] hover:border-white/[0.06] hover:bg-white/[0.025] transition-all cursor-pointer group">
-          <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0">
-            <Building2 size={14} className="text-[#8b5cf6]" />
+          <div className="w-8 h-8 rounded-lg bg-[#bef264]/10 flex items-center justify-center flex-shrink-0">
+            <Building2 size={14} className="text-[#bef264]" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[12px] font-medium text-white/70 truncate group-hover:text-white/90 transition-colors">{buyer.name}</p>
@@ -273,7 +273,7 @@ export default function SupplierDashboardPage() {
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
                 <input type="text" placeholder="Search orders..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white placeholder-white/20 focus:outline-none focus:border-[#8b5cf6]/30 w-48" />
+                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white placeholder-white/20 focus:outline-none focus:border-[#bef264]/30 w-48" />
               </div>
               <button className="btn-crimson text-[12px] py-1.5 px-3"><Plus size={14} /> Add Product</button>
             </div>
@@ -295,8 +295,8 @@ export default function SupplierDashboardPage() {
                   <motion.div key={order.id} variants={cardEnter} initial="hidden" animate="visible"
                     whileHover={{ scale: 1.01 }} onClick={() => setSelectedOrder(order)}
                     className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.015] border border-white/[0.03] hover:border-white/[0.08] cursor-pointer transition-all group">
-                    <div className="w-9 h-9 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0">
-                      <ClipboardList size={15} className="text-[#8b5cf6]" />
+                    <div className="w-9 h-9 rounded-lg bg-[#bef264]/10 flex items-center justify-center flex-shrink-0">
+                      <ClipboardList size={15} className="text-[#bef264]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">

@@ -5,11 +5,11 @@ import { Search, ShieldCheck, CheckCircle2, Building, PackageSearch } from "luci
 
 export default function MarketplaceFront() {
   return (
-    <div className="min-h-screen bg-[#050505] text-[#f0f0f0] font-sans flex flex-col">
+    <div className="min-h-screen bg-[#000000] text-[#f0f0f0] font-sans flex flex-col">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-white/[0.08] bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-[#8b5cf6] flex items-center justify-center font-bold text-white tracking-tighter">HV</div>
+          <div className="w-8 h-8 rounded bg-[#bef264] flex items-center justify-center font-bold text-white tracking-tighter">HV</div>
           <span className="text-lg font-black tracking-tight text-white">HotelsVendors</span>
         </div>
         <div className="flex items-center gap-6 text-sm font-medium">
@@ -26,7 +26,7 @@ export default function MarketplaceFront() {
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
         {/* Abstract Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#8b5cf6]/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#bef264]/20 blur-[120px] rounded-full pointer-events-none" />
 
         <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white max-w-4xl leading-tight mb-6 relative z-10">
           The Financial Operating System for <span className="text-[#e1a95f]">Egyptian Hospitality</span>.
@@ -44,7 +44,7 @@ export default function MarketplaceFront() {
             placeholder="Search SKUs, Factories, or Asset Categories (e.g., 'Luxury Bath Towels 800 GSM')"
             className="flex-1 bg-transparent border-none text-white px-4 py-3 text-sm focus:outline-none focus:ring-0 placeholder-[#505050]"
           />
-          <button className="bg-[#8b5cf6] text-white px-6 py-3 rounded text-sm font-bold hover:bg-[#a00000] transition-colors">
+          <button className="bg-[#bef264] text-white px-6 py-3 rounded text-sm font-bold hover:bg-[#a00000] transition-colors">
             Query Matrix
           </button>
         </div>
@@ -52,7 +52,7 @@ export default function MarketplaceFront() {
         {/* Enterprise Trust Badges (CPA & ETA) */}
         <div className="mt-20 flex flex-wrap justify-center gap-8 relative z-10">
           
-          <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#011e3a]/40 border border-[#1a4a7c]/50">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#a3e635]/40 border border-[#bef264]/50">
             <ShieldCheck size={28} className="text-[#55b3ff]" />
             <div className="text-left">
               <div className="text-xs font-bold text-white flex items-center gap-1.5">
@@ -76,7 +76,7 @@ export default function MarketplaceFront() {
       </main>
 
       {/* Footer (Supplier Backdoor) */}
-      <footer className="border-t border-white/[0.08] bg-[#050505] py-8 px-8 flex justify-between items-center text-xs">
+      <footer className="border-t border-white/[0.08] bg-[#000000] py-8 px-8 flex justify-between items-center text-xs">
         <div className="text-[#505050]">© 2026 HotelsVendors. Institutional Grade B2B.</div>
         <div className="flex gap-6">
           <a href="#" className="text-[#a0a0a0] hover:text-[#e1a95f] transition-colors font-semibold flex items-center gap-2">

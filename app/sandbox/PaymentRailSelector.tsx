@@ -86,12 +86,12 @@ export default function PaymentRailSelector({
             disabled={!method.enabled}
             className={`w-full flex items-center justify-between p-4 rounded border transition-all ${
               activeRail === method.id
-                ? "bg-[#011e3a] border-[#1a4a7c] ring-1 ring-[#1a4a7c]"
+                ? "bg-[#a3e635] border-[#bef264] ring-1 ring-[#bef264]"
                 : "bg-[#101010] border-white/[0.05] hover:bg-white/[0.02]"
             } ${!method.enabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center gap-4">
-              <div className={`p-2 rounded ${activeRail === method.id ? "bg-[#1a4a7c]/40 text-[#55b3ff]" : "bg-white/[0.04] text-[#707070]"}`}>
+              <div className={`p-2 rounded ${activeRail === method.id ? "bg-[#bef264]/40 text-[#55b3ff]" : "bg-white/[0.04] text-[#707070]"}`}>
                 <method.icon size={20} />
               </div>
               <div className="text-left">
@@ -133,7 +133,7 @@ export default function PaymentRailSelector({
       <button 
         onClick={handleAuthorize}
         disabled={isPending}
-        className="w-full mt-6 py-3 rounded bg-[#8b5cf6] text-white text-sm font-bold shadow-lg shadow-black/50 hover:bg-[#a00000] transition-colors border border-[#a00000]/50 flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full mt-6 py-3 rounded bg-[#bef264] text-white text-sm font-bold shadow-lg shadow-black/50 hover:bg-[#a00000] transition-colors border border-[#a00000]/50 flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {isPending && <Loader2 size={16} className="animate-spin" />}
         Authorize {activeRail} Settlement

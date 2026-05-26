@@ -32,14 +32,14 @@ export default function DeliveryHandshake({
   return (
     <div className="bg-[#101010] border border-white/[0.08] p-6 rounded-lg text-[#f0f0f0] w-full max-w-md font-sans mx-auto">
       <div className="text-center mb-6">
-        <div className="w-12 h-12 rounded-full bg-[#1a4a7c]/20 flex items-center justify-center mx-auto mb-3">
+        <div className="w-12 h-12 rounded-full bg-[#bef264]/20 flex items-center justify-center mx-auto mb-3">
           <Truck size={24} className="text-[#55b3ff]" />
         </div>
         <h2 className="text-xl font-bold text-white">GRN Handshake</h2>
         <p className="text-xs text-[#a0a0a0] mt-1">Cryptographic Goods Receipt Note verification.</p>
       </div>
 
-      <div className="bg-[#050505] border border-white/[0.04] p-4 rounded mb-6 text-sm">
+      <div className="bg-[#000000] border border-white/[0.04] p-4 rounded mb-6 text-sm">
         <div className="flex justify-between mb-2">
           <span className="text-[#707070]">Purchase Order</span>
           <span className="font-mono text-white">{poNumber}</span>
@@ -66,7 +66,7 @@ export default function DeliveryHandshake({
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value.replace(/\\D/g, ''))}
               placeholder="000000"
-              className="w-full bg-[#0a0a0a] border border-[#1a4a7c] text-white text-center text-3xl tracking-[0.5em] py-4 rounded font-mono focus:outline-none focus:ring-1 focus:ring-[#55b3ff]"
+              className="w-full bg-[#0a0a0a] border border-[#bef264] text-white text-center text-3xl tracking-[0.5em] py-4 rounded font-mono focus:outline-none focus:ring-1 focus:ring-[#55b3ff]"
             />
           </div>
 

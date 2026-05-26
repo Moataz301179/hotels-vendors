@@ -139,7 +139,7 @@ export default function HotelInvoicesPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-[#8b5cf6] text-white"
+                  ? "bg-[#bef264] text-white"
                   : "text-white/40 hover:text-white/70 hover:bg-white/[0.03]"
               }`}
             >
@@ -154,7 +154,7 @@ export default function HotelInvoicesPage() {
             placeholder="Search invoice number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8b5cf6]/50 w-64"
+            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#bef264]/50 w-64"
           />
         </div>
       </motion.div>

@@ -133,7 +133,7 @@ export default function AnalyticsPage() {
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <div
-                      className="w-full rounded-t-md bg-[#8b5cf6]/30 hover:bg-[#8b5cf6]/50 transition-colors"
+                      className="w-full rounded-t-md bg-[#bef264]/30 hover:bg-[#bef264]/50 transition-colors"
                       style={{ height: `${height}%` }}
                     />
                   </div>
@@ -162,7 +162,7 @@ export default function AnalyticsPage() {
           {categoryData.length > 0 ? (
             <div className="space-y-3">
               {categoryData.map((cat, i) => {
-                const colors = ["#8b5cf6", "#3b82f6", "#10b981", "#f59e0b", "#6b7280", "#ec4899"];
+                const colors = ["#bef264", "#3b82f6", "#10b981", "#f59e0b", "#6b7280", "#ec4899"];
                 return (
                   <div key={i} className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ background: colors[i % colors.length] }} />

@@ -38,8 +38,8 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
-    CONFIRMED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Confirmed" },
-    IN_TRANSIT: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "In Transit" },
+    CONFIRMED: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "Confirmed" },
+    IN_TRANSIT: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
     DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
@@ -57,7 +57,7 @@ function PaymentBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     PAID: "bg-emerald-500/10 text-emerald-400",
     PENDING: "bg-amber-500/10 text-amber-400",
-    FACTORED: "bg-[#8b5cf6]/10 text-[#8b5cf6]",
+    FACTORED: "bg-[#bef264]/10 text-[#bef264]",
     UNPAID: "bg-red-500/10 text-red-400",
   };
   return (
@@ -143,7 +143,7 @@ export default function OrdersPage() {
             placeholder="Search orders, hotels, suppliers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8b5cf6]/50"
+            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#bef264]/50"
           />
         </div>
         <select

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HotelsVendors — Operations Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            hv: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; background: #f8fafc; }
+    .nav-item { transition: all 0.15s; }
+    .nav-item:hover { background: rgba(14, 165, 233, 0.08); }
+    .nav-item.active { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
+    .workflow-card { transition: all 0.2s; cursor: pointer; }
+    .workflow-card:hover { border-color: #0ea5e9; box-shadow: 0 4px 12px -2px rgba(14, 165, 233, 0.15); }
+    .workflow-card.active { border-color: #0ea5e9; background: #f0f9ff; }
+    .chat-bubble { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .typing-indicator span { animation: typing 1.4s infinite; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+  </style>
+</head>
+<body class="text-slate-800 h-screen overflow-hidden">
+
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-hv-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">HV</div>
+      <span class="font-semibold text-slate-900">HotelsVendors</span>
+      <span class="text-xs text-slate-400 px-2 py-0.5 bg-slate-100 rounded-full">Operations</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-lg">
+        <div class="w-2 h-2 bg-emerald-500 rounded-full pulse-dot"></div>
+        <span class="text-xs font-medium text-emerald-700">Swarm Active</span>
+      </div>
+      <div class="w-8 h-8 bg-hv-100 rounded-full flex items-center justify-center text-hv-700 font-semibold text-sm">MA</div>
+    </div>
+  </header>
+
+  <div class="flex pt-14 h-screen">
+    <!-- Left Sidebar: Navigation -->
+    <aside class="w-14 bg-white border-r border-slate-200 flex flex-col items-center py-3 gap-1 fixed left-0 top-14 bottom-0 z-40">
+      <button class="nav-item active w-10 h-10 rounded-lg flex items-center justify-center" title="Workflows">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <button class="nav-item w-10 h-10 rounded-lg flex items-center justify-center text-slate-400" title="Orders">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      </button>
+      <button class="nav-item w-10 h-10 rounded-lg flex items-center justify-center text-slate-400" title="Vendors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      </button>
+      <button class="nav-item w-10 h-10 rounded-lg flex items-center justify-center text-slate-400" title="Chat">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+      </button>
+      <div class="flex-1"></div>
+      <button class="nav-item w-10 h-10 rounded-lg flex items-center justify-center text-slate-400" title="Settings">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+    </aside>
+
+    <!-- Center Panel: Active Workflows -->
+    <main class="flex-1 ml-14 bg-slate-50 overflow-y-auto">
+      <div class="p-5 max-w-2xl mx-auto">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h1 class="text-lg font-bold text-slate-900">Active Workflows</h1>
+            <p class="text-xs text-slate-400 mt-0.5">6 procurement processes in progress</p>
+          </div>
+          <button class="px-3 py-1.5 bg-hv-600 text-white rounded-lg text-xs font-medium hover:bg-hv-700">+ New Workflow</button>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Workflow 1 -->
+          <div class="workflow-card active bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-hv-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-hv-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-sm text-slate-900">Q3 Linen Restock</h3>
+                  <p class="text-xs text-slate-400">Cairo Linens • EGP 89,000</p>
+                </div>
+              </div>
+              <span class="text-xs font-medium text-hv-600 bg-hv-50 px-2 py-1 rounded-full">In Review</span>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-hv-500 rounded-full" style="width: 65%"></div>
+              </div>
+              <span class="text-xs text-slate-400 w-8">65%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 bg-hv-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-hv-700">MA</div>
+                <div class="w-6 h-6 bg-emerald-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-emerald-700">AI</div>
+              </div>
+              <span class="text-xs text-slate-400">Waiting for Pre-Spend Gatekeeper approval</span>
+            </div>
+          </div>
+
+          <!-- Workflow 2 -->
+          <div class="workflow-card bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-sm text-slate-900">Weekly Fresh Produce</h3>
+                  <p class="text-xs text-slate-400">Al-Amal Foods • EGP 45,200</p>
+                </div>
+              </div>
+              <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Ordered</span>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 80%"></div>
+              </div>
+              <span class="text-xs text-slate-400 w-8">80%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 bg-hv-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-hv-700">MA</div>
+              </div>
+              <span class="text-xs text-slate-400">In transit • ETA 2 hours</span>
+            </div>
+          </div>
+
+          <!-- Workflow 3 -->
+          <div class="workflow-card bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-sm text-slate-900">Chemical Supply Negotiation</h3>
+                  <p class="text-xs text-slate-400">Nile Chemicals • EGP 12,800</p>
+                </div>
+              </div>
+              <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Action Needed</span>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full" style="width: 40%"></div>
+              </div>
+              <span class="text-xs text-slate-400 w-8">40%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 bg-hv-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-hv-700">MA</div>
+                <div class="w-6 h-6 bg-purple-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-purple-700">NC</div>
+              </div>
+              <span class="text-xs text-slate-400">Vendor counter-offer received</span>
+            </div>
+          </div>
+
+          <!-- Workflow 4 -->
+          <div class="workflow-card bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-sm text-slate-900">AI Cost Optimization</h3>
+                  <p class="text-xs text-slate-400">Multi-vendor • EGP 234K potential</p>
+                </div>
+              </div>
+              <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Swarm</span>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-purple-500 rounded-full" style="width: 25%"></div>
+              </div>
+              <span class="text-xs text-slate-400 w-8">25%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 bg-purple-100 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-purple-700">AI</div>
+              </div>
+              <span class="text-xs text-slate-400">Analyzing 23 vendor contracts...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Panel: Real-time Activity -->
+    <aside class="w-80 bg-white border-l border-slate-200 flex flex-col fixed right-0 top-14 bottom-0">
+      <div class="p-4 border-b border-slate-100">
+        <h2 class="font-semibold text-sm text-slate-900">Live Activity</h2>
+        <p class="text-xs text-slate-400">Vendor chat & swarm alerts</p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Chat Message -->
+        <div class="chat-bubble">
+          <div class="flex items-start gap-2">
+            <div class="w-7 h-7 bg-emerald-100 rounded-full flex items-center justify-center text-[10px] font-bold text-emerald-700 flex-shrink-0">AF</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-medium">Al-Amal Foods</span>
+                <span class="text-[10px] text-slate-400">2m ago</span>
+              </div>
+              <p class="text-xs text-slate-600 bg-slate-50 rounded-lg p-2">Order #ORD-7829 is out for delivery. Expected arrival: 14:30.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Alert -->
+        <div class="chat-bubble">
+          <div class="flex items-start gap-2">
+            <div class="w-7 h-7 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"/></svg>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-medium text-purple-600">Cost Optimizer</span>
+                <span class="text-[10px] text-slate-400">5m ago</span>
+              </div>
+              <p class="text-xs text-slate-600 bg-purple-50 rounded-lg p-2">Detected price drop on olive oil (Al-Amal). Lock in 3-month contract?</p>
+              <div class="flex gap-2 mt-1.5">
+                <button class="px-2 py-1 bg-purple-600 text-white rounded text-[10px] font-medium">Lock</button>
+                <button class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[10px] font-medium">Ignore</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Message -->
+        <div class="chat-bubble">
+          <div class="flex items-start gap-2">
+            <div class="w-7 h-7 bg-amber-100 rounded-full flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">NC</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-medium">Nile Chemicals</span>
+                <span class="text-[10px] text-slate-400">12m ago</span>
+              </div>
+              <p class="text-xs text-slate-600 bg-slate-50 rounded-lg p-2">We can match Delta's pricing on bulk bleach if you commit to 6 months.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="flex items-center gap-2 pl-9">
+          <div class="typing-indicator flex gap-0.5">
+            <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+            <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+            <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+          </div>
+          <span class="text-[10px] text-slate-400">Cashflow Planner is typing...</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="p-3 border-t border-slate-100 bg-slate-50">
+        <div class="flex gap-2">
+          <input type="text" placeholder="Message vendor or AI..." class="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-hv-500">
+          <button class="px-3 py-2 bg-hv-600 text-white rounded-lg hover:bg-hv-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+</body>
+</html>

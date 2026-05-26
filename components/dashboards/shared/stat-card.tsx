@@ -14,7 +14,7 @@ interface StatCardProps {
 }
 
 const colorMap = {
-  crimson: { accent: "bg-[#8b5cf6]/20", dot: "bg-[#8b5cf6]", icon: "text-[#8b5cf6]", glow: "hover:shadow-[0_0_20px_rgba(139,92,246,0.1)]" },
+  crimson: { accent: "bg-[#bef264]/20", dot: "bg-[#bef264]", icon: "text-[#bef264]", glow: "hover:shadow-[0_0_20px_rgba(139,92,246,0.1)]" },
   emerald: { accent: "bg-emerald-500/15", dot: "bg-emerald-500", icon: "text-emerald-400", glow: "hover:shadow-[0_0_20px_rgba(16,185,129,0.08)]" },
   amber: { accent: "bg-amber-500/15", dot: "bg-amber-500", icon: "text-amber-400", glow: "hover:shadow-[0_0_20px_rgba(245,158,11,0.08)]" },
   blue: { accent: "bg-blue-500/15", dot: "bg-blue-500", icon: "text-blue-400", glow: "hover:shadow-[0_0_20px_rgba(59,130,246,0.08)]" },

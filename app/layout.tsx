@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     google: "google-site-verification-code",
   },
   other: {
-    "msapplication-TileColor": "#8b5cf6",
+    "msapplication-TileColor": "#bef264",
     "msapplication-TileImage": "/logo-icon-white.png",
     "theme-color": "#ffffff",
   },
@@ -105,7 +105,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",
@@ -147,7 +147,7 @@ export default function RootLayout({
                   } else {
                     document.documentElement.removeAttribute('data-theme');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#050505');
+                    if (meta) meta.setAttribute('content', '#000000');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

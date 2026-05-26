@@ -129,8 +129,8 @@ export default function HotelRegisterPage() {
     }
   };
 
-  const inputCls = "w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[13px] text-white placeholder:text-white/15 outline-none focus:border-[#8b5cf6]/40 focus:ring-1 focus:ring-[#8b5cf6]/10 transition-all";
-  const selectCls = "w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[13px] text-white outline-none focus:border-[#8b5cf6]/40 focus:ring-1 focus:ring-[#8b5cf6]/10 transition-all appearance-none";
+  const inputCls = "w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[13px] text-white placeholder:text-white/15 outline-none focus:border-[#bef264]/40 focus:ring-1 focus:ring-[#bef264]/10 transition-all";
+  const selectCls = "w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[13px] text-white outline-none focus:border-[#bef264]/40 focus:ring-1 focus:ring-[#bef264]/10 transition-all appearance-none";
   const labelCls = "text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5 block";
 
   return (
@@ -143,8 +143,8 @@ export default function HotelRegisterPage() {
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/15 flex items-center justify-center">
-            <Hotel size={18} className="text-[#8b5cf6]" />
+          <div className="w-10 h-10 rounded-xl bg-[#bef264]/10 border border-[#bef264]/15 flex items-center justify-center">
+            <Hotel size={18} className="text-[#bef264]" />
           </div>
           <div>
             <h2 className="text-[18px] font-semibold text-white tracking-tight">Register Your Property</h2>
@@ -154,8 +154,8 @@ export default function HotelRegisterPage() {
 
         {/* Step indicator */}
         <div className="flex items-center gap-2 mb-8">
-          <div className={`h-1 flex-1 rounded-full transition-colors ${step >= 1 ? "bg-[#8b5cf6]" : "bg-white/[0.06]"}`} />
-          <div className={`h-1 flex-1 rounded-full transition-colors ${step >= 2 ? "bg-[#8b5cf6]" : "bg-white/[0.06]"}`} />
+          <div className={`h-1 flex-1 rounded-full transition-colors ${step >= 1 ? "bg-[#bef264]" : "bg-white/[0.06]"}`} />
+          <div className={`h-1 flex-1 rounded-full transition-colors ${step >= 2 ? "bg-[#bef264]" : "bg-white/[0.06]"}`} />
         </div>
 
         {registered ? (
@@ -253,7 +253,7 @@ export default function HotelRegisterPage() {
                     </div>
                   </div>
 
-                  <button type="submit" className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98]">
+                  <button type="submit" className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98]">
                     Continue <ChevronRight className="w-4 h-4" />
                   </button>
                 </motion.div>
@@ -290,7 +290,7 @@ export default function HotelRegisterPage() {
                     <button type="button" onClick={back} className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.08] text-white/40 text-[13px] font-medium hover:bg-white/[0.03] transition-all">
                       <ChevronLeft className="w-4 h-4" /> Back
                     </button>
-                    <button type="submit" disabled={loading} className="flex-[2] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98] disabled:opacity-50">
+                    <button type="submit" disabled={loading} className="flex-[2] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-[13px] font-medium transition-all active:scale-[0.98] disabled:opacity-50">
                       {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><span>Create Hotel Account</span><ArrowRight className="w-4 h-4" /></>}
                     </button>
                   </div>

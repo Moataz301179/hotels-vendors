@@ -12,7 +12,7 @@ const ROLE_COLORS: Record<string, string> = {
   supplier: "bg-amber-400",
   factoring: "bg-purple-400",
   shipping: "bg-cyan-400",
-  admin: "bg-[#8b5cf6]",
+  admin: "bg-[#bef264]",
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -288,7 +288,7 @@ export function WorkspaceChatbot({ mode, userId }: WorkspaceChatbotProps) {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#8b5cf6] shadow-lg shadow-black/20 hover:bg-[#8b5cf6] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-[#bef264] shadow-lg shadow-black/20 hover:bg-[#bef264] hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
           title="HotelsVendors Intelligence Engine"
         >
           <Sparkles size={22} />
@@ -312,7 +312,7 @@ export function WorkspaceChatbot({ mode, userId }: WorkspaceChatbotProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02] shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#8b5cf6]/15 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#bef264]/15 flex items-center justify-center">
                   <Sparkles size={16} className="text-white" />
                 </div>
                 <div>

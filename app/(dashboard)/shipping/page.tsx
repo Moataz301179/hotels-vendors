@@ -56,7 +56,7 @@ const TRIP_STATUS: Record<string, { bg: string; text: string; dot: string; label
   SCHEDULED: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Scheduled" },
   IN_TRANSIT: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "In Transit" },
   AT_HUB: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "At Hub" },
-  OUT_FOR_DELIVERY: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Out for Delivery" },
+  OUT_FOR_DELIVERY: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "Out for Delivery" },
   DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
   DELAYED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Delayed" },
 };

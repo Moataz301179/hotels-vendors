@@ -67,7 +67,7 @@ export const AGENTS: Record<string, AgentConfig> = {
     name: "SEO Strategist",
     role: "Organic Growth & Content",
     avatar: "🔍",
-    color: "#8b5cf6",
+    color: "#bef264",
     systemPrompt:
       "You are an SEO and growth strategist. Your expertise: technical SEO, content strategy, local search (Egypt Arabic + English), backlink acquisition, schema markup, Core Web Vitals, conversion rate optimization. You ensure the platform is discoverable by every hotel GM searching for procurement solutions.",
     capabilities: ["seo_audit", "market_research", "data_analysis", "ux_audit"],

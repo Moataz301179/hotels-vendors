@@ -53,7 +53,7 @@ export function MarketingFooter() {
             { icon: Zap, text: "99.9% uptime SLA" },
           ].map((item) => (
             <div key={item.text} className="flex items-center gap-2 text-[12px] text-gray-500">
-              <item.icon className="w-4 h-4 text-[#8b5cf6]" />
+              <item.icon className="w-4 h-4 text-[#bef264]" />
               {item.text}
             </div>
           ))}
@@ -69,7 +69,7 @@ export function MarketingFooter() {
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
             {INVESTORS.map((inv) => (
               <div key={inv.name} className="text-center group">
-                <span className="text-[13px] font-semibold text-gray-700 group-hover:text-[#8b5cf6] transition-colors">
+                <span className="text-[13px] font-semibold text-gray-700 group-hover:text-[#bef264] transition-colors">
                   {inv.name}
                 </span>
                 <span className="block text-[10px] text-gray-400 mt-0.5">{inv.region}</span>
@@ -89,7 +89,7 @@ export function MarketingFooter() {
                 <span className="text-[14px] font-bold text-gray-900 tracking-tight block">
                   Hotels Vendors
                 </span>
-                <span className="text-[9px] font-semibold text-[#8b5cf6] uppercase tracking-[0.1em]">
+                <span className="text-[9px] font-semibold text-[#bef264] uppercase tracking-[0.1em]">
                   Smarter Together
                 </span>
               </div>
@@ -109,7 +109,7 @@ export function MarketingFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[13px] text-gray-500 hover:text-[#8b5cf6] transition-colors"
+                      className="text-[13px] text-gray-500 hover:text-[#bef264] transition-colors"
                     >
                       {link.label}
                     </Link>

@@ -33,7 +33,7 @@ export function LandingNav() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.06]"
+          ? "bg-[#000000]/80 backdrop-blur-xl border-b border-white/[0.06]"
           : "bg-transparent"
       }`}
     >
@@ -82,8 +82,8 @@ export function LandingNav() {
                         href={link.href}
                         className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors border-b border-white/[0.03] last:border-0"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <link.icon className="w-4 h-4 text-[#8b5cf6]" />
+                        <div className="w-8 h-8 rounded-lg bg-[#bef264]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <link.icon className="w-4 h-4 text-[#bef264]" />
                         </div>
                         <div>
                           <div className="text-[13px] font-semibold text-white/80">
@@ -120,7 +120,7 @@ export function LandingNav() {
           </Link>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white hover:bg-[#6d28d9] rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#bef264] text-white hover:bg-[#6d28d9] rounded-lg transition-colors"
           >
             Get Started
             <ArrowRight className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export function LandingNav() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-white/[0.06] px-6 py-5 bg-[#050505]/95 backdrop-blur-xl">
+        <div className="lg:hidden border-t border-white/[0.06] px-6 py-5 bg-[#000000]/95 backdrop-blur-xl">
           {primaryNav.map((item) => (
             <Link
               key={item.label}
@@ -159,7 +159,7 @@ export function LandingNav() {
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white rounded-lg hover:bg-[#6d28d9] transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#bef264] text-white rounded-lg hover:bg-[#6d28d9] transition-colors"
               >
                 Get Started
               </Link>

@@ -25,16 +25,16 @@ export interface DesignConfig {
 }
 
 export const DEFAULT_CONFIG: DesignConfig = {
-  heroBg: "#050505",
-  heroAccent: "#8b5cf6",
-  accentColor: "#8b5cf6",
+  heroBg: "#000000",
+  heroAccent: "#bef264",
+  accentColor: "#bef264",
   accentDark: "#6d28d9",
   cardBg: "rgba(255,255,255,0.02)",
   cardBorder: "rgba(255,255,255,0.06)",
   textPrimary: "#FFFFFF",
   textSecondary: "rgba(255,255,255,0.50)",
   textMuted: "rgba(255,255,255,0.30)",
-  canvasBg: "#050505",
+  canvasBg: "#000000",
   sectionPadding: 96,
   cardRadius: 16,
   fontSizeHero: 64,

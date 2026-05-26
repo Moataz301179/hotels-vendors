@@ -60,7 +60,7 @@ export function ConversationSidebar({ activeId, onSelect, onNew }: ConversationS
       <div className="p-3 border-b border-white/[0.06]">
         <button
           onClick={onNew}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#8b5cf6]/20 text-[#8b5cf6] text-sm font-medium hover:bg-[#8b5cf6]/30 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#bef264]/20 text-[#bef264] text-sm font-medium hover:bg-[#bef264]/30 transition-colors"
         >
           <Plus size={14} />
           New Chat

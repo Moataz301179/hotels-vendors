@@ -22,7 +22,7 @@ export default function HotelOrderingMatrix() {
   };
 
   return (
-    <div className="bg-[var(--bg-canvas,#050505)] min-h-screen text-[var(--text-primary,#f0f0f0)] p-8 font-sans">
+    <div className="bg-[var(--bg-canvas,#000000)] min-h-screen text-[var(--text-primary,#f0f0f0)] p-8 font-sans">
       
       <header className="mb-8 border-b border-[var(--border-subtle,rgba(255,255,255,0.1))] pb-6">
         <h1 className="text-2xl font-black">Enterprise Procurement Matrix</h1>
@@ -31,21 +31,21 @@ export default function HotelOrderingMatrix() {
 
       {/* Progress Tracker */}
       <div className="flex items-center gap-4 mb-10 max-w-4xl mx-auto">
-        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "REQUISITION" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#8b5cf6)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
+        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "REQUISITION" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#bef264)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
           <div className="text-[10px] uppercase tracking-widest text-[var(--text-secondary,#a0a0a0)] font-bold mb-1">Step 1</div>
           <div className="text-sm font-bold flex items-center gap-2">
             <ShoppingCart size={16} /> Department Preparer
           </div>
         </div>
         
-        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "PURCHASING_REVIEW" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#8b5cf6)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
+        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "PURCHASING_REVIEW" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#bef264)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
           <div className="text-[10px] uppercase tracking-widest text-[var(--text-secondary,#a0a0a0)] font-bold mb-1">Step 2</div>
           <div className="text-sm font-bold flex items-center gap-2">
             <FileSignature size={16} /> Purchasing Manager
           </div>
         </div>
 
-        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "FINANCE_FINAL" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#8b5cf6)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
+        <div className={`flex-1 p-4 rounded border transition-all ${cartState === "FINANCE_FINAL" ? "bg-[var(--crimson-glow,rgba(139, 92, 246,0.2))] border-[var(--brand-red,#bef264)]" : "bg-[var(--bg-surface-1,#0a0a0a)] border-[var(--border-invisible,rgba(255,255,255,0.06))]"}`}>
           <div className="text-[10px] uppercase tracking-widest text-[var(--text-secondary,#a0a0a0)] font-bold mb-1">Step 3 (Master Authority)</div>
           <div className="text-sm font-bold flex items-center gap-2">
             <ShieldCheck size={16} /> Finance Manager
@@ -100,7 +100,7 @@ export default function HotelOrderingMatrix() {
                   <button onClick={() => setCartState("REQUISITION")} className="flex-1 py-3 rounded border border-red-500/50 text-red-400 font-bold text-sm hover:bg-red-500/10 transition-colors">
                     Reject to Preparer
                   </button>
-                  <button onClick={() => setCartState("FINANCE_FINAL")} className="flex-1 py-3 rounded bg-[var(--brand-red,#8b5cf6)] text-white font-bold text-sm hover:opacity-90 transition-colors">
+                  <button onClick={() => setCartState("FINANCE_FINAL")} className="flex-1 py-3 rounded bg-[var(--brand-red,#bef264)] text-white font-bold text-sm hover:opacity-90 transition-colors">
                     Approve & Forward to Finance
                   </button>
                 </div>
@@ -129,7 +129,7 @@ export default function HotelOrderingMatrix() {
                       value={authCode}
                       onChange={(e) => setAuthCode(e.target.value.replace(/\\D/g, ''))}
                       placeholder="000000"
-                      className="w-full bg-[var(--bg-surface-3,#1a1a1a)] border border-[var(--border-subtle,rgba(255,255,255,0.1))] text-white text-lg tracking-[0.5em] py-3 pl-10 rounded font-mono focus:outline-none focus:border-[var(--brand-red,#8b5cf6)]"
+                      className="w-full bg-[var(--bg-surface-3,#1a1a1a)] border border-[var(--border-subtle,rgba(255,255,255,0.1))] text-white text-lg tracking-[0.5em] py-3 pl-10 rounded font-mono focus:outline-none focus:border-[var(--brand-red,#bef264)]"
                     />
                   </div>
                   <p className="text-[10px] text-[var(--text-tertiary,#707070)] mt-2">This code was sent securely to the designated Finance Manager's mobile device.</p>
@@ -138,7 +138,7 @@ export default function HotelOrderingMatrix() {
                 <button 
                   onClick={handleAuthSubmit}
                   disabled={authCode.length !== 6 || isProcessing}
-                  className="w-full py-4 rounded bg-[var(--brand-red,#8b5cf6)] text-white font-bold shadow-lg disabled:opacity-50 hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded bg-[var(--brand-red,#bef264)] text-white font-bold shadow-lg disabled:opacity-50 hover:opacity-90 transition-all flex items-center justify-center gap-2"
                 >
                   {isProcessing ? <Loader2 size={18} className="animate-spin" /> : "Post Final LPO to Supplier"}
                 </button>

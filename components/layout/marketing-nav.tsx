@@ -41,7 +41,7 @@ export function MarketingNav() {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}>
       {/* Burgundy top bar — auth links only */}
-      <div className="bg-[#8b5cf6] text-white/90">
+      <div className="bg-[#bef264] text-white/90">
         <div className="mx-auto max-w-7xl px-6 h-8 flex items-center justify-end text-[11px] tracking-wide gap-3">
           <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
           <span className="text-white/30">|</span>
@@ -63,7 +63,7 @@ export function MarketingNav() {
               <span className="text-[15px] font-bold tracking-tight leading-none text-gray-900">
                 Hotels Vendors
               </span>
-              <span className="text-[9px] font-semibold text-[#8b5cf6] uppercase tracking-[0.12em] leading-none mt-0.5">
+              <span className="text-[9px] font-semibold text-[#bef264] uppercase tracking-[0.12em] leading-none mt-0.5">
                 Smarter Together
               </span>
             </div>
@@ -79,7 +79,7 @@ export function MarketingNav() {
                   onMouseEnter={() => setSolutionsOpen(true)}
                   onMouseLeave={() => setSolutionsOpen(false)}
                 >
-                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#8b5cf6] hover:bg-gray-50">
+                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#bef264] hover:bg-gray-50">
                     {item.label}
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? "rotate-180" : ""}`} />
                   </button>
@@ -94,8 +94,8 @@ export function MarketingNav() {
                           href={link.href}
                           className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
                         >
-                          <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <link.icon className="w-4 h-4 text-[#8b5cf6]" />
+                          <div className="w-8 h-8 rounded-lg bg-[#bef264]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <link.icon className="w-4 h-4 text-[#bef264]" />
                           </div>
                           <div>
                             <div className="text-[13px] font-semibold text-gray-900">{link.label}</div>
@@ -113,7 +113,7 @@ export function MarketingNav() {
                   className={`px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
                     item.isMarketplace
                       ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5"
-                      : "text-gray-600 hover:text-[#8b5cf6] hover:bg-gray-50"
+                      : "text-gray-600 hover:text-[#bef264] hover:bg-gray-50"
                   }`}
                 >
                   {item.label}
@@ -138,7 +138,7 @@ export function MarketingNav() {
             </a>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white hover:bg-[#6d28d9] rounded-lg transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#bef264] text-white hover:bg-[#6d28d9] rounded-lg transition-colors shadow-sm"
             >
               Get Started
               <ArrowRight className="w-3.5 h-3.5" />
@@ -175,7 +175,7 @@ export function MarketingNav() {
                         <Link
                           key={link.label}
                           href={link.href}
-                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#8b5cf6]"
+                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#bef264]"
                           onClick={() => setMobileOpen(false)}
                         >
                           {link.label}
@@ -190,7 +190,7 @@ export function MarketingNav() {
                   className={`block py-2.5 text-[14px] font-medium transition-colors ${
                     item.isMarketplace
                       ? "text-[#C9A227] hover:text-[#B8921F]"
-                      : "text-gray-700 hover:text-[#8b5cf6]"
+                      : "text-gray-700 hover:text-[#bef264]"
                   }`}
                   onClick={() => setMobileOpen(false)}
                 >
@@ -204,7 +204,7 @@ export function MarketingNav() {
               <Link href="/login" className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
                 Sign In
               </Link>
-              <Link href="/register" className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8b5cf6] text-white rounded-lg hover:bg-[#6d28d9] transition-colors">
+              <Link href="/register" className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#bef264] text-white rounded-lg hover:bg-[#6d28d9] transition-colors">
                 Get Started
               </Link>
             </div>

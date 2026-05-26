@@ -47,7 +47,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
           onClick={() => onSelectCategory("")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
             !activeCategory
-              ? "bg-[#8b5cf6] text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
+              ? "bg-[#bef264] text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
               : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
           }`}
         >
@@ -70,7 +70,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                 onClick={() => onSelectCategory(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? "bg-[#8b5cf6] text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
+                    ? "bg-[#bef264] text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
                     : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
                 }`}
               >

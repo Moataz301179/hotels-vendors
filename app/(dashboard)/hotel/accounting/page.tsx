@@ -53,7 +53,7 @@ function MonthBar({ label, amount, max }: { label: string; amount: number; max: 
     <div className="flex flex-col items-center gap-1.5 flex-1">
       <div className="w-full flex items-end justify-center" style={{ height: 96 }}>
         <div
-          className="w-full max-w-[28px] rounded-t-sm bg-[#8b5cf6]/40 hover:bg-[#8b5cf6]/60 transition-colors"
+          className="w-full max-w-[28px] rounded-t-sm bg-[#bef264]/40 hover:bg-[#bef264]/60 transition-colors"
           style={{ height: `${height}%` }}
           title={`${label}: ${formatCurrency(amount)}`}
         />
@@ -176,7 +176,7 @@ export default function HotelAccountingPage() {
               <TrendingUp size={14} className="text-white/40" />
               Monthly Spend Trend
             </h3>
-            <Sparkline data={sparklineData} width={100} height={32} color="#8b5cf6" />
+            <Sparkline data={sparklineData} width={100} height={32} color="#bef264" />
           </div>
           {loading ? (
             <div className="h-32 bg-white/[0.02] rounded-lg animate-pulse" />
@@ -215,7 +215,7 @@ export default function HotelAccountingPage() {
                   </div>
                   <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[#8b5cf6]/60"
+                      className="h-full rounded-full bg-[#bef264]/60"
                       style={{ width: `${cat.pct}%` }}
                     />
                   </div>

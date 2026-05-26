@@ -26,7 +26,7 @@ function PreviewNav({ accent }: { accent: string }) {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled ? "bg-[var(--preview-canvas,#050505)]/90 backdrop-blur-xl border-b border-white/[0.05]" : "bg-transparent"}`}>
+    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled ? "bg-[var(--preview-canvas,#000000)]/90 backdrop-blur-xl border-b border-white/[0.05]" : "bg-transparent"}`}>
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <Image src="/logo-icon-white.png" alt="Hotels Vendors" width={28} height={28} className="opacity-90" />
@@ -58,14 +58,14 @@ function PreviewNav({ accent }: { accent: string }) {
                   <p className="text-[10px] font-semibold text-white/20 uppercase tracking-wider px-2 pt-1">Stakeholders</p>
                 </div>
                 <Link href="/register/hotel" className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.03] border-b border-white/[0.03] transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#8b5cf6)]/10 flex items-center justify-center flex-shrink-0"><Building2 className="w-4 h-4 text-[var(--preview-accent,#8b5cf6)]" /></div>
+                  <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#bef264)]/10 flex items-center justify-center flex-shrink-0"><Building2 className="w-4 h-4 text-[var(--preview-accent,#bef264)]" /></div>
                   <div>
                     <div className="text-[13px] font-semibold text-white/80">For Hotels</div>
                     <div className="text-[11px] text-white/30">Procurement OS &amp; spend optimization</div>
                   </div>
                 </Link>
                 <Link href="/register/supplier" className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#8b5cf6)]/10 flex items-center justify-center flex-shrink-0"><ShoppingCart className="w-4 h-4 text-[var(--preview-accent,#8b5cf6)]" /></div>
+                  <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#bef264)]/10 flex items-center justify-center flex-shrink-0"><ShoppingCart className="w-4 h-4 text-[var(--preview-accent,#bef264)]" /></div>
                   <div>
                     <div className="text-[13px] font-semibold text-white/80">For Suppliers</div>
                     <div className="text-[11px] text-white/30">Grow your B2B hospitality business</div>
@@ -78,7 +78,7 @@ function PreviewNav({ accent }: { accent: string }) {
 
         <div className="hidden lg:flex items-center gap-3">
           <Link href="/login" className="px-4 py-2 text-[13px] font-medium text-white/40 hover:text-white transition-colors">Sign In</Link>
-          <Link href="/register" className="inline-flex items-center gap-1.5 px-5 py-2.5 text-[13px] font-semibold bg-[var(--preview-accent,#8b5cf6)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-lg transition-colors">
+          <Link href="/register" className="inline-flex items-center gap-1.5 px-5 py-2.5 text-[13px] font-semibold bg-[var(--preview-accent,#bef264)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-lg transition-colors">
             Get Started <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -89,7 +89,7 @@ function PreviewNav({ accent }: { accent: string }) {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-white/[0.06] px-6 py-5 bg-[var(--preview-canvas,#050505)]/95 backdrop-blur-xl">
+        <div className="lg:hidden border-t border-white/[0.06] px-6 py-5 bg-[var(--preview-canvas,#000000)]/95 backdrop-blur-xl">
           {["Platform", "Workflow", "Coverage", "Modules", "Trust"].map((l) => (
             <Link key={l} href={`#${l.toLowerCase()}`} className="block py-2.5 text-[14px] font-medium text-white/50" onClick={() => setMobileOpen(false)}>{l}</Link>
           ))}
@@ -132,7 +132,7 @@ function SectionTabs({ accent }: { accent: string }) {
   ];
 
   return (
-    <nav className="sticky top-16 z-30 backdrop-blur-xl bg-[var(--preview-canvas,#050505)]/70 border-y border-white/[0.04]">
+    <nav className="sticky top-16 z-30 backdrop-blur-xl bg-[var(--preview-canvas,#000000)]/70 border-y border-white/[0.04]">
       <div className="mx-auto max-w-7xl px-6 h-12 flex items-center gap-1 overflow-x-auto scrollbar-hide">
         {tabs.map((t) => (
           <button
@@ -141,7 +141,7 @@ function SectionTabs({ accent }: { accent: string }) {
             className={`relative px-4 py-2 text-[13px] font-medium transition-colors whitespace-nowrap rounded-lg ${active === t.id ? "text-white" : "text-white/30 hover:text-white/60"}`}
           >
             {t.label}
-            {active === t.id && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] rounded-full bg-[var(--preview-accent,#8b5cf6)]" />}
+            {active === t.id && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] rounded-full bg-[var(--preview-accent,#bef264)]" />}
           </button>
         ))}
       </div>
@@ -152,20 +152,20 @@ function SectionTabs({ accent }: { accent: string }) {
 /* ─── HERO ─── */
 function Hero() {
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-center overflow-hidden" style={{ background: "var(--preview-hero-bg, #050505)" }}>
+    <section className="relative min-h-[92vh] flex flex-col justify-center overflow-hidden" style={{ background: "var(--preview-hero-bg, #000000)" }}>
       <div className="absolute inset-0 opacity-[0.015]" style={{
         backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
         backgroundSize: "60px 60px",
       }} />
       <div className="absolute inset-0 opacity-30" style={{
-        background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${"var(--preview-accent,#8b5cf6)"}20, transparent), radial-gradient(ellipse 60% 40% at 80% 30%, ${"var(--preview-accent,#8b5cf6)"}08, transparent)`,
+        background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${"var(--preview-accent,#bef264)"}20, transparent), radial-gradient(ellipse 60% 40% at 80% 30%, ${"var(--preview-accent,#bef264)"}08, transparent)`,
       }} />
 
       <div className="relative mx-auto max-w-7xl px-6 pt-32 pb-20">
         <div className="max-w-3xl">
           <div className="flex items-center gap-3 mb-8">
-            <div className="h-px w-8 bg-[var(--preview-accent,#8b5cf6)]/50" />
-            <span className="text-[11px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em]">Egypt's B2B Procurement Hub</span>
+            <div className="h-px w-8 bg-[var(--preview-accent,#bef264)]/50" />
+            <span className="text-[11px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em]">Egypt's B2B Procurement Hub</span>
           </div>
 
           <h1 className="font-bold text-white leading-[1.05] tracking-[-0.02em] mb-6" style={{ fontSize: "var(--preview-font-hero, 64px)" }}>
@@ -177,7 +177,7 @@ function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mb-16">
-            <Link href="/register/hotel" className="inline-flex items-center gap-2 px-7 py-3.5 text-[14px] font-semibold bg-[var(--preview-accent,#8b5cf6)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-xl transition-all">
+            <Link href="/register/hotel" className="inline-flex items-center gap-2 px-7 py-3.5 text-[14px] font-semibold bg-[var(--preview-accent,#bef264)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-xl transition-all">
               Register as Hotel <ArrowRight className="w-4 h-4" />
             </Link>
             <Link href="/register/supplier" className="inline-flex items-center gap-2 px-7 py-3.5 text-[14px] font-semibold border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] hover:bg-white/[0.02] rounded-xl transition-all">
@@ -227,7 +227,7 @@ function BentoCard({ label, title, desc, accent, span, children }: {
 /* ─── MINI MOCKS ─── */
 function MockChart() {
   return (
-    <div className="mt-4 p-4 rounded-xl border space-y-3" style={{ backgroundColor: "var(--preview-canvas,#050505)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
+    <div className="mt-4 p-4 rounded-xl border space-y-3" style={{ backgroundColor: "var(--preview-canvas,#000000)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
       <div className="flex items-center justify-between">
         <span className="text-[10px] text-white/20 uppercase tracking-wider">Spend Overview</span>
         <span className="text-[10px] text-white/15">This Month</span>
@@ -244,7 +244,7 @@ function MockChart() {
 
 function MockInvoice() {
   return (
-    <div className="mt-4 p-4 rounded-xl border space-y-2.5" style={{ backgroundColor: "var(--preview-canvas,#050505)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
+    <div className="mt-4 p-4 rounded-xl border space-y-2.5" style={{ backgroundColor: "var(--preview-canvas,#000000)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
       <div className="flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-emerald-500/60" />
         <span className="text-[10px] text-emerald-400/60">Submitted to ETA</span>
@@ -258,7 +258,7 @@ function MockInvoice() {
 
 function MockCredit() {
   return (
-    <div className="mt-4 p-4 rounded-xl border space-y-2.5" style={{ backgroundColor: "var(--preview-canvas,#050505)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
+    <div className="mt-4 p-4 rounded-xl border space-y-2.5" style={{ backgroundColor: "var(--preview-canvas,#000000)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
       <div className="flex justify-between">
         <span className="text-[10px] text-white/20 uppercase tracking-wider">Credit Line</span>
         <span className="text-[9px] text-blue-400/60">Active</span>
@@ -274,7 +274,7 @@ function MockCredit() {
 
 function MockNetwork() {
   return (
-    <div className="mt-4 p-4 rounded-xl border space-y-2" style={{ backgroundColor: "var(--preview-canvas,#050505)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
+    <div className="mt-4 p-4 rounded-xl border space-y-2" style={{ backgroundColor: "var(--preview-canvas,#000000)", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
       <div className="flex items-center gap-2 mb-1">
         <Globe size={12} className="text-amber-400/40" />
         <span className="text-[10px] text-white/20 uppercase tracking-wider">6 Governorates</span>
@@ -293,10 +293,10 @@ function MockNetwork() {
 /* ─── PLATFORM SECTION ─── */
 function PlatformSection() {
   return (
-    <section id="platform" className="py-24" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section id="platform" className="py-24" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-xl mb-12">
-          <span className="text-[10px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em] mb-3 block">Platform Overview</span>
+          <span className="text-[10px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em] mb-3 block">Platform Overview</span>
           <h2 className="font-bold text-white tracking-[-0.01em] mb-3" style={{ fontSize: "var(--preview-font-section, 36px)" }}>Built to scale as your business grows</h2>
           <p className="text-white/35 leading-relaxed" style={{ fontSize: "var(--preview-font-body, 15px)" }}>
             An integrated operating system connecting demand intelligence, compliance, financing, and supplier verification into a single workflow.
@@ -304,7 +304,7 @@ function PlatformSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
-          <BentoCard label="INTELLIGENCE" title="Predictive Demand Sensing" desc="AI analyzes consumption velocity across properties, anticipates seasonal spikes, and auto-generates purchase orders before stockouts." accent="#8b5cf6" span="lg:col-span-2 lg:row-span-2">
+          <BentoCard label="INTELLIGENCE" title="Predictive Demand Sensing" desc="AI analyzes consumption velocity across properties, anticipates seasonal spikes, and auto-generates purchase orders before stockouts." accent="#bef264" span="lg:col-span-2 lg:row-span-2">
             <MockChart />
           </BentoCard>
           <BentoCard label="COMPLIANCE" title="Native ETA E-Invoicing" desc="Every invoice digitally signed, UUID-tagged, and submitted to the Egyptian Tax Authority in real time." accent="#10b981">
@@ -332,10 +332,10 @@ function WorkflowSection() {
   ];
 
   return (
-    <section id="workflow" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section id="workflow" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center mb-14">
-          <span className="text-[10px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em] mb-3 block">Workflow</span>
+          <span className="text-[10px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em] mb-3 block">Workflow</span>
           <h2 className="font-bold text-white tracking-[-0.01em] mb-3" style={{ fontSize: "var(--preview-font-section, 36px)" }}>From signal to delivery</h2>
           <p className="text-white/35" style={{ fontSize: "var(--preview-font-body, 15px)" }}>Four stages. Zero manual intervention.</p>
         </div>
@@ -345,8 +345,8 @@ function WorkflowSection() {
             <div key={s.n} className="relative">
               <div className="text-[48px] font-bold text-white/[0.03] leading-none mb-2">{s.n}</div>
               <div className="rounded-2xl border p-5" style={{ backgroundColor: "var(--preview-card-bg, rgba(255,255,255,0.02))", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))", borderRadius: "var(--preview-card-radius, 16px)" }}>
-                <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#8b5cf6)]/10 flex items-center justify-center mb-3">
-                  <span className="text-[11px] font-bold text-[var(--preview-accent,#8b5cf6)]">{s.n}</span>
+                <div className="w-8 h-8 rounded-lg bg-[var(--preview-accent,#bef264)]/10 flex items-center justify-center mb-3">
+                  <span className="text-[11px] font-bold text-[var(--preview-accent,#bef264)]">{s.n}</span>
                 </div>
                 <h3 className="text-[15px] font-semibold text-white mb-1.5">{s.t}</h3>
                 <p className="text-[12px] text-white/30 leading-relaxed">{s.d}</p>
@@ -374,16 +374,16 @@ function CoverageSection() {
   ];
 
   return (
-    <section id="coverage" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section id="coverage" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
           <div className="max-w-xl">
-            <span className="text-[10px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em] mb-3 block">Coverage</span>
+            <span className="text-[10px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em] mb-3 block">Coverage</span>
             <h2 className="font-bold text-white tracking-[-0.01em] mb-3" style={{ fontSize: "var(--preview-font-section, 36px)" }}>From Cairo to Aswan</h2>
             <p className="text-white/35" style={{ fontSize: "var(--preview-font-body, 15px)" }}>Unified procurement across six governorates.</p>
           </div>
           <div className="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2 rounded-xl border" style={{ backgroundColor: "var(--preview-card-bg, rgba(255,255,255,0.02))", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))" }}>
-            <MapPin size={14} className="text-[var(--preview-accent,#8b5cf6)]" />
+            <MapPin size={14} className="text-[var(--preview-accent,#bef264)]" />
             <span className="text-[12px] text-white/40">52 properties connected</span>
           </div>
         </div>
@@ -415,10 +415,10 @@ function ModulesSection() {
   ];
 
   return (
-    <section id="modules" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section id="modules" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center mb-14">
-          <span className="text-[10px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em] mb-3 block">Modules</span>
+          <span className="text-[10px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em] mb-3 block">Modules</span>
           <h2 className="font-bold text-white tracking-[-0.01em] mb-3" style={{ fontSize: "var(--preview-font-section, 36px)" }}>Six integrated modules</h2>
           <p className="text-white/35" style={{ fontSize: "var(--preview-font-body, 15px)" }}>Every layer of the procurement stack, connected.</p>
         </div>
@@ -426,8 +426,8 @@ function ModulesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {mods.map((m) => (
             <div key={m.t} className="group rounded-2xl border p-6 hover:border-white/[0.08] transition-colors" style={{ backgroundColor: "var(--preview-card-bg, rgba(255,255,255,0.02))", borderColor: "var(--preview-card-border, rgba(255,255,255,0.06))", borderRadius: "var(--preview-card-radius, 16px)" }}>
-              <div className="w-10 h-10 rounded-xl bg-white/[0.03] flex items-center justify-center mb-4 group-hover:bg-[var(--preview-accent,#8b5cf6)]/10 transition-colors">
-                <m.icon className="w-5 h-5 text-white/30 group-hover:text-[var(--preview-accent,#8b5cf6)] transition-colors" />
+              <div className="w-10 h-10 rounded-xl bg-white/[0.03] flex items-center justify-center mb-4 group-hover:bg-[var(--preview-accent,#bef264)]/10 transition-colors">
+                <m.icon className="w-5 h-5 text-white/30 group-hover:text-[var(--preview-accent,#bef264)] transition-colors" />
               </div>
               <h3 className="text-[15px] font-semibold text-white mb-1.5">{m.t}</h3>
               <p className="text-[12px] text-white/30 leading-relaxed">{m.d}</p>
@@ -449,10 +449,10 @@ function TrustSection() {
   ];
 
   return (
-    <section id="trust" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section id="trust" className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center mb-14">
-          <span className="text-[10px] font-semibold text-[var(--preview-accent,#8b5cf6)] uppercase tracking-[0.2em] mb-3 block">Trust &amp; Security</span>
+          <span className="text-[10px] font-semibold text-[var(--preview-accent,#bef264)] uppercase tracking-[0.2em] mb-3 block">Trust &amp; Security</span>
           <h2 className="font-bold text-white tracking-[-0.01em] mb-3" style={{ fontSize: "var(--preview-font-section, 36px)" }}>Enterprise-grade security</h2>
           <p className="text-white/35" style={{ fontSize: "var(--preview-font-body, 15px)" }}>Security and compliance at every layer.</p>
         </div>
@@ -476,7 +476,7 @@ function TrustSection() {
 /* ─── CTA SECTION ─── */
 function CTASection() {
   return (
-    <section className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
+    <section className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)", paddingTop: "var(--preview-section-padding, 96px)", paddingBottom: "var(--preview-section-padding, 96px)" }}>
       <div className="mx-auto max-w-3xl px-6 text-center">
         <h2 className="font-bold text-white tracking-[-0.02em] mb-4" style={{ fontSize: "var(--preview-font-section, 36px)" }}>
           Ready to transform your procurement?
@@ -485,7 +485,7 @@ function CTASection() {
           Join 52 hotels and 68 suppliers already on the platform.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/register/hotel" className="inline-flex items-center gap-2 px-8 py-4 text-[14px] font-semibold bg-[var(--preview-accent,#8b5cf6)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-xl transition-colors">
+          <Link href="/register/hotel" className="inline-flex items-center gap-2 px-8 py-4 text-[14px] font-semibold bg-[var(--preview-accent,#bef264)] text-white hover:bg-[var(--preview-accent-dark,#6d28d9)] rounded-xl transition-colors">
             Register as Hotel <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="/register/supplier" className="inline-flex items-center gap-2 px-8 py-4 text-[14px] font-semibold border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] hover:bg-white/[0.02] rounded-xl transition-all">
@@ -500,7 +500,7 @@ function CTASection() {
 /* ─── FOOTER ─── */
 function Footer() {
   return (
-    <footer className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#050505)" }}>
+    <footer className="border-t border-white/[0.04]" style={{ backgroundColor: "var(--preview-canvas,#000000)" }}>
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10">
           <div className="col-span-2 md:col-span-4 lg:col-span-1">

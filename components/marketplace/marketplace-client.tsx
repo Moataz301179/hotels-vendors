@@ -217,11 +217,11 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#000000] text-white">
       <MarketingNav />
 
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#000000]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
           <div className="flex-1 max-w-2xl">
             <div className="relative flex items-center">
@@ -247,7 +247,7 @@ export default function MarketplacePage() {
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all ${
-                memberMode ? "bg-[#8b5cf6] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
+                memberMode ? "bg-[#bef264] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
@@ -258,7 +258,7 @@ export default function MarketplacePage() {
             <button onClick={openCart} className="relative flex items-center justify-center px-3 py-2 rounded-xl border border-white/[0.06] text-white/50 hover:text-white hover:border-white/[0.12] transition-all">
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8b5cf6] text-white text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#bef264] text-white text-[10px] font-bold flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
@@ -341,7 +341,7 @@ export default function MarketplacePage() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#050505] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
+          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#000000] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
             {mobileSidebarOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
                 <span className="text-sm font-semibold text-white">{t("categories")}</span>
@@ -417,7 +417,7 @@ export default function MarketplacePage() {
                 <p className="text-sm text-white/25 max-w-sm text-center mb-6">{error}</p>
                 <button
                   onClick={fetchProducts}
-                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8b5cf6] hover:bg-[#6d28d9] transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#bef264] hover:bg-[#6d28d9] transition-colors"
                 >
                   Retry
                 </button>
@@ -434,7 +434,7 @@ export default function MarketplacePage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
-                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#8b5cf6] hover:bg-[#6d28d9] transition-colors"
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#bef264] hover:bg-[#6d28d9] transition-colors"
                   >
                     {t("viewAllProducts")}
                   </button>
@@ -540,7 +540,7 @@ export default function MarketplacePage() {
                         </Link>
                         <button
                           onClick={() => handleAdd(product)}
-                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d28d9] text-white transition-all"
+                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white transition-all"
                         >
                           <ShoppingCart className="w-4 h-4" />
                         </button>

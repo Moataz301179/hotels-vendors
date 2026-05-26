@@ -84,7 +84,7 @@ const FEATURES = [
     ],
     stat: "23%",
     statLabel: "Average cost reduction",
-    accent: "#8b5cf6",
+    accent: "#bef264",
   },
   {
     slug: "supplier",
@@ -221,14 +221,14 @@ const GAP_FEATURES = [
 export default async function SolutionsPage() {
   const cms = await getCmsPage("solutions");
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[#000000] text-white">
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
       <section className="relative pt-40 pb-20 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#8b5cf6]/[0.06] rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#bef264]/[0.06] rounded-full blur-[140px] pointer-events-none" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="text-[11px] font-semibold text-white/40 uppercase tracking-[0.2em] mb-5">
             Platform Solutions
@@ -245,7 +245,7 @@ export default async function SolutionsPage() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-xl transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#bef264] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-xl transition-all active:scale-[0.98]"
             >
               Start Free
               <ArrowRight className="w-4 h-4" />
@@ -423,7 +423,7 @@ export default async function SolutionsPage() {
       <section className="py-28">
         <div className="mx-auto max-w-4xl px-6">
           <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-white/[0.015] p-12 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8b5cf6]/[0.06] rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#bef264]/[0.06] rounded-full blur-[100px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[28px] md:text-[38px] font-bold tracking-tight">
                 The Infrastructure Egyptian Hospitality Needs
@@ -434,7 +434,7 @@ export default async function SolutionsPage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-xl transition-all active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#bef264] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-xl transition-all active:scale-[0.98]"
                 >
                   Get Started
                   <ArrowRight className="w-4 h-4" />

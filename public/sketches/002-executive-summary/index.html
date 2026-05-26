@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HotelsVendors — Executive Summary</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['DM Sans', 'system-ui', 'sans-serif'],
+            display: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            cream: '#faf8f5',
+            ink: '#1a1a2e',
+            sage: '#8b9a7d',
+            sand: '#e8e4df',
+            clay: '#c4a882',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; background: #faf8f5; }
+    .hero-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+    .metric-ring { transition: all 0.3s ease; }
+    .metric-ring:hover { transform: scale(1.02); }
+    .insight-card { transition: all 0.2s ease; }
+    .insight-card:hover { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { color: #1a1a2e; border-bottom: 2px solid #c4a882; }
+    .tab-btn:not(.active) { color: #9ca3af; }
+    .tab-btn:not(.active):hover { color: #6b7280; }
+  </style>
+</head>
+<body class="text-ink">
+
+  <!-- Minimal Header -->
+  <header class="bg-cream/80 backdrop-blur-md border-b border-sand h-16 flex items-center justify-between px-8 fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-ink rounded-xl flex items-center justify-center text-cream font-bold text-sm tracking-tight">HV</div>
+      <span class="font-display text-lg font-semibold text-ink">HotelsVendors</span>
+    </div>
+    <nav class="flex items-center gap-8">
+      <a href="#" class="text-sm font-medium text-ink">Overview</a>
+      <a href="#" class="text-sm text-gray-400 hover:text-ink transition-colors">Reports</a>
+      <a href="#" class="text-sm text-gray-400 hover:text-ink transition-colors">Team</a>
+      <div class="flex items-center gap-3 pl-6 border-l border-sand">
+        <div class="w-8 h-8 bg-sage/20 rounded-full flex items-center justify-center text-sage font-semibold text-xs">MA</div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-16">
+    <!-- Hero Section -->
+    <section class="hero-card text-white px-8 py-12">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-white/60 text-sm font-medium tracking-wider uppercase mb-2">Nile Ritz-Carlton, Cairo</p>
+            <h1 class="font-display text-4xl font-bold mb-4">Q3 Procurement Health</h1>
+            <p class="text-white/70 text-lg max-w-lg">Your AI swarm has optimized 23 vendor contracts and identified EGP 340K in potential savings this quarter.</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="px-5 py-2.5 bg-white/10 backdrop-blur rounded-lg text-sm font-medium hover:bg-white/20 transition-colors">Download Report</button>
+            <button class="px-5 py-2.5 bg-clay text-ink rounded-lg text-sm font-medium hover:bg-clay/90 transition-colors">Schedule Review</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="px-8 -mt-8 relative z-10">
+      <div class="max-w-6xl mx-auto grid grid-cols-3 gap-6">
+        <div class="metric-ring bg-white rounded-2xl p-6 shadow-sm border border-sand">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Spend</span>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full font-medium">On Track</span>
+          </div>
+          <div class="font-display text-3xl font-bold text-ink mb-1">EGP 3.72M</div>
+          <div class="text-sm text-gray-400">Budget: EGP 4.2M (88% utilized)</div>
+          <div class="mt-4 h-2 bg-sand rounded-full overflow-hidden">
+            <div class="h-full bg-sage rounded-full" style="width: 88%"></div>
+          </div>
+        </div>
+
+        <div class="metric-ring bg-white rounded-2xl p-6 shadow-sm border border-sand">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">AI Savings</span>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full font-medium">+24%</span>
+          </div>
+          <div class="font-display text-3xl font-bold text-ink mb-1">EGP 892K</div>
+          <div class="text-sm text-gray-400">Across Cost Optimizer & Gatekeeper</div>
+          <div class="mt-4 flex gap-2">
+            <div class="flex-1 h-2 bg-sand rounded-full overflow-hidden">
+              <div class="h-full bg-clay rounded-full" style="width: 65%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-ring bg-white rounded-2xl p-6 shadow-sm border border-sand">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Vendor Health</span>
+            <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium">1 Alert</span>
+          </div>
+          <div class="font-display text-3xl font-bold text-ink mb-1">4.3/5.0</div>
+          <div class="text-sm text-gray-400">Average across 12 active vendors</div>
+          <div class="mt-4 flex gap-1">
+            <div class="w-8 h-8 bg-sage/20 rounded-lg flex items-center justify-center text-xs font-bold text-sage">AF</div>
+            <div class="w-8 h-8 bg-sage/20 rounded-lg flex items-center justify-center text-xs font-bold text-sage">NC</div>
+            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-xs font-bold text-amber-600">CL</div>
+            <div class="w-8 h-8 bg-sage/20 rounded-lg flex items-center justify-center text-xs font-bold text-sage">DM</div>
+            <div class="w-8 h-8 bg-sage/20 rounded-lg flex items-center justify-center text-xs font-bold text-sage">AS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insights & Trends -->
+    <section class="px-8 py-10">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 gap-8">
+        <!-- AI Insights -->
+        <div>
+          <h2 class="font-display text-2xl font-bold text-ink mb-6">Strategic Insights</h2>
+          <div class="space-y-4">
+            <div class="insight-card bg-white rounded-xl p-5 border border-sand">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-clay/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-clay" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-ink mb-1">Cashflow Opportunity</h3>
+                  <p class="text-sm text-gray-500 leading-relaxed">Oliv pre-approved EGP 500K credit line. Use for Q4 bulk orders to capture 8% early-payment discounts from Al-Amal Foods and Delta Meats.</p>
+                  <button class="mt-3 text-sm font-medium text-clay hover:text-ink transition-colors">Explore →</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-card bg-white rounded-xl p-5 border border-sand">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-sage/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-ink mb-1">Pre-Spend Gatekeeper</h3>
+                  <p class="text-sm text-gray-500 leading-relaxed">Blocked 3 redundant orders this month, saving EGP 47K. AI detected duplicate linen requests from Housekeeping and F&B departments.</p>
+                  <button class="mt-3 text-sm font-medium text-sage hover:text-ink transition-colors">Review Blocks →</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-card bg-white rounded-xl p-5 border border-sand">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-ink mb-1">Vendor Risk Alert</h3>
+                  <p class="text-sm text-gray-500 leading-relaxed">Cairo Linens delivery reliability dropped to 72%. Recommend activating backup vendor Alexandria Textiles for Q4.</p>
+                  <button class="mt-3 text-sm font-medium text-red-500 hover:text-red-700 transition-colors">Mitigate →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spend Trends -->
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-display text-2xl font-bold text-ink">Spend Trends</h2>
+            <div class="flex gap-4 text-sm">
+              <button class="tab-btn active pb-1 font-medium">Monthly</button>
+              <button class="tab-btn pb-1 font-medium">Quarterly</button>
+              <button class="tab-btn pb-1 font-medium">Yearly</button>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl border border-sand p-6">
+            <!-- Simple CSS Bar Chart -->
+            <div class="flex items-end justify-between h-48 gap-3 mb-4">
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 60%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-sage rounded-t-lg transition-all" style="height: 70%"></div>
+                </div>
+                <span class="text-xs text-gray-400">Jan</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 75%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-sage rounded-t-lg" style="height: 65%"></div>
+                </div>
+                <span class="text-xs text-gray-400">Feb</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 55%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-sage rounded-t-lg" style="height: 80%"></div>
+                </div>
+                <span class="text-xs text-gray-400">Mar</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 85%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-sage rounded-t-lg" style="height: 60%"></div>
+                </div>
+                <span class="text-xs text-gray-400">Apr</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 70%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-sage rounded-t-lg" style="height: 75%"></div>
+                </div>
+                <span class="text-xs text-gray-400">May</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full bg-sand rounded-t-lg relative" style="height: 90%">
+                  <div class="absolute bottom-0 left-0 right-0 bg-clay rounded-t-lg" style="height: 55%"></div>
+                </div>
+                <span class="text-xs text-gray-400 font-semibold text-ink">Jun</span>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-center gap-6 text-xs">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-sage rounded"></div>
+                <span class="text-gray-500">Actual Spend</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-sand rounded"></div>
+                <span class="text-gray-500">Budget</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-clay rounded"></div>
+                <span class="text-gray-500">AI Optimized</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div class="mt-6 bg-white rounded-xl border border-sand p-6">
+            <h3 class="font-semibold text-ink mb-4">Category Breakdown</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-clay rounded-full"></div>
+                <span class="text-sm flex-1">Fresh Produce</span>
+                <span class="text-sm font-medium">EGP 1.2M</span>
+                <span class="text-xs text-gray-400 w-12 text-right">32%</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-sage rounded-full"></div>
+                <span class="text-sm flex-1">Proteins</span>
+                <span class="text-sm font-medium">EGP 980K</span>
+                <span class="text-xs text-gray-400 w-12 text-right">26%</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-ink rounded-full"></div>
+                <span class="text-sm flex-1">Textiles & Linens</span>
+                <span class="text-sm font-medium">EGP 720K</span>
+                <span class="text-xs text-gray-400 w-12 text-right">19%</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-sand rounded-full"></div>
+                <span class="text-sm flex-1">Cleaning & Chemicals</span>
+                <span class="text-sm font-medium">EGP 480K</span>
+                <span class="text-xs text-gray-400 w-12 text-right">13%</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                <span class="text-sm flex-1">Other</span>
+                <span class="text-sm font-medium">EGP 340K</span>
+                <span class="text-xs text-gray-400 w-12 text-right">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

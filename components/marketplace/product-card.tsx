@@ -19,9 +19,9 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/marketplace/product/${product.id}`}>
-      <div className="group relative overflow-hidden rounded-2xl border border-white/[0.04] bg-[#0a0a12] transition-all duration-500 hover:border-[#7c3aed]/20">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7c3aed]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="aspect-square overflow-hidden bg-[#0a0a12]">
+      <div className="group relative overflow-hidden rounded-2xl border border-white/[0.04] bg-[#0a0a0a] transition-all duration-500 hover:border-[#a3e635]/20">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a3e635]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="aspect-square overflow-hidden bg-[#0a0a0a]">
           {product.images && product.images[0] ? (
             <Image
               src={product.images[0]}

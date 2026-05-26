@@ -72,8 +72,8 @@ export const PRESETS: ThemePreset[] = [
       800: "#3730a3", 900: "#312e81",
     },
     bg: {
-      background: "#050508",
-      surface: "#050505",
+      background: "#000000",
+      surface: "#000000",
       surfaceRaised: "#12121a",
       surfaceHover: "#1a1a25",
     },
@@ -130,7 +130,7 @@ export const PRESETS: ThemePreset[] = [
     description: "Royal violet on deep slate. Premium factoring positioning.",
     accent: {
       50: "#f5f3ff", 100: "#ede9fe", 200: "#ddd6fe", 300: "#c4b5fd",
-      400: "#a78bfa", 500: "#8b5cf6", 600: "#7c3aed", 700: "#6d28d9",
+      400: "#a78bfa", 500: "#bef264", 600: "#a3e635", 700: "#6d28d9",
       800: "#5b21b6", 900: "#4c1d95",
     },
     bg: {

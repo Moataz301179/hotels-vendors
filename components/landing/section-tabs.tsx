@@ -42,7 +42,7 @@ export function SectionTabs() {
   }, []);
 
   return (
-    <nav className="sticky top-16 z-40 backdrop-blur-xl bg-[#050505]/70 border-y border-white/[0.04]">
+    <nav className="sticky top-16 z-40 backdrop-blur-xl bg-[#000000]/70 border-y border-white/[0.04]">
       <div className="mx-auto max-w-7xl px-6 h-12 flex items-center gap-1 overflow-x-auto scrollbar-hide">
         {SECTIONS.map(({ id, label }) => (
           <button
@@ -56,7 +56,7 @@ export function SectionTabs() {
           >
             {label}
             {active === id && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] rounded-full bg-[#8b5cf6]" />
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] rounded-full bg-[#bef264]" />
             )}
           </button>
         ))}

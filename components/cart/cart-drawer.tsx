@@ -76,8 +76,8 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#8b5cf6]/20 flex items-center justify-center">
-                  <ShoppingBag size={18} className="text-[#8b5cf6]" />
+                <div className="w-9 h-9 rounded-lg bg-[#bef264]/20 flex items-center justify-center">
+                  <ShoppingBag size={18} className="text-[#bef264]" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white">Your Cart</h3>
@@ -114,7 +114,7 @@ export function CartDrawer() {
                       closeCart();
                       router.push("/marketplace");
                     }}
-                    className="px-4 py-2 rounded-lg bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 text-white text-xs font-medium transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[#bef264] hover:bg-[#bef264]/80 text-white text-xs font-medium transition-colors"
                   >
                     Browse Marketplace
                   </button>
@@ -220,7 +220,7 @@ export function CartDrawer() {
                     closeCart();
                     router.push("/login?redirect=/hotel/order");
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 text-white text-sm font-medium transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#bef264] hover:bg-[#bef264]/80 text-white text-sm font-medium transition-colors"
                 >
                   <span>Sign In to Checkout</span>
                   <ArrowRight size={16} />

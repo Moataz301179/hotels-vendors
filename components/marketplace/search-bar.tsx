@@ -9,7 +9,7 @@ export function SearchBar() {
       <input
         type="text"
         placeholder="Search products, suppliers, categories..."
-        className="w-full rounded-full border border-white/[0.04] bg-[#0a0a12] py-3 pl-11 pr-5 text-[13px] text-white placeholder-white/20 focus:border-[#7c3aed]/30 focus:outline-none focus:ring-1 focus:ring-[#7c3aed]/20 transition-all"
+        className="w-full rounded-full border border-white/[0.04] bg-[#0a0a0a] py-3 pl-11 pr-5 text-[13px] text-white placeholder-white/20 focus:border-[#a3e635]/30 focus:outline-none focus:ring-1 focus:ring-[#a3e635]/20 transition-all"
       />
     </div>
   );

@@ -61,7 +61,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
   return (
     <button
       onClick={onChange}
-      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-[#8b5cf6]" : "bg-white/10"}`}
+      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-[#bef264]" : "bg-white/10"}`}
     >
       <span
         className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`}
@@ -97,7 +97,7 @@ function ThemeSelector() {
               <div className="flex items-center gap-2">
                 <span className="text-[13px] font-medium text-white">{config.name}</span>
                 {active && (
-                  <span className="text-[9px] font-semibold text-[#8b5cf6] bg-[#8b5cf6]/10 px-1.5 py-0.5 rounded">Active</span>
+                  <span className="text-[9px] font-semibold text-[#bef264] bg-[#bef264]/10 px-1.5 py-0.5 rounded">Active</span>
                 )}
               </div>
               <p className="text-[11px] text-white/30 truncate">{config.description}</p>
@@ -144,7 +144,7 @@ export default function SettingsPage() {
           <h1 className="text-xl font-bold text-white mb-1">Settings</h1>
           <p className="text-xs text-white/40">Manage your account, team, and preferences</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-[#8b5cf6] text-white text-xs font-medium rounded-lg hover:bg-[#6d28d9] transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-[#bef264] text-white text-xs font-medium rounded-lg hover:bg-[#6d28d9] transition-colors">
           <Save size={14} />
           Save Changes
         </button>
@@ -282,7 +282,7 @@ export default function SettingsPage() {
               <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-white">Current Plan</span>
-                  <span className="text-[10px] font-semibold text-[#8b5cf6] bg-[#8b5cf6]/10 px-2 py-0.5 rounded">Pro</span>
+                  <span className="text-[10px] font-semibold text-[#bef264] bg-[#bef264]/10 px-2 py-0.5 rounded">Pro</span>
                 </div>
                 <p className="text-[24px] font-bold text-white">EGP 4,500<span className="text-[13px] font-normal text-white/40">/month</span></p>
                 <p className="text-[11px] text-white/30 mt-1">Billed monthly. Next billing date: June 15, 2026.</p>

@@ -62,7 +62,7 @@ const APP_STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string;
   UNDER_ANALYSIS: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Analysis" },
   APPROVED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Approved" },
   REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
-  DISBURSED: { bg: "bg-[#8b5cf6]/10", text: "text-[#8b5cf6]", dot: "bg-[#8b5cf6]", label: "Disbursed" },
+  DISBURSED: { bg: "bg-[#bef264]/10", text: "text-[#bef264]", dot: "bg-[#bef264]", label: "Disbursed" },
 };
 function StatusBadge({ status }: { status: string }) {
   const c = APP_STATUS_CONFIG[status] || APP_STATUS_CONFIG.PENDING_REVIEW;
@@ -114,8 +114,8 @@ function CreditPipeline({ applications, onSelect }: { applications: CreditApplic
           className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.01] hover:border-white/[0.08] hover:bg-white/[0.02] cursor-pointer transition-all group">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center">
-                <Building2 size={14} className="text-[#8b5cf6]" />
+              <div className="w-8 h-8 rounded-lg bg-[#bef264]/10 flex items-center justify-center">
+                <Building2 size={14} className="text-[#bef264]" />
               </div>
               <div>
                 <p className="text-[13px] font-semibold text-white/80 group-hover:text-white transition-colors">{app.hotelName}</p>
@@ -194,7 +194,7 @@ function PortfolioSummary({ metrics, loading }: { metrics: PortfolioMetricsData 
     <div className="space-y-5">
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Total Exposure", value: formatCurrency(metrics.totalExposure), icon: DollarSign, color: "text-[#8b5cf6]", bg: "bg-[#8b5cf6]/10" },
+          { label: "Total Exposure", value: formatCurrency(metrics.totalExposure), icon: DollarSign, color: "text-[#bef264]", bg: "bg-[#bef264]/10" },
           { label: "Default Rate", value: `${(metrics.defaultRate * 100).toFixed(1)}%`, icon: Shield, color: "text-emerald-400", bg: "bg-emerald-500/10" },
           { label: "Avg Facility", value: formatCurrency(metrics.averageFacilitySize), icon: CreditCard, color: "text-blue-400", bg: "bg-blue-500/10" },
           { label: "Concentration", value: `${(metrics.concentrationRisk * 100).toFixed(0)}%`, icon: PieChart, color: "text-amber-400", bg: "bg-amber-500/10" },
@@ -271,7 +271,7 @@ export default function FactoringDashboardPage() {
           actions={
             <div className="flex items-center gap-2">
               <select value={filter} onChange={(e) => setFilter(e.target.value)}
-                className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white focus:outline-none focus:border-[#8b5cf6]/30">
+                className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[12px] text-white focus:outline-none focus:border-[#bef264]/30">
                 <option value="ALL">All Status</option>
                 <option value="PENDING_REVIEW">Pending</option>
                 <option value="UNDER_ANALYSIS">Analysis</option>

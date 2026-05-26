@@ -159,13 +159,13 @@ export default async function PricingPage() {
                 key={tier.name}
                 className={`relative flex flex-col rounded-2xl border p-6 md:p-8 transition-all ${
                   tier.popular
-                    ? "bg-[#111] border-[#8b5cf6]/30 shadow-[0_0_40px_-12px_rgba(139, 92, 246,0.25)]"
+                    ? "bg-[#111] border-[#bef264]/30 shadow-[0_0_40px_-12px_rgba(139, 92, 246,0.25)]"
                     : "bg-[#111] border-white/10 hover:border-white/15"
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8b5cf6] text-white text-[11px] font-semibold uppercase tracking-wider">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#bef264] text-white text-[11px] font-semibold uppercase tracking-wider">
                       <Sparkles className="w-3 h-3" />
                       Most Popular
                     </span>
@@ -213,7 +213,7 @@ export default async function PricingPage() {
                   href={tier.href}
                   className={`inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-lg transition-colors ${
                     tier.popular
-                      ? "bg-[#8b5cf6] hover:bg-[#6d28d9] text-white"
+                      ? "bg-[#bef264] hover:bg-[#6d28d9] text-white"
                       : "border border-white/15 text-white hover:bg-white/5"
                   }`}
                 >
@@ -349,7 +349,7 @@ export default async function PricingPage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8b5cf6]/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#bef264]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[26px] md:text-[34px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Still have questions?"}
@@ -360,7 +360,7 @@ export default async function PricingPage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8b5cf6] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#bef264] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Create Free Account
                   <ArrowRight className="w-4 h-4" />

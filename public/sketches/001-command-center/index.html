@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HotelsVendors — Command Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            hv: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; background: #f8fafc; }
+    .sidebar-link:hover { background: rgba(14, 165, 233, 0.08); }
+    .sidebar-link.active { background: rgba(14, 165, 233, 0.12); border-right: 3px solid #0ea5e9; }
+    .metric-card { transition: all 0.2s ease; }
+    .metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1); }
+    .order-row { transition: background 0.15s ease; }
+    .order-row:hover { background: #f1f5f9; }
+    .status-badge { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .filter-btn { transition: all 0.2s; }
+    .filter-btn.active { background: #0ea5e9; color: white; }
+    .filter-btn:not(.active):hover { background: #e2e8f0; }
+  </style>
+</head>
+<body class="text-slate-800">
+
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-hv-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">HV</div>
+      <span class="font-semibold text-slate-900">HotelsVendors</span>
+      <span class="text-xs text-slate-400 ml-2 px-2 py-0.5 bg-slate-100 rounded-full">B2B Procurement</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="relative p-2 text-slate-400 hover:text-slate-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-hv-100 rounded-full flex items-center justify-center text-hv-700 font-semibold text-sm">MA</div>
+        <span class="text-sm font-medium">Moataz Abdelghani</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-14">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-slate-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+      <nav class="p-3 space-y-1">
+        <a href="#" class="sidebar-link active flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-hv-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          Orders
+          <span class="ml-auto text-xs bg-slate-100 px-2 py-0.5 rounded-full">24</span>
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Vendors
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Analytics
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Cashflow
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          AI Swarm
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-56 p-6">
+      <!-- Page Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Command Center</h1>
+          <p class="text-sm text-slate-500 mt-1">Real-time procurement overview — Nile Ritz-Carlton, Cairo</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">Export Report</button>
+          <button class="px-4 py-2 bg-hv-600 text-white rounded-lg text-sm font-medium hover:bg-hv-700">New Order</button>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="metric-card bg-white p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Active Orders</span>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">+12%</span>
+          </div>
+          <div class="text-2xl font-bold text-slate-900">24</div>
+          <div class="text-xs text-slate-400 mt-1">8 awaiting vendor confirmation</div>
+        </div>
+        <div class="metric-card bg-white p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Monthly Spend</span>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">-5.2%</span>
+          </div>
+          <div class="text-2xl font-bold text-slate-900">EGP 1.24M</div>
+          <div class="text-xs text-slate-400 mt-1">Under budget by EGP 89K</div>
+        </div>
+        <div class="metric-card bg-white p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Vendor Score</span>
+            <span class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">-0.3</span>
+          </div>
+          <div class="text-2xl font-bold text-slate-900">4.2</div>
+          <div class="text-xs text-slate-400 mt-1">Al-Amal Foods: delayed delivery</div>
+        </div>
+        <div class="metric-card bg-white p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">AI Savings</span>
+            <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">+18%</span>
+          </div>
+          <div class="text-2xl font-bold text-slate-900">EGP 234K</div>
+          <div class="text-xs text-slate-400 mt-1">Cost Optimizer this quarter</div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Orders Table -->
+        <div class="col-span-2 bg-white rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between p-4 border-b border-slate-100">
+            <h2 class="font-semibold text-slate-900">Recent Orders</h2>
+            <div class="flex gap-1">
+              <button class="filter-btn active px-3 py-1 rounded-lg text-xs font-medium">All</button>
+              <button class="filter-btn px-3 py-1 rounded-lg text-xs font-medium text-slate-600">Pending</button>
+              <button class="filter-btn px-3 py-1 rounded-lg text-xs font-medium text-slate-600">In Transit</button>
+              <button class="filter-btn px-3 py-1 rounded-lg text-xs font-medium text-slate-600">Delivered</button>
+            </div>
+          </div>
+          <table class="w-full">
+            <thead>
+              <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100">
+                <th class="text-left px-4 py-3 font-medium">Order ID</th>
+                <th class="text-left px-4 py-3 font-medium">Vendor</th>
+                <th class="text-left px-4 py-3 font-medium">Category</th>
+                <th class="text-left px-4 py-3 font-medium">Amount</th>
+                <th class="text-left px-4 py-3 font-medium">Status</th>
+                <th class="text-left px-4 py-3 font-medium">ETA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="order-row border-b border-slate-50">
+                <td class="px-4 py-3 text-sm font-medium text-hv-600">#ORD-7829</td>
+                <td class="px-4 py-3 text-sm">Al-Amal Foods</td>
+                <td class="px-4 py-3 text-sm text-slate-500">Fresh Produce</td>
+                <td class="px-4 py-3 text-sm font-medium">EGP 45,200</td>
+                <td class="px-4 py-3"><span class="status-badge px-2 py-1 bg-amber-100 text-amber-700 rounded-full">In Transit</span></td>
+                <td class="px-4 py-3 text-sm text-slate-500">2h</td>
+              </tr>
+              <tr class="order-row border-b border-slate-50">
+                <td class="px-4 py-3 text-sm font-medium text-hv-600">#ORD-7828</td>
+                <td class="px-4 py-3 text-sm">Nile Chemicals</td>
+                <td class="px-4 py-3 text-sm text-slate-500">Cleaning</td>
+                <td class="px-4 py-3 text-sm font-medium">EGP 12,800</td>
+                <td class="px-4 py-3"><span class="status-badge px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Delivered</span></td>
+                <td class="px-4 py-3 text-sm text-slate-500">—</td>
+              </tr>
+              <tr class="order-row border-b border-slate-50">
+                <td class="px-4 py-3 text-sm font-medium text-hv-600">#ORD-7827</td>
+                <td class="px-4 py-3 text-sm">Cairo Linens</td>
+                <td class="px-4 py-3 text-sm text-slate-500">Textiles</td>
+                <td class="px-4 py-3 text-sm font-medium">EGP 89,000</td>
+                <td class="px-4 py-3"><span class="status-badge px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Pending</span></td>
+                <td class="px-4 py-3 text-sm text-slate-500">—</td>
+              </tr>
+              <tr class="order-row border-b border-slate-50">
+                <td class="px-4 py-3 text-sm font-medium text-hv-600">#ORD-7826</td>
+                <td class="px-4 py-3 text-sm">Delta Meats</td>
+                <td class="px-4 py-3 text-sm text-slate-500">Proteins</td>
+                <td class="px-4 py-3 text-sm font-medium">EGP 67,500</td>
+                <td class="px-4 py-3"><span class="status-badge px-2 py-1 bg-red-100 text-red-700 rounded-full">Issue</span></td>
+                <td class="px-4 py-3 text-sm text-slate-500">Delayed</td>
+              </tr>
+              <tr class="order-row">
+                <td class="px-4 py-3 text-sm font-medium text-hv-600">#ORD-7825</td>
+                <td class="px-4 py-3 text-sm">Alexandria Seafood</td>
+                <td class="px-4 py-3 text-sm text-slate-500">Seafood</td>
+                <td class="px-4 py-3 text-sm font-medium">EGP 34,100</td>
+                <td class="px-4 py-3"><span class="status-badge px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Delivered</span></td>
+                <td class="px-4 py-3 text-sm text-slate-500">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+          <!-- AI Insights -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-hv-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"/></svg>
+              <h3 class="font-semibold text-slate-900 text-sm">AI Swarm Insights</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="p-3 bg-amber-50 rounded-lg border border-amber-100">
+                <div class="text-xs font-medium text-amber-800 mb-1">Cost Optimizer Alert</div>
+                <div class="text-xs text-amber-700">Switch linen vendor to Cairo Textiles → save EGP 12K/month</div>
+              </div>
+              <div class="p-3 bg-hv-50 rounded-lg border border-hv-100">
+                <div class="text-xs font-medium text-hv-800 mb-1">Cashflow Planner</div>
+                <div class="text-xs text-hv-700">Q3 payment due in 14 days. Oliv pre-approval available.</div>
+              </div>
+              <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                <div class="text-xs font-medium text-emerald-800 mb-1">Pre-Spend Gatekeeper</div>
+                <div class="text-xs text-emerald-700">3 orders flagged for budget review. Tap to approve.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Vendors -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <h3 class="font-semibold text-slate-900 text-sm mb-3">Top Vendors (30d)</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center text-xs font-bold text-slate-600">AF</div>
+                  <div>
+                    <div class="text-sm font-medium">Al-Amal Foods</div>
+                    <div class="text-xs text-slate-400">EGP 234K volume</div>
+                  </div>
+                </div>
+                <div class="text-sm font-semibold text-emerald-600">4.8</div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center text-xs font-bold text-slate-600">NC</div>
+                  <div>
+                    <div class="text-sm font-medium">Nile Chemicals</div>
+                    <div class="text-xs text-slate-400">EGP 189K volume</div>
+                  </div>
+                </div>
+                <div class="text-sm font-semibold text-emerald-600">4.6</div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center text-xs font-bold text-slate-600">CL</div>
+                  <div>
+                    <div class="text-sm font-medium">Cairo Linens</div>
+                    <div class="text-xs text-slate-400">EGP 156K volume</div>
+                  </div>
+                </div>
+                <div class="text-sm font-semibold text-amber-600">3.9</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

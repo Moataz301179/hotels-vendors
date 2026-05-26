@@ -30,7 +30,7 @@ const SOURCE_COLORS: Record<string, string> = {
   I_SCORE: "#10b981",
   DUN_BRADSTREET: "#3b82f6",
   GAFI: "#f59e0b",
-  MANUAL: "#8b5cf6",
+  MANUAL: "#bef264",
   PLATFORM_INTERNAL: "#06b6d4",
 };
 

@@ -57,7 +57,7 @@ const FAQS = [
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-[#161618]">
       <MarketingNav />
 
       {/* Header */}
@@ -68,7 +68,7 @@ export default function HelpPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-[12px] font-medium text-[#8b5cf6] tracking-[0.15em] uppercase mb-4">
+            <p className="text-[12px] font-medium text-[#a3e635] tracking-[0.15em] uppercase mb-4">
               Support
             </p>
             <h1 className="text-[40px] sm:text-[52px] font-bold text-white tracking-[-0.03em] leading-tight">
@@ -85,7 +85,7 @@ export default function HelpPage() {
         {/* Video Guides */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <PlayCircle size={18} className="text-[#8b5cf6]" />
+            <PlayCircle size={18} className="text-[#a3e635]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Portal Video Guides
             </h2>
@@ -99,9 +99,9 @@ export default function HelpPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-white/[0.12] hover:-translate-y-1 transition-all"
+                className="rounded-xl border border-[#e5e5e5] bg-white/[0.02] p-6 hover:border-white/[0.12] hover:-translate-y-1 transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-[#161618] border border-[#e5e5e5] flex items-center justify-center mb-4">
                   <PlayCircle size={24} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-white mb-1">
@@ -116,7 +116,7 @@ export default function HelpPage() {
         {/* FAQs */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <BookOpen size={18} className="text-[#8b5cf6]" />
+            <BookOpen size={18} className="text-[#a3e635]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Frequently Asked Questions
             </h2>
@@ -129,7 +129,7 @@ export default function HelpPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5"
+                className="rounded-xl border border-[#e5e5e5] bg-white/[0.02] p-5"
               >
                 <h3 className="text-sm font-semibold text-white mb-2">
                   {faq.q}
@@ -145,7 +145,7 @@ export default function HelpPage() {
         {/* Contact */}
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <MessageCircle size={18} className="text-[#8b5cf6]" />
+            <MessageCircle size={18} className="text-[#a3e635]" />
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
               Still Need Help?
             </h2>
@@ -153,9 +153,9 @@ export default function HelpPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a
               href="mailto:support@hotelsvendors.com"
-              className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 flex items-center gap-4 hover:border-[#8b5cf6]/30 transition-colors"
+              className="rounded-xl border border-[#e5e5e5] bg-white/[0.02] p-5 flex items-center gap-4 hover:border-[#a3e635]/30 transition-colors"
             >
-              <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-[#161618] border border-[#e5e5e5] flex items-center justify-center">
                 <Mail size={18} className="text-white" />
               </div>
               <div>
@@ -167,8 +167,8 @@ export default function HelpPage() {
                 </p>
               </div>
             </a>
-            <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center">
+            <div className="rounded-xl border border-[#e5e5e5] bg-white/[0.02] p-5 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-[#161618] border border-[#e5e5e5] flex items-center justify-center">
                 <Phone size={18} className="text-white" />
               </div>
               <div>

@@ -32,7 +32,7 @@ export function AuthLeftPanel() {
     <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] relative flex-col justify-between p-10 xl:p-14 overflow-hidden">
       {/* Background layers */}
       <div className="absolute inset-0 bg-[#0a0a0a]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(2,35,73,0.25)_0%,_transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(163,230,53,0.25)_0%,_transparent_60%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(185,28,28,0.08)_0%,_transparent_50%)]" />
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
 
@@ -66,7 +66,7 @@ export function AuthLeftPanel() {
         <h2 className="text-3xl xl:text-4xl font-bold text-white leading-tight tracking-tight">
           The Amazon of
           <br />
-          <span className="text-[#8b5cf6]">Egyptian Hospitality</span>
+          <span className="text-[#bef264]">Egyptian Hospitality</span>
         </h2>
         <p className="mt-4 text-sm text-white/40 leading-relaxed max-w-sm">
           Connect hotels, suppliers, logistics providers, and factoring companies on one
@@ -82,8 +82,8 @@ export function AuthLeftPanel() {
               transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
               className="flex items-start gap-4 group"
             >
-              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:border-[#8b5cf6]/30 group-hover:bg-[#8b5cf6]/10 transition-colors">
-                <prop.icon className="w-4 h-4 text-[#8b5cf6]" />
+              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:border-[#bef264]/30 group-hover:bg-[#bef264]/10 transition-colors">
+                <prop.icon className="w-4 h-4 text-[#bef264]" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white/80">{prop.title}</p>
