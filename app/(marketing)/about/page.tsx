@@ -132,14 +132,14 @@ export default async function AboutPage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#bef264] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#a3e635] hover:bg-[#bef264] text-black text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Join the Platform
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/marketplace"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-white/70 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
               >
                 Explore the Marketplace
               </Link>
@@ -161,10 +161,19 @@ export default async function AboutPage() {
                 <blockquote className="text-[20px] md:text-[24px] font-medium text-white leading-snug tracking-tight">
                   "An auditor does not simply check the numbers. An auditor sees the gaps between what is happening and what should be happening. That is exactly what Hotels Vendors does for procurement."
                 </blockquote>
-                <div className="mt-6">
-                  <p className="text-[15px] font-semibold text-white">Moataz Abdel Ghani</p>
-                  <p className="text-[13px] text-white/60">Founder & Chief Executive Officer</p>
-                </div>
+            <div className="mt-6">
+              <p className="text-[15px] font-semibold text-white">Moataz Abdel Ghani</p>
+              <p className="text-[13px] text-white/60">Founder & Chief Executive Officer</p>
+              <a
+                href="https://hotels-vendors.vercel.app/about"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-2 text-[12px] text-[#a3e635] hover:text-[#bef264] transition-colors"
+              >
+                <Globe className="w-3 h-3" />
+                View Founder Profile
+              </a>
+            </div>
               </div>
             </div>
 
@@ -415,19 +424,19 @@ export default async function AboutPage() {
                 {cms?.ctaDescription || "Join the hospitality groups that have replaced procurement chaos with audit-grade control, AI-powered intelligence, and real-time spend visibility."}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#bef264] hover:bg-[#6d28d9] text-white text-[14px] font-semibold rounded-lg transition-colors"
-                >
-                  Get Started Free
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/marketplace"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
-                >
-                  Browse the Marketplace
-                </Link>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#a3e635] hover:bg-[#bef264] text-black text-[14px] font-semibold rounded-lg transition-colors"
+              >
+                Get Started Free
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/marketplace"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-white/70 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Browse the Marketplace
+              </Link>
               </div>
             </div>
           </div>

@@ -28,16 +28,15 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
 
+  const logoSrc = variant === "dark" ? "/logo-icon-white.png" : "/logo-icon.png";
+
   return (
     <Image
-      src="/logo-icon-white.png"
+      src={logoSrc}
       alt="Hotels Vendors"
       width={dims.width}
       height={dims.height}
       className={cn("object-contain", className)}
-      style={{
-        filter: variant === "dark" ? undefined : "brightness(0)",
-      }}
       priority
     />
   );
