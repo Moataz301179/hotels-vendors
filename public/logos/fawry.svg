@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <rect width="200" height="40" rx="8" fill="#E31937"/>
+  <text x="20" y="26" fill="white" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Fawry</text>
+  <circle cx="170" cy="20" r="10" fill="white" opacity="0.2"/>
+  <path d="M166 20l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
