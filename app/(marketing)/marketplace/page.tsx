@@ -48,13 +48,13 @@ export default async function MarketplacePage() {
       <section className="relative overflow-hidden border-b border-white/[0.04] py-16 lg:py-24">
         <div className="absolute inset-0">
           <div className="absolute top-[-30%] right-[-10%] w-[70%] h-[80%] rounded-full opacity-10"
-            style={{ background: "radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 70%)", filter: "blur(120px)" }} />
+            style={{ background: "radial-gradient(circle, rgba(163,230,53,0.4) 0%, transparent 70%)", filter: "blur(120px)" }} />
         </div>
         <div className="relative z-10 max-w-[1280px] mx-auto px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 border border-[#a3e635]/20 bg-[#a3e635]/[0.06]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#a3e635] animate-pulse" />
-              <span className="text-[11px] font-medium text-[#a78bfa] tracking-wide">Verified Suppliers</span>
+              <span className="text-[11px] font-medium text-[#a3e635] tracking-wide">Verified Suppliers</span>
             </div>
             <h1 className="text-[36px] md:text-[44px] font-semibold text-white tracking-[-0.03em] leading-[1.1]">
               B2B Hospitality Marketplace

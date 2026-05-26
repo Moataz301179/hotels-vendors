@@ -75,7 +75,7 @@ export default function HelpPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0f0f11]">
+    <div className="min-h-screen bg-[#000000]">
       {/* Hero */}
       <section className="pt-24 pb-16 px-8">
         <div className="max-w-[1280px] mx-auto text-center">

@@ -173,7 +173,7 @@ export default function SupplierOnboardingPage() {
               Thank you for applying to join Hotels Vendors. Our compliance team will review your application within 2–3 business days.
             </p>
 
-            <div className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.08] text-left space-y-4 mb-10">
+            <div className="p-6 rounded-2xl bg-[#000000] border border-white/[0.08] text-left space-y-4 mb-10">
               <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider">What happens next?</p>
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-white" /></div>
@@ -190,7 +190,7 @@ export default function SupplierOnboardingPage() {
             </div>
 
             <div className="flex gap-4 justify-center">
-              <Link href="/" className="px-6 py-3 rounded-xl bg-[#0a0a0a] border border-white/[0.08] text-white text-sm font-medium hover:bg-white/5 transition-colors">Back to Home</Link>
+              <Link href="/" className="px-6 py-3 rounded-xl bg-[#000000] border border-white/[0.08] text-white text-sm font-medium hover:bg-white/5 transition-colors">Back to Home</Link>
               <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#bef264] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
@@ -254,7 +254,7 @@ export default function SupplierOnboardingPage() {
             </div>
 
             {/* Form Card */}
-            <div className="rounded-2xl border border-white/[0.08] bg-[#0a0a0a] overflow-hidden">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#000000] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={step}
@@ -376,9 +376,9 @@ export default function SupplierOnboardingPage() {
                             onChange={(e) => updateField("governorate", e.target.value)}
                             className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-[14px] focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 transition-colors appearance-none"
                           >
-                            <option value="" className="bg-[#0a0a0a]">Select governorate</option>
+                            <option value="" className="bg-[#000000]">Select governorate</option>
                             {GOVERNORATES.map((g) => (
-                              <option key={g} value={g} className="bg-[#0a0a0a]">{g}</option>
+                              <option key={g} value={g} className="bg-[#000000]">{g}</option>
                             ))}
                           </select>
                         </div>
@@ -670,7 +670,7 @@ function MobileBenefits() {
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#0a0a0a] border border-white/[0.08] text-white text-[13px] font-medium"
+        className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#000000] border border-white/[0.08] text-white text-[13px] font-medium"
       >
         <span>Why join as a Supplier?</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />

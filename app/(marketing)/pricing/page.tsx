@@ -159,8 +159,8 @@ export default async function PricingPage() {
                 key={tier.name}
                 className={`relative flex flex-col rounded-2xl border p-6 md:p-8 transition-all ${
                   tier.popular
-                    ? "bg-[#111] border-[#bef264]/30 shadow-[0_0_40px_-12px_rgba(139, 92, 246,0.25)]"
-                    : "bg-[#111] border-white/10 hover:border-white/15"
+                    ? "bg-[#000000] border-[#bef264]/30 "
+                    : "bg-[#000000] border-white/10 hover:border-white/15"
                 }`}
               >
                 {tier.popular && (
@@ -307,7 +307,7 @@ export default async function PricingPage() {
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-xl bg-[#111] border border-white/10 open:border-white/15 transition-colors"
+                className="group rounded-xl bg-[#000000] border border-white/10 open:border-white/15 transition-colors"
               >
                 <summary className="flex items-center justify-between gap-4 cursor-pointer p-5 list-none">
                   <span className="text-[14px] font-medium text-white flex items-center gap-3">
@@ -348,7 +348,7 @@ export default async function PricingPage() {
           ═══════════════════════════════════════════ */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center">
+          <div className="relative overflow-hidden rounded-3xl bg-[#000000] border border-white/10 p-10 md:p-16 text-center">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#bef264]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[26px] md:text-[34px] font-bold text-white tracking-tight">

@@ -235,7 +235,7 @@ export default async function AboutPage() {
           STATS BAR
           ═══════════════════════════════════════════ */}
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-20">
-        <div className="bg-[#111] border border-white/10 rounded-2xl p-6 md:p-8 shadow-sm">
+        <div className="bg-[#000000] border border-white/10 rounded-2xl p-6 md:p-8 shadow-sm">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {STATS.map((stat) => (
               <div key={stat.label} className="text-center">
@@ -255,7 +255,7 @@ export default async function AboutPage() {
       {/* ═══════════════════════════════════════════
           TIMELINE / MILESTONES
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10 bg-[#0a0a0a]">
+      <section className="py-20 border-t border-white/10 bg-[#000000]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
@@ -284,7 +284,7 @@ export default async function AboutPage() {
                   {/* content */}
                   <div className="ml-10 md:ml-0 md:w-1/2 md:text-right">
                     <div
-                      className={`p-6 rounded-2xl bg-[#111] border border-white/10 shadow-sm ${
+                      className={`p-6 rounded-2xl bg-[#000000] border border-white/10 shadow-sm ${
                         i % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-left"
                       }`}
                     >
@@ -326,7 +326,7 @@ export default async function AboutPage() {
             {VALUES.map((item) => (
               <div
                 key={item.title}
-                className="flex gap-4 p-6 rounded-2xl border border-white/10 bg-[#111] shadow-sm"
+                className="flex gap-4 p-6 rounded-2xl border border-white/10 bg-[#000000] shadow-sm"
               >
                 <CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <div>
@@ -346,7 +346,7 @@ export default async function AboutPage() {
       {/* ═══════════════════════════════════════════
           TEAM / LEADERSHIP
           ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10 bg-[#0a0a0a]">
+      <section className="py-20 border-t border-white/10 bg-[#000000]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-14">
             <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
@@ -361,7 +361,7 @@ export default async function AboutPage() {
             {TEAM.map((member) => (
               <div
                 key={member.name}
-                className="group p-6 rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all shadow-sm"
+                className="group p-6 rounded-2xl bg-[#000000] border border-white/10 hover:border-white/15 transition-all shadow-sm"
               >
                 <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-gray-500 text-[11px] font-bold tracking-widest group-hover:bg-white/10 group-hover:border-white/20 group-hover:text-white transition-all">
                   {member.initials}
@@ -399,7 +399,7 @@ export default async function AboutPage() {
             {PARTNERS.map((partner) => (
               <span
                 key={partner}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#111] border border-white/10 text-[13px] text-gray-400 hover:border-white/15 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#000000] border border-white/10 text-[13px] text-gray-400 hover:border-white/15 transition-colors shadow-sm"
               >
                 <Briefcase className="w-3.5 h-3.5 text-gray-600" />
                 {partner}
@@ -412,9 +412,9 @@ export default async function AboutPage() {
       {/* ═══════════════════════════════════════════
           CTA
           ═══════════════════════════════════════════ */}
-      <section className="py-20 bg-[#0a0a0a]">
+      <section className="py-20 bg-[#000000]">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center shadow-sm">
+          <div className="relative overflow-hidden rounded-3xl bg-[#000000] border border-white/10 p-10 md:p-16 text-center shadow-sm">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#bef264]/[0.08] rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[26px] md:text-[34px] font-bold text-white tracking-tight">
