@@ -2,108 +2,97 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Hotel, Store, ArrowRight } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
+import { Hotel, UserCog, ArrowRight, Building2, Landmark, Truck } from "lucide-react";
 
-const MARKETPLACE_ROLES = [
+const roles = [
   {
-    slug: "hotel",
-    label: "Hotel / Property",
-    tagline: "Streamline procurement across all your properties",
-    desc: "Access verified suppliers, automate purchase orders, enforce approval matrices, and generate ETA-compliant invoices — all from one dashboard.",
     icon: Hotel,
-    stats: "68 verified suppliers",
-    cta: "Register as Hotel",
+    title: "Hotel Owner",
+    desc: "Manage procurement, track spend, and connect with verified suppliers.",
+    href: "/register/hotel",
+    accent: "#a3e635",
   },
   {
-    slug: "supplier",
-    label: "Supplier / Vendor",
-    tagline: "Grow your B2B hospitality business",
-    desc: "List your products, receive POs from vetted hotels, get paid faster with embedded factoring, and track deliveries in real time.",
-    icon: Store,
-    stats: "52 hotel properties",
-    cta: "Register as Supplier",
+    icon: UserCog,
+    title: "Supplier",
+    desc: "List products, receive orders, and get paid faster with embedded financing.",
+    href: "/register/supplier",
+    accent: "#bef264",
+  },
+  {
+    icon: Landmark,
+    title: "Factoring Partner",
+    desc: "Provide liquidity to suppliers through invoice factoring.",
+    href: "/register/factoring",
+    accent: "#34d399",
+  },
+  {
+    icon: Truck,
+    title: "Logistics Partner",
+    desc: "Optimize delivery routes and reduce shipping overhead.",
+    href: "/register/logistics",
+    accent: "#60a5fa",
   },
 ];
 
-export default function RegisterGatewayPage() {
+export default function RegisterPage() {
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Mobile brand */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="lg:hidden flex items-center gap-3 mb-8 justify-center"
-      >
-        <BrandLogo variant="dark" size="md" />
-        <div>
-          <h1 className="text-lg font-bold tracking-tight text-white">Hotels Vendors</h1>
-          <p className="text-[10px] text-white/40 uppercase tracking-wider">Digital Procurement Hub</p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full"
+    >
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#a3e635]/10 border border-[#a3e635]/20 mb-6">
+          <Building2 className="w-6 h-6 text-[#a3e635]" />
         </div>
-      </motion.div>
+        <h1 className="text-2xl font-bold text-white tracking-tight">Join HotelsVendors</h1>
+        <p className="mt-2 text-sm text-white/40">Choose your role to get started</p>
+      </div>
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-        className="text-center mb-10"
-      >
-        <h2 className="text-[22px] md:text-[26px] font-semibold text-white tracking-tight">
-          Join the platform
-        </h2>
-        <p className="text-[13px] text-white/35 mt-2">
-          Select your business type to get started
-        </p>
-      </motion.div>
-
-      {/* Role Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-        {MARKETPLACE_ROLES.map((role, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {roles.map((role, i) => (
           <motion.div
-            key={role.slug}
-            initial={{ opacity: 0, y: 16 }}
+            key={role.title}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 + i * 0.08 }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
           >
             <Link
-              href={`/register/${role.slug}`}
-              className="group block h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[#bef264]/30 hover:bg-white/[0.03] transition-all duration-300"
+              href={role.href}
+              className="group flex flex-col rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[#a3e635]/20 hover:bg-white/[0.04] transition-all duration-300"
             >
-              <div className="flex items-start justify-between mb-5">
-                <div className="w-11 h-11 rounded-xl bg-[#bef264]/10 border border-[#bef264]/15 flex items-center justify-center group-hover:bg-[#bef264]/15 transition-colors">
-                  <role.icon size={22} className="text-[#bef264]" />
+              <div className="flex items-center gap-4 mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center border border-white/[0.08]"
+                  style={{ backgroundColor: `${role.accent}10`, borderColor: `${role.accent}20` }}
+                >
+                  <role.icon className="w-5 h-5" style={{ color: role.accent }} />
                 </div>
-                <span className="text-[11px] text-white/25 bg-white/[0.04] px-2.5 py-1 rounded-full border border-white/[0.05]">
-                  {role.stats}
-                </span>
+                <div>
+                  <h3 className="text-sm font-semibold text-white group-hover:text-[#a3e635] transition-colors">
+                    {role.title}
+                  </h3>
+                </div>
               </div>
-
-              <h3 className="text-[16px] font-semibold text-white mb-1">{role.label}</h3>
-              <p className="text-[12px] text-[#bef264]/70 font-medium mb-3">{role.tagline}</p>
-              <p className="text-[12px] text-white/30 leading-relaxed mb-5">{role.desc}</p>
-
-              <div className="flex items-center gap-2 text-[13px] font-medium text-white/50 group-hover:text-[#bef264] transition-colors">
-                {role.cta}
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              <p className="text-xs text-white/30 leading-relaxed mb-4">{role.desc}</p>
+              <div className="mt-auto flex items-center gap-1 text-xs font-medium" style={{ color: role.accent }}>
+                Get Started <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </div>
             </Link>
           </motion.div>
         ))}
       </div>
 
-      {/* Sign in link */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-center text-[13px] text-white/25 mt-8"
-      >
-        Already have an account?{" "}
-        <Link href="/login" className="text-[#bef264] hover:text-[#ff6b6b] font-medium transition-colors">
-          Sign in
-        </Link>
-      </motion.p>
-    </div>
+      <div className="mt-8 text-center">
+        <p className="text-xs text-white/20">
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#a3e635] hover:text-[#bef264] transition-colors font-medium">
+            Sign In
+          </Link>
+        </p>
+      </div>
+    </motion.div>
   );
 }

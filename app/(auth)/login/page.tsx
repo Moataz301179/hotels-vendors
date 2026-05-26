@@ -34,7 +34,6 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // "admin" / "Admin" alias → Admin account
       const resolvedEmail = email.toLowerCase() === "admin" ? "Admin" : email;
       const res = await fetch("/api/v1/auth/login", {
         method: "POST",
@@ -44,21 +43,20 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (data.success) {
-        // Redirect based on role
         const role = data.user?.platformRole;
         if (role === "ADMIN") {
           router.push("/admin");
+        } else if (role === "HOTEL") {
+          router.push("/hotel");
         } else if (role === "SUPPLIER") {
           router.push("/supplier");
         } else if (role === "FACTORING") {
           router.push("/factoring");
-        } else if (role === "SHIPPING") {
-          router.push("/shipping");
         } else {
-          router.push("/hotel");
+          router.push("/dashboard");
         }
       } else {
-        setError(data.error || "Invalid credentials");
+        setError(data.message || "Invalid credentials");
       }
     } catch {
       setError("Network error. Please try again.");
@@ -67,249 +65,178 @@ export default function LoginPage() {
     }
   };
 
+  const handleResend = async () => {
+    if (!email || resending) return;
+    setResending(true);
+    setResendMsg("");
+    try {
+      const res = await fetch("/api/v1/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      setResendMsg(data.message || "Verification email sent.");
+    } catch {
+      setResendMsg("Failed to resend. Try again.");
+    } finally {
+      setResending(false);
+    }
+  };
+
   return (
-    <div>
-      {/* Mobile-only brand header */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="lg:hidden flex items-center gap-3 mb-8 justify-center"
-      >
-        <BrandLogo variant="dark" size="md" />
-        <div>
-          <h1 className="text-lg font-bold tracking-tight text-white">Hotels Vendors</h1>
-          <p className="text-[10px] text-white/40 uppercase tracking-wider">
-            Digital Procurement Hub
-          </p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full"
+    >
+      {/* Header */}
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#a3e635]/10 border border-[#a3e635]/20 mb-6">
+          <BrandLogo variant="dark" size="md" />
         </div>
-      </motion.div>
+        <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back</h1>
+        <p className="mt-2 text-sm text-white/40">Sign in to your HotelsVendors account</p>
+      </div>
 
-      {/* Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.08 }}
-        className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden "
-      >
-        {/* Header */}
-        <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-          <h2 className="text-lg font-semibold text-white">Welcome back</h2>
-          <p className="text-sm text-white/40 mt-1">
-            Sign in to your procurement portal
-          </p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex items-center gap-2.5 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-sm text-red-400"
-            >
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </motion.div>
-          )}
-
-          {resendMsg && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex items-center gap-2.5 px-4 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-400"
-            >
-              <MailCheck className="w-4 h-4 flex-shrink-0" />
-              <span>{resendMsg}</span>
-            </motion.div>
-          )}
-
-          {/* Email / Username */}
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
-              Email or Username
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@hotel.com or admin"
-                required
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#bef264]/60 focus:ring-1 focus:ring-[#bef264]/20 transition-all"
-              />
-            </div>
-          </div>
-
-          {/* Password */}
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#bef264]/60 focus:ring-1 focus:ring-[#bef264]/20 transition-all"
-              />
+      {/* Error */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 rounded-xl bg-red-500/10 border border-red-500/20 p-4 flex items-start gap-3"
+        >
+          <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm text-red-300">{error}</p>
+            {error.includes("verify") && (
               <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 transition-colors"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Remember + Forgot */}
-          <div className="flex items-center justify-between text-xs">
-            <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
-              <input
-                type="checkbox"
-                className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.04] accent-[#bef264]"
-              />
-              <span>Remember me</span>
-            </label>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={async () => {
-                  const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
-                  if (!resolvedEmail) { setError("Please enter your email first"); return; }
-                  setResending(true);
-                  setResendMsg("");
-                  try {
-                    const res = await fetch("/api/v1/auth/resend-verification", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email: resolvedEmail }),
-                    });
-                    const data = await res.json();
-                    setResendMsg(data.data?.message || "Verification email sent if account exists.");
-                  } catch {
-                    setResendMsg("Failed to send. Please try again.");
-                  } finally {
-                    setResending(false);
-                  }
-                }}
+                onClick={handleResend}
                 disabled={resending}
-                className="text-white/30 hover:text-white/60 transition-colors font-medium disabled:opacity-50"
+                className="mt-2 text-xs text-red-400 hover:text-red-300 underline transition-colors"
               >
-                {resending ? "Sending..." : "Resend verification"}
+                {resending ? "Sending..." : "Resend verification email"}
               </button>
-              <Link
-                href="/forgot-password"
-                className="text-[#ff6b6b] hover:text-[#ff9999] transition-colors font-medium"
-              >
-                Forgot password?
-              </Link>
-            </div>
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#bef264] hover:bg-[#033663] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed "
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                <span>Sign In</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
             )}
-          </button>
+          </div>
+        </motion.div>
+      )}
 
-          {/* Divider */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/[0.06]" />
-            <span className="text-[10px] text-white/20 uppercase tracking-wider">
-              or continue with
+      {resendMsg && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mb-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 flex items-center gap-3"
+        >
+          <MailCheck className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+          <p className="text-sm text-emerald-300">{resendMsg}</p>
+        </motion.div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="block text-xs font-medium text-white/50 mb-2">Email or Username</label>
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@hotel.com or Admin"
+              className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#a3e635]/30 focus:bg-white/[0.05] transition-all"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-medium text-white/50">Password</label>
+            <Link
+              href="/forgot-password"
+              className="text-xs text-[#a3e635] hover:text-[#bef264] transition-colors"
+            >
+              Forgot?
+            </Link>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#a3e635]/30 focus:bg-white/[0.05] transition-all"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 transition-colors"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#a3e635] hover:bg-[#bef264] text-black text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+              Signing in...
             </span>
-            <div className="flex-1 h-px bg-white/[0.06]" />
-          </div>
+          ) : (
+            <>
+              Sign In <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
+      </form>
 
-          {/* Demo credentials */}
-          <div className="space-y-2">
-            <p className="text-[10px] text-center text-white/20 uppercase tracking-wider">
-              Demo Accounts
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                {
-                  label: "Hotel",
-                  icon: Hotel,
-                  email: "hotel.owner@nilegrand.com",
-                  pass: "HotelOwner123!",
-                },
-                {
-                  label: "Admin",
-                  icon: UserCog,
-                  email: "admin",
-                  pass: "1234Harly",
-                }
-              ].map((acc) => (
-                <button
-                  key={acc.label}
-                  type="button"
-                  onClick={() => {
-                    setEmail(acc.email);
-                    setPassword(acc.pass);
-                  }}
-                  className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] text-xs text-white/50 hover:text-white/80 hover:border-white/[0.12] hover:bg-white/[0.04] transition-all text-center"
-                >
-                  <acc.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                  <div className="text-left min-w-0">
-                    <span className="block font-medium">{acc.label}</span>
-                    <span className="block text-[10px] text-white/30 mt-0.5 truncate">
-                      {acc.email}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </form>
-      </motion.div>
+      {/* Divider */}
+      <div className="flex items-center gap-4 my-8">
+        <div className="flex-1 h-px bg-white/[0.06]" />
+        <span className="text-xs text-white/20">or</span>
+        <div className="flex-1 h-px bg-white/[0.06]" />
+      </div>
+
+      {/* Role quick links */}
+      <div className="grid grid-cols-2 gap-3">
+        <Link
+          href="/register/hotel"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/60 text-xs font-medium hover:border-[#a3e635]/20 hover:text-white hover:bg-white/[0.04] transition-all"
+        >
+          <Hotel className="w-3.5 h-3.5" />
+          Hotel Owner
+        </Link>
+        <Link
+          href="/register/supplier"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/60 text-xs font-medium hover:border-[#a3e635]/20 hover:text-white hover:bg-white/[0.04] transition-all"
+        >
+          <UserCog className="w-3.5 h-3.5" />
+          Supplier
+        </Link>
+      </div>
 
       {/* Footer */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-center text-sm text-white/30 mt-6"
-      >
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/register"
-          className="text-[#A52A2A] hover:text-[#3a6a9c] font-medium transition-colors"
-        >
-          Create account
-        </Link>
-      </motion.p>
-
-      {/* Security Badge */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="flex items-center justify-center gap-2 mt-4 text-[10px] text-white/20"
-      >
-        <Shield className="w-3 h-3" />
-        <span>Secured with JWT + RBAC + Email Verification</span>
-      </motion.div>
-    </div>
+      <div className="mt-8 text-center">
+        <p className="text-xs text-white/20">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="text-[#a3e635] hover:text-[#bef264] transition-colors font-medium">
+            Get Started
+          </Link>
+        </p>
+        <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-white/10">
+          <Shield className="w-3 h-3" />
+          Bank-grade encryption
+        </div>
+      </div>
+    </motion.div>
   );
 }

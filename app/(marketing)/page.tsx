@@ -143,7 +143,7 @@ function ProblemSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-32 bg-[#000000]" ref={ref}>
+    <section className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="text-center mb-20">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">The Problem</span>
@@ -196,7 +196,7 @@ function PlatformSection() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="platform" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="platform" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-16">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Platform</span>
@@ -297,7 +297,7 @@ function WorkflowSection() {
   ];
 
   return (
-    <section id="workflow" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="workflow" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-20">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Workflow</span>
@@ -343,7 +343,7 @@ function NetworkSection() {
   ];
 
   return (
-    <section id="network" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="network" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
@@ -370,7 +370,7 @@ function NetworkSection() {
 
           <motion.div custom={2} variants={scaleIn} initial="hidden" animate={inView ? "visible" : "hidden"}
             className="relative rounded-2xl overflow-hidden border border-white/[0.04] aspect-[4/3]">
-            <img src="/hotel-cairo.jpg" alt="Egypt Hospitality" className="w-full h-full object-cover opacity-60" />
+            <img src="/hero-hotel-drone.jpg" alt="Egypt Hospitality" className="w-full h-full object-cover opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6">
               <div className="flex items-baseline justify-between mb-2">
@@ -401,7 +401,7 @@ function TrustSection() {
   ];
 
   return (
-    <section id="trust" className="py-32 bg-[#000000]" ref={ref}>
+    <section id="trust" className="py-40 bg-[#000000]" ref={ref}>
       <div className="max-w-[1280px] mx-auto px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }} className="mb-16">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a3e635] mb-4 block">Trust</span>
@@ -508,15 +508,22 @@ function Footer() {
    ═══════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#000000]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif" }}>
+    <main className="min-h-screen bg-[#000000]" style={{ fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif" }}>
       <LandingNav />
       <HeroSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <ProblemSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <PlatformSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <WorkflowSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <NetworkSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <TrustSection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <CTASection />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       <Footer />
     </main>
   );

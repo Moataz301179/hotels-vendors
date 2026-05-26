@@ -2,140 +2,71 @@
 
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { Shield, FileCheck, Zap } from "lucide-react";
-import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-icons";
-
-const INVESTORS = [
-  { name: "Flat6Labs", region: "Egypt" },
-  { name: "Algebra Ventures", region: "Egypt" },
-  { name: "500 Startups", region: "Global" },
-  { name: "Sawari Ventures", region: "MENA" },
-  { name: "Global Ventures", region: "MENA" },
-  { name: "A15", region: "Egypt" },
-];
-
-const FOOTER_LINKS = {
-  Product: [
-    { label: "Platform", href: "/solutions" },
-    { label: "Marketplace", href: "/marketplace" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "API", href: "/about" },
-  ],
-  Company: [
-    { label: "About", href: "/about" },
-    { label: "Careers", href: "/about" },
-    { label: "Press", href: "/about" },
-    { label: "Contact", href: "/about" },
-  ],
-  Resources: [
-    { label: "Blog", href: "/about" },
-    { label: "Documentation", href: "/about" },
-    { label: "Help Center", href: "/help" },
-    { label: "Status", href: "/about" },
-  ],
-  Legal: [
-    { label: "Privacy", href: "/about" },
-    { label: "Terms", href: "/about" },
-    { label: "Compliance", href: "/about" },
-    { label: "Security", href: "/about" },
-  ],
-};
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-black border-t border-white/10">
-      {/* Trust Bar */}
-      <div className="border-b border-white/10">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-          {[
-            { icon: Shield, text: "Bank-grade security & encryption" },
-            { icon: FileCheck, text: "Full ETA e-invoicing compliance" },
-            { icon: Zap, text: "99.9% uptime SLA" },
-          ].map((item) => (
-            <div key={item.text} className="flex items-center gap-2 text-[12px] text-white/50">
-              <item.icon className="w-4 h-4 text-[#a3e635]" />
-              {item.text}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Venture Capital */}
-      <div className="border-b border-white/10 bg-white/[0.02]">
-        <div className="mx-auto max-w-7xl px-6 py-6">
-          <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider text-center mb-4">
-            Backed by Leading Investors in MENA Fintech
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-            {INVESTORS.map((inv) => (
-              <div key={inv.name} className="text-center group">
-                <span className="text-[13px] font-semibold text-white/70 group-hover:text-[#a3e635] transition-colors">
-                  {inv.name}
-                </span>
-                <span className="block text-[10px] text-white/30 mt-0.5">{inv.region}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
+    <footer className="py-16 border-t border-white/[0.04] bg-[#000000]">
+      <div className="max-w-[1280px] mx-auto px-8">
+        {/* Top: Brand + Trust badges */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
               <BrandLogo variant="dark" size="sm" />
-              <div>
-                <span className="text-[14px] font-bold text-white tracking-tight block">
-                  Hotels Vendors
-                </span>
-                <span className="text-[9px] font-semibold text-[#a3e635] uppercase tracking-[0.1em]">
-                  Smarter Together
-                </span>
-              </div>
+              <span className="text-sm font-semibold text-white">HotelsVendors</span>
             </div>
-            <p className="text-[12px] text-white/40 leading-relaxed max-w-xs">
-              Egypt&apos;s first integrated procurement operating system for hospitality. SaaS-powered, AI-driven, fully compliant.
+            <p className="text-xs text-white/30 max-w-xs leading-relaxed">
+              Egypt&apos;s first AI-powered procurement orchestration platform for mid-size hotels.
             </p>
           </div>
-
-          {Object.entries(FOOTER_LINKS).map(([category, links]) => (
-            <div key={category}>
-              <h4 className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-4">
-                {category}
-              </h4>
-              <ul className="space-y-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-[13px] text-white/50 hover:text-[#a3e635] transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="flex items-center gap-6">
+            <img src="/logo-instapay.png" alt="InstaPay" className="h-6 opacity-40 hover:opacity-70 transition-opacity" />
+            <img src="/logo-fawry.png" alt="Fawry" className="h-6 opacity-40 hover:opacity-70 transition-opacity" />
+            <img src="/logo-oliv.png" alt="Oliv" className="h-6 opacity-40 hover:opacity-70 transition-opacity" />
+            <img src="/logo-eta.png" alt="ETA" className="h-6 opacity-40 hover:opacity-70 transition-opacity" />
+          </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-white/40">
-            &copy; 2025 Hotels Vendors. All rights reserved.
-          </p>
-          <div className="flex items-center gap-3">
-            <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-white/40 hover:text-[#a3e635]">
-              <FacebookIcon className="w-4 h-4" />
-            </a>
-            <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-white/40 hover:text-[#a3e635]">
-              <InstagramIcon className="w-4 h-4" />
-            </a>
-            <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg transition-colors text-white/40 hover:text-[#a3e635]">
-              <LinkedInIcon className="w-4 h-4" />
-            </a>
+        <div className="h-px bg-white/[0.04] mb-10" />
+
+        {/* Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+          <div>
+            <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Product</h5>
+            <Link href="/solutions" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Solutions</Link>
+            <Link href="/pricing" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Pricing</Link>
+            <Link href="/marketplace" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Marketplace</Link>
           </div>
+          <div>
+            <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Company</h5>
+            <Link href="/about" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">About Us</Link>
+            <Link href="/partners" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Partners</Link>
+            <Link href="/become-supplier" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Become a Supplier</Link>
+          </div>
+          <div>
+            <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Resources</h5>
+            <Link href="/help" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Help Center</Link>
+            <Link href="/blog" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Blog</Link>
+            <Link href="/api-docs" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">API Docs</Link>
+          </div>
+          <div>
+            <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Legal</h5>
+            <Link href="/privacy" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Privacy Policy</Link>
+            <Link href="/terms" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Terms of Service</Link>
+            <Link href="/security" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Security</Link>
+          </div>
+          <div>
+            <h5 className="text-[10px] font-semibold uppercase tracking-wider text-white/40 mb-4">Connect</h5>
+            <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Facebook</a>
+            <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">LinkedIn</a>
+            <a href="https://twitter.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="block text-[12px] text-white/20 hover:text-white/60 transition-colors mb-3">Twitter</a>
+          </div>
+        </div>
+
+        <div className="h-px bg-white/[0.04] mb-6" />
+
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <span className="text-[11px] text-white/10">© 2024 HotelsVendors. All rights reserved.</span>
+          <span className="text-[11px] text-white/10">Cairo, Egypt · CR: [Your CR Number]</span>
         </div>
       </div>
     </footer>
