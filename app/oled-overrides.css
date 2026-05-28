@@ -1,0 +1,83 @@
+
+/* ════════════════════════════════════════════════════════
+   V5 OVERRIDE — Premium OLED Typography & Border System
+   Applied after base theme variables
+   ════════════════════════════════════════════════════════ */
+
+/* ── Sharp ultra-thin borders everywhere ── */
+* {
+  --border-sharp: #1A1A1A;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-visible: #1A1A1A;
+  --card-surface: #050505;
+  --card-surface-alt: #0A0A0A;
+}
+
+/* ── Premium geometric sans stack ── */
+body, .font-sans {
+  font-family: "Inter", "SF Pro Display", "Helvetica Neue", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Typography scale ── */
+h1, h2, h3, h4 {
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+h1 { font-size: clamp(2.25rem, 5vw, 3.75rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 3.25rem); }
+h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); }
+h4 { font-size: clamp(1rem, 1.5vw, 1.125rem); }
+
+p, li, span, div, a, button, input, label {
+  line-height: 1.65;
+}
+
+/* ── Utility classes for OLED system ── */
+.oled-card {
+  background: #050505;
+  border: 1px solid #1A1A1A;
+  border-radius: 12px;
+}
+.oled-card:hover {
+  border-color: #00FF66;
+}
+.oled-badge {
+  background: #0A0A0A;
+  border: 1px solid #1A1A1A;
+  color: #FFFFFF;
+}
+.oled-bg {
+  background: #000000;
+}
+.oled-accent {
+  color: #00FF66;
+}
+.oled-accent-bg {
+  background: #00FF66;
+}
+
+/* ── Remove old framed-card gradient borders ── */
+.framed-card {
+  border: 1px solid #1A1A1A;
+  border-radius: 16px;
+  position: relative;
+}
+.framed-card::before {
+  display: none;
+}
+
+/* ── Scroll reveal ── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

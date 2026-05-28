@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-export function MarketingNav() {
+export default function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -26,14 +26,15 @@ export function MarketingNav() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#000000]/90 backdrop-blur-2xl border-b border-white/[0.04]"
+          ? "bg-[#000000]/90 backdrop-blur-2xl border-b border-[#1A1A1A]"
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <BrandLogo variant="dark" size="sm" />
-          <span className="text-[14px] font-semibold text-white tracking-tight">HotelsVendors</span>
+      <div className="max-w-[1280px] mx-auto px-8 h-20 flex items-center justify-between">
+        {/* Larger logo in header */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <BrandLogo variant="dark" size="lg" />
+          <span className="text-[15px] font-semibold text-white tracking-tight hidden sm:inline">HotelsVendors</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -48,7 +49,7 @@ export function MarketingNav() {
           ))}
           <Link
             href="/login"
-            className="text-[12px] font-semibold text-black bg-[#a3e635] hover:bg-[#bef264] px-5 py-2 rounded-full transition-all"
+            className="text-[12px] font-semibold text-black bg-[#00FF66] hover:bg-[#33FF88] px-5 py-2 rounded-full transition-all"
           >
             Sign In
           </Link>
@@ -63,7 +64,7 @@ export function MarketingNav() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-[#000000]/95 backdrop-blur-xl border-b border-white/[0.06] px-8 py-6">
+        <div className="md:hidden bg-[#000000]/95 backdrop-blur-xl border-b border-[#1A1A1A] px-8 py-6">
           <div className="flex flex-col gap-4">
             {links.map((link) => (
               <Link
@@ -77,7 +78,7 @@ export function MarketingNav() {
             ))}
             <Link
               href="/login"
-              className="inline-flex items-center justify-center text-[14px] font-semibold text-black bg-[#a3e635] hover:bg-[#bef264] px-5 py-2.5 rounded-full transition-all mt-2"
+              className="inline-flex items-center justify-center text-[14px] font-semibold text-black bg-[#00FF66] hover:bg-[#33FF88] px-5 py-2.5 rounded-full transition-all mt-2"
             >
               Sign In
             </Link>
