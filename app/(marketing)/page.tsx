@@ -337,38 +337,36 @@ function RealitySection() {
    ═══════════════════════════════════════════════════════ */
 function PlatformSection() {
   const categories = [
-    { title: "F&B", items: ["AI demand forecasting", "Spoilage alerts", "FIFO tracking", "Recipe-costing integration"] },
-    { title: "Housekeeping", items: ["Par-level auto-reorder", "Amenity bundle management", "Linen lifecycle tracking", "Eco-friendly product sourcing"] },
-    { title: "Engineering", items: ["Preventive maintenance scheduling", "Spare parts catalog", "Work order integration", "Vendor warranty tracking"] },
-    { title: "Amenities", items: ["Guest room amenity kits", "Brand-standard compliance", "Bulk ordering", "Seasonal customization"] },
+    { title: "F&B Procurement", items: ["AI demand forecasting", "Spoilage alerts", "FIFO tracking", "Recipe-costing integration"] },
+    { title: "Housekeeping Supplies", items: ["Par-level auto-reorder", "Amenity bundle management", "Linen lifecycle tracking", "Eco-friendly product sourcing"] },
+    { title: "Engineering & Maintenance", items: ["Preventive maintenance scheduling", "Spare parts catalog", "Work order integration", "Vendor warranty tracking"] },
+    { title: "Amenities & Guest Experience", items: ["Guest room amenity kits", "Brand-standard compliance", "Bulk ordering", "Seasonal customization"] },
     { title: "Capital Equipment", items: ["Capex budgeting", "Depreciation tracking", "Installation scheduling", "Multi-vendor quote comparison"] },
   ];
 
   return (
-    <section id="platform" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-surface-1)" }}>
-      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-        <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>THE PLATFORM</span>
-          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
-            From F&B to Capital Equipment.
-            <span style={{ color: "var(--text-secondary)" }}> Every Dirham Tracked. Every Invoice Compliant.</span>
+    <section id="platform" className="py-28 lg:py-[140px]" style={{ background: "#000000" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+        <div className="text-center mb-20">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "#00FF66", border: "1px solid rgba(0,255,102,0.25)", background: "rgba(0,255,102,0.06)" }}>THE PLATFORM</span>
+          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "#FFFFFF" }}>
+            From F&B to Capital Equipment.<br />
+            <span style={{ color: "rgba(255,255,255,0.55)" }}> Every Dirham Tracked. Every Invoice Compliant.</span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {categories.map((cat) => (
-            <div key={cat.title} className="p-6 rounded-2xl transition-all duration-300 hover:lime-shadow"
-              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-              <h3 className="text-[18px] font-bold mb-4" style={{ color: "var(--text-primary)" }}>{cat.title}</h3>
-              <ul className="space-y-2.5">
+            <div key={cat.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
+              <h3 className="text-[17px] font-bold mb-5 tracking-[-0.01em]" style={{ color: "#FFFFFF" }}>{cat.title}</h3>
+              <ul className="space-y-3">
                 {cat.items.map((item) => (
-                  <li key={item} className="text-[12px] leading-relaxed flex items-start gap-2"
-                    style={{ color: "var(--text-secondary)" }}>
-                    <span style={{ color: "var(--accent)" }}>•</span> {item}
+                  <li key={item} className="text-[13px] leading-relaxed flex items-start gap-2.5" style={{ color: "rgba(255,255,255,0.6)" }}>
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#00FF66" }} /> {item}
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 text-[12px] font-semibold" style={{ color: "var(--accent)" }}>Explore →</div>
+              <div className="mt-6 text-[12px] font-semibold tracking-wide uppercase transition-colors" style={{ color: "rgba(255,255,255,0.4)" }}>Explore</div>
             </div>
           ))}
         </div>
@@ -380,6 +378,7 @@ function PlatformSection() {
 /* ═══════════════════════════════════════════════════════
    SECTION 4: FOR HOTELS — AI Features
    ═══════════════════════════════════════════════════════ */
+
 function ForHotelsSection() {
   const [activeTab, setActiveTab] = useState(0);
   const features = [
@@ -581,58 +580,53 @@ function ForSuppliersSection() {
    SECTION 6: ETA COMPLIANCE
    ═══════════════════════════════════════════════════════ */
 function ETAComplianceSection() {
-  const features = [
-    { title: "Every Invoice = ETA-Compliant", desc: "Platform auto-generates XML/JSON e-invoices in ETA format with digital signature, UUID assignment, and real-time portal submission." },
-    { title: "Product Coding Included", desc: "All catalog items mapped to Egyptian Goods and Services (EGS) or GS1 GPC classification standards. No manual coding required." },
-    { title: "Pre-Clearance Before Issuance", desc: "Invoices validated by ETA before being sent to the buyer. UUID assigned. Buyer notified. Zero rejected invoices." },
-    { title: "Automatic Secure Storage", desc: "All e-invoices, credit notes, and debit notes archived for the legally required 5-year period with instant retrieval." },
+  const complianceItems = [
+    { title: "Real-time ETA E-Invoicing SDK Integration", desc: "Platform auto-generates XML/JSON e-invoices in ETA format with digital signature, UUID assignment, and real-time portal submission to the Egyptian Tax Authority clearance model." },
+    { title: "Secure Digital Signature & Hardware Token Mapping", desc: "Cryptographic invoice signing via certified hardware security modules. Each transaction stamped with a unique cryptographic identity registered under the ETA digital signer framework." },
+    { title: "Automatic UUID Verification & Validation", desc: "Invoices validated by ETA before being sent to the buyer. UUID assigned and verified against the central tax registry. Zero rejected invoices." },
+    { title: "5-Year Compliant Legal Archiving Architecture", desc: "All e-invoices, credit notes, and debit notes archived on immutable storage for the legally required 5-year period with instant retrieval and audit trail." },
   ];
 
   return (
-    <section id="eta-compliance" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
-      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>ETA COMPLIANCE</span>
-            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
-              E-Invoicing Is No Longer Optional.
-              <span style={{ color: "var(--accent)" }}> It's the Law. And the Penalties Are Real.</span>
-            </h2>
-            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Since 2022, paper invoices are legally INVALID for VAT deduction in Egypt. All B2B transactions must be submitted to the Egyptian Tax Authority (ETA) in real-time via the clearance model. Non-compliance carries penalties of EGP 20,000–100,000 and potential criminal sanctions.
-            </p>
+    <section id="eta-compliance" className="py-28 lg:py-[140px]" style={{ background: "#000000" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+        <div className="text-center mb-20">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "#00FF66", border: "1px solid rgba(0,255,102,0.25)", background: "rgba(0,255,102,0.06)" }}>ETA COMPLIANCE</span>
+          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "#FFFFFF" }}>
+            E-Invoicing Is No Longer Optional.<br />
+            <span style={{ color: "#00FF66" }}> It is the Law. And the Penalties Are Real.</span>
+          </h2>
+          <p className="mt-6 text-[16px] max-w-[720px] mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            Since 2022, paper invoices are legally INVALID for VAT deduction in Egypt. All B2B transactions must be submitted to the Egyptian Tax Authority in real-time via the clearance model. Non-compliance carries penalties of EGP 20,000\u2013100,000 and potential criminal sanctions.
+          </p>
+        </div>
 
-            <div className="mt-8 space-y-4">
-              {features.map((f) => (
-                <div key={f.title} className="p-4 rounded-xl transition-all hover:lime-shadow"
-                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-                  <h4 className="text-[14px] font-bold mb-1" style={{ color: "var(--text-primary)" }}>{f.title}</h4>
-                  <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+          {["ETA Registered", "Digital Signature Ready", "UUID Auto-Assigned", "5-Year Archive", "GS1 GPC Coded", "VAT Compliant"].map((b) => (
+            <span key={b} className="px-4 py-2 text-[12px] font-semibold tracking-wide rounded-full" style={{ background: "#0A0A0A", border: "1px solid #1A1A1A", color: "#FFFFFF" }}>
+              {b}
+            </span>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {complianceItems.map((item, i) => (
+            <div key={item.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
+              <div className="flex items-start gap-4">
+                <span className="text-[13px] font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5" style={{ background: "rgba(0,255,102,0.1)", color: "#00FF66", border: "1px solid rgba(0,255,102,0.2)" }}>0{i+1}</span>
+                <div>
+                  <h4 className="text-[16px] font-bold mb-2 tracking-[-0.01em]" style={{ color: "#FFFFFF" }}>{item.title}</h4>
+                  <p className="text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{item.desc}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ETA badges */}
-          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-[32px] lime-shadow-strong"
-                style={{ background: "var(--accent)15" }}>
-                🏛️
               </div>
-              <h3 className="text-[18px] font-bold mt-4" style={{ color: "var(--text-primary)" }}>100% ETA Compliant</h3>
-              <p className="text-[13px] mt-1" style={{ color: "var(--text-secondary)" }}>Every invoice, every time, automatically</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {["ETA Registered", "Digital Signature Ready", "UUID Auto-Assigned", "5-Year Archive"].map((b) => (
-                <div key={b} className="p-4 rounded-xl text-center transition-all hover:lime-shadow"
-                  style={{ background: "var(--bg-canvas)", border: "1px solid var(--border-subtle)" }}>
-                  <div className="text-[18px] mb-2" style={{ color: "var(--accent)" }}>✓</div>
-                  <span className="text-[11px] font-semibold" style={{ color: "var(--text-primary)" }}>{b}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
+        </div>
+
+        <div className="mt-12 p-6 rounded-xl text-center" style={{ background: "#0A0A0A", border: "1px solid #1A1A1A" }}>
+          <p className="text-[14px] font-semibold uppercase tracking-wider" style={{ color: "#00FF66" }}>
+            100% ETA Compliant \u2014 Every Invoice, Every Transaction, Automatically
+          </p>
         </div>
       </div>
     </section>
@@ -642,6 +636,7 @@ function ETAComplianceSection() {
 /* ═══════════════════════════════════════════════════════
    SECTION 7: HOW IT WORKS — 5-step flow
    ═══════════════════════════════════════════════════════ */
+
 function HowItWorksSection() {
   const steps = [
     { step: "1", actor: "HOTEL", time: "2 min", title: "Create Smart PO", desc: "AI suggests quantities based on forecast. Cost estimated before approval. Multi-supplier comparison visible." },
