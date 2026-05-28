@@ -36,14 +36,14 @@ function ThemeSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="text-[12px] font-medium transition-colors tracking-wide uppercase flex items-center gap-1"
-        style={{ color: "rgba(255,255,255,0.55)" }}
+        style={{ color: "var(--fg-secondary)" }}
       >
         Settings {THEMES.find((t) => t.id === theme)?.icon}
       </button>
       {open && (
         <div className="absolute top-full right-0 mt-3 w-44 rounded-2xl border shadow-xl p-2 z-50"
-          style={{ background: "#050505", borderColor: "#1A1A1A" }}>
-          <p className="text-[10px] uppercase tracking-wider px-3 py-2" style={{ color: "rgba(255,255,255,0.3)" }}>Theme</p>
+          style={{ background: "var(--bg-raised)", borderColor: "var(--border-default)" }}>
+          <p className="text-[10px] uppercase tracking-wider px-3 py-2" style={{ color: "var(--fg-tertiary)" }}>Theme</p>
           {THEMES.map((t) => (
             <button
               key={t.id}
@@ -54,8 +54,8 @@ function ThemeSwitcher() {
                   : ""
               }`}
               style={theme === t.id
-                ? { background: "rgba(0,255,102,0.08)", color: "#00FF66" }
-                : { color: "rgba(255,255,255,0.55)" }
+                ? { background: "rgba(31,111,235,0.08)", color: "var(--fg-success)" }
+                : { color: "var(--fg-secondary)" }
               }
             >
               {t.icon} {t.label}
@@ -111,19 +111,19 @@ function LandingNav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
-        background: scrolled ? "#000000" : "transparent",
+        background: scrolled ? "var(--bg-canvas)" : "transparent",
         backdropFilter: scrolled ? "blur(24px)" : "none",
-        borderBottom: scrolled ? "1px solid #1A1A1A" : "1px solid transparent",
+        borderBottom: scrolled ? "1px solid var(--border-default)" : "1px solid transparent",
       }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-[20px] font-black tracking-tight">
-            <span style={{ color: "#FFFFFF" }}>Hotels</span>
-            <span style={{ color: "#00FF66" }}>V</span>
-            <span style={{ color: "#FFFFFF" }}>endors</span>
+            <span style={{ color: "var(--fg-primary)" }}>Hotels</span>
+            <span style={{ color: "var(--fg-success)" }}>V</span>
+            <span style={{ color: "var(--fg-primary)" }}>endors</span>
           </span>
           <span className="text-[9px] tracking-[0.15em] uppercase ml-1 hidden sm:inline"
-            style={{ color: "rgba(255,255,255,0.3)" }}>
+            style={{ color: "var(--fg-tertiary)" }}>
             B2B PROCUREMENT · EGYPT
           </span>
         </Link>
@@ -131,19 +131,19 @@ function LandingNav() {
           {["Platform", "For Hotels", "For Suppliers", "Pricing", "ETA Compliance"].map((item) => (
             <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
               className="text-[11px] font-semibold uppercase tracking-wider transition-colors"
-              style={{ color: "rgba(255,255,255,0.55)" }}>
+              style={{ color: "var(--fg-secondary)" }}>
               {item}
             </a>
           ))}
           <ThemeSwitcher />
           <Link href="/login"
             className="text-[11px] font-semibold uppercase tracking-wider transition-colors"
-            style={{ color: "rgba(255,255,255,0.55)" }}>
+            style={{ color: "var(--fg-secondary)" }}>
             Sign In
           </Link>
           <Link href="/register/hotel"
             className="text-[12px] font-bold px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
-            style={{ background: "#00FF66", color: "#000000" }}>
+            style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
             Get Started
           </Link>
         </div>
@@ -156,7 +156,7 @@ function LandingNav() {
    SECTION DIVIDER
    ═══════════════════════════════════════════════════════ */
 function Divider() {
-  return <div style={{ height: 1, background: "#1A1A1A" }} />;
+  return <div style={{ height: 1, background: "var(--border-default)" }} />;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -166,48 +166,48 @@ function HeroSection() {
   const { y1, y2, opacity, scale } = useParallax();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "#000000" }}>
+    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "var(--bg-canvas)" }}>
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full opacity-[0.03]" style={{ background: "#00FF66", filter: "blur(140px)" }} />
-        <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full opacity-[0.02]" style={{ background: "#00FF66", filter: "blur(100px)" }} />
+        <div className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full opacity-[0.03]" style={{ background: "var(--fg-success)", filter: "blur(140px)" }} />
+        <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full opacity-[0.02]" style={{ background: "var(--fg-success)", filter: "blur(100px)" }} />
       </div>
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 w-full pt-32 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div style={{ y: y1 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8" style={{ border: "1px solid rgba(0,255,102,0.25)", background: "rgba(0,255,102,0.06)" }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#00FF66" }} />
-              <span className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "#00FF66" }}>NOW LIVE IN EGYPT</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8" style={{ border: "1px solid rgba(31,111,235,0.25)", background: "rgba(31,111,235,0.06)" }}>
+              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--fg-success)" }} />
+              <span className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "var(--fg-success)" }}>NOW LIVE IN EGYPT</span>
             </div>
 
-            <h1 className="text-[44px] sm:text-[56px] lg:text-[68px] font-bold leading-[1.04] tracking-[-0.04em]" style={{ color: "#FFFFFF" }}>
+            <h1 className="text-[44px] sm:text-[56px] lg:text-[68px] font-bold leading-[1.04] tracking-[-0.04em]" style={{ color: "var(--fg-primary)" }}>
               Smart Supply Chain<br />
-              <span style={{ color: "rgba(255,255,255,0.5)" }}>Execution for</span><br />
-              <span style={{ color: "#00FF66" }}>Egyptian Hospitality</span>
+              <span style={{ color: "var(--fg-secondary)" }}>Execution for</span><br />
+              <span style={{ color: "var(--fg-success)" }}>Egyptian Hospitality</span>
             </h1>
 
-            <p className="mt-8 text-[17px] max-w-[540px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-8 text-[17px] max-w-[540px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
               AI-powered B2B procurement orchestration that replaces WhatsApp chaos with pre-spend control, embedded fintech, and 100% ETA e-invoice compliance. Built exclusively for Egyptian hotels.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Link href="/register/hotel"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-semibold rounded-full transition-all hover:-translate-y-0.5"
-                style={{ background: "#00FF66", color: "#000000", boxShadow: "0 0 40px rgba(0,255,102,0.15)" }}>
+                style={{ background: "var(--fg-success)", color: "var(--bg-canvas)", boxShadow: "0 0 40px rgba(31,111,235,0.15)" }}>
                 Start Free — No Credit Card
               </Link>
               <a href="#workflow"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-medium rounded-full transition-all"
-                style={{ border: "1px solid #1A1A1A", color: "rgba(255,255,255,0.6)" }}>
+                style={{ border: "1px solid var(--border-default)", color: "var(--fg-secondary)" }}>
                 Watch the Workflow
               </a>
             </div>
 
             <div className="mt-8">
-              <p className="text-[9px] uppercase tracking-[0.2em] mb-4" style={{ color: "rgba(255,255,255,0.25)" }}>TRUSTED BY HOTELS ACROSS EGYPT</p>
+              <p className="text-[9px] uppercase tracking-[0.2em] mb-4" style={{ color: "var(--fg-tertiary)" }}>TRUSTED BY HOTELS ACROSS EGYPT</p>
               <div className="flex flex-wrap gap-3">
                 {["5-STAR", "BOUTIQUE", "RESORT", "BUSINESS"].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold tracking-wider px-4 py-1.5 rounded-full" style={{ border: "1px solid #1A1A1A", color: "rgba(255,255,255,0.5)" }}>{t}</span>
+                  <span key={t} className="text-[11px] font-semibold tracking-wider px-4 py-1.5 rounded-full" style={{ border: "1px solid var(--border-default)", color: "var(--fg-secondary)" }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -219,45 +219,45 @@ function HeroSection() {
                 { v: "850+", l: "Verified Suppliers" },
               ].map((s) => (
                 <div key={s.l} className="flex items-baseline gap-2">
-                  <span className="text-[22px] font-bold" style={{ color: "#00FF66" }}>{s.v}</span>
-                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>{s.l}</span>
+                  <span className="text-[22px] font-bold" style={{ color: "var(--fg-success)" }}>{s.v}</span>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>{s.l}</span>
                 </div>
               ))}
             </div>
           </motion.div>
 
           <motion.div style={{ y: y2, scale }} className="relative hidden lg:block h-[540px]">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-              <div className="p-6 border-b" style={{ borderColor: "#1A1A1A" }}>
+            <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+              <div className="p-6 border-b" style={{ borderColor: "var(--border-default)" }}>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "#00FF66" }}>Today's Procurement</span>
-                  <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>Live</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--fg-success)" }}>Today's Procurement</span>
+                  <span className="text-[10px]" style={{ color: "var(--fg-tertiary)" }}>Live</span>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-1 p-4 rounded-xl" style={{ background: "#000000" }}>
-                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Active POs</span>
-                    <div className="text-[28px] font-bold mt-1" style={{ color: "#FFFFFF" }}>23</div>
+                  <div className="flex-1 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>Active POs</span>
+                    <div className="text-[28px] font-bold mt-1" style={{ color: "var(--fg-primary)" }}>23</div>
                   </div>
-                  <div className="flex-1 p-4 rounded-xl" style={{ background: "#000000" }}>
-                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Pending</span>
-                    <div className="text-[28px] font-bold mt-1" style={{ color: "#00FF66" }}>7</div>
+                  <div className="flex-1 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>Pending</span>
+                    <div className="text-[28px] font-bold mt-1" style={{ color: "var(--fg-success)" }}>7</div>
                   </div>
                 </div>
-                <div className="mt-3 p-4 rounded-xl" style={{ background: "#000000" }}>
-                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Suppliers Paid Today</span>
-                  <div className="text-[22px] font-bold mt-1" style={{ color: "#00FF66" }}>EGP 147,500</div>
+                <div className="mt-3 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>Suppliers Paid Today</span>
+                  <div className="text-[22px] font-bold mt-1" style={{ color: "var(--fg-success)" }}>EGP 147,500</div>
                 </div>
               </div>
               <div className="p-6">
-                <div className="p-4 rounded-xl" style={{ background: "#000000", border: "1px solid #1A1A1A" }}>
-                  <span className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Supplier Invoice</span>
-                  <div className="text-[15px] font-semibold mt-1" style={{ color: "#FFFFFF" }}>Fresh Foods Co.</div>
+                <div className="p-4 rounded-xl" style={{ background: "var(--bg-canvas)", border: "1px solid var(--border-default)" }}>
+                  <span className="text-[9px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>Supplier Invoice</span>
+                  <div className="text-[15px] font-semibold mt-1" style={{ color: "var(--fg-primary)" }}>Fresh Foods Co.</div>
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-[18px] font-bold" style={{ color: "#00FF66" }}>EGP 25,000</span>
-                    <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(0,255,102,0.12)", color: "#00FF66" }}>Paid</span>
+                    <span className="text-[18px] font-bold" style={{ color: "var(--fg-success)" }}>EGP 25,000</span>
+                    <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(31,111,235,0.12)", color: "var(--fg-success)" }}>Paid</span>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: "#00FF66" }}>
+                <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: "var(--fg-success)" }}>
                   ✓ ETA Compliant
                 </div>
               </div>
@@ -284,15 +284,15 @@ function RealitySection() {
   ];
 
   return (
-    <section className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "#00FF66" }}>THE REALITY</span>
-          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12] max-w-[800px] mx-auto" style={{ color: "#FFFFFF" }}>
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--fg-success)" }}>THE REALITY</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12] max-w-[800px] mx-auto" style={{ color: "var(--fg-primary)" }}>
             Egyptian Hotels Work With Hundreds of Suppliers.
-            <span style={{ color: "rgba(255,255,255,0.55)" }}> And Still Run Out of Stock Before They Run Out of Month.</span>
+            <span style={{ color: "var(--fg-secondary)" }}> And Still Run Out of Stock Before They Run Out of Month.</span>
           </h2>
-          <p className="mt-5 text-[15px] max-w-[650px] mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="mt-5 text-[15px] max-w-[650px] mx-auto leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
             The HoReCa market in Egypt will hit $18.14 billion by 2029. Yet the average hotel procurement operation runs on WhatsApp messages, paper invoices, cash payments, and prayers.
           </p>
         </div>
@@ -300,10 +300,10 @@ function RealitySection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {stats.map((s) => (
             <div key={s.label} className="group p-6 rounded-2xl transition-all duration-300 "
-              style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-              <div className="text-[42px] font-black leading-none mb-1" style={{ color: "#00FF66" }}>{s.value}</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-3" style={{ color: "#FFFFFF" }}>{s.label}</div>
-              <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{s.desc}</p>
+              style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+              <div className="text-[42px] font-black leading-none mb-1" style={{ color: "var(--fg-success)" }}>{s.value}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-3" style={{ color: "var(--fg-primary)" }}>{s.label}</div>
+              <p className="text-[13px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -311,7 +311,7 @@ function RealitySection() {
         <div className="mt-12 text-center">
           <a href="#how-it-works"
             className="inline-flex items-center gap-2 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
-            style={{ background: "#00FF66", color: "#000000" }}>
+            style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
             See How We Fix This →
           </a>
         </div>
@@ -333,28 +333,28 @@ function PlatformSection() {
   ];
 
   return (
-    <section id="platform" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="platform" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-10">
         <div className="text-center mb-20">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "#00FF66", border: "1px solid rgba(0,255,102,0.25)", background: "rgba(0,255,102,0.06)" }}>THE PLATFORM</span>
-          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "#FFFFFF" }}>
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "var(--fg-success)", border: "1px solid rgba(31,111,235,0.25)", background: "rgba(31,111,235,0.06)" }}>THE PLATFORM</span>
+          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--fg-primary)" }}>
             From F&B to Capital Equipment.<br />
-            <span style={{ color: "rgba(255,255,255,0.55)" }}> Every Dirham Tracked. Every Invoice Compliant.</span>
+            <span style={{ color: "var(--fg-secondary)" }}> Every Dirham Tracked. Every Invoice Compliant.</span>
           </h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {categories.map((cat) => (
-            <div key={cat.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-              <h3 className="text-[17px] font-bold mb-5 tracking-[-0.01em]" style={{ color: "#FFFFFF" }}>{cat.title}</h3>
+            <div key={cat.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+              <h3 className="text-[17px] font-bold mb-5 tracking-[-0.01em]" style={{ color: "var(--fg-primary)" }}>{cat.title}</h3>
               <ul className="space-y-3">
                 {cat.items.map((item) => (
-                  <li key={item} className="text-[13px] leading-relaxed flex items-start gap-2.5" style={{ color: "rgba(255,255,255,0.6)" }}>
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#00FF66" }} /> {item}
+                  <li key={item} className="text-[13px] leading-relaxed flex items-start gap-2.5" style={{ color: "var(--fg-secondary)" }}>
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--fg-success)" }} /> {item}
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 text-[12px] font-semibold tracking-wide uppercase transition-colors" style={{ color: "rgba(255,255,255,0.4)" }}>Explore</div>
+              <div className="mt-6 text-[12px] font-semibold tracking-wide uppercase transition-colors" style={{ color: "var(--fg-secondary)" }}>Explore</div>
             </div>
           ))}
         </div>
@@ -377,20 +377,20 @@ function ForHotelsSection() {
   ];
 
   return (
-    <section id="for-hotels" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="for-hotels" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "#00FF66" }}>FOR HOTELS</span>
-            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "#FFFFFF" }}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--fg-success)" }}>FOR HOTELS</span>
+            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--fg-primary)" }}>
               Control Before.
               <br />
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>Not After.</span>
+              <span style={{ color: "var(--fg-secondary)" }}>Not After.</span>
             </h2>
-            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
               Most procurement platforms tell you what you spent last month. We tell you what you should order next week. HotelsVendors embeds AI-powered demand forecasting directly into your procurement workflow.
             </p>
-            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
               Before you create a purchase order, you see: projected guest occupancy, historical consumption patterns, seasonal adjustments, and real-time price comparisons across verified suppliers. You don't just track spend. You prevent waste. You optimize par levels. You negotiate from a position of data, not desperation.
             </p>
 
@@ -398,15 +398,15 @@ function ForHotelsSection() {
               {features.map((f, i) => (
                 <div key={f.title} className="p-4 rounded-xl transition-all cursor-pointer"
                   style={{
-                    background: activeTab === i ? "#080808" : "transparent",
-                    border: activeTab === i ? "1px solid #00FF66" : "1px solid transparent",
+                    background: activeTab === i ? "var(--bg-raised)" : "transparent",
+                    border: activeTab === i ? "1px solid var(--fg-success)" : "1px solid transparent",
                   }}
                   onMouseEnter={() => setActiveTab(i)}>
                   <div className="flex items-center gap-3">
                     <span className="text-[20px]">{f.icon}</span>
                     <div>
-                      <h4 className="text-[14px] font-bold" style={{ color: "#FFFFFF" }}>{f.title}</h4>
-                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{f.desc}</p>
+                      <h4 className="text-[14px] font-bold" style={{ color: "var(--fg-primary)" }}>{f.title}</h4>
+                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "var(--fg-secondary)" }}>{f.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -415,20 +415,20 @@ function ForHotelsSection() {
 
             <Link href="/register/hotel"
               className="inline-flex items-center gap-2 mt-8 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
-              style={{ background: "#00FF66", color: "#000000" }}>
+              style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
               Request Hotel Demo →
             </Link>
           </div>
 
           {/* Chart mockup */}
-          <div className="p-8 rounded-2xl" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
+          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
             <div className="flex items-center gap-2 mb-6">
               {["Forecasting", "Cost Control", "Inventory", "Analytics"].map((tab, i) => (
                 <button key={tab}
                   className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all"
                   style={{
-                    background: activeTab === i ? "#00FF66" : "transparent",
-                    color: activeTab === i ? "#000000" : "rgba(255,255,255,0.55)",
+                    background: activeTab === i ? "var(--fg-success)" : "transparent",
+                    color: activeTab === i ? "var(--bg-canvas)" : "var(--fg-secondary)",
                   }}>
                   {tab}
                 </button>
@@ -436,27 +436,27 @@ function ForHotelsSection() {
             </div>
             {/* Simple chart representation */}
             <div className="h-[260px] rounded-xl p-6 flex items-end justify-between gap-2"
-              style={{ background: "#000000" }}>
+              style={{ background: "var(--bg-canvas)" }}>
               {[65, 45, 78, 55, 90, 60, 72].map((h, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2">
                   <div className="w-full rounded-t-md transition-all"
                     style={{
                       height: h * 2,
-                      background: i >= 4 ? "#00FF66" : "rgba(255,255,255,0.2)",
+                      background: i >= 4 ? "var(--fg-success)" : "rgba(255,255,255,0.2)",
                       opacity: i >= 4 ? 0.9 : 0.3,
                     }} />
-                  <span className="text-[9px] font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  <span className="text-[9px] font-semibold" style={{ color: "var(--fg-tertiary)" }}>
                     {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}
                   </span>
                 </div>
               ))}
             </div>
             <div className="flex items-center gap-6 mt-4 justify-center">
-              <div className="flex items-center gap-2 text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#00FF66" }} /> Projected
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: "var(--fg-tertiary)" }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--fg-success)" }} /> Projected
               </div>
-              <div className="flex items-center gap-2 text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.3)", opacity: 0.3 }} /> Actual
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: "var(--fg-tertiary)" }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--fg-tertiary)", opacity: 0.3 }} /> Actual
               </div>
             </div>
           </div>
@@ -478,35 +478,35 @@ function ForSuppliersSection() {
   ];
 
   return (
-    <section id="for-suppliers" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="for-suppliers" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "#00FF66" }}>FOR SUPPLIERS</span>
-            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "#FFFFFF" }}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--fg-success)" }}>FOR SUPPLIERS</span>
+            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--fg-primary)" }}>
               Get Paid.
               <br />
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>Not Promised.</span>
+              <span style={{ color: "var(--fg-secondary)" }}>Not Promised.</span>
             </h2>
-            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
               The biggest barrier for Egyptian hospitality suppliers isn't finding buyers. It's collecting money after you've delivered. HotelsVendors changes the equation.
             </p>
-            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
               When a hotel approves your invoice, you can choose to get paid instantly via InstaPay — funds hit your account in under 10 seconds, 24/7, even on weekends. Or, opt for our non-recourse factoring: we pay you within 24 hours, and we take the credit risk. If the hotel doesn't pay, that's our problem. Not yours.
             </p>
-            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "#00FF66" }}>
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--fg-success)" }}>
               Your liquidity turnover goes from 30-90 days to same-day. Your cash flow becomes predictable. Your business grows.
             </p>
 
             <div className="mt-8 space-y-3">
               {features.map((f) => (
                 <div key={f.title} className="p-4 rounded-xl transition-all "
-                  style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
+                  style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
                   <div className="flex items-center gap-3">
                     <span className="text-[20px]">{f.icon}</span>
                     <div>
-                      <h4 className="text-[14px] font-bold" style={{ color: "#FFFFFF" }}>{f.title}</h4>
-                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{f.desc}</p>
+                      <h4 className="text-[14px] font-bold" style={{ color: "var(--fg-primary)" }}>{f.title}</h4>
+                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "var(--fg-secondary)" }}>{f.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -515,14 +515,14 @@ function ForSuppliersSection() {
 
             <Link href="/register/supplier"
               className="inline-flex items-center gap-2 mt-8 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
-              style={{ background: "#00FF66", color: "#000000" }}>
+              style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
               Become a Verified Supplier →
             </Link>
           </div>
 
           {/* Payment flow visual */}
-          <div className="p-8 rounded-2xl" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-            <h4 className="text-[14px] font-bold mb-6" style={{ color: "#FFFFFF" }}>
+          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+            <h4 className="text-[14px] font-bold mb-6" style={{ color: "var(--fg-primary)" }}>
               Payment Flow: Same Day vs Traditional
             </h4>
             {[
@@ -532,29 +532,29 @@ function ForSuppliersSection() {
               { step: "04", day: "Day 0", title: "Supplier PAID", desc: "Funds in &lt;10 seconds" },
             ].map((s, i) => (
               <div key={s.step} className="flex items-start gap-4 pb-5 relative"
-                style={{ borderLeft: i < 3 ? "2px dashed" : "none", borderColor: "#00FF66", marginLeft: 8, paddingLeft: 20 }}>
+                style={{ borderLeft: i < 3 ? "2px dashed" : "none", borderColor: "var(--fg-success)", marginLeft: 8, paddingLeft: 20 }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
-                  style={{ background: "#00FF66", color: "#000000", marginLeft: -24 }}>
+                  style={{ background: "var(--fg-success)", color: "var(--bg-canvas)", marginLeft: -24 }}>
                   {s.step}
                 </div>
-                <div className="flex-1 p-3 rounded-xl" style={{ background: "#000000" }}>
+                <div className="flex-1 p-3 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>{s.title}</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(0,255,102,0.12)", color: "#00FF66" }}>{s.day}</span>
+                    <span className="text-[13px] font-semibold" style={{ color: "var(--fg-primary)" }}>{s.title}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(31,111,235,0.12)", color: "var(--fg-success)" }}>{s.day}</span>
                   </div>
-                  <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.55)" }}>{s.desc}</p>
+                  <p className="text-[11px]" style={{ color: "var(--fg-secondary)" }}>{s.desc}</p>
                 </div>
               </div>
             ))}
-            <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: "1px solid #1A1A1A" }}>
+            <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: "1px solid var(--border-default)" }}>
               <div className="text-center">
-                <div className="text-[11px] line-through" style={{ color: "rgba(255,255,255,0.3)" }}>Traditional</div>
-                <div className="text-[14px] font-bold" style={{ color: "rgba(255,255,255,0.55)" }}>30-90 days</div>
+                <div className="text-[11px] line-through" style={{ color: "var(--fg-tertiary)" }}>Traditional</div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--fg-secondary)" }}>30-90 days</div>
               </div>
-              <div className="text-[20px] font-bold" style={{ color: "#00FF66" }}>VS</div>
+              <div className="text-[20px] font-bold" style={{ color: "var(--fg-success)" }}>VS</div>
               <div className="text-center">
-                <div className="text-[11px]" style={{ color: "#00FF66" }}>HotelsVendors</div>
-                <div className="text-[14px] font-bold" style={{ color: "#00FF66" }}>Same Day</div>
+                <div className="text-[11px]" style={{ color: "var(--fg-success)" }}>HotelsVendors</div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--fg-success)" }}>Same Day</div>
               </div>
             </div>
           </div>
@@ -576,22 +576,22 @@ function ETAComplianceSection() {
   ];
 
   return (
-    <section id="eta-compliance" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="eta-compliance" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-10">
         <div className="text-center mb-20">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "#00FF66", border: "1px solid rgba(0,255,102,0.25)", background: "rgba(0,255,102,0.06)" }}>ETA COMPLIANCE</span>
-          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "#FFFFFF" }}>
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-1.5 rounded-full" style={{ color: "var(--fg-success)", border: "1px solid rgba(31,111,235,0.25)", background: "rgba(31,111,235,0.06)" }}>ETA COMPLIANCE</span>
+          <h2 className="text-[36px] md:text-[52px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--fg-primary)" }}>
             E-Invoicing Is No Longer Optional.<br />
-            <span style={{ color: "#00FF66" }}> It is the Law. And the Penalties Are Real.</span>
+            <span style={{ color: "var(--fg-success)" }}> It is the Law. And the Penalties Are Real.</span>
           </h2>
-          <p className="mt-6 text-[16px] max-w-[720px] mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="mt-6 text-[16px] max-w-[720px] mx-auto leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
             Since 2022, paper invoices are legally INVALID for VAT deduction in Egypt. All B2B transactions must be submitted to the Egyptian Tax Authority in real-time via the clearance model. Non-compliance carries penalties of EGP 20,000\u2013100,000 and potential criminal sanctions.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
           {["ETA Registered", "Digital Signature Ready", "UUID Auto-Assigned", "5-Year Archive", "GS1 GPC Coded", "VAT Compliant"].map((b) => (
-            <span key={b} className="px-4 py-2 text-[12px] font-semibold tracking-wide rounded-full" style={{ background: "#0A0A0A", border: "1px solid #1A1A1A", color: "#FFFFFF" }}>
+            <span key={b} className="px-4 py-2 text-[12px] font-semibold tracking-wide rounded-full" style={{ background: "var(--bg-subtle)", border: "1px solid var(--border-default)", color: "var(--fg-primary)" }}>
               {b}
             </span>
           ))}
@@ -599,20 +599,20 @@ function ETAComplianceSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {complianceItems.map((item, i) => (
-            <div key={item.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
+            <div key={item.title} className="group p-6 rounded-xl transition-all duration-300" style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
               <div className="flex items-start gap-4">
-                <span className="text-[13px] font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5" style={{ background: "rgba(0,255,102,0.1)", color: "#00FF66", border: "1px solid rgba(0,255,102,0.2)" }}>0{i+1}</span>
+                <span className="text-[13px] font-bold px-2.5 py-1 rounded-md shrink-0 mt-0.5" style={{ background: "rgba(31,111,235,0.1)", color: "var(--fg-success)", border: "1px solid rgba(31,111,235,0.2)" }}>0{i+1}</span>
                 <div>
-                  <h4 className="text-[16px] font-bold mb-2 tracking-[-0.01em]" style={{ color: "#FFFFFF" }}>{item.title}</h4>
-                  <p className="text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{item.desc}</p>
+                  <h4 className="text-[16px] font-bold mb-2 tracking-[-0.01em]" style={{ color: "var(--fg-primary)" }}>{item.title}</h4>
+                  <p className="text-[14px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>{item.desc}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 p-6 rounded-xl text-center" style={{ background: "#0A0A0A", border: "1px solid #1A1A1A" }}>
-          <p className="text-[14px] font-semibold uppercase tracking-wider" style={{ color: "#00FF66" }}>
+        <div className="mt-12 p-6 rounded-xl text-center" style={{ background: "var(--bg-subtle)", border: "1px solid var(--border-default)" }}>
+          <p className="text-[14px] font-semibold uppercase tracking-wider" style={{ color: "var(--fg-success)" }}>
             100% ETA Compliant \u2014 Every Invoice, Every Transaction, Automatically
           </p>
         </div>
@@ -634,13 +634,13 @@ function TrustSection() {
   ];
 
   return (
-    <section id="trust" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="trust" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "#00FF66" }}>TRUST & TRACTION</span>
-          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "#FFFFFF" }}>
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--fg-success)" }}>TRUST & TRACTION</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--fg-primary)" }}>
             Built for Egyptian Hospitality.
-            <span style={{ color: "rgba(255,255,255,0.55)" }}> Backed by Real Results.</span>
+            <span style={{ color: "var(--fg-secondary)" }}> Backed by Real Results.</span>
           </h2>
         </div>
 
@@ -653,9 +653,9 @@ function TrustSection() {
             { v: "<4 hrs", l: "Avg Payment Time" },
           ].map((s) => (
             <div key={s.l} className="p-6 rounded-2xl text-center transition-all "
-              style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-              <div className="text-[32px] font-black" style={{ color: "#00FF66" }}>{s.v}</div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>{s.l}</div>
+              style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+              <div className="text-[32px] font-black" style={{ color: "var(--fg-success)" }}>{s.v}</div>
+              <div className="text-[10px] font-semibold uppercase tracking-wider mt-2" style={{ color: "var(--fg-secondary)" }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -664,23 +664,23 @@ function TrustSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t) => (
             <div key={t.name} className="p-7 rounded-2xl transition-all "
-              style={{ background: "#050505", border: "1px solid #1A1A1A" }}>
-              <div className="text-[24px] leading-none mb-4" style={{ color: "#00FF66", opacity: 0.4 }}>"</div>
-              <p className="text-[13px] leading-relaxed mb-5 italic" style={{ color: "rgba(255,255,255,0.55)" }}>"{t.quote}"</p>
+              style={{ background: "var(--bg-raised)", border: "1px solid var(--border-default)" }}>
+              <div className="text-[24px] leading-none mb-4" style={{ color: "var(--fg-success)", opacity: 0.4 }}>"</div>
+              <p className="text-[13px] leading-relaxed mb-5 italic" style={{ color: "var(--fg-secondary)" }}>"{t.quote}"</p>
               <div>
-                <div className="text-[14px] font-bold" style={{ color: "#FFFFFF" }}>{t.name}</div>
-                <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>{t.role}, {t.hotel}</div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--fg-primary)" }}>{t.name}</div>
+                <div className="text-[11px]" style={{ color: "var(--fg-tertiary)" }}>{t.role}, {t.hotel}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Partners */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 pt-8" style={{ borderTop: "1px solid #1A1A1A" }}>
-          <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.3)" }}>POWERED BY</span>
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 pt-8" style={{ borderTop: "1px solid var(--border-default)" }}>
+          <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "var(--fg-tertiary)" }}>POWERED BY</span>
           {["InstaPay IPN", "ETA Egypt", "CBE Certified", "Afreximbank Partner"].map((p) => (
             <span key={p} className="text-[11px] font-semibold px-4 py-2 rounded-full"
-              style={{ border: "1px solid #1A1A1A", color: "rgba(255,255,255,0.55)" }}>
+              style={{ border: "1px solid var(--border-default)", color: "var(--fg-secondary)" }}>
               {p}
             </span>
           ))}
@@ -713,15 +713,15 @@ function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section id="pricing" className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "#00FF66" }}>PRICING</span>
-          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "#FFFFFF" }}>
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--fg-success)" }}>PRICING</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--fg-primary)" }}>
             Start Free.
-            <span style={{ color: "rgba(255,255,255,0.55)" }}> Scale Smart.</span>
+            <span style={{ color: "var(--fg-secondary)" }}> Scale Smart.</span>
           </h2>
-          <p className="mt-4 text-[15px] max-w-[550px] mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="mt-4 text-[15px] max-w-[550px] mx-auto leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
             No setup fees. No hidden charges. Pay only for what you use. AI questions included. Upgrade when you need more power.
           </p>
         </div>
@@ -730,32 +730,32 @@ function PricingSection() {
           {plans.map((plan) => (
             <div key={plan.name} className="p-8 rounded-2xl transition-all  relative"
               style={{
-                background: "#050505",
-                border: plan.featured ? "2px solid #00FF66" : "1px solid #1A1A1A",
+                background: "var(--bg-raised)",
+                border: plan.featured ? "2px solid var(--fg-success)" : "1px solid var(--border-default)",
               }}>
               {plan.featured && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                  style={{ background: "#00FF66", color: "#000000" }}>
+                  style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
                   MOST POPULAR
                 </div>
               )}
-              <h3 className="text-[20px] font-bold" style={{ color: "#FFFFFF" }}>{plan.name}</h3>
+              <h3 className="text-[20px] font-bold" style={{ color: "var(--fg-primary)" }}>{plan.name}</h3>
               <div className="mt-3 mb-6">
-                <span className="text-[36px] font-black" style={{ color: "#FFFFFF" }}>{plan.price}</span>
-                {plan.period && <span className="text-[14px]" style={{ color: "rgba(255,255,255,0.3)" }}>{plan.period}</span>}
+                <span className="text-[36px] font-black" style={{ color: "var(--fg-primary)" }}>{plan.price}</span>
+                {plan.period && <span className="text-[14px]" style={{ color: "var(--fg-tertiary)" }}>{plan.period}</span>}
               </div>
               <ul className="space-y-3 mb-8">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
-                    <span style={{ color: "#00FF66" }}>✓</span> {f}
+                  <li key={f} className="flex items-start gap-2 text-[12px]" style={{ color: "var(--fg-secondary)" }}>
+                    <span style={{ color: "var(--fg-success)" }}>✓</span> {f}
                   </li>
                 ))}
               </ul>
               <Link href={plan.href}
                 className="block w-full text-center text-[13px] font-bold py-3 rounded-full transition-all hover:-translate-y-0.5"
                 style={plan.featured
-                  ? { background: "#00FF66", color: "#000000" }
-                  : { border: "1px solid #1A1A1A", color: "#FFFFFF" }
+                  ? { background: "var(--fg-success)", color: "var(--bg-canvas)" }
+                  : { border: "1px solid var(--border-default)", color: "var(--fg-primary)" }
                 }>
                 {plan.cta}
               </Link>
@@ -763,7 +763,7 @@ function PricingSection() {
           ))}
         </div>
 
-        <p className="mt-8 text-center text-[12px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="mt-8 text-center text-[12px]" style={{ color: "var(--fg-tertiary)" }}>
           All paid plans include: Free supplier onboarding · Zero payment processing markup · Automatic ETA updates · 99.9% uptime SLA · Bank-grade encryption
         </p>
       </div>
@@ -787,12 +787,12 @@ function FAQSection() {
   ];
 
   return (
-    <section className="py-32 lg:py-[160px]" style={{ background: "#000000" }}>
+    <section className="py-32 lg:py-[160px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[800px] mx-auto px-6 md:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "#FFFFFF" }}>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--fg-primary)" }}>
             Questions?
-            <span style={{ color: "rgba(255,255,255,0.55)" }}> We've Got Answers.</span>
+            <span style={{ color: "var(--fg-secondary)" }}> We've Got Answers.</span>
           </h2>
         </div>
 
@@ -800,16 +800,16 @@ function FAQSection() {
           {faqs.map((faq, i) => (
             <div key={i} className="rounded-xl overflow-hidden transition-all"
               style={{
-                background: "#050505",
-                border: openIndex === i ? "1px solid #00FF66" : "1px solid #1A1A1A",
+                background: "var(--bg-raised)",
+                border: openIndex === i ? "1px solid var(--fg-success)" : "1px solid var(--border-default)",
               }}>
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full text-left px-6 py-5 flex items-center justify-between gap-4">
-                <span className="text-[14px] font-semibold" style={{ color: "#FFFFFF" }}>{faq.q}</span>
+                <span className="text-[14px] font-semibold" style={{ color: "var(--fg-primary)" }}>{faq.q}</span>
                 <span className="text-[16px] transition-transform shrink-0"
                   style={{
-                    color: "#00FF66",
+                    color: "var(--fg-success)",
                     transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)",
                   }}>
                   +
@@ -817,7 +817,7 @@ function FAQSection() {
               </button>
               {openIndex === i && (
                 <div className="px-6 pb-5">
-                  <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>{faq.a}</p>
+                  <p className="text-[13px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>{faq.a}</p>
                 </div>
               )}
             </div>
@@ -833,33 +833,33 @@ function FAQSection() {
    ═══════════════════════════════════════════════════════ */
 function FinalCTASection() {
   return (
-    <section className="py-24 lg:py-[120px] relative overflow-hidden" style={{ background: "#000000" }}>
+    <section className="py-24 lg:py-[120px] relative overflow-hidden" style={{ background: "var(--bg-canvas)" }}>
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full opacity-[0.05]"
-          style={{ background: "#00FF66", filter: "blur(160px)" }} />
+          style={{ background: "var(--fg-success)", filter: "blur(160px)" }} />
       </div>
       <div className="relative z-10 max-w-[700px] mx-auto px-6 text-center">
-        <h2 className="text-[34px] md:text-[48px] font-bold tracking-[-0.03em] leading-[1.08]" style={{ color: "#FFFFFF" }}>
+        <h2 className="text-[34px] md:text-[48px] font-bold tracking-[-0.03em] leading-[1.08]" style={{ color: "var(--fg-primary)" }}>
           Stop Managing Suppliers.
           <br />
-          <span style={{ color: "#00FF66" }}>Start Commanding Your Supply Chain.</span>
+          <span style={{ color: "var(--fg-success)" }}>Start Commanding Your Supply Chain.</span>
         </h2>
-        <p className="mt-5 text-[16px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+        <p className="mt-5 text-[16px] leading-relaxed" style={{ color: "var(--fg-secondary)" }}>
           Join 120+ Egyptian hotels and 850+ verified suppliers who've already made the switch.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/register/hotel"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-semibold rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
-            style={{ background: "#00FF66", color: "#000000" }}>
+            style={{ background: "var(--fg-success)", color: "var(--bg-canvas)" }}>
             Start Free Today →
           </Link>
           <Link href="/register/supplier"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-medium rounded-full transition-all"
-            style={{ border: "1px solid #1A1A1A", color: "rgba(255,255,255,0.55)" }}>
+            style={{ border: "1px solid var(--border-default)", color: "var(--fg-secondary)" }}>
             Talk to Our Team
           </Link>
         </div>
-        <p className="mt-5 text-[12px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="mt-5 text-[12px]" style={{ color: "var(--fg-tertiary)" }}>
           No credit card required · 2-minute setup · Free forever for Starter tier
         </p>
       </div>
@@ -872,21 +872,21 @@ function FinalCTASection() {
    ═══════════════════════════════════════════════════════ */
 function Footer() {
   return (
-    <footer className="py-16" style={{ background: "#000000", borderTop: "1px solid #1A1A1A" }}>
+    <footer className="py-16" style={{ background: "var(--bg-canvas)", borderTop: "1px solid var(--border-default)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="mb-3">
               <span className="text-[18px] font-black tracking-tight">
-                <span style={{ color: "#FFFFFF" }}>Hotels</span>
-                <span style={{ color: "#00FF66" }}>V</span>
-                <span style={{ color: "#FFFFFF" }}>endors</span>
+                <span style={{ color: "var(--fg-primary)" }}>Hotels</span>
+                <span style={{ color: "var(--fg-success)" }}>V</span>
+                <span style={{ color: "var(--fg-primary)" }}>endors</span>
               </span>
             </div>
-            <p className="text-[12px] leading-relaxed mb-3" style={{ color: "#FFFFFF", opacity: 0.7 }}>
+            <p className="text-[12px] leading-relaxed mb-3" style={{ color: "var(--fg-primary)", opacity: 0.7 }}>
               AI-powered procurement orchestration for Egyptian hospitality. ETA-compliant, fintech-enabled.
             </p>
-            <span className="text-[11px]" style={{ color: "#FFFFFF", opacity: 0.55 }}>Cairo, Egypt</span>
+            <span className="text-[11px]" style={{ color: "var(--fg-primary)", opacity: 0.55 }}>Cairo, Egypt</span>
           </div>
           {[
             { title: "Product", links: ["Platform", "For Hotels", "For Suppliers", "Pricing"] },
@@ -895,14 +895,14 @@ function Footer() {
             { title: "Legal", links: ["Privacy", "Terms", "Security", "ETA Compliance"] },
           ].map((col) => (
             <div key={col.title}>
-              <h5 className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: "#FFFFFF", opacity: 0.45 }}>
+              <h5 className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--fg-primary)", opacity: 0.45 }}>
                 {col.title}
               </h5>
               <ul className="space-y-2.5">
                 {col.links.map((l) => (
                   <li key={l}>
                     <a href="#" className="text-[12px] transition-colors hover:underline"
-                      style={{ color: "#FFFFFF", opacity: 0.7 }}>{l}</a>
+                      style={{ color: "var(--fg-primary)", opacity: 0.7 }}>{l}</a>
                   </li>
                 ))}
               </ul>
@@ -910,13 +910,13 @@ function Footer() {
           ))}
         </div>
         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
-          style={{ borderTop: "1px solid #1A1A1A" }}>
-          <span className="text-[11px]" style={{ color: "#FFFFFF", opacity: 0.6 }}>
+          style={{ borderTop: "1px solid var(--border-default)" }}>
+          <span className="text-[11px]" style={{ color: "var(--fg-primary)", opacity: 0.6 }}>
             © {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </span>
           <div className="flex items-center gap-5">
             {["ETA Compliant", "InstaPay IPN", "CBE Certified"].map((b) => (
-              <span key={b} className="text-[10px]" style={{ color: "#FFFFFF", opacity: 0.45 }}>
+              <span key={b} className="text-[10px]" style={{ color: "var(--fg-primary)", opacity: 0.45 }}>
                 {b}
               </span>
             ))}
@@ -932,7 +932,7 @@ function Footer() {
    ═══════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <main className="min-h-screen" style={{ background: "#000000", fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif" }}>
+    <main className="min-h-screen" style={{ background: "var(--bg-canvas)", fontFamily: "var(--font-body), system-ui, -apple-system, sans-serif" }}>
       <LandingNav />
       <HeroSection />
       <Divider />
