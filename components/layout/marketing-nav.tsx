@@ -5,7 +5,7 @@ import Link from "next/link";
 import { X, Menu } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-export default function MarketingNav() {
+export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
