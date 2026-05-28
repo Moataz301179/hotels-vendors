@@ -16,17 +16,17 @@
   --fg-inverse: #010409;
   --fg-accent: #58a6ff;
   --fg-success: #3fb950;
-  --fg-danger: #f85149;
-  --fg-warning: #d29922;
+  --fg-danger: #ff7b72;
+  --fg-warning: #f7786b;
   --border-default: #3d444d;
   --border-muted: #212830;
   --border-subtle: #656c7633;
-  --border-accent: #1f6feb;
-  --accent: #1f6feb;
-  --accent-hover: #388bfd;
-  --accent-glow: #1f6feb33;
-  --success: #238636;
-  --success-bright: #3fb950;
+  --border-accent: #a371f7;
+  --accent: #a371f7;
+  --accent-hover: #bf7af0;
+  --accent-glow: #a371f733;
+  --success: #a371f7;
+  --success-bright: #bf7af0;
   --font-body: "Mona Sans VF", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   --radius-sm: 6px;
@@ -60,7 +60,7 @@ h4 { font-size: 1rem; font-weight: 600; line-height: 1.35; margin: 0; }
 h5 { font-size: .875rem; font-weight: 600; line-height: 1.5; margin: 0; }
 p, li, span, a, button, input, label { line-height: 1.5; }
 p { margin: 0 0 16px 0; }
-a { color: var(--fg-accent); text-decoration: none; }
+a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
@@ -82,4 +82,12 @@ a:hover { text-decoration: underline; }
 .gh-hero { padding: 6rem 0; }
 @media (min-width: 64rem) { .gh-hero { padding: 8rem 0; } }
 .gh-hover-card { background: var(--bg-raised); border: 1px solid var(--border-default); border-radius: var(--radius-lg); transition: border-color 80ms cubic-bezier(.33, 1, .68, 1); }
-.gh-hover-card:hover { border-color: var(--fg-tertiary); }
+.gh-hover-card:hover { border-color: var(--accent); }
+
+/* ── Calibrated Neon Accent Utilities ── */
+.neon-purple { color: #a371f7; }
+.neon-purple-bg { background: #a371f71a; border: 1px solid #a371f7; }
+.neon-orange { color: #ff7b72; }
+.neon-orange-bg { background: #ff7b721a; border: 1px solid #ff7b72; }
+.neon-purple-border { border-color: #a371f7; }
+.neon-purple-glow { box-shadow: 0 0 20px #a371f733; }
