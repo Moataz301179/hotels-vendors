@@ -9,7 +9,39 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Hotels Vendors — Digital Procurement Hub for Egyptian Hospitality",
+  title: "HotelsVendors — AI-Powered Procurement for Egyptian Hospitality | ETA Compliant",
+  description:
+    "HotelsVendors replaces WhatsApp orders with AI-powered procurement workflows, automated ETA e-invoicing, and embedded supplier financing. Stop losing EGP 3M/year to procurement leakage. 14-day free trial.",
+  keywords: [
+    "hotel procurement Egypt",
+    "ETA e-invoicing",
+    "B2B procurement platform",
+    "hotel supply chain",
+    "Egyptian hospitality procurement",
+    "supplier financing Egypt",
+    "AI procurement",
+    "pre-spend control",
+    "hotel purchasing",
+    "Red Sea hotels",
+  ],
+  openGraph: {
+    title: "HotelsVendors — AI-Powered Procurement for Egyptian Hospitality",
+    description:
+      "Stop losing EGP 3M/year to procurement leakage. AI-powered pre-spend control, ETA compliance, and embedded financing for Egyptian hotels.",
+    type: "website",
+    locale: "en_EG",
+    siteName: "HotelsVendors",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HotelsVendors — AI-Powered Procurement for Egyptian Hospitality",
+    description:
+      "Stop losing EGP 3M/year to procurement leakage. AI-powered pre-spend control, ETA compliance, and embedded financing for Egyptian hotels.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function MarketingLayout({
