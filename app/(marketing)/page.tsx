@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 /* ═══════════════════════════════════════════════════════
@@ -34,36 +34,32 @@ function ThemeSwitcher() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="text-[12px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors tracking-wide uppercase flex items-center gap-1"
+        className="text-[12px] font-medium transition-colors tracking-wide uppercase flex items-center gap-1"
+        style={{ color: "var(--text-secondary)" }}
       >
         Settings {THEMES.find((t) => t.id === theme)?.icon}
       </button>
       {open && (
-        <div className="absolute top-full right-0 mt-3 w-44 rounded-2xl bg-[var(--bg-surface-2)] border border-[var(--border-visible)] shadow-xl p-2 z-50">
-          <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider px-3 py-2">Theme</p>
+        <div className="absolute top-full right-0 mt-3 w-44 rounded-2xl border shadow-xl p-2 z-50"
+          style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-visible)" }}>
+          <p className="text-[10px] uppercase tracking-wider px-3 py-2" style={{ color: "var(--text-tertiary)" }}>Theme</p>
           {THEMES.map((t) => (
             <button
               key={t.id}
               onClick={() => switchTheme(t.id)}
               className={`w-full text-left px-3 py-2 rounded-xl text-[13px] transition-all ${
                 theme === t.id
-                  ? "bg-[var(--accent)]/15 text-[var(--accent)] font-semibold"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-surface-3)]"
+                  ? "font-semibold"
+                  : ""
               }`}
+              style={theme === t.id
+                ? { background: "var(--accent)15", color: "var(--accent)" }
+                : { color: "var(--text-secondary)" }
+              }
             >
               {t.icon} {t.label}
             </button>
           ))}
-          <hr className="my-1 border-[var(--border-subtle)]" />
-          <button
-            onClick={() => {
-              const next = theme === "dark" ? "light" : theme === "light" ? "premium" : "dark";
-              switchTheme(next);
-            }}
-            className="w-full text-left px-3 py-2 rounded-xl text-[13px] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-3)] transition-all"
-          >
-            🔄 Toggle Dark/Light
-          </button>
         </div>
       )}
     </div>
@@ -71,7 +67,7 @@ function ThemeSwitcher() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   PARALLAX SCROLL EFFECT — deep sight
+   PARALLAX SCROLL EFFECT
    ═══════════════════════════════════════════════════════ */
 function useParallax() {
   const { scrollY } = useScroll();
@@ -83,7 +79,25 @@ function useParallax() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   NAVIGATION — with Settings theme tab
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════════ */
+function ScrollReveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) el.classList.add("visible"); },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return <div ref={ref} className="scroll-reveal">{children}</div>;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION
    ═══════════════════════════════════════════════════════ */
 function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -94,36 +108,42 @@ function LandingNav() {
   }, []);
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled ? "var(--bg-canvas)" : "transparent",
         backdropFilter: scrolled ? "blur(24px)" : "none",
         borderBottom: scrolled ? "1px solid var(--border-subtle)" : "1px solid transparent",
-        opacity: scrolled ? 0.95 : 1,
-      }}
-    >
+      }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="text-[18px] font-bold text-[var(--accent)] tracking-tight">🏨</span>
-          <span className="text-[14px] font-semibold text-[var(--text-primary)] tracking-tight">HotelsVendors</span>
+        <Link href="/" className="flex items-center gap-2">
+          <span className="text-[20px] font-black tracking-tight">
+            <span style={{ color: "var(--text-primary)" }}>Hotels</span>
+            <span style={{ color: "var(--accent)" }}>V</span>
+            <span style={{ color: "var(--text-primary)" }}>endors</span>
+          </span>
+          <span className="text-[9px] tracking-[0.15em] uppercase ml-1 hidden sm:inline"
+            style={{ color: "var(--text-tertiary)" }}>
+            B2B PROCUREMENT · EGYPT
+          </span>
         </Link>
-        <div className="hidden md:flex items-center gap-8">
-          {["Platform", "Network", "Trust"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`}
-              className="text-[12px] font-medium text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors tracking-wide uppercase">
+        <div className="hidden md:flex items-center gap-7">
+          {["Platform", "For Hotels", "For Suppliers", "Pricing", "ETA Compliance"].map((item) => (
+            <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+              className="text-[11px] font-semibold uppercase tracking-wider transition-colors"
+              style={{ color: "var(--text-secondary)" }}>
               {item}
             </a>
           ))}
           <ThemeSwitcher />
           <Link href="/login"
-            className="text-[12px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+            className="text-[11px] font-semibold uppercase tracking-wider transition-colors"
+            style={{ color: "var(--text-secondary)" }}>
             Sign In
           </Link>
           <Link href="/register/hotel"
-            className="text-[12px] font-semibold text-[var(--text-inverse)] px-5 py-2 rounded-full transition-all lime-shadow-strong"
-            style={{ background: "var(--accent)" }}>
-            Get On Board Now
+            className="text-[12px] font-bold px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
+            style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+            Get Started
           </Link>
         </div>
       </div>
@@ -132,60 +152,80 @@ function LandingNav() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   HERO — Parallax deep-sight
+   SECTION DIVIDER
+   ═══════════════════════════════════════════════════════ */
+function Divider() {
+  return <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 1: HERO — "Control Your Hotel's Supply Chain..."
    ═══════════════════════════════════════════════════════ */
 function HeroSection() {
   const { y1, y2, opacity, scale } = useParallax();
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "var(--bg-canvas)" }}>
-      {/* BG decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[20%] right-[10%] w-[500px] h-[500px] rounded-full opacity-[0.03]"
-          style={{ background: "var(--accent)", filter: "blur(120px)" }} />
+        <div className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full opacity-[0.04]"
+          style={{ background: "var(--accent)", filter: "blur(140px)" }} />
+        <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full opacity-[0.02]"
+          style={{ background: "var(--accent)", filter: "blur(100px)" }} />
       </div>
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 w-full pt-24 pb-16">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 w-full pt-28 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* LEFT */}
           <motion.div style={{ y: y1 }}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8"
               style={{ border: "1px solid var(--border-accent)", background: "var(--accent)08" }}>
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
-              <span className="text-[11px] font-medium tracking-wide" style={{ color: "var(--accent)" }}>
-                Now Onboarding Egyptian Hotels & Suppliers
+              <span className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "var(--accent)" }}>
+                NOW LIVE IN EGYPT
               </span>
             </div>
 
-            <h1 className="text-[44px] sm:text-[54px] lg:text-[64px] font-bold leading-[1.06] tracking-[-0.03em]" style={{ color: "var(--text-primary)" }}>
-              Egypt's procurement,{" "}
-              <span style={{ color: "var(--text-tertiary)" }}>reimagined.</span>
+            <h1 className="text-[42px] sm:text-[52px] lg:text-[60px] font-bold leading-[1.06] tracking-[-0.03em]" style={{ color: "var(--text-primary)" }}>
+              Control Your Hotel's{" "}
+              <span style={{ color: "var(--text-secondary)" }}>Supply Chain Before</span>
+              <br />
+              <span style={{ color: "var(--accent)" }}>It Controls You</span>
             </h1>
 
-            <p className="mt-6 text-[16px] max-w-[500px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              AI-powered procurement orchestration that replaces WhatsApp chaos with pre-spend control, ETA e-invoicing, and embedded financing — built for Egyptian hospitality.
+            <p className="mt-6 text-[15px] max-w-[520px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              The only procurement platform built exclusively for Egyptian hotels. Connect with verified suppliers across F&B, housekeeping, engineering, amenities, and capital equipment. Pay instantly via InstaPay. Stay 100% ETA e-invoice compliant. Automate what shouldn't be manual.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
               <Link href="/register/hotel"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-semibold rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
                 style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
-                Get On Board Now →
+                Start Free — No Credit Card →
               </Link>
-              <Link href="/register/supplier"
+              <a href="#how-it-works"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-medium rounded-full transition-all hover:-translate-y-0.5"
                 style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
-                Watch Demo
-              </Link>
+                Watch How It Works
+              </a>
             </div>
-            <p className="mt-4 text-[11px]" style={{ color: "var(--text-tertiary)" }}>
-              Free 14-day trial · No credit card · Cancel anytime
-            </p>
 
-            <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <div className="mt-6">
+              <p className="text-[9px] uppercase tracking-[0.2em] mb-4" style={{ color: "var(--text-tertiary)" }}>TRUSTED BY HOTELS ACROSS EGYPT</p>
+              <div className="flex flex-wrap gap-4">
+                {["5-STAR", "BOUTIQUE", "RESORT", "BUSINESS"].map((t) => (
+                  <span key={t} className="text-[11px] font-semibold tracking-wider px-4 py-1.5 rounded-full"
+                    style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
               {[
-                { v: "EGP 25M+", l: "Managed Procurement" },
-                { v: "100%", l: "ETA Compliant" },
-                { v: "54+", l: "Hotels Connected" },
+                { v: "EGP 500M+", l: "Annual GMV" },
+                { v: "120+", l: "Hotels" },
+                { v: "850+", l: "Verified Suppliers" },
               ].map((s) => (
                 <div key={s.l} className="flex items-baseline gap-2">
                   <span className="text-[20px] font-bold" style={{ color: "var(--accent)" }}>{s.v}</span>
@@ -195,18 +235,45 @@ function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right visual */}
-          <motion.div style={{ y: y2, scale }} className="relative hidden lg:block h-[500px]">
-            <div className="absolute inset-4 rounded-2xl overflow-hidden framed-card" style={{ background: "var(--bg-surface-2)" }}>
-              <img src="/intelligence-v2.jpg" alt="Dashboard" className="w-full h-full object-cover opacity-70" />
-              <div className="absolute inset-0" style={{ background: `linear-gradient(to top, var(--bg-canvas), transparent)` }} />
-              <div className="absolute top-6 left-6">
-                <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--accent)" }}>Platform</div>
-                <div className="text-[15px] mt-1 font-medium" style={{ color: "var(--text-primary)" }}>AI Procurement Hub</div>
+          {/* RIGHT — Dashboard visual */}
+          <motion.div style={{ y: y2, scale }} className="relative hidden lg:block h-[520px]">
+            {/* Main card */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
+              <div className="p-6 border-b" style={{ borderColor: "var(--border-subtle)" }}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--accent)" }}>Today's Procurement</span>
+                  <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>Live</span>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Active POs</span>
+                    <div className="text-[28px] font-bold mt-1" style={{ color: "var(--text-primary)" }}>23</div>
+                  </div>
+                  <div className="flex-1 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Pending</span>
+                    <div className="text-[28px] font-bold mt-1" style={{ color: "var(--accent)" }}>7</div>
+                  </div>
+                </div>
+                <div className="mt-3 p-4 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Suppliers Paid Today</span>
+                  <div className="text-[22px] font-bold mt-1" style={{ color: "var(--accent)" }}>EGP 147,500</div>
+                </div>
               </div>
-            </div>
-            <div className="absolute -bottom-4 -left-8 w-[260px] rounded-xl overflow-hidden lime-shadow" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
-              <img src="/compliance-v2.jpg" alt="Compliance" className="w-full h-auto opacity-75" />
+              {/* Supplier invoice card */}
+              <div className="p-6">
+                <div className="p-4 rounded-xl lime-shadow" style={{ background: "var(--bg-canvas)", border: "1px solid var(--border-visible)" }}>
+                  <span className="text-[9px] uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Supplier Invoice</span>
+                  <div className="text-[15px] font-semibold mt-1" style={{ color: "var(--text-primary)" }}>Fresh Foods Co.</div>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-[18px] font-bold" style={{ color: "var(--accent)" }}>EGP 25,000</span>
+                    <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ background: "var(--accent)20", color: "var(--accent)" }}>Paid</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-semibold"
+                  style={{ color: "var(--accent)" }}>
+                  ✓ ETA Compliant
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -216,56 +283,196 @@ function HeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   FEATURE CARDS — Grey/white with lime shadows
+   SECTION 2: THE REALITY — Pain point stats
    ═══════════════════════════════════════════════════════ */
-function FeatureCards() {
-  const features = [
-    {
-      title: "AI Pre-Spend Control",
-      desc: "Multi-agent swarm analyzes spend patterns, detects anomalies, and flags savings before you approve a single PO.",
-      icon: "⚡",
-    },
-    {
-      title: "ETA E-Invoicing",
-      desc: "Automated real-time submission to Egyptian Tax Authority. Zero manual filing. Full compliance from day one.",
-      icon: "📋",
-    },
-    {
-      title: "Embedded Financing",
-      desc: "Licensed Egyptian fintech integration for factoring, credit lines, and payment orchestration — all in one workflow.",
-      icon: "💰",
-    },
-    {
-      title: "Verified Network",
-      desc: "Pre-qualified suppliers across Egypt — Cairo, Red Sea, North Coast. Every supplier verified for EGS compliance.",
-      icon: "🌐",
-    },
+function RealitySection() {
+  const stats = [
+    { value: "10–20", label: "Daily Deliveries", desc: "Hotels receive 10-20 supplier deliveries daily from hundreds of vendors. Operations grind to a halt every morning." },
+    { value: "60%", label: "Kitchen Waste", desc: "60% of hotel food waste happens before a guest sees their meal — overproduction, spoilage, buffet excess. 45-73% is avoidable." },
+    { value: "~20%", label: "Spoilage Loss", desc: "Nearly 20% of purchased F&B inventory is lost to spoilage from poor FIFO, temperature failure, and over-ordering." },
+    { value: "EGP 100K", label: "ETA Penalty Risk", desc: "Non-compliance with Egyptian Tax Authority e-invoicing carries penalties of EGP 20,000-100,000. Paper invoices are legally invalid since 2022." },
+    { value: "30–90 Days", label: "Payment Delays", desc: "Egyptian SMEs face 30-90 day payment delays. SMEs extend trade credit based on relationships, not risk assessment." },
+    { value: "EGP 180K", label: "Hidden Waste Cost", desc: "A hotel spending EGP 300K/month on F&B loses EGP 15K/month to spoilage alone. That's EGP 180,000 annually in preventable waste." },
   ];
 
   return (
-    <section className="py-32" style={{ background: "var(--bg-canvas)" }}>
+    <section className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="text-center mb-16">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] block mb-4" style={{ color: "var(--accent)" }}>Platform</span>
-          <h2 className="text-[34px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--text-primary)" }}>
-            Everything you need.{" "}
-            <span style={{ color: "var(--text-tertiary)" }}>One platform.</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>THE REALITY</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12] max-w-[800px] mx-auto" style={{ color: "var(--text-primary)" }}>
+            Egyptian Hotels Work With Hundreds of Suppliers.
+            <span style={{ color: "var(--text-secondary)" }}> And Still Run Out of Stock Before They Run Out of Month.</span>
+          </h2>
+          <p className="mt-5 text-[15px] max-w-[650px] mx-auto leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            The HoReCa market in Egypt will hit $18.14 billion by 2029. Yet the average hotel procurement operation runs on WhatsApp messages, paper invoices, cash payments, and prayers.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {stats.map((s) => (
+            <div key={s.label} className="group p-6 rounded-2xl transition-all duration-300 hover:lime-shadow"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+              <div className="text-[42px] font-black leading-none mb-1" style={{ color: "var(--accent)" }}>{s.value}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-3" style={{ color: "var(--text-primary)" }}>{s.label}</div>
+              <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <a href="#how-it-works"
+            className="inline-flex items-center gap-2 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
+            style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+            See How We Fix This →
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 3: THE PLATFORM — 5 categories
+   ═══════════════════════════════════════════════════════ */
+function PlatformSection() {
+  const categories = [
+    { title: "F&B", items: ["AI demand forecasting", "Spoilage alerts", "FIFO tracking", "Recipe-costing integration"] },
+    { title: "Housekeeping", items: ["Par-level auto-reorder", "Amenity bundle management", "Linen lifecycle tracking", "Eco-friendly product sourcing"] },
+    { title: "Engineering", items: ["Preventive maintenance scheduling", "Spare parts catalog", "Work order integration", "Vendor warranty tracking"] },
+    { title: "Amenities", items: ["Guest room amenity kits", "Brand-standard compliance", "Bulk ordering", "Seasonal customization"] },
+    { title: "Capital Equipment", items: ["Capex budgeting", "Depreciation tracking", "Installation scheduling", "Multi-vendor quote comparison"] },
+  ];
+
+  return (
+    <section id="platform" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-surface-1)" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="text-center mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>THE PLATFORM</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+            From F&B to Capital Equipment.
+            <span style={{ color: "var(--text-secondary)" }}> Every Dirham Tracked. Every Invoice Compliant.</span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {features.map((f, i) => (
-            <div key={f.title}
-              className="group framed-card p-8 transition-all duration-500 hover:lime-shadow"
-              style={{ background: "var(--bg-surface-2)" }}>
-              <div className="text-[28px] mb-4">{f.icon}</div>
-              <h3 className="text-[20px] font-bold mb-2" style={{ color: "var(--text-primary)" }}>{f.title}</h3>
-              <p className="text-[14px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
-              <div className="mt-4 flex items-center gap-2 text-[13px] font-semibold" style={{ color: "var(--accent)" }}>
-                Learn more <span>→</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {categories.map((cat) => (
+            <div key={cat.title} className="p-6 rounded-2xl transition-all duration-300 hover:lime-shadow"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+              <h3 className="text-[18px] font-bold mb-4" style={{ color: "var(--text-primary)" }}>{cat.title}</h3>
+              <ul className="space-y-2.5">
+                {cat.items.map((item) => (
+                  <li key={item} className="text-[12px] leading-relaxed flex items-start gap-2"
+                    style={{ color: "var(--text-secondary)" }}>
+                    <span style={{ color: "var(--accent)" }}>•</span> {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-5 text-[12px] font-semibold" style={{ color: "var(--accent)" }}>Explore →</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 4: FOR HOTELS — AI Features
+   ═══════════════════════════════════════════════════════ */
+function ForHotelsSection() {
+  const [activeTab, setActiveTab] = useState(0);
+  const features = [
+    { title: "AI Demand Forecasting", desc: "Predict F&B, housekeeping, and amenity needs based on occupancy, events, seasonality, and historical data", icon: "📊" },
+    { title: "Cost Estimation Pre-Order", desc: "See exact projected cost before approving any PO — no budget surprises", icon: "💰" },
+    { title: "Reorder Alerts", desc: "Automatic notifications when inventory hits par level, with suggested order quantities", icon: "🔔" },
+    { title: "Spend Analytics Dashboard", desc: "Real-time visibility across all 5 categories, all properties, all suppliers — in one view", icon: "📈" },
+  ];
+
+  return (
+    <section id="for-hotels" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>FOR HOTELS</span>
+            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+              Control Before.
+              <br />
+              <span style={{ color: "var(--text-secondary)" }}>Not After.</span>
+            </h2>
+            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Most procurement platforms tell you what you spent last month. We tell you what you should order next week. HotelsVendors embeds AI-powered demand forecasting directly into your procurement workflow.
+            </p>
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Before you create a purchase order, you see: projected guest occupancy, historical consumption patterns, seasonal adjustments, and real-time price comparisons across verified suppliers. You don't just track spend. You prevent waste. You optimize par levels. You negotiate from a position of data, not desperation.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              {features.map((f, i) => (
+                <div key={f.title} className="p-4 rounded-xl transition-all cursor-pointer"
+                  style={{
+                    background: activeTab === i ? "var(--bg-surface-2)" : "transparent",
+                    border: activeTab === i ? "1px solid var(--border-accent)" : "1px solid transparent",
+                  }}
+                  onMouseEnter={() => setActiveTab(i)}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[20px]">{f.icon}</span>
+                    <div>
+                      <h4 className="text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>{f.title}</h4>
+                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Link href="/register/hotel"
+              className="inline-flex items-center gap-2 mt-8 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
+              style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+              Request Hotel Demo →
+            </Link>
+          </div>
+
+          {/* Chart mockup */}
+          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
+            <div className="flex items-center gap-2 mb-6">
+              {["Forecasting", "Cost Control", "Inventory", "Analytics"].map((tab, i) => (
+                <button key={tab}
+                  className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all"
+                  style={{
+                    background: activeTab === i ? "var(--accent)" : "transparent",
+                    color: activeTab === i ? "var(--text-inverse)" : "var(--text-secondary)",
+                  }}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+            {/* Simple chart representation */}
+            <div className="h-[260px] rounded-xl p-6 flex items-end justify-between gap-2"
+              style={{ background: "var(--bg-canvas)" }}>
+              {[65, 45, 78, 55, 90, 60, 72].map((h, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                  <div className="w-full rounded-t-md transition-all"
+                    style={{
+                      height: h * 2,
+                      background: i >= 4 ? "var(--accent)" : "var(--text-tertiary)",
+                      opacity: i >= 4 ? 0.9 : 0.3,
+                    }} />
+                  <span className="text-[9px] font-semibold" style={{ color: "var(--text-tertiary)" }}>
+                    {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-6 mt-4 justify-center">
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent)" }} /> Projected
+              </div>
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--text-tertiary)", opacity: 0.3 }} /> Actual
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
@@ -273,85 +480,158 @@ function FeatureCards() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   PROBLEM CARDS — White cards with black text
+   SECTION 5: FOR SUPPLIERS — InstaPay + Factoring
    ═══════════════════════════════════════════════════════ */
-function ProblemSection() {
-  const cards = [
-    { stat: "EGP 3M", label: "Annual Leakage", title: "No Pre-Spend Visibility", desc: "WhatsApp orders and phone calls mean no audit trail. Price discrepancies and unauthorized spend slip through — discovered at month-end, when it's too late." },
-    { stat: "48 hrs", label: "Invoice Delay", title: "ETA Compliance Risk", desc: "Mandatory e-invoicing requires real-time submission. Manual processes create backlogs, penalties, and audit exposure." },
-    { stat: "60-90", label: "Day Payment Gap", title: "Working Capital Crunch", desc: "Suppliers demand 15-30 day payment. Hotels operate on 60-90 day cycles. The gap forces expensive borrowing." },
+function ForSuppliersSection() {
+  const features = [
+    { title: "Instant InstaPay Settlement", desc: "Receive full invoice amount in &lt;10 seconds via IPN. Zero deduction. 24/7 including weekends.", icon: "⚡" },
+    { title: "Non-Recourse Factoring", desc: "Get paid within 24 hours. Platform assumes credit risk. No recourse if hotel defaults.", icon: "🛡️" },
+    { title: "Verified Supplier Badge", desc: "Pass KYC verification to earn a trust badge visible to all hotels. Higher visibility = more orders.", icon: "✓" },
+    { title: "Digital Invoice Management", desc: "Submit invoices digitally, track payment status in real-time, automatic ETA e-invoice generation.", icon: "📄" },
   ];
 
   return (
-    <section className="py-32" style={{ background: "var(--bg-surface-1)" }}>
+    <section id="for-suppliers" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-surface-1)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-        <div className="text-center mb-16">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] block mb-4" style={{ color: "var(--accent)" }}>Why HotelsVendors</span>
-          <h2 className="text-[34px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--text-primary)" }}>
-            Your team deserves better than{" "}
-            <span style={{ color: "var(--text-tertiary)" }}>WhatsApp.</span>
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {cards.map((c) => (
-            <div key={c.title}
-              className="p-8 rounded-2xl card-shadow transition-all duration-300 hover:lime-shadow"
-              style={{ background: "var(--bg-surface-2)" }}>
-              <div className="text-[48px] font-black leading-none mb-2" style={{ color: "var(--accent)", opacity: 0.12 }}>{c.stat}</div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--accent)", opacity: 0.7 }}>{c.label}</div>
-              <h3 className="text-[17px] font-bold mb-2" style={{ color: "var(--text-primary)" }}>{c.title}</h3>
-              <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{c.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════
-   NETWORK — Egypt map (keep this image)
-   ═══════════════════════════════════════════════════════ */
-function NetworkSection() {
-  const cities = [
-    { name: "Cairo & Giza", hotels: "28+", region: "Capital Corridor" },
-    { name: "Hurghada", hotels: "12+", region: "Red Sea" },
-    { name: "Sharm El-Sheikh", hotels: "8+", region: "South Sinai" },
-    { name: "Alexandria", hotels: "6+", region: "North Coast" },
-  ];
-
-  return (
-    <section id="network" className="py-32" style={{ background: "var(--bg-canvas)" }}>
-      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] block mb-4" style={{ color: "var(--accent)" }}>Network</span>
-            <h2 className="text-[34px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--text-primary)" }}>
-              Nationwide coverage.{" "}
-              <span style={{ color: "var(--text-tertiary)" }}>Deep categories.</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>FOR SUPPLIERS</span>
+            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+              Get Paid.
+              <br />
+              <span style={{ color: "var(--text-secondary)" }}>Not Promised.</span>
             </h2>
-            <p className="mt-4 text-[15px] max-w-[450px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Active across Egypt's key hospitality corridors with verified suppliers in F&B, housekeeping, linens, pool chemicals, and maintenance.
+            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              The biggest barrier for Egyptian hospitality suppliers isn't finding buyers. It's collecting money after you've delivered. HotelsVendors changes the equation.
             </p>
-            <div className="mt-8 grid grid-cols-2 gap-3">
-              {cities.map((c) => (
-                <div key={c.name}
-                  className="p-4 rounded-xl transition-all hover:lime-shadow"
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              When a hotel approves your invoice, you can choose to get paid instantly via InstaPay — funds hit your account in under 10 seconds, 24/7, even on weekends. Or, opt for our non-recourse factoring: we pay you within 24 hours, and we take the credit risk. If the hotel doesn't pay, that's our problem. Not yours.
+            </p>
+            <p className="mt-4 text-[14px] leading-relaxed" style={{ color: "var(--accent)" }}>
+              Your liquidity turnover goes from 30-90 days to same-day. Your cash flow becomes predictable. Your business grows.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              {features.map((f) => (
+                <div key={f.title} className="p-4 rounded-xl transition-all hover:lime-shadow"
                   style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-[14px] font-semibold" style={{ color: "var(--text-primary)" }}>{c.name}</span>
-                    <span className="text-[15px] font-bold" style={{ color: "var(--accent)" }}>{c.hotels}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[20px]">{f.icon}</span>
+                    <div>
+                      <h4 className="text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>{f.title}</h4>
+                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
+                    </div>
                   </div>
-                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>{c.region}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link href="/register/supplier"
+              className="inline-flex items-center gap-2 mt-8 text-[14px] font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
+              style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+              Become a Verified Supplier →
+            </Link>
+          </div>
+
+          {/* Payment flow visual */}
+          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
+            <h4 className="text-[14px] font-bold mb-6" style={{ color: "var(--text-primary)" }}>
+              Payment Flow: Same Day vs Traditional
+            </h4>
+            {[
+              { step: "01", day: "Day 0", title: "Supplier Delivers Goods", desc: "Invoice submitted digitally" },
+              { step: "02", day: "Day 0", title: "Hotel Approves Invoice", desc: "One-click approval" },
+              { step: "03", day: "Day 0", title: "Platform Processes", desc: "Auto ETA e-invoice" },
+              { step: "04", day: "Day 0", title: "Supplier PAID", desc: "Funds in &lt;10 seconds" },
+            ].map((s, i) => (
+              <div key={s.step} className="flex items-start gap-4 pb-5 relative"
+                style={{ borderLeft: i < 3 ? "2px dashed" : "none", borderColor: "var(--accent)", marginLeft: 8, paddingLeft: 20 }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
+                  style={{ background: "var(--accent)", color: "var(--text-inverse)", marginLeft: -24 }}>
+                  {s.step}
+                </div>
+                <div className="flex-1 p-3 rounded-xl" style={{ background: "var(--bg-canvas)" }}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>{s.title}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: "var(--accent)20", color: "var(--accent)" }}>{s.day}</span>
+                  </div>
+                  <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>{s.desc}</p>
+                </div>
+              </div>
+            ))}
+            <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+              <div className="text-center">
+                <div className="text-[11px] line-through" style={{ color: "var(--text-tertiary)" }}>Traditional</div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--text-secondary)" }}>30-90 days</div>
+              </div>
+              <div className="text-[20px] font-bold" style={{ color: "var(--accent)" }}>VS</div>
+              <div className="text-center">
+                <div className="text-[11px]" style={{ color: "var(--accent)" }}>HotelsVendors</div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--accent)" }}>Same Day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 6: ETA COMPLIANCE
+   ═══════════════════════════════════════════════════════ */
+function ETAComplianceSection() {
+  const features = [
+    { title: "Every Invoice = ETA-Compliant", desc: "Platform auto-generates XML/JSON e-invoices in ETA format with digital signature, UUID assignment, and real-time portal submission." },
+    { title: "Product Coding Included", desc: "All catalog items mapped to Egyptian Goods and Services (EGS) or GS1 GPC classification standards. No manual coding required." },
+    { title: "Pre-Clearance Before Issuance", desc: "Invoices validated by ETA before being sent to the buyer. UUID assigned. Buyer notified. Zero rejected invoices." },
+    { title: "Automatic Secure Storage", desc: "All e-invoices, credit notes, and debit notes archived for the legally required 5-year period with instant retrieval." },
+  ];
+
+  return (
+    <section id="eta-compliance" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>ETA COMPLIANCE</span>
+            <h2 className="text-[32px] md:text-[42px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+              E-Invoicing Is No Longer Optional.
+              <span style={{ color: "var(--accent)" }}> It's the Law. And the Penalties Are Real.</span>
+            </h2>
+            <p className="mt-5 text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Since 2022, paper invoices are legally INVALID for VAT deduction in Egypt. All B2B transactions must be submitted to the Egyptian Tax Authority (ETA) in real-time via the clearance model. Non-compliance carries penalties of EGP 20,000–100,000 and potential criminal sanctions.
+            </p>
+
+            <div className="mt-8 space-y-4">
+              {features.map((f) => (
+                <div key={f.title} className="p-4 rounded-xl transition-all hover:lime-shadow"
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+                  <h4 className="text-[14px] font-bold mb-1" style={{ color: "var(--text-primary)" }}>{f.title}</h4>
+                  <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden framed-card">
-            <img src="/hero-hotel-drone.jpg" alt="Egypt hospitality coverage map" className="w-full aspect-[4/3] object-cover opacity-60" />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--bg-canvas) 0%, transparent 60%)" }} />
+          {/* ETA badges */}
+          <div className="p-8 rounded-2xl" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}>
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-[32px] lime-shadow-strong"
+                style={{ background: "var(--accent)15" }}>
+                🏛️
+              </div>
+              <h3 className="text-[18px] font-bold mt-4" style={{ color: "var(--text-primary)" }}>100% ETA Compliant</h3>
+              <p className="text-[13px] mt-1" style={{ color: "var(--text-secondary)" }}>Every invoice, every time, automatically</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {["ETA Registered", "Digital Signature Ready", "UUID Auto-Assigned", "5-Year Archive"].map((b) => (
+                <div key={b} className="p-4 rounded-xl text-center transition-all hover:lime-shadow"
+                  style={{ background: "var(--bg-canvas)", border: "1px solid var(--border-subtle)" }}>
+                  <div className="text-[18px] mb-2" style={{ color: "var(--accent)" }}>✓</div>
+                  <span className="text-[11px] font-semibold" style={{ color: "var(--text-primary)" }}>{b}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -360,39 +640,267 @@ function NetworkSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   TRUST BADGES
+   SECTION 7: HOW IT WORKS — 5-step flow
    ═══════════════════════════════════════════════════════ */
-function TrustSection() {
-  const badges = [
-    { title: "ETA Compliant", desc: "Full Egyptian Tax Authority e-invoicing integration with automated real-time submission." },
-    { title: "Pre-Spend Gatekeeper", desc: "AI-powered cost analysis before money is committed. Flag anomalies, enforce budgets." },
-    { title: "Fintech Licensed", desc: "Integrated with licensed Egyptian financial institutions for payments and factoring." },
-    { title: "AI Swarm 24/7", desc: "Multi-agent system continuously analyzing spend, compliance, and procurement." },
-    { title: "RBAC Security", desc: "Granular role-based access. Each stakeholder sees only what they need." },
-    { title: "Full Audit Trail", desc: "Every transaction, approval, and modification logged immutably." },
+function HowItWorksSection() {
+  const steps = [
+    { step: "1", actor: "HOTEL", time: "2 min", title: "Create Smart PO", desc: "AI suggests quantities based on forecast. Cost estimated before approval. Multi-supplier comparison visible." },
+    { step: "2", actor: "SUPPLIER", time: "Real-time", title: "Receive & Confirm", desc: "Supplier gets instant notification, confirms availability and delivery date. Digital acknowledgment." },
+    { step: "3", actor: "HOTEL", time: "Same day", title: "Receive & Verify", desc: "Goods delivered. Three-way match: PO + Delivery Note + Invoice. Discrepancies flagged automatically." },
+    { step: "4", actor: "HOTEL", time: "1 click", title: "Approve & Pay", desc: "One-click invoice approval. Choose: InstaPay instant (EGP 20 fee) or schedule later." },
+    { step: "5", actor: "SUPPLIER", time: "<10 sec", title: "Get Paid", desc: "Funds in account in <10 seconds via InstaPay. Or 24-hour factoring advance. Full amount, zero deduction." },
   ];
 
   return (
-    <section id="trust" className="py-32" style={{ background: "var(--bg-surface-1)" }}>
+    <section id="how-it-works" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-surface-1)" }}>
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-        <div className="mb-16">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] block mb-4" style={{ color: "var(--accent)" }}>Trust</span>
-          <h2 className="text-[34px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.1]" style={{ color: "var(--text-primary)" }}>
-            Enterprise-grade trust.{" "}
-            <span style={{ color: "var(--text-tertiary)" }}>Banking standard.</span>
+        <div className="text-center mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>HOW IT WORKS</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+            From Order to Payment.
+            <span style={{ color: "var(--text-secondary)" }}> In Minutes, Not Weeks.</span>
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {badges.map((b) => (
-            <div key={b.title}
-              className="p-6 rounded-2xl transition-all hover:lime-shadow"
-              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                style={{ background: "var(--accent)15" }}>
-                <span style={{ color: "var(--accent)" }}>✓</span>
+
+        <div className="relative">
+          {/* Connecting line (desktop) */}
+          <div className="hidden lg:block absolute top-12 left-[5%] right-[5%] h-0.5" style={{ background: "linear-gradient(90deg, var(--accent), var(--accent)40, var(--accent))" }} />
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {steps.map((s, i) => (
+              <div key={s.step} className="group relative text-center">
+                <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center text-[14px] font-bold relative z-10 lime-shadow-strong"
+                  style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+                  {s.step}
+                </div>
+                <div className="mt-4 px-4 py-6 rounded-2xl transition-all hover:lime-shadow"
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full"
+                      style={{ background: "var(--accent)20", color: "var(--accent)" }}>{s.actor}</span>
+                    <span className="text-[9px]" style={{ color: "var(--text-tertiary)" }}>{s.time}</span>
+                  </div>
+                  <h4 className="text-[14px] font-bold mb-2" style={{ color: "var(--text-primary)" }}>{s.title}</h4>
+                  <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{s.desc}</p>
+                </div>
               </div>
-              <h4 className="text-[15px] font-bold mb-1" style={{ color: "var(--text-primary)" }}>{b.title}</h4>
-              <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{b.desc}</p>
+            ))}
+          </div>
+
+          <div className="mt-12 flex items-center justify-center gap-6">
+            <div className="text-center px-8 py-4 rounded-2xl" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: "var(--text-tertiary)" }}>Traditional</div>
+              <div className="text-[20px] font-bold" style={{ color: "var(--text-secondary)" }}>7–14 DAYS</div>
+            </div>
+            <div className="text-[22px] font-black" style={{ color: "var(--accent)" }}>VS</div>
+            <div className="text-center px-8 py-4 rounded-2xl lime-shadow" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-accent)" }}>
+              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: "var(--accent)" }}>HotelsVendors</div>
+              <div className="text-[20px] font-bold" style={{ color: "var(--accent)" }}>SAME DAY</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 8: TRUST & TRACTION
+   ═══════════════════════════════════════════════════════ */
+function TrustSection() {
+  const testimonials = [
+    { quote: "We went from 15 WhatsApp groups with suppliers to one dashboard. Our F&B wastage dropped 34% in the first quarter. The ETA compliance alone saved us from a EGP 50,000 penalty.", name: "Karim H.", role: "Procurement Director", hotel: "Grand Nile Hotel, Cairo" },
+    { quote: "As a linen supplier, I used to chase payments for 60 days. Now I get paid the same day via InstaPay. My turnover doubled because I can reinvest immediately.", name: "Mona S.", role: "Owner", hotel: "Nile Textile Supplies" },
+    { quote: "The AI forecasting is uncanny. It predicted our Eid occupancy surge two weeks ahead and auto-suggested order quantities. We didn't run out of a single SKU.", name: "Ahmed R.", role: "F&B Manager", hotel: "Red Sea Resort, Sharm El-Sheikh" },
+  ];
+
+  return (
+    <section id="trust" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="text-center mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>TRUST & TRACTION</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+            Built for Egyptian Hospitality.
+            <span style={{ color: "var(--text-secondary)" }}> Backed by Real Results.</span>
+          </h2>
+        </div>
+
+        {/* Stats row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          {[
+            { v: "120+", l: "Hotels Onboarded" },
+            { v: "850+", l: "Verified Suppliers" },
+            { v: "EGP 500M+", l: "Annual GMV" },
+            { v: "<4 hrs", l: "Avg Payment Time" },
+          ].map((s) => (
+            <div key={s.l} className="p-6 rounded-2xl text-center transition-all hover:lime-shadow"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+              <div className="text-[32px] font-black" style={{ color: "var(--accent)" }}>{s.v}</div>
+              <div className="text-[10px] font-semibold uppercase tracking-wider mt-2" style={{ color: "var(--text-secondary)" }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Testimonials */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {testimonials.map((t) => (
+            <div key={t.name} className="p-7 rounded-2xl transition-all hover:lime-shadow"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+              <div className="text-[24px] leading-none mb-4" style={{ color: "var(--accent)", opacity: 0.4 }}>"</div>
+              <p className="text-[13px] leading-relaxed mb-5 italic" style={{ color: "var(--text-secondary)" }}>"{t.quote}"</p>
+              <div>
+                <div className="text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>{t.name}</div>
+                <div className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>{t.role}, {t.hotel}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Partners */}
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "var(--text-tertiary)" }}>POWERED BY</span>
+          {["InstaPay IPN", "ETA Egypt", "CBE Certified", "Afreximbank Partner"].map((p) => (
+            <span key={p} className="text-[11px] font-semibold px-4 py-2 rounded-full"
+              style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>
+              {p}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 9: PRICING
+   ═══════════════════════════════════════════════════════ */
+function PricingSection() {
+  const plans = [
+    {
+      name: "Starter", price: "Free", featured: false,
+      features: ["Single property, <50 rooms", "2 AI questions/day", "10 verified suppliers", "F&B + Housekeeping", "Basic ETA e-invoice", "InstaPay standard", "Basic dashboard", "Email support"],
+      cta: "Sign Up Free", href: "/register/hotel",
+    },
+    {
+      name: "Professional", price: "EGP 2,500", period: "/mo", featured: true,
+      features: ["Multi-property, 50-200 rooms", "Unlimited AI questions", "Unlimited suppliers", "All 5 categories", "Full ETA compliance + archiving", "InstaPay + Scheduled", "Advanced + Forecasting", "Priority + WhatsApp"],
+      cta: "Start 14-Day Trial", href: "/register/hotel",
+    },
+    {
+      name: "Enterprise", price: "Custom", featured: false,
+      features: ["Hotel chains, 200+ rooms", "Unlimited + Custom AI Models", "Unlimited + Onboarding Support", "All 5 + Custom Catalogs", "Full + API + Multi-entity", "InstaPay + Factoring + Bulk", "Custom BI + API Access", "Dedicated Account Manager"],
+      cta: "Contact Sales", href: "/contact",
+    },
+  ];
+
+  return (
+    <section id="pricing" className="py-24 lg:py-[120px]" style={{ background: "var(--bg-surface-1)" }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <div className="text-center mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] block mb-4" style={{ color: "var(--accent)" }}>PRICING</span>
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+            Start Free.
+            <span style={{ color: "var(--text-secondary)" }}> Scale Smart.</span>
+          </h2>
+          <p className="mt-4 text-[15px] max-w-[550px] mx-auto leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            No setup fees. No hidden charges. Pay only for what you use. AI questions included. Upgrade when you need more power.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-[1000px] mx-auto">
+          {plans.map((plan) => (
+            <div key={plan.name} className="p-8 rounded-2xl transition-all hover:lime-shadow relative"
+              style={{
+                background: "var(--bg-surface-2)",
+                border: plan.featured ? "2px solid var(--accent)" : "1px solid var(--border-subtle)",
+              }}>
+              {plan.featured && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
+                  MOST POPULAR
+                </div>
+              )}
+              <h3 className="text-[20px] font-bold" style={{ color: "var(--text-primary)" }}>{plan.name}</h3>
+              <div className="mt-3 mb-6">
+                <span className="text-[36px] font-black" style={{ color: "var(--text-primary)" }}>{plan.price}</span>
+                {plan.period && <span className="text-[14px]" style={{ color: "var(--text-tertiary)" }}>{plan.period}</span>}
+              </div>
+              <ul className="space-y-3 mb-8">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[12px]" style={{ color: "var(--text-secondary)" }}>
+                    <span style={{ color: "var(--accent)" }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={plan.href}
+                className="block w-full text-center text-[13px] font-bold py-3 rounded-full transition-all hover:-translate-y-0.5"
+                style={plan.featured
+                  ? { background: "var(--accent)", color: "var(--text-inverse)" }
+                  : { border: "1px solid var(--border-visible)", color: "var(--text-primary)" }
+                }>
+                {plan.cta}
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-8 text-center text-[12px]" style={{ color: "var(--text-tertiary)" }}>
+          All paid plans include: Free supplier onboarding · Zero payment processing markup · Automatic ETA updates · 99.9% uptime SLA · Bank-grade encryption
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 10: FAQ
+   ═══════════════════════════════════════════════════════ */
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const faqs = [
+    { q: "Do hotels pay suppliers through the platform, or does the platform hold funds?", a: "Neither. HotelsVendors is a payment initiator, not a funds holder. When a hotel approves an invoice, the platform generates a payment instruction sent via InstaPay's IPN rail. Funds move directly from the hotel's bank account to the supplier's bank account in under 10 seconds. We never touch the money — which means no PSP license complexity and maximum security for both parties." },
+    { q: "How does the non-recourse factoring work?", a: "When a supplier opts for factoring, HotelsVendors pays the supplier within 24 hours of invoice approval. We then collect from the hotel on the agreed due date. If the hotel doesn't pay, we absorb the loss — the supplier has no recourse obligation. This is true non-recourse factoring, backed by our risk assessment of each hotel's credit profile." },
+    { q: "Is ETA e-invoicing really mandatory for my hotel?", a: "Yes. Since April 2023, all VAT-registered businesses in Egypt must issue electronic invoices for B2B transactions. Paper invoices are legally invalid for VAT deduction. Penalties range from EGP 20,000 to EGP 100,000. HotelsVendors automatically generates ETA-compliant e-invoices in XML/JSON format, submits them for pre-clearance, and assigns UUIDs — so you're always compliant without lifting a finger." },
+    { q: "What suppliers are available on the platform?", a: "We verify every supplier before they join. Current categories include F&B (fresh produce, dry goods, beverages, imported items), Housekeeping (cleaning chemicals, linens, amenities, equipment), Engineering (spare parts, HVAC, electrical, plumbing), Amenities (guest room kits, toiletries, branded items), and Capital Equipment (kitchen appliances, laundry machines, furniture). New suppliers are added weekly." },
+    { q: "How much does InstaPay cost per transaction?", a: "InstaPay charges 0.2% of the transaction value via corporate banking channels, capped at EGP 200 per transaction. For a typical EGP 50,000 supplier invoice, that's EGP 100. The supplier receives the full amount — zero deductions. Compare that to the hidden costs of cash handling (security, transportation, counting, reconciliation errors) which typically exceed EGP 500-1,000 per month for an active hotel." },
+    { q: "Can I use HotelsVendors if I already have an ERP?", a: "Absolutely. HotelsVendors integrates with major ERP systems including SAP, Oracle NetSuite, Odoo, and local Egyptian accounting software. We can sync purchase orders, invoices, and payment data bidirectionally. Many of our customers use us as their procurement layer while keeping their existing ERP for general ledger and financial reporting." },
+    { q: "What happens to my data?", a: "Your data is hosted on Egyptian cloud infrastructure (AWS Cairo region) and encrypted at rest (AES-256) and in transit (TLS 1.3). We comply with Egypt's Personal Data Protection Law (Law No. 151 of 2020). We never sell your data. Hotels see only their own data; suppliers see only their own transactions." },
+  ];
+
+  return (
+    <section className="py-24 lg:py-[120px]" style={{ background: "var(--bg-canvas)" }}>
+      <div className="max-w-[800px] mx-auto px-6 md:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-[32px] md:text-[44px] font-bold tracking-[-0.03em] leading-[1.12]" style={{ color: "var(--text-primary)" }}>
+            Questions?
+            <span style={{ color: "var(--text-secondary)" }}> We've Got Answers.</span>
+          </h2>
+        </div>
+
+        <div className="space-y-3">
+          {faqs.map((faq, i) => (
+            <div key={i} className="rounded-xl overflow-hidden transition-all"
+              style={{
+                background: "var(--bg-surface-2)",
+                border: openIndex === i ? "1px solid var(--border-accent)" : "1px solid var(--border-subtle)",
+              }}>
+              <button
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4">
+                <span className="text-[14px] font-semibold" style={{ color: "var(--text-primary)" }}>{faq.q}</span>
+                <span className="text-[16px] transition-transform shrink-0"
+                  style={{
+                    color: "var(--accent)",
+                    transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)",
+                  }}>
+                  +
+                </span>
+              </button>
+              {openIndex === i && (
+                <div className="px-6 pb-5">
+                  <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{faq.a}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -402,37 +910,38 @@ function TrustSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   CTA SECTION
+   SECTION 11: FINAL CTA
    ═══════════════════════════════════════════════════════ */
-function CTASection() {
+function FinalCTASection() {
   return (
-    <section className="py-32 relative overflow-hidden" style={{ background: "var(--bg-canvas)" }}>
+    <section className="py-24 lg:py-[120px] relative overflow-hidden" style={{ background: "var(--bg-canvas)" }}>
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
-          style={{ background: "var(--accent)", filter: "blur(150px)" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full opacity-[0.05]"
+          style={{ background: "var(--accent)", filter: "blur(160px)" }} />
       </div>
-      <div className="relative z-10 max-w-[680px] mx-auto px-6 text-center">
-        <h2 className="text-[36px] md:text-[48px] font-bold tracking-[-0.03em] leading-[1.08]" style={{ color: "var(--text-primary)" }}>
-          Ready to stop the{" "}
-          <span style={{ color: "var(--accent)" }}>procurement chaos</span>?
+      <div className="relative z-10 max-w-[700px] mx-auto px-6 text-center">
+        <h2 className="text-[34px] md:text-[48px] font-bold tracking-[-0.03em] leading-[1.08]" style={{ color: "var(--text-primary)" }}>
+          Stop Managing Suppliers.
+          <br />
+          <span style={{ color: "var(--accent)" }}>Start Commanding Your Supply Chain.</span>
         </h2>
         <p className="mt-5 text-[16px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          Join Egypt's first AI-powered procurement platform. 14-day free trial. No credit card. Cancel anytime.
+          Join 120+ Egyptian hotels and 850+ verified suppliers who've already made the switch.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/register/hotel"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-semibold rounded-full transition-all hover:-translate-y-0.5 lime-shadow-strong"
             style={{ background: "var(--accent)", color: "var(--text-inverse)" }}>
-            Get On Board Now →
+            Start Free Today →
           </Link>
           <Link href="/register/supplier"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[14px] font-medium rounded-full transition-all"
             style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
-            Join as Supplier
+            Talk to Our Team
           </Link>
         </div>
         <p className="mt-5 text-[12px]" style={{ color: "var(--text-tertiary)" }}>
-          14-day free trial · No credit card · Cancel anytime · ETA-compliant
+          No credit card required · 2-minute setup · Free forever for Starter tier
         </p>
       </div>
     </section>
@@ -440,7 +949,7 @@ function CTASection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   FOOTER — Regular white text (not muted)
+   FOOTER
    ═══════════════════════════════════════════════════════ */
 function Footer() {
   return (
@@ -448,20 +957,23 @@ function Footer() {
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[18px]">🏨</span>
-              <span className="text-[14px] font-bold" style={{ color: "var(--accent)" }}>HotelsVendors</span>
+            <div className="mb-3">
+              <span className="text-[18px] font-black tracking-tight">
+                <span style={{ color: "var(--text-primary)" }}>Hotels</span>
+                <span style={{ color: "var(--accent)" }}>V</span>
+                <span style={{ color: "var(--text-primary)" }}>endors</span>
+              </span>
             </div>
-            <p className="text-[12px] leading-relaxed mb-3" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-[12px] leading-relaxed mb-3" style={{ color: "var(--text-primary)", opacity: 0.85 }}>
               AI-powered procurement orchestration for Egyptian hospitality. ETA-compliant, fintech-enabled.
             </p>
-            <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>Cairo, Egypt</span>
+            <span className="text-[11px]" style={{ color: "var(--text-primary)", opacity: 0.7 }}>Cairo, Egypt</span>
           </div>
           {[
-            { title: "Product", links: ["Platform", "Solutions", "Network", "Trust", "Pricing"] },
-            { title: "Teams", links: ["Hotels", "Suppliers", "Factoring", "Logistics"] },
+            { title: "Product", links: ["Platform", "For Hotels", "For Suppliers", "Pricing"] },
+            { title: "Teams", links: ["Hotels", "Suppliers", "Factoring", "Shipping"] },
             { title: "Resources", links: ["Documentation", "API", "Blog", "Help Center"] },
-            { title: "Legal", links: ["Privacy", "Terms", "Security", "Compliance"] },
+            { title: "Legal", links: ["Privacy", "Terms", "Security", "ETA Compliance"] },
           ].map((col) => (
             <div key={col.title}>
               <h5 className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--text-primary)", opacity: 0.6 }}>
@@ -480,39 +992,20 @@ function Footer() {
         </div>
         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
           style={{ borderTop: "1px solid var(--border-subtle)" }}>
-          <span className="text-[11px]" style={{ color: "var(--text-primary)", opacity: 0.7 }}>
+          <span className="text-[11px]" style={{ color: "var(--text-primary)", opacity: 0.75 }}>
             © {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </span>
           <div className="flex items-center gap-5">
-            <span className="text-[10px]" style={{ color: "var(--text-primary)", opacity: 0.5 }}>ETA Compliant</span>
-            <span className="text-[10px]" style={{ color: "var(--text-primary)", opacity: 0.5 }}>ISO 27001 (in progress)</span>
+            {["ETA Compliant", "InstaPay IPN", "CBE Certified"].map((b) => (
+              <span key={b} className="text-[10px]" style={{ color: "var(--text-primary)", opacity: 0.6 }}>
+                {b}
+              </span>
+            ))}
           </div>
         </div>
       </div>
     </footer>
   );
-}
-
-/* ═══════════════════════════════════════════════════════
-   SCROLL REVEAL OBSERVER
-   ═══════════════════════════════════════════════════════ */
-function ScrollReveal({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("visible");
-        }
-      },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return <div ref={ref} className="scroll-reveal">{children}</div>;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -523,16 +1016,26 @@ export default function LandingPage() {
     <main className="min-h-screen" style={{ background: "var(--bg-canvas)", fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif" }}>
       <LandingNav />
       <HeroSection />
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />
-      <ScrollReveal><FeatureCards /></ScrollReveal>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />
-      <ScrollReveal><ProblemSection /></ScrollReveal>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />
-      <ScrollReveal><NetworkSection /></ScrollReveal>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />
+      <Divider />
+      <ScrollReveal><RealitySection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><PlatformSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><ForHotelsSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><ForSuppliersSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><ETAComplianceSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><HowItWorksSection /></ScrollReveal>
+      <Divider />
       <ScrollReveal><TrustSection /></ScrollReveal>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--border-visible), transparent)" }} />
-      <ScrollReveal><CTASection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><PricingSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><FAQSection /></ScrollReveal>
+      <Divider />
+      <ScrollReveal><FinalCTASection /></ScrollReveal>
       <Footer />
     </main>
   );
