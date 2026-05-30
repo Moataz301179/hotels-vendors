@@ -1,400 +1,756 @@
-import type { Metadata } from "next";
+/* ═══════════════════════════════════════════════════════════════
+   HOTELS VENDORS — MARKETING PAGE v2 (HERMES BUILD May 30 2026)
+   Reference design: clario.framer.website
+   Reference content: kimi.page HotelsVendors
+   Color system: #050505 bg, #8cff2e lime primary, #a855f7 purple secondary
+   Animation: Framer Motion — fade+slide scroll reveals, stagger, 3D tilt
+   ═══════════════════════════════════════════════════════════════ */
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import {
-  ArrowRight,
-  BrainCircuit,
-  Receipt,
-  Banknote,
-  ShieldCheck,
-  Store,
-  TrendingUp,
-  Zap,
-  FileCheck,
-  MapPin,
-  ChevronRight,
+  ShoppingCart, Store, ArrowRight, Shield, Cpu, Truck, Landmark,
+  CheckCircle, FileCheck, Banknote, CreditCard, ChevronRight, Play
 } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { getCmsPage } from "@/lib/cms";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const cms = await getCmsPage("home");
-  return {
-    title:
-      cms?.metaTitle ||
-      "Hotels Vendors — AI Procurement OS for Egyptian Hospitality",
-    description:
-      cms?.metaDescription ||
-      "An AI-native procurement operating system that predicts demand, automates workflows, secures cashflow, and enforces ETA compliance. Built for Egyptian hospitality.",
-  };
-}
+/* ─── Animation variants (Clario-style) ─── */
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] as const },
+  }),
+};
 
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const staggerItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.92 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+};
+
+/* ─── Data ─── */
 const STATS = [
-  { value: "52", label: "Hotel Properties", sub: "Across 8 governorates" },
-  { value: "68", label: "Verified Suppliers", sub: "1,200+ SKU categories" },
-  { value: "100%", label: "ETA Compliant", sub: "E-invoicing & tax authority integration" },
-  { value: "EGP 86M", label: "Monthly GMV", sub: "Procurement volume tracked" },
-  { value: "6", label: "Coastal Clusters", sub: "Cairo, Alexandria, Red Sea, Sinai, Luxor, Aswan" },
-  { value: "48hr", label: "Delivery SLA", sub: "From order to dock receipt" },
+  { value: "10–20", label: "Daily supplier deliveries per hotel. Operations grind to a halt every morning." },
+  { value: "60%", label: "Kitchen food waste before a guest sees their meal. 45–73% is avoidable." },
+  { value: "~20%", label: "Of F&B inventory lost to spoilage from poor FIFO and over-ordering." },
+  { value: "EGP 100K", label: "ETA penalty risk. Paper invoices are legally invalid since 2022." },
 ];
 
-const CAPABILITIES = [
-  {
-    icon: BrainCircuit,
-    title: "Predictive Demand Intelligence",
-    desc: "Our AI engine analyzes consumption velocity across your properties, anticipates seasonal spikes, and auto-generates purchase orders before stockouts occur — not after.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-  },
-  {
-    icon: Receipt,
-    title: "Native ETA E-Invoicing",
-    desc: "Every invoice is digitally signed, UUID-tagged, and submitted to the Egyptian Tax Authority in real time. Compliance is not a module — it is the foundation.",
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80",
-  },
-  {
-    icon: Banknote,
-    title: "Embedded Cashflow Architecture",
-    desc: "Invoice factoring, payment guarantees, and credit-line management are woven into the transaction flow. Suppliers get liquidity; hotels preserve working capital.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Authority Matrix Governance",
-    desc: "Multi-level approval chains enforced at the database layer. No PO can be approved above its threshold without the required signatures — bypassing is technically impossible.",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80",
-  },
-  {
-    icon: Store,
-    title: "Verified Supplier Network",
-    desc: "Every supplier is audited for commercial registration, tax compliance, and delivery track record. Not a directory — a vetted ecosystem.",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
-  },
-  {
-    icon: TrendingUp,
-    title: "Procurement Intelligence Layer",
-    desc: "Cross-property spend analysis, price benchmarking against market indices, and anomaly detection that flags unusual pricing or delivery patterns before they become problems.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-  },
+const STEPS = [
+  { num: "Step 1", title: "Connect Your Suppliers", desc: "Onboard existing suppliers onto the platform. They get a free dashboard to manage orders, invoices, and payments." },
+  { num: "Step 2", title: "AI Forecasts Your Needs", desc: "Our engine analyzes occupancy, seasonality, consumption patterns, and events to predict exactly what you need — before you run out." },
+  { num: "Step 3", title: "Order, Track & Pay — Compliant", desc: "Create POs with pre-order cost estimates. Track deliveries in real time. Every invoice is ETA e-invoicing compliant automatically." },
 ];
 
-const CITIES = [
-  { name: "Cairo", properties: 18, region: "Capital Corridor" },
-  { name: "Alexandria", properties: 8, region: "Mediterranean" },
-  { name: "Hurghada", properties: 12, region: "Red Sea" },
-  { name: "Sharm El-Sheikh", properties: 9, region: "South Sinai" },
-  { name: "Luxor", properties: 3, region: "Upper Egypt" },
-  { name: "Aswan", properties: 2, region: "Upper Egypt" },
+const CATEGORIES = [
+  { icon: "🍽️", title: "F&B Procurement", desc: "AI-powered demand forecasting. Predict what you need before you need it. Real-time price comparison across verified suppliers.", accent: "lime" as const },
+  { icon: "🧹", title: "Housekeeping", desc: "Consumables tracking with automated reorder points. Never run out of linens, toiletries, or cleaning supplies.", accent: "purple" as const },
+  { icon: "⚙️", title: "Engineering", desc: "Maintenance scheduling, spare parts inventory, and MRO procurement — all in one compliant workflow.", accent: "purple" as const },
+  { icon: "✨", title: "Amenities", desc: "Guest experience supplies managed with par-level automation. Seasonal adjustments built into your forecast.", accent: "lime" as const },
+  { icon: "🏗️", title: "Capital Equipment", desc: "Track high-value asset purchases, depreciation schedules, and vendor warranties. Compare supplier quotes.", accent: "purple" as const },
 ];
 
-const WORKFLOW = [
-  {
-    num: "01",
-    title: "Intelligent Demand Sensing",
-    desc: "The system ingests historical consumption, seasonal patterns, and property-specific events to forecast exactly what each outlet needs and when.",
-  },
-  {
-    num: "02",
-    title: "Autonomous Sourcing & Negotiation",
-    desc: "AI evaluates supplier bids against quality scores, delivery SLAs, and historical pricing. The optimal vendor is selected automatically — or flagged for human review.",
-  },
-  {
-    num: "03",
-    title: "Governed Order Execution",
-    desc: "Purchase orders route through your authority matrix automatically. ETA-compliant invoices generate at order confirmation. Payments execute per contracted terms.",
-  },
-  {
-    num: "04",
-    title: "Continuous Optimization",
-    desc: "Post-delivery analytics feed back into the demand model. Price deviations, quality issues, and delivery failures automatically adjust future sourcing decisions.",
-  },
+const FEATURES = [
+  { icon: Cpu, title: "AI Demand Forecasting", desc: "Predict procurement needs based on occupancy, seasonality, and historical data.", accent: "lime" as const },
+  { icon: Shield, title: "Authority Matrix", desc: "Multi-level approval enforcement based on order value thresholds.", accent: "purple" as const },
+  { icon: FileCheck, title: "Native ETA Compliance", desc: "Full Egyptian Tax Authority e-invoicing integration. Zero penalty risk.", accent: "lime" as const },
+  { icon: CreditCard, title: "Supplier Factoring", desc: "Non-recourse factoring via Oliv Finance. Suppliers get paid in under 10 seconds.", accent: "purple" as const },
+  { icon: Truck, title: "Shared Logistics", desc: "Coastal cluster delivery within 48 hours with optimized routing.", accent: "lime" as const },
+  { icon: Landmark, title: "Supply Chain Finance", desc: "Dynamic credit lines based on transaction history and supplier performance.", accent: "purple" as const },
 ];
 
-export default async function HomePage() {
-  const cms = await getCmsPage("home");
+const HOTEL_FEATURES = [
+  { title: "AI Demand Forecasting", desc: "Predict F&B, housekeeping, and amenity needs based on occupancy, events, seasonality, and historical data." },
+  { title: "Cost Estimation Pre-Order", desc: "See exact projected cost before approving any PO — no budget surprises." },
+  { title: "Reorder Alerts", desc: "Automatic notifications when inventory hits par level, with suggested order quantities." },
+  { title: "Spend Analytics Dashboard", desc: "Real-time visibility across all 5 categories, all properties, all suppliers — in one view." },
+];
+
+const SUPPLIER_FEATURES = [
+  { title: "Instant InstaPay Settlement", desc: "Receive full invoice amount in <10 seconds via IPN. Zero deduction. 24/7 including weekends." },
+  { title: "Non-Recourse Factoring", desc: "Get paid within 24 hours. We take the credit risk. If the hotel doesn't pay, that's our problem." },
+  { title: "Purchase Order Visibility", desc: "See confirmed orders before you deliver. Plan your logistics with real hotel commitment data." },
+];
+
+export default function MarketingPage() {
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 400], [0, -80]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.7]);
+
   return (
-    <main className="min-h-screen bg-black">
-      <MarketingNav />
+    <main className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
 
       {/* ═══════════════════════════════════════════
-          HERO SECTION
+          NAV
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-[640px] md:min-h-[720px] flex items-center overflow-hidden">
-        {/* Background image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80"
-            alt="Luxury hotel lobby"
-            fill
-            className="object-cover opacity-30"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        </div>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[rgba(5,5,5,0.80)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.06)]">
+        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 group">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="w-9 h-9 flex items-center justify-center"
+            >
+              <img
+                src="/logo-horse-only.png"
+                alt=""
+                width={28}
+                height={28}
+                className="invert-0"
+                style={{ filter: "invert(1) drop-shadow(0 0 4px rgba(140,255,46,0.4))" }}
+              />
+            </motion.div>
+            <span className="font-bold text-white text-base tracking-tight">
+              Hotels<span className="text-[#8cff2e]">Vendors</span>
+            </span>
+          </Link>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 pt-[120px] pb-20 w-full">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/90 text-white text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              Now Operating in Egypt
-            </div>
-
-            <h1 className="text-[28px] md:text-[48px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
-              The AI-Powered Procurement Ecosystem for Hospitality
-            </h1>
-
-            <p className="mt-6 text-[14px] md:text-[17px] text-white/80 leading-relaxed max-w-2xl">
-              <span className="text-white font-semibold">We are not another marketplace.</span> Hotels Vendors is your AI agentic procurement module — operating 24 hours to manage your spendings, estimated costs, cashflow, inventory, invoicing, and payments in one framework.
-            </p>
-
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                <FileCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-[13px] font-semibold text-white">ETA Automation</p>
-                  <p className="text-[11px] text-white/40 mt-0.5">Compliance built into every transaction</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                <Banknote className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-[13px] font-semibold text-white">Embedded Factoring</p>
-                  <p className="text-[11px] text-white/40 mt-0.5">Payment friction removed at source</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                <BrainCircuit className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-[13px] font-semibold text-white">AI Agentic Core</p>
-                  <p className="text-[11px] text-white/40 mt-0.5">Demand sensing, ordering, optimizing</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-6 text-[13px] text-white/50 italic">
-              One Framework. Zero Friction. Full Transparency. Each layer pays for the next.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+          <nav className="hidden md:flex items-center gap-8">
+            {["Platform", "For Hotels", "For Suppliers", "Pricing"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase().replace(/ /g, "-")}`}
+                className="text-[rgba(255,255,255,0.65)] hover:text-white text-sm font-medium transition-colors"
               >
-                Request Platform Access
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/marketplace"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/25 text-white text-[14px] font-medium rounded-lg hover:bg-white/10 transition-colors"
-              >
-                Browse the Marketplace
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          STATS BAR
-          ═══════════════════════════════════════════ */}
-      <section className="relative z-10 -mt-16 mx-auto max-w-6xl px-6">
-        <div className="bg-[#111] border border-white/10 rounded-2xl p-6 md:p-8 shadow-sm">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-[26px] md:text-[30px] font-bold text-white tracking-tight">
-                  {stat.value}
-                </div>
-                <div className="mt-1 text-[11px] font-medium text-white/60 uppercase tracking-wide">
-                  {stat.label}
-                </div>
-                <div className="text-[11px] text-gray-500 mt-0.5">{stat.sub}</div>
-              </div>
+                {item}
+              </a>
             ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="px-4 py-2 bg-[#171717] border border-[rgba(255,255,255,0.06)] text-white text-xs font-semibold rounded-lg hover:bg-[#1e1e1e] transition-all"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className="px-4 py-2 bg-[#8cff2e] text-[#0d0d0d] text-xs font-bold rounded-lg hover:bg-[#a0ff4a] transition-all"
+            >
+              Get Started
+            </Link>
           </div>
         </div>
-      </section>
+      </header>
 
       {/* ═══════════════════════════════════════════
-          PLATFORM PREVIEW — Screenshot
+          HERO
           ═══════════════════════════════════════════ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              Platform Preview
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              One Dashboard. Full Control.
-            </h2>
-          </div>
-          <div className="relative rounded-2xl border border-white/10 overflow-hidden bg-[#0a0a0a]">
-            <Image
-              src="/user-screenshot2.png"
-              alt="Hotels Vendors Platform Dashboard"
-              width={2880}
-              height={1800}
-              className="w-full h-auto"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-          </div>
+      <motion.section
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="pt-28 pb-20 bg-[#050505] relative"
+      >
+        {/* Ambient orbs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-48 -right-48 w-[600px] h-[600px] bg-[#8cff2e] rounded-full blur-[200px] opacity-[0.03]" />
+          <div className="absolute bottom-0 -left-48 w-[400px] h-[400px] bg-[#a855f7] rounded-full blur-[200px] opacity-[0.03]" />
         </div>
-      </section>
 
-      {/* ═══════════════════════════════════════════
-          NETWORK COVERAGE
-          ═══════════════════════════════════════════ */}
-      <section className="py-14 border-y border-white/[0.06]">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              Network Coverage
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              Active Across Egypt's Hospitality Corridors
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {CITIES.map((city) => (
-              <div key={city.name} className="p-5 rounded-xl bg-[#111] border border-white/[0.08] text-center hover:border-[#8B0000]/30 transition-colors">
-                <MapPin className="w-5 h-5 text-white mx-auto mb-3" />
-                <p className="text-[15px] font-semibold text-white">{city.name}</p>
-                <p className="text-[22px] font-bold text-white mt-1">{city.properties}</p>
-                <p className="text-[11px] text-gray-500 mt-1">{city.region}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          PLATFORM CAPABILITIES
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 bg-[#0a0a0a]">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              Platform Capabilities
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              One Operating System.
-              <br />
-              <span className="text-gray-500">Six Critical Capabilities.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {CAPABILITIES.map((cap) => (
-              <div
-                key={cap.title}
-                className="group relative rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all overflow-hidden"
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
+            {/* Left: Copy */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold text-[#8cff2e] border border-[rgba(140,255,46,0.2)] rounded-full bg-[rgba(140,255,46,0.08)] mb-8"
               >
-                {/* Background image */}
-                <div className="absolute inset-0 z-0">
-                  <Image
-                    src={cap.image}
-                    alt=""
-                    fill
-                    className="object-cover opacity-10 group-hover:opacity-15 transition-opacity"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-[#111]/95 to-[#111]/80" />
+                <span className="w-[6px] h-[6px] bg-[#8cff2e] rounded-full animate-pulse" />
+                B2B PROCUREMENT · EGYPT
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
+                className="text-4xl md:text-5xl lg:text-[56px] font-black mb-6 tracking-tight leading-[1.05]"
+              >
+                <span className="text-white">Control Your Hotel's</span>
+                <br />
+                <span className="text-white">Supply Chain</span>
+                <br />
+                <span className="text-[#8cff2e]">Before It Controls You.</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-base md:text-lg text-[rgba(255,255,255,0.65)] max-w-lg mb-10 leading-relaxed"
+              >
+                From F&B to capital equipment — track every dirham, automate every order, and get AI demand forecasting that prevents waste before it happens.
+              </motion.p>
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col sm:flex-row gap-4 mb-10"
+              >
+                <motion.div variants={staggerItem}>
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center px-7 py-3.5 bg-[#8cff2e] text-[#0d0d0d] font-bold rounded-xl text-sm hover:bg-[#a0ff4a] hover:-translate-y-0.5 transition-all"
+                  >
+                    Start Free — No Credit Card
+                  </Link>
+                </motion.div>
+                <motion.div variants={staggerItem}>
+                  <a
+                    href="#platform"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] text-white font-semibold rounded-xl text-sm hover:bg-[rgba(255,255,255,0.08)] transition-all"
+                  >
+                    <Play className="w-4 h-4" />
+                    Watch How It Works
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="flex items-center gap-6 flex-wrap"
+              >
+                <span className="text-[11px] text-[rgba(255,255,255,0.45)] font-semibold uppercase tracking-widest">Trusted by hotels across Egypt</span>
+                <div className="flex items-center gap-3">
+                  {["5-STAR", "BOUTIQUE", "RESORT", "BUSINESS"].map((t) => (
+                    <span key={t} className="flex items-center gap-1.5 text-[10px] text-[rgba(255,255,255,0.55)] font-semibold uppercase tracking-wider">
+                      <span className="w-[4px] h-[4px] bg-[#8cff2e] rounded-full" />
+                      {t}
+                    </span>
+                  ))}
                 </div>
-                <div className="relative z-10 p-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 border border-[#8B0000]/20 flex items-center justify-center mb-4 group-hover:bg-[#8B0000]/15 group-hover:border-[#8B0000]/30 transition-all">
-                    <cap.icon className="w-5 h-5 text-white" />
+              </motion.div>
+            </div>
+
+            {/* Right: 3D Tilt Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
+              className="perspective-[1200px] hidden lg:flex justify-center"
+            >
+              <motion.div
+                whileHover={{
+                  rotateY: -4,
+                  rotateX: 2,
+                  y: -8,
+                  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+                }}
+                initial={{ rotateY: -8, rotateX: 4 }}
+                className="w-full max-w-[460px] bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-8 cursor-default"
+                style={{ boxShadow: "-20px 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(140,255,46,0.05)" }}
+              >
+                <div className="flex justify-between mb-6 pb-5 border-b border-[rgba(255,255,255,0.06)]">
+                  <div>
+                    <div className="text-3xl font-black text-[#8cff2e] tracking-tight">EGP 180K</div>
+                    <div className="text-[11px] text-[rgba(255,255,255,0.45)] uppercase font-semibold tracking-wider mt-1">Annual Waste Saved</div>
                   </div>
-                  <h3 className="text-[16px] font-semibold text-white mb-2">{cap.title}</h3>
-                  <p className="text-[13px] text-gray-400 leading-relaxed">{cap.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          HOW IT WORKS
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              How It Works
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              Autonomous Procurement
-              <br />
-              <span className="text-gray-500">From Signal to Settlement</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {WORKFLOW.map((step, i) => (
-              <div key={step.num} className="relative">
-                <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full">
-                  <div className="text-[44px] font-bold text-white/10 leading-none mb-4">
-                    {step.num}
+                  <div className="text-right">
+                    <div className="text-3xl font-black text-[#8cff2e] tracking-tight">~20%</div>
+                    <div className="text-[11px] text-[rgba(255,255,255,0.45)] uppercase font-semibold tracking-wider mt-1">Spoilage Reduced</div>
                   </div>
-                  <h3 className="text-[16px] font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-[13px] text-gray-400 leading-relaxed">{step.desc}</p>
                 </div>
-                {i < WORKFLOW.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
-                )}
-              </div>
-            ))}
+                <div className="flex items-end gap-1.5 h-16 mb-4">
+                  {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-t-sm transition-opacity"
+                      style={{
+                        height: `${h}%`,
+                        backgroundColor: "#8cff2e",
+                        opacity: i === 5 ? 1 : 0.15,
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-[rgba(255,255,255,0.45)]">Projected</span>
+                  <span className="text-[#8cff2e] font-semibold font-mono">Actual ↑ 12%</span>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
+        </div>
+      </motion.section>
+
+      {/* Lime gradient divider */}
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
+
+      {/* ═══════════════════════════════════════════
+          THE REALITY
+          ═══════════════════════════════════════════ */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8cff2e] mb-4">THE REALITY</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
+              Egyptian Hotels Work With Hundreds of Suppliers.
+              <br />
+              <span className="text-[rgba(255,255,255,0.65)]">And Still Run Out of Stock Before They Run Out of Month.</span>
+            </h2>
+            <p className="text-base text-[rgba(255,255,255,0.65)] max-w-2xl mx-auto mt-6 leading-relaxed">
+              The HoReCa market in Egypt will hit $18.14 billion by 2029. Yet the average hotel procurement operation runs on WhatsApp messages, paper invoices, cash payments, and prayers.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          >
+            {STATS.map((s, i) => (
+              <motion.div
+                key={s.label}
+                variants={staggerItem}
+                whileHover={{ y: -4, borderColor: "rgba(140,255,46,0.3)" }}
+                className="bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-7 transition-all duration-300"
+              >
+                <div className="text-4xl font-black text-[#8cff2e] tracking-tight mb-3">{s.value}</div>
+                <div className="text-[13px] text-[rgba(255,255,255,0.65)] leading-relaxed">{s.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CTA SECTION
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 bg-[#0a0a0a]">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/[0.08] rounded-full blur-[120px] pointer-events-none" />
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
 
-            <div className="relative z-10">
-              <h2 className="text-[28px] md:text-[38px] font-bold text-white tracking-tight">
-                {cms?.ctaTitle || "Ready to Stop Leaking Money?"}
+      {/* ═══════════════════════════════════════════
+          HOW IT WORKS — 3 STEPS
+          ═══════════════════════════════════════════ */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8cff2e] mb-4">HOW IT WORKS</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+              Three Steps to Procurement Clarity
+            </h2>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          >
+            {STEPS.map((step, i) => (
+              <motion.div
+                key={step.num}
+                variants={staggerItem}
+                whileHover={{ y: -4, borderColor: "rgba(140,255,46,0.3)" }}
+                className="bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-8 transition-all duration-300"
+              >
+                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8cff2e] mb-3">{step.num}</p>
+                <h3 className="text-lg font-bold text-white mb-3">{step.title}</h3>
+                <p className="text-[14px] text-[rgba(255,255,255,0.65)] leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
+
+      {/* ═══════════════════════════════════════════
+          THE PLATFORM — BENTO GRID
+          ═══════════════════════════════════════════ */}
+      <section id="platform" className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8cff2e] mb-4">THE PLATFORM</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+              From F&B to Capital Equipment.
+              <br />
+              <span className="text-[rgba(255,255,255,0.65)]">Every Dirham Tracked. Every Invoice Compliant.</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {CATEGORIES.map((cat, i) => (
+              <motion.div
+                key={cat.title}
+                variants={staggerItem}
+                whileHover={{
+                  y: -4,
+                  borderColor: cat.accent === "lime" ? "rgba(140,255,46,0.3)" : "rgba(168,85,247,0.3)",
+                  boxShadow: cat.accent === "lime"
+                    ? "0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(140,255,46,0.08)"
+                    : "0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(168,85,247,0.08)",
+                }}
+                className={`bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-7 transition-all duration-300 ${i === 0 ? "md:col-span-2" : ""}`}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg mb-4 ${cat.accent === "lime" ? "bg-[rgba(140,255,46,0.12)]" : "bg-[rgba(168,85,247,0.12)]"}`}>
+                  {cat.icon}
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">{cat.title}</h3>
+                <p className="text-[14px] text-[rgba(255,255,255,0.65)] leading-relaxed mb-4">{cat.desc}</p>
+                <span className={`inline-flex items-center gap-1 text-[13px] font-semibold ${cat.accent === "lime" ? "text-[#8cff2e]" : "text-[#a855f7]"} transition-all hover:gap-2`}>
+                  Explore →
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
+
+      {/* ═══════════════════════════════════════════
+          PLATFORM FEATURES — 6 CARDS
+          ═══════════════════════════════════════════ */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#a855f7] mb-4">PLATFORM FEATURES</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+              Designed for Clarity.
+              <br />
+              <span className="text-[rgba(255,255,255,0.65)]">Built for Better Procurement Decisions.</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {FEATURES.map((feat, i) => {
+              const Icon = feat.icon;
+              return (
+                <motion.div
+                  key={feat.title}
+                  variants={staggerItem}
+                  whileHover={{ y: -3, borderColor: "rgba(140,255,46,0.2)" }}
+                  className="group p-6 bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl transition-all duration-300"
+                >
+                  <Icon className={`w-8 h-8 mb-4 ${feat.accent === "lime" ? "text-[#8cff2e]" : "text-[#a855f7]"}`} />
+                  <h3 className="font-bold text-white text-base mb-2">{feat.title}</h3>
+                  <p className="text-[13px] text-[rgba(255,255,255,0.65)] leading-relaxed">{feat.desc}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
+
+      {/* ═══════════════════════════════════════════
+          FOR HOTELS
+          ═══════════════════════════════════════════ */}
+      <section id="for-hotels" className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={fadeInUp}
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8cff2e] mb-4">FOR HOTELS</p>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-5">
+                Control Before.
+                <br />
+                <span className="text-[rgba(255,255,255,0.65)]">Not After.</span>
               </h2>
-              <p className="mt-4 text-[14px] md:text-[15px] text-gray-400 max-w-xl mx-auto">
-                {cms?.ctaDescription || "Join the hotels that have turned procurement from a cost center into a competitive advantage."}
+              <p className="text-[15px] text-[rgba(255,255,255,0.65)] leading-relaxed mb-8">
+                Most procurement platforms tell you what you spent last month. We tell you what you should order next week. HotelsVendors embeds AI-powered demand forecasting directly into your procurement workflow.
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
-                >
-                  Request Platform Access
-                  <ArrowRight className="w-4 h-4" />
+
+              <ul className="space-y-5 mb-10">
+                {HOTEL_FEATURES.map((f, i) => (
+                  <motion.li
+                    key={f.title}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+                    className="flex gap-4 items-start"
+                  >
+                    <div className="w-6 h-6 min-w-[24px] rounded-md bg-[rgba(168,85,247,0.12)] flex items-center justify-center mt-0.5">
+                      <ChevronRight className="w-3.5 h-3.5 text-[#a855f7]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-[15px] mb-1">{f.title}</h4>
+                      <p className="text-[13px] text-[rgba(255,255,255,0.65)] leading-relaxed">{f.desc}</p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/register" className="inline-flex items-center px-7 py-3.5 bg-[#8cff2e] text-[#0d0d0d] font-bold rounded-xl text-sm hover:bg-[#a0ff4a] hover:-translate-y-0.5 transition-all">
+                  Request Hotel Demo
                 </Link>
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
-                >
-                  Schedule Executive Briefing
+                <Link href="/for-hotels" className="inline-flex items-center px-7 py-3.5 bg-[#a855f7] text-white font-bold rounded-xl text-sm hover:bg-[#b56dff] hover:-translate-y-0.5 transition-all">
+                  Learn More
                 </Link>
               </div>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-[12px] text-gray-500">
-                <span className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5" />
-                  No setup fees, no long-term commitments
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <FileCheck className="w-3.5 h-3.5" />
-                  Full ETA e-invoicing compliance from day one
-                </span>
-              </div>
-            </div>
+            </motion.div>
+
+            {/* Mockup card */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={scaleIn}
+            >
+              <motion.div
+                whileHover={{ y: -4, borderColor: "rgba(140,255,46,0.2)" }}
+                className="bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-7 transition-all duration-400"
+              >
+                <div className="flex justify-between items-center mb-5 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+                  <div className="flex gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                  </div>
+                  <span className="text-[11px] text-[rgba(255,255,255,0.45)]">Forecasting Dashboard</span>
+                </div>
+                <p className="text-[12px] text-[rgba(255,255,255,0.65)] mb-4">Weekly Demand Forecast — F&B</p>
+                <div className="flex items-end gap-2 h-24 mb-5">
+                  {[50, 70, 45, 85, 60, 95, 75].map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-t-sm transition-opacity"
+                      style={{ height: `${h}%`, backgroundColor: "#8cff2e", opacity: i === 5 ? 1 : 0.15 }}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-6 pt-4 border-t border-[rgba(255,255,255,0.06)]">
+                  <div><div className="text-xl font-black text-[#8cff2e]">-18%</div><div className="text-[10px] text-[rgba(255,255,255,0.45)] mt-0.5">Waste Reduction</div></div>
+                  <div><div className="text-xl font-black text-[#a855f7]">EGP 15K</div><div className="text-[10px] text-[rgba(255,255,255,0.45)] mt-0.5">Monthly Savings</div></div>
+                  <div><div className="text-xl font-black text-white">94%</div><div className="text-[10px] text-[rgba(255,255,255,0.45)] mt-0.5">Forecast Accuracy</div></div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <MarketingFooter />
+      <div className="w-[120px] h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#8cff2e] to-transparent" />
+
+      {/* ═══════════════════════════════════════════
+          FOR SUPPLIERS
+          ═══════════════════════════════════════════ */}
+      <section id="for-suppliers" className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Mockup */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={scaleIn}
+              className="order-2 lg:order-1"
+            >
+              <motion.div
+                whileHover={{ y: -4, borderColor: "rgba(140,255,46,0.2)" }}
+                className="bg-[#0d0d0d] border border-[rgba(255,255,255,0.06)] rounded-2xl p-7 transition-all duration-400"
+              >
+                <div className="flex justify-between items-center mb-5 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+                  <div className="flex gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#8cff2e] opacity-60" />
+                  </div>
+                  <span className="text-[11px] text-[rgba(255,255,255,0.45)]">Invoice Status</span>
+                </div>
+                <div className="text-center py-8">
+                  <div className="text-[56px] font-black text-[#8cff2e] tracking-tight leading-none">&lt;10s</div>
+                  <div className="text-[13px] text-[rgba(255,255,255,0.65)] mt-3">InstaPay Settlement</div>
+                  <div className="flex gap-3 justify-center mt-7">
+                    <span className="inline-flex items-center px-4 py-2 bg-[rgba(140,255,46,0.12)] border border-[rgba(140,255,46,0.2)] rounded-lg text-[12px] font-semibold text-[#8cff2e]">
+                      ✓ Paid
+                    </span>
+                    <span className="inline-flex items-center px-4 py-2 bg-[#171717] border border-[rgba(255,255,255,0.06)] rounded-lg text-[12px] font-semibold text-[rgba(255,255,255,0.65)]">
+                      Pending
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Copy */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={fadeInUp}
+              className="order-1 lg:order-2"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8cff2e] mb-4">FOR SUPPLIERS</p>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-5">
+                Get Paid.
+                <br />
+                <span className="text-[rgba(255,255,255,0.65)]">Not Promised.</span>
+              </h2>
+              <p className="text-[15px] text-[rgba(255,255,255,0.65)] leading-relaxed mb-5">
+                The biggest barrier for Egyptian hospitality suppliers isn't finding buyers. It's collecting money after you've delivered. HotelsVendors changes the equation.
+              </p>
+              <p className="text-[15px] text-[rgba(255,255,255,0.65)] leading-relaxed mb-8">
+                When a hotel approves your invoice, get paid instantly via InstaPay — funds hit your account in under 10 seconds, 24/7, even on weekends.
+              </p>
+
+              <ul className="space-y-5 mb-10">
+                {SUPPLIER_FEATURES.map((f, i) => (
+                  <motion.li
+                    key={f.title}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+                    className="flex gap-4 items-start"
+                  >
+                    <div className="w-6 h-6 min-w-[24px] rounded-md bg-[rgba(168,85,247,0.12)] flex items-center justify-center mt-0.5">
+                      <ChevronRight className="w-3.5 h-3.5 text-[#a855f7]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-[15px] mb-1">{f.title}</h4>
+                      <p className="text-[13px] text-[rgba(255,255,255,0.65)] leading-relaxed">{f.desc}</p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/register" className="inline-flex items-center px-7 py-3.5 bg-[#8cff2e] text-[#0d0d0d] font-bold rounded-xl text-sm hover:bg-[#a0ff4a] hover:-translate-y-0.5 transition-all">
+                  Become a Supplier
+                </Link>
+                <Link href="/for-suppliers" className="inline-flex items-center px-7 py-3.5 bg-[#a855f7] text-white font-bold rounded-xl text-sm hover:bg-[#b56dff] hover:-translate-y-0.5 transition-all">
+                  Supplier FAQ
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          CTA
+          ═══════════════════════════════════════════ */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={scaleIn}
+          >
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-5">
+              Ready to Take Control?
+            </h2>
+            <p className="text-[15px] text-[rgba(255,255,255,0.65)] leading-relaxed mb-10">
+              Join Egypt's leading B2B hospitality procurement platform. No credit card required to start.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link href="/register" className="inline-flex items-center px-8 py-4 bg-[#8cff2e] text-[#0d0d0d] font-bold rounded-xl text-base hover:bg-[#a0ff4a] hover:-translate-y-0.5 transition-all">
+                Get Started Free
+              </Link>
+              <Link href="/demo" className="inline-flex items-center px-8 py-4 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] text-white font-semibold rounded-xl text-base hover:bg-[rgba(255,255,255,0.08)] transition-all">
+                Schedule Demo
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FOOTER
+          ═══════════════════════════════════════════ */}
+      <footer className="border-t border-[rgba(255,255,255,0.06)] bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            <div>
+              <Link href="/" className="flex items-center gap-3 mb-4">
+                <img src="/logo-horse-only.png" alt="" width={28} height={28} style={{ filter: "invert(1) drop-shadow(0 0 4px rgba(140,255,46,0.4))" }} />
+                <span className="font-bold text-white text-base">
+                  Hotels<span className="text-[#8cff2e]">Vendors</span>
+                </span>
+              </Link>
+              <p className="text-[13px] text-[rgba(255,255,255,0.65)] leading-relaxed max-w-[260px]">
+                B2B procurement platform for the Egyptian hospitality industry. Smarter Together.
+              </p>
+            </div>
+            <div>
+              <h5 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[rgba(255,255,255,0.45)] mb-4">Platform</h5>
+              <div className="space-y-2.5">
+                {["Features", "For Hotels", "For Suppliers", "Pricing", "ETA Compliance"].map((l) => (
+                  <a key={l} href="#" className="block text-[13px] text-[rgba(255,255,255,0.65)] hover:text-[#8cff2e] transition-colors">{l}</a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h5 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[rgba(255,255,255,0.45)] mb-4">Company</h5>
+              <div className="space-y-2.5">
+                {["About", "Blog", "Careers", "Contact"].map((l) => (
+                  <a key={l} href="#" className="block text-[13px] text-[rgba(255,255,255,0.65)] hover:text-[#8cff2e] transition-colors">{l}</a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h5 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[rgba(255,255,255,0.45)] mb-4">Legal</h5>
+              <div className="space-y-2.5">
+                {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((l) => (
+                  <a key={l} href="#" className="block text-[13px] text-[rgba(255,255,255,0.65)] hover:text-[#8cff2e] transition-colors">{l}</a>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-[rgba(255,255,255,0.06)] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <span className="text-[12px] text-[rgba(255,255,255,0.45)]">© 2026 HotelsVendors. All rights reserved.</span>
+            <span className="text-[12px] text-[rgba(255,255,255,0.45)]">Built for Egyptian hospitality. Smarter Together.</span>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
