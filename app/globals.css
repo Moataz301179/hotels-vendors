@@ -1,81 +1,90 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — LUXURY DARK DESIGN SYSTEM v3
-   Research-backed: Linear, Raycast, Stripe, Mercury patterns
+   HOTELS VENDORS — DARK DESIGN SYSTEM v4 (HERMES BUILD)
+   Reference: clario.framer.website — OLED black + neon lime + purple
+   Primary accent: #8cff2e (lime) — CTAs, labels, highlights
+   Secondary accent: #a855f7 (purple) — feature icons, secondary buttons
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --brand-red: #8B0000;
-  --header-bg: var(--brand-red);
-  /* ── Background Layers ──
-     Blue-purple undertone. Never pure black (#000000).
-     Creates atmospheric depth like a dimly lit room. */
+  /* ── Background Hierarchy (Clario exact) ── */
   --bg-canvas: #050505;
-  --bg-surface-1: #0a0a0a;
-  --bg-surface-2: #101010;
-  --bg-surface-3: #1a1a1a;
+  --bg-surface-1: #0d0d0d;
+  --bg-surface-2: #171717;
+  --bg-surface-3: #1e1e1e;
 
   /* Legacy aliases (backward compat) */
   --background: #050505;
-  --background-void: #080808;
-  --surface: #0a0a0a;
-  --surface-raised: #101010;
-  --surface-hover: #1a1a1a;
+  --background-void: #050505;
+  --surface: #0d0d0d;
+  --surface-raised: #171717;
+  --surface-hover: #1e1e1e;
 
-  /* ── Text Hierarchy ──
-     Never pure white (#ffffff) — creates halation on dark.
-     Stepped grays for eye comfort and scan hierarchy. */
-  --text-primary: #f0f0f0;
-  --text-secondary: #a0a0a0;
-  --text-tertiary: #707070;
-  --text-muted: #505050;
+  /* ── Text Hierarchy ── */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,0.65);
+  --text-tertiary: rgba(255,255,255,0.55);
+  --text-muted: rgba(255,255,255,0.45);
   --text-inverse: #050505;
+  --text-dark: #0d0d0d;
 
   /* Legacy aliases */
-  --foreground: #f0f0f0;
-  --foreground-secondary: #a0a0a0;
-  --foreground-tertiary: #707070;
-  --foreground-muted: #505050;
+  --foreground: #ffffff;
+  --foreground-secondary: rgba(255,255,255,0.65);
+  --foreground-tertiary: rgba(255,255,255,0.55);
+  --foreground-muted: rgba(255,255,255,0.45);
   --foreground-faint: rgba(255,255,255,0.25);
   --foreground-dim: rgba(255,255,255,0.15);
   --foreground-inverse: #050505;
 
-  /* ── Borders ──
-     Edge definition, not dividers. Simulate light catching
-     on raised surfaces with a consistent top-left light source. */
+  /* ── Borders ── */
   --border-invisible: rgba(255, 255, 255, 0.06);
   --border-subtle: rgba(255, 255, 255, 0.10);
   --border-visible: rgba(255, 255, 255, 0.15);
-  --border-accent: rgba(2, 35, 73, 0.40);
+  --border-accent: rgba(140, 255, 46, 0.30);
 
   /* Legacy aliases */
-  --border-default: rgba(255,255,255,0.08);
+  --border-default: rgba(255,255,255,0.06);
   --border-strong: rgba(255,255,255,0.12);
   --border-subtle-legacy: rgba(255,255,255,0.05);
 
-  /* ── Crimson Accent Scale ──
-     Brand color. NOT for errors — reserve #ff4444 for errors. */
-  --crimson-base: #8B0000;
-  --crimson-light: #1a4a7c;
-  --crimson-dark: #011e3a;
-  --crimson-muted: rgba(2, 35, 73, 0.15);
-  --crimson-glow: rgba(2, 35, 73, 0.25);
+  /* ── Primary Accent: Lime Green (Clario exact #8cff2e) ── */
+  --accent-lime: #8cff2e;
+  --accent-lime-light: #a0ff4a;
+  --accent-lime-dark: #6acc1e;
+  --accent-lime-dim: rgba(140, 255, 46, 0.12);
+  --accent-lime-glow: rgba(140, 255, 46, 0.25);
+
+  /* ── Secondary Accent: Purple ── */
+  --accent-purple: #a855f7;
+  --accent-purple-light: #b56dff;
+  --accent-purple-dark: #8b3fd9;
+  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --accent-purple-glow: rgba(168, 85, 247, 0.25);
+
+  /* ── Legacy crimson mapping (redirect to new system) ── */
+  --brand-red: #8cff2e;
+  --header-bg: #050505;
+  --crimson-base: #8cff2e;
+  --crimson-light: #a0ff4a;
+  --crimson-dark: #6acc1e;
+  --crimson-muted: rgba(140, 255, 46, 0.12);
+  --crimson-glow: rgba(140, 255, 46, 0.25);
 
   /* Legacy aliases */
-  --accent-500: #8B0000;
-  --accent-600: #01305e;
-  --accent-700: #011e3a;
-  --accent-glow: rgba(2,35,73,0.35);
-  --accent-glow-strong: rgba(2,35,73,0.50);
-  --brand-500: #8B0000;
-  --brand-400: #1a4a7c;
-  --brand-600: #01305e;
-  --brand-700: #011e3a;
-  --brand-800: #01142a;
+  --accent-500: #8cff2e;
+  --accent-600: #6acc1e;
+  --accent-700: #55aa18;
+  --accent-glow: rgba(140, 255, 46, 0.25);
+  --accent-glow-strong: rgba(140, 255, 46, 0.40);
+  --brand-500: #8cff2e;
+  --brand-400: #a0ff4a;
+  --brand-600: #6acc1e;
+  --brand-700: #55aa18;
+  --brand-800: #448812;
 
-  /* ── Complementary Gold ──
-     Shifts crimson perception from "warning" to "premium". */
+  /* ── Gold (kept for compatibility) ── */
   --gold-base: #e1a95f;
   --gold-light: #f0c987;
   --gold-muted: rgba(225, 169, 95, 0.15);
@@ -111,7 +120,7 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--bg-canvas);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
   --color-surface-hover: var(--surface-hover);
@@ -120,9 +129,11 @@
   --color-foreground-tertiary: var(--foreground-tertiary);
   --color-foreground-muted: var(--foreground-muted);
   --color-foreground-faint: var(--foreground-faint);
-  --color-accent-500: var(--accent-500);
-  --color-accent-600: var(--accent-600);
-  --color-accent-700: var(--accent-700);
+  --color-accent-lime: var(--accent-lime);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-500: var(--accent-lime);
+  --color-accent-600: var(--accent-lime-dark);
+  --color-accent-700: var(--accent-lime-dark);
   --color-border-default: var(--border-default);
   --color-border-strong: var(--border-strong);
   --color-border-subtle: var(--border-subtle-legacy);
@@ -139,7 +150,6 @@
   --color-accent-emerald: var(--accent-emerald);
   --color-accent-amber: var(--accent-amber);
   --color-accent-gold: var(--accent-gold);
-  --color-foreground-faint: var(--foreground-faint);
   --color-foreground-dim: var(--foreground-dim);
 }
 
