@@ -562,16 +562,21 @@ export async function orchestrateConsolidatedFactoring(
   });
 
   const distinctApprovers = new Set(approvals.map((a) => a.actorId).filter(Boolean));
-  const isDevBypass = process.env.NODE_ENV === "development" && process.env.BYPASS_FOUR_EYES === "true";
 
-  if (distinctApprovers.size < 2 && !isDevBypass) {
-    return {
-      success: false,
-      stage: "FAILED",
-      error: "FRA Guideline Violation: Consolidated invoice factoring requires 'Four-Eyes' dual authorization from two distinct authorized users.",
-      errorCode: "FOUR_EYES_APPROVAL_REQUIRED",
-      details: { approvalsCount: distinctApprovers.size },
-    };
+  if (distinctApprovers.size < 2) {
+    if (process.env.BYPASS_FOUR_EYES === "true") {
+      console.error(
+        `[SECURITY] Four-eyes bypass activated for package ${consolidatedInvoiceId} by actor ${triggeredBy}. Dual authorization was skipped.`
+      );
+    } else {
+      return {
+        success: false,
+        stage: "FAILED",
+        error: "FRA Guideline Violation: Consolidated invoice factoring requires 'Four-Eyes' dual authorization from two distinct authorized users.",
+        errorCode: "FOUR_EYES_APPROVAL_REQUIRED",
+        details: { approvalsCount: distinctApprovers.size },
+      };
+    }
   }
 
   // ── INVARIANT LOCK: Detect and prevent double-factoring vectors ──
@@ -581,9 +586,11 @@ export async function orchestrateConsolidatedFactoring(
     try {
       await prisma.$transaction(async (tx) => {
         // 1. Instantly isolate all underlying supplier child invoices and apply a PostgreSQL pessimistic row-level lock
-        const lockedChildInvoices = await tx.$queryRawUnsafe<any[]>(
-          `SELECT id, "invoiceNumber", "factoringStatus" FROM "Invoice" WHERE id IN (${invoiceIds.map((id) => `'${id}'`).join(',')}) FOR UPDATE`
-        );
+        const lockedChildInvoices = await tx.$queryRaw<any[]>`
+          SELECT id, "invoiceNumber", "factoringStatus" FROM "Invoice"
+          WHERE id IN (${Prisma.join(invoiceIds)})
+          FOR UPDATE
+        `;
 
         // 2. Validate double-factoring attempt
         for (const lockedInv of lockedChildInvoices) {

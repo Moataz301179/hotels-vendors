@@ -12,7 +12,25 @@ const CallbackSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
-  const data = CallbackSchema.parse(body);
+  const parsed = CallbackSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return error("Invalid callback payload", 400);
+  }
+
+  const data = parsed.data;
+
+  // Verify the invoice exists in our system before processing
+  const { prisma } = await import("@/lib/prisma");
+  const invoice = await prisma.invoice.findUnique({
+    where: { etaUuid: data.uuid },
+    select: { id: true },
+  });
+
+  if (!invoice) {
+    // Acknowledge to stop ETA retries but don't process
+    return success({ message: "UUID not found — acknowledged" });
+  }
 
   try {
     await etaClient.processCallback(data);

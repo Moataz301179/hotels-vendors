@@ -1,7 +1,11 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { apiRoute, authenticate, requirePermission } from "@/lib/api-utils";
 
-export async function GET(_request: NextRequest) {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:read");
+
   try {
     const [
       pendingApprovals,
@@ -51,7 +55,7 @@ export async function GET(_request: NextRequest) {
       }),
     ]);
 
-    return Response.json({
+    return NextResponse.json({
       success: true,
       data: {
         pendingApprovals,
@@ -68,9 +72,9 @@ export async function GET(_request: NextRequest) {
     });
   } catch (error) {
     console.error("[Admin Pulse] Error:", error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, error: "Failed to fetch platform metrics" },
       { status: 500 }
     );
   }
-}
+});

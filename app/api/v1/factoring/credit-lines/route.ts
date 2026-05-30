@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
 const CreditLineApplicationSchema = z.object({
   hotelInfo: z.object({
@@ -42,7 +43,10 @@ const CreditLineApplicationSchema = z.object({
   recommendedLimit: z.number().min(0),
 });
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:manage");
+
   try {
     const body = await request.json();
     const data = CreditLineApplicationSchema.parse(body);
@@ -90,21 +94,24 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
     }).catch(() => {});
 
-    return Response.json({ success: true, data: { id: application.id, status: application.status } });
-  } catch (error) {
-    console.error("[Credit Line] Error:", error);
-    return Response.json({ success: false, error: "Failed to submit application" }, { status: 500 });
+    return success({ id: application.id, status: application.status });
+  } catch (err) {
+    console.error("[Credit Line] Error:", err);
+    return error("Failed to submit application", 500);
   }
-}
+});
 
-export async function GET() {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:manage");
+
   try {
     const applications = await prisma.creditLineApplication.findMany({
       orderBy: { createdAt: "desc" },
       take: 50,
     });
-    return Response.json({ success: true, data: applications });
+    return success(applications);
   } catch {
-    return Response.json({ success: false, error: "Failed to fetch applications" }, { status: 500 });
+    return error("Failed to fetch applications", 500);
   }
-}
+});

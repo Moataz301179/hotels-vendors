@@ -25,10 +25,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Invoice not found", 404);
   }
 
-  if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
+  // Verify the user's entity matches the invoice
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    select: { hotelId: true, supplierId: true },
+  });
+  if (auth.platformRole === "HOTEL" && invoice.hotelId !== user?.hotelId) {
     return error("Forbidden", 403);
   }
-  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
+  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== user?.supplierId) {
     return error("Forbidden", 403);
   }
 

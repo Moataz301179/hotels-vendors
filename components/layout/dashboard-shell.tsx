@@ -30,7 +30,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
   }, []);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden" style={{ background: 'linear-gradient(180deg, #121212 0%, #1C1C1C 100%)' }}>
+    <div className="flex h-screen w-full overflow-hidden bg-[#050505]">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${

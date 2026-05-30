@@ -34,23 +34,23 @@ export const PRESETS: ThemePreset[] = [
   {
     id: "hotels-vendors",
     name: "Hotels Vendors",
-    description: "Dark crimson red on solid black. The signature brand identity.",
+    description: "Dark crimson red on deep charcoal. The signature brand identity.",
     accent: {
       50: "#fef2f2", 100: "#fee2e2", 200: "#fecaca", 300: "#fca5a5",
-      400: "#f87171", 500: "#dc143c", 600: "#b91c1c", 700: "#991b1b",
-      800: "#7f1d1d", 900: "#450a0a",
+      400: "#ff6b6b", 500: "#8B0000", 600: "#6B0000", 700: "#500000",
+      800: "#3a0000", 900: "#220000",
     },
     bg: {
-      background: "#000000",
+      background: "#050505",
       surface: "#0a0a0a",
-      surfaceRaised: "#111111",
+      surfaceRaised: "#101010",
       surfaceHover: "#1a1a1a",
     },
     fg: {
-      primary: "#ffffff",
+      primary: "#f0f0f0",
       secondary: "#a0a0a0",
-      tertiary: "#666666",
-      muted: "#444444",
+      tertiary: "#707070",
+      muted: "#505050",
     },
     semantic: {
       success: "#34d399",

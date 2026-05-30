@@ -26,10 +26,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Invoice not found", 404);
   }
 
-  if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
+  // Verify the user's entity matches the invoice
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    select: { hotelId: true, supplierId: true },
+  });
+  if (auth.platformRole === "HOTEL" && invoice.hotelId !== user?.hotelId) {
     return error("Forbidden", 403);
   }
-  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
+  if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== user?.supplierId) {
     return error("Forbidden", 403);
   }
 
@@ -70,7 +75,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   await prisma.factoringRequest.create({
     data: {
-          tenantId: auth.tenantId,
+      tenantId: auth.tenantId,
       invoiceId: data.invoiceId,
       factoringCompanyId: data.partnerId,
       requestedAmount: invoice.total,
@@ -84,6 +89,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
       factoringFee: hubRev.factoringFee,
       disbursedAmount: funding.disbursedAmount,
       disbursedAt: funding.disbursedAt,
+      partnerResponse: JSON.stringify({
+        factoringRequestId: funding.factoringRequestId,
+        transactionReference: funding.transactionReference,
+        expectedSettlementDate: funding.expectedSettlementDate,
+      }),
     },
   });
 
@@ -98,6 +108,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       partnerId: data.partnerId,
       disbursedAmount: funding.disbursedAmount,
       platformFee: hubRev.netPlatformFee,
+      factoringRequestId: funding.factoringRequestId,
     },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),

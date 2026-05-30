@@ -71,15 +71,19 @@ export async function signEtaDocument(
   const canonicalizedString = canonicalizeEtaDocument(documentPayload);
   const driverPath = process.env.PKCS11_DRIVER_PATH || "/usr/lib/libepskey.so";
 
-  console.log(`[Signer Log] Beginning signing for tenant: ${tenantId}`);
-  console.log(`[Signer Log] Loading driver path configuration: ${driverPath}`);
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[Signer Log] Beginning signing for tenant: ${tenantId}`);
+    console.log(`[Signer Log] Loading driver path configuration: ${driverPath}`);
+  }
 
   let nodePkcs11: any = null;
   try {
     // Attempt to dynamically require PKCS11 drivers if installed
     nodePkcs11 = require("node-pkcs11");
   } catch (e) {
-    console.log("[Signer Log] node-pkcs11 driver package not loaded on host. Engaging Soft-HSM Emulation Layer.");
+    if (process.env.NODE_ENV === "development") {
+      console.log("[Signer Log] node-pkcs11 driver package not loaded on host. Engaging Soft-HSM Emulation Layer.");
+    }
   }
 
   // 1. HARDWARE TOKEN PATHWAYS (node-pkcs11 driver loading)
@@ -126,11 +130,13 @@ export async function signEtaDocument(
         value: signature.toString("base64")
       };
     } catch (hardwareError) {
-      console.warn(
-        `[Signer Warning] Physical HSM signing failed: ${
-          hardwareError instanceof Error ? hardwareError.message : String(hardwareError)
-        }. Falling back to Soft-HSM Emulation.`
-      );
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `[Signer Warning] Physical HSM signing failed: ${
+            hardwareError instanceof Error ? hardwareError.message : String(hardwareError)
+          }. Falling back to Soft-HSM Emulation.`
+        );
+      }
     }
   }
 

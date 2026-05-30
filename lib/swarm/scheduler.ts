@@ -30,8 +30,13 @@ function getRedisConnection() {
   return { url };
 }
 
+export const ExecutionQueue = swarmQueues.platform;
+export const IntelligenceQueue = swarmQueues.intelligence;
+
 // ── Job Types ──
 export type SwarmJobType =
+  // Orchestrator
+  | "agent_task"
   // Director
   | "director_plan"
   | "director_review"

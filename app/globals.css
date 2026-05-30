@@ -947,3 +947,5 @@ html[data-theme="light"] .home-section-border {
 }
 .card { @apply bg-gradient-to-r from-slate-900 shadow-2xl ring-1 ring-white/10 backdrop-blur p-6 rounded-2xl hover:scale-105 transition-all; }
 .gallery-grid { @apply grid grid-cols-2 md:grid-cols-3 gap-4; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

@@ -56,16 +56,20 @@ export const PATCH = apiRoute(async (request: NextRequest, { params }: { params:
   const body = await request.json();
   const data = validateBody(LeadUpdateSchema, body);
 
-  const lead = await prisma.lead.updateMany({
+  // Fetch first to verify tenant ownership before update
+  const existing = await prisma.lead.findFirst({
     where: { id: params.id, tenantId: auth.tenantId },
-    data,
+    select: { id: true },
   });
 
-  if (lead.count === 0) {
+  if (!existing) {
     return success({ error: "Lead not found" }, 404);
   }
 
-  const updated = await prisma.lead.findUnique({ where: { id: params.id } });
+  const updated = await prisma.lead.update({
+    where: { id: params.id },
+    data,
+  });
   return success({ lead: updated });
 });
 

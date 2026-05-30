@@ -7,6 +7,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { apiRoute, authenticate, requirePermission, error as apiError } from "@/lib/api-utils";
+
+const ALLOWED_SORT_FIELDS: Record<string, string[]> = {
+  users: ["createdAt", "name", "email", "lastActive"],
+  suppliers: ["createdAt", "name", "city", "tier", "rating", "reviewCount"],
+  hotels: ["createdAt", "name", "city", "starRating", "creditLimit"],
+  orders: ["createdAt", "orderNumber", "total", "status", "deliveryDate"],
+  products: ["createdAt", "name", "sku", "unitPrice", "stockQuantity"],
+  invoices: ["createdAt", "invoiceNumber", "total", "issueDate", "status"],
+  factoring: ["createdAt", "requestedAmount", "status", "riskScore"],
+  leads: ["createdAt", "name", "priority", "status", "lastContactAt"],
+};
 
 const ExplorerQuerySchema = z.object({
   entity: z.enum(["users", "suppliers", "hotels", "orders", "products", "invoices", "factoring", "leads"]),
@@ -18,25 +30,22 @@ const ExplorerQuerySchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
-export async function GET(request: NextRequest) {
-  try {
-    const platformRole = request.headers.get("x-platform-role");
-    if (platformRole !== "ADMIN") {
-      return NextResponse.json({ success: false, error: "Admin access required" }, { status: 403 });
-    }
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:manage_platform");
 
+  try {
     const { searchParams } = new URL(request.url);
     const params = Object.fromEntries(searchParams.entries());
     const query = ExplorerQuerySchema.safeParse(params);
 
     if (!query.success) {
-      return NextResponse.json(
-        { success: false, error: "Invalid query parameters", details: query.error.format() },
-        { status: 400 }
-      );
+      return apiError("Invalid query parameters", 400);
     }
 
-    const { entity, search, status, page, limit, sortBy, sortOrder } = query.data;
+    const { entity, search, status, page, limit, sortOrder } = query.data;
+    const allowedSort = ALLOWED_SORT_FIELDS[entity];
+    const sortBy = allowedSort.includes(query.data.sortBy) ? query.data.sortBy : "createdAt";
     const skip = (page - 1) * limit;
 
     let data: unknown[] = [];
@@ -364,4 +373,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

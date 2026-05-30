@@ -3,8 +3,16 @@ import { cookies } from "next/headers";
 import { getRedis } from "./redis";
 
 const SESSION_COOKIE = "hv_session";
+
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret && process.env.NODE_ENV === "production") {
+  throw new Error(
+    "FATAL: SESSION_SECRET environment variable is required in production. " +
+    "Generate one with: openssl rand -hex 32"
+  );
+}
 const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
+  sessionSecret || "dev-secret-do-not-use-in-production"
 );
 
 // ── Token Blacklist ──

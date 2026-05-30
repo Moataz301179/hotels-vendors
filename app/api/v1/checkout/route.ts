@@ -5,7 +5,7 @@
 
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 import { z } from "zod";
 
 const CheckoutSchema = z.object({
@@ -44,6 +44,7 @@ function generateOrderNumber(): string {
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:create");
   const body = await request.json();
   const data = CheckoutSchema.parse(body);
 

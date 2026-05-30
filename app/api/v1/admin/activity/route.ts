@@ -6,14 +6,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { apiRoute, authenticate, requirePermission } from "@/lib/api-utils";
 
-export async function GET(request: NextRequest) {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:manage_platform");
+
   try {
-    const platformRole = request.headers.get("x-platform-role");
-    if (platformRole !== "ADMIN") {
-      return NextResponse.json({ success: false, error: "Admin access required" }, { status: 403 });
-    }
-
     const { searchParams } = new URL(request.url);
     const limit = Math.min(50, parseInt(searchParams.get("limit") || "20", 10));
 
@@ -152,4 +151,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

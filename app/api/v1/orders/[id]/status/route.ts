@@ -10,7 +10,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
 import { validateStatusTransition } from "@/lib/auth/state-machine";
 import { z } from "zod";
 
@@ -21,6 +21,7 @@ const UpdateStatusSchema = z.object({
 
 export const PATCH = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:approve");
   const id = request.nextUrl.pathname.split("/").pop();
   if (!id) return error("Order ID required", 400);
 

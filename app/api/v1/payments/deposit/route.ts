@@ -28,6 +28,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   if (!order) return error("Order not found", 404);
   if (order.paymentGuaranteed) return error("Deposit already paid", 400);
+  if (order.paymentGuaranteeMethod?.startsWith("DEPOSIT_PAYMOB")) return error("Deposit already pending", 409);
 
   const depositAmount = Math.round(order.total * 0.2 * 100); // 20% in cents
 
@@ -44,7 +45,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   await prisma.order.update({
     where: { id: order.id },
     data: {
-      paymentGuaranteeMethod: "DEPOSIT_PAYMOB",
+      paymentGuaranteeMethod: `DEPOSIT_PAYMOB:${paymobOrderId}`,
       paymentGuaranteeSetAt: new Date(),
     },
   });

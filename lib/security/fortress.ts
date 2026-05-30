@@ -377,21 +377,19 @@ export async function validateAPIRequest(params: {
     return { valid: false, reason: "Request timestamp too old" };
   }
 
-  // 2. Get API key from DB
-  const keyRecord = await prisma.auditLog.findFirst({
-    where: {
-      entityType: "API_KEY",
-      entityId: apiKey,
-      action: "API_KEY_CREATED",
-    },
-  });
+  // 2. Get API key from environment configuration
+  // TODO: Replace with a proper ApiKey model migration when multi-tenant API access is needed
+  const validApiKeys: Array<{ key: string; secret: string }> = process.env.API_KEYS
+    ? JSON.parse(process.env.API_KEYS)
+    : [];
 
+  const keyRecord = validApiKeys.find((k) => k.key === apiKey);
   if (!keyRecord) {
     return { valid: false, reason: "Invalid API key" };
   }
 
-  // 3. Verify HMAC signature
-  const expectedSignature = generateHMAC(payload, apiKey);
+  // 3. Verify HMAC signature using the key's secret
+  const expectedSignature = generateHMAC(payload, keyRecord.secret);
   if (!verifyHMAC(signature, expectedSignature)) {
     return { valid: false, reason: "Invalid HMAC signature" };
   }

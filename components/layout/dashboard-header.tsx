@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
@@ -34,6 +35,22 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
   const { totalItems, toggleCart } = useCart();
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("hv-theme");
+    if (saved === "light" || saved === "dark") {
+      setTheme(saved);
+      document.documentElement.classList.toggle("light-mode", saved === "light");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("hv-theme", next);
+    document.documentElement.classList.toggle("light-mode", next === "light");
+  };
 
   return (
     <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#121212]/80 backdrop-blur-xl border-b border-white/[0.06]">
@@ -80,8 +97,27 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
           <span className="text-xs font-medium text-white/60">{config.label}</span>
         </div>
 
-        <button className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
+        {role === "admin" && (
+          <>
+            <Link href="/admin/health" title="Platform Health" className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
+              <HeartPulse size={18} />
+            </Link>
+            <Link href="/admin/logs" title="System Logs" className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
+              <ScrollText size={18} />
+            </Link>
+          </>
+        )}
+
+        <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
           <Settings size={18} />
+        </Link>
+
+        <button
+          onClick={toggleTheme}
+          className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block"
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         <button

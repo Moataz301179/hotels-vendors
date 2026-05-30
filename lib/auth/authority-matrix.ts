@@ -465,7 +465,7 @@ export async function adminOverride(
     return { success: false, error: "Reason must be at least 20 characters" };
   }
 
-  // Verify both admins exist and have override permission
+  // Verify both admins exist
   const [admin1, admin2] = await Promise.all([
     prisma.user.findUnique({ where: { id: req.authorizerId } }),
     prisma.user.findUnique({ where: { id: req.coAuthorizerId } }),
@@ -479,49 +479,62 @@ export async function adminOverride(
     return { success: false, error: "Dual authorization requires two distinct admins" };
   }
 
-  // Get order current state
-  const order = await prisma.order.findUnique({
-    where: { id: req.orderId },
-    include: { hotel: true },
-  });
+  // Verify both have admin role or canOverride flag
+  const canOverride = (u: typeof admin1) =>
+    u.platformRole === "ADMIN" || u.canOverride === true;
 
-  if (!order) {
-    return { success: false, error: "Order not found" };
+  if (!canOverride(admin1) || !canOverride(admin2)) {
+    return { success: false, error: "Both authorizers must have admin privileges" };
   }
 
-  const beforeState = JSON.stringify({
-    status: order.status,
-    paymentGuaranteed: order.paymentGuaranteed,
-    paymentGuaranteeMethod: order.paymentGuaranteeMethod,
-  });
+  // All mutations in a single transaction with row locking
+  const result = await prisma.$transaction(async (tx) => {
+    // Lock the order row to prevent concurrent overrides
+    const order = await tx.$queryRaw<Array<{ id: string; status: string; paymentGuaranteed: boolean; paymentGuaranteeMethod: string | null; tenantId: string }>>`
+      SELECT "id", "status", "paymentGuaranteed", "paymentGuaranteeMethod", "tenantId"
+      FROM "Order"
+      WHERE "id" = ${req.orderId}
+      FOR UPDATE
+    `;
 
-  // Apply override — ALL database mutations in a single transaction
-  await prisma.$transaction([
-    prisma.order.update({
+    if (order.length === 0) {
+      return { success: false as const, error: "Order not found" as const };
+    }
+
+    const beforeState = JSON.stringify({
+      status: order[0].status,
+      paymentGuaranteed: order[0].paymentGuaranteed,
+      paymentGuaranteeMethod: order[0].paymentGuaranteeMethod,
+    });
+
+    await tx.order.update({
       where: { id: req.orderId },
       data: {
         status: "APPROVED",
-        paymentGuaranteed: req.waivePaymentGuarantee ? true : order.paymentGuaranteed,
-        paymentGuaranteeMethod: req.waivePaymentGuarantee ? "WAIVED" : order.paymentGuaranteeMethod,
+        paymentGuaranteed: req.waivePaymentGuarantee ? true : order[0].paymentGuaranteed,
+        paymentGuaranteeMethod: req.waivePaymentGuarantee ? "WAIVED" : order[0].paymentGuaranteeMethod,
       },
-    }),
-    prisma.orderApproval.create({
+    });
+
+    await tx.orderApproval.create({
       data: {
         orderId: req.orderId,
         approverId: req.authorizerId,
         action: "ADMIN_OVERRIDE",
         reason: req.reason,
       },
-    }),
-    prisma.orderApproval.create({
+    });
+
+    await tx.orderApproval.create({
       data: {
         orderId: req.orderId,
         approverId: req.coAuthorizerId,
         action: "ADMIN_OVERRIDE",
         reason: `Co-authorized override: ${req.reason}`,
       },
-    }),
-    prisma.auditLog.create({
+    });
+
+    await tx.auditLog.create({
       data: {
         entityType: "ORDER",
         entityId: req.orderId,
@@ -536,8 +549,14 @@ export async function adminOverride(
           waivedReason: req.reason,
         }),
       },
-    }),
-  ]);
+    });
+
+    return { success: true as const };
+  });
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
 
   // TODO: Send escalated alert to all platform admins
   // await sendEscalatedAlert({...});

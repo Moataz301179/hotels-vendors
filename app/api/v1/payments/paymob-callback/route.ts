@@ -18,13 +18,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Payment failed or incomplete", 400);
   }
 
-  // Find order by Paymob order ID
+  // Find order by Paymob order ID (stored in paymentGuaranteeMethod as "DEPOSIT_PAYMOB:<id>")
   const order = await prisma.order.findFirst({
     where: {
-      paymentGuaranteeMethod: "DEPOSIT_PAYMOB",
-      paymentGuaranteeSetAt: { not: null },
+      paymentGuaranteeMethod: `DEPOSIT_PAYMOB:${paymobOrderId}`,
     },
-    orderBy: { createdAt: "desc" },
   });
 
   if (!order) {

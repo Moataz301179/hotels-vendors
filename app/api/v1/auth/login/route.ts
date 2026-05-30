@@ -17,8 +17,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = validateBody(LoginSchema, body);
 
-  // Allow "admin" / "Admin" as username alias for the admin account
-  const email = data.email.toLowerCase() === "admin" ? "Admin" : data.email;
+  const email = data.email;
 
   const user = await prisma.user.findUnique({
     where: { email },

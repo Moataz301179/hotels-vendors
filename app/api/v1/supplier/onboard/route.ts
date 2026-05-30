@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SupplierCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { checkRateLimit } from "@/lib/redis";
 
 /**
  * POST /api/v1/supplier/onboard
@@ -9,6 +10,26 @@ import { ZodError } from "zod";
  * Creates a Supplier with PENDING status for admin review.
  */
 export async function POST(request: NextRequest) {
+  // Rate limit: 3 registrations per hour per IP
+  const clientIp =
+    request.headers.get("x-forwarded-for") ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+  const rateLimit = await checkRateLimit(
+    `supplier_onboard:${clientIp}`,
+    3600,
+    3
+  );
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Too many registration attempts. Please try again later.",
+      },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -18,10 +39,7 @@ export async function POST(request: NextRequest) {
     // Check for existing supplier with same email or taxId
     const existing = await prisma.supplier.findFirst({
       where: {
-        OR: [
-          { email: validated.email },
-          { taxId: validated.taxId },
-        ],
+        OR: [{ email: validated.email }, { taxId: validated.taxId }],
       },
     });
 
