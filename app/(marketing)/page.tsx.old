@@ -1,0 +1,549 @@
+"use client";
+
+import Link from "next/link";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  ShoppingCart,
+  Store,
+  ArrowRight,
+  Shield,
+  Cpu,
+  Truck,
+  Landmark,
+  CheckCircle,
+  FileCheck,
+  Banknote,
+  X,
+  Play,
+  Pause,
+  CreditCard,
+} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+
+// Font style - Professional monospace for fintech dashboard
+const fontStyle = {
+  fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', monospace"
+};
+
+// Workflow steps for Hotels
+const HOTEL_WORKFLOW = [
+  {
+    num: "01",
+    title: "Sync Inventory",
+    desc: "Connect PMS or upload CSV. Real-time stock levels feed predictive analytics for automatic reorder suggestions.",
+    icon: ShoppingCart
+  },
+  {
+    num: "02",
+    title: "AI Sourcing",
+    desc: "Our AI selects from 68 verified Egyptian suppliers. Average 28% price advantage vs spot market procurement.",
+    icon: Cpu
+  },
+  {
+    num: "03",
+    title: "Authority Approval",
+    desc: "Multi-level matrix enforced based on order value thresholds. Full ETA compliance with auto-generated invoices.",
+    icon: Shield
+  },
+  {
+    num: "04",
+    title: "Oliv Factoring",
+    desc: "Payments guaranteed via Oliv Finance — Egypt's first licensed digital factoring (FRA Dec 2024). Up to 88% advance rate, 90-day settlement.",
+    icon: CreditCard
+  }
+];
+
+// Workflow steps for Suppliers
+const SUPPLIER_WORKFLOW = [
+  {
+    num: "01",
+    title: "Onboard Products",
+    desc: "API or bulk upload inventory. Auto-score ranks your catalog. Verified badge = priority placement in search.",
+    icon: Store
+  },
+  {
+    num: "02",
+    title: "Get Verified",
+    desc: "Quality audit + pricing review. Verified suppliers see 45% average order volume increase vs unverified.",
+    icon: CheckCircle
+  },
+  {
+    num: "03",
+    title: "Receive Orders",
+    desc: "Instant POs from verified hotels. Coastal cluster delivery within 48 hours with shared logistics.",
+    icon: Truck
+  },
+  {
+    num: "04",
+    title: "Oliv Payment",
+    desc: "Receive payment via Oliv Finance — non-recourse factoring up to 2M EGP working capital. Zero default risk to suppliers.",
+    icon: Banknote
+  }
+];
+
+const CAPABILITIES = [
+  { icon: Cpu, title: "AI Procurement Engine", desc: "Predictive demand forecasting reduces waste by 30%" },
+  { icon: Shield, title: "Authority Matrix", desc: "Database-level approvals enforce procurement policies automatically" },
+  { icon: FileCheck, title: "Native ETA Compliance", desc: "Full Egyptian Tax Authority e-invoicing integration" },
+  { icon: CreditCard, title: "Oliv Integration", desc: "Instant liquidity via Egypt's first licensed digital factoring" },
+  { icon: Truck, title: "Shared Logistics", desc: "Nationwide coverage with 48hr delivery SLA" },
+  { icon: Landmark, title: "Supply Chain Finance", desc: "Dynamic credit lines based on transaction history" }
+];
+
+const STATS = [
+  { value: "52", label: "HOTELS", sub: "Egyptian hospitality groups" },
+  { value: "68", label: "SUPPLIERS", sub: "Verified B2B partners" },
+  { value: "100%", label: "ETA COMPLIANT", sub: "Tax authority integrated" },
+  { value: "EGP 86M", label: "MONTHLY GMV", sub: "Procurement volume" }
+];
+
+const WORKFLOW = [
+  { num: "01", title: "Demand Signal", desc: "System ingests consumption patterns to predict procurement needs" },
+  { num: "02", title: "Smart Sourcing", desc: "AI evaluates fixed-price catalogs and selects optimal suppliers" },
+  { num: "03", title: "Order Bundle", desc: "Purchases grouped by geography and delivery windows" },
+  { num: "04", title: "Oliv Settlement", desc: "ETA invoices generated, payments processed via Oliv Finance factoring" },
+];
+
+const PARTNERS = [
+  { name: "Oliv Finance", category: "Factoring (FRA Licensed)" },
+  { name: "ETA Portal", category: "Govt" }
+];
+
+export default function WorkflowPresentationPage() {
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 300], [0, -50]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.8]);
+
+  const [hotelModalOpen, setHotelModalOpen] = useState(false);
+  const [supplierModalOpen, setSupplierModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(false);
+  const slideInterval = useRef<NodeJS.Timeout | null>(null);
+
+  const container = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } } };
+  const item = { hidden: { opacity: 0, y: 15, scale: 0.96 }, visible: { opacity: 1, y: 0, scale: 1 } };
+  const card = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+
+  useEffect(() => {
+    if (autoPlay && (hotelModalOpen || supplierModalOpen)) {
+      slideInterval.current = setInterval(() => {
+        setCurrentStep((prev) => (prev + 1) % 4);
+      }, 3500);
+    }
+    return () => { if (slideInterval.current) clearInterval(slideInterval.current); };
+  }, [autoPlay, hotelModalOpen, supplierModalOpen]);
+
+  const openWorkflow = (type: "hotel" | "supplier") => {
+    setCurrentStep(0);
+    setAutoPlay(true);
+    if (type === "hotel") setHotelModalOpen(true);
+    else setSupplierModalOpen(true);
+  };
+
+  const closeWorkflow = () => {
+    setHotelModalOpen(false);
+    setSupplierModalOpen(false);
+    setAutoPlay(false);
+  };
+
+  const workflowSteps = hotelModalOpen ? HOTEL_WORKFLOW : SUPPLIER_WORKFLOW;
+
+  return (
+    <main className="min-h-screen bg-black text-white" style={fontStyle}>
+      {/* Dark Header - OLED background */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0F1A]/95 border-b border-white/5 backdrop-blur-md supports-backdrop-blur:backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-6 flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="w-9 h-9 flex items-center justify-center"
+          >
+            <img
+              src="/logo-horse-only.png"
+              alt=""
+              width={28}
+              height={28}
+              style={{ filter: "invert(1) drop-shadow(0 0 4px rgba(140,255,46,0.4))" }}
+            />
+          </motion.div>
+          <div>
+            <span className="text-white font-bold text-lg tracking-tight">Hotels Vendors</span>
+            <span className="text-[10px] text-[#8cff2e] block font-medium">Smarter Together</span>
+          </div>
+        </Link>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#capabilities" className="text-white/80 hover:text-white text-sm font-medium transition">Capabilities</a>
+            <a href="#workflow" className="text-white/80 hover:text-white text-sm font-medium transition">Workflow</a>
+            <Link href="/(auth)/login" className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-500 transition">
+              Sign In
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero Section - OLED deep black with white text contrast */}
+      <motion.section
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="pt-28 pb-16 bg-black relative"
+      >
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-64 h-64 bg-indigo-900/20 rounded-full blur-2xl" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-6 relative z-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium text-white bg-blue-600/90 rounded-full mb-8"
+          >
+            <Shield className="w-3.5 h-3.5" />
+            EGYPT'S ENTERPRISE PROCUREMENT INFRASTRUCTURE
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold mb-6 tracking-tight"
+          >
+            <span className="text-white">Procurement Operating System</span>
+            <span className="block text-blue-400 mt-2">for Hospitality</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-base md:text-lg text-white/70 max-w-xl mx-auto mb-12"
+          >
+            AI-powered platform connecting Egypt's hospitality sector with verified suppliers.
+            Bank-grade security. Full ETA compliance. Embedded Oliv Finance factoring.
+          </motion.p>
+
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col md:flex-row gap-4 justify-center max-w-lg mx-auto mb-14"
+          >
+            <motion.button
+              variants={item}
+              whileHover={{ y: -2, boxShadow: "0 12px 24px -6px rgba(59,130,246,0.3)" }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => openWorkflow("hotel")}
+              className="flex-1 px-6 py-3 bg-white/5 border border-white/10 text-blue-300 font-medium rounded-lg hover:bg-white/10 transition text-sm"
+            >
+              <Play className="w-4 h-4 inline mr-2" />
+              See How It Works for Hotels
+            </motion.button>
+
+            <motion.button
+              variants={item}
+              whileHover={{ y: -2, boxShadow: "0 12px 24px -6px rgba(59,130,246,0.3)" }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => openWorkflow("supplier")}
+              className="flex-1 px-6 py-3 bg-white/5 border border-white/10 text-blue-300 font-medium rounded-lg hover:bg-white/10 transition text-sm"
+            >
+              <Play className="w-4 h-4 inline mr-2" />
+              See How It Works for Suppliers
+            </motion.button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          >
+            {STATS.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-1">{s.value}</div>
+                <div className="text-xs font-semibold text-white/70 uppercase">{s.label}</div>
+                <div className="text-[10px] text-white/50 mt-0.5">{s.sub}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Dashboard Screenshots - subtle OLED glow on hover */}
+      <section className="py-14 bg-black/40">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="relative group"
+            >
+              <div className="absolute -inset-0.5 bg-blue-600/10 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity" />
+              <img
+                src="/user-screenshot.png"
+                alt="Hotel Procurement Dashboard"
+                className="relative w-full h-auto rounded-xl border border-white/5 shadow-xl group-hover:shadow-2xl transition-shadow"
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="relative group"
+            >
+              <div className="absolute -inset-0.5 bg-blue-600/10 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity" />
+              <img
+                src="/user-screenshot2.png"
+                alt="Supplier Central Dashboard"
+                className="relative w-full h-auto rounded-xl border border-white/5 shadow-xl group-hover:shadow-2xl transition-shadow"
+              />
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Capabilities Grid - glassmorphism cards */}
+      <section id="capabilities" className="py-24 bg-black">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold text-center mb-5 text-white"
+          >
+            Platform Capabilities
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.05 }}
+            className="text-white/60 text-center mb-12 max-w-lg mx-auto text-sm"
+          >
+            End-to-end procurement orchestration with embedded financial infrastructure
+          </motion.p>
+
+          <motion.div
+            variants={container}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {CAPABILITIES.map((c, i) => (
+              <motion.div
+                key={c.title}
+                variants={card}
+                whileHover={{ y: -3, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="group p-6 rounded-xl bg-white/[0.02] border border-white/5 backdrop-blur hover:bg-white/[0.04] transition-all duration-300"
+              >
+                <c.icon className="w-9 h-9 text-blue-400 mb-4" />
+                <h3 className="font-semibold text-white text-base mb-2">{c.title}</h3>
+                <p className="text-white/60 text-xs leading-relaxed">{c.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Workflow Process - split view for Hotels/Suppliers */}
+      <section id="workflow" className="py-20 bg-gradient-to-b from-black to-slate-950">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold text-center mb-12 text-white"
+          >
+            Autonomous Procurement Process
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* Hotel Side */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <h3 className="text-lg font-medium text-blue-400 mb-5 flex items-center gap-2">
+                <ShoppingCart className="w-4.5 h-4.5" />
+                For Hotels
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {HOTEL_WORKFLOW.map((w, i) => (
+                  <motion.div
+                    key={w.num}
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="bg-white/[0.02] border border-white/5 rounded-xl p-4 transition-all duration-300"
+                  >
+                    <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-base mb-3">
+                      {w.num}
+                    </div>
+                    <h4 className="font-semibold text-white text-sm mb-1">{w.title}</h4>
+                    <p className="text-white/60 text-[11px] leading-tight">{w.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Supplier Side */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <h3 className="text-lg font-medium text-blue-400 mb-5 flex items-center gap-2">
+                <Store className="w-4.5 h-4.5" />
+                For Suppliers
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {SUPPLIER_WORKFLOW.map((w, i) => (
+                  <motion.div
+                    key={w.num}
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="bg-white/[0.02] border border-white/5 rounded-xl p-4 transition-all duration-300"
+                  >
+                    <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-base mb-3">
+                      {w.num}
+                    </div>
+                    <h4 className="font-semibold text-white text-sm mb-1">{w.title}</h4>
+                    <p className="text-white/60 text-[11px] leading-tight">{w.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Financial Partners */}
+      <section className="py-20 border-t border-white/5">
+        <div className="mx-auto max-w-7xl px-6">
+          <h2 className="text-lg font-bold text-center mb-8 text-white">Financial Infrastructure</h2>
+          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto opacity-80">
+            {PARTNERS.map((p) => (
+              <div key={p.name} className="text-center">
+                <div className="w-36 h-16 bg-white/[0.02] rounded-lg flex items-center justify-center mb-2 border border-white/5">
+                  <span className="text-blue-300 font-medium text-xs px-2 text-center">{p.name}</span>
+                </div>
+                <span className="text-[10px] text-white/50 uppercase">{p.category}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Workflow Modal */}
+      <AnimatePresence>
+        {(hotelModalOpen || supplierModalOpen) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white/[0.03] border border-white/10 rounded-2xl max-w-4xl w-full max-h-[80vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">
+                    {hotelModalOpen ? "Hotel Workflow" : "Supplier Workflow"}
+                  </h2>
+                  <button
+                    onClick={closeWorkflow}
+                    className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition"
+                  >
+                    <X className="w-4 h-4 text-white/70" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                  {workflowSteps.map((step, i) => (
+                    <motion.div
+                      key={step.num}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{
+                        opacity: i <= currentStep ? 1 : 0.4,
+                        y: 0,
+                        scale: i === currentStep ? 1.03 : 1
+                      }}
+                      transition={{ duration: 0.4 }}
+                      className={`bg-white/[0.03] border rounded-xl p-4 transition-all duration-300 ${
+                        i === currentStep ? "border-blue-500/50 shadow-lg shadow-blue-600/40 scale-105" : "border-white/5"
+                      }`}
+                    >
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm mb-3 ${
+                        i === currentStep ? "bg-blue-600 text-white" : "bg-white/10 text-white/70"
+                      }`}>
+                        {step.num}
+                      </div>
+                      <h3 className="font-semibold text-white text-sm mb-1">{step.title}</h3>
+                      <p className="text-white/60 text-xs">{step.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={() => setAutoPlay(!autoPlay)}
+                    className="px-4 py-2 bg-white/5 text-white/80 rounded-lg hover:bg-white/10 transition text-xs flex items-center gap-1.5"
+                  >
+                    {autoPlay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                    {autoPlay ? "Pause" : "Play"}
+                  </button>
+                  <button
+                    onClick={closeWorkflow}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition text-xs"
+                  >
+                    {hotelModalOpen ? "Access Hotel Portal" : "Join Supplier Network"}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="bg-black/50 border-t border-white/5">
+        <div className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <img src="/logo-horse-only.png" alt="HV" width={20} height={20} style={{ filter: "brightness(0) invert(1)" }} />
+              </div>
+              <span className="font-semibold text-white text-sm">Hotels Vendors</span>
+            </div>
+            <div className="text-[10px] text-white/50">
+              © 2026 Hotels Vendors. Cairo, Egypt. Enterprise Procurement Platform.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
