@@ -5,7 +5,7 @@
 
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { executeLLM } from "@/lib/swarm/model-router";
+import { executeLLM } from "@/lib/ai/llm";
 import { HotelScoreEngine } from "@/lib/fintech/scoring/hotel-score-engine";
 
 const FINANCIAL_ANALYST_PROMPT = `You are the Hotels Vendors Credit Underwriting AI — an institutional-grade financial analyst specialized in Egyptian hospitality sector credit risk.

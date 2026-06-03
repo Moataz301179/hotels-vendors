@@ -115,14 +115,14 @@ export default function CheckoutPage() {
                   <p className="text-sm font-semibold text-gray-900">{o.orderNumber}</p>
                   <p className="text-xs text-gray-500">{o.supplier}</p>
                 </div>
-                <span className="text-sm font-bold text-[#8B0000]">EGP {o.total.toFixed(2)}</span>
+                <span className="text-sm font-bold text-accent-base">EGP {o.total.toFixed(2)}</span>
               </div>
             </div>
           ))}
         </div>
         <button
           onClick={() => router.push("/hotel/order")}
-          className="px-6 py-3 rounded-xl bg-[#8B0000] text-white font-medium hover:bg-[#6B0512] transition-colors"
+          className="px-6 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-[#6B0512] transition-colors"
         >
           Track Orders
         </button>
@@ -145,9 +145,9 @@ export default function CheckoutPage() {
               <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   isCurrent
-                    ? "bg-[#8B0000] text-white"
+                    ? "bg-accent-base text-white"
                     : isActive
-                    ? "bg-[#8B0000]/10 text-[#8B0000]"
+                    ? "bg-accent-base/10 text-accent-base"
                     : "bg-gray-100 text-gray-400"
                 }`}
               >
@@ -180,7 +180,7 @@ export default function CheckoutPage() {
                       value={address.address}
                       onChange={(e) => setAddress({ ...address, address: e.target.value })}
                       placeholder="Street address"
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                   <div>
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
                     <input
                       value={address.city}
                       onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                   <div>
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
                     <input
                       value={address.governorate}
                       onChange={(e) => setAddress({ ...address, governorate: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                   <div>
@@ -205,14 +205,14 @@ export default function CheckoutPage() {
                       value={address.phone}
                       onChange={(e) => setAddress({ ...address, phone: e.target.value })}
                       placeholder="+20 10..."
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                 </div>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!address.address || !address.phone}
-                  className="w-full py-3 rounded-xl bg-[#8B0000] text-white font-medium hover:bg-[#6B0512] disabled:bg-gray-200 disabled:text-gray-400 transition-colors"
+                  className="w-full py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-[#6B0512] disabled:bg-gray-200 disabled:text-gray-400 transition-colors"
                 >
                   Continue to Shipping
                 </button>
@@ -239,7 +239,7 @@ export default function CheckoutPage() {
                       onClick={() => setShippingMethod(method.id as any)}
                       className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-colors text-left ${
                         shippingMethod === method.id
-                          ? "border-[#8B0000] bg-[#8B0000]/5"
+                          ? "border-accent-base bg-accent-base/5"
                           : "border-gray-200 hover:border-gray-300"
                       }`}
                     >
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
                   </button>
                   <button
                     onClick={() => setStep(3)}
-                    className="flex-1 py-3 rounded-xl bg-[#8B0000] text-white font-medium hover:bg-[#6B0512]"
+                    className="flex-1 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-[#6B0512]"
                   >
                     Continue to Payment
                   </button>
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
                       value={poNumber}
                       onChange={(e) => setPoNumber(e.target.value)}
                       placeholder="Optional"
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                   <div>
@@ -297,7 +297,7 @@ export default function CheckoutPage() {
                       value={costCenter}
                       onChange={(e) => setCostCenter(e.target.value)}
                       placeholder="Optional"
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40"
                     />
                   </div>
                 </div>
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
                         onClick={() => setPaymentMethod(pm.id)}
                         className={`p-3 rounded-xl border-2 text-sm font-medium transition-colors ${
                           paymentMethod === pm.id
-                            ? "border-[#8B0000] bg-[#8B0000]/5 text-[#8B0000]"
+                            ? "border-accent-base bg-accent-base/5 text-accent-base"
                             : "border-gray-200 text-gray-600 hover:border-gray-300"
                         }`}
                       >
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Any special instructions..."
                     rows={3}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#8B0000]/40 resize-none"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-accent-base/40 resize-none"
                   />
                 </div>
 
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
                   <button
                     onClick={handlePlaceOrder}
                     disabled={loading}
-                    className="flex-1 py-3 rounded-xl bg-[#8B0000] text-white font-medium hover:bg-[#6B0512] disabled:opacity-50 transition-colors"
+                    className="flex-1 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-[#6B0512] disabled:opacity-50 transition-colors"
                   >
                     {loading ? "Placing Order..." : `Place Order · EGP ${grandTotal.toFixed(2)}`}
                   </button>

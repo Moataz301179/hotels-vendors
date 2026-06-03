@@ -25,7 +25,7 @@ export function CompareDrawer() {
           >
             <button
               onClick={() => setIsOpen(true)}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-[#8B0000] hover:bg-[#6B0512] text-white shadow-[0_0_24px_rgba(2,35,73,0.4)] transition-colors"
+              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-accent-base hover:bg-[#6B0512] text-white shadow-[0_0_24px_rgba(2,35,73,0.4)] transition-colors"
             >
               <Scale className="w-5 h-5" />
               <span className="text-sm font-medium">Compare ({items.length})</span>
@@ -85,7 +85,7 @@ export function CompareDrawer() {
                     {items.map((item) => (
                       <div key={item.id} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#8B0000]/15 text-[#ff7a33] border border-[#8B0000]/25">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-base/15 text-[#ff7a33] border border-accent-base/25">
                             {getCategoryById(item.category)?.code || item.category}
                           </span>
                           <button

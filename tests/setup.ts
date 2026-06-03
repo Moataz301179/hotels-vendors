@@ -3,7 +3,7 @@ import { vi } from "vitest";
 
 // Mock environment variables for tests
 process.env.SESSION_SECRET = "test-secret-64-characters-long-string-here-1234567890";
-process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
+process.env.DATABASE_URL = "postgresql://test:test@localhost:5433/test";
 process.env.REDIS_URL = "redis://localhost:6379";
 
 // Mock Redis for unit tests

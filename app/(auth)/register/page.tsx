@@ -40,11 +40,11 @@ export default function RegisterPageWrapper() {
 function RegisterSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.3)] p-8 space-y-5">
-        <div className="h-6 bg-white/[0.04] rounded w-1/3" />
-        <div className="h-12 bg-white/[0.04] rounded" />
-        <div className="h-12 bg-white/[0.04] rounded" />
-        <div className="h-12 bg-white/[0.04] rounded" />
+      <div className="rounded-2xl border border-white/[0.06] bg-[#111827] overflow-hidden p-8 space-y-5">
+        <div className="h-6 bg-[#0B0F1A] rounded w-1/3" />
+        <div className="h-12 bg-[#0B0F1A] rounded" />
+        <div className="h-12 bg-[#0B0F1A] rounded" />
+        <div className="h-12 bg-[#0B0F1A] rounded" />
       </div>
     </div>
   );
@@ -65,7 +65,6 @@ function RegisterPage() {
     role: "HOTEL" as StakeholderRole,
   });
 
-  // Pre-select role from URL ?role= param
   useEffect(() => {
     const roleParam = searchParams.get("role");
     const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
@@ -110,7 +109,6 @@ function RegisterPage() {
       const data = await res.json();
       if (data.success) {
         setRegistered(true);
-        // Auto-redirect to login after 2 seconds
         setTimeout(() => router.push("/login"), 2000);
       } else {
         setError(data.error || "Registration failed");
@@ -133,9 +131,9 @@ function RegisterPage() {
       >
         <BrandLogo variant="dark" size="md" />
         <div>
-          <h1 className="text-lg font-bold tracking-tight text-white">Hotels Vendors</h1>
-          <p className="text-[10px] text-white/40 uppercase tracking-wider">
-            Digital Procurement Hub
+          <h1 className="text-lg font-bold tracking-tight text-white">HotelsVendors</h1>
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+            B2B Procurement Egypt
           </p>
         </div>
       </motion.div>
@@ -145,7 +143,7 @@ function RegisterPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08 }}
-        className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.3)]"
+        className="rounded-2xl border border-white/[0.06] bg-[#111827] overflow-hidden"
       >
         {registered ? (
           <div className="p-8 text-center space-y-6">
@@ -158,7 +156,7 @@ function RegisterPage() {
             </motion.div>
             <div>
               <h2 className="text-xl font-semibold text-white">Welcome aboard, {form.name}!</h2>
-              <p className="text-sm text-white/50 mt-2 max-w-sm mx-auto">
+              <p className="text-sm text-gray-500 mt-2 max-w-sm mx-auto">
                 Your account has been created successfully. Redirecting you to sign in...
               </p>
             </div>
@@ -168,7 +166,7 @@ function RegisterPage() {
             {/* Header */}
             <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
               <h2 className="text-lg font-semibold text-white">Create your account</h2>
-              <p className="text-sm text-white/40 mt-1">
+              <p className="text-sm text-gray-500 mt-1">
                 Quick signup — only name, email & password required
               </p>
             </div>
@@ -188,7 +186,7 @@ function RegisterPage() {
 
               {/* Role Selection */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                   I am a...
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -201,8 +199,8 @@ function RegisterPage() {
                         onClick={() => updateForm("role", role.value)}
                         className={`flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
                           form.role === role.value
-                            ? "bg-[#8B0000]/15 border-[#8B0000]/40 text-[#ff6b6b]"
-                            : "bg-white/[0.02] border-white/[0.06] text-white/50 hover:text-white/80 hover:border-white/[0.12]"
+                            ? "bg-accent-base/10 border-accent-base/30 text-accent-base"
+                            : "bg-[#0B0F1A] border-white/[0.06] text-gray-500 hover:text-gray-300 hover:border-white/[0.10]"
                         }`}
                       >
                         <Icon className="w-4 h-4" />
@@ -215,47 +213,47 @@ function RegisterPage() {
 
               {/* Name */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Full Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                   <input
                     type="text"
                     value={form.name}
                     onChange={(e) => updateForm("name", e.target.value)}
                     placeholder="Your full name"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                 </div>
               </div>
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                   <input
                     type="email"
                     value={form.email}
                     onChange={(e) => updateForm("email", e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/60 uppercase tracking-wider">
+                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={form.password}
@@ -263,12 +261,12 @@ function RegisterPage() {
                     placeholder="Min 6 characters"
                     required
                     minLength={6}
-                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#8B0000]/60 focus:ring-1 focus:ring-[#8B0000]/20 transition-all"
+                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -279,7 +277,7 @@ function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#8B0000] hover:bg-[#6B0000] text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 shadow-[0_0_20px_rgba(139,0,0,0.2)]"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent-base hover:bg-accent-light text-white text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -300,13 +298,10 @@ function RegisterPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="text-center text-sm text-white/30 mt-6"
+        className="text-center text-sm text-gray-600 mt-6"
       >
         Already have an account?{" "}
-        <Link
-          href="/login"
-          className="text-[#ff6b6b] hover:text-[#ff9999] font-medium transition-colors"
-        >
+        <Link href="/login" className="text-accent-base hover:text-accent-light font-medium transition-colors">
           Sign in
         </Link>
       </motion.p>

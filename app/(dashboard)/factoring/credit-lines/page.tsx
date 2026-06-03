@@ -214,7 +214,7 @@ export default function CreditLineApplicationPage() {
           </div>
           <button
             onClick={() => router.push("/factoring")}
-            className="mt-8 px-6 py-2.5 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors"
+            className="mt-8 px-6 py-2.5 bg-accent-base hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors"
           >
             Back to Dashboard
           </button>
@@ -252,7 +252,7 @@ export default function CreditLineApplicationPage() {
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${
                     step === s.id
-                      ? "bg-[#8B0000] border-[#8B0000] text-white"
+                      ? "bg-accent-base border-accent-base text-white"
                       : step > s.id
                       ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
                       : "bg-white/[0.03] border-white/[0.06] text-white/30"
@@ -434,7 +434,7 @@ export default function CreditLineApplicationPage() {
           {step < 5 ? (
             <button
               onClick={() => setStep((s) => s + 1)}
-              className="px-6 py-2.5 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors flex items-center gap-2"
+              className="px-6 py-2.5 bg-accent-base hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors flex items-center gap-2"
             >
               Next <ChevronRight className="w-4 h-4" />
             </button>
@@ -502,7 +502,7 @@ function DocUpload({ label, file, onChange, required }: { label: string; file: F
   return (
     <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-colors">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[13px] text-white/70">{label} {required && <span className="text-[#8B0000]">*</span>}</span>
+        <span className="text-[13px] text-white/70">{label} {required && <span className="text-accent-base">*</span>}</span>
         {file ? (
           <span className="text-[11px] text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" /> {file.name.length > 20 ? file.name.slice(0, 20) + "..." : file.name}

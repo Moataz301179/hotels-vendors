@@ -54,7 +54,7 @@ export function UserDropdown({ user }: { user?: UserData | null }) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-white/[0.04] transition-colors"
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8B0000] to-[#6B0000] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10 flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-base to-[#6B0000] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white/10 flex-shrink-0">
           {initials}
         </div>
         <div className="hidden md:block text-left">
@@ -70,7 +70,7 @@ export function UserDropdown({ user }: { user?: UserData | null }) {
             <p className="text-[13px] font-semibold text-white truncate">{displayName}</p>
             <p className="text-[11px] text-white/40 truncate">{user?.email || ""}</p>
             {user?.tenantName && (
-              <p className="text-[10px] text-[#8B0000] mt-0.5 truncate">{user.tenantName}</p>
+              <p className="text-[10px] text-accent-base mt-0.5 truncate">{user.tenantName}</p>
             )}
           </div>
           <div className="p-1.5">

@@ -124,7 +124,7 @@ export default function HotelPropertiesPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Property Management</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage all hotels and properties in your portfolio</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all self-start">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all self-start">
           <Plus size={14} />
           Add Property
         </button>
@@ -164,7 +164,7 @@ export default function HotelPropertiesPage() {
             placeholder="Search properties..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 w-56"
+            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-56"
           />
         </div>
       </motion.div>
@@ -179,7 +179,7 @@ export default function HotelPropertiesPage() {
           title="No properties found"
           description={searchQuery ? "Try a different search term." : "Properties will appear here once added."}
           action={
-            <button className="px-4 py-2 rounded-lg bg-[#8B0000] text-xs text-white font-medium">
+            <button className="px-4 py-2 rounded-lg bg-accent-base text-xs text-white font-medium">
               Add Property
             </button>
           }

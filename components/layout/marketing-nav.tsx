@@ -2,266 +2,114 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Menu,
-  X,
-  Search,
-  ChevronDown,
-  Phone,
-  Mail,
-  Building2,
-  ShoppingCart,
-  Truck,
-  Landmark,
-  ArrowRight,
-} from "lucide-react";
-import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-icons";
-import Image from "next/image";
+import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [solutionsOpen, setSolutionsOpen] = useState(false);
 
-  // Scroll listener
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const primaryNav = [
+  const navLinks = [
     { label: "Platform", href: "/solutions" },
-    { label: "Marketplace", href: "/marketplace", isMarketplace: true },
-    { label: "Solutions", href: "#", hasDropdown: true },
+    { label: "For Hotels", href: "/hotels" },
+    { label: "For Suppliers", href: "/become-supplier" },
     { label: "Pricing", href: "/pricing" },
-    { label: "About", href: "/about" },
-  ];
-
-  const solutionLinks = [
-    { label: "For Hotels", href: "/register?role=hotel", desc: "Procurement OS & spend optimization", icon: Building2 },
-    { label: "For Suppliers", href: "/become-supplier", desc: "Grow your B2B hospitality business", icon: ShoppingCart },
-    { label: "For Logistics", href: "/register?role=shipping", desc: "Route optimization & delivery network", icon: Truck },
-    { label: "For Factoring", href: "/register?role=factoring", desc: "Embedded liquidity & credit solutions", icon: Landmark },
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}>
-      {/* ═══ Top Bar — Burgundy utility bar ═══ */}
-      <div className="bg-[#8B0000] text-white/90">
-        <div className="mx-auto max-w-7xl px-6 h-8 flex items-center justify-between text-[11px] tracking-wide">
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3 h-3" />
-              +201060001828
-            </span>
-            <span className="hidden sm:flex items-center gap-1.5">
-              <Mail className="w-3 h-3" />
-              hello@hotelsvendors.com
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
-            <span className="text-white/30">|</span>
-            <Link href="/register" className="hover:text-white transition-colors">Register</Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ Main Nav — White institutional (always light) ═══ */}
-      <div className={`transition-all duration-300 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-gray-200"
-          : "bg-white border-b border-gray-100"
-      }`}>
-        <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
-          {/* Logo — horse icon + text */}
-          <Link href="/" className="flex items-center gap-3 relative z-10 group">
-            <BrandLogo variant="light" size="sm" />
-            <div className="flex flex-col">
-              <span className="text-[15px] font-bold tracking-tight leading-none text-gray-900">
-                Hotels Vendors
-              </span>
-              <span className="text-[9px] font-semibold text-[#8B0000] uppercase tracking-[0.12em] leading-none mt-0.5">
-                Smarter Together
-              </span>
-            </div>
-          </Link>
+          ? "bg-[#0B0F1A]/95 backdrop-blur-sm border-b border-white/5"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 relative z-10">
+          <BrandLogo variant="dark" size="sm" />
+          <span className="text-[15px] font-bold tracking-tight text-white">
+            HotelsVendors
+          </span>
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-0.5">
-            {primaryNav.map((item) =>
-              item.hasDropdown ? (
-                <div
-                  key={item.label}
-                  className="relative"
-                  onMouseEnter={() => setSolutionsOpen(true)}
-                  onMouseLeave={() => setSolutionsOpen(false)}
-                >
-                  <button className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium transition-colors rounded-lg text-gray-600 hover:text-[#8B0000] hover:bg-gray-50">
-                    {item.label}
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? "rotate-180" : ""}`} />
-                  </button>
-                  {solutionsOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-72 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden animate-fade-in-up">
-                      <div className="p-3 bg-gray-50/50 border-b border-gray-100">
-                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Stakeholder Solutions</p>
-                      </div>
-                      {solutionLinks.map((link) => (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-[#8B0000]/5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <link.icon className="w-4 h-4 text-[#8B0000]" />
-                          </div>
-                          <div>
-                            <div className="text-[13px] font-semibold text-gray-900">{link.label}</div>
-                            <div className="text-[11px] text-gray-400 mt-0.5">{link.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
-                    item.isMarketplace
-                      ? "text-[#C9A227] hover:text-[#B8921F] hover:bg-[#C9A227]/5"
-                      : "text-gray-600 hover:text-[#8B0000] hover:bg-gray-50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
-          </nav>
-
-          {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <button className="p-2 rounded-lg transition-colors text-gray-400 hover:text-gray-700 hover:bg-gray-50">
-              <Search className="w-4 h-4" />
-            </button>
-            <a
-              href="https://www.facebook.com/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#1877F2] hover:bg-gray-50"
-              aria-label="Facebook"
-            >
-              <FacebookIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.instagram.com/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#E4405F] hover:bg-gray-50"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/hotelsvendors"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors text-gray-400 hover:text-[#0A66C2] hover:bg-gray-50"
-              aria-label="LinkedIn"
-            >
-              <LinkedInIcon className="w-4 h-4" />
-            </a>
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navLinks.map((item) => (
             <Link
-              href="/register"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white hover:bg-[#6B0000] rounded-lg transition-colors shadow-sm"
+              key={item.label}
+              href={item.href}
+              className="px-4 py-2 text-[14px] font-medium text-gray-400 hover:text-white rounded-lg transition-colors"
             >
-              Get Started
-              <ArrowRight className="w-3.5 h-3.5" />
+              {item.label}
             </Link>
-          </div>
+          ))}
+        </nav>
 
-          {/* Mobile Toggle */}
-          <button
-            className="lg:hidden p-2 rounded-lg transition-colors text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-            onClick={() => setMobileOpen(!mobileOpen)}
+        {/* Right Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          <ThemeToggle />
+          <Link
+            href="/login"
+            className="text-[14px] font-medium text-gray-300 hover:text-white transition-colors"
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+            Sign In
+          </Link>
+          <Link
+            href="/register"
+            className="btn-accent text-[13px] py-2 px-5"
+          >
+            Get Started
+          </Link>
         </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white transition-colors"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t px-6 py-5 shadow-xl animate-fade-in-up bg-white border-gray-100">
-          {primaryNav.map((item) => (
-            <div key={item.label}>
-              {item.hasDropdown ? (
-                <div>
-                  <button
-                    onClick={() => setSolutionsOpen(!solutionsOpen)}
-                    className="flex items-center justify-between w-full py-2.5 text-[14px] font-medium transition-colors text-gray-700"
-                  >
-                    {item.label}
-                    <ChevronDown className={`w-4 h-4 transition-transform ${solutionsOpen ? "rotate-180" : ""}`} />
-                  </button>
-                  {solutionsOpen && (
-                    <div className="pl-4 pb-2 space-y-1">
-                      {solutionLinks.map((link) => (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          className="block py-2 text-[13px] transition-colors text-gray-500 hover:text-[#8B0000]"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href={item.href}
-                  className={`block py-2.5 text-[14px] font-medium transition-colors ${
-                    item.isMarketplace
-                      ? "text-[#C9A227] hover:text-[#B8921F]"
-                      : "text-gray-700 hover:text-[#8B0000]"
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              )}
+        <div className="lg:hidden bg-[#0B0F1A]/98 border-t border-white/5 backdrop-blur-md animate-fade-in-up">
+          <div className="px-6 py-5 space-y-1">
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="block py-2.5 text-[14px] font-medium text-gray-400 hover:text-white transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="pt-4 mt-2 border-t border-white/5 flex items-center gap-4">
+              <ThemeToggle />
+              <span className="text-[12px] text-gray-500">Toggle accent</span>
             </div>
-          ))}
-          <div className="pt-4 mt-2 border-t border-gray-100">
-            <div className="flex gap-3">
+            <div className="pt-4 flex gap-3">
               <Link
                 href="/login"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg border-gray-200 text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/10 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[#8B0000] text-white rounded-lg hover:bg-[#6B0000] transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-semibold bg-[var(--accent-base)] text-white rounded-lg hover:opacity-90 transition-opacity"
               >
                 Get Started
               </Link>
-            </div>
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <a href="https://www.facebook.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#1877F2] transition-colors">
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-              <a href="https://www.instagram.com/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#E4405F] transition-colors">
-                <InstagramIcon className="w-4 h-4" />
-              </a>
-              <a href="https://www.linkedin.com/company/hotelsvendors" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0A66C2] transition-colors">
-                <LinkedInIcon className="w-4 h-4" />
-              </a>
             </div>
           </div>
         </div>

@@ -108,7 +108,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                memberMode ? "bg-[#8B0000] text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
+                memberMode ? "bg-accent-base text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
               }`}
             >
               <Crown className="w-3 h-3" />
@@ -117,7 +117,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
             <button onClick={openCart} className="relative flex items-center justify-center px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/50 hover:text-white transition-all">
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#8B0000] text-white text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-white text-[10px] font-bold flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
@@ -235,7 +235,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
               <button
                 onClick={handleAdd}
                 disabled={!inStock}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium transition-all"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base hover:bg-[#6B0000] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium transition-all"
               >
                 {added ? (
                   <>

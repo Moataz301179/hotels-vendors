@@ -220,8 +220,8 @@ export function RoleBenefits({ role, variant = "full", theme = "dark" }: RoleBen
   const textBenefitDesc = isDark ? "text-white/40" : "text-gray-500";
   const iconPain = isDark ? "text-red-400" : "text-red-500";
   const iconBenefit = isDark ? "text-emerald-400" : "text-emerald-600";
-  const statBg = isDark ? "bg-[#8B0000]/10 border-[#8B0000]/20" : "bg-[#8B0000]/5 border-[#8B0000]/10";
-  const statText = isDark ? "text-[#8B0000]" : "text-[#8B0000]";
+  const statBg = isDark ? "bg-accent-base/10 border-accent-base/20" : "bg-accent-base/5 border-accent-base/10";
+  const statText = isDark ? "text-accent-base" : "text-accent-base";
 
   if (variant === "compact") {
     return (

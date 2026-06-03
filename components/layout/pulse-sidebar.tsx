@@ -205,7 +205,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
+      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#111827]">
         <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/10 transition-colors">
           <BrandLogo variant="dark" size="md" />
         </Link>
@@ -226,13 +226,13 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                   href={item.href}
                   className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
                     isActive
-                      ? "bg-[rgba(128,0,0,0.15)] text-white"
+                      ? "bg-accent-base/15 text-white"
                       : "text-[rgba(255,255,255,0.35)] hover:text-white hover:bg-[rgba(255,255,255,0.04)]"
                   }`}
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#8B0000] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-accent-base rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -251,7 +251,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#121212]">
+    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#111827]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(255,255,255,0.04)]">
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -283,14 +283,14 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                     href={item.href}
                     className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
                       isActive
-                        ? "bg-[rgba(128,0,0,0.12)] text-white font-medium"
+                        ? "bg-accent-base/12 text-white font-medium"
                         : "text-[rgba(255,255,255,0.50)] hover:text-white hover:bg-[rgba(255,255,255,0.03)]"
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#8B0000] rounded-r-full shadow-[0_0_8px_rgba(128,0,0,0.50)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent-base rounded-r-full shadow-[0_0_8px_var(--accent-glow)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#8B0000]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-accent-base" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );

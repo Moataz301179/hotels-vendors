@@ -33,7 +33,7 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     SCHEDULED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Scheduled" },
     PICKED_UP: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Picked Up" },
-    IN_TRANSIT: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "In Transit" },
+    IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
     ARRIVED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Arrived" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     DELAYED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Delayed" },
@@ -60,7 +60,7 @@ function ShipmentProgress({ status }: { status: string }) {
   };
   const progress = progressMap[status] || 0;
   const isDelayed = status === "DELAYED";
-  const color = progress >= 100 ? "#10B981" : isDelayed ? "#EF4444" : progress > 50 ? "#8B0000" : "#60a5fa";
+  const color = progress >= 100 ? "#10B981" : isDelayed ? "#EF4444" : progress > 50 ? "var(--accent-base)" : "#60a5fa";
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-1">
@@ -75,7 +75,7 @@ function ShipmentProgress({ status }: { status: string }) {
       </div>
       <div className="flex items-center justify-between mt-1.5 px-0.5">
         <div className={`w-2 h-2 rounded-full ${progress >= 5 ? "bg-blue-400" : "bg-white/10"}`} title="Scheduled" />
-        <div className={`w-2 h-2 rounded-full ${progress >= 50 ? "bg-[#8B0000]" : "bg-white/10"}`} title="In Transit" />
+        <div className={`w-2 h-2 rounded-full ${progress >= 50 ? "bg-accent-base" : "bg-white/10"}`} title="In Transit" />
         <div className={`w-2 h-2 rounded-full ${progress >= 100 ? "bg-emerald-400" : "bg-white/10"}`} title="Delivered" />
       </div>
     </div>
@@ -224,7 +224,7 @@ export default function LogisticsPortalPage() {
                   <div key={trip.id} className="flex items-center justify-between p-3 rounded-lg border border-white/[0.04] hover:bg-white/[0.02] transition-colors">
                     <div className="flex items-center gap-3">
                       <div className={`w-2 h-2 rounded-full ${
-                        trip.status === "IN_TRANSIT" ? "bg-[#8B0000]" :
+                        trip.status === "IN_TRANSIT" ? "bg-accent-base" :
                         trip.status === "DELAYED" ? "bg-red-400" :
                         trip.status === "DELIVERED" ? "bg-emerald-400" :
                         "bg-blue-400"

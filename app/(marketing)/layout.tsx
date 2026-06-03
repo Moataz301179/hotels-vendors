@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { PublicChatbot } from "@/components/ai-assistant/public-chatbot";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Hotels Vendors — Digital Procurement Hub for Egyptian Hospitality",
+  title: "HotelsVendors — B2B Procurement for Egyptian Hospitality",
 };
 
 export default function MarketingLayout({
@@ -11,9 +11,8 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ThemeProvider>
       {children}
-      <PublicChatbot />
-    </>
+    </ThemeProvider>
   );
 }

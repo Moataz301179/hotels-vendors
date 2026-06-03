@@ -90,7 +90,7 @@ npm ci --legacy-peer-deps
 npx prisma generate
 
 # Run migrations
-DATABASE_URL="postgresql://hv_${ENV}:$(sudo -u postgres psql -t -c "SELECT passwd FROM pg_shadow WHERE usename='hv_${ENV}'" | xargs)@localhost:5432/hotelsvendors_${ENV}" npx prisma migrate deploy
+DATABASE_URL="postgresql://hv_${ENV}:$(sudo -u postgres psql -t -c "SELECT passwd FROM pg_shadow WHERE usename='hv_${ENV}'" | xargs)@localhost:5433/hotelsvendors_${ENV}" npx prisma migrate deploy
 
 # Build Next.js
 npm run build
@@ -109,7 +109,7 @@ module.exports = {
     env: {
       NODE_ENV: '${ENV}',
       PORT: 3000,
-      DATABASE_URL: 'postgresql://hv_${ENV}:$(sudo -u postgres psql -t -c "SELECT passwd FROM pg_shadow WHERE usename='hv_${ENV}'" | xargs)@localhost:5432/hotelsvendors_${ENV}',
+      DATABASE_URL: 'postgresql://hv_${ENV}:$(sudo -u postgres psql -t -c "SELECT passwd FROM pg_shadow WHERE usename='hv_${ENV}'" | xargs)@localhost:5433/hotelsvendors_${ENV}',
       REDIS_URL: 'redis://:$(sudo grep requirepass /etc/redis/redis.conf | awk '{print $2}')@localhost:6379',
       SESSION_SECRET: '$(openssl rand -base64 64)',
       ETA_CLIENT_ID: '${ETA_CLIENT_ID}',

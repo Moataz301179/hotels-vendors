@@ -60,7 +60,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
   return (
     <button
       onClick={onChange}
-      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-[#8B0000]" : "bg-white/10"}`}
+      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-accent-base" : "bg-white/10"}`}
     >
       <span
         className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`}
@@ -92,7 +92,7 @@ export default function SettingsPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
           <p className="text-sm text-white/40 mt-0.5">Manage platform configuration, preferences, and integrations</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all">
           <Save size={14} />
           Save Changes
         </button>
@@ -121,7 +121,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="Hotels Vendors"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Default Currency" description="Primary currency for all transactions">
@@ -191,7 +191,7 @@ export default function SettingsPage() {
               <SettingRow label="API Key" description="Your platform API key for integrations">
                 <div className="flex items-center gap-2">
                   <code className="px-2 py-1 rounded bg-white/[0.04] text-[10px] text-white/30 font-mono">hv_live_••••••••••••</code>
-                  <button className="text-[10px] text-[#8B0000] hover:underline">Regenerate</button>
+                  <button className="text-[10px] text-accent-base hover:underline">Regenerate</button>
                 </div>
               </SettingRow>
             </div>
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        member.role === "Admin" ? "bg-[#8B0000]/10 text-[#8B0000]" :
+                        member.role === "Admin" ? "bg-accent-base/10 text-accent-base" :
                         member.role === "Manager" ? "bg-blue-500/10 text-blue-400" :
                         "bg-white/10 text-white/40"
                       }`}>
@@ -240,28 +240,28 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="Hotels Vendors Egypt Ltd."
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Tax ID" description="Egyptian Tax Registration Number">
                 <input
                   type="text"
                   defaultValue="123-456-789"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Address" description="Registered business address">
                 <input
                   type="text"
                   defaultValue="123 Nile Corniche, Cairo"
-                  className="w-64 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
+                  className="w-64 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Phone" description="Primary contact number">
                 <input
                   type="text"
                   defaultValue="+20 2 1234 5678"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#8B0000]/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
             </div>
@@ -273,7 +273,7 @@ export default function SettingsPage() {
               <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-4 mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs text-white/40">Current Plan</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#8B0000]/10 text-[#8B0000]">Enterprise</span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-accent-base/10 text-accent-base">Enterprise</span>
                 </div>
                 <p className="text-lg font-bold text-white">EGP 25,000 / month</p>
                 <p className="text-[11px] text-white/25 mt-0.5">Next billing: June 8, 2026</p>
@@ -328,8 +328,8 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow label="Accent Color" description="Primary brand color">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#8B0000] border border-white/20" />
-                  <span className="text-[11px] text-white/40">#8B0000</span>
+                  <div className="w-6 h-6 rounded-full bg-accent-base border border-white/20" />
+                  <span className="text-[11px] text-white/40">var(--accent-base)</span>
                 </div>
               </SettingRow>
               <SettingRow label="Compact Mode" description="Reduce padding and spacing">

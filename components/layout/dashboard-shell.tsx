@@ -24,13 +24,12 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close mobile sidebar on route changes
   useEffect(() => {
     setMobileOpen(false);
   }, []);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#050505]">
+    <div className="flex h-screen w-full overflow-hidden bg-[#0B0F1A]">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${
@@ -47,12 +46,10 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <>
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 md:hidden"
             onClick={() => setMobileOpen(false)}
           />
-          {/* Mobile Sidebar */}
           <aside className="fixed left-0 top-0 z-50 h-full w-[280px] md:hidden">
             <PulseSidebar
               role={role}

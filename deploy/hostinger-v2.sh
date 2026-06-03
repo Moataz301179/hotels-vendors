@@ -59,7 +59,7 @@ cat > $APP_DIR/.env << 'EOF'
 # ═══════════════════════════════════════════════════════════════
 
 # ── Database ──
-DATABASE_URL=postgresql://hotels_vendors:CHANGE_ME@postgres:5432/hotels_vendors
+DATABASE_URL=postgresql://hotels_vendors:CHANGE_ME@postgres:5433/hotels_vendors
 
 # ── Redis ──
 REDIS_URL=redis://redis:6379
@@ -200,7 +200,7 @@ echo "Services:"
 echo "  App:       http://localhost:3000"
 echo "  OpenClaw:  http://localhost:8000"
 echo "  Agent0:    http://localhost:9000"
-echo "  Postgres:  localhost:5432"
+echo "  Postgres:  localhost:5433"
 echo "  Redis:     localhost:6379"
 echo ""
 echo "Management:"

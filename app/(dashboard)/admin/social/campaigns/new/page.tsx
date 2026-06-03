@@ -156,7 +156,7 @@ export default function NewCampaignPage() {
             <div
               key={s}
               className={`flex-1 h-1 rounded-full transition-colors ${
-                s <= step ? "bg-[#8B0000]" : "bg-white/[0.06]"
+                s <= step ? "bg-accent-base" : "bg-white/[0.06]"
               }`}
             />
           ))}
@@ -172,7 +172,7 @@ export default function NewCampaignPage() {
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="e.g., Beta Launch Awareness"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
@@ -183,7 +183,7 @@ export default function NewCampaignPage() {
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 placeholder="What is this campaign about?"
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors resize-none"
               />
             </div>
 
@@ -196,7 +196,7 @@ export default function NewCampaignPage() {
                     onClick={() => setForm((f) => ({ ...f, objective: obj.value }))}
                     className={`p-3 rounded-lg border text-left transition-colors ${
                       form.objective === obj.value
-                        ? "bg-[#8B0000]/10 border-[#8B0000]/40"
+                        ? "bg-accent-base/10 border-accent-base/40"
                         : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
                     }`}
                   >
@@ -214,7 +214,7 @@ export default function NewCampaignPage() {
                   type="date"
                   value={form.startDate}
                   onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
               <div>
@@ -223,7 +223,7 @@ export default function NewCampaignPage() {
                   type="date"
                   value={form.endDate}
                   onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
             </div>
@@ -235,7 +235,7 @@ export default function NewCampaignPage() {
                 value={form.budgetEgp}
                 onChange={(e) => setForm((f) => ({ ...f, budgetEgp: e.target.value }))}
                 placeholder="5000"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
@@ -243,7 +243,7 @@ export default function NewCampaignPage() {
               <button
                 onClick={() => setStep(2)}
                 disabled={!form.name || !form.startDate}
-                className="px-6 py-2.5 text-[13px] font-medium bg-[#8B0000] hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 text-[13px] font-medium bg-accent-base hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next: Audience
               </button>
@@ -263,7 +263,7 @@ export default function NewCampaignPage() {
                     onClick={() => togglePlatform(p.value)}
                     className={`p-3 rounded-lg border text-left transition-colors flex items-center gap-3 ${
                       form.platforms.includes(p.value)
-                        ? "bg-[#8B0000]/10 border-[#8B0000]/40"
+                        ? "bg-accent-base/10 border-accent-base/40"
                         : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
                     }`}
                   >
@@ -286,7 +286,7 @@ export default function NewCampaignPage() {
                     onClick={() => toggleRole(r.value)}
                     className={`px-4 py-2.5 rounded-lg border text-[13px] font-medium transition-colors ${
                       form.targetRoles.includes(r.value)
-                        ? "bg-[#8B0000]/10 border-[#8B0000]/40 text-[#8B0000]"
+                        ? "bg-accent-base/10 border-accent-base/40 text-accent-base"
                         : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
                     }`}
                   >
@@ -306,7 +306,7 @@ export default function NewCampaignPage() {
               <button
                 onClick={() => setStep(3)}
                 disabled={form.platforms.length === 0 || form.targetRoles.length === 0}
-                className="px-6 py-2.5 text-[13px] font-medium bg-[#8B0000] hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 text-[13px] font-medium bg-accent-base hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next: Content
               </button>
@@ -326,7 +326,7 @@ export default function NewCampaignPage() {
                     onClick={() => setForm((f) => ({ ...f, tone: t.value as any }))}
                     className={`px-4 py-2.5 rounded-lg border text-[13px] font-medium transition-colors ${
                       form.tone === t.value
-                        ? "bg-[#8B0000]/10 border-[#8B0000]/40 text-[#8B0000]"
+                        ? "bg-accent-base/10 border-accent-base/40 text-accent-base"
                         : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
                     }`}
                   >
@@ -348,7 +348,7 @@ export default function NewCampaignPage() {
                   }))
                 }
                 placeholder="Beta launch, Supplier spotlight, Industry insights"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
@@ -359,7 +359,7 @@ export default function NewCampaignPage() {
                 value={form.hashtags}
                 onChange={(e) => setForm((f) => ({ ...f, hashtags: e.target.value }))}
                 placeholder="#HotelsVendors #EgyptHospitality"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
@@ -369,7 +369,7 @@ export default function NewCampaignPage() {
                 <select
                   value={form.postingFrequency}
                   onChange={(e) => setForm((f) => ({ ...f, postingFrequency: e.target.value as any }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-[#8B0000]/50 transition-colors appearance-none"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors appearance-none"
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f.value} value={f.value} className="bg-[#1a1a1a]">
@@ -386,7 +386,7 @@ export default function NewCampaignPage() {
                   max={50}
                   value={form.postCount}
                   onChange={(e) => setForm((f) => ({ ...f, postCount: parseInt(e.target.value) || 1 }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-[#8B0000]/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function NewCampaignPage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium bg-[#8B0000] hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium bg-accent-base hover:bg-[#7A0000] rounded-lg transition-colors disabled:opacity-50"
               >
                 {loading ? (
                   <>

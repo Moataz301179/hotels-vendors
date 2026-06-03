@@ -98,7 +98,7 @@ export default function CampaignDetailPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#8B0000]" />
+        <Loader2 className="w-6 h-6 animate-spin text-accent-base" />
       </main>
     );
   }
@@ -109,7 +109,7 @@ export default function CampaignDetailPage() {
         <div className="text-center">
           <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-3" />
           <p className="text-white/40">Campaign not found</p>
-          <Link href="/admin/social" className="text-[#8B0000] hover:underline text-[13px] mt-2 inline-block">
+          <Link href="/admin/social" className="text-accent-base hover:underline text-[13px] mt-2 inline-block">
             Back to Social Hub
           </Link>
         </div>
@@ -192,7 +192,7 @@ export default function CampaignDetailPage() {
                       </div>
                       <p className="text-[13px] text-white/70 leading-relaxed">{post.content}</p>
                       {post.hashtags && (
-                        <p className="text-[11px] text-[#8B0000]/60 mt-1.5">{post.hashtags}</p>
+                        <p className="text-[11px] text-accent-base/60 mt-1.5">{post.hashtags}</p>
                       )}
                     </div>
                   ))

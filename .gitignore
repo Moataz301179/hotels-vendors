@@ -42,3 +42,12 @@ next-env.d.ts
 
 /app/generated/prisma
 .ssh/
+
+# orphaned / temp files — never commit
+dev.db
+*.log
+*.pid
+*.zip
+.dev.pid
+session-*.zip
+tmp/

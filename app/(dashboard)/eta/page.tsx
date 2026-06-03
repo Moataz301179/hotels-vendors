@@ -40,7 +40,7 @@ function StatusBadge({ status }: { status: string }) {
     ACCEPTED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Accepted" },
     PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
-    VALIDATED: { bg: "bg-[#8B0000]/10", text: "text-[#8B0000]", dot: "bg-[#8B0000]", label: "Validated" },
+    VALIDATED: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "Validated" },
     SUBMITTED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Submitted" },
   };
   const c = config[status] || config.PENDING;
@@ -157,7 +157,7 @@ export default function ETACenterPage() {
           </button>
           <button
             onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#8B0000] hover:bg-[#8B0000]/80 text-xs text-white font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all"
           >
             <FileCheck size={14} />
             Submit Invoice
@@ -207,7 +207,7 @@ export default function ETACenterPage() {
                 placeholder="Search by invoice ID or hotel..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#8B0000]/50"
+                className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function ETACenterPage() {
               action={
                 <button
                   onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
-                  className="px-4 py-2 rounded-lg bg-[#8B0000] text-xs text-white font-medium"
+                  className="px-4 py-2 rounded-lg bg-accent-base text-xs text-white font-medium"
                 >
                   Submit Invoice
                 </button>
@@ -304,7 +304,7 @@ export default function ETACenterPage() {
               <div className="relative w-36 h-36">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="8" />
-                  <circle cx="50" cy="50" r="42" fill="none" stroke="#8B0000" strokeWidth="8"
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="var(--accent-base)" strokeWidth="8"
                     strokeDasharray={`${2 * Math.PI * 42 * 0.988} ${2 * Math.PI * 42 * 0.012}`} strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -317,7 +317,7 @@ export default function ETACenterPage() {
               <div className="flex items-center justify-between text-xs"><span className="text-white/40">Acceptance Rate</span><span className="text-white font-medium">99.2%</span></div>
               <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-emerald-500" style={{ width: "99.2%" }} /></div>
               <div className="flex items-center justify-between text-xs mt-2"><span className="text-white/40">Avg. Validation Time</span><span className="text-white font-medium">124ms</span></div>
-              <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-[#8B0000]" style={{ width: "85%" }} /></div>
+              <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-accent-base" style={{ width: "85%" }} /></div>
             </div>
           </div>
         </motion.div>
@@ -449,7 +449,7 @@ export default function ETACenterPage() {
 
                 {submitStep === "submitting" && (
                   <motion.div key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-12 flex flex-col items-center gap-3">
-                    <Loader2 size={28} className="animate-spin text-[#8B0000]" />
+                    <Loader2 size={28} className="animate-spin text-accent-base" />
                     <p className="text-sm text-white/40">Submitting to Egyptian Tax Authority...</p>
                     <p className="text-xs text-white/20">This may take a few moments</p>
                   </motion.div>
@@ -469,7 +469,7 @@ export default function ETACenterPage() {
                       <div className="flex justify-between text-xs"><span className="text-white/30">ETA UUID</span><span className="text-emerald-400 font-mono">{submitResult.etaUuid || "Pending generation"}</span></div>
                       <div className="flex justify-between text-xs"><span className="text-white/30">Status</span><span className="text-blue-400">{submitResult.etaStatus || "SUBMITTED"}</span></div>
                     </div>
-                    <button onClick={closeSubmitModal} className="px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#8B0000]/80 text-white text-sm font-medium transition-colors">Done</button>
+                    <button onClick={closeSubmitModal} className="px-5 py-2 rounded-xl bg-accent-base hover:bg-accent-base/80 text-white text-sm font-medium transition-colors">Done</button>
                   </motion.div>
                 )}
               </AnimatePresence>

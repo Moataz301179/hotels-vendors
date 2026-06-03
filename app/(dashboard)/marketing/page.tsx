@@ -85,28 +85,28 @@ export default function MarketingDashboardPage() {
           value="2"
           change="+1 from last month"
           changeType="positive"
-          icon={<Megaphone className="w-5 h-5" />}
+          icon={Megaphone}
         />
         <StatCard
           title="Leads This Month"
           value="638"
           change="+24% vs April"
           changeType="positive"
-          icon={<Users className="w-5 h-5" />}
+          icon={Users}
         />
         <StatCard
           title="Social Engagement"
           value="5.8%"
           change="+0.6% avg rate"
           changeType="positive"
-          icon={<Share2 className="w-5 h-5" />}
+          icon={Share2}
         />
         <StatCard
           title="Content Pipeline"
           value="12"
           change="3 pending review"
           changeType="neutral"
-          icon={<Eye className="w-5 h-5" />}
+          icon={Eye}
         />
       </div>
 

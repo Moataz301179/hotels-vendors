@@ -32,7 +32,7 @@ export default function AdminReportsPage() {
   const formatEgpK = (v: number) => `EGP ${(v / 1000).toFixed(0)}K`;
 
   const kpiCards = [
-    { label: "Total GMV", value: data ? formatEgp(data.gmv.total) : "—", icon: Wallet, color: "#8B0000" },
+    { label: "Total GMV", value: data ? formatEgp(data.gmv.total) : "—", icon: Wallet, color: "var(--accent-base)" },
     { label: "Monthly GMV", value: data ? formatEgp(data.gmv.monthly) : "—", icon: TrendingUp, color: "#10b981" },
     { label: "Weekly GMV", value: data ? formatEgp(data.gmv.weekly) : "—", icon: TrendingUp, color: "#3b82f6" },
     { label: "Platform Fees", value: data ? formatEgp(data.factoring.totalPlatformFees) : "—", icon: BarChart3, color: "#f59e0b" },
@@ -45,8 +45,8 @@ export default function AdminReportsPage() {
       <div className="border-b border-white/[0.06]">
         <div className="px-6 py-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8B0000]/15 flex items-center justify-center">
-              <BarChart3 className="w-4 h-4 text-[#8B0000]" />
+            <div className="w-8 h-8 rounded-lg bg-accent-base/15 flex items-center justify-center">
+              <BarChart3 className="w-4 h-4 text-accent-base" />
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">Platform Reports</h1>
@@ -148,7 +148,7 @@ export default function AdminReportsPage() {
                   <span className="text-[12px] text-white/60 flex-1">{c.category}</span>
                   <div className="w-24 h-2 rounded-full bg-white/[0.06] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[#8B0000]/60 transition-all"
+                      className="h-full rounded-full bg-accent-base/60 transition-all"
                       style={{
                         width: `${Math.max(2, (c.count / (data.categories.reduce((s, x) => s + x.count, 0) || 1)) * 100)}%`,
                       }}
