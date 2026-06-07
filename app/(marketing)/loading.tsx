@@ -1,17 +1,17 @@
 export default function MarketingLoading() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Nav skeleton */}
       <div className="fixed top-0 left-0 right-0 z-50">
-        <div className="bg-[#8B0000] h-8" />
-        <div className="bg-white border-b border-gray-100 h-[68px] flex items-center justify-between px-6 max-w-7xl mx-auto">
-          <div className="w-40 h-8 bg-gray-100 rounded-lg animate-pulse" />
+        <div className="bg-[var(--accent-base)] h-8" />
+        <div className="bg-[#0a0a0a] border-b border-white/[0.06] h-[68px] flex items-center justify-between px-6 max-w-7xl mx-auto">
+          <div className="w-40 h-8 bg-white/10 rounded-lg animate-pulse" />
           <div className="hidden lg:flex items-center gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="w-16 h-6 bg-gray-100 rounded-lg animate-pulse" />
+              <div key={i} className="w-16 h-6 bg-white/10 rounded-lg animate-pulse" />
             ))}
           </div>
-          <div className="w-24 h-8 bg-gray-100 rounded-lg animate-pulse" />
+          <div className="w-24 h-8 bg-white/10 rounded-lg animate-pulse" />
         </div>
       </div>
 

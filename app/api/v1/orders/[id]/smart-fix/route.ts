@@ -35,4 +35,4 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   });
 
   return success({ fixes });
-});
+}, { rateLimit: "api" });

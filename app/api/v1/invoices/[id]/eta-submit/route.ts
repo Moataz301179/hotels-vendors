@@ -56,4 +56,4 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     jobId: job.id,
     status: "QUEUED",
   });
-});
+}, { rateLimit: "api" });

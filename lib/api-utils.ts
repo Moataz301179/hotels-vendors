@@ -8,6 +8,8 @@ import { z } from "zod";
 import { verifySession, getSessionToken } from "@/lib/session";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
 import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } from "@/lib/redis";
+import { rateLimitResponse, type RateLimitTier } from "@/lib/security/rate-limiter";
+import { logAuthFailure, logRateLimit } from "@/lib/security/security-logger";
 
 // ─────────────────────────────────────────
 // 1. TENANT ISOLATION
@@ -200,13 +202,29 @@ export function handleApiError(err: unknown): NextResponse {
 
 export function apiRoute(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (request: NextRequest, ctx: any) => Promise<NextResponse>
+  handler: (request: NextRequest, ctx: any) => Promise<NextResponse | Response>,
+  options?: { rateLimit?: RateLimitTier; skipAuthLog?: boolean }
 ) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (request: NextRequest, ctx: any): Promise<NextResponse> => {
+  return async (request: NextRequest, ctx: any): Promise<NextResponse | Response> => {
+    // Rate limiting check (if configured)
+    if (options?.rateLimit) {
+      const rateLimited = await rateLimitResponse(request, options.rateLimit);
+      if (rateLimited) {
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+        logRateLimit(ip, request.url, options.rateLimit);
+        return rateLimited;
+      }
+    }
+
     try {
       return await handler(request, ctx);
     } catch (err) {
+      // Log auth failures for security monitoring
+      if (!options?.skipAuthLog && err instanceof ApiError && err.statusCode === 401) {
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+        logAuthFailure(ip, request.url, err.message);
+      }
       return handleApiError(err);
     }
   };

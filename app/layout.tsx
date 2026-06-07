@@ -97,9 +97,9 @@ export const metadata: Metadata = {
     google: "google-site-verification-code",
   },
   other: {
-    "msapplication-TileColor": "#8B0000",
+    "msapplication-TileColor": "#F97316",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#ffffff",
+    "theme-color": "#0C0814",
   },
 };
 

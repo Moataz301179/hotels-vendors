@@ -3,589 +3,288 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight,
-  Play,
-  TrendingDown,
-  Shield,
-  Zap,
-  Truck,
-  Building2,
-  ShoppingCart,
-  Landmark,
-  Package,
-  BarChart3,
-  FileCheck,
-  Clock,
-  CheckCircle2,
+  BrainCircuit,
+  Receipt,
+  Banknote,
+  ShieldCheck,
+  Store,
+  PackageSearch,
   ChevronRight,
+  Building2,
+  Users,
+  Landmark,
 } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
-export const metadata: Metadata = {
-  title: "HotelsVendors — B2B Procurement for Egyptian Hospitality",
-  description:
-    "From F&B to capital equipment: track every dirham, automate every order, and get AI demand forecasting that prevents waste before it happens.",
-};
-
-/* ── Data ── */
-
-const TRUST_BADGES = ["5-STAR", "BOUTIQUE", "RESORT", "BUSINESS"];
-
-const STATS = [
-  { value: "2,400+", label: "Hotels Onboarded", sub: "Across Egypt" },
-  { value: "680+", label: "Verified Suppliers", sub: "Vetted & rated" },
-  { value: "EGP 4.2B", label: "Annual GMV", sub: "Transactions processed" },
-  { value: "36hr", label: "Avg. Delivery", sub: "From order to dock" },
-  { value: "100%", label: "ETA Compliant", sub: "E-invoicing ready" },
-  { value: "28%", label: "Cost Reduction", sub: "Average savings" },
-];
-
-const CAPABILITIES = [
-  {
-    icon: BarChart3,
-    title: "AI Demand Forecasting",
-    desc: "Predict consumption 14 days ahead. Reduce over-ordering by 34% and eliminate emergency purchases.",
-  },
-  {
-    icon: Shield,
-    title: "Authority Matrix",
-    desc: "Multi-signature approval chains encoded into every PO. No bypass. No fraud. Full audit trail.",
-  },
-  {
-    icon: FileCheck,
-    title: "ETA E-Invoicing",
-    desc: "Every invoice digitally signed and submitted to the Egyptian Tax Authority in real time. Zero manual work.",
-  },
-  {
-    icon: Landmark,
-    title: "Embedded Factoring",
-    desc: "Suppliers get paid in 48 hours. Hotels keep 90-day terms. The platform bridges the gap.",
-  },
-  {
-    icon: Truck,
-    title: "Shared Logistics",
-    desc: "Coastal cluster consolidation routes cut delivery costs by 40%. One truck, multiple hotels.",
-  },
-  {
-    icon: Zap,
-    title: "Auto Reorder",
-    desc: "Set par levels once. The system generates purchase orders before you run out. Never stockout again.",
-  },
-];
-
-const WORKFLOW = [
-  {
-    num: "01",
-    title: "Connect Your Properties",
-    desc: "Link all hotel outlets in one dashboard. Set approval thresholds per department and property.",
-  },
-  {
-    num: "02",
-    title: "Browse Verified Suppliers",
-    desc: "Access 680+ vetted suppliers across F&B, housekeeping, engineering, and capital equipment.",
-  },
-  {
-    num: "03",
-    title: "AI Optimizes Every Order",
-    desc: "The system suggests quantities, picks the best supplier, and routes for approval automatically.",
-  },
-  {
-    num: "04",
-    title: "Track & Settle",
-    desc: "Real-time delivery tracking, automatic ETA invoicing, and embedded payment settlement.",
-  },
-];
-
-const STAKEHOLDERS = [
-  {
-    icon: Building2,
-    title: "For Hotels",
-    desc: "Cut procurement costs by 28%. Eliminate stockouts. Enforce spend governance across every property.",
-    cta: "See Hotel Features",
-    href: "/hotels",
-  },
-  {
-    icon: ShoppingCart,
-    title: "For Suppliers",
-    desc: "Access 2,400+ hotel buyers. Get paid in 48 hours. Grow your B2B hospitality revenue.",
-    cta: "Become a Supplier",
-    href: "/become-supplier",
-  },
-  {
-    icon: Truck,
-    title: "For Logistics",
-    desc: "Optimize coastal routes. Fill deadhead miles. Earn per-kilometer on shared delivery networks.",
-    cta: "Join the Network",
-    href: "/register?role=shipping",
-  },
-  {
-    icon: Landmark,
-    title: "For Factoring",
-    desc: "Access verified hospitality receivables. Non-recourse factoring with full transaction transparency.",
-    cta: "Partner With Us",
-    href: "/register?role=factoring",
-  },
-];
-
-/* ── Mini BarChart for hero stat card ── */
-function MiniBarChart() {
-  const bars = [35, 55, 40, 65, 50, 85, 45];
-  return (
-    <div className="flex items-end gap-1.5 h-16 mt-4">
-      {bars.map((h, i) => (
-        <div
-          key={i}
-          className="flex-1 rounded-sm transition-all"
-          style={{
-            height: `${h}%`,
-            background: i === 5 ? "var(--accent-base)" : "rgba(255,255,255,0.08)",
-          }}
-        />
-      ))}
-    </div>
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "HotelsVendors — Procurement OS for Egyptian Hospitality",
+    description:
+      "One platform for hotel procurement. AI-powered demand sensing, ETA-compliant invoicing, embedded factoring, and a verified supplier network. Built for Egyptian hospitality.",
+  };
 }
 
-/* ── Page ── */
+const STATS = [
+  { value: "52", label: "Hotel Properties" },
+  { value: "100+", label: "Verified Suppliers" },
+  { value: "100%", label: "ETA Compliant" },
+  { value: "EGP 86M", label: "Monthly GMV" },
+];
 
-export default function HomePage() {
+const FEATURES = [
+  {
+    icon: BrainCircuit,
+    title: "AI Demand Sensing",
+    desc: "Predicts what each outlet needs before stockouts occur. Auto-generates purchase orders.",
+  },
+  {
+    icon: Receipt,
+    title: "ETA E-Invoicing",
+    desc: "Every invoice digitally signed, UUID-tagged, and submitted to the tax authority. Automatically.",
+  },
+  {
+    icon: Banknote,
+    title: "Embedded Factoring",
+    desc: "Suppliers get paid in 24 hours. Hotels preserve working capital. Zero default risk via INVO.",
+    badge: "INVO",
+    badgeColor: "#D4A843",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Authority Matrix",
+    desc: "Multi-level approval chains enforced at the database layer. No bypass. Full audit trail.",
+  },
+  {
+    icon: Store,
+    title: "Verified Suppliers",
+    desc: "Every supplier audited for commercial registration, tax compliance, and delivery track record.",
+  },
+  {
+    icon: PackageSearch,
+    title: "Procurement Intelligence",
+    desc: "Cross-property spend analysis, price benchmarking, and anomaly detection across your network.",
+  },
+];
+
+const ROLES = [
+  {
+    icon: Building2,
+    title: "Hotel Buyers",
+    desc: "Browse catalogs, place orders, track deliveries, manage invoices — all from one dashboard.",
+    href: "/register",
+    cta: "Start Procuring",
+  },
+  {
+    icon: Users,
+    title: "Suppliers",
+    desc: "List your catalog, reach 52+ hotels, get paid faster with INVO factoring. Subscribe on INVO →",
+    href: "/invo",
+    cta: "List on INVO",
+    accent: true,
+  },
+  {
+    icon: Landmark,
+    title: "Capital Partners",
+    desc: "Deploy capital with full visibility into every transaction. Non-recourse factoring with verified hotel cash flows.",
+    href: "/register",
+    cta: "Partner With Us",
+  },
+];
+
+export default async function HomePage() {
   return (
-    <main className="min-h-screen bg-[#0B0F1A]">
+    <main className="min-h-screen bg-black">
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
-          HERO SECTION
+          HERO
           ═══════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-            {/* Left: Copy */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--accent-base)]/30 text-[var(--accent-base)] text-[11px] font-semibold uppercase tracking-[0.12em] mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-base)] animate-pulse" />
-                B2B Procurement Egypt
-              </div>
+      <section className="relative min-h-[600px] md:min-h-[680px] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80"
+            alt="Luxury hotel lobby"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+        </div>
 
-              <h1 className="text-[32px] md:text-[48px] lg:text-[52px] font-bold text-white leading-[1.1] tracking-[-0.02em]">
-                Control Your Hotel's
-                <br />
-                Supply Chain{" "}
-                <span className="text-[var(--accent-base)]">Before It Controls You.</span>
-              </h1>
-
-              <p className="mt-6 text-[15px] md:text-[16px] text-gray-400 leading-relaxed max-w-lg">
-                From F&B to capital equipment: track every dirham, automate every order,
-                and get AI demand forecasting that prevents waste before it happens.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  href="/register"
-                  className="btn-accent text-[14px] py-3 px-6"
-                >
-                  Start Free — No Credit Card
-                </Link>
-                <button className="inline-flex items-center gap-2 text-[14px] font-medium text-gray-400 hover:text-white transition-colors">
-                  <span className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center">
-                    <Play className="w-3 h-3 fill-white text-white ml-0.5" />
-                  </span>
-                  Watch How It Works
-                </button>
-              </div>
-
-              {/* Trust bar */}
-              <div className="mt-10 flex flex-wrap items-center gap-3 text-[11px] text-gray-500 uppercase tracking-wide">
-                <span>Trusted by hotels across Egypt</span>
-                {TRUST_BADGES.map((badge) => (
-                  <span key={badge} className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-[var(--accent-base)]" />
-                    {badge}
-                  </span>
-                ))}
-              </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-6 pt-[120px] pb-20 w-full">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B0000]/90 text-white text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              Now Operating in Egypt
             </div>
 
-            {/* Right: Stat Card */}
-            <div className="lg:justify-self-end w-full max-w-md">
-              <div className="surface-card p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="text-[32px] font-bold text-[var(--accent-base)] metric-value">
-                      EGP 180K
-                    </div>
-                    <div className="text-[11px] text-gray-500 uppercase tracking-wide mt-1">
-                      Annual Waste Saved
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[28px] font-bold text-[var(--accent-base)] metric-value">
-                      ~20%
-                    </div>
-                    <div className="text-[11px] text-gray-500 uppercase tracking-wide mt-1">
-                      Spoilage Reduced
-                    </div>
-                  </div>
-                </div>
-                <MiniBarChart />
-                <div className="flex items-center justify-between mt-3 text-[12px]">
-                  <span className="text-gray-500">Projected</span>
-                  <span className="text-[var(--accent-base)] font-medium">Actual up 12%</span>
-                </div>
-              </div>
+            <h1 className="text-[28px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+              Procurement Under
+              <br />
+              One Slate.
+            </h1>
+
+            <p className="mt-6 text-[15px] md:text-[17px] text-white/60 leading-relaxed max-w-xl">
+              AI-powered demand sensing. ETA-compliant invoicing. Embedded factoring via{" "}
+              <Link href="/invo" className="text-[#D4A843] hover:text-[#e0b856] transition-colors">
+                INVO
+              </Link>
+              . A verified supplier network. Everything a hotel procurement team needs — in one platform.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#a50000] text-white text-[14px] font-medium rounded-lg transition-colors"
+              >
+                Request Platform Access
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/invo"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-[rgba(212,168,67,0.3)] text-[#D4A843] text-[14px] font-medium rounded-lg hover:bg-[rgba(212,168,67,0.06)] transition-colors"
+              >
+                INVO for Suppliers
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          STATS BAR
-          ═══════════════════════════════════════════ */}
-      <section className="border-y border-white/[0.04]">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+      {/* STATS */}
+      <section className="relative z-10 -mt-8 mx-auto max-w-5xl px-6">
+        <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-6 md:p-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {STATS.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-[24px] md:text-[28px] font-bold text-white tracking-tight metric-value">
+                <div className="text-[24px] md:text-[28px] font-medium text-white tracking-tight">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium text-[var(--accent-base)] uppercase tracking-wide">
+                <div className="mt-1 text-[11px] font-medium text-white/40 uppercase tracking-wide">
                   {stat.label}
                 </div>
-                <div className="text-[11px] text-gray-600 mt-0.5">{stat.sub}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          THE REALITY
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28">
+      {/* FEATURES */}
+      <section id="features" className="py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
-            <p className="text-[var(--accent-base)] text-[11px] font-semibold uppercase tracking-[0.2em] mb-4">
-              The Reality
-            </p>
-            <h2 className="text-[26px] md:text-[36px] font-bold text-white tracking-tight max-w-3xl mx-auto leading-[1.2]">
-              Egyptian Hotels Work With Hundreds of Suppliers.
+          <div className="max-w-xl mb-14">
+            <p className="label-upper mb-4">Platform Capabilities</p>
+            <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] leading-tight tracking-tight">
+              Everything procurement needs.
               <br />
-              <span className="text-gray-500">And Still Run Out of Stock Before They Run Out of Month.</span>
+              <span className="text-white/40">Nothing it doesn't.</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: TrendingDown,
-                stat: "32%",
-                label: "Average Over-Ordering",
-                desc: "Hotels order 32% more than needed to avoid stockouts. The excess spoils or expires.",
-              },
-              {
-                icon: Clock,
-                stat: "14 Days",
-                label: "Payment Delay",
-                desc: "Suppliers wait an average of 14-30 days. Many refuse to serve hotels without cash upfront.",
-              },
-              {
-                icon: Package,
-                stat: "8+ Hours",
-                label: "Weekly Procurement Time",
-                desc: "Kitchen managers, engineers, and housekeepers spend hours calling suppliers instead of running operations.",
-              },
-            ].map((item) => (
-              <div key={item.label} className="surface-card p-6 text-center">
-                <div className="w-10 h-10 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent-base)]/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-5 h-5 text-[var(--accent-base)]" />
-                </div>
-                <div className="text-[36px] font-bold text-white metric-value">{item.stat}</div>
-                <div className="text-[13px] font-semibold text-gray-300 mt-1">{item.label}</div>
-                <p className="text-[13px] text-gray-500 mt-3 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          PLATFORM PREVIEW — Screenshot
-          ═══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 border-y border-white/[0.04]">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-10">
-            <p className="text-[11px] font-semibold text-[var(--accent-base)] uppercase tracking-[0.2em] mb-3">
-              Platform Preview
-            </p>
-            <h2 className="text-[26px] md:text-[36px] font-bold text-white tracking-tight">
-              One Dashboard. Every Order. Zero Chaos.
-            </h2>
-          </div>
-          <div className="relative rounded-2xl border border-white/8 overflow-hidden bg-[#080c14]">
-            <Image
-              src="/user-screenshot2.png"
-              alt="HotelsVendors Platform Dashboard"
-              width={2880}
-              height={1800}
-              className="w-full h-auto"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F1A]/80 via-transparent to-transparent pointer-events-none" />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          CAPABILITIES
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[var(--accent-base)] uppercase tracking-[0.2em] mb-3">
-              Platform Capabilities
-            </p>
-            <h2 className="text-[26px] md:text-[36px] font-bold text-white tracking-tight">
-              Built for Egyptian Hospitality.
-              <br />
-              <span className="text-gray-500">Not a generic marketplace.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {CAPABILITIES.map((cap) => (
-              <div
-                key={cap.title}
-                className="surface-card p-6 group hover:border-[var(--accent-base)]/20 transition-all"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent-base)]/10 flex items-center justify-center mb-4 group-hover:bg-[var(--accent-base)]/15 transition-all">
-                  <cap.icon className="w-5 h-5 text-[var(--accent-base)]" />
-                </div>
-                <h3 className="text-[15px] font-semibold text-white mb-2">{cap.title}</h3>
-                <p className="text-[13px] text-gray-500 leading-relaxed">{cap.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          HOW IT WORKS
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28 border-y border-white/[0.04]">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[var(--accent-base)] uppercase tracking-[0.2em] mb-3">
-              How It Works
-            </p>
-            <h2 className="text-[26px] md:text-[36px] font-bold text-white tracking-tight">
-              From Setup to First Order
-              <br />
-              <span className="text-gray-500">In Under 48 Hours.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {WORKFLOW.map((step, i) => (
-              <div key={step.num} className="relative">
-                <div className="surface-card p-6 h-full">
-                  <div className="text-[44px] font-bold text-white/[0.06] leading-none mb-4">
-                    {step.num}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="surface-card p-6 hover-lift group">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(139,0,0,0.1)] border border-[rgba(139,0,0,0.15)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <f.icon className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-[15px] font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-[13px] text-gray-500 leading-relaxed">{step.desc}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <h3 className="text-[15px] text-white tracking-tight">{f.title}</h3>
+                      {f.badge && (
+                        <span
+                          className="text-[9px] font-medium uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
+                          style={{ color: f.badgeColor, border: `1px solid ${f.badgeColor}33` }}
+                        >
+                          {f.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[13px] text-white/45 leading-relaxed">{f.desc}</p>
+                  </div>
                 </div>
-                {i < WORKFLOW.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/8" />
-                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          STAKEHOLDERS
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28">
+      <hr className="section-divider" />
+
+      {/* ROLES */}
+      <section id="hotels" className="py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-[var(--accent-base)] uppercase tracking-[0.2em] mb-3">
-              For Every Stakeholder
-            </p>
-            <h2 className="text-[26px] md:text-[36px] font-bold text-white tracking-tight">
-              Four Sides. One Platform.
+          <div className="max-w-xl mb-14">
+            <p className="label-upper mb-4">Who It's For</p>
+            <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] leading-tight tracking-tight">
+              One platform.
               <br />
-              <span className="text-gray-500">Everyone Wins.</span>
+              <span className="text-white/40">Three roles. Zero friction.</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {STAKEHOLDERS.map((s) => (
-              <div
-                key={s.title}
-                className="surface-card p-6 flex flex-col sm:flex-row sm:items-start gap-5 group hover:border-[var(--accent-base)]/20 transition-all"
-              >
-                <div className="w-12 h-12 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent-base)]/10 flex items-center justify-center shrink-0 group-hover:bg-[var(--accent-base)]/15 transition-all">
-                  <s.icon className="w-6 h-6 text-[var(--accent-base)]" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-[16px] font-semibold text-white mb-1">{s.title}</h3>
-                  <p className="text-[13px] text-gray-500 leading-relaxed mb-4">{s.desc}</p>
-                  <Link
-                    href={s.href}
-                    className="inline-flex items-center gap-1 text-[13px] font-medium text-[var(--accent-base)] hover:text-[var(--accent-light)] transition-colors"
-                  >
-                    {s.cta}
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {ROLES.map((r) => (
+              <div key={r.title} className="surface-card p-7 hover-lift">
+                <r.icon className={`w-8 h-8 mb-5 ${r.accent ? "text-[#D4A843]" : "text-white/60"}`} />
+                <h3 className="text-[17px] text-white mb-2 tracking-tight">{r.title}</h3>
+                <p className="text-[13px] text-white/45 leading-relaxed mb-6">{r.desc}</p>
+                <Link
+                  href={r.href}
+                  className={`inline-flex items-center gap-1.5 text-[13px] font-medium transition-colors ${
+                    r.accent
+                      ? "text-[#D4A843] hover:text-[#e0b856]"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  {r.cta} <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CTA SECTION
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28">
+      <hr className="section-divider" />
+
+      {/* CTA */}
+      <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="surface-card p-10 md:p-16 text-center relative overflow-hidden">
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-[28px] md:text-[38px] font-bold text-white tracking-tight leading-[1.15]">
-                Stop Leaking Money Into Your Supply Chain.
+          <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-white/[0.06] p-10 md:p-16 text-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/[0.06] rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="relative z-10">
+              <h2 className="text-[24px] md:text-[34px] font-medium text-white tracking-tight">
+                Ready to consolidate your procurement?
               </h2>
-              <p className="mt-4 text-[15px] text-gray-500 leading-relaxed">
-                Join 2,400+ Egyptian hotels that have turned procurement from a cost center into a competitive advantage.
+              <p className="mt-4 text-[14px] text-white/45 max-w-lg mx-auto">
+                Join 52+ hotel properties that have turned procurement from a cost center
+                into a competitive advantage.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="btn-accent text-[14px] py-3 px-7"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#a50000] text-white text-[14px] font-medium rounded-lg transition-colors"
                 >
-                  Start Free — No Credit Card
+                  Request Platform Access
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="/register"
-                  className="btn-ghost text-[14px] py-3 px-7"
+                  href="/invo"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-[rgba(212,168,67,0.25)] text-[#D4A843] text-[14px] font-medium rounded-lg hover:bg-[rgba(212,168,67,0.04)] transition-colors"
                 >
-                  Schedule a Demo
+                  Explore INVO for Suppliers
                 </Link>
-              </div>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-[12px] text-gray-600">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-base)]" />
-                  Free forever for hotels under 50 rooms
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-base)]" />
-                  Full ETA compliance from day one
-                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          FOOTER
-          ═══════════════════════════════════════════ */}
-      <footer className="border-t border-white/[0.04] bg-[#080c14]">
-        <div className="mx-auto max-w-7xl px-6 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2.5 mb-4">
-                <BrandLogo variant="dark" size="sm" />
-                <span className="text-[14px] font-bold text-white tracking-tight">
-                  HotelsVendors
-                </span>
-              </div>
-              <p className="text-[12px] text-gray-600 leading-relaxed max-w-xs">
-                Egypt's B2B procurement operating system for hospitality. AI-powered, fully compliant, built for scale.
-              </p>
-            </div>
-
-            {/* Platform */}
-            <div>
-              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                Platform
-              </h4>
-              <ul className="space-y-2.5">
-                {[
-                  { label: "Solutions", href: "/solutions" },
-                  { label: "Pricing", href: "/pricing" },
-                  { label: "Marketplace", href: "/marketplace" },
-                ].map((item) => (
-                  <li key={item.label}>
-                    <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Stakeholders */}
-            <div>
-              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                Stakeholders
-              </h4>
-              <ul className="space-y-2.5">
-                {[
-                  { label: "Hotels", href: "/hotels" },
-                  { label: "Suppliers", href: "/become-supplier" },
-                  { label: "Logistics", href: "/register?role=shipping" },
-                  { label: "Factoring", href: "/register?role=factoring" },
-                ].map((item) => (
-                  <li key={item.label}>
-                    <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                Company
-              </h4>
-              <ul className="space-y-2.5">
-                {[
-                  { label: "About", href: "/about" },
-                  { label: "Sign In", href: "/login" },
-                  { label: "Get Started", href: "/register" },
-                ].map((item) => (
-                  <li key={item.label}>
-                    <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-white/[0.04] pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[12px] text-gray-600">
-              &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
-            </p>
-            <div className="flex items-center gap-4 text-[12px] text-gray-600">
-              <span className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-[var(--accent-base)]" />
-                Bank-grade security
-              </span>
-              <span className="flex items-center gap-1.5">
-                <FileCheck className="w-3.5 h-3.5 text-[var(--accent-base)]" />
-                ETA compliant
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </main>
   );
 }

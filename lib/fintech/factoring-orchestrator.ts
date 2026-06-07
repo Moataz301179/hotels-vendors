@@ -362,12 +362,12 @@ export async function checkSettlement(
       data: {
         status: newStatus,
         settledAt: settlement.status === "SETTLED" ? new Date() : fr.settledAt,
-        hotelPaidAt: settlement.hotelPaid ? new Date() : fr.hotelPaidAt,
+        hotelPaidAt: fr.hotelPaidAt,
       },
     });
   }
 
-  return { status: settlement, factoringRequestId };
+  return { status: settlement?.status ?? null, factoringRequestId };
 }
 
 // ─────────────────────────────────────────

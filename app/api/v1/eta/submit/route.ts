@@ -113,4 +113,4 @@ export const POST = apiRoute(async (request: NextRequest) => {
     const message = err instanceof Error ? err.message : "Unknown ETA error";
     return error(`ETA submission failed: ${message}`, 502);
   }
-});
+}, { rateLimit: "api" });

@@ -38,7 +38,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Webhook processing failed", 400);
   }
 
-  const olivFundingId = result.factoringRequestId;
+  const olivFundingId = result.partnerFundingId;
   if (!olivFundingId) {
     console.warn("[Oliv Callback] Missing funding_id in payload");
     return success({ acknowledged: true, matched: false, reason: "missing_funding_id" });

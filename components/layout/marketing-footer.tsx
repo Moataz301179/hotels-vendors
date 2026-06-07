@@ -1,18 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { Shield, FileCheck } from "lucide-react";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-white/[0.04] bg-[#080c14]">
+    <footer className="border-t border-white/[0.04] bg-[#080510]">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="sm" />
+              <svg width="24" height="24" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <g fill="#ffffff" stroke="#ffffff" strokeWidth="12" strokeLinejoin="round">
+                  <rect x="80" y="100" width="40" height="200" rx="8"/>
+                  <rect x="80" y="140" width="160" height="40" rx="8"/>
+                  <path d="M260 100 L300 300 L340 100"/>
+                  <path d="M120 300 Q200 280 280 300" strokeWidth="8" fill="none"/>
+                </g>
+              </svg>
               <div>
                 <span className="text-[14px] font-bold text-white tracking-tight block">
                   HotelsVendors
@@ -92,11 +98,11 @@ export function MarketingFooter() {
           </p>
           <div className="flex items-center gap-4 text-[12px] text-gray-600">
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-accent-base" />
+              <Shield className="w-3.5 h-3.5 text-[var(--accent-base)]" />
               Bank-grade security
             </span>
             <span className="flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5 text-accent-base" />
+              <FileCheck className="w-3.5 h-3.5 text-[var(--accent-base)]" />
               ETA compliant
             </span>
           </div>

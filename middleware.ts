@@ -127,12 +127,60 @@ async function verifySession(token: string) {
 
 /* ── Middleware ── */
 
+/* ── Security Headers ── */
+function addSecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  );
+  // Strict CSP — allow self, inline styles/scripts (Next.js requirement), and Google Fonts
+  response.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: blob:; " +
+    "connect-src 'self'; " +
+    "frame-ancestors 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self';"
+  );
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get("host") || "";
+
+  // ── INVO Subdomain Routing ──
+  // invo.hotelsvendors.com/ → serves /invo page
+  // invo.hotelsvendors.com/docs → serves /invo/docs page
+  if (host.startsWith("invo.")) {
+    const url = request.nextUrl.clone();
+    // Root path → rewrite to /invo
+    if (pathname === "/") {
+      url.pathname = "/invo";
+      return addSecurityHeaders(NextResponse.rewrite(url));
+    }
+    // API paths under subdomain → route to /api/v1/invo
+    if (pathname.startsWith("/api/") && !pathname.startsWith("/api/v1/invo")) {
+      // Allow API calls on invo subdomain to reach the INVO API routes
+      return addSecurityHeaders(NextResponse.next());
+    }
+    // Other paths → prepend /invo if not already
+    if (!pathname.startsWith("/invo") && !pathname.startsWith("/api/")) {
+      url.pathname = `/invo${pathname}`;
+      return addSecurityHeaders(NextResponse.rewrite(url));
+    }
+  }
 
   // Allow public paths without auth
   if (isPublicPath(pathname)) {
-    return NextResponse.next();
+    return addSecurityHeaders(NextResponse.next());
   }
 
   // Read session cookie
@@ -141,30 +189,30 @@ export async function middleware(request: NextRequest) {
   // ── API routes: require valid session ──
   if (isApiPath(pathname)) {
     if (!token) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+      return addSecurityHeaders(NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }));
     }
     const session = await verifySession(token);
     if (!session) {
-      return NextResponse.json({ success: false, error: "Invalid or expired session" }, { status: 401 });
+      return addSecurityHeaders(NextResponse.json({ success: false, error: "Invalid or expired session" }, { status: 401 }));
     }
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", session.userId);
     requestHeaders.set("x-tenant-id", session.tenantId);
     requestHeaders.set("x-platform-role", session.platformRole);
     requestHeaders.set("x-session-token", token);
-    return NextResponse.next({ request: { headers: requestHeaders } });
+    return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
   }
 
   // No token on protected route → redirect to login
   if (!token && isProtectedPath(pathname)) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+    return addSecurityHeaders(NextResponse.redirect(loginUrl));
   }
 
   // No token on non-protected route → allow through
   if (!token) {
-    return NextResponse.next();
+    return addSecurityHeaders(NextResponse.next());
   }
 
   // Verify token
@@ -174,12 +222,12 @@ export async function middleware(request: NextRequest) {
   if (!session && isProtectedPath(pathname)) {
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete(SESSION_COOKIE);
-    return response;
+    return addSecurityHeaders(response);
   }
 
   // Invalid token on non-protected route → allow through (will fail at API layer if needed)
   if (!session) {
-    return NextResponse.next();
+    return addSecurityHeaders(NextResponse.next());
   }
 
   const { userId, platformRole, tenantId } = session;
@@ -194,14 +242,14 @@ export async function middleware(request: NextRequest) {
   // Redirect /dashboard (non-existent) to role-specific dashboard
   if (pathname === "/dashboard") {
     const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
-    return NextResponse.redirect(new URL(target, request.url));
+    return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
   }
 
   // Role-based route guards
   if (isProtectedPath(pathname)) {
     // ADMIN can access everything
     if (platformRole === "ADMIN") {
-      return NextResponse.next({ request: { headers: requestHeaders } });
+      return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
     }
 
     // Check if user has access to this route
@@ -213,11 +261,11 @@ export async function middleware(request: NextRequest) {
     if (!hasAccess) {
       // Redirect to their default dashboard
       const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
-      return NextResponse.redirect(new URL(target, request.url));
+      return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
     }
   }
 
-  return NextResponse.next({ request: { headers: requestHeaders } });
+  return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
 }
 
 /* ── Matcher ── */

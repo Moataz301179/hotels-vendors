@@ -1,16 +1,23 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { fundThroughPartner } from "@/lib/fintech/factoring-bridge";
-import { calculateHubRevenue } from "@/lib/fintech/hub-revenue";
+import { submitFactoringInstruction } from "@/lib/fintech/factoring-bridge";
 import { apiRoute, authenticate, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const FundSchema = z.object({
   invoiceId: z.string().cuid(),
   partnerId: z.string().min(1),
-  eligibilityResponseId: z.string().min(1),
 });
 
+/**
+ * Submit a factoring instruction to a licensed partner.
+ *
+ * ⚠️  HotelsVendors does NOT transfer funds.
+ * This endpoint sends invoice data to the factoring partner.
+ * The partner pays the supplier directly and collects from the hotel later.
+ *
+ * HotelsVendors earns a referral fee from the partner (invoiced off-chain).
+ */
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "factoring:fund");
@@ -38,61 +45,66 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Forbidden", 403);
   }
 
-  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "FACTORING_FUND", amount: invoice.total });
-
-  const hubRev = await calculateHubRevenue({
-    invoiceId: data.invoiceId,
-    partnerDiscountRate: 0.02,
-    advanceRate: 0.9,
+  // Idempotency — prevent duplicate factoring submissions
+  const idempotencyKey = await requireIdempotencyKey(request, {
+    userId: auth.userId,
+    action: "FACTORING_INSTRUCTION",
+    amount: invoice.total,
   });
 
-  const funding = await fundThroughPartner(data.partnerId, {
-    eligibilityResponseId: data.eligibilityResponseId,
-    invoiceId: data.invoiceId,
+  // Prepare invoice data for the partner
+  const invoiceData = {
+    invoiceId: invoice.id,
+    invoiceNumber: invoice.invoiceNumber,
     etaUuid: invoice.etaUuid || "",
     grossAmount: invoice.total,
-    platformFee: hubRev.netPlatformFee,
-    netDisbursement: hubRev.supplierDisbursement,
-    supplierBankAccount: invoice.supplier.bankAccount || "",
-    supplierBankName: invoice.supplier.bankName || "",
-    supplierTaxId: invoice.supplier.taxId,
-    hotelTaxId: invoice.hotel.taxId,
-  });
+    currency: invoice.currency,
+    supplier: {
+      name: invoice.supplier.name,
+      taxId: invoice.supplier.taxId,
+      bankAccount: invoice.supplier.bankAccount || "",
+      bankName: invoice.supplier.bankName || "",
+    },
+    hotel: {
+      name: invoice.hotel.name,
+      taxId: invoice.hotel.taxId,
+    },
+    orderId: invoice.orderId,
+    deliveryConfirmedAt: invoice.order?.createdAt?.toISOString() || new Date().toISOString(),
+  };
 
-  if (!funding.success) {
-    return error("Funding execution failed", 502);
+  // Submit to partner — partner handles all fund transfers
+  const result = await submitFactoringInstruction(data.partnerId, invoiceData);
+
+  if (!result.success) {
+    return error(result.error || "Partner rejected the instruction", 502);
   }
 
+  // Update invoice status — platform orchestrates, partner transacts
   await prisma.invoice.update({
     where: { id: data.invoiceId },
     data: {
       factoringStatus: "ACCEPTED",
       factoringCompanyId: data.partnerId,
-      factoringAmount: funding.disbursedAmount,
       paymentStatus: "FACTORED",
     },
   });
 
-  await prisma.factoringRequest.create({
+  // Create factoring request record (for tracking only — no cash handled)
+  const factoringRequest = await prisma.factoringRequest.create({
     data: {
       tenantId: auth.tenantId,
       invoiceId: data.invoiceId,
       factoringCompanyId: data.partnerId,
       requestedAmount: invoice.total,
       status: "DISBURSED",
-      advanceRate: 0.9,
-      discountRate: 0.02,
-      platformFeeRate: hubRev.platformFeeRate,
-      grossAmount: invoice.total,
-      platformFee: hubRev.netPlatformFee,
-      netPlatformFee: hubRev.netPlatformFee,
-      factoringFee: hubRev.factoringFee,
-      disbursedAmount: funding.disbursedAmount,
-      disbursedAt: funding.disbursedAt,
+      // Terms are set by the partner, not the platform
+      disbursedAt: new Date(),
       partnerResponse: JSON.stringify({
-        factoringRequestId: funding.factoringRequestId,
-        transactionReference: funding.transactionReference,
-        expectedSettlementDate: funding.expectedSettlementDate,
+        instructionId: result.instructionId,
+        partnerFundingId: result.partnerFundingId,
+        estimatedDisbursementDate: result.estimatedDisbursementDate,
+        note: "Funds disbursed directly by partner to supplier",
       }),
     },
   });
@@ -100,15 +112,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
   await audit({
     entityType: "INVOICE",
     entityId: data.invoiceId,
-    action: "FACTORING_FUND",
+    action: "FACTORING_INSTRUCTION_SUBMITTED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
     afterState: {
       partnerId: data.partnerId,
-      disbursedAmount: funding.disbursedAmount,
-      platformFee: hubRev.netPlatformFee,
-      factoringRequestId: funding.factoringRequestId,
+      instructionId: result.instructionId,
+      partnerFundingId: result.partnerFundingId,
+      factoringRequestId: factoringRequest.id,
+      note: "Partner handles all fund transfers. Platform does not hold cash.",
     },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
@@ -116,5 +129,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   completeIdempotency(idempotencyKey, data.invoiceId);
 
-  return success({ funding, hubRevenue: hubRev });
-});
+  return success({
+    instructionId: result.instructionId,
+    partnerFundingId: result.partnerFundingId,
+    estimatedDisbursementDate: result.estimatedDisbursementDate,
+    factoringRequestId: factoringRequest.id,
+  });
+}, { rateLimit: "financial" });

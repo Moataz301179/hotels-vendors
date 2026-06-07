@@ -99,6 +99,8 @@ export async function POST(request: NextRequest) {
       averageDisputeRate: params.averageDisputeRate || 0.05,
       etaPenaltyRate: params.etaPenaltyRate || 0.025,
       supplierCostOfCapitalAnnual: params.supplierCostOfCapitalAnnual || 0.20,
+      factoringPartnerRate: 0.025,
+      documentProcessingFee: 500,
     });
 
     // Enrich with platform-specific data
@@ -113,19 +115,19 @@ export async function POST(request: NextRequest) {
         { label: "Storage Waste", amount: report.storageWaste, type: "hidden" },
         { label: "Dispute Losses", amount: report.disputeLosses, type: "hidden" },
         { label: "TRUE Offline Cost", amount: report.totalOfflineCost, type: "total_offline" },
-        { label: "Platform Price", amount: report.platformPrice, type: "base" },
-        { label: "Platform Fee", amount: report.platformFee, type: "fee" },
-        { label: "Factoring Fee", amount: report.factoringFee, type: "fee" },
-        { label: "Net Platform Price", amount: report.netPlatformPrice, type: "total_platform" },
+        { label: "Platform Order Total", amount: report.platformOrderTotal, type: "base" },
+        { label: "Document Processing Fee", amount: report.platformDocumentFee, type: "fee" },
+        { label: "Factoring Partner Fee", amount: report.factoringPartnerFee, type: "fee" },
+        { label: "Total Platform Cost", amount: report.totalPlatformCost, type: "total_platform" },
         { label: "SAVINGS", amount: report.absoluteSavings, type: "savings" },
       ],
       // Comparison for quick reference
       comparison: {
         offline: report.totalOfflineCost,
-        platform: report.netPlatformPrice,
+        platform: report.totalPlatformCost,
         savings: report.absoluteSavings,
         savingsPercent: report.percentageSavings,
-        paybackPeriodMonths: report.orderTotal > 0 ? Math.ceil(report.netPlatformPrice / (report.orderTotal * 0.025)) : 0,
+        paybackPeriodMonths: report.orderTotal > 0 ? Math.ceil(report.totalPlatformCost / (report.orderTotal * 0.025)) : 0,
       },
       // Narrative sections for different audiences
       narratives: {

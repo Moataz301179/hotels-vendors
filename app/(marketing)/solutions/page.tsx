@@ -146,7 +146,7 @@ export default async function SolutionsPage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Explore the Platform
                 <ArrowRight className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default async function SolutionsPage() {
                 className="group p-6 md:p-8 rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all"
               >
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#8B0000]/10 group-hover:border-[#8B0000]/20 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[var(--accent-base)]/10 group-hover:border-[var(--accent-base)]/20 transition-all">
                     <solution.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-right">
@@ -253,7 +253,7 @@ export default async function SolutionsPage() {
             ].map((step, i) => (
               <div key={step.title} className="relative">
                 <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full">
-                  <div className="w-10 h-10 rounded-xl bg-[#8B0000]/10 flex items-center justify-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-base)]/10 flex items-center justify-center mb-4">
                     <step.icon className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-[16px] font-semibold text-white mb-2">
@@ -371,7 +371,7 @@ export default async function SolutionsPage() {
       <section className="py-10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-base)]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
                 <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">
@@ -383,7 +383,7 @@ export default async function SolutionsPage() {
               </div>
               <Link
                 href="/register?role=hotel"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors shrink-0"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors shrink-0"
               >
                 Register as Hotel
                 <ArrowRight className="w-4 h-4" />
@@ -399,7 +399,7 @@ export default async function SolutionsPage() {
       <section className="py-10 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B0000]/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-base)]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
                 <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">

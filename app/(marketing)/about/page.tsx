@@ -132,7 +132,7 @@ export default async function AboutPage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors"
               >
                 Join the Platform
                 <ArrowRight className="w-4 h-4" />
@@ -270,7 +270,7 @@ export default async function AboutPage() {
                   }`}
                 >
                   {/* dot */}
-                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[#8B0000] -translate-x-1/2 mt-2" />
+                  <div className="absolute left-4 md:left-1/2 top-0 w-2 h-2 rounded-full bg-[var(--accent-base)] -translate-x-1/2 mt-2" />
 
                   {/* content */}
                   <div className="ml-10 md:ml-0 md:w-1/2 md:text-right">
@@ -406,7 +406,7 @@ export default async function AboutPage() {
       <section className="py-20 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center shadow-sm">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B0000]/[0.08] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--accent-base)]/[0.08] rounded-full blur-[120px] pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-[28px] md:text-[38px] font-bold text-white tracking-tight">
                 {cms?.ctaTitle || "Ready to See What We See?"}
@@ -417,7 +417,7 @@ export default async function AboutPage() {
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#6B0000] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4" />

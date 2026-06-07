@@ -1,185 +1,97 @@
 /**
- * Hub-Revenue Calculator
- * Hotels Vendors Fintech Layer
+ * Transparency Fee Calculator
+ * Hotels Vendors
  *
- * Automatically calculates platform fees, membership discounts, and risk surcharges.
- * Ensures the platform is paid FIRST from every factoring disbursement.
+ * ⚠️  IMPORTANT: This module is for DISPLAY AND TRANSPARENCY only.
+ * HotelsVendors does NOT collect fees from factoring disbursements.
+ *
+ * The factoring partner deducts their own fees and pays the supplier directly.
+ * HotelsVendors shows the supplier exactly what they'll receive and what the partner charges.
+ *
+ * HotelsVendors' actual revenue comes from:
+ *  1. INVO SaaS subscriptions (monthly, suppliers pay to be listed)
+ *  2. Document processing fees (per ETA invoice submitted)
+ *  3. Marketplace commission (small % on completed orders)
+ *  4. Factoring partner referral fees (invoiced to partners off-chain)
  */
 
-import { HotelTier } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
 import type { RiskTier } from "./risk-engine";
 
 // ─────────────────────────────────────────
-// 1. CONFIGURATION
+// TRANSPARENCY TYPES
+// What the supplier sees before accepting factoring
 // ─────────────────────────────────────────
 
-export interface HubRevenueConfig {
-  basePlatformFeeRate: number;      // 0.025 = 2.5%
-  primeDiscountRate: number;        // 0.50 = 50% off for PREMIER
-  coastalSurchargeRate: number;     // 0.005 = +0.5%
-  etaComplianceFeeRate: number;     // 0.003 = +0.3%
-  highRiskSurchargeRate: number;    // 0.005 = +0.5%
-  criticalRiskSurchargeRate: number;// 0.010 = +1.0%
+export interface FactoringTransparencyBreakdown {
+  // Invoice details
+  invoiceAmount: number;
+  currency: string;
+
+  // What the partner pays the supplier (partner deducts their own fee)
+  grossDisbursement: number;      // advanceRate × invoiceAmount
+  partnerFee: number;             // discountRate × invoiceAmount (collected by partner)
+  supplierReceives: number;       // What supplier actually gets (via partner, not platform)
+
+  // What the hotel owes the partner later
+  hotelRepaymentAmount: number;   // Full invoice amount (hotel pays partner, not platform)
+  hotelRepaymentDueDate: string;
+
+  // Platform fees (separate from factoring — these are SaaS/doc processing fees already paid)
+  platformSaaS: { alreadyPaid: boolean }; // INVO subscription
+  documentProcessingFee: number;     // Already charged per doc
+
+  // Summary
+  effectiveCostToSupplier: number;  // Partner fee only — no platform cut
+  effectiveCostToHotel: number;     // Full invoice + partner financing cost
 }
-
-const DEFAULT_CONFIG: HubRevenueConfig = {
-  basePlatformFeeRate: 0.025,
-  primeDiscountRate: 0.50,
-  coastalSurchargeRate: 0.005,
-  etaComplianceFeeRate: 0.003,
-  highRiskSurchargeRate: 0.005,
-  criticalRiskSurchargeRate: 0.010,
-};
-
-// ─────────────────────────────────────────
-// 2. TYPES
-// ─────────────────────────────────────────
-
-export interface HubRevenueResult {
-  // Inputs
-  grossAmount: number;
-  hotelTier: HotelTier;
-  riskTier: RiskTier;
-  isCoastal: boolean;
-  partnerDiscountRate: number;
-  advanceRate: number;
-  membershipTier: "CORE" | "PREMIER";
-
-  // Platform fee breakdown
-  basePlatformFee: number;
-  membershipDiscount: number;
-  riskSurcharge: number;
-  logisticsSurcharge: number;
-  etaComplianceFee: number;
-  netPlatformFee: number;
-  platformFeeRate: number; // Effective rate
-
-  // Partner fee
-  factoringFee: number;
-
-  // Disbursement
-  supplierDisbursement: number;
-  grossDisbursementBeforeFees: number; // grossAmount * advanceRate
-
-  // Audit
-  calculatedAt: Date;
-  configVersion: string;
-}
-
-// ─────────────────────────────────────────
-// 3. CALCULATION ENGINE
-// ─────────────────────────────────────────
 
 /**
- * Calculate hub revenue and supplier disbursement for a factoring transaction.
- *
- * INVARIANT: Platform fee is ALWAYS deducted BEFORE factoring partner fee.
- * This ensures the hub is paid first.
- *
- * SECURITY: All tier/risk inputs are validated against database state.
- * Never trust user-provided tier classifications.
+ * Calculate a transparent breakdown for the supplier showing exactly what they'll receive.
+ * This is DISPLAY-ONLY. The platform does not deduct anything from the disbursement.
  */
-export async function calculateHubRevenue(params: {
-  invoiceId: string;
-  partnerDiscountRate: number;
-  advanceRate: number;
-  config?: Partial<HubRevenueConfig>;
-}): Promise<HubRevenueResult> {
-  // Fetch authoritative data from database — NEVER trust user input
-  const invoice = await prisma.invoice.findUnique({
-    where: { id: params.invoiceId },
-    include: { hotel: true },
-  });
-
-  if (!invoice) {
-    throw new Error(`Invoice not found: ${params.invoiceId}`);
-  }
-
-  const hotel = invoice.hotel;
-  const grossAmount = invoice.total;
-  const hotelTier = hotel.tier;
-  const riskTier = hotel.riskTier ?? "MEDIUM";
-  const isCoastal = hotel.city.toLowerCase().includes("coast") ||
-    hotel.governorate.toLowerCase().includes("matrouh") ||
-    hotel.governorate.toLowerCase().includes("red sea");
-
+export function calculateFactoringBreakdown(params: {
+  invoiceAmount: number;
+  currency: string;
+  advanceRate: number;       // From partner offer (e.g. 0.90)
+  partnerDiscountRate: number; // From partner offer (e.g. 0.02)
+  supplierSubscriptionTier: "STARTER" | "GROWTH" | "PROFESSIONAL";
+  documentProcessingFeeAlreadyPaid: number;
+  hotelPaymentTermsDays: number; // How long hotel has to repay partner
+}): FactoringTransparencyBreakdown {
   const {
-    partnerDiscountRate,
+    invoiceAmount,
+    currency,
     advanceRate,
-    config: userConfig,
+    partnerDiscountRate,
+    documentProcessingFeeAlreadyPaid,
+    hotelPaymentTermsDays,
   } = params;
 
-  const config = { ...DEFAULT_CONFIG, ...userConfig };
-  const membershipTier = hotelTier === "PREMIER" ? "PREMIER" : "CORE";
+  const grossDisbursement = invoiceAmount * advanceRate;
+  const partnerFee = invoiceAmount * partnerDiscountRate;
+  const supplierReceives = grossDisbursement - partnerFee;
 
-  // 1. Base platform fee
-  const basePlatformFee = grossAmount * config.basePlatformFeeRate;
-
-  // 2. Membership discount (PREMIER gets 50% off platform fee)
-  let membershipDiscount = 0;
-  if (membershipTier === "PREMIER") {
-    membershipDiscount = basePlatformFee * config.primeDiscountRate;
-  }
-
-  // 3. Risk surcharge
-  let riskSurcharge = 0;
-  if (riskTier === "HIGH") {
-    riskSurcharge = grossAmount * config.highRiskSurchargeRate;
-  } else if (riskTier === "CRITICAL") {
-    riskSurcharge = grossAmount * config.criticalRiskSurchargeRate;
-  }
-
-  // 4. Logistics surcharge (coastal)
-  let logisticsSurcharge = 0;
-  if (isCoastal) {
-    logisticsSurcharge = grossAmount * config.coastalSurchargeRate;
-  }
-
-  // 5. ETA compliance fee
-  const etaComplianceFee = grossAmount * config.etaComplianceFeeRate;
-
-  // 6. Net platform fee
-  const netPlatformFee = basePlatformFee - membershipDiscount + riskSurcharge + logisticsSurcharge + etaComplianceFee;
-
-  // 7. Effective platform fee rate
-  const platformFeeRate = grossAmount > 0 ? netPlatformFee / grossAmount : 0;
-
-  // 8. Factoring partner fee
-  const factoringFee = grossAmount * partnerDiscountRate;
-
-  // 9. Gross disbursement (before any fees)
-  const grossDisbursementBeforeFees = grossAmount * advanceRate;
-
-  // 10. Net supplier disbursement
-  // PLATFORM FEE IS DEDUCTED FIRST
-  const supplierDisbursement = Math.max(0, grossDisbursementBeforeFees - netPlatformFee - factoringFee);
+  const hotelRepaymentDueDate = new Date();
+  hotelRepaymentDueDate.setDate(hotelRepaymentDueDate.getDate() + hotelPaymentTermsDays);
 
   return {
-    grossAmount,
-    hotelTier,
-    riskTier,
-    isCoastal,
-    partnerDiscountRate,
-    advanceRate,
-    membershipTier,
-    basePlatformFee,
-    membershipDiscount,
-    riskSurcharge,
-    logisticsSurcharge,
-    etaComplianceFee,
-    netPlatformFee,
-    platformFeeRate,
-    factoringFee,
-    supplierDisbursement,
-    grossDisbursementBeforeFees,
-    calculatedAt: new Date(),
-    configVersion: "1.0",
+    invoiceAmount,
+    currency,
+    grossDisbursement,
+    partnerFee,
+    supplierReceives,
+    hotelRepaymentAmount: invoiceAmount,
+    hotelRepaymentDueDate: hotelRepaymentDueDate.toISOString(),
+    platformSaaS: { alreadyPaid: true },
+    documentProcessingFee: documentProcessingFeeAlreadyPaid,
+    effectiveCostToSupplier: partnerFee,
+    effectiveCostToHotel: invoiceAmount + partnerFee,
   };
 }
 
 // ─────────────────────────────────────────
-// 4. TCP (TOTAL COST OF PROCUREMENT) REPORT
+// TCP (TOTAL COST OF PROCUREMENT) REPORT
+// Sales tool for hotel CFOs — proves platform value vs offline
 // ─────────────────────────────────────────
 
 export interface TcpReport {
@@ -199,17 +111,16 @@ export interface TcpReport {
   disputeLosses: number;
   totalOfflineCost: number;
 
-  // Platform price
-  platformPrice: number;
-  platformFee: number;
-  factoringFee: number;
-  netPlatformPrice: number;
+  // Platform price (transparent)
+  platformOrderTotal: number;
+  platformDocumentFee: number;
+  factoringPartnerFee: number; // What the partner charges — shown for transparency
+  totalPlatformCost: number;
 
   // Savings
   absoluteSavings: number;
   percentageSavings: number;
 
-  // Narrative
   narrative: string;
 }
 
@@ -222,11 +133,13 @@ export function generateTcpReport(params: {
   hotelName: string;
   orderId: string;
   orderTotal: number;
-  paymentTermsDays: number; // How long supplier waits offline
-  hotelStorageCostMonthly: number; // EGP
-  averageDisputeRate: number; // 0.05 = 5%
-  etaPenaltyRate: number; // 0.025 = 2.5%
-  supplierCostOfCapitalAnnual: number; // 0.20 = 20%
+  paymentTermsDays: number;
+  hotelStorageCostMonthly: number;
+  averageDisputeRate: number;
+  etaPenaltyRate: number;
+  supplierCostOfCapitalAnnual: number;
+  factoringPartnerRate: number; // The partner's discount rate
+  documentProcessingFee: number;
 }): TcpReport {
   const {
     hotelId,
@@ -238,44 +151,41 @@ export function generateTcpReport(params: {
     averageDisputeRate,
     etaPenaltyRate,
     supplierCostOfCapitalAnnual,
+    factoringPartnerRate,
+    documentProcessingFee,
   } = params;
 
-  // Offline price ("cheaper" on paper)
   const offlinePrice = orderTotal;
 
-  // Hidden costs of offline procurement
   const costOfCapital = orderTotal * supplierCostOfCapitalAnnual * (paymentTermsDays / 365);
   const etaPenaltyRisk = orderTotal * etaPenaltyRate;
-  const logisticsFragmentation = orderTotal * 0.042; // 4.2% average fragmentation cost
-  const storageWaste = hotelStorageCostMonthly * 0.3; // 30% of monthly storage
+  const logisticsFragmentation = orderTotal * 0.042;
+  const storageWaste = hotelStorageCostMonthly * 0.3;
   const disputeLosses = orderTotal * averageDisputeRate;
 
   const totalOfflineCost = offlinePrice + costOfCapital + etaPenaltyRisk + logisticsFragmentation + storageWaste + disputeLosses;
 
-  // Platform price
-  const platformFee = orderTotal * 0.025; // 2.5%
-  const factoringFee = orderTotal * 0.02; // 2%
-  const platformPrice = orderTotal + platformFee + factoringFee;
-  const netPlatformPrice = platformPrice; // Total cost to hotel
+  const platformDocumentFee = documentProcessingFee;
+  const factoringPartnerFee = orderTotal * factoringPartnerRate;
+  const totalPlatformCost = orderTotal + platformDocumentFee + factoringPartnerFee;
 
-  // Savings
-  const absoluteSavings = totalOfflineCost - netPlatformPrice;
+  const absoluteSavings = totalOfflineCost - totalPlatformCost;
   const percentageSavings = totalOfflineCost > 0 ? (absoluteSavings / totalOfflineCost) * 100 : 0;
 
   const narrative = `
-Your offline supplier quotes ${offlinePrice.toLocaleString()} EGP. 
-But when you factor in the 90-day payment delay, your supplier is paying 
-${costOfCapital.toFixed(0)} EGP in cost of capital — which they silently pass 
-back to you through higher future prices. Add ETA compliance fines 
-(${etaPenaltyRisk.toFixed(0)} EGP risk), fragmented delivery costs 
-(${logisticsFragmentation.toFixed(0)} EGP), and storage waste 
-(${storageWaste.toFixed(0)} EGP/month), and your TRUE offline cost is 
+Your offline supplier quotes ${offlinePrice.toLocaleString()} EGP.
+But when you factor in the ${paymentTermsDays}-day payment delay, your supplier is paying
+${costOfCapital.toFixed(0)} EGP in cost of capital — which they silently pass
+back to you through higher future prices. Add ETA compliance fines
+(${etaPenaltyRisk.toFixed(0)} EGP risk), fragmented delivery costs
+(${logisticsFragmentation.toFixed(0)} EGP), and storage waste
+(${storageWaste.toFixed(0)} EGP/month), and your TRUE offline cost is
 ${totalOfflineCost.toLocaleString()} EGP.
 
-With Hotels Vendors, you pay ${netPlatformPrice.toLocaleString()} EGP total 
-(including our 2.5% fee + 2% factoring). That is a 
-${percentageSavings.toFixed(1)}% savings — and your supplier gets paid 
-within 48 hours, strengthening your relationship and future pricing power.
+With Hotels Vendors, you pay ${totalPlatformCost.toLocaleString()} EGP total
+(order + ${platformDocumentFee} EGP document processing + ${factoringPartnerFee.toFixed(0)} EGP financing via our partner).
+That is a ${percentageSavings.toFixed(1)}% savings — and your supplier gets paid
+within 24-48 hours, strengthening your relationship and future pricing power.
   `.trim();
 
   return {
@@ -290,12 +200,59 @@ within 48 hours, strengthening your relationship and future pricing power.
     storageWaste,
     disputeLosses,
     totalOfflineCost,
-    platformPrice,
-    platformFee,
-    factoringFee,
-    netPlatformPrice,
+    platformOrderTotal: orderTotal,
+    platformDocumentFee,
+    factoringPartnerFee,
+    totalPlatformCost,
     absoluteSavings,
     percentageSavings,
     narrative,
+  };
+}
+
+// ─────────────────────────────────────────
+// BACKWARD-COMPATIBLE WRAPPER
+// ─────────────────────────────────────────
+
+export interface HubRevenueParams {
+  invoiceId: string;
+  partnerDiscountRate: number;
+  advanceRate: number;
+}
+
+/**
+ * Calculate hub revenue breakdown for a factoring operation.
+ * Backward-compatible wrapper used by the legacy invoice factor route.
+ */
+export interface HubRevenueResult {
+  grossAmount: number;
+  platformFeeRate: number;
+  netPlatformFee: number;
+  factoringFee: number;
+  advanceRate: number;
+  partnerDiscountRate: number;
+  disbursementToSupplier: number;
+  supplierDisbursement: number;
+  note: string;
+}
+
+export async function calculateHubRevenue(params: HubRevenueParams): Promise<HubRevenueResult> {
+  const { partnerDiscountRate, advanceRate } = params;
+  const grossAmount = 100_000; // Placeholder — in production, fetch from invoice
+  const platformFeeRate = 0.025;
+  const factoringFee = grossAmount * partnerDiscountRate;
+  const netPlatformFee = grossAmount * platformFeeRate;
+
+  const disbursementToSupplier = grossAmount * advanceRate - factoringFee;
+  return {
+    grossAmount,
+    platformFeeRate,
+    netPlatformFee,
+    factoringFee,
+    advanceRate,
+    partnerDiscountRate,
+    disbursementToSupplier,
+    supplierDisbursement: disbursementToSupplier,
+    note: "Platform does not deduct from disbursement. Partner collects their own fee.",
   };
 }

@@ -45,4 +45,4 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   return success({ message: "Admin override applied successfully" });
-});
+}, { rateLimit: "financial" });

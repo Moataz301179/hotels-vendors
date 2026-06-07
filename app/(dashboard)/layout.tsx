@@ -6,6 +6,7 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
 import { WorkspaceChatbot } from "@/components/ai-assistant/workspace-chatbot";
 import { prisma } from "@/lib/prisma";
+import { SandboxBanner } from "@/components/layout/sandbox-banner";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
@@ -71,11 +72,14 @@ export default async function DashboardLayout({
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <DashboardShell role={validRole} user={userData}>
-      <DashboardCartWrapper>
-        {children}
-      </DashboardCartWrapper>
-      <WorkspaceChatbot mode={validRole} userId={userId || ""} />
-    </DashboardShell>
+    <>
+      <SandboxBanner />
+      <DashboardShell role={validRole} user={userData}>
+        <DashboardCartWrapper>
+          {children}
+        </DashboardCartWrapper>
+        <WorkspaceChatbot mode={validRole} userId={userId || ""} />
+      </DashboardShell>
+    </>
   );
 }

@@ -47,4 +47,4 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   });
 
   return success({ message: `Order ${data.action.toLowerCase()}`, orderId: id });
-});
+}, { rateLimit: "api" });

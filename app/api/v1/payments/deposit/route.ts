@@ -56,4 +56,4 @@ export const POST = apiRoute(async (request: NextRequest) => {
     depositAmount: depositAmount / 100,
     currency: order.currency,
   });
-});
+}, { rateLimit: "financial" });

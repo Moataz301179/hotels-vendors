@@ -122,4 +122,4 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     hubRevenue: hubRev,
     offers: allOffers,
   });
-});
+}, { rateLimit: "financial" });

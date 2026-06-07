@@ -56,4 +56,4 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   completeIdempotency(idempotencyKey, id);
 
   return success({ message: "Payment guarantee confirmed", orderId: id });
-});
+}, { rateLimit: "financial" });
