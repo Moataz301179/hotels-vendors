@@ -482,36 +482,3 @@ h1, h2, h3, h4, h5, h6,
   position: absolute; top: -2rem; right: -2rem; z-index: 1; opacity: 0.3; transform: scale(0.9);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CARBON DESIGN SYSTEM — Stripe-Inspired Overrides
-   Applied globally; Carbon components use .cds-- prefixed classes.
-   ═══════════════════════════════════════════════════════════════ */
-.cds--tile { border-radius: 8px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important; border: 1px solid #e3e8ee !important; }
-.cds--btn { border-radius: 6px !important; font-weight: 500 !important; letter-spacing: 0 !important; }
-.cds--btn--primary { background-color: #635bff !important; color: #fff !important; }
-.cds--btn--primary:hover { background-color: #5851db !important; }
-.cds--btn--secondary { background-color: #fff !important; color: #635bff !important; border: 1px solid #635bff !important; }
-.cds--btn--secondary:hover { background-color: #f6f5ff !important; }
-.cds--text-input, .cds--text-area, .cds--select-input { border-radius: 6px !important; border-color: #e3e8ee !important; }
-.cds--text-input:focus, .cds--text-area:focus, .cds--select-input:focus { outline-color: #635bff !important; border-color: #635bff !important; }
-.cds--data-table { border-radius: 8px !important; overflow: hidden; }
-.cds--data-table th { background-color: #f7f8fa !important; color: #525f7f !important; font-weight: 600 !important; font-size: 11px !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; border-bottom: 1px solid #e3e8ee !important; }
-.cds--data-table td { border-bottom: 1px solid #f0f2f5 !important; color: #1a1f36 !important; }
-.cds--data-table tr:hover td { background-color: #f8f9ff !important; }
-.cds--tag { border-radius: 4px !important; font-weight: 500 !important; }
-.cds--tag--green { background-color: #e6f9ed !important; color: #0a7d2b !important; }
-.cds--tag--blue { background-color: #ededff !important; color: #4338ca !important; }
-.cds--tag--red { background-color: #fde8eb !important; color: #b0102a !important; }
-.cds--tag--yellow { background-color: #fff7e0 !important; color: #a16200 !important; }
-.cds--modal-container { border-radius: 12px !important; box-shadow: 0 24px 48px rgba(0,0,0,0.12) !important; }
-.cds--modal-header { border-bottom: 1px solid #e3e8ee !important; }
-.cds--structured-list { border-radius: 8px !important; }
-.cds--structured-list-row { border-bottom: 1px solid #f0f2f5 !important; }
-.cds--header { background-color: #fff !important; border-bottom: 1px solid #e3e8ee !important; }
-.cds--side-nav { background-color: #fff !important; border-right: 1px solid #e3e8ee !important; }
-.cds--side-nav__item > .cds--side-nav__link:hover { background-color: #f6f5ff !important; }
-.cds--side-nav__link--current { background-color: #ededff !important; border-left: 3px solid #635bff !important; }
-.cds--side-nav__link-text { color: #1a1f36 !important; }
-.cds--side-nav__link--current .cds--side-nav__link-text { color: #635bff !important; font-weight: 600 !important; }
-.cds--toast-notification { border-radius: 8px !important; box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important; }
-.cds--skeleton { border-radius: 4px !important; }

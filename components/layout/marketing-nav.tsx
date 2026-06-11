@@ -15,11 +15,11 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "Solutions", href: "/solutions" },
-    { label: "Hotels", href: "/hotels" },
+    { label: "Platform", href: "/platform" },
+    { label: "Marketplace", href: "/marketplace" },
+    { label: "Factoring", href: "/factoring-service" },
+    { label: "Logistics", href: "/logistics-service" },
     { label: "Pricing", href: "/pricing" },
-    { label: "INVO", href: "/invo" },
-    { label: "About", href: "/about" },
   ];
 
   return (
@@ -32,14 +32,9 @@ export function MarketingNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <svg width="28" height="28" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <g fill="#ffffff" stroke="#ffffff" strokeWidth="12" strokeLinejoin="round">
-              <rect x="80" y="100" width="40" height="200" rx="8"/>
-              <rect x="80" y="140" width="160" height="40" rx="8"/>
-              <path d="M260 100 L300 300 L340 100"/>
-              <path d="M120 300 Q200 280 280 300" strokeWidth="8" fill="none"/>
-            </g>
-          </svg>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#39FF14" }}>
+            <span className="text-black font-bold text-sm">HV</span>
+          </div>
           <span className="text-[15px] font-medium tracking-tight text-white">
             HotelsVendors
           </span>
@@ -50,18 +45,14 @@ export function MarketingNav() {
             <Link
               key={item.label}
               href={item.href}
-              className={`px-4 py-2 text-[14px] font-medium rounded-lg transition-colors ${
-                item.href === "/invo"
-                  ? "text-[#D4A843] hover:text-[#e0b856]"
-                  : "text-white/50 hover:text-white"
-              }`}
+              className="px-4 py-2 text-[14px] font-medium rounded-lg text-white/50 hover:text-white transition-colors"
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/login"
             className="text-[14px] font-medium text-white/50 hover:text-white transition-colors"
@@ -70,7 +61,8 @@ export function MarketingNav() {
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium bg-[#8B0000] text-white rounded-lg hover:bg-[#a50000] transition-colors"
+            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(57,255,20,0.15)]"
+            style={{ backgroundColor: "#39FF14", color: "#000000" }}
           >
             Get Started
           </Link>
@@ -91,11 +83,7 @@ export function MarketingNav() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`block py-2.5 text-[14px] font-medium transition-colors ${
-                  item.href === "/invo"
-                    ? "text-[#D4A843]"
-                    : "text-white/50 hover:text-white"
-                }`}
+                className="block py-2.5 text-[14px] font-medium text-white/50 hover:text-white transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -110,7 +98,8 @@ export function MarketingNav() {
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium bg-[#8B0000] text-white rounded-lg hover:bg-[#a50000] transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
+                style={{ backgroundColor: "#39FF14", color: "#000000" }}
               >
                 Get Started
               </Link>

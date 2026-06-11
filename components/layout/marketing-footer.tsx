@@ -5,44 +5,34 @@ import { Shield, FileCheck } from "lucide-react";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-white/[0.04] bg-[#080510]">
+    <footer className="border-t border-white/[0.04] bg-[#050505]">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <svg width="24" height="24" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                <g fill="#ffffff" stroke="#ffffff" strokeWidth="12" strokeLinejoin="round">
-                  <rect x="80" y="100" width="40" height="200" rx="8"/>
-                  <rect x="80" y="140" width="160" height="40" rx="8"/>
-                  <path d="M260 100 L300 300 L340 100"/>
-                  <path d="M120 300 Q200 280 280 300" strokeWidth="8" fill="none"/>
-                </g>
-              </svg>
-              <div>
-                <span className="text-[14px] font-bold text-white tracking-tight block">
-                  HotelsVendors
-                </span>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#39FF14" }}>
+                <span className="text-black font-bold text-xs">HV</span>
               </div>
+              <span className="text-[14px] font-medium text-white tracking-tight">HotelsVendors</span>
             </div>
-            <p className="text-[12px] text-gray-600 leading-relaxed max-w-xs">
-              Egypt's B2B procurement operating system for hospitality. AI-powered, fully compliant, built for scale.
+            <p className="text-[12px] text-white/30 leading-relaxed max-w-xs">
+              Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.
             </p>
           </div>
 
           {/* Platform */}
           <div>
-            <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Platform
-            </h4>
+            <h4 className="text-[11px] font-medium text-white/30 uppercase tracking-wider mb-4">Platform</h4>
             <ul className="space-y-2.5">
               {[
-                { label: "Solutions", href: "/solutions" },
-                { label: "Pricing", href: "/pricing" },
+                { label: "Platform", href: "/platform" },
                 { label: "Marketplace", href: "/marketplace" },
+                { label: "Factoring", href: "/factoring-service" },
+                { label: "Logistics", href: "/logistics-service" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/30 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -52,18 +42,15 @@ export function MarketingFooter() {
 
           {/* Stakeholders */}
           <div>
-            <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Stakeholders
-            </h4>
+            <h4 className="text-[11px] font-medium text-white/30 uppercase tracking-wider mb-4">Stakeholders</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "Hotels", href: "/hotels" },
                 { label: "Suppliers", href: "/become-supplier" },
-                { label: "Logistics", href: "/register?role=shipping" },
-                { label: "Factoring", href: "/register?role=factoring" },
+                { label: "Pricing", href: "/pricing" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/30 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -73,9 +60,7 @@ export function MarketingFooter() {
 
           {/* Company */}
           <div>
-            <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Company
-            </h4>
+            <h4 className="text-[11px] font-medium text-white/30 uppercase tracking-wider mb-4">Company</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "About", href: "/about" },
@@ -83,7 +68,7 @@ export function MarketingFooter() {
                 { label: "Get Started", href: "/register" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/30 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -93,16 +78,16 @@ export function MarketingFooter() {
         </div>
 
         <div className="border-t border-white/[0.04] pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-gray-600">
+          <p className="text-[12px] text-white/20">
             &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-[12px] text-gray-600">
+          <div className="flex items-center gap-4 text-[12px] text-white/20">
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-[var(--accent-base)]" />
+              <Shield className="w-3.5 h-3.5 text-[#39FF14]" />
               Bank-grade security
             </span>
             <span className="flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5 text-[var(--accent-base)]" />
+              <FileCheck className="w-3.5 h-3.5 text-[#39FF14]" />
               ETA compliant
             </span>
           </div>
