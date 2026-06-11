@@ -20,7 +20,17 @@
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { Resend } from "resend";
+
+// Dynamic import to avoid TypeScript build errors for optional dependency
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let Resend: any;
+async function getResend() {
+  if (!Resend) {
+    const mod = await import("resend");
+    Resend = mod.Resend;
+  }
+  return Resend;
+}
 
 // ─── Configuration ────────────────────────────────────────────────
 
@@ -255,8 +265,9 @@ async function main(): Promise<void> {
     return;
   }
 
-  // Initialize Resend client
-  const resend = isDryRun ? null : new Resend(RESEND_API_KEY);
+  // Initialize Resend client (dynamic import to avoid build-time type issues)
+  const ResendCls = isDryRun ? null : await getResend();
+  const resend = isDryRun ? null : new ResendCls(RESEND_API_KEY);
 
   // Initialize execution log
   const log: ExecutionLog = {
