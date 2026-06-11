@@ -4,10 +4,8 @@ import path from "path";
 const nextConfig: NextConfig = {
   output: "standalone",
 
-  // Resolve ~@ibm/plex font paths in Carbon SCSS
   sassOptions: {
     includePaths: [path.join(__dirname, "node_modules")],
-    additionalData: `$font-path: "~@ibm/plex";`,
   },
   images: {
     remotePatterns: [

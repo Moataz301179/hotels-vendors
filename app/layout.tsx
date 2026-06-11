@@ -196,7 +196,7 @@ export default function RootLayout({
       <body
         className="min-h-full flex flex-col antialiased"
         style={{
-          fontFamily: "var(--font-body), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           background: "var(--bg-canvas)",
         }}
       >

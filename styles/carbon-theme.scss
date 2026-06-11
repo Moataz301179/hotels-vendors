@@ -2,11 +2,18 @@
 // Carbon Design System v11 — Stripe-Inspired Theme Override
 // ═══════════════════════════════════════════════════════════════
 
-// Disable Carbon's built-in font loading (uses ~@ibm/plex paths that
-// Turbopack can't resolve). We use our own fonts in globals.css.
+// Disable Carbon's built-in font loading — we use Plus Jakarta Sans globally.
 $css--font-face: false;
 
 @use '@carbon/react';
+
+// Override Carbon's IBM Plex font to Plus Jakarta Sans
+// Applied at the shell container so it inherits into all Carbon sub-components.
+.cds--header,
+.cds--side-nav,
+.cds--content {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // Stripe-Style Border Radius & Color Overrides

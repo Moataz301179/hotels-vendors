@@ -98,6 +98,8 @@ html[data-accent="invo"] {
   --color-error: var(--error);
   --color-info: var(--info);
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ── Base ── */
