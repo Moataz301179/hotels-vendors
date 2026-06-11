@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
 
 // ─── Animated Counter Hook ─────────────────────────────────────────
 function useCounter(end: number, duration = 2000, start = 0, inView = false) {
@@ -343,8 +344,11 @@ export default function HomePage() {
                 <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
                   Request Enterprise Access <ArrowRight size={15} />
                 </Link>
+                <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(57,255,20,0.25)", color: "#39FF14" }}>
+                  <Play size={13} /> Try Sandbox
+                </Link>
                 <Link href="#platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-                  <Play size={13} /> Watch 2-Min Demo
+                  Explore Platform
                 </Link>
               </motion.div>
 
@@ -368,59 +372,9 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="lg:col-span-2 space-y-4"
-            >
-              <div className="rounded-2xl p-5" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Live Market Rates</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#22C55E" }} />
-                    <span className="text-[10px] text-white/25">Real-time</span>
-                  </span>
-                </div>
-                <div className="space-y-3">
-                  {liveRates.map((rate, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 rounded-lg transition-colors hover:bg-white/[0.02]">
-                      <div>
-                        <p className="text-[12px] font-medium text-white/70">{rate.label}</p>
-                        <p className="text-[10px] text-white/25">{rate.source}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[14px] font-mono font-medium text-white/80">{rate.value}</p>
-                        <p className={`text-[10px] font-medium ${rate.change.startsWith("+") ? "text-[#22C55E]" : "text-[#EF4444]"}`}>{rate.change}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="rounded-2xl p-4 text-center"
-                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <p className="text-[22px] font-bold" style={{ color: "#39FF14" }}>24h</p>
-                  <p className="text-[9px] text-white/25 uppercase tracking-wider">Settlement</p>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="rounded-2xl p-4 text-center"
-                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <p className="text-[22px] font-bold text-[#22C55E]">40%</p>
-                  <p className="text-[9px] text-white/25 uppercase tracking-wider">Cost Cut</p>
-                </motion.div>
-              </div>
-            </motion.div>
+            <div className="lg:col-span-2">
+              <DashboardMockup />
+            </div>
           </div>
         </motion.div>
       </section>
@@ -869,22 +823,31 @@ export default function HomePage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <motion.a
-                  href="/register"
+                  href="/sandbox"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]"
                   style={{ backgroundColor: "#39FF14", color: "#000000" }}
                 >
-                  Request Enterprise Access <ArrowRight size={15} />
+                  Try Sandbox Free <ArrowRight size={15} />
                 </motion.a>
                 <motion.a
-                  href="/platform"
+                  href="/register"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
+                  style={{ border: "1px solid rgba(57,255,20,0.25)", color: "#39FF14" }}
+                >
+                  Request Enterprise Access
+                </motion.a>
+                <motion.a
+                  href="/marketplace"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
                 >
-                  <Sparkles size={14} /> Explore Platform
+                  <Sparkles size={14} /> Explore Marketplace
                 </motion.a>
               </div>
               <p className="text-[10px] text-white/20 mt-6">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
