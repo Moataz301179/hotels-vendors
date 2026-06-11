@@ -353,7 +353,7 @@ export default function HomePage() {
                 className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8"
               >
                 <Link href="/register" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-                  Request Enterprise Access <ArrowRight size={14} />
+                  Request Institutional Onboarding <ArrowRight size={14} />
                 </Link>
                 <Link href="/sandbox" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
                   <Play size={13} /> Try Sandbox
@@ -665,7 +665,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.15)]"
                     style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                   >
-                    Get Started with {currentSector.label} <ArrowRight size={14} />
+                    Schedule {currentSector.label} Audit <ArrowRight size={14} />
                   </Link>
                 </div>
 
@@ -729,7 +729,7 @@ export default function HomePage() {
                         )}
                       </button>
                       <p className="text-[10px] text-white/20 text-center">
-                        Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · No credit card required
+                        Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · Data orchestration only · No liability for logistics or collection
                       </p>
                     </form>
                   )}
@@ -777,9 +777,9 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Stretch working capital to net-90+ without corporate debt.", href: "/register", cta: "Start Procurement", color: "#84cc16" },
-              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. No more 180-day collection chases across regional hotel clusters. On-site GRN validation unlocks non-recourse, bank-direct settlement.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
-              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow — not paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Stretch working capital to net-90+ without corporate debt.", href: "/register", cta: "Schedule Procurement Audit", color: "#84cc16" },
+              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. No more 180-day collection chases across regional hotel clusters. On-site GRN validation unlocks non-recourse, bank-direct settlement.", href: "/register", cta: "Request Capital Assessment", color: "#22C55E" },
+              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow — not paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail.", href: "/register", cta: "Schedule Integration Audit", color: "#3B82F6" },
             ].map((role, i) => (
               <RevealSection key={role.title} delay={i * 0.12}>
                 <motion.div
@@ -829,9 +829,9 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing. Phase 1 & 2 fully covered.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#84cc16" }} />, bg: "rgba(132,204,22,0.1)" },
-              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals, settlement reconciliation, and late-repayment protocols.", badge: "Programmatic Routing · Auto Accrual · Bank-Direct", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
-              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness with clean, real-time risk parameters. FRA Anti-Fraud Compliance via three-way matching gate. ISO/IEC 27001 and SOC 2 Type II audit-ready architecture.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
+              { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. GS1/EGS product tax code mapping with Alphabetical Canonical flattening logic. Clear token handling rules. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing. Phase 1 & 2 fully covered.", badges: ["GS1/EGS Tax Code Mapping", "Alphabetical Canonical Flattening", "ETA UUID · RSA-2048", "Phase 1 & 2 Compliant", "Clear Token Handling Rules"], bg: "rgba(132,204,22,0.1)" },
+              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Technology Layer — Not a Financial Intermediary", desc: "HotelsVendors is a technology orchestration layer. We never touch capital. Funders fund. Suppliers receive. Hotels owe. Capital routes programmatically from licensed grantor desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals, settlement reconciliation, and late-repayment protocols.", badges: ["Technology Layer Only", "No Capital Custody", "Programmatic Routing", "Bank-Direct IBAN Settlement", "Auto Accrual & Reconciliation"], bg: "rgba(34,197,94,0.1)" },
+              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness with clean, real-time risk parameters. FRA Anti-Fraud Compliance via three-way matching gate: PO + ETA UUID + Signed Digital GRN. ISO/IEC 27001 and SOC 2 Type II audit-ready architecture.", badges: ["I-Score Ready", "FRA Anti-Fraud — 3-Way Match", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
             ].map((card, i) => (
               <RevealSection key={card.title} delay={i * 0.1}>
                 <motion.div whileHover={{ y: -3 }} className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -845,21 +845,14 @@ export default function HomePage() {
                     </div>
                   </div>
                   <p className="text-[12px] text-white/40 leading-relaxed mb-4">{card.desc}</p>
-                  {"badges" in card && card.badges ? (
-                    <div className="space-y-1.5">
-                      {card.badges.map((badge, j) => (
-                        <div key={j} className="flex items-center gap-2 p-2 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
-                          <CheckCircle size={11} style={{ color: "#3B82F6" }} />
-                          <span className="text-[10px] text-white/40">{badge}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 p-2.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
-                      {card.badgeIcon}
-                      <span className="text-[10px] text-white/25">{card.badge}</span>
-                    </div>
-                  )}
+                  <div className="space-y-1.5">
+                    {card.badges.map((badge, j) => (
+                      <div key={j} className="flex items-center gap-2 p-2 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+                        <CheckCircle size={11} style={{ color: "#3B82F6" }} />
+                        <span className="text-[10px] text-white/40">{badge}</span>
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               </RevealSection>
             ))}
@@ -963,22 +956,22 @@ export default function HomePage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <motion.a
-                  href="/sandbox"
+                  href="/register"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
                   style={{ backgroundColor: "#84cc16", color: "#000000" }}
                 >
-                  Try Sandbox Free <ArrowRight size={15} />
+                  Request Institutional Onboarding <ArrowRight size={15} />
                 </motion.a>
                 <motion.a
-                  href="/register"
+                  href="/sandbox"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
                   style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}
                 >
-                  Request Enterprise Access
+                  Explore Interactive Sandbox
                 </motion.a>
                 <motion.a
                   href="/marketplace"
@@ -987,10 +980,10 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
                 >
-                  <Sparkles size={14} /> Explore Marketplace
+                  <Sparkles size={14} /> View Marketplace
                 </motion.a>
               </div>
-              <p className="text-[10px] text-white/20 mt-6">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
+              <p className="text-[10px] text-white/20 mt-6">Dedicated onboarding · Integration audit included · Zero liability for logistics or collection defaults</p>
             </motion.div>
           </RevealSection>
         </div>

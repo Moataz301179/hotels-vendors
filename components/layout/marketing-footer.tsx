@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Shield, FileCheck } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingFooter() {
   return (
@@ -11,9 +12,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-                <span className="text-black text-xs" style={{ fontWeight: 700 }}>HV</span>
-              </div>
+              <BrandLogo variant="dark" size="sm" />
               <span className="text-[14px] font-medium text-white tracking-tight">HotelsVendors</span>
             </div>
             <p className="text-[12px] text-white/30 leading-relaxed max-w-xs">
@@ -77,7 +76,17 @@ export function MarketingFooter() {
           </div>
         </div>
 
-        <div className="border-t border-white/[0.04] pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Legal Foundation Block */}
+        <div className="border-t border-white/[0.04] pt-6 pb-4">
+          <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <p className="text-[11px] text-white/30 leading-relaxed text-center">
+              Platform owned and operated by <strong className="text-white/50">Restaurants for E-Marketing</strong><br />
+              Tax ID: <span className="text-white/40">704226146</span> · Unified Commercial Registry Number: <span className="text-white/40">105300900196948</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[12px] text-white/20">
             &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </p>
