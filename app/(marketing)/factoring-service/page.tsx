@@ -21,7 +21,7 @@ export default function FactoringServicePage() {
             Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Zero balance-sheet liability.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?role=factoring" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+            <Link href="/register?role=factoring" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -81,7 +81,7 @@ export default function FactoringServicePage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Stretch Your Working Capital</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egyptian hotel groups already using embedded factoring to optimize cashflow.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?role=hotel" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+            <Link href="/register?role=hotel" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Get Started <ArrowRight size={14} />
             </Link>
             <Link href="/register?role=factoring" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

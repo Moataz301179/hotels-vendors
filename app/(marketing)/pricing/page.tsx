@@ -65,7 +65,7 @@ export default function PricingPage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Pricing</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -86,11 +86,11 @@ export default function PricingPage() {
                 className="rounded-2xl p-7 flex flex-col"
                 style={{
                   backgroundColor: tier.highlighted ? "#0a0a0a" : "#080808",
-                  border: tier.highlighted ? "1px solid rgba(57,255,20,0.2)" : "1px solid rgba(255,255,255,0.06)",
+                  border: tier.highlighted ? "1px solid rgba(132,204,22,0.2)" : "1px solid rgba(255,255,255,0.06)",
                 }}
               >
                 {tier.highlighted && (
-                  <span className="text-[10px] font-medium text-[#39FF14] uppercase tracking-wider mb-3">Most Popular</span>
+                  <span className="text-[10px] font-medium text-[#84cc16] uppercase tracking-wider mb-3">Most Popular</span>
                 )}
                 <h3 className="text-[18px] font-medium text-white mb-1">{tier.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
@@ -101,7 +101,7 @@ export default function PricingPage() {
                 <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
-                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#39FF14" }} />
+                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#84cc16" }} />
                       <span className="text-[12px] text-white/50">{f}</span>
                     </li>
                   ))}
@@ -110,7 +110,7 @@ export default function PricingPage() {
                   href={tier.highlighted ? "/register" : "/register"}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-medium transition-all"
                   style={tier.highlighted
-                    ? { backgroundColor: "#39FF14", color: "#000000" }
+                    ? { backgroundColor: "#84cc16", color: "#000000" }
                     : { border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }
                   }
                 >
@@ -144,7 +144,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Need a Custom Plan?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">We work with hotel groups of all sizes. Let&apos;s build a plan that fits your portfolio.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
             Contact Sales <ArrowRight size={14} />
           </Link>
         </div>

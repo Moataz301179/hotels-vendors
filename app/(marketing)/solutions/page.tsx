@@ -15,7 +15,7 @@ const solutions = [
     features: ["AI demand forecasting", "Budget blockades", "Multi-property control", "Net-60 factoring", "48-hour delivery"],
     href: "/register?role=hotel",
     cta: "Register Hotel",
-    color: "#39FF14",
+    color: "#84cc16",
   },
   {
     icon: Store,
@@ -50,7 +50,7 @@ export default function SolutionsPage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -84,7 +84,7 @@ export default function SolutionsPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-center lg:justify-end">
-                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
                     {s.cta} <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -96,14 +96,14 @@ export default function SolutionsPage() {
 
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#39FF14" }} />
+          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">The Full Picture</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-xl mx-auto">
             All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver — with AI orchestrating every step.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
-              { icon: Building2, label: "Hotels", color: "#39FF14" },
+              { icon: Building2, label: "Hotels", color: "#84cc16" },
               { icon: Store, label: "Suppliers", color: "#22C55E" },
               { icon: Landmark, label: "Funders", color: "#D4A843" },
               { icon: Truck, label: "Carriers", color: "#3B82F6" },
@@ -119,10 +119,10 @@ export default function SolutionsPage() {
 
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <ShieldCheck size={32} className="mx-auto mb-6" style={{ color: "#39FF14" }} />
+          <ShieldCheck size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">ETA Compliant. FRA Secure.</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
             Get Started <ArrowRight size={14} />
           </Link>
         </div>

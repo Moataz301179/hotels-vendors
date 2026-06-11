@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const governorates = [
-  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#39FF14" },
+  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#84cc16" },
   { name: "Hurghada", type: "Red Sea", color: "#22C55E" },
   { name: "Cairo", type: "Central Hub", color: "#3B82F6" },
   { name: "Alexandria", type: "Mediterranean", color: "#D4A843" },
@@ -30,7 +30,7 @@ export default function LogisticsServicePage() {
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS tracking.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?role=shipping" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+            <Link href="/register?role=shipping" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Register as Carrier <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -60,7 +60,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Our Logistics Win</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {[
-              { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles.", color: "#39FF14" },
+              { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles.", color: "#84cc16" },
               { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#3B82F6" },
               { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring.", color: "#22C55E" },
               { icon: Truck, title: "Multi-Supplier Loads", desc: "One truck, multiple suppliers, single delivery point. Reduces your receiving overhead and dock congestion.", color: "#D4A843" },
@@ -82,7 +82,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Need Reliable Hotel Delivery?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Whether you&apos;re a hotel needing deliveries or a carrier looking for volume, we&apos;ve got you covered.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?role=hotel" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+            <Link href="/register?role=hotel" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Register Hotel <ArrowRight size={14} />
             </Link>
             <Link href="/register?role=shipping" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

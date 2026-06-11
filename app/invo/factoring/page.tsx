@@ -8,7 +8,7 @@ const BORDER = "rgba(60,64,67,0.50)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#39FF14";
+const ACCENT_LIME = "#84cc16";
 
 export default async function FactoringPage() {
   const supabase = await createClient();
@@ -106,7 +106,7 @@ export default async function FactoringPage() {
                       key={req.id}
                       className="border-t transition-colors"
                       style={{ borderColor: BORDER }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(57,255,20,0.02)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(132,204,22,0.02)")}
                       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                     >
                       <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>

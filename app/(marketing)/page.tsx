@@ -79,7 +79,7 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
 }
 
 // ─── Scroll-Triggered Counter ──────────────────────────────────────
-function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = "#39FF14" }: {
+function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = "#84cc16" }: {
   end: number; suffix?: string; prefix?: string; label: string; icon: React.ElementType; color?: string;
 }) {
   const ref = useRef(null);
@@ -123,8 +123,8 @@ const SECTORS: SectorData[] = [
     key: "procurement",
     label: "Digital Procurement",
     icon: CircuitBoard,
-    accent: "#39FF14",
-    accentMuted: "rgba(57,255,20,0.1)",
+    accent: "#84cc16",
+    accentMuted: "rgba(132,204,22,0.1)",
     hook: "AI-automated SaaS procurement that predicts demand, generates POs against budget ceilings, and enforces pre-occurrence blockades — before a single pound leaves your account.",
     bullets: [
       "14-day forward demand forecasting from occupancy curves",
@@ -211,12 +211,12 @@ const PIPELINE = [
 ];
 
 const FEATURES = [
-  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "#39FF14" },
-  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "#39FF14" },
-  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "#39FF14" },
-  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "#39FF14" },
-  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "#39FF14" },
-  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#39FF14" },
+  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "#84cc16" },
+  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "#84cc16" },
+  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "#84cc16" },
+  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "#84cc16" },
+  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "#84cc16" },
+  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#84cc16" },
 ];
 
 const TRUST_BADGES = [
@@ -288,7 +288,7 @@ export default function HomePage() {
           HERO — Parallax Scroll + Animated Entry
           ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative pt-28 pb-20 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.04) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.04) 0%, transparent 70%)" }} />
 
         <motion.div className="relative z-10 mx-auto max-w-7xl px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
           <div className="grid lg:grid-cols-5 gap-10 items-start">
@@ -300,7 +300,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
                 style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
               >
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#39FF14" }} />
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
                 <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
               </motion.div>
 
@@ -341,10 +341,10 @@ export default function HomePage() {
                 transition={{ duration: 0.6, delay: 0.6 }}
                 className="flex flex-wrap gap-3 mb-8"
               >
-                <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+                <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
                   Request Enterprise Access <ArrowRight size={15} />
                 </Link>
-                <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(57,255,20,0.25)", color: "#39FF14" }}>
+                <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
                   <Play size={13} /> Try Sandbox
                 </Link>
                 <Link href="#platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -395,8 +395,8 @@ export default function HomePage() {
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(57,255,20,0.08)" }}>
-                    <badge.icon size={16} style={{ color: "#39FF14" }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
+                    <badge.icon size={16} style={{ color: "#84cc16" }} />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-white/60">{badge.label}</p>
@@ -413,7 +413,7 @@ export default function HomePage() {
           SECTOR ROUTER — Dynamic Tab System
           ═══════════════════════════════════════════ */}
       <section id="platform" className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(57,255,20,0.02) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(132,204,22,0.02) 0%, transparent 60%)" }} />
 
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <RevealSection>
@@ -522,7 +522,7 @@ export default function HomePage() {
 
                   <Link
                     href={`/register?sector=${activeSector}`}
-                    className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.15)]"
+                    className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.15)]"
                     style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                   >
                     Get Started with {currentSector.label} <ArrowRight size={14} />
@@ -637,7 +637,7 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Every purchase order is validated before it leaves your desk.", href: "/register", cta: "Start Procurement", color: "#39FF14" },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Every purchase order is validated before it leaves your desk.", href: "/register", cta: "Start Procurement", color: "#84cc16" },
               { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Net-60+ working capital without balance-sheet debt. Suppliers paid in 24 hours via competitive reverse factoring. You keep your cash longer.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
               { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Every invoice passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail on every transition.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
             ].map((role, i) => (
@@ -689,7 +689,7 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: <FileText size={18} style={{ color: "#39FF14" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#39FF14" }} />, bg: "rgba(57,255,20,0.1)" },
+              { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#84cc16" }} />, bg: "rgba(132,204,22,0.1)" },
               { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals and settlement reconciliation.", badge: "Programmatic Routing · Auto Accrual", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
               { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness, FRA Anti-Fraud Compliance, and alignment against ISO/IEC 27001 & SOC 2 Type II control frameworks.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
             ].map((card, i) => (
@@ -744,12 +744,12 @@ export default function HomePage() {
             {FEATURES.map((f, i) => (
               <RevealSection key={f.title} delay={i * 0.08}>
                 <motion.div
-                  whileHover={{ y: -3, borderColor: "rgba(57,255,20,0.2)" }}
+                  whileHover={{ y: -3, borderColor: "rgba(132,204,22,0.2)" }}
                   className="rounded-2xl p-6 h-full"
                   style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 60}ms` }}
                 >
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                    <f.icon size={20} style={{ color: "#39FF14" }} />
+                    <f.icon size={20} style={{ color: "#84cc16" }} />
                   </div>
                   <h3 className="text-[14px] font-bold mb-2 text-white">{f.title}</h3>
                   <p className="text-[12px] text-white/40 leading-relaxed">{f.desc}</p>
@@ -781,9 +781,9 @@ export default function HomePage() {
                   className="rounded-2xl p-6 text-center h-full"
                   style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
-                  <div className="text-[28px] font-bold leading-none mb-3" style={{ color: "rgba(57,255,20,0.08)" }}>{step.step}</div>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(57,255,20,0.08)", border: "1px solid rgba(57,255,20,0.12)" }}>
-                    <step.icon size={18} style={{ color: "#39FF14" }} />
+                  <div className="text-[28px] font-bold leading-none mb-3" style={{ color: "rgba(132,204,22,0.08)" }}>{step.step}</div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(132,204,22,0.08)", border: "1px solid rgba(132,204,22,0.12)" }}>
+                    <step.icon size={18} style={{ color: "#84cc16" }} />
                   </div>
                   <h3 className="text-[13px] font-bold mb-2 text-white">{step.title}</h3>
                   <p className="text-[11px] text-white/35 leading-relaxed">{step.desc}</p>
@@ -805,7 +805,7 @@ export default function HomePage() {
           CTA — Final Conversion
           ═══════════════════════════════════════════ */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(57,255,20,0.05) 0%, transparent 70%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(132,204,22,0.05) 0%, transparent 70%)" }} />
         <div className="mx-auto max-w-7xl px-6 text-center relative">
           <RevealSection>
             <motion.div
@@ -826,8 +826,8 @@ export default function HomePage() {
                   href="/sandbox"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]"
-                  style={{ backgroundColor: "#39FF14", color: "#000000" }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
+                  style={{ backgroundColor: "#84cc16", color: "#000000" }}
                 >
                   Try Sandbox Free <ArrowRight size={15} />
                 </motion.a>
@@ -836,7 +836,7 @@ export default function HomePage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
-                  style={{ border: "1px solid rgba(57,255,20,0.25)", color: "#39FF14" }}
+                  style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}
                 >
                   Request Enterprise Access
                 </motion.a>

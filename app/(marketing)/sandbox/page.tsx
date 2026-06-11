@@ -52,8 +52,8 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#39FF14",
-    accentMuted: "rgba(57,255,20,0.1)",
+    color: "#84cc16",
+    accentMuted: "rgba(132,204,22,0.1)",
     description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
     steps: [
       { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Forecast generated: 2,400 kg F&B, 800 units consumables, 120 linens. Budget blockade set at EGP 185,000.", icon: BarChart3 },
@@ -136,7 +136,7 @@ export default function SandboxPage() {
       <MarketingNav />
 
       <section className="pt-28 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-5xl px-6">
           {/* Header */}
@@ -146,8 +146,8 @@ export default function SandboxPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(57,255,20,0.15)", backgroundColor: "rgba(57,255,20,0.04)" }}>
-              <Zap size={11} style={{ color: "#39FF14" }} />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(132,204,22,0.15)", backgroundColor: "rgba(132,204,22,0.04)" }}>
+              <Zap size={11} style={{ color: "#84cc16" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(28px,4vw,44px)] font-bold tracking-tight text-white mb-4">
@@ -355,8 +355,8 @@ export default function SandboxPage() {
                       <div className="flex flex-wrap justify-center gap-3">
                         <Link
                           href="/register"
-                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]"
-                          style={{ backgroundColor: "#39FF14", color: "#000000" }}
+                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
+                          style={{ backgroundColor: "#84cc16", color: "#000000" }}
                         >
                           Get Full Access <ArrowRight size={14} />
                         </Link>

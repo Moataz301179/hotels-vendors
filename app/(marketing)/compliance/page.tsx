@@ -29,7 +29,7 @@ export default function CompliancePage() {
             <p className="text-[13px] text-white/40 max-w-2xl mb-6">Native integration with the Egyptian Tax Authority ensures all invoices meet Phase 1 and Phase 2 requirements. Our system handles document signing, UUID generation, and real-time portal submission automatically.</p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {["RSA 2048-bit digital signing", "UUID-based invoice tracking", "Real-time ETA portal submission", "Phase 1 & 2 compliance", "Penalty prevention automation", "Submission audit trail"].map((f, i) => (
-                <div key={i} className="flex items-center gap-2 text-[12px] text-white/40"><span className="w-1 h-1 rounded-full" style={{ backgroundColor: "#39FF14" }} />{f}</div>
+                <div key={i} className="flex items-center gap-2 text-[12px] text-white/40"><span className="w-1 h-1 rounded-full" style={{ backgroundColor: "#84cc16" }} />{f}</div>
               ))}
             </div>
           </div>

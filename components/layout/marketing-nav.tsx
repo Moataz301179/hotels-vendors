@@ -32,7 +32,7 @@ export function MarketingNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#39FF14" }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
             <span className="text-black font-bold text-sm">HV</span>
           </div>
           <span className="text-[15px] font-medium tracking-tight text-white">
@@ -61,8 +61,8 @@ export function MarketingNav() {
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(57,255,20,0.15)]"
-            style={{ backgroundColor: "#39FF14", color: "#000000" }}
+            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
+            style={{ backgroundColor: "#84cc16", color: "#000000" }}
           >
             Get Started
           </Link>
@@ -99,7 +99,7 @@ export function MarketingNav() {
               <Link
                 href="/register"
                 className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
-                style={{ backgroundColor: "#39FF14", color: "#000000" }}
+                style={{ backgroundColor: "#84cc16", color: "#000000" }}
               >
                 Get Started
               </Link>

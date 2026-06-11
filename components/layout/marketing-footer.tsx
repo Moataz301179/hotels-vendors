@@ -11,7 +11,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#39FF14" }}>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
                 <span className="text-black font-bold text-xs">HV</span>
               </div>
               <span className="text-[14px] font-medium text-white tracking-tight">HotelsVendors</span>
@@ -83,11 +83,11 @@ export function MarketingFooter() {
           </p>
           <div className="flex items-center gap-4 text-[12px] text-white/20">
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-[#39FF14]" />
+              <Shield className="w-3.5 h-3.5 text-[#84cc16]" />
               Bank-grade security
             </span>
             <span className="flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5 text-[#39FF14]" />
+              <FileCheck className="w-3.5 h-3.5 text-[#84cc16]" />
               ETA compliant
             </span>
           </div>

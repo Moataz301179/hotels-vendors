@@ -129,7 +129,7 @@ function RegisterPage() {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-3 mb-8 justify-center"
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#39FF14" }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
             <span className="text-black font-bold text-lg">HV</span>
           </div>
           <div>
@@ -204,7 +204,7 @@ function RegisterPage() {
                               ? "text-black"
                               : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
                           }`}
-                          style={form.role === role.value ? { backgroundColor: "#39FF14", borderColor: "#39FF14" } : {}}
+                          style={form.role === role.value ? { backgroundColor: "#84cc16", borderColor: "#84cc16" } : {}}
                         >
                           <Icon className="w-4 h-4" />
                           {role.label}
@@ -227,7 +227,7 @@ function RegisterPage() {
                       onChange={(e) => updateForm("name", e.target.value)}
                       placeholder="Your full name"
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#39FF14]/60 focus:ring-1 focus:ring-[#39FF14]/20 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
                     />
                   </div>
                 </div>
@@ -245,7 +245,7 @@ function RegisterPage() {
                       onChange={(e) => updateForm("email", e.target.value)}
                       placeholder="you@example.com"
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#39FF14]/60 focus:ring-1 focus:ring-[#39FF14]/20 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
                     />
                   </div>
                 </div>
@@ -264,7 +264,7 @@ function RegisterPage() {
                       placeholder="Min 6 characters"
                       required
                       minLength={6}
-                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#39FF14]/60 focus:ring-1 focus:ring-[#39FF14]/20 transition-all"
+                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
                     />
                     <button
                       type="button"
@@ -280,8 +280,8 @@ function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(57,255,20,0.15)]"
-                  style={{ backgroundColor: "#39FF14", color: "#000000" }}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
+                  style={{ backgroundColor: "#84cc16", color: "#000000" }}
                 >
                   {loading ? (
                     <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -305,7 +305,7 @@ function RegisterPage() {
           className="text-center text-sm text-white/30 mt-6"
         >
           Already have an account?{" "}
-          <Link href="/login" className="text-[#39FF14] hover:opacity-80 font-medium transition-opacity">
+          <Link href="/login" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
             Sign in
           </Link>
         </motion.p>
