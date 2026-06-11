@@ -77,8 +77,11 @@ export interface EtaDelivery {
 
 export interface EtaInvoiceLine {
   description: string;
+  descriptionAr?: string; // Arabic description — الوصف (ETA V2 bilingual requirement)
   itemType: "GS1" | "EGS";
   itemCode: string;
+  codeName?: string;    // Product code name (English)
+  codeNameAr?: string;  // Product code name (Arabic) — اسم الكود
   unitType: string;
   quantity: number;
   internalCode?: string;

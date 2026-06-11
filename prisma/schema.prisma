@@ -637,6 +637,12 @@ model Invoice {
   digitalSignature String?
   submissionLog    String?
 
+  // ETA Dual-Language Fields (bilingual invoice line items per ETA V2 spec)
+  codeName    String? // Product/service code name (English)
+  codeNameAr  String? // Product/service code name (Arabic) — اسم الكود
+  description String? // Line item description (English)
+  descriptionAr String? // Line item description (Arabic) — الوصف
+
   // Financial
   subtotal  Float
   vatRate   Float  @default(14.00)
