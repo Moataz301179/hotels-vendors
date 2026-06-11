@@ -14,6 +14,9 @@ import {
   Hotel,
   UserCog,
   MailCheck,
+  Store,
+  Landmark,
+  Truck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -240,6 +243,9 @@ export default function LoginPage() {
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: "Hotel", icon: Hotel, email: "hotel.owner@nilegrand.com", pass: "HotelOwner123!" },
+                  { label: "Supplier", icon: Store, email: "supplier@freshfoods.com", pass: "Supplier123!" },
+                  { label: "Factoring", icon: Landmark, email: "fund@cib.com.eg", pass: "Factor123!" },
+                  { label: "Logistics", icon: Truck, email: "ops@sharkbreaker.com", pass: "Logistics123!" },
                   { label: "Admin", icon: UserCog, email: "admin", pass: "1234Harly" },
                 ].map((acc) => (
                   <button

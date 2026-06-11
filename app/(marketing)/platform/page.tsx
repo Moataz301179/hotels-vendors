@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Receipt, Truck, Banknote, ShieldCheck, BarChart3, Cpu } from "lucide-react";
+import { ArrowRight, BrainCircuit, Receipt, Truck, Banknote, ShieldCheck, BarChart3, Cpu, Lock, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Platform — HotelsVendors Procurement OS | HotelsVendors",
@@ -13,7 +13,7 @@ const pillars = [
     num: "01",
     title: "AI Demand Forecasting",
     color: "#84cc16",
-    desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio.",
+    desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio. Auto-generates POs against budget ceilings.",
     features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "94% forecast accuracy"],
   },
   {
@@ -21,7 +21,7 @@ const pillars = [
     num: "02",
     title: "ETA E-Invoicing Compliance",
     color: "#22C55E",
-    desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA 2048-bit encryption, UUID-tracked, and submitted in real-time.",
+    desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA-2048 encryption, UUID-tracked, and submitted in real-time. Zero penalty risk.",
     features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Zero penalty guarantee"],
   },
   {
@@ -29,7 +29,7 @@ const pillars = [
     num: "03",
     title: "Shared-Route Logistics",
     color: "#3B82F6",
-    desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs by up to 40%.",
+    desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs by up to 40%. Cold-chain capable with real-time GPS.",
     features: ["40% cost reduction", "6 governorate coverage", "Real-time GPS tracking", "Cold-chain capable"],
   },
   {
@@ -37,7 +37,7 @@ const pillars = [
     num: "04",
     title: "Embedded Factoring",
     color: "#D4A843",
-    desc: "Hotel-initiated reverse factoring with 4+ licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms.",
+    desc: "Hotel-initiated reverse factoring with 4+ licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
     features: ["4+ licensed grantors", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
   },
 ];
@@ -51,27 +51,49 @@ export default function PlatformPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Platform</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Four Engines.<br /><span className="text-gradient-lime">One Operating System.</span>
+            Four Engines.<br /><span className="text-gradient-lime">One Operating System.<br />Zero Manual Reconciliation.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-              Request Enterprise Access <ArrowRight size={14} />
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              Try the Sandbox <ArrowRight size={14} />
             </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              View Pricing <ArrowRight size={14} />
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Request Enterprise Access <ArrowRight size={14} />
             </Link>
           </div>
         </div>
       </section>
 
+      {/* Trust Bar */}
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              { icon: ShieldCheck, label: "ETA Phase 1 & 2", desc: "Full compliance" },
+              { icon: Lock, label: "RSA-2048 Signing", desc: "Cryptographic audit trail" },
+              { icon: Zap, label: "AI-Native", desc: "94% forecast accuracy" },
+              { icon: BarChart3, label: "Real-Time Analytics", desc: "Live dashboards" },
+            ].map((b) => (
+              <div key={b.label} className="flex items-center gap-3">
+                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <div>
+                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Pillars */}
-      <section className="pb-20">
+      <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-4">
           {pillars.map((p) => (
-            <div key={p.title} className="rounded-2xl p-6 md:p-8" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-[#84cc16]/10" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-4 gap-6 items-start">
                 <div className="lg:col-span-3">
                   <div className="flex items-center gap-3 mb-3">
@@ -133,11 +155,11 @@ export default function PlatformPage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egypt&apos;s leading hotel groups already running on HotelsVendors infrastructure.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-              Get Started <ArrowRight size={14} />
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              Try the Sandbox <ArrowRight size={14} />
             </Link>
-            <Link href="/marketplace" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Browse Marketplace
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Get Started
             </Link>
           </div>
         </div>

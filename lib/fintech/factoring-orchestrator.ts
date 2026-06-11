@@ -762,7 +762,8 @@ export async function orchestrateConsolidatedFactoring(
   const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true";
 
   for (const invoice of ci.invoices) {
-    const margin = (invoice.supplierDiscountRate ?? 0) - factorDiscountRate;
+    const supplierDiscountRateNum = invoice.supplierDiscountRate != null ? Number(invoice.supplierDiscountRate) : 0;
+    const margin = supplierDiscountRateNum - factorDiscountRate;
     if (margin < 0.015 && !isTreasuryOverridden) {
       // Log a 'YIELD_SPREAD_BREACH' exception to our append-only AuditLog
       await prisma.auditLog.create({
@@ -775,7 +776,7 @@ export async function orchestrateConsolidatedFactoring(
             message: `Yield Spread Breach: Margin for Invoice ${invoice.invoiceNumber} (${(margin * 100).toFixed(2)}%) fell below the net positive 1.5% platform margin requirement.`,
             invoiceId: invoice.id,
             invoiceNumber: invoice.invoiceNumber,
-            supplierDiscountRate: (invoice.supplierDiscountRate ?? 0),
+            supplierDiscountRate: supplierDiscountRateNum,
             factorDiscountRate,
             margin,
           }),
@@ -792,7 +793,7 @@ export async function orchestrateConsolidatedFactoring(
       });
 
       throw new Error(
-        `YIELD_SPREAD_BREACH: The delta between Supplier Cash-Discount (${((invoice.supplierDiscountRate ?? 0) * 100).toFixed(2)}%) and Factoring Fee (${(factorDiscountRate * 100).toFixed(2)}%) drops below the net positive 1.5% platform margin.`
+        `YIELD_SPREAD_BREACH: The delta between Supplier Cash-Discount (${(supplierDiscountRateNum * 100).toFixed(2)}%) and Factoring Fee (${(factorDiscountRate * 100).toFixed(2)}%) drops below the net positive 1.5% platform margin.`
       );
     }
   }
@@ -802,9 +803,10 @@ export async function orchestrateConsolidatedFactoring(
   let totalSupplierDisbursement = 0;
 
   for (const invoice of ci.invoices) {
-    const discountRate = (invoice.supplierDiscountRate ?? 0);
-    const discountAmount = invoice.total * discountRate;
-    const cashRate = invoice.total - discountAmount;
+    const discountRate = invoice.supplierDiscountRate != null ? Number(invoice.supplierDiscountRate) : 0;
+    const totalNum = invoice.total != null ? Number(invoice.total) : 0;
+    const discountAmount = totalNum * discountRate;
+    const cashRate = totalNum - discountAmount;
 
     totalSupplierDiscountAmount += discountAmount;
     totalSupplierDisbursement += cashRate;
@@ -934,7 +936,7 @@ export async function orchestrateConsolidatedFactoring(
       await tx.creditTransaction.create({
         data: {
           type: "FACTORING_ADVANCE",
-          amount: invoice.total - (invoice.total * (invoice.supplierDiscountRate ?? 0)),
+          amount: (invoice.total != null ? Number(invoice.total) : 0) * (1 - (invoice.supplierDiscountRate != null ? Number(invoice.supplierDiscountRate) : 0)),
           description: `Disbursement for Invoice ${invoice.invoiceNumber} in Consolidated Cluster ${ci.invoiceNumber}`,
           hotelId: hotel.id,
           factoringCompanyId: bestOffer.partnerId,

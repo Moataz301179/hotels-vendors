@@ -1,27 +1,44 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Banknote, Clock, Shield, TrendingUp, Check } from "lucide-react";
+import { ArrowRight, Banknote, Clock, Shield, TrendingUp, Check, Landmark, FileCheck, BarChart3, Users } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Factoring — Reverse Factoring for Hospitality | HotelsVendors",
   description: "Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Suppliers paid in 24 hours, hotels keep net-60.",
 };
 
+const flow = [
+  { step: "01", title: "Invoice Cleared", desc: "Three-way match: PO + ETA UUID + Signed Digital Delivery Note verified automatically. No manual reconciliation.", icon: Check },
+  { step: "02", title: "Enter Factoring Pool", desc: "Pre-cleared invoice enters competitive bidding pool visible to all licensed grantors. Full transparency.", icon: TrendingUp },
+  { step: "03", title: "Grantors Bid", desc: "4+ licensed grantors compete on rate. Best offer selected automatically. Market-driven pricing every time.", icon: Banknote },
+  { step: "04", title: "Settlement", desc: "Supplier paid in 24 hours via bank-direct transfer. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
+];
+
+const funderFeatures = [
+  { icon: FileCheck, title: "Pre-Verified Invoice Pool", desc: "Every invoice has passed three-way matching: PO + ETA UUID + Signed Digital Delivery Note. You buy cleared assets, not paper promises." },
+  { icon: BarChart3, title: "Risk Scoring Engine", desc: "AI-driven risk scoring on every invoice. Hotel creditworthiness, repayment velocity, and sector concentration metrics in real-time." },
+  { icon: TrendingUp, title: "Competitive Bidding", desc: "Bid on invoice pools with full visibility into competing rates. Transparent, fair, and optimized for your return targets." },
+  { icon: Banknote, title: "24-Hour Settlement", desc: "Bank-direct settlement to supplier IBANs. Automated interest accrual and late repayment protocols. No intermediary accounts." },
+  { icon: Shield, title: "Non-Recourse by Design", desc: "Once settled, the invoice is your risk — not the hotel&apos;s. Clean balance-sheet treatment for all parties." },
+  { icon: Landmark, title: "$12B Market Access", desc: "Egypt&apos;s hospitality sector is a $12B industry with 480+ properties on our pipeline. High-velocity corporate deal flow." },
+];
+
 export default function FactoringServicePage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(212,168,67,0.04) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Factoring</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Suppliers Paid in 24 Hours.<br /><span className="text-gradient-lime">You Keep Net-60.</span>
+            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-gradient-lime">Non-Recourse<br />by Design.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Zero balance-sheet liability.
+            Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?role=factoring" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -31,16 +48,34 @@ export default function FactoringServicePage() {
         </div>
       </section>
 
+      {/* Trust Bar */}
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              { icon: Shield, label: "Non-Recourse", desc: "Clean risk transfer" },
+              { icon: Banknote, label: "Bank-Direct Settlement", desc: "No intermediary accounts" },
+              { icon: FileCheck, label: "Three-Way Matched", desc: "Pre-cleared invoices" },
+              { icon: Clock, label: "24-Hour Payment", desc: "Programmatic settlement" },
+            ].map((b) => (
+              <div key={b.label} className="flex items-center gap-3">
+                <b.icon size={16} style={{ color: "#D4A843" }} />
+                <div>
+                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Flow */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">The Flow</h2>
+          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">The Factoring Flow</h2>
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {[
-              { step: "01", title: "Invoice Cleared", desc: "Three-way match: PO + ETA UUID + Signed Delivery Note verified automatically.", icon: Check },
-              { step: "02", title: "Enter Factoring Pool", desc: "Pre-cleared invoice enters competitive bidding pool visible to all licensed grantors.", icon: TrendingUp },
-              { step: "03", title: "Grantors Bid", desc: "4+ licensed grantors compete on rate. Best offer selected automatically.", icon: Banknote },
-              { step: "04", title: "Settlement", desc: "Supplier paid in 24hrs. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
-            ].map((item) => (
+            {flow.map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(212,168,67,0.1)" }}>
                   <item.icon size={20} style={{ color: "#D4A843" }} />
@@ -54,19 +89,13 @@ export default function FactoringServicePage() {
         </div>
       </section>
 
+      {/* Funder Features */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Hotels Choose Us</h2>
+          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
-            {[
-              { icon: Banknote, title: "No Balance-Sheet Debt", desc: "Reverse factoring is off-balance-sheet. Your credit rating stays clean while suppliers get early payment." },
-              { icon: TrendingUp, title: "Competitive Rates", desc: "4+ grantors bid on every invoice. Market-driven rates ensure you always get the best deal." },
-              { icon: Shield, title: "Non-Recourse", desc: "Once settled, the invoice is the grantor's risk. Zero recourse back to your property." },
-              { icon: Clock, title: "Net-60+ Preserved", desc: "Your working capital stays liquid. Settle invoices at net-60 or longer while suppliers get paid in 24 hours." },
-              { icon: Check, title: "Auto Three-Way Match", desc: "Every invoice is pre-verified: PO + ETA UUID + Signed Delivery Note. No manual reconciliation." },
-              { icon: ArrowRight, title: "Bank-Direct Settlement", desc: "Settlement happens directly between grantor and your bank. No intermediary accounts." },
-            ].map((f) => (
-              <div key={f.title} className="rounded-xl p-6" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            {funderFeatures.map((f) => (
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#D4A843]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-3" style={{ color: "#D4A843" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -76,16 +105,18 @@ export default function FactoringServicePage() {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-white">Stretch Your Working Capital</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egyptian hotel groups already using embedded factoring to optimize cashflow.</p>
+          <Users size={28} className="mx-auto mb-6" style={{ color: "#D4A843" }} />
+          <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">4+ licensed grantors already bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?role=hotel" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-              Get Started <ArrowRight size={14} />
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/register?role=factoring" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Become a Grantor
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Register Your Hotel
             </Link>
           </div>
         </div>

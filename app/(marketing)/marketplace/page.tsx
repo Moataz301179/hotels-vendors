@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield } from "lucide-react";
+import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Marketplace — B2B Procurement Catalog | HotelsVendors",
@@ -12,7 +12,7 @@ const categories = [
   { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", count: "1,800+ SKUs", color: "#22C55E" },
   { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", count: "950+ SKUs", color: "#3B82F6" },
   { name: "FF&E", desc: "Furniture, fixtures, capital equipment", count: "620+ SKUs", color: "#D4A843" },
-  { name: "Services", desc: "Maintenance, pest control, laundry, security", count: "340+ vendors", color: "#A855F7" },
+  { name: "Services", desc: "Maintenance, pest control, laundry, security", count: "340+ vendors", color: "#00E5CC" },
 ];
 
 const suppliers = [
@@ -24,18 +24,28 @@ const suppliers = [
   { name: "Pharaoh Chemicals", category: "Consumables", rating: 4.8, location: "Cairo", verified: true },
 ];
 
+const supplierFeatures = [
+  { icon: Upload, title: "Catalog Upload", desc: "Upload 2,400+ SKUs with bulk CSV import. Set fixed prices per hotel or per property group." },
+  { icon: ShoppingCart, title: "PO Matching", desc: "Receive purchase orders directly from hotel procurement teams. Auto-match against your catalog availability." },
+  { icon: Banknote, title: "24-Hour Payment", desc: "Get paid in 24 hours via embedded factoring. No more chasing invoices for 90 days." },
+  { icon: FileCheck, title: "ETA Invoicing", desc: "Every invoice is auto-generated with RSA-2048 signing and UUID tracking. Zero compliance overhead." },
+  { icon: BarChart3, title: "Sales Analytics", desc: "Track orders, revenue, and buyer behavior across properties. Identify your top hotel accounts at a glance." },
+  { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified supplier badge. Hotels prioritize verified vendors for new POs." },
+];
+
 export default function MarketplacePage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Verified Suppliers.<br /><span className="text-gradient-lime">Fixed-Price Catalogs.</span>
+            2,400+ SKUs. 680+ Verified<br />Suppliers. <span className="text-gradient-lime">Zero Collection Chases.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Browse 6,000+ SKUs across 5 product categories from verified suppliers. Every order is ETA-compliant, budget-enforced, and logistics-optimized.
+            Egypt&apos;s largest hospitality procurement catalog. Fixed-price listings, ETA-compliant invoicing, and 24-hour settlement via embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
           </p>
           <div className="max-w-2xl mb-8">
             <div className="flex gap-2">
@@ -49,12 +59,34 @@ export default function MarketplacePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>Start Ordering <ArrowRight size={14} /></Link>
-            <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Become a Supplier</Link>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>Start Selling <ArrowRight size={14} /></Link>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
           </div>
         </div>
       </section>
 
+      {/* Trust Bar */}
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              { icon: Shield, label: "680+ Verified Suppliers", desc: "KYC completed" },
+              { icon: Clock, label: "24-Hour Settlement", desc: "Via embedded factoring" },
+              { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
+            ].map((b) => (
+              <div key={b.label} className="flex items-center gap-3">
+                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <div>
+                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Product Categories */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Product Categories</h2>
@@ -73,12 +105,13 @@ export default function MarketplacePage() {
         </div>
       </section>
 
+      {/* Featured Suppliers */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Featured Suppliers</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {suppliers.map((s) => (
-              <div key={s.name} className="rounded-xl p-5 flex items-center justify-between" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={s.name} className="rounded-xl p-5 flex items-center justify-between transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
                     <span className="text-[12px] font-medium text-[#84cc16]">{s.name.charAt(0)}</span>
@@ -98,14 +131,31 @@ export default function MarketplacePage() {
         </div>
       </section>
 
+      {/* Supplier Features */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {supplierFeatures.map((f) => (
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <f.icon size={20} className="mb-4" style={{ color: "#84cc16" }} />
+                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
+                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">How Procurement Works</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {[
-              { step: "01", title: "Browse & Order", desc: "Search catalogs, compare prices, add to cart. AI suggests optimal quantities based on your occupancy forecast.", icon: Search },
-              { step: "02", title: "Approve & Invoice", desc: "PO routes through your authority matrix. Supplier issues ETA-compliant invoice with cryptographic signature.", icon: FileCheck },
-              { step: "03", title: "Deliver & Settle", desc: "Shared-route delivery in 48hrs. Three-way matching auto-verifies GRN. Factoring settles in 24hrs.", icon: Truck },
+              { step: "01", title: "Upload & List", desc: "Upload your catalog with fixed prices. Set per-hotel or per-group pricing. Go live in under 48 hours.", icon: Upload },
+              { step: "02", title: "Receive & Fulfill", desc: "Hotels place orders directly. PO routes through their authority matrix. You confirm and ship.", icon: ShoppingCart },
+              { step: "03", title: "Invoice & Get Paid", desc: "ETA-compliant invoice auto-generated. Three-way match verified. Factoring settles in 24 hours.", icon: Banknote },
             ].map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
@@ -120,12 +170,13 @@ export default function MarketplacePage() {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Source Smarter?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join 680+ hotels and suppliers already transacting on HotelsVendors.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-            Request Enterprise Access <ArrowRight size={14} />
+          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join 680+ suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
+          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            Register as Supplier <ArrowRight size={14} />
           </Link>
         </div>
       </section>

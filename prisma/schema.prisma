@@ -241,13 +241,13 @@ enum PropertyType {
 // ─────────────────────────────────────────
 
 model User {
-  id          String     @id @default(cuid())
-  email       String     @unique
+  id          String      @id @default(cuid())
+  email       String      @unique
   name        String
   companyName String?
   phone       String?
-  role        UserRole   @default(DEPARTMENT_HEAD)
-  status      UserStatus @default(ACTIVE)
+  role        UserRole    @default(DEPARTMENT_HEAD)
+  status      UserStatus  @default(ACTIVE)
   sector      UserSector?
 
   // Auth
@@ -276,9 +276,9 @@ model User {
   canOverride Boolean @default(false)
 
   // Delegate invite
-  inviteToken      String?   @unique
-  inviteExpiresAt  DateTime?
-  invitedBy        String?
+  inviteToken     String?   @unique
+  inviteExpiresAt DateTime?
+  invitedBy       String?
 
   // Audit
   createdAt DateTime @default(now())
@@ -297,6 +297,8 @@ model User {
   addresses      UserAddress[]
   reviews        ProductReview[]
   sampleRequests SampleRequest[]
+
+  @@index([sector])
 }
 
 enum UserRole {
@@ -325,10 +327,14 @@ enum UserStatus {
 }
 
 enum UserSector {
+  PROCUREMENT
+  CASHFLOW
+  FINTECH
+  AI
   HOTEL
   SUPPLIER
+  FACTORING
   LOGISTICS
-  FINANCE
 }
 
 enum AccountType {
@@ -675,9 +681,15 @@ model Invoice {
   factoringCompanyId   String?
   factoringCompany     FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
   factoringRequests    FactoringRequest[]
-  acceleratedCashRate  Float?            @default(0) // Early payment discount rate applied
-  supplierDiscountRate Float?            @default(0) // Supplier's cash discount rate for early payment
-  cashDiscountDelta    Float?            @default(0) // Delta between supplier discount and factoring fee
+  acceleratedCashRate  Decimal            @default(0) // Early payment discount rate applied
+  supplierDiscountRate Decimal            @default(0) // Supplier's cash discount rate for early payment
+  cashDiscountDelta    Decimal            @default(0) // Delta between supplier discount and factoring fee
+
+  // Platform & admin fee fields
+  platformFee         Decimal @default(0) // Platform fee charged per invoice
+  platformFeeRate     Decimal @default(0) // Platform fee percentage rate
+  hotelAdminFeeRate   Decimal @default(0) // Hotel admin fee percentage
+  hotelAdminFeeAmount Decimal @default(0) // Calculated hotel admin fee amount
 
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -695,17 +707,17 @@ enum EtaStatus {
 }
 
 model EtaCredential {
-  id            String   @id @default(cuid())
-  tenantId      String   @unique
-  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  clientId      String
-  clientSecret  String   // AES-256-GCM encrypted
-  taxId         String
-  environment   String   @default("preprod") // preprod | production
-  isActive      Boolean  @default(true)
-  lastUsedAt    DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String    @id @default(cuid())
+  tenantId     String    @unique
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  clientId     String
+  clientSecret String // AES-256-GCM encrypted
+  taxId        String
+  environment  String    @default("preprod") // preprod | production
+  isActive     Boolean   @default(true)
+  lastUsedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 enum InvoiceStatus {
@@ -1289,9 +1301,9 @@ model Payment {
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  transactions     PaymentTransaction[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  transactions PaymentTransaction[]
 }
 
 model PaymentTransaction {
@@ -2462,4 +2474,25 @@ enum LiabilityAssignment {
 enum SubscriptionTier {
   STANDARD
   ENTERPRISE_COWORKER
+}
+
+// ─────────────────────────────────────────
+// 36. LEAD CAPTURE — Landing Page Sector Router
+// ─────────────────────────────────────────
+
+model LeadCapture {
+  id          String     @id @default(cuid())
+  companyName String
+  email       String
+  sector      UserSector
+  role        String? // optional: hotel, supplier, factoring, logistics
+  message     String?
+  source      String? // which page/form captured the lead
+  status      String     @default("new") // new, contacted, qualified, converted
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([sector])
+  @@index([email])
+  @@index([status])
 }

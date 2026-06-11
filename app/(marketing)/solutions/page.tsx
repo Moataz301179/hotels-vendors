@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck } from "lucide-react";
+import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Solutions — By Stakeholder | HotelsVendors",
@@ -11,36 +11,36 @@ const solutions = [
   {
     icon: Building2,
     title: "For Hotels & Resorts",
-    desc: "AI-automated procurement, budget blockades, ETA compliance, and net-60 factoring — all from one dashboard. Built for Egyptian hospitality groups managing 100-500 room properties.",
+    desc: "AI-automated procurement, budget blockades, ETA compliance, and net-60 factoring — all from one dashboard. Built for Egyptian hospitality groups managing 100-500 room coastal properties.",
     features: ["AI demand forecasting", "Budget blockades", "Multi-property control", "Net-60 factoring", "48-hour delivery"],
-    href: "/register?role=hotel",
+    href: "/register?sector=procurement",
     cta: "Register Hotel",
     color: "#84cc16",
   },
   {
     icon: Store,
     title: "For Suppliers & Vendors",
-    desc: "Get discovered by Egypt's largest hotel groups. Upload catalogs, receive POs, issue ETA-compliant invoices, and get paid in 24 hours via embedded factoring.",
+    desc: "Get discovered by Egypt's largest hotel groups. Upload catalogs, receive POs, issue ETA-compliant invoices, and get paid in 24 hours via embedded factoring. Stop chasing payments.",
     features: ["Catalog management", "PO notifications", "ETA invoicing", "24hr payment", "Analytics dashboard"],
-    href: "/become-supplier",
+    href: "/register?sector=procurement",
     cta: "Become a Supplier",
     color: "#22C55E",
   },
   {
     icon: Landmark,
     title: "For Factoring Companies",
-    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows.",
+    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector is a $12B market.",
     features: ["Pre-verified invoices", "Competitive bidding", "Non-recourse", "Bank-direct settlement", "Risk scoring"],
-    href: "/register?role=factoring",
+    href: "/register?sector=cashflow",
     cta: "Register Grantor",
     color: "#D4A843",
   },
   {
     icon: Truck,
     title: "For Logistics Providers",
-    desc: "Fill your trucks with consolidated multi-supplier loads. Shared-route optimization, guaranteed volume, and on-time payment.",
+    desc: "Fill your trucks with consolidated multi-supplier loads. Shared-route optimization, guaranteed volume, and on-time payment. Cover 6 governorates with AI-driven route planning.",
     features: ["Load consolidation", "Route optimization", "Guaranteed volume", "On-time payment", "GPS tracking"],
-    href: "/register?role=shipping",
+    href: "/register?sector=procurement",
     cta: "Register Carrier",
     color: "#3B82F6",
   },
@@ -49,23 +49,47 @@ const solutions = [
 export default function SolutionsPage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            One Platform.<br /><span className="text-gradient-lime">Four Stakeholders.</span>
+            One Platform.<br /><span className="text-gradient-lime">Four Stakeholder Workflows.<br />Infinite Scale.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
-            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier — HotelsVendors has a tailored workflow for you.
+            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier — HotelsVendors has a tailored workflow for you. Every role. One operating system.
           </p>
         </div>
       </section>
 
-      <section className="pb-20">
+      {/* Trust Bar */}
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              { icon: FileCheck, label: "ETA Compliant", desc: "Phase 1 & 2" },
+              { icon: ShieldCheck, label: "FRA Aligned", desc: "Anti-fraud" },
+              { icon: Banknote, label: "24hr Settlement", desc: "Bank-direct" },
+              { icon: MapPin, label: "6 Governorates", desc: "Full coverage" },
+            ].map((b) => (
+              <div key={b.label} className="flex items-center gap-3">
+                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <div>
+                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions Cards */}
+      <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-6">
           {solutions.map((s) => (
-            <div key={s.title} className="rounded-2xl p-8" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={s.title} className="rounded-2xl p-8 transition-all hover:border-[#84cc16]/10" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-3 mb-4">
@@ -94,6 +118,7 @@ export default function SolutionsPage() {
         </div>
       </section>
 
+      {/* Ecosystem Overview */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
           <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
@@ -108,7 +133,7 @@ export default function SolutionsPage() {
               { icon: Landmark, label: "Funders", color: "#D4A843" },
               { icon: Truck, label: "Carriers", color: "#3B82F6" },
             ].map((item) => (
-              <div key={item.label} className="rounded-xl p-4" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={item.label} className="rounded-xl p-4 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <item.icon size={20} className="mx-auto mb-2" style={{ color: item.color }} />
                 <p className="text-[12px] font-medium text-white/60">{item.label}</p>
               </div>
@@ -117,14 +142,20 @@ export default function SolutionsPage() {
         </div>
       </section>
 
+      {/* Compliance */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <ShieldCheck size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">ETA Compliant. FRA Secure.</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-            Get Started <ArrowRight size={14} />
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              Get Started <ArrowRight size={14} />
+            </Link>
+            <Link href="/compliance" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              View Compliance
+            </Link>
+          </div>
         </div>
       </section>
     </main>
