@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   ArrowRight,
   BrainCircuit,
@@ -25,12 +25,85 @@ import {
   Calendar,
   FileText,
   Send,
+  Sparkles,
+  CircuitBoard,
+  Wallet,
+  LineChart,
+  ArrowUpRight,
+  Play,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  Globe,
+  Lock,
+  Cpu,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
+// ─── Animated Counter Hook ─────────────────────────────────────────
+function useCounter(end: number, duration = 2000, start = 0, inView = false) {
+  const [count, setCount] = useState(start);
+  useEffect(() => {
+    if (!inView) return;
+    let startTime: number | null = null;
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * (end - start) + start));
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [end, duration, start, inView]);
+  return count;
+}
+
+// ─── RevealSection ────────────────────────────────────────────────
+function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ─── Scroll-Triggered Counter ──────────────────────────────────────
+function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = "#39FF14" }: {
+  end: number; suffix?: string; prefix?: string; label: string; icon: React.ElementType; color?: string;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const count = useCounter(end, 2200, 0, inView);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5 }}
+      className="rounded-2xl p-6 text-center hover-lift"
+      style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+    >
+      <Icon size={18} className="mx-auto mb-3" style={{ color: "rgba(255,255,255,0.15)" }} />
+      <p className="text-[32px] font-bold text-white mb-1">
+        {prefix}{count.toLocaleString()}{suffix}
+      </p>
+      <p className="text-[10px] text-white/25 uppercase tracking-wider font-medium">{label}</p>
+    </motion.div>
+  );
+}
+
 // ─── Sector Router Data ───────────────────────────────────────────
-type SectorKey = "HOTEL" | "SUPPLIER" | "LOGISTICS" | "FINANCE";
+type SectorKey = "procurement" | "cashflow" | "fintech" | "ai";
 
 interface SectorData {
   key: SectorKey;
@@ -41,64 +114,69 @@ interface SectorData {
   hook: string;
   bullets: string[];
   placeholder: string;
+  features: string[];
 }
 
 const SECTORS: SectorData[] = [
   {
-    key: "HOTEL",
-    label: "Hotel Procurement",
-    icon: Building2,
+    key: "procurement",
+    label: "Digital Procurement",
+    icon: CircuitBoard,
     accent: "#39FF14",
     accentMuted: "rgba(57,255,20,0.1)",
-    hook: "Optimize your HORECA supply chain. Access real-time cost forecasting and automated factored credit lines.",
+    hook: "AI-automated SaaS procurement that predicts demand, generates POs against budget ceilings, and enforces pre-occurrence blockades — before a single pound leaves your account.",
     bullets: [
-      "Direct ETA-compliant invoicing",
-      "AI-driven alternative suggestions",
-      "Flexible credit checkout",
+      "14-day forward demand forecasting from occupancy curves",
+      "Pre-occurrence budget blockades at property-branch level",
+      "Automated three-way matching: PO + ETA UUID + GRN",
     ],
-    placeholder: "Enter Hotel Name / Group",
+    placeholder: "Enter Hotel / Resort Group Name",
+    features: ["AI Demand Forecasting", "Budget Blockades", "ETA Compliance", "Multi-Property"],
   },
   {
-    key: "SUPPLIER",
-    label: "Supplier Vendors",
-    icon: Store,
+    key: "cashflow",
+    label: "Cashflow Optimization",
+    icon: Wallet,
     accent: "#22C55E",
     accentMuted: "rgba(34,197,94,0.1)",
-    hook: "Get paid immediately on delivery while offering your hotel buyers flexible credit terms.",
+    hook: "Stretch working capital to net-60+ without balance-sheet debt. Embedded reverse factoring pays suppliers in 24 hours while you keep your cash longer.",
     bullets: [
-      "Direct ETA eInvoicing SDK sync",
-      "Zero-friction Invisible Onboarding",
-      "Instant placement in hotel catalogs",
+      "Net-60+ terms without balance-sheet liability",
+      "Suppliers paid in 24 hours via competitive bidding",
+      "Automated interest accrual and settlement reconciliation",
     ],
-    placeholder: "Enter Company / Storefront Name",
+    placeholder: "Enter Company / Property Group Name",
+    features: ["Net-60+ Terms", "24h Settlement", "Zero Debt", "Auto Accrual"],
   },
   {
-    key: "LOGISTICS",
-    label: "Logistics & Shipping",
-    icon: Truck,
+    key: "fintech",
+    label: "B2B Fintech",
+    icon: LineChart,
     accent: "#3B82F6",
     accentMuted: "rgba(59,130,246,0.1)",
-    hook: "Become an authorized fulfillment partner for Egypt's premier hotel supplier network.",
+    hook: "The smartest fintech layer for Egyptian B2B. Every invoice passes tenant validation, ETA cryptographic verification, and automated three-way matching before entering the factoring pool.",
     bullets: [
-      "Automated route dispatching",
-      "Guaranteed corporate payloads",
-      "Seamless ERP inventory integration",
+      "SHA-256 cryptographic audit trail on every transition",
+      "Non-recourse factoring with bank-direct settlement",
+      "Automated scoring: PO + ETA UUID + Signed Delivery Note",
     ],
-    placeholder: "Enter Logistics / Fleet Company Name",
+    placeholder: "Enter Financial Institution / Fund Name",
+    features: ["Crypto Audit Trail", "Non-Recourse", "Bank-Direct", "Risk Scoring"],
   },
   {
-    key: "FINANCE",
-    label: "Factoring & Finance",
-    icon: Landmark,
+    key: "ai",
+    label: "AI Automation",
+    icon: Cpu,
     accent: "#D4A843",
     accentMuted: "rgba(212,168,67,0.1)",
-    hook: "Deploy your capital safely into verified, real-time B2B hospitality transactions.",
+    hook: "Autonomous agents that run your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues, and real-time telemetry.",
     bullets: [
-      "Risk mitigation via official ETA telemetry",
-      "Automated transaction scoring",
-      "Complete liability protection",
+      "Autonomous agent orchestration with self-healing protocols",
+      "Real-time anomaly detection across all transactions",
+      "Dead-letter queue with automatic retry and escalation",
     ],
-    placeholder: "Enter Financial Institution Name",
+    placeholder: "Enter Enterprise / Group Name",
+    features: ["Agent Orchestration", "Self-Healing", "Anomaly Detection", "Dead-Letter Queue"],
   },
 ];
 
@@ -123,21 +201,12 @@ const liveRates = [
   { label: "CBE Rate", value: "49.45", change: "-0.05", source: "CBE" },
 ];
 
-const seasonForecast = [
-  { month: "Jun", occupancy: 72, demand: 0.78, priceIndex: 105, season: "Low" },
-  { month: "Jul", occupancy: 85, demand: 0.92, priceIndex: 118, season: "High" },
-  { month: "Aug", occupancy: 94, demand: 1.0, priceIndex: 132, season: "Peak" },
-  { month: "Sep", occupancy: 78, demand: 0.82, priceIndex: 108, season: "Med" },
-  { month: "Oct", occupancy: 68, demand: 0.71, priceIndex: 98, season: "Low" },
-  { month: "Nov", occupancy: 62, demand: 0.64, priceIndex: 92, season: "Low" },
-  { month: "Dec", occupancy: 88, demand: 0.96, priceIndex: 128, season: "Peak" },
-];
-
-const STATS = [
-  { value: "680+", label: "Verified Suppliers", icon: Store },
-  { value: "94%", label: "Forecast Accuracy", icon: TrendingUp },
-  { value: "24h", label: "Supplier Settlement", icon: Clock },
-  { value: "40%", label: "Logistics Cost Reduction", icon: Truck },
+const PIPELINE = [
+  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings.", icon: BrainCircuit },
+  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits.", icon: ShieldCheck },
+  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed and submitted to Tax Authority. On-site GRN clearance triggers UUID validation.", icon: Receipt },
+  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation. Multi-supplier load matching. 48-hour delivery guarantee to any Egyptian governorate.", icon: Truck },
+  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding. Funders bid. Supplier paid in 24hrs. Hotel keeps net-60+.", icon: Banknote },
 ];
 
 const FEATURES = [
@@ -149,74 +218,29 @@ const FEATURES = [
   { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#39FF14" },
 ];
 
-const ROLES = [
-  {
-    icon: Building2,
-    title: "For Hotels & Resorts",
-    subtitle: "The Buyers",
-    desc: "Pre-occurrence budget blockades at the individual resort branch level. Every PO validated against pre-approved allocation ceilings. Stretch working capital to net-60+ without balance-sheet debt.",
-    href: "/register",
-    cta: "Register Your Property Group",
-    features: ["Pre-occurrence budget enforcement per property branch", "Net-60+ working capital without balance-sheet liability", "Automated PO-to-invoice matching with authority matrix", "Real-time credit utilization dashboard"],
-    accent: "#39FF14",
-  },
-  {
-    icon: Store,
-    title: "For Suppliers & Vendors",
-    subtitle: "The Providers",
-    desc: "The moment your on-site Goods Received Note is cleared and the ETA cryptographic UUID is validated, your invoice enters the non-recourse factoring pool. Bank-direct settlement within 24 hours.",
-    href: "/register",
-    cta: "Join as a Verified Supplier",
-    features: ["GRN clearance triggers automatic factoring eligibility", "Non-recourse, bank-direct payment within 24 hours", "Zero collection overhead across multi-property groups", "Real-time receivables ledger with settlement tracking"],
-    accent: "#22C55E",
-  },
-  {
-    icon: Landmark,
-    title: "For Funders & Capital Partners",
-    subtitle: "The Capital",
-    desc: "Pre-cleared, high-velocity corporate deal flow — every invoice has passed tenant validation, ETA UUID verification, delivery sign-off, and automated three-way matching.",
-    href: "/register",
-    cta: "Apply as a Licensed Funder",
-    features: ["SHA-256 cryptographic audit trail on every transition", "Three-way matching: PO + ETA UUID + Signed Digital Delivery Note", "Normalized bidding parameters across all hotel debtors", "Automated interest accrual and late repayment protocols"],
-    accent: "#3B82F6",
-  },
+const TRUST_BADGES = [
+  { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
+  { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
+  { icon: Globe, label: "6 Governorates Covered", desc: "Coastal + Inland" },
+  { icon: Zap, label: "24-Hour Settlement", desc: "Bank-direct factoring" },
 ];
-
-const PIPELINE = [
-  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings.", icon: BrainCircuit },
-  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits.", icon: ShieldCheck },
-  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed and submitted to Tax Authority. On-site GRN clearance triggers UUID validation.", icon: Receipt },
-  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation. Multi-supplier load matching. 48-hour delivery guarantee to any Egyptian governorate.", icon: Truck },
-  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding. Funders bid. Supplier paid in 24hrs. Hotel keeps net-60+.", icon: Banknote },
-];
-
-// ─── RevealSection ────────────────────────────────────────────────
-function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 // ─── Main Page ────────────────────────────────────────────────────
 export default function HomePage() {
-  const [activeSector, setActiveSector] = useState<SectorKey>("HOTEL");
+  const [activeSector, setActiveSector] = useState<SectorKey>("procurement");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.96]);
+  const smoothOpacity = useSpring(heroOpacity, { stiffness: 100, damping: 30 });
+  const smoothScale = useSpring(heroScale, { stiffness: 100, damping: 30 });
+
   const currentSector = SECTORS.find((s) => s.key === activeSector)!;
-  const maxOccupancy = Math.max(...seasonForecast.map((s) => s.occupancy));
   const doubledIndex = [...marketIndex, ...marketIndex];
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -227,18 +251,14 @@ export default function HomePage() {
       await fetch("/api/v1/leads/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          companyName,
-          email,
-          sector: activeSector,
-        }),
+        body: JSON.stringify({ companyName, email, sector: activeSector }),
       });
       setSubmitSuccess(true);
       setCompanyName("");
       setEmail("");
       setTimeout(() => setSubmitSuccess(false), 4000);
     } catch {
-      // silent fail — non-critical
+      // silent fail
     } finally {
       setIsSubmitting(false);
     }
@@ -264,44 +284,78 @@ export default function HomePage() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          HERO
+          HERO — Parallax Scroll + Animated Entry
           ═══════════════════════════════════════════ */}
-      <section className="relative pt-28 pb-20 overflow-hidden">
+      <section ref={heroRef} className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.04) 0%, transparent 70%)" }} />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <motion.div className="relative z-10 mx-auto max-w-7xl px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
           <div className="grid lg:grid-cols-5 gap-10 items-start">
             <div className="lg:col-span-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
+                style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
+              >
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#39FF14" }} />
-                <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egyptian Hospitality Procurement Infrastructure</span>
-              </div>
+                <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
+              </motion.div>
 
-              <h1 className="text-[36px] sm:text-[48px] md:text-[58px] font-bold leading-[1.02] tracking-tight mb-6" style={{ color: "#ffffff" }}>
-                Corporate Working Capital,
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-[36px] sm:text-[48px] md:text-[58px] font-bold leading-[1.02] tracking-tight mb-6"
+                style={{ color: "#ffffff" }}
+              >
+                AI-Automated Procurement.
                 <br />
-                <span className="text-gradient-lime">Re-Engineered</span> for Egyptian Hospitality
-              </h1>
+                <span className="text-gradient-lime">Smartest B2B Fintech.</span>
+                <br />
+                One Platform.
+              </motion.h1>
 
-              <p className="text-[15px] text-white/50 leading-relaxed max-w-lg mb-4">
-                HotelsVendors is the middleware operating system that sits between your property&apos;s procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital deployment engine — enforcing pre-occurrence budget blockades, automating ETA cryptographic compliance, and routing pre-cleared invoices into a competitive reverse factoring pool.
-              </p>
-              <p className="text-[13px] text-white/30 leading-relaxed max-w-lg mb-8">
-                No balance-sheet debt. No 180-day collection chases. No unverified paper.
-              </p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.4 }}
+                className="text-[15px] text-white/50 leading-relaxed max-w-lg mb-3"
+              >
+                HotelsVendors is the all-in-one operating system that sits between your property&apos;s procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital deployment engine — combining <strong className="text-white/70">AI-automated SaaS digital procurement</strong>, <strong className="text-white/70">cashflow optimization</strong>, and the <strong className="text-white/70">smartest B2B fintech</strong> layer for Egyptian hospitality.
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="text-[13px] text-white/30 leading-relaxed max-w-lg mb-8"
+              >
+                No balance-sheet debt. No 180-day collection chases. No unverified paper. Just cryptographic compliance, automated settlement, and zero manual reconciliation.
+              </motion.p>
 
-              <div className="flex flex-wrap gap-3 mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="flex flex-wrap gap-3 mb-8"
+              >
                 <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
                   Request Enterprise Access <ArrowRight size={15} />
                 </Link>
-                <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-                  Architecture Overview
+                <Link href="#platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+                  <Play size={13} /> Watch 2-Min Demo
                 </Link>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center gap-6 flex-wrap">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                className="flex items-center gap-6 flex-wrap"
+              >
                 <div className="flex -space-x-2">
-                  {["HV", "INVO", "CBE", "ETA"].map((a, i) => (
+                  {["AI", "ETA", "B2B", "HV"].map((a, i) => (
                     <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "2px solid #000000" }}>
                       <span className="text-[8px] font-bold text-white/30">{a}</span>
                     </div>
@@ -311,10 +365,15 @@ export default function HomePage() {
                   <span className="text-white/50 font-medium">Trusted by 680+ suppliers</span>
                   <br />across Egypt&apos;s hospitality sector
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <div className="lg:col-span-2 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="lg:col-span-2 space-y-4"
+            >
               <div className="rounded-2xl p-5" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Live Market Rates</span>
@@ -340,35 +399,77 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="rounded-2xl p-4 text-center"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
                   <p className="text-[22px] font-bold" style={{ color: "#39FF14" }}>24h</p>
                   <p className="text-[9px] text-white/25 uppercase tracking-wider">Settlement</p>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="rounded-2xl p-4 text-center"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
                   <p className="text-[22px] font-bold text-[#22C55E]">40%</p>
                   <p className="text-[9px] text-white/25 uppercase tracking-wider">Cost Cut</p>
-                </div>
+                </motion.div>
               </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          TRUST BAR — Animated Scroll
+          ═══════════════════════════════════════════ */}
+      <RevealSection>
+        <div className="py-10 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#050505" }}>
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {TRUST_BADGES.map((badge, i) => (
+                <motion.div
+                  key={badge.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  className="flex items-center gap-3"
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(57,255,20,0.08)" }}>
+                    <badge.icon size={16} style={{ color: "#39FF14" }} />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-white/60">{badge.label}</p>
+                    <p className="text-[9px] text-white/25">{badge.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════════════════════════
           SECTOR ROUTER — Dynamic Tab System
           ═══════════════════════════════════════════ */}
-      <section className="py-16 relative overflow-hidden">
+      <section id="platform" className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(57,255,20,0.02) 0%, transparent 60%)" }} />
 
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <RevealSection>
             <div className="text-center mb-10">
-              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Choose Your Role</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
-                One Platform. Four Entry Points.
+                Four Engines. One Operating System.
               </h2>
-              <p className="text-white/40 text-[14px] max-w-xl mx-auto leading-relaxed">
-                Select your sector below to see how HotelsVendors re-engineers your specific workflow — then request access with one click.
+              <p className="text-white/40 text-[14px] max-w-2xl mx-auto leading-relaxed">
+                AI-automated procurement, cashflow optimization, B2B fintech, and autonomous AI agents — all running on a single multi-tenant platform with cryptographic ETA compliance.
               </p>
             </div>
           </RevealSection>
@@ -380,9 +481,11 @@ export default function HomePage() {
                 const isActive = activeSector === sector.key;
                 const Icon = sector.icon;
                 return (
-                  <button
+                  <motion.button
                     key={sector.key}
                     onClick={() => setActiveSector(sector.key)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className="relative inline-flex items-center gap-2.5 px-5 py-3 rounded-xl text-[13px] font-medium transition-all duration-200"
                     style={{
                       backgroundColor: isActive ? sector.accentMuted : "rgba(255,255,255,0.02)",
@@ -400,7 +503,7 @@ export default function HomePage() {
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -410,18 +513,24 @@ export default function HomePage() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSector}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <div className="grid lg:grid-cols-5 gap-6 items-start">
                 {/* Left: Hook + Bullets */}
                 <div className="lg:col-span-3 rounded-2xl p-8" style={{ backgroundColor: "#0a0a0a", border: `1px solid ${currentSector.accent}15` }}>
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: currentSector.accentMuted }}>
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="w-11 h-11 rounded-xl flex items-center justify-center"
+                      style={{ backgroundColor: currentSector.accentMuted }}
+                    >
                       <currentSector.icon size={22} style={{ color: currentSector.accent }} />
-                    </div>
+                    </motion.div>
                     <div>
                       <h3 className="text-[18px] font-bold text-white">{currentSector.label}</h3>
                       <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: currentSector.accent }}>Your Workflow, Re-Engineered</p>
@@ -434,12 +543,26 @@ export default function HomePage() {
 
                   <div className="space-y-3 mb-8">
                     {currentSector.bullets.map((bullet, i) => (
-                      <div key={i} className="flex items-start gap-3">
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + i * 0.08 }}
+                        className="flex items-start gap-3"
+                      >
                         <div className="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: currentSector.accentMuted }}>
                           <CheckCircle size={12} style={{ color: currentSector.accent }} />
                         </div>
                         <span className="text-[13px] text-white/50 leading-relaxed">{bullet}</span>
-                      </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {currentSector.features.map((f) => (
+                      <span key={f} className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ backgroundColor: currentSector.accentMuted, color: currentSector.accent }}>
+                        {f}
+                      </span>
                     ))}
                   </div>
 
@@ -448,7 +571,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.15)]"
                     style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                   >
-                    Get Started as {currentSector.label.split(" ")[0]} <ArrowRight size={14} />
+                    Get Started with {currentSector.label} <ArrowRight size={14} />
                   </Link>
                 </div>
 
@@ -478,10 +601,7 @@ export default function HomePage() {
                           onChange={(e) => setCompanyName(e.target.value)}
                           placeholder={currentSector.placeholder}
                           className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
-                          style={{
-                            backgroundColor: "rgba(255,255,255,0.03)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                          }}
+                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                           onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
                           onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
                         />
@@ -494,26 +614,16 @@ export default function HomePage() {
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="you@company.com"
                           className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
-                          style={{
-                            backgroundColor: "rgba(255,255,255,0.03)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                          }}
+                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                           onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
                           onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
                         />
                       </div>
-
-                      {/* Hidden sector tag — submitted with form */}
-                      <input type="hidden" name="sector" value={activeSector} />
-
                       <button
                         type="submit"
                         disabled={isSubmitting || !companyName.trim() || !email.trim()}
                         className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{
-                          backgroundColor: currentSector.accent,
-                          color: "#000000",
-                        }}
+                        style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                       >
                         {isSubmitting ? (
                           <span className="flex items-center gap-2">
@@ -524,9 +634,8 @@ export default function HomePage() {
                           <>Submit Application <Send size={13} /></>
                         )}
                       </button>
-
                       <p className="text-[10px] text-white/20 text-center">
-                        Sector: <span className="font-medium" style={{ color: currentSector.accent }}>{activeSector}</span> · No credit card required
+                        Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · No credit card required
                       </p>
                     </form>
                   )}
@@ -540,51 +649,68 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          THREE PILLARS
+          ANIMATED STATS
+          ═══════════════════════════════════════════ */}
+      <section className="py-16" style={{ backgroundColor: "#050505" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <Counter end={680} suffix="+" label="Verified Suppliers" icon={Store} />
+            <Counter end={94} suffix="%" label="Forecast Accuracy" icon={TrendingUp} />
+            <Counter end={24} suffix="h" label="Supplier Settlement" icon={Clock} />
+            <Counter end={40} suffix="%" label="Logistics Cost Reduction" icon={Truck} />
+          </div>
+        </div>
+      </section>
+
+      <hr className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          THREE PILLARS — Staggered Scroll Reveal
           ═══════════════════════════════════════════ */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <RevealSection>
             <div className="text-center mb-14">
-              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Network Architecture</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-4">
-                Three Participants. One Settlement Engine.
+                Procurement + Fintech + AI.<br />One Settlement Engine.
               </h2>
               <p className="text-white/40 text-[14px] max-w-2xl mx-auto leading-relaxed">
-                Every transaction on HotelsVendors simultaneously serves the hotel&apos;s cashflow mandate, the supplier&apos;s liquidity requirement, and the funder&apos;s asset-quality threshold — with zero manual reconciliation.
+                Every transaction simultaneously serves the hotel&apos;s cashflow mandate, the supplier&apos;s liquidity requirement, and the funder&apos;s asset-quality threshold — with zero manual reconciliation.
               </p>
             </div>
           </RevealSection>
 
           <div className="grid lg:grid-cols-3 gap-5">
-            {ROLES.map((role, i) => (
-              <RevealSection key={role.title}>
-                <div className="rounded-2xl p-0 overflow-hidden transition-all duration-300 hover:scale-[1.02]" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 80}ms` }}>
-                  <div className="h-1.5" style={{ background: `linear-gradient(to right, ${role.accent}, ${role.accent}88)` }} />
+            {[
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Every purchase order is validated before it leaves your desk.", href: "/register", cta: "Start Procurement", color: "#39FF14" },
+              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Net-60+ working capital without balance-sheet debt. Suppliers paid in 24 hours via competitive reverse factoring. You keep your cash longer.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
+              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Every invoice passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail on every transition.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
+            ].map((role, i) => (
+              <RevealSection key={role.title} delay={i * 0.12}>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="rounded-2xl p-0 overflow-hidden h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <div className="h-1.5" style={{ background: `linear-gradient(to right, ${role.color}, ${role.color}88)` }} />
                   <div className="p-7">
                     <div className="flex items-center gap-3 mb-5">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${role.accent}15` }}>
-                        <role.icon size={22} style={{ color: role.accent }} />
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${role.color}15` }}>
+                        <role.icon size={22} style={{ color: role.color }} />
                       </div>
                       <div>
                         <h3 className="text-[16px] font-bold text-white">{role.title}</h3>
-                        <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: role.accent }}>{role.subtitle}</p>
+                        <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: role.color }}>{role.subtitle}</p>
                       </div>
                     </div>
-                    <p className="text-[12px] text-white/40 leading-relaxed mb-4">{role.desc}</p>
-                    <div className="space-y-2.5 mb-6">
-                      {role.features.map((item, j) => (
-                        <div key={j} className="flex items-start gap-2">
-                          <CheckCircle size={13} className="mt-0.5 flex-shrink-0" style={{ color: role.accent }} />
-                          <span className="text-[11px] text-white/40">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <Link href={role.href} className="inline-flex items-center gap-1.5 text-[11px] font-semibold py-2.5 px-4 rounded-xl transition-all" style={{ color: role.accent, border: `1px solid ${role.accent}30` }}>
+                    <p className="text-[12px] text-white/40 leading-relaxed mb-6">{role.desc}</p>
+                    <Link href={role.href} className="inline-flex items-center gap-1.5 text-[11px] font-semibold py-2.5 px-4 rounded-xl transition-all" style={{ color: role.color, border: `1px solid ${role.color}30` }}>
                       {role.cta} <ArrowRight size={12} />
                     </Link>
                   </div>
-                </div>
+                </motion.div>
               </RevealSection>
             ))}
           </div>
@@ -604,20 +730,17 @@ export default function HomePage() {
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-4">
                 Regulatory Shield. Settlement Engine.<br />Cryptographic Audit Trail.
               </h2>
-              <p className="text-white/40 text-[14px] max-w-2xl mx-auto leading-relaxed">
-                Every invoice that moves through HotelsVendors is validated, signed, and settled by infrastructure — not by people chasing spreadsheets.
-              </p>
             </div>
           </RevealSection>
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: <FileText size={18} style={{ color: "#39FF14" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority's e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing. Full Phase 1 & 2 compliance.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2 Compliant", badgeIcon: <Shield size={13} style={{ color: "#39FF14" }} />, bg: "rgba(57,255,20,0.1)" },
-              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. The engine manages automated interest accruals, late repayment protocols, and settlement reconciliation in real time.", badge: "Programmatic Routing · Auto Accrual · Immutable Ledger", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
-              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness, FRA Anti-Fraud Compliance, and alignment against ISO/IEC 27001 & SOC 2 Type II control frameworks.", badges: ["I-Score Assessment Ready", "FRA Anti-Fraud: 3-Way Match", "ISO/IEC 27001 Aligned", "SOC 2 Type II Audit Ready"], bg: "rgba(59,130,246,0.1)" },
+              { icon: <FileText size={18} style={{ color: "#39FF14" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#39FF14" }} />, bg: "rgba(57,255,20,0.1)" },
+              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals and settlement reconciliation.", badge: "Programmatic Routing · Auto Accrual", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
+              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness, FRA Anti-Fraud Compliance, and alignment against ISO/IEC 27001 & SOC 2 Type II control frameworks.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
             ].map((card, i) => (
-              <RevealSection key={card.title}>
-                <div className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <RevealSection key={card.title} delay={i * 0.1}>
+                <motion.div whileHover={{ y: -3 }} className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: card.bg }}>
                       {card.icon}
@@ -643,7 +766,7 @@ export default function HomePage() {
                       <span className="text-[10px] text-white/25">{card.badge}</span>
                     </div>
                   )}
-                </div>
+                </motion.div>
               </RevealSection>
             ))}
           </div>
@@ -653,79 +776,7 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          SEASON FORECAST
-          ═══════════════════════════════════════════ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <RevealSection>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-1 block">Hospitality Intelligence</span>
-                <h2 className="text-[22px] font-bold text-white">Seasonal Occupancy & Demand Forecast</h2>
-              </div>
-              <span className="flex items-center gap-1.5 text-[10px] text-white/25"><Calendar size={12} />Jun — Dec 2026</span>
-            </div>
-            <div className="rounded-2xl p-6" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <div className="flex items-end gap-3 h-44 mb-5 px-2">
-                {seasonForecast.map((s, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2 group relative">
-                    <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-white/50 whitespace-nowrap px-2.5 py-1 rounded-lg z-10" style={{ backgroundColor: "#1a1a1a" }}>
-                      {s.occupancy}% occ · Idx {s.priceIndex}
-                    </div>
-                    <div className="w-full rounded-lg overflow-hidden relative transition-all group-hover:scale-105" style={{ height: `${(s.occupancy / maxOccupancy) * 140}px` }}>
-                      <div
-                        className="absolute bottom-0 left-0 right-0 rounded-lg transition-all"
-                        style={{
-                          height: "100%",
-                          background: s.season === "Peak" ? "linear-gradient(to top, rgba(57,255,20,0.7), rgba(57,255,20,0.2))" :
-                            s.season === "High" ? "linear-gradient(to top, rgba(59,130,246,0.6), rgba(59,130,246,0.2))" :
-                            s.season === "Med" ? "linear-gradient(to top, rgba(255,255,255,0.15), rgba(255,255,255,0.04))" :
-                            "linear-gradient(to top, rgba(255,255,255,0.08), rgba(255,255,255,0.02))",
-                        }}
-                      />
-                    </div>
-                    <span className="text-[10px] text-white/25 font-medium">{s.month}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-7 gap-2 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                {seasonForecast.map((s, i) => (
-                  <div key={i} className="text-center">
-                    <p className="text-[12px] font-semibold text-white/70">{s.occupancy}%</p>
-                    <p className="text-[9px] text-white/25">occ</p>
-                    <span className={`inline-block mt-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
-                      s.season === "Peak" ? "text-[#39FF14]" : s.season === "High" ? "text-blue-400" : s.season === "Med" ? "text-white/40" : "text-white/20"
-                    }`} style={{
-                      backgroundColor: s.season === "Peak" ? "rgba(57,255,20,0.1)" :
-                        s.season === "High" ? "rgba(59,130,246,0.1)" :
-                        s.season === "Med" ? "rgba(255,255,255,0.05)" :
-                        "rgba(255,255,255,0.03)",
-                    }}>{s.season}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center justify-center gap-6 mt-4 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                {[
-                  { label: "Peak", dot: "#39FF14" },
-                  { label: "High", dot: "#3B82F6" },
-                  { label: "Medium", dot: "rgba(255,255,255,0.3)" },
-                  { label: "Low", dot: "rgba(255,255,255,0.1)" },
-                ].map((l, i) => (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: l.dot }} />
-                    <span className="text-[9px] text-white/25">{l.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </RevealSection>
-        </div>
-      </section>
-
-      <hr className="section-divider" />
-
-      {/* ═══════════════════════════════════════════
-          PLATFORM CAPABILITIES
+          PLATFORM CAPABILITIES — Scroll Reveal Grid
           ═══════════════════════════════════════════ */}
       <section className="py-20" style={{ backgroundColor: "#0a0a0a" }}>
         <div className="mx-auto max-w-7xl px-6">
@@ -737,17 +788,18 @@ export default function HomePage() {
           </RevealSection>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {FEATURES.map((f, i) => (
-              <RevealSection key={f.title}>
-                <Link href="/platform" className="rounded-2xl p-6 block group hover-lift h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 60}ms` }}>
+              <RevealSection key={f.title} delay={i * 0.08}>
+                <motion.div
+                  whileHover={{ y: -3, borderColor: "rgba(57,255,20,0.2)" }}
+                  className="rounded-2xl p-6 h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 60}ms` }}
+                >
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
                     <f.icon size={20} style={{ color: "#39FF14" }} />
                   </div>
-                  <h3 className="text-[14px] font-bold mb-2 text-white group-hover:text-[#39FF14] transition-colors">{f.title}</h3>
-                  <p className="text-[12px] text-white/40 leading-relaxed mb-4">{f.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-white/20 group-hover:text-[#39FF14] transition-all">
-                    Learn more <ChevronRight size={12} />
-                  </span>
-                </Link>
+                  <h3 className="text-[14px] font-bold mb-2 text-white">{f.title}</h3>
+                  <p className="text-[12px] text-white/40 leading-relaxed">{f.desc}</p>
+                </motion.div>
               </RevealSection>
             ))}
           </div>
@@ -757,7 +809,7 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          HOW IT WORKS
+          HOW IT WORKS — Staggered Pipeline
           ═══════════════════════════════════════════ */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
@@ -769,8 +821,12 @@ export default function HomePage() {
           </RevealSection>
           <div className="grid md:grid-cols-5 gap-4">
             {PIPELINE.map((step, i) => (
-              <RevealSection key={step.step}>
-                <div className="rounded-2xl p-6 text-center hover-lift relative h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 80}ms` }}>
+              <RevealSection key={step.step} delay={i * 0.1}>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  className="rounded-2xl p-6 text-center h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
                   <div className="text-[28px] font-bold leading-none mb-3" style={{ color: "rgba(57,255,20,0.08)" }}>{step.step}</div>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(57,255,20,0.08)", border: "1px solid rgba(57,255,20,0.12)" }}>
                     <step.icon size={18} style={{ color: "#39FF14" }} />
@@ -782,7 +838,7 @@ export default function HomePage() {
                       <ArrowRight size={16} />
                     </div>
                   )}
-                </div>
+                </motion.div>
               </RevealSection>
             ))}
           </div>
@@ -792,49 +848,47 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          STATS
+          CTA — Final Conversion
           ═══════════════════════════════════════════ */}
-      <section className="py-16" style={{ backgroundColor: "#0a0a0a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <RevealSection>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {STATS.map((s, i) => (
-                <div key={s.label} className="rounded-2xl p-6 text-center hover-lift" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <s.icon size={18} className="mx-auto mb-3" style={{ color: "rgba(255,255,255,0.15)" }} />
-                  <p className="text-[32px] font-bold text-white mb-1">{s.value}</p>
-                  <p className="text-[10px] text-white/25 uppercase tracking-wider font-medium">{s.label}</p>
-                </div>
-              ))}
-            </div>
-          </RevealSection>
-        </div>
-      </section>
-
-      <hr className="section-divider" />
-
-      {/* ═══════════════════════════════════════════
-          CTA
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(57,255,20,0.04) 0%, transparent 70%)" }} />
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(57,255,20,0.05) 0%, transparent 70%)" }} />
         <div className="mx-auto max-w-7xl px-6 text-center relative">
           <RevealSection>
-            <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Enterprise Onboarding</span>
-            <h2 className="text-[clamp(28px,4vw,42px)] font-bold mb-5 tracking-tight text-white">
-              Your Procurement Infrastructure Shouldn&apos;t<br />Depend on Spreadsheets
-            </h2>
-            <p className="text-[14px] text-white/40 mb-8 leading-relaxed max-w-lg mx-auto">
-              HotelsVendors is the middleware layer that connects your property group&apos;s procurement operations to institutional capital — with cryptographic compliance, automated settlement, and zero manual reconciliation.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
-                Request Enterprise Access <ArrowRight size={15} />
-              </Link>
-              <Link href="/invo" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-                INVO Developer Platform
-              </Link>
-            </div>
-            <p className="text-[10px] text-white/20 mt-6">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 200 }}
+            >
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Enterprise Onboarding</span>
+              <h2 className="text-[clamp(28px,4vw,42px)] font-bold mb-5 tracking-tight text-white">
+                Your Procurement Infrastructure Shouldn&apos;t<br />Depend on Spreadsheets
+              </h2>
+              <p className="text-[14px] text-white/40 mb-8 leading-relaxed max-w-lg mx-auto">
+                AI-automated procurement. Cashflow optimization. The smartest B2B fintech. All in one platform — with cryptographic ETA compliance, automated settlement, and zero manual reconciliation.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <motion.a
+                  href="/register"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]"
+                  style={{ backgroundColor: "#39FF14", color: "#000000" }}
+                >
+                  Request Enterprise Access <ArrowRight size={15} />
+                </motion.a>
+                <motion.a
+                  href="/platform"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
+                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
+                >
+                  <Sparkles size={14} /> Explore Platform
+                </motion.a>
+              </div>
+              <p className="text-[10px] text-white/20 mt-6">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
+            </motion.div>
           </RevealSection>
         </div>
       </section>
