@@ -3,8 +3,14 @@ import Link from "next/link";
 import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Solutions — By Stakeholder | HotelsVendors",
-  description: "Tailored procurement solutions for hotels, suppliers, factoring companies, and logistics providers in Egyptian hospitality.",
+  title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
+  description: "Tailored B2B procurement solutions for Egyptian hotels, suppliers, factoring companies, and logistics providers. F&B, consumables, guest supplies, FF&E, and services.",
+  keywords: ["B2B hospitality procurement Egypt", "hotel procurement solutions Egypt", "F&B suppliers Egypt", "FF&E procurement", "hospitality factoring Egypt", "حلول المشتريات الفندقية مصر", "سلسلة التوريد الفندقية"],
+  openGraph: {
+    title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
+    description: "Tailored B2B procurement solutions for Egyptian hotels, suppliers, factoring companies, and logistics providers.",
+    type: "website",
+  },
 };
 
 const solutions = [

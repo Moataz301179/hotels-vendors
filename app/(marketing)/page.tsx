@@ -857,6 +857,16 @@ export default function HomePage() {
               </RevealSection>
             ))}
           </div>
+
+          {/* ── SLA Uptime Badge ── */}
+          <RevealSection delay={0.35}>
+            <div className="mt-8 rounded-xl p-4 flex items-center justify-center gap-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
+              <p className="text-[11px] text-white/30 text-center">
+                <strong className="text-white/50">Operational Integrity Protocol:</strong> Hosting infrastructure maintains redundant configurations with a target of <strong className="text-white/50">99.99% uptime</strong>, keeping transaction data streams running without interruption.
+              </p>
+            </div>
+          </RevealSection>
         </div>
       </section>
 

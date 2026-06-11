@@ -3,8 +3,14 @@ import Link from "next/link";
 import { ArrowRight, Building2, MapPin, CheckCircle2, TrendingUp, ShieldCheck, Clock, Banknote, BrainCircuit, FileCheck, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "For Hotels — Procurement OS for Egyptian Hospitality | HotelsVendors",
-  description: "AI-automated procurement, budget blockades, ETA compliance, and net-60 factoring for Egyptian hotels and resort groups.",
+  title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
+  description: "AI-automated procurement OS for Egyptian hotels. 14-day demand forecasting, budget blockades, ETA e-invoicing compliance, and net-60 factoring. Built for Sharm El-Sheikh and Hurghada resorts.",
+  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
+  openGraph: {
+    title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
+    description: "AI-automated procurement OS for Egyptian hotels. 14-day demand forecasting, budget blockades, ETA compliance, and net-60 factoring.",
+    type: "website",
+  },
 };
 
 const features = [

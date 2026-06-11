@@ -3,8 +3,14 @@ import Link from "next/link";
 import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Marketplace — B2B Procurement Catalog | HotelsVendors",
-  description: "Browse verified suppliers across F&B, consumables, FF&E, guest supplies, and services. Fixed-price catalogs with ETA-compliant invoicing.",
+  title: "B2B Hospitality Marketplace Egypt | 680+ Verified Hotel Suppliers | HotelsVendors",
+  description: "Egypt's largest B2B hospitality marketplace. 680+ verified suppliers across F&B, consumables, FF&E, guest supplies, and services. Fixed-price catalogs with ETA-compliant invoicing.",
+  keywords: ["B2B hospitality procurement Egypt", "hospitality vendor marketplace", "hotel suppliers Egypt", "F&B wholesale Egypt", "FF&E procurement", "تجهيزات الفنادق بالجملة", "موردي الفنادق مصر"],
+  openGraph: {
+    title: "B2B Hospitality Marketplace Egypt | 680+ Verified Hotel Suppliers | HotelsVendors",
+    description: "Egypt's largest B2B hospitality marketplace. 680+ verified suppliers across F&B, consumables, FF&E, guest supplies, and services.",
+    type: "website",
+  },
 };
 
 const categories = [

@@ -3,8 +3,14 @@ import Link from "next/link";
 import { Check, ArrowRight, Building2, Store, Landmark, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Pricing — HotelsVendors | HotelsVendors",
-  description: "Transparent pricing for Egyptian hospitality procurement. Free tier available. Enterprise plans for hotel groups.",
+  title: "Enterprise Hospitality Procurement Pricing | HotelsVendors Egypt",
+  description: "Transparent pricing for Egyptian hospitality procurement. SaaS listing plans, per-document ETA processing fees, and marketplace commissions. No hidden financial spreads.",
+  keywords: ["B2B hospitality procurement Egypt", "hotel procurement pricing Egypt", "SaaS marketplace Egypt", "ETA document processing fee", "hospitality platform pricing", "تسعير المشتريات الفندقية مصر"],
+  openGraph: {
+    title: "Enterprise Hospitality Procurement Pricing | HotelsVendors Egypt",
+    description: "Transparent pricing for Egyptian hospitality procurement. SaaS listing plans, per-document ETA processing fees, and marketplace commissions.",
+    type: "website",
+  },
 };
 
 const tiers = [

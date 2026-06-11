@@ -3,8 +3,14 @@ import Link from "next/link";
 import { ArrowRight, Eye, Target, Shield, Globe, Zap, MapPin, Building2, Banknote, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — HotelsVendors | HotelsVendors",
-  description: "Egypt's B2B procurement operating system for hospitality. Built for coastal hotels, powered by AI, compliant by design.",
+  title: "About HotelsVendors — Egypt's B2B Hospitality Procurement Platform | Restaurants for E-Marketing",
+  description: "Egypt's B2B hospitality procurement platform connecting coastal hotels, suppliers, and funders. AI-powered, ETA-compliant, built for Sharm El-Sheikh and Hurghada resorts.",
+  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
+  openGraph: {
+    title: "About HotelsVendors — Egypt's B2B Hospitality Procurement Platform | Restaurants for E-Marketing",
+    description: "Egypt's B2B hospitality procurement platform connecting coastal hotels, suppliers, and funders. AI-powered, ETA-compliant, built for Sharm El-Sheikh and Hurghada resorts.",
+    type: "website",
+  },
 };
 
 export default function AboutPage() {
