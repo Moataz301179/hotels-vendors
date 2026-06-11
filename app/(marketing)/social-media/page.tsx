@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -39,11 +38,12 @@ const stagger = {
 
 export default function SocialMediaPage() {
   return (
-    <main className="bg-[#0a0a0a] min-h-screen">
+    <main className="bg-black min-h-screen">
       <MarketingNav />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20">
+      <section className="relative pt-36 pb-20">
+        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[#D4A843]/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             variants={stagger}
@@ -52,38 +52,38 @@ export default function SocialMediaPage() {
             className="max-w-3xl"
           >
             <motion.div variants={fadeUp}>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
                 <Megaphone className="w-3 h-3" />
                 Beta Launch — May 2026
               </span>
             </motion.div>
             <motion.h1
               variants={fadeUp}
-              className="mt-6 text-[48px] sm:text-[64px] font-bold tracking-[-0.03em] leading-[1.05] text-white"
+              className="mt-6 text-[32px] sm:text-[48px] font-medium tracking-[-0.02em] leading-[1.05] text-white"
             >
               The Story of
               <br />
-              <span className="text-[var(--accent-base)]">Smarter Procurement</span>
+              <span className="text-[#D4A843]">Smarter Procurement</span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
-              className="mt-6 text-[18px] text-white/50 max-w-xl leading-[1.7]"
+              className="mt-6 text-[16px] text-white/40 max-w-xl leading-relaxed"
             >
               Hotels Vendors is building the digital infrastructure for Egyptian
-              hospitality. We are entering a limited 1-week beta on May 18, 2026. 
+              hospitality. We are entering a limited 1-week beta on May 18, 2026.
               Join the waiting list to be among the first to experience it.
             </motion.p>
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="group px-6 py-3.5 text-[14px] font-medium bg-[var(--accent-base)] text-white hover:bg-[#EA580C] rounded-lg transition-colors flex items-center gap-2"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#D4A843] text-black text-[14px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
               >
                 Join the Waiting List
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <a
                 href="#channels"
-                className="px-6 py-3.5 text-[14px] font-medium text-white/50 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-colors"
+                className="px-6 py-3.5 text-[14px] font-medium text-white/50 border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
               >
                 Follow Our Channels
               </a>
@@ -93,7 +93,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* Beta Launch Announcement */}
-      <section id="beta-waiting-list" className="py-20 border-y border-white/[0.06] bg-gradient-to-b from-[var(--accent-base)]/5 to-transparent">
+      <section id="beta-waiting-list" className="py-24 border-y border-white/[0.04]">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -101,18 +101,18 @@ export default function SocialMediaPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
                 <Rocket className="w-3 h-3" />
                 Limited Beta Access
               </span>
-              <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em] leading-tight">
+              <h2 className="mt-4 text-[28px] sm:text-[36px] font-medium text-white tracking-[-0.02em] leading-tight">
                 1-Week Beta Launch
                 <br />
-                <span className="text-white/60">May 18 — May 25, 2026</span>
+                <span className="text-white/30">May 18 — May 25, 2026</span>
               </h2>
-              <p className="mt-4 text-[16px] text-white/50 leading-relaxed max-w-lg">
-                We are opening Hotels Vendors to a select group of early adopters. 
-                Get priority access, direct support from our team, and lifetime 
+              <p className="mt-4 text-[15px] text-white/40 leading-relaxed max-w-lg">
+                We are opening Hotels Vendors to a select group of early adopters.
+                Get priority access, direct support from our team, and lifetime
                 benefits as a founding member.
               </p>
 
@@ -124,10 +124,10 @@ export default function SocialMediaPage() {
                   "Exclusive beta badge on your profile",
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[var(--accent-base)]/20 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
+                    <div className="w-5 h-5 rounded-full bg-[#D4A843]/10 border border-[#D4A843]/20 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-[#D4A843]" />
                     </div>
-                    <span className="text-[14px] text-white/70">{item}</span>
+                    <span className="text-[14px] text-white/50">{item}</span>
                   </div>
                 ))}
               </div>
@@ -137,12 +137,12 @@ export default function SocialMediaPage() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02]"
+              className="p-8 rounded-2xl bg-[#0a0a0a] border border-white/[0.06]"
             >
-              <h3 className="text-[18px] font-semibold text-white mb-1">
+              <h3 className="text-[18px] font-medium text-white mb-1">
                 Join the Waiting List
               </h3>
-              <p className="text-[13px] text-white/40 mb-6">
+              <p className="text-[13px] text-white/30 mb-6">
                 Limited spots available. We will notify you when beta access opens.
               </p>
               <BetaWaitingListForm />
@@ -152,7 +152,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* Brand Pillars */}
-      <section className="py-20 border-b border-white/[0.06]">
+      <section className="py-24 border-b border-white/[0.04]">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -160,10 +160,10 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
               Brand Pillars
             </span>
-            <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
+            <h2 className="mt-4 text-[28px] sm:text-[36px] font-medium text-white tracking-[-0.02em]">
               What we stand for
             </h2>
           </motion.div>
@@ -192,15 +192,15 @@ export default function SocialMediaPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] text-center hover:border-white/[0.12] transition-colors"
+                className="p-8 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] text-center hover:border-white/[0.12] transition-colors"
               >
-                <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/[0.08] flex items-center justify-center mx-auto mb-4 text-white">
-                  <p.icon className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
+                  <p.icon className="w-6 h-6 text-white/50" />
                 </div>
-                <h3 className="text-[18px] font-semibold text-white">
+                <h3 className="text-[18px] font-medium text-white">
                   {p.title}
                 </h3>
-                <p className="mt-2 text-[14px] text-white/50">{p.desc}</p>
+                <p className="mt-2 text-[14px] text-white/35">{p.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -208,7 +208,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* Content Themes */}
-      <section className="py-28">
+      <section className="py-24">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -216,10 +216,10 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
               Content
             </span>
-            <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
+            <h2 className="mt-4 text-[28px] sm:text-[36px] font-medium text-white tracking-[-0.02em]">
               What we share
             </h2>
           </motion.div>
@@ -253,16 +253,16 @@ export default function SocialMediaPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="flex gap-4 p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02]"
+                className="flex gap-4 p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
+                  <item.icon className="w-5 h-5 text-white/40" />
                 </div>
                 <div>
-                  <h3 className="text-[15px] font-semibold text-white mb-1">
+                  <h3 className="text-[15px] font-medium text-white mb-1">
                     {item.title}
                   </h3>
-                  <p className="text-[13px] text-white/50 leading-relaxed">
+                  <p className="text-[13px] text-white/35 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -275,7 +275,7 @@ export default function SocialMediaPage() {
       {/* Social Channels */}
       <section
         id="channels"
-        className="py-28 border-y border-white/[0.06] bg-white/[0.02]"
+        className="py-24 border-y border-white/[0.04]"
       >
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
@@ -284,10 +284,10 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
               Connect With Us
             </span>
-            <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
+            <h2 className="mt-4 text-[28px] sm:text-[36px] font-medium text-white tracking-[-0.02em]">
               Follow the journey
             </h2>
           </motion.div>
@@ -328,7 +328,7 @@ export default function SocialMediaPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-6 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] hover:border-white/[0.18] hover:-translate-y-1 transition-all duration-300 block"
+                className="group p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] hover:-translate-y-1 transition-all duration-300 block"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div
@@ -338,14 +338,14 @@ export default function SocialMediaPage() {
                     <channel.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-medium text-white">
                       {channel.name}
                     </h3>
-                    <p className="text-[11px] text-white/40">{channel.handle}</p>
+                    <p className="text-[11px] text-white/30">{channel.handle}</p>
                   </div>
                 </div>
-                <p className="text-[13px] text-white/50 mb-4">{channel.desc}</p>
-                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-white/60 group-hover:text-white transition-colors">
+                <p className="text-[13px] text-white/35 mb-4">{channel.desc}</p>
+                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-white/40 group-hover:text-white/60 transition-colors">
                   Follow <ExternalLink className="w-3 h-3" />
                 </span>
               </motion.a>
@@ -355,7 +355,7 @@ export default function SocialMediaPage() {
       </section>
 
       {/* Campaign Timeline */}
-      <section className="py-28">
+      <section className="py-24">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -363,16 +363,16 @@ export default function SocialMediaPage() {
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-white/80 tracking-widest uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em]">
               <Calendar className="w-3 h-3" />
               Campaign Timeline
             </span>
-            <h2 className="mt-4 text-[36px] sm:text-[44px] font-bold text-white tracking-[-0.02em]">
+            <h2 className="mt-4 text-[28px] sm:text-[36px] font-medium text-white tracking-[-0.02em]">
               Beta Launch Roadmap
             </h2>
           </motion.div>
 
-          <div className="max-w-3xl mx-auto space-y-6">
+          <div className="max-w-3xl mx-auto space-y-4">
             {[
               {
                 date: "May 12 — May 17",
@@ -409,24 +409,24 @@ export default function SocialMediaPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex gap-4 p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                className="flex gap-4 p-5 rounded-xl bg-[#0a0a0a] border border-white/[0.06]"
               >
-                <div className="w-10 h-10 rounded-lg bg-[var(--accent-base)]/10 border border-[var(--accent-base)]/20 flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-[#D4A843]/10 border border-[#D4A843]/20 flex items-center justify-center shrink-0">
+                  <item.icon className="w-5 h-5 text-[#D4A843]" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-[15px] font-semibold text-white">{item.title}</h3>
-                    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                    <h3 className="text-[15px] font-medium text-white">{item.title}</h3>
+                    <span className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
                       item.status === "In Progress"
-                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                        : "bg-white/5 text-white/40 border border-white/10"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-white/[0.03] text-white/30 border border-white/[0.06]"
                     }`}>
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-[12px] text-white/50 font-medium mb-1">{item.date}</p>
-                  <p className="text-[13px] text-white/50">{item.desc}</p>
+                  <p className="text-[12px] text-white/30 font-medium mb-1">{item.date}</p>
+                  <p className="text-[13px] text-white/35">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -435,35 +435,33 @@ export default function SocialMediaPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-28 border-t border-white/[0.06]">
+      <section className="py-24 border-t border-white/[0.04]">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="relative w-14 h-14 mx-auto mb-8">
-              <BrandLogo variant="dark" size="xl" className="relative z-10" />
-              <div className="absolute inset-0 bg-[var(--accent-base)]/8 blur-2xl rounded-full" />
-            </div>
-            <h2 className="text-[36px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">
-              Be Part of the Procurement Revolution
+            <h2 className="text-[28px] sm:text-[40px] font-medium text-white tracking-[-0.02em] leading-tight">
+              Be Part of the
+              <br />
+              <span className="text-[#D4A843]">Procurement Revolution</span>
             </h2>
-            <p className="mt-4 text-[17px] text-white/50 max-w-md mx-auto">
+            <p className="mt-4 text-[16px] text-white/35 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider — there is
               a place for you on Hotels Vendors.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="group px-7 py-3.5 text-[14px] font-medium bg-[var(--accent-base)] text-white hover:bg-[#EA580C] rounded-lg transition-colors flex items-center gap-2"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A843] text-black text-[14px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
               >
                 Join Beta Waiting List
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/register"
-                className="px-7 py-3.5 text-[14px] font-medium text-white/50 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-colors"
+                className="px-7 py-3.5 text-[14px] font-medium text-white/50 border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
               >
                 Create Account
               </Link>
@@ -502,11 +500,11 @@ function BetaWaitingListForm() {
   if (submitted) {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-4">
-          <Check className="w-6 h-6 text-green-400" />
+        <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+          <Check className="w-6 h-6 text-emerald-400" />
         </div>
-        <h4 className="text-[16px] font-semibold text-white mb-2">You are on the list!</h4>
-        <p className="text-[13px] text-white/50">
+        <h4 className="text-[16px] font-medium text-white mb-2">You are on the list!</h4>
+        <p className="text-[13px] text-white/35">
           We will email you when beta access opens on May 18, 2026.
         </p>
       </div>
@@ -516,7 +514,7 @@ function BetaWaitingListForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-[12px] font-medium text-white/60 mb-2">
+        <label className="block text-[12px] font-medium text-white/40 mb-2">
           Email Address
         </label>
         <input
@@ -525,11 +523,11 @@ function BetaWaitingListForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
           required
-          className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-[var(--accent-base)]/50 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-colors"
+          className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:outline-none focus:border-[#D4A843]/40 focus:ring-1 focus:ring-[#D4A843]/10 transition-colors"
         />
       </div>
       <div>
-        <label className="block text-[12px] font-medium text-white/60 mb-2">
+        <label className="block text-[12px] font-medium text-white/40 mb-2">
           I am a...
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -538,10 +536,10 @@ function BetaWaitingListForm() {
               key={r}
               type="button"
               onClick={() => setRole(r)}
-              className={`px-3 py-2.5 rounded-lg text-[12px] font-medium border transition-colors ${
+              className={`px-3 py-2.5 rounded-xl text-[12px] font-medium border transition-colors ${
                 role === r
-                  ? "bg-white/10 border-white/20 text-white"
-                  : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
+                  ? "bg-[#D4A843]/10 border-[#D4A843]/20 text-[#D4A843]"
+                  : "bg-white/[0.02] border-white/[0.06] text-white/30 hover:text-white/50"
               }`}
             >
               {r === "LOGISTICS" ? "Logistics" : r.charAt(0) + r.slice(1).toLowerCase()}
@@ -552,14 +550,13 @@ function BetaWaitingListForm() {
       <button
         type="submit"
         disabled={loading || !email || !role}
-        className="w-full py-3 text-[14px] font-semibold bg-[var(--accent-base)] text-white hover:bg-[#EA580C] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 text-[14px] font-medium bg-[#D4A843] text-black rounded-xl hover:bg-[#e0b856] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {loading ? "Joining..." : "Join Waiting List"}
       </button>
-      <p className="text-[11px] text-white/30 text-center">
+      <p className="text-[11px] text-white/20 text-center">
         No spam. Unsubscribe anytime. We respect your privacy.
       </p>
     </form>
   );
 }
-

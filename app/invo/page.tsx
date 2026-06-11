@@ -11,6 +11,7 @@ import {
   Zap,
   Receipt,
   Building2,
+  Star,
 } from "lucide-react";
 import { InvoNav } from "@/components/invo/invo-nav";
 import { InvoFooter } from "@/components/invo/invo-footer";
@@ -22,10 +23,10 @@ export const metadata: Metadata = {
 };
 
 const STATS = [
-  { value: "100+", label: "Suppliers Listed" },
-  { value: "1-2%", label: "Service Fee" },
-  { value: "24hr", label: "Settlement" },
-  { value: "0%", label: "Default Risk" },
+  { value: "100+", label: "Suppliers Listed", icon: Building2 },
+  { value: "1-2%", label: "Service Fee", icon: Receipt },
+  { value: "24hr", label: "Settlement", icon: Clock },
+  { value: "0%", label: "Default Risk", icon: ShieldCheck },
 ];
 
 const FEATURES = [
@@ -42,7 +43,7 @@ const FEATURES = [
   {
     icon: TrendingUp,
     title: "Reach Every Hotel",
-    desc: "Your products visible to every hotel on HotelsVendors. One listing, 100+ properties. No cold calls, no chasing procurement managers.",
+    desc: "Your products visible to every hotel on HotelsVendors. One listing, 52+ properties. No cold calls, no chasing procurement managers.",
   },
   {
     icon: FileCheck,
@@ -130,23 +131,24 @@ export default function InvoPage() {
       {/* ═══════════════════════════════════════════════════════════
           HERO
       ═══════════════════════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-20 overflow-hidden hero-glow-gold">
+      <section className="relative pt-36 pb-20 lg:pt-44 lg:pb-24 overflow-hidden hero-glow-gold">
+        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[#D4A843]/[0.04] rounded-full blur-[150px] pointer-events-none" />
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(212,168,67,0.2)] bg-[rgba(212,168,67,0.06)] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(212,168,67,0.15)] bg-[rgba(212,168,67,0.04)] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4A843] animate-pulse" />
               <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#D4A843]">
                 Supplier Growth Platform
               </span>
             </div>
 
-            <h1 className="text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight text-white">
+            <h1 className="text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight text-white font-medium">
               List Once. Get Paid Fast.
               <span className="block text-[#D4A843]">Grow Predictably.</span>
             </h1>
 
-            <p className="mt-6 text-[16px] text-white/60 leading-relaxed max-w-lg">
-              INVO is the financial layer for suppliers on Egypt's largest hospitality
+            <p className="mt-6 text-[16px] text-white/45 leading-relaxed max-w-lg">
+              INVO is the financial layer for suppliers on Egypt&apos;s largest hospitality
               procurement network. A flat monthly subscription gets you listed. A small
               service fee on factored invoices gets you paid in 24 hours. No commission.
               No hidden costs. No default risk.
@@ -155,20 +157,20 @@ export default function InvoPage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A843] text-black text-[15px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
+                className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#D4A843] text-black text-[15px] font-medium rounded-xl hover:bg-[#e0b856] transition-all hover:shadow-[0_0_30px_rgba(212,168,67,0.2)]"
               >
                 Subscribe Now
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 px-6 py-4 text-[14px] font-medium text-white/70 border border-white/10 rounded-xl hover:bg-white/[0.04] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-4 text-[14px] font-medium text-white/50 border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
               >
                 How It Works
               </Link>
             </div>
 
-            <div className="mt-8 flex items-center gap-6 text-[13px] text-white/40">
+            <div className="mt-8 flex items-center gap-6 text-[13px] text-white/30">
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#D4A843]" />
                 No commission
@@ -187,10 +189,11 @@ export default function InvoPage() {
       </section>
 
       {/* STATS STRIP */}
-      <section className="border-y border-white/5">
+      <section className="border-y border-white/[0.04]">
         <div className="stat-strip max-w-5xl mx-auto">
           {STATS.map((s) => (
             <div key={s.label} className="stat-strip-item">
+              <s.icon className="w-5 h-5 text-[#D4A843]/30 mx-auto mb-2" />
               <div className="stat-strip-value">{s.value}</div>
               <div className="stat-strip-label">{s.label}</div>
             </div>
@@ -199,11 +202,11 @@ export default function InvoPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="py-20 lg:py-28">
+      <section className="py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="max-w-xl mb-14">
+          <div className="max-w-xl mb-16">
             <p className="label-upper mb-4">Why INVO</p>
-            <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] leading-tight tracking-tight">
+            <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight text-white">
               Procurement under one slate.
               <br />
               <span className="text-[#D4A843]">Your growth, simplified.</span>
@@ -212,14 +215,15 @@ export default function InvoPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {FEATURES.map((f) => (
-              <div key={f.title} className="surface-card p-7 hover-lift group">
-                <div className="flex items-start gap-5">
-                  <div className="w-11 h-11 rounded-xl bg-[rgba(212,168,67,0.10)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div key={f.title} className="surface-card p-7 hover-lift group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D4A843]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative z-10 flex items-start gap-5">
+                  <div className="w-11 h-11 rounded-xl bg-[rgba(212,168,67,0.08)] border border-[rgba(212,168,67,0.12)] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <f.icon className="w-5 h-5 text-[#D4A843]" />
                   </div>
                   <div>
-                    <h3 className="text-[17px] text-white mb-2 tracking-tight">{f.title}</h3>
-                    <p className="text-[14px] text-white/50 leading-relaxed">{f.desc}</p>
+                    <h3 className="text-[17px] text-white mb-2 tracking-tight font-medium">{f.title}</h3>
+                    <p className="text-[14px] text-white/40 leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
               </div>
@@ -231,11 +235,11 @@ export default function InvoPage() {
       <hr className="section-divider" />
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-20 lg:py-28">
+      <section id="how-it-works" className="py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="max-w-xl mb-14">
+          <div className="max-w-xl mb-16">
             <p className="label-upper mb-4">How It Works</p>
-            <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] leading-tight tracking-tight">
+            <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight text-white">
               Four steps to
               <br />
               <span className="text-[#D4A843]">predictable cash flow.</span>
@@ -244,12 +248,12 @@ export default function InvoPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {HOW_IT_WORKS.map((step) => (
-              <div key={step.num} className="surface-card p-6">
-                <div className="text-[36px] font-medium text-[#D4A843]/20 leading-none mb-4">
+              <div key={step.num} className="surface-card p-6 hover-lift">
+                <div className="text-[36px] font-medium text-[#D4A843]/15 leading-none mb-4">
                   {step.num}
                 </div>
-                <h3 className="text-[16px] text-white mb-2 tracking-tight">{step.title}</h3>
-                <p className="text-[13px] text-white/45 leading-relaxed">{step.desc}</p>
+                <h3 className="text-[16px] text-white mb-2 tracking-tight font-medium">{step.title}</h3>
+                <p className="text-[13px] text-white/35 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -259,18 +263,18 @@ export default function InvoPage() {
       <hr className="section-divider" />
 
       {/* PRICING */}
-      <section id="pricing" className="py-20 lg:py-28">
+      <section id="pricing" className="py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
             <p className="label-upper mb-4">Pricing</p>
-            <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] leading-tight tracking-tight">
+            <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight text-white">
               Flat monthly fee.
               <br />
               <span className="text-[#D4A843]">No commission. Ever.</span>
             </h2>
-            <p className="mt-4 text-[15px] text-white/45 max-w-lg mx-auto">
+            <p className="mt-4 text-[15px] text-white/35 max-w-lg mx-auto">
               Pay a fixed monthly subscription to be listed. When you use factoring,
-              a small service fee (1-2%) is deducted from the invoice amount. That's it.
+              a small service fee (1-2%) is deducted from the invoice amount. That&apos;s it.
             </p>
           </div>
 
@@ -278,8 +282,8 @@ export default function InvoPage() {
             {PRICING.map((p) => (
               <div
                 key={p.tier}
-                className={`surface-card p-7 flex flex-col ${
-                  p.featured ? "border-[rgba(212,168,67,0.25)]" : ""
+                className={`surface-card p-7 flex flex-col hover-lift ${
+                  p.featured ? "border-[rgba(212,168,67,0.2)]" : ""
                 }`}
               >
                 {p.featured && (
@@ -287,15 +291,15 @@ export default function InvoPage() {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-[18px] text-white tracking-tight">{p.tier}</h3>
+                <h3 className="text-[18px] text-white tracking-tight font-medium">{p.tier}</h3>
                 <div className="mt-4 mb-1">
-                  <span className="text-[32px] text-white tracking-tight">EGP {p.price}</span>
-                  <span className="text-[14px] text-white/40">{p.period}</span>
+                  <span className="text-[32px] text-white tracking-tight font-medium">EGP {p.price}</span>
+                  <span className="text-[14px] text-white/30">{p.period}</span>
                 </div>
-                <p className="text-[13px] text-white/40 mb-6">{p.desc}</p>
+                <p className="text-[13px] text-white/30 mb-6">{p.desc}</p>
                 <ul className="space-y-3 mb-8 flex-1">
                   {p.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-2.5 text-[13px] text-white/60">
+                    <li key={feat} className="flex items-start gap-2.5 text-[13px] text-white/50">
                       <Check className="w-4 h-4 text-[#D4A843] shrink-0 mt-0.5" />
                       {feat}
                     </li>
@@ -303,10 +307,10 @@ export default function InvoPage() {
                 </ul>
                 <Link
                   href="/register"
-                  className={`block text-center py-3 rounded-xl text-[14px] font-medium transition-colors ${
+                  className={`block text-center py-3 rounded-xl text-[14px] font-medium transition-all ${
                     p.featured
-                      ? "bg-[#D4A843] text-black hover:bg-[#e0b856]"
-                      : "border border-white/10 text-white/70 hover:bg-white/[0.04]"
+                      ? "bg-[#D4A843] text-black hover:bg-[#e0b856] hover:shadow-[0_0_30px_rgba(212,168,67,0.2)]"
+                      : "border border-white/[0.08] text-white/50 hover:bg-white/[0.04]"
                   }`}
                 >
                   {p.cta}
@@ -318,8 +322,8 @@ export default function InvoPage() {
           <div className="mt-10 text-center">
             <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
               <Receipt className="w-4 h-4 text-[#D4A843]" />
-              <span className="text-[13px] text-white/50">
-                Factoring service fee: <span className="text-[#D4A843]">1-2%</span> of invoice value — only when you use it
+              <span className="text-[13px] text-white/40">
+                Factoring service fee: <span className="text-[#D4A843] font-medium">1-2%</span> of invoice value — only when you use it
               </span>
             </div>
           </div>
@@ -331,26 +335,26 @@ export default function InvoPage() {
       {/* CTA */}
       <section className="py-24 lg:py-32">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight mb-6">
-            Ready to stop chasing payments?
+          <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight text-white font-medium">
+            Ready to stop chasing
             <br />
-            <span className="text-[#D4A843]">Start your free trial.</span>
+            <span className="text-[#D4A843]">payments?</span>
           </h2>
-          <p className="text-[16px] text-white/50 leading-relaxed mb-10 max-w-lg mx-auto">
+          <p className="mt-5 text-[16px] text-white/35 leading-relaxed mb-10 max-w-lg mx-auto">
             30 days free. No credit card. List your catalog, access every hotel,
-            and see why Egypt's top suppliers are moving to INVO.
+            and see why Egypt&apos;s top suppliers are moving to INVO.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A843] text-black text-[15px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A843] text-black text-[15px] font-medium rounded-xl hover:bg-[#e0b856] transition-all hover:shadow-[0_0_30px_rgba(212,168,67,0.2)]"
             >
               Start Free Trial
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-4 text-[14px] font-medium text-white/60 border border-white/10 rounded-xl hover:bg-white/[0.04] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-4 text-[14px] font-medium text-white/40 border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
             >
               <Building2 className="w-4 h-4" />
               Back to HotelsVendors

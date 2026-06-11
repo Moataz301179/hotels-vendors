@@ -15,9 +15,11 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "Platform", href: "/#features" },
-    { label: "For Hotels", href: "/#hotels" },
-    { label: "INVO for Suppliers", href: "/invo" },
+    { label: "Solutions", href: "/solutions" },
+    { label: "Hotels", href: "/hotels" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "INVO", href: "/invo" },
+    { label: "About", href: "/about" },
   ];
 
   return (
@@ -68,7 +70,7 @@ export function MarketingNav() {
           </Link>
           <Link
             href="/register"
-            className="btn-accent text-[13px] py-2 px-5 font-medium"
+            className="text-[13px] py-2 px-5 font-medium bg-[#8B0000] text-white rounded-lg hover:bg-[#a50000] transition-colors"
           >
             Get Started
           </Link>

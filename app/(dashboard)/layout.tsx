@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
-import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
-import { WorkspaceChatbot } from "@/components/ai-assistant/workspace-chatbot";
+import { CarbonShell } from "@/components/carbon/carbon-shell";
 import { prisma } from "@/lib/prisma";
-import { SandboxBanner } from "@/components/layout/sandbox-banner";
+import "@/styles/carbon-theme.scss";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
@@ -46,7 +44,6 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Fetch user data for header
   let userData = null;
   if (userId) {
     try {
@@ -65,21 +62,19 @@ export default async function DashboardLayout({
         };
       }
     } catch {
-      // Silently fail — header will show generic user
+      // Silently fail
     }
   }
 
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <>
-      <SandboxBanner />
-      <DashboardShell role={validRole} user={userData}>
-        <DashboardCartWrapper>
-          {children}
-        </DashboardCartWrapper>
-        <WorkspaceChatbot mode={validRole} userId={userId || ""} />
-      </DashboardShell>
-    </>
+    <CarbonShell
+      role={validRole}
+      userName={userData?.name || undefined}
+      tenantName={userData?.tenantName || undefined}
+    >
+      {children}
+    </CarbonShell>
   );
 }

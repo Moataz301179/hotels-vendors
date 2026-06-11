@@ -1,378 +1,321 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Check,
-  X,
-  Sparkles,
-  Building2,
-  Infinity,
-  HelpCircle,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Check, ArrowRight, Star, Zap } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { getCmsPage } from "@/lib/cms";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const cms = await getCmsPage("pricing");
-  return {
-    title: cms?.metaTitle || "Pricing — Hotels Vendors | Flexible Plans for Every Stage",
-    description:
-      cms?.metaDescription ||
-      "Choose the plan that fits your business. Starter (free), Growth (subscription), or Enterprise (custom). No hidden fees. Transparent pricing for Egyptian hospitality.",
-  };
-}
-
-const TIERS = [
+const tiers = [
   {
-    name: "Starter",
-    price: "Free",
-    sub: "Forever free",
-    icon: Sparkles,
-    popular: false,
-    description: "Perfect for small hotels and independent suppliers exploring digital procurement.",
-    cta: "Get Started Free",
-    href: "/register",
+    name: "Essential",
+    desc: "Independent hotels and small chains",
+    price: { monthly: 2900, semi: 2610, annual: 2320 },
     features: [
-      { label: "Up to 3 users", included: true },
-      { label: "Basic supplier catalog", included: true },
-      { label: "Manual purchase orders", included: true },
-      { label: "Email support", included: true },
-      { label: "ETA e-invoicing", included: false },
-      { label: "AI sourcing assistant", included: false },
-      { label: "Shared-route logistics", included: false },
-      { label: "Invoice factoring", included: false },
-      { label: "Spend analytics", included: false },
-      { label: "Dedicated account manager", included: false },
+      "Up to 3 properties",
+      "AI Demand Forecasting",
+      "ETA E-Invoicing (50/mo)",
+      "Basic Analytics Dashboard",
+      "Email Support",
+      "Shared-Route Logistics",
     ],
+    cta: "Start Free Trial",
+    color: "border-white/[0.06]",
   },
   {
-    name: "Growth",
-    price: "EGP 2,900",
-    sub: "/ month",
-    icon: Building2,
+    name: "Professional",
+    desc: "Growing hotel chains",
     popular: true,
-    description: "For growing hotel groups and suppliers ready to scale with automation.",
-    cta: "Start Growing",
-    href: "/register",
+    price: { monthly: 7900, semi: 7110, annual: 6320 },
     features: [
-      { label: "Up to 25 users", included: true },
-      { label: "Full supplier catalog", included: true },
-      { label: "Automated purchase orders", included: true },
-      { label: "Priority support", included: true },
-      { label: "ETA e-invoicing", included: true },
-      { label: "AI sourcing assistant", included: true },
-      { label: "Shared-route logistics", included: true },
-      { label: "Invoice factoring", included: false },
-      { label: "Advanced spend analytics", included: false },
-      { label: "Dedicated account manager", included: false },
+      "Up to 10 properties",
+      "Advanced AI Forecasting",
+      "Unlimited ETA Invoicing",
+      "Embedded Factoring Access",
+      "Priority Support",
+      "Custom Integrations",
+      "Multi-user Roles",
     ],
+    cta: "Start Free Trial",
+    color: "border-[rgba(139,0,0,0.25)]",
+    highlight: true,
   },
   {
     name: "Enterprise",
-    price: "Custom",
-    sub: "Tailored to you",
-    icon: Infinity,
-    popular: false,
-    description: "For large hotel chains, distributor networks, and multi-property groups.",
-    cta: "Contact Sales",
-    href: "/register",
+    desc: "Large hotel groups & resorts",
+    custom: true,
+    price: { monthly: 0, semi: 0, annual: 0 },
     features: [
-      { label: "Unlimited users", included: true },
-      { label: "Full supplier catalog + API", included: true },
-      { label: "Automated purchase orders", included: true },
-      { label: "24/7 dedicated support", included: true },
-      { label: "ETA e-invoicing + custom ERP", included: true },
-      { label: "AI sourcing assistant", included: true },
-      { label: "Shared-route logistics", included: true },
-      { label: "Invoice factoring", included: true },
-      { label: "Advanced spend analytics", included: true },
-      { label: "Dedicated account manager", included: true },
+      "Unlimited properties",
+      "Custom AI Models",
+      "Unlimited Everything",
+      "Dedicated Account Manager",
+      "SLA Guarantee (99.9%)",
+      "On-premise Option",
+      "Custom Development",
     ],
+    cta: "Contact Sales",
+    color: "border-white/[0.06]",
   },
 ];
 
-const FAQS = [
-  {
-    q: "Is there really a free plan with no time limit?",
-    a: "Yes. The Starter plan is free forever for hotels and suppliers with basic needs. You only upgrade when you are ready to unlock automation, AI features, and advanced analytics.",
-  },
-  {
-    q: "Can I switch plans at any time?",
-    a: "Absolutely. You can upgrade from Starter to Growth or Enterprise at any time. Downgrades take effect at the start of your next billing cycle.",
-  },
-  {
-    q: "What payment methods do you accept?",
-    a: "We accept bank transfers, credit cards, and Vodafone Cash for Egyptian businesses. Enterprise clients may request invoicing with net-30 terms.",
-  },
-  {
-    q: "Are there any hidden transaction fees?",
-    a: "No hidden fees. The platform charges a transparent transaction fee of 1.5–2.5% on completed orders, depending on volume. This is clearly displayed before checkout.",
-  },
-  {
-    q: "Do you offer discounts for annual billing?",
-    a: "Yes. Growth and Enterprise plans receive a 15% discount when billed annually. Contact our sales team for custom multi-year agreements.",
-  },
-  {
-    q: "Is ETA e-invoicing included in all plans?",
-    a: "ETA e-invoicing is included in Growth and Enterprise plans. Starter users can generate invoices but must manually submit them to the Egyptian Tax Authority.",
-  },
+const loyalty = [
+  { name: "Silver", spend: "EGP 100K+", cashback: "1.5%", color: "text-slate-300" },
+  { name: "Gold", spend: "EGP 500K+", cashback: "2.5%", color: "text-[#D4A843]" },
+  { name: "Platinum", spend: "EGP 1M+", cashback: "4%", color: "text-[#C084FC]" },
 ];
 
-export default async function PricingPage() {
-  const cms = await getCmsPage("pricing");
-  const faqs: Array<{ question: string; answer: string }> =
-    cms?.faqs?.map((f) => ({
-      question: f.question || (f as unknown as { q: string }).q || "",
-      answer: f.answer || (f as unknown as { a: string }).a || "",
-    })) || FAQS.map((f) => ({ question: f.q, answer: f.a }));
+type Period = "monthly" | "semi" | "annual";
+
+const periodLabels: Record<Period, string> = {
+  monthly: "Monthly",
+  semi: "Semi-Annual",
+  annual: "Annual",
+};
+
+export default function PricingPage() {
+  const [period, setPeriod] = useState<Period>("monthly");
+
   return (
     <main className="min-h-screen bg-black">
       <MarketingNav />
 
-      {/* ═══════════════════════════════════════════
-          HERO
-          ═══════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-16">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
-            <Sparkles className="w-3 h-3" />
-            Simple, Transparent Pricing
-          </div>
-          <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
-            {cms?.heroTitle || "Plans built for every stage of growth."}
+      {/* Hero */}
+      <section className="relative pt-36 pb-20 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[rgba(212,168,67,0.03)] rounded-full blur-[100px] pointer-events-none" />
+        <div className="relative mx-auto max-w-6xl px-6 text-center">
+          <p className="label-upper mb-3">Pricing</p>
+          <h1 className="text-[32px] md:text-[52px] font-medium text-white tracking-tight mb-4">
+            Simple, Transparent
+            <br />
+            <span className="text-gradient-red-gold">Enterprise Pricing</span>
           </h1>
-          <p className="mt-5 text-[16px] md:text-[18px] text-gray-400 leading-relaxed max-w-2xl mx-auto">
-            {cms?.heroDescription || "No hidden fees. No long-term contracts. Start free and scale as your procurement volume grows."}
+          <p className="text-[14px] text-white/40 max-w-lg mx-auto mb-8">
+            Choose the plan that fits your property portfolio. All plans include
+            core AI procurement features.
           </p>
+
+          {/* Toggle */}
+          <div
+            className="inline-flex p-1 rounded-xl"
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px solid var(--border-subtle)",
+            }}
+          >
+            {(["monthly", "semi", "annual"] as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className="px-5 py-2.5 text-[12px] font-medium rounded-lg transition-all"
+                style={
+                  period === p
+                    ? {
+                        background: "var(--invo-base)",
+                        color: "#000",
+                        boxShadow: "0 4px 20px rgba(212,168,67,0.2)",
+                      }
+                    : {
+                        color: "var(--text-muted)",
+                        background: "transparent",
+                      }
+                }
+              >
+                {periodLabels[p]}
+                {p === "annual" && (
+                  <span className="ml-1.5 text-[10px] opacity-80">-20%</span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          PRICING CARDS
-          ═══════════════════════════════════════════ */}
+      {/* Cards */}
       <section className="pb-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {TIERS.map((tier) => (
-              <div
-                key={tier.name}
-                className={`relative flex flex-col rounded-2xl border p-6 md:p-8 transition-all ${
-                  tier.popular
-                    ? "bg-[#111] border-[var(--accent-base)]/30 shadow-[0_0_40px_-12px_rgba(249,115,22,0.25)]"
-                    : "bg-[#111] border-white/10 hover:border-white/15"
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {tiers.map((t, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: i * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className={`relative rounded-2xl overflow-hidden transition-all hover:-translate-y-1 ${
+                  t.highlight
+                    ? "ring-1 ring-[rgba(139,0,0,0.25)] scale-[1.02]"
+                    : ""
                 }`}
+                style={{
+                  background: "var(--bg-surface-1)",
+                  border: t.highlight
+                    ? "1px solid rgba(139,0,0,0.25)"
+                    : "1px solid var(--border-subtle)",
+                }}
               >
-                {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-base)] text-white text-[11px] font-semibold uppercase tracking-wider">
-                      <Sparkles className="w-3 h-3" />
-                      Most Popular
-                    </span>
+                {t.popular && (
+                  <div
+                    className="text-[10px] font-medium py-1.5 text-center uppercase tracking-wider flex items-center justify-center gap-1"
+                    style={{
+                      background: "linear-gradient(to right, #8B0000, #a50000)",
+                      color: "#fff",
+                    }}
+                  >
+                    <Star size={10} />
+                    Most Popular
                   </div>
                 )}
-
-                <div className="mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-                    <tier.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-[18px] font-semibold text-white">
-                    {tier.name}
+                <div className="p-7">
+                  <h3 className="text-[18px] font-medium text-white mb-1">
+                    {t.name}
                   </h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-[32px] font-bold text-white tracking-tight">
-                      {tier.price}
-                    </span>
-                    <span className="text-[13px] text-gray-500">{tier.sub}</span>
+                  <p className="text-[11px] text-white/25 mb-6">{t.desc}</p>
+                  <div className="mb-6">
+                    {t.custom ? (
+                      <div>
+                        <span className="text-[28px] font-medium text-white">
+                          Custom
+                        </span>
+                        <p className="text-[10px] text-white/25 mt-1">
+                          Tailored to your portfolio
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <span className="text-[32px] font-medium text-white">
+                          EGP {t.price[period].toLocaleString()}
+                        </span>
+                        <span className="text-[12px] text-white/25 ml-1">
+                          /mo
+                        </span>
+                        {period !== "monthly" && (
+                          <p className="text-[10px] text-[#22C55E] mt-1">
+                            Save vs monthly &middot; Billed{" "}
+                            {period === "semi"
+                              ? "every 6 months"
+                              : "annually"}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-3 text-[13px] text-gray-400 leading-relaxed">
-                    {tier.description}
-                  </p>
-                </div>
-
-                <div className="flex-1 space-y-3 mb-8">
-                  {tier.features.map((f) => (
-                    <div key={f.label} className="flex items-start gap-3">
-                      {f.included ? (
-                        <Check className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                      ) : (
-                        <X className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" />
-                      )}
-                      <span
-                        className={`text-[13px] ${
-                          f.included ? "text-gray-300" : "text-gray-600"
-                        }`}
+                  <ul className="space-y-3 mb-7">
+                    {t.features.map((f, j) => (
+                      <li
+                        key={j}
+                        className="flex items-start gap-2.5 text-[12px] text-white/40"
                       >
-                        {f.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href={tier.href}
-                  className={`inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-lg transition-colors ${
-                    tier.popular
-                      ? "bg-[var(--accent-base)] hover:bg-[#EA580C] text-white"
-                      : "border border-white/15 text-white hover:bg-white/5"
-                  }`}
-                >
-                  {tier.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          FEATURE COMPARISON TABLE
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              Compare Plans
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              Full Feature Comparison
-            </h2>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="py-4 pr-6 text-[13px] font-semibold text-gray-500 uppercase tracking-wider">
-                    Feature
-                  </th>
-                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
-                    Starter
-                  </th>
-                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-white uppercase tracking-wider min-w-[120px]">
-                    Growth
-                  </th>
-                  <th className="py-4 px-4 text-center text-[13px] font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
-                    Enterprise
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {TIERS[0].features.map((feature, idx) => (
-                  <tr
-                    key={feature.label}
-                    className={
-                      idx % 2 === 0 ? "bg-white/[0.03]" : "bg-transparent"
-                    }
+                        <Check
+                          size={14}
+                          className="text-[#D4A843] mt-0.5 shrink-0"
+                        />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={t.custom ? "/support" : "/register"}
+                    className={`flex items-center justify-center py-3 rounded-xl text-[13px] font-medium transition-all ${
+                      t.highlight
+                        ? "bg-[#8B0000] text-white hover:bg-[#a50000] hover:shadow-[0_4px_20px_rgba(139,0,0,0.3)]"
+                        : "border border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white"
+                    }`}
                   >
-                    <td className="py-3.5 pr-6 text-[13px] text-gray-400">
-                      {feature.label}
-                    </td>
-                    {TIERS.map((tier) => {
-                      const f = tier.features.find((x) => x.label === feature.label);
-                      return (
-                        <td key={tier.name} className="py-3.5 px-4 text-center">
-                          {f?.included ? (
-                            <Check className="w-4 h-4 text-white mx-auto" />
-                          ) : (
-                            <X className="w-4 h-4 text-gray-600 mx-auto" />
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          FAQ ACCORDION
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
-        <div className="mx-auto max-w-3xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              FAQ
-            </p>
-            <h2 className="text-[28px] md:text-[36px] font-bold text-white tracking-tight">
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className="space-y-3">
-            {faqs.map((faq) => (
-              <details
-                key={faq.question}
-                className="group rounded-xl bg-[#111] border border-white/10 open:border-white/15 transition-colors"
-              >
-                <summary className="flex items-center justify-between gap-4 cursor-pointer p-5 list-none">
-                  <span className="text-[14px] font-medium text-white flex items-center gap-3">
-                    <HelpCircle className="w-4 h-4 text-white shrink-0" />
-                    {faq.question}
-                  </span>
-                  <span className="text-gray-600 group-open:rotate-180 transition-transform shrink-0">
-                    <svg
-                      width="12"
-                      height="8"
-                      viewBox="0 0 12 8"
-                      fill="none"
-                      className="text-current"
-                    >
-                      <path
-                        d="M1 1.5L6 6.5L11 1.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </summary>
-                <div className="px-5 pb-5 pl-12">
-                  <p className="text-[13px] text-gray-400 leading-relaxed">
-                    {faq.answer}
-                  </p>
+                    {t.cta}{" "}
+                    <ArrowRight size={13} className="ml-1" />
+                  </Link>
                 </div>
-              </details>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CTA
-          ═══════════════════════════════════════════ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-16 text-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--accent-base)]/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="relative z-10">
-              <h2 className="text-[32px] md:text-[44px] font-bold text-white tracking-tight">
-                {cms?.ctaTitle || "Still have questions?"}
-              </h2>
-              <p className="mt-4 text-[15px] text-gray-400 max-w-xl mx-auto">
-                {cms?.ctaDescription || "Our team is here to help you choose the right plan and get your properties set up in under 10 minutes."}
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors"
+      {/* Cashback */}
+      <section className="py-20" style={{ background: "var(--bg-surface-1)" }}>
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Zap size={16} className="text-[#D4A843]" />
+            <span className="label-upper">Rewards Program</span>
+          </div>
+          <h2 className="text-[26px] font-medium text-white mb-4">
+            Cashback Tiers
+          </h2>
+          <p className="text-[13px] text-white/40 mb-10 max-w-md mx-auto">
+            The more you procure through HotelsVendors, the more you earn back.
+            Automatic cashback on every qualified transaction.
+          </p>
+          <div className="grid md:grid-cols-3 gap-5 max-w-2xl mx-auto">
+            {loyalty.map((tier, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.2 }}
+                className="surface-card p-6"
+              >
+                <p
+                  className={`text-[16px] font-medium mb-1 ${tier.color}`}
                 >
-                  Create Free Account
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
-                >
-                  Back to Home
-                </Link>
+                  {tier.name}
+                </p>
+                <p className="text-[11px] text-white/25 mb-4">
+                  {tier.spend} annual spend
+                </p>
+                <p className={`text-[36px] font-medium ${tier.color}`}>
+                  {tier.cashback}
+                </p>
+                <p className="text-[10px] text-white/25 mt-1">
+                  cashback on procurement
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16">
+        <div className="mx-auto max-w-2xl px-6">
+          <h2 className="text-[24px] font-medium text-white mb-8 text-center">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
+            {[
+              {
+                q: "Can I switch plans at any time?",
+                a: "Yes. You can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
+              },
+              {
+                q: "Is there a free trial?",
+                a: "All paid plans include a 14-day free trial. No credit card required to start.",
+              },
+              {
+                q: "What payment methods do you accept?",
+                a: "We accept bank transfers, credit cards, and enterprise invoicing for annual plans.",
+              },
+              {
+                q: "Does pricing include ETA e-invoicing?",
+                a: "Essential includes 50 ETA invoices/mo. Professional and Enterprise include unlimited ETA invoicing.",
+              },
+            ].map((faq, i) => (
+              <div
+                key={i}
+                className="surface-card p-5"
+              >
+                <h3 className="text-[13px] font-medium text-white/70 mb-2">
+                  {faq.q}
+                </h3>
+                <p className="text-[12px] text-white/40 leading-relaxed">
+                  {faq.a}
+                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

@@ -11,22 +11,17 @@ import {
   ShieldCheck,
   Zap,
   Globe,
-  FileCheck,
-  Users,
   TrendingUp,
-  Package,
   Clock,
+  Star,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { getCmsPage } from "@/lib/cms";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cms = await getCmsPage("solutions");
   return {
-    title: cms?.metaTitle || "Solutions — Hotels Vendors | Built for Egyptian Hospitality",
+    title: "Solutions — Hotels Vendors | Built for Egyptian Hospitality",
     description:
-      cms?.metaDescription ||
       "End-to-end procurement solutions for hotels, suppliers, logistics providers, and factoring companies. AI-powered sourcing, ETA compliance, and guaranteed payments.",
   };
 }
@@ -47,6 +42,7 @@ const SOLUTIONS = [
     ],
     stat: "All-in-One",
     statLabel: "Procurement OS",
+    gradient: "from-red-500/10 to-transparent",
   },
   {
     icon: Store,
@@ -61,8 +57,9 @@ const SOLUTIONS = [
       "Shared-route logistics to reduce delivery costs",
       "Demand forecasting to optimize inventory",
     ],
-    stat: "68",
+    stat: "100+",
     statLabel: "Verified Suppliers",
+    gradient: "from-amber-500/10 to-transparent",
   },
   {
     icon: Truck,
@@ -79,6 +76,7 @@ const SOLUTIONS = [
     ],
     stat: "48hr",
     statLabel: "Delivery Guarantee",
+    gradient: "from-emerald-500/10 to-transparent",
   },
   {
     icon: Banknote,
@@ -95,65 +93,57 @@ const SOLUTIONS = [
     ],
     stat: "24hr",
     statLabel: "Supplier Payout",
+    gradient: "from-blue-500/10 to-transparent",
   },
 ];
 
-const CASE_STUDIES = [
-  {
-    industry: "Projected Impact — Hotel Chain",
-    title: "Multi-property procurement orchestration",
-    desc: "Based on platform analytics: a 15-property chain replacing fragmented ordering with automated POs, approval chains, and real-time spend tracking across all locations.",
-    results: [
-      "Projected reduction in procurement administrative burden",
-      "EGP 2.3M estimated annual savings",
-      "100% ETA compliance from day one",
-    ],
-  },
-  {
-    industry: "Projected Impact — SME Supplier",
-    title: "Factory supplier scales to 50+ hotel clients",
-    desc: "Analyzed scenario: a linens manufacturer in 6th of October City leveraging the platform's shared logistics network to cut delivery costs and access factoring liquidity.",
-    results: [
-      "50+ potential hotel buyers within network reach",
-      "40% projected reduction in per-delivery logistics cost",
-      "Cash flow unlocked via non-recourse invoice factoring",
-    ],
-  },
+const FLOW = [
+  { icon: Building2, title: "Hotel Places Order", desc: "Browse catalog, compare suppliers, submit PO with automated approval chains." },
+  { icon: Store, title: "Supplier Fulfills", desc: "Confirms stock, prepares shipment, hands off to shared logistics network." },
+  { icon: Truck, title: "Logistics Delivers", desc: "Consolidated routes guarantee 48-hour delivery anywhere in Egypt." },
+  { icon: Banknote, title: "Factoring Pays", desc: "Supplier gets paid within 24 hours. Hotel keeps net-30/60 terms." },
+];
+
+const CAPABILITIES = [
+  { icon: BarChart3, title: "Spend Analytics", desc: "Real-time dashboards tracking every EGP across all properties and categories." },
+  { icon: ShieldCheck, title: "Authority Matrix", desc: "Multi-level approval chains enforced server-side for every purchase order." },
+  { icon: Globe, title: "ETA Compliance", desc: "Native Egyptian Tax Authority e-invoicing with digital signing and submission." },
+  { icon: Zap, title: "AI Sourcing", desc: "Smart demand forecasting and automated reordering trained on hospitality data." },
 ];
 
 export default async function SolutionsPage() {
-  const cms = await getCmsPage("solutions");
   return (
     <main className="min-h-screen bg-black">
       <MarketingNav />
 
-      {/* ═══════════════════════════════════════════
-          HERO
-          ═══════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-20">
+      {/* Hero */}
+      <section className="relative pt-36 pb-24">
+        <div className="absolute top-20 right-1/3 w-[500px] h-[500px] bg-[#D4A843]/[0.02] rounded-full blur-[150px] pointer-events-none" />
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-[11px] font-semibold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70 text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
               <Globe className="w-3 h-3" />
               End-to-End Platform
             </div>
-            <h1 className="text-[30px] md:text-[44px] font-bold text-white leading-[1.05] tracking-[-0.02em]">
-              {cms?.heroTitle || "Built for Egyptian Hospitality."}
+            <h1 className="text-[32px] md:text-[48px] font-medium text-white leading-[1.05] tracking-[-0.02em]">
+              Built for Egyptian
+              <br />
+              <span className="text-white/30">Hospitality.</span>
             </h1>
-            <p className="mt-6 text-[16px] md:text-[18px] text-gray-400 leading-relaxed max-w-xl">
-              {cms?.heroDescription || "Four integrated solutions — procurement, supplier growth, logistics, and factoring — designed to transform how Egypt's hospitality sector buys, sells, and moves goods."}
+            <p className="mt-6 text-[16px] md:text-[18px] text-white/40 leading-relaxed max-w-xl">
+              Four integrated solutions — procurement, supplier growth, logistics, and factoring — designed to transform how Egypt&apos;s hospitality sector buys, sells, and moves goods.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] hover:bg-[#a50000] text-white text-[14px] font-medium rounded-xl transition-colors"
               >
                 Explore the Platform
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 text-gray-300 text-[14px] font-medium rounded-lg hover:bg-white/5 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/[0.08] text-white/50 text-[14px] font-medium rounded-xl hover:bg-white/[0.04] transition-colors"
               >
                 Back to Home
               </Link>
@@ -162,109 +152,86 @@ export default async function SolutionsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          SOLUTION CARDS
-          ═══════════════════════════════════════════ */}
-      <section className="pb-20">
+      {/* Solution Cards */}
+      <section className="pb-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {SOLUTIONS.map((solution) => (
+            {SOLUTIONS.map((s) => (
               <div
-                key={solution.title}
-                className="group p-6 md:p-8 rounded-2xl bg-[#111] border border-white/10 hover:border-white/15 transition-all"
+                key={s.title}
+                className="group p-7 md:p-8 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-all relative overflow-hidden"
               >
-                <div className="flex items-start justify-between mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[var(--accent-base)]/10 group-hover:border-[var(--accent-base)]/20 transition-all">
-                    <solution.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[24px] font-bold text-white tracking-tight">
-                      {solution.stat}
+                <div className={`absolute inset-0 bg-gradient-to-br ${s.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <s.icon className="w-6 h-6 text-white/60" />
                     </div>
-                    <div className="text-[11px] text-gray-500 uppercase tracking-wide">
-                      {solution.statLabel}
+                    <div className="text-right">
+                      <div className="text-[24px] font-medium text-white tracking-tight">
+                        {s.stat}
+                      </div>
+                      <div className="text-[11px] text-white/25 uppercase tracking-wide">
+                        {s.statLabel}
+                      </div>
                     </div>
                   </div>
+
+                  <h3 className="text-[20px] font-medium text-white mb-1">
+                    {s.title}
+                  </h3>
+                  <p className="text-[13px] font-medium text-white/40 mb-4">
+                    {s.tagline}
+                  </p>
+                  <p className="text-[14px] text-white/35 leading-relaxed mb-6">
+                    {s.description}
+                  </p>
+
+                  <ul className="space-y-2.5">
+                    {s.benefits.map((b) => (
+                      <li key={b} className="flex items-start gap-2.5 text-[13px] text-white/40">
+                        <CheckCircle2 className="w-4 h-4 text-white/15 shrink-0 mt-0.5" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <h3 className="text-[20px] font-semibold text-white mb-1">
-                  {solution.title}
-                </h3>
-                <p className="text-[13px] font-medium text-white/60 mb-4">
-                  {solution.tagline}
-                </p>
-                <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
-                  {solution.description}
-                </p>
-
-                <ul className="space-y-2.5">
-                  {solution.benefits.map((benefit) => (
-                    <li
-                      key={benefit}
-                      className="flex items-start gap-2.5 text-[13px] text-gray-400"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          HOW IT WORKS — FLOW
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
+      {/* How It Works Flow */}
+      <section className="py-24 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              How It Works
-            </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
-              One Platform. Four Stakeholders. Zero Friction.
+          <div className="text-center mb-16">
+            <p className="label-upper mb-4">How It Works</p>
+            <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-tight text-white">
+              One Platform. Four Stakeholders.
+              <br />
+              <span className="text-white/30">Zero Friction.</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              {
-                icon: Building2,
-                title: "Hotel Places Order",
-                desc: "Browse catalog, compare suppliers, and submit PO with automated approval chains.",
-              },
-              {
-                icon: Store,
-                title: "Supplier Fulfills",
-                desc: "Confirms stock, prepares shipment, and hands off to shared logistics network.",
-              },
-              {
-                icon: Truck,
-                title: "Logistics Delivers",
-                desc: "Consolidated routes guarantee 48-hour delivery anywhere in Egypt.",
-              },
-              {
-                icon: Banknote,
-                title: "Factoring Pays",
-                desc: "Supplier gets paid within 24 hours. Hotel keeps net-30/60 terms.",
-              },
-            ].map((step, i) => (
+            {FLOW.map((step, i) => (
               <div key={step.title} className="relative">
-                <div className="p-6 rounded-2xl bg-[#111] border border-white/10 h-full">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-base)]/10 flex items-center justify-center mb-4">
-                    <step.icon className="w-5 h-5 text-white" />
+                <div className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] h-full hover:border-white/[0.12] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center mb-4">
+                    <step.icon className="w-5 h-5 text-white/50" />
                   </div>
-                  <h3 className="text-[16px] font-semibold text-white mb-2">
+                  <h3 className="text-[15px] font-medium text-white mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-[13px] text-gray-400 leading-relaxed">
+                  <p className="text-[13px] text-white/35 leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
-                {i < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
+                {i < FLOW.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-2.5 text-white/10">
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
                 )}
               </div>
             ))}
@@ -272,91 +239,20 @@ export default async function SolutionsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CASE STUDIES
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.2em] mb-3">
-              Projected Impact
-            </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-white tracking-tight">
-              What Our Architecture Is Designed to Deliver
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {CASE_STUDIES.map((cs) => (
-              <div
-                key={cs.title}
-                className="p-6 md:p-8 rounded-2xl bg-[#111] border border-white/10"
-              >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-4">
-                  {cs.industry}
-                </div>
-                <h3 className="text-[18px] font-semibold text-white mb-3">
-                  {cs.title}
-                </h3>
-                <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
-                  {cs.desc}
-                </p>
-                <div className="space-y-2">
-                  {cs.results.map((result) => (
-                    <div
-                      key={result}
-                      className="flex items-center gap-2 text-[13px] text-gray-400"
-                    >
-                      <TrendingUp className="w-4 h-4 text-white shrink-0" />
-                      {result}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          CAPABILITY HIGHLIGHTS
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 border-t border-white/10">
+      {/* Capabilities */}
+      <section className="py-24 border-t border-white/[0.04]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              {
-                icon: BarChart3,
-                title: "Spend Analytics",
-                desc: "Real-time dashboards tracking every EGP across all properties and categories.",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Authority Matrix",
-                desc: "Multi-level approval chains enforced server-side for every purchase order.",
-              },
-              {
-                icon: FileCheck,
-                title: "ETA Compliance",
-                desc: "Native Egyptian Tax Authority e-invoicing with digital signing and submission.",
-              },
-              {
-                icon: Zap,
-                title: "AI Sourcing",
-                desc: "Smart demand forecasting and automated reordering trained on hospitality data.",
-              },
-            ].map((cap) => (
+            {CAPABILITIES.map((cap) => (
               <div
                 key={cap.title}
-                className="p-6 rounded-2xl bg-[#111] border border-white/10"
+                className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/[0.12] transition-all group"
               >
-                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-                  <cap.icon className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-[15px] font-semibold text-white mb-2">
+                <cap.icon className="w-8 h-8 text-white/15 mb-4 group-hover:text-white/30 transition-colors" />
+                <h3 className="text-[15px] font-medium text-white mb-2">
                   {cap.title}
                 </h3>
-                <p className="text-[13px] text-gray-400 leading-relaxed">
+                <p className="text-[13px] text-white/35 leading-relaxed">
                   {cap.desc}
                 </p>
               </div>
@@ -365,25 +261,22 @@ export default async function SolutionsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CTA — Hotels
-          ═══════════════════════════════════════════ */}
-      <section className="py-10">
+      {/* CTA — Hotels */}
+      <section className="py-8">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-base)]/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-white/[0.06] p-10 md:p-14 cta-bleed">
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
-                <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">
+                <h3 className="text-[24px] md:text-[30px] font-medium text-white tracking-tight">
                   Are you a hotel buyer?
                 </h3>
-                <p className="mt-2 text-[14px] text-gray-400 leading-relaxed">
+                <p className="mt-3 text-[14px] text-white/35 leading-relaxed">
                   Join hotels across Egypt running their entire procurement lifecycle — from AI sourcing and ordering to payments, factoring, and ETA compliance — on one unified platform.
                 </p>
               </div>
               <Link
                 href="/register?role=hotel"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-base)] hover:bg-[#EA580C] text-white text-[14px] font-semibold rounded-lg transition-colors shrink-0"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#8B0000] hover:bg-[#a50000] text-white text-[14px] font-medium rounded-xl transition-colors shrink-0"
               >
                 Register as Hotel
                 <ArrowRight className="w-4 h-4" />
@@ -393,26 +286,23 @@ export default async function SolutionsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          CTA — Suppliers
-          ═══════════════════════════════════════════ */}
-      <section className="py-10 pb-20">
+      {/* CTA — Suppliers */}
+      <section className="py-8 pb-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="relative overflow-hidden rounded-3xl bg-[#111] border border-white/10 p-10 md:p-14">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-base)]/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-[rgba(212,168,67,0.15)] p-10 md:p-14">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#D4A843]/[0.04] rounded-full blur-[100px] pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="max-w-xl">
-                <h3 className="text-[24px] md:text-[28px] font-bold text-white tracking-tight">
+                <h3 className="text-[24px] md:text-[30px] font-medium text-white tracking-tight">
                   Are you a supplier?
                 </h3>
-                <p className="mt-2 text-[14px] text-gray-400 leading-relaxed">
-                  Access 52+ verified hotel properties, get paid early via factoring,
-                  and reduce logistics costs with shared-route delivery.
+                <p className="mt-3 text-[14px] text-white/35 leading-relaxed">
+                  Access 52+ verified hotel properties, get paid early via factoring, and reduce logistics costs with shared-route delivery.
                 </p>
               </div>
               <Link
                 href="/register?role=supplier"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[14px] font-semibold rounded-lg transition-colors shrink-0"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A843] text-black text-[14px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors shrink-0"
               >
                 Register as Supplier
                 <ArrowRight className="w-4 h-4" />
