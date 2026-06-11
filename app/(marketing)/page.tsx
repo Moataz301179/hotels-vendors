@@ -225,6 +225,7 @@ const FEATURES = [
   { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct IBAN settlement. Suppliers paid in 24 hours. Hotels preserve net-60+ working capital.", color: "#84cc16" },
   { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail on every transaction state transition.", color: "#84cc16" },
   { icon: BarChart3, title: "Cost Control & Anomaly Detection", desc: "Real-time spend analysis, pricing deviation alerts, and budget optimization across every property, department, and vendor. AI flags anomalies before they compound.", color: "#84cc16" },
+  { icon: Cpu, title: "Offline-First Data Resilience", desc: "Secure local caching stores serialized transaction arrays during connectivity drops. Auto-queued sync with ETA portal on reconnection — zero data loss, zero manual re-entry. Built for Egyptian hotel network realities.", color: "#84cc16" },
 ];
 
 const TRUST_BADGES = [
@@ -858,15 +859,42 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* ── SLA Uptime Badge ── */}
-          <RevealSection delay={0.35}>
-            <div className="mt-8 rounded-xl p-4 flex items-center justify-center gap-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-              <p className="text-[11px] text-white/30 text-center">
-                <strong className="text-white/50">Operational Integrity Protocol:</strong> Hosting infrastructure maintains redundant configurations with a target of <strong className="text-white/50">99.99% uptime</strong>, keeping transaction data streams running without interruption.
-              </p>
-            </div>
-          </RevealSection>
+          {/* ── SLA & Resilience Badges ── */}
+          <div className="mt-8 space-y-4">
+            {/* SLA Uptime Commitment */}
+            <RevealSection delay={0.35}>
+              <div className="rounded-xl p-4 flex items-center gap-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
+                  <Server size={16} style={{ color: "#84cc16" }} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[11px] text-white/40 leading-relaxed">
+                    <strong className="text-white/60">99.99% Uptime Target — Operational Integrity Protocol:</strong> Hosting infrastructure maintains redundant, multi-zone configurations with automated failover — keeping transaction data streams running without interruption. Architecture aligned with CIB and Paymob aggregator SLA expectations.
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
+                </div>
+              </div>
+            </RevealSection>
+
+            {/* Offline-First Fallback */}
+            <RevealSection delay={0.4}>
+              <div className="rounded-xl p-4 flex items-center gap-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(59,130,246,0.08)" }}>
+                  <Cpu size={16} style={{ color: "#3B82F6" }} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[11px] text-white/40 leading-relaxed">
+                    <strong className="text-white/60">Offline-First Resilience:</strong> The platform utilizes a secure local caching layer to store serialized transaction data arrays safely during connectivity interruptions. Queued submissions sync automatically with the ETA portal the moment connectivity recovers — zero data loss, zero manual re-entry.
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#3B82F6" }} />
+                </div>
+              </div>
+            </RevealSection>
+          </div>
         </div>
       </section>
 
@@ -880,7 +908,7 @@ export default function HomePage() {
           <RevealSection>
             <div className="mb-10">
               <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-1 block">Platform Capabilities</span>
-              <h2 className="text-[26px] font-bold text-white">Six Infrastructure Pillars</h2>
+              <h2 className="text-[26px] font-bold text-white">Seven Infrastructure Pillars</h2>
             </div>
           </RevealSection>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
