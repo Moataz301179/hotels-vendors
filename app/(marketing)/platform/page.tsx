@@ -3,8 +3,14 @@ import Link from "next/link";
 import { ArrowRight, BrainCircuit, Receipt, Truck, Banknote, ShieldCheck, BarChart3, Cpu, Lock, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Platform — HotelsVendors Procurement OS | HotelsVendors",
-  description: "AI-automated procurement, ETA e-invoicing, shared-route logistics, and embedded factoring — one platform for Egyptian hospitality.",
+  title: "B2B Hospitality Operating System | Procurement + Fintech + AI Automation | HotelsVendors",
+  description: "Four engines. One operating system. AI-automated procurement, embedded reverse factoring, ETA e-invoicing compliance, and autonomous AI agents — purpose-built for Egyptian hospitality.",
+  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "AI procurement automation", "hospitality operating system", "منصة المشتريات الفندقية مصر", "تمويل فندقي مصر"],
+  openGraph: {
+    title: "B2B Hospitality Operating System | Procurement + Fintech + AI Automation | HotelsVendors",
+    description: "AI-automated procurement, embedded reverse factoring, ETA e-invoicing compliance, and autonomous AI agents — purpose-built for Egyptian hospitality.",
+    type: "website",
+  },
 };
 
 const pillars = [
