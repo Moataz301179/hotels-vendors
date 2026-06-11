@@ -12,7 +12,7 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-                <span className="text-black font-bold text-xs">HV</span>
+                <span className="text-black text-xs" style={{ fontWeight: 700 }}>HV</span>
               </div>
               <span className="text-[14px] font-medium text-white tracking-tight">HotelsVendors</span>
             </div>

@@ -37,10 +37,18 @@ import {
   Globe,
   Lock,
   Cpu,
+  Fingerprint,
+  Server,
+  Eye,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
+import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
+import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
+import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
+import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
+import { IPadFrame } from "@/components/marketing/ipad-frame";
+import { ForexWidget } from "@/components/marketing/forex-widget";
 
 // ─── Animated Counter Hook ─────────────────────────────────────────
 function useCounter(end: number, duration = 2000, start = 0, inView = false) {
@@ -125,11 +133,11 @@ const SECTORS: SectorData[] = [
     icon: CircuitBoard,
     accent: "#84cc16",
     accentMuted: "rgba(132,204,22,0.1)",
-    hook: "AI-automated SaaS procurement that predicts demand, generates POs against budget ceilings, and enforces pre-occurrence blockades — before a single pound leaves your account.",
+    hook: "Cashflow preservation engine, not an administrative expense. Enforce strict pre-occurrence budget blockades at the resort branch level while stretching working capital cycles to net-90+ without taking on corporate debt.",
     bullets: [
-      "14-day forward demand forecasting from occupancy curves",
-      "Pre-occurrence budget blockades at property-branch level",
-      "Automated three-way matching: PO + ETA UUID + GRN",
+      "14-day forward demand forecasting from occupancy curves, events, and seasonality",
+      "Pre-occurrence budget blockades at property-branch-department level",
+      "Automated three-way matching: PO + ETA UUID + Signed Digital GRN",
     ],
     placeholder: "Enter Hotel / Resort Group Name",
     features: ["AI Demand Forecasting", "Budget Blockades", "ETA Compliance", "Multi-Property"],
@@ -140,11 +148,11 @@ const SECTORS: SectorData[] = [
     icon: Wallet,
     accent: "#22C55E",
     accentMuted: "rgba(34,197,94,0.1)",
-    hook: "Stretch working capital to net-60+ without balance-sheet debt. Embedded reverse factoring pays suppliers in 24 hours while you keep your cash longer.",
+    hook: "Suppliers get paid in 24 hours. You keep net-60+. No more chasing decentralized hotel properties across regional clusters for 180 days. On-site GRN validation unlocks non-recourse, bank-direct early payment factoring — programmatically.",
     bullets: [
-      "Net-60+ terms without balance-sheet liability",
-      "Suppliers paid in 24 hours via competitive bidding",
-      "Automated interest accrual and settlement reconciliation",
+      "Net-60+ terms without balance-sheet liability — off-balance-sheet by design",
+      "Suppliers paid in 24 hours via competitive bidding among 4+ licensed grantors",
+      "Automated interest accrual, settlement reconciliation, and late-repayment protocols",
     ],
     placeholder: "Enter Company / Property Group Name",
     features: ["Net-60+ Terms", "24h Settlement", "Zero Debt", "Auto Accrual"],
@@ -155,11 +163,11 @@ const SECTORS: SectorData[] = [
     icon: LineChart,
     accent: "#3B82F6",
     accentMuted: "rgba(59,130,246,0.1)",
-    hook: "The smartest fintech layer for Egyptian B2B. Every invoice passes tenant validation, ETA cryptographic verification, and automated three-way matching before entering the factoring pool.",
+    hook: "Pre-cleared, high-velocity corporate deal flow — not unverified, paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching before entering your bidding pool.",
     bullets: [
-      "SHA-256 cryptographic audit trail on every transition",
-      "Non-recourse factoring with bank-direct settlement",
-      "Automated scoring: PO + ETA UUID + Signed Delivery Note",
+      "SHA-256 cryptographic audit trail on every transaction state transition",
+      "Non-recourse factoring with bank-direct IBAN settlement — no intermediary accounts",
+      "AI-driven risk scoring: hotel creditworthiness, repayment velocity, sector concentration",
     ],
     placeholder: "Enter Financial Institution / Fund Name",
     features: ["Crypto Audit Trail", "Non-Recourse", "Bank-Direct", "Risk Scoring"],
@@ -170,11 +178,11 @@ const SECTORS: SectorData[] = [
     icon: Cpu,
     accent: "#D4A843",
     accentMuted: "rgba(212,168,67,0.1)",
-    hook: "Autonomous agents that run your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues, and real-time telemetry.",
+    hook: "Autonomous agents running your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues with automatic retry and escalation, and real-time telemetry across every transaction.",
     bullets: [
-      "Autonomous agent orchestration with self-healing protocols",
-      "Real-time anomaly detection across all transactions",
-      "Dead-letter queue with automatic retry and escalation",
+      "Autonomous agent orchestration with self-healing protocols and circuit-breaker patterns",
+      "Real-time anomaly detection across all transactions — pricing, volume, velocity",
+      "Dead-letter queue with automatic retry, escalation, and human-in-the-loop fallback",
     ],
     placeholder: "Enter Enterprise / Group Name",
     features: ["Agent Orchestration", "Self-Healing", "Anomaly Detection", "Dead-Letter Queue"],
@@ -203,20 +211,20 @@ const liveRates = [
 ];
 
 const PIPELINE = [
-  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings.", icon: BrainCircuit },
-  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits.", icon: ShieldCheck },
-  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed and submitted to Tax Authority. On-site GRN clearance triggers UUID validation.", icon: Receipt },
-  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation. Multi-supplier load matching. 48-hour delivery guarantee to any Egyptian governorate.", icon: Truck },
-  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding. Funders bid. Supplier paid in 24hrs. Hotel keeps net-60+.", icon: Banknote },
+  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings with pre-occurrence blockades enforced.", icon: BrainCircuit },
+  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits at property-branch-department level.", icon: ShieldCheck },
+  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed with RSA-2048 and submitted to ETA in real-time. On-site GRN clearance triggers cryptographic UUID validation the millisecond goods land.", icon: Receipt },
+  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation across 6 governorates. Multi-supplier load matching. 48-hour delivery guarantee. Cold-chain capable with real-time GPS.", icon: Truck },
+  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding pool. Funders bid. Supplier paid in 24hrs via bank-direct IBAN. Hotel keeps net-60+. Non-recourse.", icon: Banknote },
 ];
 
 const FEATURES = [
-  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "#84cc16" },
-  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "#84cc16" },
-  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "#84cc16" },
-  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "#84cc16" },
-  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "#84cc16" },
-  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#84cc16" },
+  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns. Auto-generates POs against budget ceilings — before a single pound leaves your account.", color: "#84cc16" },
+  { icon: Receipt, title: "ETA E-Invoicing V2 Pipeline", desc: "Direct Egyptian Tax Authority API integration. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt. Zero-exposure regulatory shield.", color: "#84cc16" },
+  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching. Cold-chain capable with real-time GPS tracking.", color: "#84cc16" },
+  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct IBAN settlement. Suppliers paid in 24 hours. Hotels preserve net-60+ working capital.", color: "#84cc16" },
+  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail on every transaction state transition.", color: "#84cc16" },
+  { icon: BarChart3, title: "Cost Control & Anomaly Detection", desc: "Real-time spend analysis, pricing deviation alerts, and budget optimization across every property, department, and vendor. AI flags anomalies before they compound.", color: "#84cc16" },
 ];
 
 const TRUST_BADGES = [
@@ -285,96 +293,228 @@ export default function HomePage() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          HERO — Parallax Scroll + Animated Entry
+          HERO — B2B Value Prop + iPad Sector Dashboard
+          Mobile-first: stacks vertically, iPad below copy
           ═══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative pt-28 pb-20 overflow-hidden">
+      <section ref={heroRef} className="relative pt-24 sm:pt-28 pb-12 sm:pb-20 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.04) 0%, transparent 70%)" }} />
 
-        <motion.div className="relative z-10 mx-auto max-w-7xl px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
-          <div className="grid lg:grid-cols-5 gap-10 items-start">
-            <div className="lg:col-span-3">
+        <motion.div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
+          {/* Mobile-first grid: stacks on mobile, side-by-side on lg */}
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-10 items-start">
+            {/* ── Left: Value Prop + CTAs ── */}
+            <div className="lg:col-span-3 order-1">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 sm:mb-6"
                 style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
               >
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-                <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
+                <span className="text-[9px] sm:text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
               </motion.div>
 
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[36px] sm:text-[48px] md:text-[58px] font-bold leading-[1.02] tracking-tight mb-6"
-                style={{ color: "#ffffff" }}
+                className="text-[30px] sm:text-[42px] md:text-[52px] lg:text-[56px] leading-[1.04] tracking-tight mb-4 sm:mb-6"
+                style={{ color: "#ffffff", fontWeight: 700 }}
               >
-                AI-Automated Procurement.
+                Your Suppliers Get Paid
                 <br />
-                <span className="text-gradient-lime">Smartest B2B Fintech.</span>
+                <span className="text-gradient-lime">In 24 Hours.</span>
                 <br />
-                One Platform.
+                <span className="text-white/60">You Keep Net-60+.</span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.4 }}
-                className="text-[15px] text-white/50 leading-relaxed max-w-lg mb-3"
+                className="text-[14px] sm:text-[15px] text-white/50 leading-relaxed max-w-lg mb-2 sm:mb-3"
               >
-                HotelsVendors is the all-in-one operating system that sits between your property&apos;s procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital deployment engine — combining <strong className="text-white/70">AI-automated SaaS digital procurement</strong>, <strong className="text-white/70">cashflow optimization</strong>, and the <strong className="text-white/70">smartest B2B fintech</strong> layer for Egyptian hospitality.
+                HotelsVendors sits between your procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital engine — <strong className="text-white/70">automating the entire flow</strong> from AI demand forecasting to ETA-compliant settlement.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
-                className="text-[13px] text-white/30 leading-relaxed max-w-lg mb-8"
+                className="text-[12px] sm:text-[13px] text-white/30 leading-relaxed max-w-lg mb-6 sm:mb-8"
               >
-                No balance-sheet debt. No 180-day collection chases. No unverified paper. Just cryptographic compliance, automated settlement, and zero manual reconciliation.
+                680+ suppliers. 4 licensed funders. 6 governorates. All connected. All live.
               </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="flex flex-wrap gap-3 mb-8"
+                className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8"
               >
-                <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-                  Request Enterprise Access <ArrowRight size={15} />
+                <Link href="/register" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+                  Request Enterprise Access <ArrowRight size={14} />
                 </Link>
-                <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
+                <Link href="/sandbox" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
                   <Play size={13} /> Try Sandbox
-                </Link>
-                <Link href="#platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-                  Explore Platform
                 </Link>
               </motion.div>
 
+              {/* Social proof — mobile compact */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
-                className="flex items-center gap-6 flex-wrap"
+                className="flex items-center gap-4 sm:gap-6 flex-wrap"
               >
                 <div className="flex -space-x-2">
-                  {["AI", "ETA", "B2B", "HV"].map((a, i) => (
-                    <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "2px solid #000000" }}>
-                      <span className="text-[8px] font-bold text-white/30">{a}</span>
+                  {[
+                    { abbr: "SM", bg: "rgba(132,204,22,0.15)", color: "#84cc16" },
+                    { abbr: "EF", bg: "rgba(34,197,94,0.15)", color: "#22C55E" },
+                    { abbr: "CC", bg: "rgba(59,130,246,0.15)", color: "#3B82F6" },
+                    { abbr: "SB", bg: "rgba(212,168,67,0.15)", color: "#D4A843" },
+                  ].map((a, i) => (
+                    <div key={i} className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: a.bg, border: "2px solid #000000" }}>
+                      <span className="text-[7px] sm:text-[8px]" style={{ color: a.color, fontWeight: 700 }}>{a.abbr}</span>
                     </div>
                   ))}
                 </div>
-                <div className="text-[10px] text-white/25">
-                  <span className="text-white/50 font-medium">Trusted by 680+ suppliers</span>
-                  <br />across Egypt&apos;s hospitality sector
+                <div className="text-[9px] sm:text-[10px] text-white/25 leading-tight">
+                  <span className="text-white/50 font-medium">Stella Di Mare · Egyptian Fresh Foods</span>
+                  <br /><span className="text-white/20">CI Capital · Shark-Breaker Logistics</span>
                 </div>
               </motion.div>
             </div>
 
-            <div className="lg:col-span-2">
-              <DashboardMockup />
+            {/* ── Right: iPad-Framed Sector Dashboard ── */}
+            <div className="lg:col-span-2 order-2">
+              {/* Sector tabs — horizontal scroll on mobile */}
+              <div className="flex gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+                {[
+                  { key: "procurement" as SectorKey, label: "Hotel", icon: Building2, accent: "#84cc16" },
+                  { key: "cashflow" as SectorKey, label: "Supplier", icon: Store, accent: "#22C55E" },
+                  { key: "fintech" as SectorKey, label: "Funder", icon: Landmark, accent: "#3B82F6" },
+                  { key: "ai" as SectorKey, label: "Logistics", icon: Truck, accent: "#D4A843" },
+                ].map((tab) => {
+                  const isActive = activeSector === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveSector(tab.key)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium whitespace-nowrap transition-all flex-shrink-0"
+                      style={{
+                        backgroundColor: isActive ? tab.accent + "15" : "rgba(255,255,255,0.02)",
+                        border: `1px solid ${isActive ? tab.accent + "40" : "rgba(255,255,255,0.06)"}`,
+                        color: isActive ? tab.accent : "rgba(255,255,255,0.4)",
+                      }}
+                    >
+                      <tab.icon size={12} />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* iPad Frame with sector dashboard */}
+              <AnimatePresence mode="wait">
+                {activeSector === "procurement" && (
+                  <motion.div key="procurement" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                    <IPadFrame accentColor="#84cc16">
+                      <HotelDashboardMockup />
+                    </IPadFrame>
+                  </motion.div>
+                )}
+                {activeSector === "cashflow" && (
+                  <motion.div key="cashflow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                    <IPadFrame accentColor="#22C55E">
+                      <SupplierDashboardMockup />
+                    </IPadFrame>
+                  </motion.div>
+                )}
+                {activeSector === "fintech" && (
+                  <motion.div key="fintech" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                    <IPadFrame accentColor="#3B82F6">
+                      <FunderDashboardMockup />
+                    </IPadFrame>
+                  </motion.div>
+                )}
+                {activeSector === "ai" && (
+                  <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                    <IPadFrame accentColor="#D4A843">
+                      <LogisticsDashboardMockup />
+                    </IPadFrame>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+          </div>
+
+          {/* ── Below Hero: Forex Widget + Live Rates (supplementary) ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 sm:mt-14">
+            <ForexWidget />
+            {/* Live activity feed — shows platform is alive */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Zap size={12} style={{ color: "#84cc16" }} />
+                <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Live Activity</span>
+                <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "#84cc16" }} />
+              </div>
+              <div className="space-y-2.5">
+                {[
+                  { text: "PO-2024-0892 issued", sub: "Stella Di Mare → Egyptian Fresh Foods", time: "2m ago", color: "#84cc16" },
+                  { text: "Invoice INV-4451 factored", sub: "EGP 87,500 · CI Capital · 2.1%", time: "8m ago", color: "#3B82F6" },
+                  { text: "Shipment SH-009 delivered", sub: "Shark-Breaker · 4 suppliers consolidated", time: "15m ago", color: "#D4A843" },
+                  { text: "Payment settled", sub: "EGP 48,500 → Supplier IBAN ****4521", time: "32m ago", color: "#22C55E" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: item.color }} />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] text-white/50 font-medium">{item.text}</p>
+                      <p className="text-[8px] text-white/20 truncate">{item.sub}</p>
+                    </div>
+                    <span className="text-[8px] text-white/15 flex-shrink-0">{item.time}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            {/* Quick trust + CTA card */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+              className="rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <ShieldCheck size={12} style={{ color: "#84cc16" }} />
+                <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Compliance & Security</span>
+              </div>
+              <div className="space-y-2">
+                {[
+                  { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
+                  { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
+                  { icon: Fingerprint, label: "SHA-256 Audit Trail", desc: "Every transaction state" },
+                  { icon: Server, label: "ISO 27001 / SOC 2 Ready", desc: "Institutional-grade security" },
+                ].map((badge) => (
+                  <div key={badge.label} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.01)" }}>
+                    <badge.icon size={10} style={{ color: "#84cc16" }} />
+                    <div>
+                      <p className="text-[9px] text-white/50 font-medium">{badge.label}</p>
+                      <p className="text-[7px] text-white/20">{badge.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link href="/sandbox" className="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 text-[10px] font-semibold rounded-lg transition-all" style={{ backgroundColor: "rgba(132,204,22,0.1)", color: "#84cc16", border: "1px solid rgba(132,204,22,0.15)" }}>
+                <Play size={10} /> Explore Interactive Sandbox
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </section>
@@ -637,9 +777,9 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Every purchase order is validated before it leaves your desk.", href: "/register", cta: "Start Procurement", color: "#84cc16" },
-              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Net-60+ working capital without balance-sheet debt. Suppliers paid in 24 hours via competitive reverse factoring. You keep your cash longer.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
-              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Every invoice passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail on every transition.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Stretch working capital to net-90+ without corporate debt.", href: "/register", cta: "Start Procurement", color: "#84cc16" },
+              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. No more 180-day collection chases across regional hotel clusters. On-site GRN validation unlocks non-recourse, bank-direct settlement.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
+              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow — not paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
             ].map((role, i) => (
               <RevealSection key={role.title} delay={i * 0.12}>
                 <motion.div
@@ -689,9 +829,9 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#84cc16" }} />, bg: "rgba(132,204,22,0.1)" },
-              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals and settlement reconciliation.", badge: "Programmatic Routing · Auto Accrual", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
-              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness, FRA Anti-Fraud Compliance, and alignment against ISO/IEC 27001 & SOC 2 Type II control frameworks.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
+              { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing. Phase 1 & 2 fully covered.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#84cc16" }} />, bg: "rgba(132,204,22,0.1)" },
+              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals, settlement reconciliation, and late-repayment protocols.", badge: "Programmatic Routing · Auto Accrual · Bank-Direct", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
+              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness with clean, real-time risk parameters. FRA Anti-Fraud Compliance via three-way matching gate. ISO/IEC 27001 and SOC 2 Type II audit-ready architecture.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
             ].map((card, i) => (
               <RevealSection key={card.title} delay={i * 0.1}>
                 <motion.div whileHover={{ y: -3 }} className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>

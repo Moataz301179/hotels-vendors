@@ -33,7 +33,7 @@ export function MarketingNav() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-            <span className="text-black font-bold text-sm">HV</span>
+            <span className="text-black text-sm" style={{ fontWeight: 700 }}>HV</span>
           </div>
           <span className="text-[15px] font-medium tracking-tight text-white">
             HotelsVendors

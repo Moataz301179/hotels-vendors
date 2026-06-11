@@ -109,7 +109,7 @@ export function DashboardMockup() {
               className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
               style={{ backgroundColor: "rgba(132,204,22,0.1)", border: "1px solid rgba(132,204,22,0.2)" }}
             >
-              <span className="text-[10px] font-black" style={{ color: "#84cc16" }}>HV</span>
+              <span className="text-[10px]" style={{ color: "#84cc16", fontWeight: 700 }}>HV</span>
             </div>
 
             {sidebarItems.map((item) => (
