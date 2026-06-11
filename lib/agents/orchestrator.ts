@@ -42,6 +42,7 @@ export class AgentOrchestrator {
         status: "RUNNING",
         startedAt: new Date(),
         parentRunId: task.parentTaskId,
+        tenantId: task.tenantId,
       },
     });
 
@@ -123,7 +124,8 @@ export class AgentOrchestrator {
    */
   async runWorkflow(
     workflowName: keyof typeof WORKFLOWS,
-    customPrompt?: string
+    customPrompt?: string,
+    tenantId: string = "system"
   ): Promise<AgentTaskResult[]> {
     const def = WORKFLOWS[workflowName];
     const plan: OrchestrationPlan = {
@@ -135,6 +137,7 @@ export class AgentOrchestrator {
         title: t.title,
         prompt: customPrompt || def.objective,
         agentId: t.agent as AgentId,
+        tenantId,
       })),
     };
     return this.executePlan(plan);

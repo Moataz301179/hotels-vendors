@@ -1,11 +1,24 @@
 /**
  * Multi-Supplier Checkout API
+ *
  * Splits cart items by supplier and creates one Order per supplier.
+ *
+ * ATOMICITY: The entire checkout flow is wrapped in a Prisma transaction.
+ * Orders are created and the buyer's cart is cleared in the same atomic
+ * operation. If the server crashes mid-checkout, the database rolls back
+ * completely — the cart is not cleared without orders being created,
+ * and no orphan orders exist without a cleared cart.
  */
 
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
+import {
+  apiRoute,
+  authenticate,
+  requirePermission,
+  success,
+  error,
+} from "@/lib/api-utils";
 import { z } from "zod";
 
 const CheckoutSchema = z.object({
@@ -91,60 +104,99 @@ export const POST = apiRoute(async (request: NextRequest) => {
   // Generate checkout group ID
   const checkoutGroupId = `CG-${Date.now()}`;
 
-  // Create orders
-  const createdOrders = [];
-  let orderIndex = 0;
+  // ── ATOMIC TRANSACTION: Create all orders + clear cart ──
+  // If any step fails, the entire transaction rolls back.
+  // This prevents: cart cleared without orders, orphan orders, double checkout.
+  let createdOrders;
+  try {
+    createdOrders = await prisma.$transaction(async (tx) => {
+      const orders: Array<{
+        id: string;
+        orderNumber: string;
+        supplier: { name: string };
+        total: number;
+        status: string;
+      }> = [];
+      let orderIndex = 0;
 
-  for (const [supplierId, items] of supplierGroups) {
-    const supplier = productMap.get(items[0].productId)!.supplier;
+      for (const [supplierId, items] of supplierGroups) {
+        const supplier = productMap.get(items[0].productId)!.supplier;
 
-    // Calculate totals
-    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-    const vatAmount = subtotal * 0.14;
-    const shippingCost = data.shippingMethod === "express" ? 150 : data.shippingMethod === "standard" ? 75 : 0;
-    const total = subtotal + vatAmount + shippingCost;
+        // Calculate totals
+        const subtotal = items.reduce(
+          (sum, item) => sum + item.quantity * item.unitPrice,
+          0
+        );
+        const vatAmount = subtotal * 0.14;
+        const shippingCost =
+          data.shippingMethod === "express"
+            ? 150
+            : data.shippingMethod === "standard"
+              ? 75
+              : 0;
+        const total = subtotal + vatAmount + shippingCost;
 
-    // Generate order number with suffix for multi-supplier
-    const suffix = String.fromCharCode(65 + orderIndex); // A, B, C...
-    const orderNumber = `${generateOrderNumber()}-${suffix}`;
+        // Generate order number with suffix for multi-supplier
+        const suffix = String.fromCharCode(65 + orderIndex); // A, B, C...
+        const orderNumber = `${generateOrderNumber()}-${suffix}`;
 
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        status: "DRAFT",
-        subtotal,
-        vatAmount,
-        total,
-        currency: "EGP",
-        hotelId,
-        supplierId,
-        requesterId: auth.userId,
-        tenantId: auth.tenantId,
-        checkoutGroupId,
-        shippingMethod: data.shippingMethod,
-        shippingCost,
-        poNumber: data.poNumber,
-        costCenter: data.costCenter,
-        deliveryAddress: JSON.stringify(data.address),
-        deliveryInstructions: data.procurementNotes,
-        items: {
-          create: items.map((item) => ({
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            total: item.quantity * item.unitPrice,
-            productId: item.productId,
-            notes: item.notes,
-          })),
+        const order = await tx.order.create({
+          data: {
+            orderNumber,
+            status: "DRAFT",
+            subtotal,
+            vatAmount,
+            total,
+            currency: "EGP",
+            hotelId,
+            supplierId,
+            requesterId: auth.userId,
+            tenantId: auth.tenantId,
+            checkoutGroupId,
+            shippingMethod: data.shippingMethod,
+            shippingCost,
+            poNumber: data.poNumber,
+            costCenter: data.costCenter,
+            deliveryAddress: JSON.stringify(data.address),
+            deliveryInstructions: data.procurementNotes,
+            items: {
+              create: items.map((item) => ({
+                quantity: item.quantity,
+                unitPrice: item.unitPrice,
+                total: item.quantity * item.unitPrice,
+                productId: item.productId,
+                notes: item.notes,
+              })),
+            },
+          },
+          include: {
+            items: { include: { product: { select: { name: true } } } },
+            supplier: { select: { name: true } },
+          },
+        });
+
+        orders.push(order);
+        orderIndex++;
+      }
+
+      // ── CLEAR CART ATOMICALLY ──
+      // Delete all cart items for this user in the same transaction.
+      // If this fails, the entire transaction rolls back — no orders, cart intact.
+      await tx.cartItem.deleteMany({
+        where: {
+          cart: { userId: auth.userId },
         },
-      },
-      include: {
-        items: { include: { product: { select: { name: true } } } },
-        supplier: { select: { name: true } },
-      },
-    });
+      });
 
-    createdOrders.push(order);
-    orderIndex++;
+      return orders;
+    }, {
+      maxWait: 5000,
+      timeout: 15000,
+    });
+  } catch (txErr) {
+    const message =
+      txErr instanceof Error ? txErr.message : "Checkout transaction failed";
+    return error(`Checkout failed: ${message}`, 500);
   }
 
   return success({

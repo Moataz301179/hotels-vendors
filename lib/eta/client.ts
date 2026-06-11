@@ -271,21 +271,43 @@ export interface EtaCallbackPayload {
 /**
  * Process an ETA callback/webhook.
  * Updates the local invoice record with ETA status.
+ *
+ * TENANT VERIFICATION: Validates that the invoice belongs to an active tenant
+ * before any state mutation. This is a defense-in-depth measure — the HTTP layer
+ * (callback route) handles HMAC verification, but this function ensures tenant
+ * integrity for any internal callers.
  */
 export async function processCallback(payload: EtaCallbackPayload): Promise<void> {
   const { prisma } = await import("@/lib/prisma");
 
   const invoice = await prisma.invoice.findUnique({
     where: { etaUuid: payload.uuid },
+    include: { tenant: { select: { id: true, status: true } } },
   });
 
   if (!invoice) {
     throw new Error(`Invoice not found for ETA UUID: ${payload.uuid}`);
   }
 
+  // TENANT VERIFICATION: Ensure the invoice's tenant is valid and active
+  if (!invoice.tenant || invoice.tenant.status !== "ACTIVE") {
+    throw new Error(
+      `ETA callback rejected: invoice ${invoice.id} belongs to inactive/missing tenant`
+    );
+  }
+
   // Idempotency check: skip if this exact callback was already processed
-  const log = invoice.submissionLog ? JSON.parse(invoice.submissionLog) : {};
-  if (log.lastCallback?.uuid === payload.uuid && log.lastCallback?.status === payload.status) {
+  let existingLog: Record<string, unknown> = {};
+  try {
+    existingLog = invoice.submissionLog ? JSON.parse(invoice.submissionLog) : {};
+  } catch {
+    // Malformed log — continue processing
+  }
+  if (
+    existingLog.lastCallback &&
+    (existingLog.lastCallback as Record<string, unknown>).uuid === payload.uuid &&
+    (existingLog.lastCallback as Record<string, unknown>).status === payload.status
+  ) {
     return; // Already processed this exact callback
   }
 
@@ -298,14 +320,14 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
     Cancelled: "MANUAL_RESOLUTION",
   };
 
-  const newEtaStatus = etaStatusMap[payload.status] ?? "RETRYING"; // Fallback won't match enum but satisfies type
+  const newEtaStatus = etaStatusMap[payload.status] ?? "RETRYING";
 
   await prisma.invoice.update({
     where: { id: invoice.id },
     data: {
       etaStatus: newEtaStatus,
       submissionLog: JSON.stringify({
-        ...((invoice.submissionLog ? JSON.parse(invoice.submissionLog) : {})),
+        ...existingLog,
         lastCallback: payload,
         updatedAt: new Date().toISOString(),
       }),

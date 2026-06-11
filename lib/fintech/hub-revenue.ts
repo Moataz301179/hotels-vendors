@@ -228,6 +228,7 @@ export interface HubRevenueResult {
   grossAmount: number;
   platformFeeRate: number;
   netPlatformFee: number;
+  platformFee: number;
   factoringFee: number;
   advanceRate: number;
   partnerDiscountRate: number;
@@ -248,6 +249,7 @@ export async function calculateHubRevenue(params: HubRevenueParams): Promise<Hub
     grossAmount,
     platformFeeRate,
     netPlatformFee,
+    platformFee: netPlatformFee,
     factoringFee,
     advanceRate,
     partnerDiscountRate,

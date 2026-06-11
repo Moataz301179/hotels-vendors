@@ -86,14 +86,26 @@ export const POST = apiRoute(async (request: NextRequest) => {
   try {
     const result = await etaClient.submitInvoice(payload);
 
-    await prisma.invoice.update({
-      where: { id: data.invoiceId },
-      data: {
-        etaUuid: result.uuid,
-        etaStatus: "SUBMITTING",
-        submissionLog: JSON.stringify({ submissions: [result] }),
-        status: "SUBMITTED",
-      },
+    // Update invoice and populate the order's etaSubmissionId atomically
+    await prisma.$transaction(async (tx) => {
+      await tx.invoice.update({
+        where: { id: data.invoiceId },
+        data: {
+          etaUuid: result.uuid,
+          etaStatus: "SUBMITTING",
+          submissionLog: JSON.stringify({ submissions: [result] }),
+          status: "SUBMITTED",
+        },
+      });
+
+      // Populate Order.etaSubmissionId so the order tracks its ETA UUID directly
+      // without needing to join through the invoice relation
+      if (invoice.orderId) {
+        await tx.order.update({
+          where: { id: invoice.orderId },
+          data: { etaSubmissionId: result.uuid },
+        });
+      }
     });
 
     await audit({

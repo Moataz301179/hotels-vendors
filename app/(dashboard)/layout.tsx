@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
-import { CarbonShell } from "@/components/carbon/carbon-shell";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { prisma } from "@/lib/prisma";
-import "@/styles/carbon-theme.scss";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
@@ -69,12 +68,12 @@ export default async function DashboardLayout({
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <CarbonShell
+    <DashboardShell
       role={validRole}
       userName={userData?.name || undefined}
       tenantName={userData?.tenantName || undefined}
     >
       {children}
-    </CarbonShell>
+    </DashboardShell>
   );
 }

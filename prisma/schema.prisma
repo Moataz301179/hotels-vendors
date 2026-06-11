@@ -76,6 +76,12 @@ model Tenant {
   // ── [NEW] INVO Subscriptions (SaaS, not financial) ──
   invoSubscriptions   InvoSubscription[]
   documentProcessings DocumentProcessing[]
+
+  // ── [NEW] Tenant isolation for AgentRun + SwarmJob ──
+  agentRuns           AgentRun[]
+  swarmJobs           SwarmJob[]
+  paymentTransactions PaymentTransaction[]
+  etaCredential       EtaCredential?
 }
 
 enum TenantType {
@@ -88,6 +94,7 @@ enum TenantType {
 
 enum TenantStatus {
   ACTIVE
+  ACTIVE_DEMO
   INACTIVE
   SUSPENDED
 }
@@ -234,12 +241,14 @@ enum PropertyType {
 // ─────────────────────────────────────────
 
 model User {
-  id     String     @id @default(cuid())
-  email  String     @unique
-  name   String
-  phone  String?
-  role   UserRole   @default(DEPARTMENT_HEAD)
-  status UserStatus @default(ACTIVE)
+  id          String     @id @default(cuid())
+  email       String     @unique
+  name        String
+  companyName String?
+  phone       String?
+  role        UserRole   @default(DEPARTMENT_HEAD)
+  status      UserStatus @default(ACTIVE)
+  sector      UserSector?
 
   // Auth
   passwordHash String?
@@ -265,6 +274,11 @@ model User {
 
   // Authority Matrix
   canOverride Boolean @default(false)
+
+  // Delegate invite
+  inviteToken      String?   @unique
+  inviteExpiresAt  DateTime?
+  invitedBy        String?
 
   // Audit
   createdAt DateTime @default(now())
@@ -308,6 +322,13 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+
+enum UserSector {
+  HOTEL
+  SUPPLIER
+  LOGISTICS
+  FINANCE
 }
 
 enum AccountType {
@@ -512,7 +533,7 @@ model Order {
   approvals OrderApproval[]
   invoices  Invoice[]
 
-  etaSubmissionId String?
+  etaSubmissionId String? @unique
 
   // Payment guarantee (operated by licensed third-party, not platform)
   paymentGuaranteed      Boolean   @default(false)
@@ -650,10 +671,13 @@ model Invoice {
 
   // Factoring — operated by licensed third-party partner only
   // The platform does NOT hold cash or charge factoring fees
-  factoringStatus    FactoringStatus    @default(NOT_FACTORABLE)
-  factoringCompanyId String?
-  factoringCompany   FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
-  factoringRequests  FactoringRequest[]
+  factoringStatus      FactoringStatus    @default(NOT_FACTORABLE)
+  factoringCompanyId   String?
+  factoringCompany     FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
+  factoringRequests    FactoringRequest[]
+  acceleratedCashRate  Float?            @default(0) // Early payment discount rate applied
+  supplierDiscountRate Float?            @default(0) // Supplier's cash discount rate for early payment
+  cashDiscountDelta    Float?            @default(0) // Delta between supplier discount and factoring fee
 
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -668,6 +692,20 @@ enum EtaStatus {
   REJECTED
   RETRYING
   MANUAL_RESOLUTION
+}
+
+model EtaCredential {
+  id            String   @id @default(cuid())
+  tenantId      String   @unique
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  clientId      String
+  clientSecret  String   // AES-256-GCM encrypted
+  taxId         String
+  environment   String   @default("preprod") // preprod | production
+  isActive      Boolean  @default(true)
+  lastUsedAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum InvoiceStatus {
@@ -896,6 +934,8 @@ model FactoringRequest {
   grossAmount     Float?
   factoringFee    Float? // Charged by factoring partner, not platform
   disbursedAmount Float?
+  platformFee     Float? @default(0) // Platform referral fee (invoiced off-chain)
+  platformFeeRate Float? @default(0.005) // 0.5% default referral rate
 
   disbursedAt DateTime?
   settledAt   DateTime?
@@ -1249,8 +1289,29 @@ model Payment {
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  transactions     PaymentTransaction[]
+}
+
+model PaymentTransaction {
+  id              String   @id @default(cuid())
+  paymentId       String?
+  payment         Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  gatewayRef      String   @unique
+  transactionType String?  @default("PAYOUT")
+  amount          Float
+  currency        String   @default("EGP")
+  status          String   @default("PENDING")
+  observedMethod  String?
+  metadata        String?
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([gatewayRef])
+  @@index([tenantId])
 }
 
 enum PaymentMethod {
@@ -1334,10 +1395,12 @@ model ConsolidatedInvoice {
 
   factoringRequest FactoringRequest?
 
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  tenantId            String
+  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  hotelAdminFeeAmount Float?   @default(0) // Admin fee charged to hotel for consolidated invoice
+  hotelAdminFeeRate   Float?   @default(0.01) // 1% default admin fee rate
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 enum ConsolidatedStatus {
@@ -1573,7 +1636,14 @@ model AgentRun {
   parentRunId String?
   childRunIds String?
 
+  // ── Tenant isolation (required for cross-tenant security) ──
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([status, tenantId])
 }
 
 enum CompetitorType {
@@ -1687,6 +1757,10 @@ model SwarmJob {
   parentJobId String?
   childJobIds String?
 
+  // ── Tenant isolation (required for cross-tenant security) ──
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1694,6 +1768,8 @@ model SwarmJob {
   @@index([queueName, status])
   @@index([scheduledAt])
   @@index([jobType])
+  @@index([tenantId])
+  @@index([status, tenantId])
 }
 
 enum SwarmJobStatus {

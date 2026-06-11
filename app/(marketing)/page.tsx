@@ -1,10 +1,8 @@
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   BrainCircuit,
@@ -21,18 +19,90 @@ import {
   Clock,
   CheckCircle2,
   TrendingUp,
-  Globe,
-  Star,
   CheckCircle,
   Shield,
   CreditCard,
   Calendar,
   FileText,
+  Send,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
-// ── Market Index Data ──
+// ─── Sector Router Data ───────────────────────────────────────────
+type SectorKey = "HOTEL" | "SUPPLIER" | "LOGISTICS" | "FINANCE";
+
+interface SectorData {
+  key: SectorKey;
+  label: string;
+  icon: React.ElementType;
+  accent: string;
+  accentMuted: string;
+  hook: string;
+  bullets: string[];
+  placeholder: string;
+}
+
+const SECTORS: SectorData[] = [
+  {
+    key: "HOTEL",
+    label: "Hotel Procurement",
+    icon: Building2,
+    accent: "#39FF14",
+    accentMuted: "rgba(57,255,20,0.1)",
+    hook: "Optimize your HORECA supply chain. Access real-time cost forecasting and automated factored credit lines.",
+    bullets: [
+      "Direct ETA-compliant invoicing",
+      "AI-driven alternative suggestions",
+      "Flexible credit checkout",
+    ],
+    placeholder: "Enter Hotel Name / Group",
+  },
+  {
+    key: "SUPPLIER",
+    label: "Supplier Vendors",
+    icon: Store,
+    accent: "#22C55E",
+    accentMuted: "rgba(34,197,94,0.1)",
+    hook: "Get paid immediately on delivery while offering your hotel buyers flexible credit terms.",
+    bullets: [
+      "Direct ETA eInvoicing SDK sync",
+      "Zero-friction Invisible Onboarding",
+      "Instant placement in hotel catalogs",
+    ],
+    placeholder: "Enter Company / Storefront Name",
+  },
+  {
+    key: "LOGISTICS",
+    label: "Logistics & Shipping",
+    icon: Truck,
+    accent: "#3B82F6",
+    accentMuted: "rgba(59,130,246,0.1)",
+    hook: "Become an authorized fulfillment partner for Egypt's premier hotel supplier network.",
+    bullets: [
+      "Automated route dispatching",
+      "Guaranteed corporate payloads",
+      "Seamless ERP inventory integration",
+    ],
+    placeholder: "Enter Logistics / Fleet Company Name",
+  },
+  {
+    key: "FINANCE",
+    label: "Factoring & Finance",
+    icon: Landmark,
+    accent: "#D4A843",
+    accentMuted: "rgba(212,168,67,0.1)",
+    hook: "Deploy your capital safely into verified, real-time B2B hospitality transactions.",
+    bullets: [
+      "Risk mitigation via official ETA telemetry",
+      "Automated transaction scoring",
+      "Complete liability protection",
+    ],
+    placeholder: "Enter Financial Institution Name",
+  },
+];
+
+// ─── Market Index Data ────────────────────────────────────────────
 const marketIndex = [
   { product: "Fresh Chicken", unit: "kg", price: 68.5, change: "+2.1%", up: true },
   { product: "Beef Fillet", unit: "kg", price: 285.0, change: "+1.4%", up: true },
@@ -71,12 +141,12 @@ const STATS = [
 ];
 
 const FEATURES = [
-  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
-  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
-  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
-  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
-  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
-  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "text-[#39FF14]", bg: "bg-[rgba(57,255,20,0.1)]" },
+  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "#39FF14" },
+  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "#39FF14" },
+  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "#39FF14" },
+  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "#39FF14" },
+  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "#39FF14" },
+  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#39FF14" },
 ];
 
 const ROLES = [
@@ -120,6 +190,7 @@ const PIPELINE = [
   { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding. Funders bid. Supplier paid in 24hrs. Hotel keeps net-60+.", icon: Banknote },
 ];
 
+// ─── RevealSection ────────────────────────────────────────────────
 function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
@@ -136,9 +207,42 @@ function RevealSection({ children, className = "" }: { children: React.ReactNode
   );
 }
 
+// ─── Main Page ────────────────────────────────────────────────────
 export default function HomePage() {
+  const [activeSector, setActiveSector] = useState<SectorKey>("HOTEL");
+  const [companyName, setCompanyName] = useState("");
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const currentSector = SECTORS.find((s) => s.key === activeSector)!;
   const maxOccupancy = Math.max(...seasonForecast.map((s) => s.occupancy));
   const doubledIndex = [...marketIndex, ...marketIndex];
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!companyName.trim() || !email.trim()) return;
+    setIsSubmitting(true);
+    try {
+      await fetch("/api/v1/leads/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName,
+          email,
+          sector: activeSector,
+        }),
+      });
+      setSubmitSuccess(true);
+      setCompanyName("");
+      setEmail("");
+      setTimeout(() => setSubmitSuccess(false), 4000);
+    } catch {
+      // silent fail — non-critical
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [companyName, email, activeSector]);
 
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
@@ -211,7 +315,6 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-2 space-y-4">
-              {/* Live Market Rates Card */}
               <div className="rounded-2xl p-5" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Live Market Rates</span>
@@ -236,7 +339,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Quick stats */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <p className="text-[22px] font-bold" style={{ color: "#39FF14" }}>24h</p>
@@ -251,6 +353,191 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTOR ROUTER — Dynamic Tab System
+          ═══════════════════════════════════════════ */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(57,255,20,0.02) 0%, transparent 60%)" }} />
+
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
+          <RevealSection>
+            <div className="text-center mb-10">
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Choose Your Role</span>
+              <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
+                One Platform. Four Entry Points.
+              </h2>
+              <p className="text-white/40 text-[14px] max-w-xl mx-auto leading-relaxed">
+                Select your sector below to see how HotelsVendors re-engineers your specific workflow — then request access with one click.
+              </p>
+            </div>
+          </RevealSection>
+
+          {/* ── Sector Tabs ── */}
+          <RevealSection>
+            <div className="flex flex-wrap justify-center gap-2 mb-10">
+              {SECTORS.map((sector) => {
+                const isActive = activeSector === sector.key;
+                const Icon = sector.icon;
+                return (
+                  <button
+                    key={sector.key}
+                    onClick={() => setActiveSector(sector.key)}
+                    className="relative inline-flex items-center gap-2.5 px-5 py-3 rounded-xl text-[13px] font-medium transition-all duration-200"
+                    style={{
+                      backgroundColor: isActive ? sector.accentMuted : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${isActive ? sector.accent + "40" : "rgba(255,255,255,0.06)"}`,
+                      color: isActive ? sector.accent : "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    <Icon size={16} />
+                    {sector.label}
+                    {isActive && (
+                      <motion.div
+                        layoutId="sector-indicator"
+                        className="absolute -bottom-px left-3 right-3 h-[2px] rounded-full"
+                        style={{ backgroundColor: sector.accent }}
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </RevealSection>
+
+          {/* ── Dynamic Sector Content ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSector}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <div className="grid lg:grid-cols-5 gap-6 items-start">
+                {/* Left: Hook + Bullets */}
+                <div className="lg:col-span-3 rounded-2xl p-8" style={{ backgroundColor: "#0a0a0a", border: `1px solid ${currentSector.accent}15` }}>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: currentSector.accentMuted }}>
+                      <currentSector.icon size={22} style={{ color: currentSector.accent }} />
+                    </div>
+                    <div>
+                      <h3 className="text-[18px] font-bold text-white">{currentSector.label}</h3>
+                      <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: currentSector.accent }}>Your Workflow, Re-Engineered</p>
+                    </div>
+                  </div>
+
+                  <p className="text-[15px] text-white/60 leading-relaxed mb-6">
+                    {currentSector.hook}
+                  </p>
+
+                  <div className="space-y-3 mb-8">
+                    {currentSector.bullets.map((bullet, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: currentSector.accentMuted }}>
+                          <CheckCircle size={12} style={{ color: currentSector.accent }} />
+                        </div>
+                        <span className="text-[13px] text-white/50 leading-relaxed">{bullet}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={`/register?sector=${activeSector}`}
+                    className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.15)]"
+                    style={{ backgroundColor: currentSector.accent, color: "#000000" }}
+                  >
+                    Get Started as {currentSector.label.split(" ")[0]} <ArrowRight size={14} />
+                  </Link>
+                </div>
+
+                {/* Right: Signup Form */}
+                <div className="lg:col-span-2 rounded-2xl p-6" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <h4 className="text-[14px] font-bold text-white mb-1">Request Access</h4>
+                  <p className="text-[11px] text-white/30 mb-5">We&apos;ll match you to the right onboarding flow.</p>
+
+                  {submitSuccess ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="rounded-xl p-5 text-center"
+                      style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
+                    >
+                      <CheckCircle2 size={28} className="mx-auto mb-3" style={{ color: "#22C55E" }} />
+                      <p className="text-[13px] font-medium text-white mb-1">Application Received</p>
+                      <p className="text-[11px] text-white/40">Our team will contact you within 24 hours.</p>
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                      <div>
+                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Company / Property</label>
+                        <input
+                          type="text"
+                          value={companyName}
+                          onChange={(e) => setCompanyName(e.target.value)}
+                          placeholder={currentSector.placeholder}
+                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.03)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                          }}
+                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Work Email</label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="you@company.com"
+                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.03)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                          }}
+                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                        />
+                      </div>
+
+                      {/* Hidden sector tag — submitted with form */}
+                      <input type="hidden" name="sector" value={activeSector} />
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || !companyName.trim() || !email.trim()}
+                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        style={{
+                          backgroundColor: currentSector.accent,
+                          color: "#000000",
+                        }}
+                      >
+                        {isSubmitting ? (
+                          <span className="flex items-center gap-2">
+                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                            Submitting…
+                          </span>
+                        ) : (
+                          <>Submit Application <Send size={13} /></>
+                        )}
+                      </button>
+
+                      <p className="text-[10px] text-white/20 text-center">
+                        Sector: <span className="font-medium" style={{ color: currentSector.accent }}>{activeSector}</span> · No credit card required
+                      </p>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+
+      <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
           THREE PILLARS

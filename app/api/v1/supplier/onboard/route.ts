@@ -7,8 +7,12 @@ import { checkRateLimit } from "@/lib/redis";
 /**
  * POST /api/v1/supplier/onboard
  * Public endpoint for supplier self-registration.
+ *
  * Creates a Supplier with PENDING status for admin review.
+ * Automatically seeds HotelSupplier shell records so the supplier
+ * is immediately visible and queryable in hotel marketplace catalogs.
  */
+
 export async function POST(request: NextRequest) {
   // Rate limit: 3 registrations per hour per IP
   const clientIp =
@@ -73,17 +77,47 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create the supplier with PENDING status
-    const supplier = await prisma.supplier.create({
-      data: {
-        ...validated,
-        tenantId: tenant.id,
-        status: "PENDING",
-        tier: "CORE",
-      },
+    // ── ATOMIC TRANSACTION: Supplier + HotelSupplier shells ──
+    // Creates the supplier AND auto-seeds HotelSupplier shell records
+    // so the supplier is immediately visible in marketplace catalogs.
+    const supplier = await prisma.$transaction(async (tx) => {
+      // Create the supplier with PENDING status
+      const newSupplier = await tx.supplier.create({
+        data: {
+          ...validated,
+          tenantId: tenant.id,
+          status: "PENDING",
+          tier: "CORE",
+        },
+      });
+
+      // Find all active hotels in the same tenant
+      const activeHotels = await tx.hotel.findMany({
+        where: {
+          tenantId: tenant.id,
+          status: "ACTIVE",
+        },
+        select: { id: true },
+      });
+
+      // Auto-create HotelSupplier shell records for marketplace visibility
+      if (activeHotels.length > 0) {
+        await tx.hotelSupplier.createMany({
+          data: activeHotels.map((h) => ({
+            hotelId: h.id,
+            supplierId: newSupplier.id,
+            tenantId: tenant.id,
+            isShell: true,
+            invitedAt: new Date(),
+          })),
+          skipDuplicates: true,
+        });
+      }
+
+      return newSupplier;
     });
 
-    // Create an audit log entry
+    // Create an audit log entry (outside transaction — non-critical)
     await prisma.auditLog.create({
       data: {
         action: "SUPPLIER_ONBOARDING_SUBMITTED",

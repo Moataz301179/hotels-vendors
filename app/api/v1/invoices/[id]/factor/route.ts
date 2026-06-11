@@ -73,7 +73,6 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
       platformFeeRate: hubRev.platformFeeRate,
       grossAmount: invoice.total,
       platformFee: hubRev.netPlatformFee,
-      netPlatformFee: hubRev.netPlatformFee,
       factoringFee: hubRev.factoringFee,
     },
   });
@@ -106,7 +105,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
       partnerId: bestOffer.partnerId,
       factoringRequestId: factoringRequest.id,
       jobId: job.id,
-      platformFee: hubRev.netPlatformFee,
+      platformFee: hubRev.platformFee,
       factoringFee: hubRev.factoringFee,
     },
     ipAddress: request.headers.get("x-forwarded-for") || null,

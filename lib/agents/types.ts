@@ -57,6 +57,7 @@ export interface AgentTask {
   title: string;
   prompt: string;
   agentId: AgentId;
+  tenantId: string;
   context?: Record<string, unknown>;
   parentTaskId?: string;
 }

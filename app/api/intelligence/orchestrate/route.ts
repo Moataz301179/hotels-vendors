@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
     if (workflow && workflow in WORKFLOWS) {
       const results = await orchestrator.runWorkflow(
         workflow as keyof typeof WORKFLOWS,
-        customPrompt
+        customPrompt,
+        "system"
       );
       return NextResponse.json({
         success: true,
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
         title: task.title,
         prompt: task.prompt,
         agentId: task.agentId as AgentId,
+        tenantId: "system",
         context: task.context,
       });
       return NextResponse.json({

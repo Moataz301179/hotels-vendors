@@ -25,7 +25,8 @@ export function getDeadLetterQueue(sourceQueueName: string): Queue {
 export async function moveToDeadLetter(
   sourceQueueName: string,
   job: Job,
-  failedReason: string
+  failedReason: string,
+  tenantId: string = "system"
 ): Promise<Job> {
   const dlq = getDeadLetterQueue(sourceQueueName);
 
@@ -63,6 +64,7 @@ export async function moveToDeadLetter(
       startedAt: new Date(),
       completedAt: new Date(),
       durationMs: 0,
+      tenantId,
     },
   });
 
