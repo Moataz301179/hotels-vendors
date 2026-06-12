@@ -24,16 +24,7 @@ const PAYMENT_STATS = [
   { label: "Failed", value: "EGP 0.04M", change: "0.8% error rate", up: true, icon: AlertTriangle },
 ];
 
-const TRANSACTIONS = [
-  { id: "TXN-2026-0089", orderId: "ORD-2026-0156", hotel: "Pickalbatros Palace", supplier: "El Araby Group", amount: "EGP 67,500", method: "Factoring", status: "COMPLETED", date: "2026-05-08" },
-  { id: "TXN-2026-0088", orderId: "ORD-2026-0155", hotel: "Hilton Cairo", supplier: "Cairo Kitchen Supply", amount: "EGP 34,200", method: "Credit", status: "PENDING", date: "2026-05-08" },
-  { id: "TXN-2026-0087", orderId: "ORD-2026-0154", hotel: "Marriott Mena", supplier: "Delta Textiles", amount: "EGP 128,000", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-07" },
-  { id: "TXN-2026-0086", orderId: "ORD-2026-0153", hotel: "Four Seasons", supplier: "Nile Fresh", amount: "EGP 52,400", method: "Factoring", status: "PENDING", date: "2026-05-07" },
-  { id: "TXN-2026-0085", orderId: "ORD-2026-0152", hotel: "Steigenberger", supplier: "Alexandria Imports", amount: "EGP 89,700", method: "Factoring", status: "COMPLETED", date: "2026-05-06" },
-  { id: "TXN-2026-0084", orderId: "ORD-2026-0151", hotel: "InterContinental", supplier: "El Araby Group", amount: "EGP 41,300", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-06" },
-  { id: "TXN-2026-0083", orderId: "ORD-2026-0150", hotel: "Sunrise Alex", supplier: "Red Sea Logistics", amount: "EGP 23,800", method: "Credit", status: "FAILED", date: "2026-05-05" },
-  { id: "TXN-2026-0082", orderId: "ORD-2026-0149", hotel: "Sofitel Cairo", supplier: "Cairo Kitchen Supply", amount: "EGP 56,100", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-05" },
-];
+const TRANSACTIONS: { id: string; orderId: string; hotel: string; supplier: string; amount: string; method: string; status: string; date: string }[] = [];
 
 const METHOD_COLORS: Record<string, string> = {
   Factoring: "bg-accent-base/10 text-accent-base",

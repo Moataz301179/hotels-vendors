@@ -11,7 +11,6 @@ import {
   Zap,
   Receipt,
   Building2,
-  Star,
 } from "lucide-react";
 import { InvoNav } from "@/components/invo/invo-nav";
 import { InvoFooter } from "@/components/invo/invo-footer";
@@ -21,13 +20,6 @@ export const metadata: Metadata = {
   description:
     "List on INVO. Get paid faster. Access invoice factoring with zero default risk. Monthly subscription for verified suppliers on Egypt's largest hospitality procurement network.",
 };
-
-const STATS = [
-  { value: "100+", label: "Suppliers Listed", icon: Building2 },
-  { value: "1-2%", label: "Service Fee", icon: Receipt },
-  { value: "24hr", label: "Settlement", icon: Clock },
-  { value: "0%", label: "Default Risk", icon: ShieldCheck },
-];
 
 const FEATURES = [
   {
@@ -43,7 +35,7 @@ const FEATURES = [
   {
     icon: TrendingUp,
     title: "Reach Every Hotel",
-    desc: "Your products visible to every hotel on HotelsVendors. One listing, 52+ properties. No cold calls, no chasing procurement managers.",
+    desc: "Your products visible to every hotel on HotelsVendors. One listing, multiple properties. No cold calls, no chasing procurement managers.",
   },
   {
     icon: FileCheck,
@@ -78,8 +70,8 @@ const HOW_IT_WORKS = [
 const PRICING = [
   {
     tier: "Starter",
-    price: "500",
-    period: "/month",
+    price: "Custom",
+    period: "",
     desc: "For suppliers starting out on the network",
     features: [
       "List up to 50 SKUs",
@@ -88,13 +80,13 @@ const PRICING = [
       "24hr factoring settlement",
       "Email support",
     ],
-    cta: "Start Free Trial",
+    cta: "Contact Sales",
     featured: false,
   },
   {
     tier: "Growth",
-    price: "1,500",
-    period: "/month",
+    price: "Custom",
+    period: "",
     desc: "For active suppliers scaling their reach",
     features: [
       "Unlimited SKUs",
@@ -103,13 +95,13 @@ const PRICING = [
       "API access for catalog sync",
       "Same-day factoring settlement",
     ],
-    cta: "Start Free Trial",
+    cta: "Contact Sales",
     featured: true,
   },
   {
     tier: "Professional",
-    price: "3,000",
-    period: "/month",
+    price: "Custom",
+    period: "",
     desc: "For established suppliers with high volume",
     features: [
       "Everything in Growth",
@@ -185,19 +177,6 @@ export default function InvoPage() {
               </span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* STATS STRIP */}
-      <section className="border-y border-white/[0.04]">
-        <div className="stat-strip max-w-5xl mx-auto">
-          {STATS.map((s) => (
-            <div key={s.label} className="stat-strip-item">
-              <s.icon className="w-5 h-5 text-[#D4A843]/30 mx-auto mb-2" />
-              <div className="stat-strip-value">{s.value}</div>
-              <div className="stat-strip-label">{s.label}</div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -293,8 +272,8 @@ export default function InvoPage() {
                 )}
                 <h3 className="text-[18px] text-white tracking-tight font-medium">{p.tier}</h3>
                 <div className="mt-4 mb-1">
-                  <span className="text-[32px] text-white tracking-tight font-medium">EGP {p.price}</span>
-                  <span className="text-[14px] text-white/30">{p.period}</span>
+                  <span className="text-[32px] text-white tracking-tight font-medium">{p.price}</span>
+                  {p.period && <span className="text-[14px] text-white/30">{p.period}</span>}
                 </div>
                 <p className="text-[13px] text-white/30 mb-6">{p.desc}</p>
                 <ul className="space-y-3 mb-8 flex-1">
@@ -341,7 +320,7 @@ export default function InvoPage() {
             <span className="text-[#D4A843]">payments?</span>
           </h2>
           <p className="mt-5 text-[16px] text-white/35 leading-relaxed mb-10 max-w-lg mx-auto">
-            30 days free. No credit card. List your catalog, access every hotel,
+            List your catalog, access every hotel,
             and see why Egypt&apos;s top suppliers are moving to INVO.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">

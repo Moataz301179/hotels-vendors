@@ -20,7 +20,7 @@ const pillars = [
     title: "AI Demand Forecasting",
     color: "#84cc16",
     desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio. Auto-generates POs against budget ceilings.",
-    features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "94% forecast accuracy"],
+    features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "Budget blockade enforcement"],
   },
   {
     icon: Receipt,
@@ -28,23 +28,23 @@ const pillars = [
     title: "ETA E-Invoicing Compliance",
     color: "#22C55E",
     desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA-2048 encryption, UUID-tracked, and submitted in real-time. Zero penalty risk.",
-    features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Zero penalty guarantee"],
+    features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Phase 1 & 2 compliant"],
   },
   {
     icon: Truck,
     num: "03",
     title: "Shared-Route Logistics",
     color: "#3B82F6",
-    desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs by up to 40%. Cold-chain capable with real-time GPS.",
-    features: ["40% cost reduction", "6 governorate coverage", "Real-time GPS tracking", "Cold-chain capable"],
+    desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs. Cold-chain capable with real-time GPS.",
+    features: ["Route consolidation", "6 governorate coverage", "Real-time GPS tracking", "Cold-chain capable"],
   },
   {
     icon: Banknote,
     num: "04",
     title: "Embedded Factoring",
     color: "#D4A843",
-    desc: "Hotel-initiated reverse factoring with 4+ licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
-    features: ["4+ licensed grantors", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
+    desc: "Hotel-initiated reverse factoring with licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
+    features: ["Licensed grantor network", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
   },
 ];
 
@@ -80,8 +80,8 @@ export default function PlatformPage() {
             {[
               { icon: ShieldCheck, label: "ETA Phase 1 & 2", desc: "Full compliance" },
               { icon: Lock, label: "RSA-2048 Signing", desc: "Cryptographic audit trail" },
-              { icon: Zap, label: "AI-Native", desc: "94% forecast accuracy" },
-              { icon: BarChart3, label: "Real-Time Analytics", desc: "Live dashboards" },
+              { icon: Zap, label: "AI-Native", desc: "Demand forecasting" },
+              { icon: BarChart3, label: "Analytics", desc: "Spend visibility" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "#84cc16" }} />
@@ -136,7 +136,7 @@ export default function PlatformPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { icon: ShieldCheck, label: "ETA Phase 1 & 2", desc: "Full compliance" },
-              { icon: BarChart3, label: "AI Forecasting", desc: "94% accuracy" },
+              { icon: BarChart3, label: "AI Forecasting", desc: "Demand prediction" },
               { icon: Truck, label: "6 Governorates", desc: "Coastal + Inland" },
               { icon: Banknote, label: "24-Hour Settlement", desc: "Bank-direct" },
             ].map((b) => (
@@ -159,7 +159,7 @@ export default function PlatformPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <Cpu size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egypt&apos;s leading hotel groups already running on HotelsVendors infrastructure.</p>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Purpose-built for Egyptian hospitality groups managing coastal and inland properties.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Try the Sandbox <ArrowRight size={14} />

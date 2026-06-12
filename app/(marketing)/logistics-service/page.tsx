@@ -3,11 +3,11 @@ import Link from "next/link";
 import { ArrowRight, Truck, MapPin, Clock, TrendingDown, Shield, Thermometer, Route, Banknote, PackageCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coastal Hotel Logistics Egypt | Shark-Breaker Shared-Route Delivery | HotelsVendors",
-  description: "AI-driven shared-route logistics for Egyptian coastal hotels. Multi-supplier load matching, cold-chain capable, 48-hour delivery guarantee across 6 governorates. Up to 40% cost reduction.",
-  keywords: ["B2B hospitality procurement Egypt", "hotel logistics Egypt", "shared-route delivery Red Sea", "coastal hotel suppliers", "Shark-Breaker logistics", "سلسلة التوريد الفندقية", "لوجستيات الفنادق مصر"],
+  title: "Coastal Hotel Logistics Egypt | Shared-Route Delivery | HotelsVendors",
+  description: "AI-driven shared-route logistics for Egyptian coastal hotels. Multi-supplier load matching, cold-chain capable, 48-hour delivery guarantee across 6 governorates.",
+  keywords: ["B2B hospitality procurement Egypt", "hotel logistics Egypt", "shared-route delivery Red Sea", "coastal hotel suppliers", "سلسلة التوريد الفندقية", "لوجستيات الفنادق مصر"],
   openGraph: {
-    title: "Coastal Hotel Logistics Egypt | Shark-Breaker Shared-Route Delivery | HotelsVendors",
+    title: "Coastal Hotel Logistics Egypt | Shared-Route Delivery | HotelsVendors",
     description: "AI-driven shared-route logistics for Egyptian coastal hotels. Multi-supplier load matching, cold-chain capable, 48-hour delivery guarantee.",
     type: "website",
   },
@@ -23,12 +23,12 @@ const governorates = [
 ];
 
 const features = [
-  { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#84cc16" },
+  { icon: TrendingDown, title: "Route Consolidation", desc: "Shared-route model means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#84cc16" },
   { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#3B82F6" },
   { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#22C55E" },
   { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "#D4A843" },
   { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "#00E5CC" },
-  { icon: Banknote, title: "Paid in 4 Hours", desc: "Not 90 days. Not 30 days. Digital POD triggers automated payment within 4 hours of confirmed delivery.", color: "#FF8C00" },
+  { icon: Banknote, title: "Fast Carrier Payout", desc: "Digital POD triggers automated payment to carriers after confirmed delivery. No 90-day waits.", color: "#FF8C00" },
 ];
 
 export default function LogisticsServicePage() {
@@ -40,7 +40,7 @@ export default function LogisticsServicePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Logistics</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Fill Your Trucks with<br />Consolidated Loads.<br /><span className="text-gradient-lime">Get Paid in 4 Hours.<br />Not 90 Days.</span>
+            Fill Your Trucks with<br />Consolidated Loads.<br /><span className="text-gradient-lime">Fast Carrier Payouts.<br />Real-Time GPS.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS. Built for carriers who want guaranteed volume and fast settlement.
@@ -62,9 +62,9 @@ export default function LogisticsServicePage() {
           <div className="flex flex-wrap justify-center gap-8">
             {[
               { icon: Truck, label: "6 Governorates", desc: "Full coverage" },
-              { icon: TrendingDown, label: "40% Cost Reduction", desc: "Shared-route model" },
+              { icon: TrendingDown, label: "Route Consolidation", desc: "Shared-route model" },
               { icon: Clock, label: "48-Hour Delivery", desc: "SLA-backed" },
-              { icon: Banknote, label: "4-Hour Payment", desc: "Digital POD trigger" },
+              { icon: Banknote, label: "Fast Carrier Payout", desc: "Digital POD trigger" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "#3B82F6" }} />

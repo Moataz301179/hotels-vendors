@@ -4,11 +4,11 @@ import { ArrowRight, Banknote, Clock, Shield, TrendingUp, Check, Landmark, FileC
 
 export const metadata: Metadata = {
   title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-  description: "Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
+  description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
   keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
   openGraph: {
     title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-    description: "Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
+    description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
     type: "website",
   },
 };
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const flow = [
   { step: "01", title: "Invoice Cleared", desc: "Three-way match: PO + ETA UUID + Signed Digital Delivery Note verified automatically. No manual reconciliation.", icon: Check },
   { step: "02", title: "Enter Factoring Pool", desc: "Pre-cleared invoice enters competitive bidding pool visible to all licensed grantors. Full transparency.", icon: TrendingUp },
-  { step: "03", title: "Grantors Bid", desc: "4+ licensed grantors compete on rate. Best offer selected automatically. Market-driven pricing every time.", icon: Banknote },
+  { step: "03", title: "Grantors Bid", desc: "Licensed grantors compete on rate. Best offer selected automatically. Market-driven pricing every time.", icon: Banknote },
   { step: "04", title: "Settlement", desc: "Supplier paid in 24 hours via bank-direct transfer. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
 ];
 
@@ -26,7 +26,7 @@ const funderFeatures = [
   { icon: TrendingUp, title: "Competitive Bidding", desc: "Bid on invoice pools with full visibility into competing rates. Transparent, fair, and optimized for your return targets." },
   { icon: Banknote, title: "24-Hour Settlement", desc: "Bank-direct settlement to supplier IBANs. Automated interest accrual and late repayment protocols. No intermediary accounts." },
   { icon: Shield, title: "Non-Recourse by Design", desc: "Once settled, the invoice is your risk — not the hotel&apos;s. Clean balance-sheet treatment for all parties." },
-  { icon: Landmark, title: "$12B Market Access", desc: "Egypt&apos;s hospitality sector is a $12B industry with 480+ properties on our pipeline. High-velocity corporate deal flow." },
+  { icon: Landmark, title: "Hospitality Sector Focus", desc: "Egypt&apos;s hospitality sector with hundreds of properties across coastal and urban markets." },
 ];
 
 export default function FactoringServicePage() {
@@ -116,7 +116,7 @@ export default function FactoringServicePage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <Users size={28} className="mx-auto mb-6" style={{ color: "#D4A843" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">4+ licensed grantors already bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Register as Grantor <ArrowRight size={14} />

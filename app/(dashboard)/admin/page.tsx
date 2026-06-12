@@ -242,7 +242,7 @@ export default function AdminDashboardPage() {
           <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#ff6b6b]" />
-              <h2 className="text-sm font-semibold text-white/80">Live Activity Feed</h2>
+              <h2 className="text-sm font-semibold text-white/80">Activity Feed</h2>
             </div>
             <Link href="/admin/explorer" className="text-[11px] text-white/30 hover:text-white/60 transition-colors">
               View All →

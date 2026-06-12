@@ -310,7 +310,7 @@ export default function HealthDashboardPage() {
                   className={pulseConnected ? "text-emerald-400" : "text-amber-400"}
                 />
                 <span className="text-xs text-white/40">
-                  {pulseConnected ? "Live" : "Reconnecting"}
+                  {pulseConnected ? "Connected" : "Reconnecting"}
                 </span>
               </div>
               <button

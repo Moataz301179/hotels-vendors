@@ -235,34 +235,12 @@ export default function LoginPage() {
               <div className="flex-1 h-px bg-white/[0.06]" />
             </div>
 
-            {/* Demo credentials */}
-            <div className="space-y-2">
-              <p className="text-[10px] text-center text-white/20 uppercase tracking-wider">
-                Demo Accounts
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { label: "Hotel", icon: Hotel, email: "hotel.owner@nilegrand.com", pass: "HotelOwner123!" },
-                  { label: "Supplier", icon: Store, email: "supplier@freshfoods.com", pass: "Supplier123!" },
-                  { label: "Factoring", icon: Landmark, email: "fund@cib.com.eg", pass: "Factor123!" },
-                  { label: "Logistics", icon: Truck, email: "ops@sharkbreaker.com", pass: "Logistics123!" },
-                  { label: "Admin", icon: UserCog, email: "admin", pass: "1234Harly" },
-                ].map((acc) => (
-                  <button
-                    key={acc.label}
-                    type="button"
-                    onClick={() => { setEmail(acc.email); setPassword(acc.pass); }}
-                    className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] text-xs text-white/40 hover:text-white/60 hover:border-white/[0.10] transition-all text-center"
-                  >
-                    <acc.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                    <div className="text-left min-w-0">
-                      <span className="block font-medium">{acc.label}</span>
-                      <span className="block text-[10px] text-white/20 mt-0.5 truncate">{acc.email}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <p className="text-[11px] text-center text-white/20">
+              Need an account?{" "}
+              <Link href="/register" className="text-[#D4A843] hover:underline">
+                Register here
+              </Link>
+            </p>
           </form>
         </motion.div>
 

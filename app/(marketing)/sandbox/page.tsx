@@ -56,10 +56,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(132,204,22,0.1)",
     description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
     steps: [
-      { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Forecast generated: 2,400 kg F&B, 800 units consumables, 120 linens. Budget blockade set at EGP 185,000.", icon: BarChart3 },
-      { title: "Auto PO Generation", description: "POs are auto-created against your budget ceilings and sent to pre-mandated suppliers.", action: "Issue PO-2024-0892", result: "PO issued to 3 suppliers. Authority matrix approval triggered. ETA pre-registered.", icon: ShoppingCart },
-      { title: "Three-Way Match", description: "When goods arrive, the system validates PO + ETA UUID + Signed Delivery Note.", action: "Receive shipment SH-009", result: "Three-way match passed. ETA UUID validated. Invoice auto-generated. GRN signed.", icon: CheckCircle2 },
-      { title: "Factoring Settlement", description: "Pre-cleared invoice enters competitive bidding. Supplier paid in 24hrs. You keep net-60.", action: "Submit invoice to factoring pool", result: "4 grantors bid. Best rate: 2.1%. Supplier paid EGP 48,000 in 24 hours. Your cash stays liquid.", icon: Banknote },
+      { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Illustrative: Forecast output will show predicted quantities per category with budget blockade.", icon: BarChart3 },
+      { title: "Auto PO Generation", description: "POs are auto-created against your budget ceilings and sent to pre-mandated suppliers.", action: "Issue PO", result: "Illustrative: PO routes through authority matrix. Suppliers receive notification.", icon: ShoppingCart },
+      { title: "Three-Way Match", description: "When goods arrive, the system validates PO + ETA UUID + Signed Delivery Note.", action: "Receive shipment", result: "Illustrative: Three-way match validates delivery. Invoice auto-generates on clearance.", icon: CheckCircle2 },
+      { title: "Factoring Settlement", description: "Pre-cleared invoice enters competitive bidding. Supplier paid in 24hrs. You keep net-60.", action: "Submit invoice to factoring pool", result: "Illustrative: Licensed grantors bid. Supplier settles within 24 hours.", icon: Banknote },
     ],
   },
   {
@@ -70,10 +70,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(34,197,94,0.1)",
     description: "Discover how suppliers get discovered, receive POs, and get paid in 24 hours.",
     steps: [
-      { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload 450 SKUs", result: "450 SKUs categorized. Matched to 12 active hotel buyers. 3 POs received within 1 hour.", icon: Package },
-      { title: "PO Notification", description: "Receive purchase orders directly from hotel procurement teams.", action: "Accept PO-2024-0892", result: "PO accepted. Delivery scheduled for 48 hours. Route optimized via shared-load matching.", icon: ShoppingCart },
-      { title: "ETA Invoice Issuance", description: "Issue ETA-compliant e-invoices directly from the platform.", action: "Issue invoice INV-4451", result: "Invoice digitally signed. ETA UUID received. Submitted to tax authority. Cleared in 3 minutes.", icon: Receipt },
-      { title: "24-Hour Payment", description: "Your invoice enters the factoring pool. Get paid in 24 hours, not 180 days.", action: "Opt for early settlement", result: "Invoice factored at 2.1%. EGP 48,000 deposited to your IBAN in 24 hours. Zero collection chase.", icon: Banknote },
+      { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload SKUs", result: "Illustrative: Catalog categorizes products. Hotels matching your categories can discover your listings.", icon: Package },
+      { title: "PO Notification", description: "Receive purchase orders directly from hotel procurement teams.", action: "Accept PO", result: "Illustrative: PO routes to your dashboard. Delivery scheduling and route optimization follow.", icon: ShoppingCart },
+      { title: "ETA Invoice Issuance", description: "Issue ETA-compliant e-invoices directly from the platform.", action: "Issue invoice", result: "Illustrative: Invoice digitally signed with ETA UUID. Submitted to tax authority automatically.", icon: Receipt },
+      { title: "24-Hour Payment", description: "Your invoice enters the factoring pool. Get paid in 24 hours, not 180 days.", action: "Opt for early settlement", result: "Illustrative: Invoice enters factoring pool. Settlement within 24 hours of clearance.", icon: Banknote },
     ],
   },
   {
@@ -84,10 +84,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(212,168,67,0.1)",
     description: "Access pre-verified hospitality invoices and deploy capital with competitive bidding.",
     steps: [
-      { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "24 invoices available. Total pool: EGP 2.1M. Average invoice: EGP 87,500. All ETA-cleared.", icon: Receipt },
-      { title: "Risk Scoring", description: "AI scores each invoice: hotel creditworthiness, delivery confirmation, ETA compliance.", action: "Review risk scores", result: "18 invoices rated Low Risk. 4 Medium. 2 excluded. Average score: 8.4/10.", icon: Shield },
-      { title: "Competitive Bid", description: "Bid on invoices. Best rate wins. Non-recourse structure protects your capital.", action: "Submit bid at 2.1%", result: "Bid accepted on 3 invoices. Total deployment: EGP 180,000. Expected return: EGP 3,780.", icon: TrendingUp },
-      { title: "Bank-Direct Settlement", description: "Settlement flows directly between your bank and the supplier. Zero intermediary risk.", action: "Confirm settlement", result: "EGP 180,000 routed to supplier IBANs. Your books updated. Non-recourse. Zero exposure.", icon: Banknote },
+      { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "Illustrative: Invoice pool shows three-way-matched, ETA-cleared invoices with risk scores.", icon: Receipt },
+      { title: "Risk Scoring", description: "AI scores each invoice: hotel creditworthiness, delivery confirmation, ETA compliance.", action: "Review risk scores", result: "Illustrative: Risk tiers (Low/Medium/High) with average score. Invoices filtered by your risk appetite.", icon: Shield },
+      { title: "Competitive Bid", description: "Bid on invoices. Best rate wins. Non-recourse structure protects your capital.", action: "Submit bid", result: "Illustrative: Bid submitted to pool. Best rate wins. Non-recourse transfer on acceptance.", icon: TrendingUp },
+      { title: "Bank-Direct Settlement", description: "Settlement flows directly between your bank and the supplier. Zero intermediary risk.", action: "Confirm settlement", result: "Illustrative: Bank-direct IBAN settlement. Non-recourse. Clean balance-sheet treatment.", icon: Banknote },
     ],
   },
   {
@@ -98,10 +98,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(59,130,246,0.1)",
     description: "Fill your trucks with consolidated loads and get guaranteed on-time payment.",
     steps: [
-      { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "3 loads matched. Route: Cairo → Sharm El-Sheikh. 4 suppliers consolidated. 95% truck utilization.", icon: Package },
-      { title: "Route Optimization", description: "Shared-route planning across 6 governorates. Minimize empty miles.", action: "Optimize route", result: "Route optimized: 2,840 km → 1,920 km. 32% distance reduction. ETA: 18 hours. Fuel savings: EGP 4,200.", icon: BarChart3 },
-      { title: "Delivery Confirmation", description: "GPS-tracked delivery. Digital proof of delivery triggers automatic payment.", action: "Confirm delivery at dock", result: "Delivery confirmed. Digital POD signed. Hotel GRN cleared. Invoice auto-generated.", icon: CheckCircle2 },
-      { title: "On-Time Payment", description: "Payment released automatically upon delivery confirmation. No 90-day waits.", action: "Receive payment", result: "EGP 28,500 credited to your account. Settlement time: 4 hours. Zero disputes.", icon: Banknote },
+      { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "Illustrative: Loads matched by route corridor. Multi-supplier consolidation maximizes truck utilization.", icon: Package },
+      { title: "Route Optimization", description: "Shared-route planning across 6 governorates. Minimize empty miles.", action: "Optimize route", result: "Illustrative: Route optimized across governorates. Distance and fuel savings calculated from shared loads.", icon: BarChart3 },
+      { title: "Delivery Confirmation", description: "GPS-tracked delivery. Digital proof of delivery triggers automatic payment.", action: "Confirm delivery at dock", result: "Illustrative: Digital POD signed. Hotel GRN cleared. Invoice auto-generates on confirmation.", icon: CheckCircle2 },
+      { title: "On-Time Payment", description: "Payment released automatically upon delivery confirmation. No 90-day waits.", action: "Receive payment", result: "Illustrative: Automated settlement triggers on POD confirmation. No manual invoicing.", icon: Banknote },
     ],
   },
 ];

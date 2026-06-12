@@ -60,7 +60,7 @@ export default function AboutPage() {
               <Eye size={24} className="mb-4" style={{ color: "#84cc16" }} />
               <h2 className="text-[20px] font-medium text-white mb-4">The Market Gap</h2>
               <p className="text-[14px] text-white/40 leading-relaxed mb-4">
-                Egypt&apos;s hospitality sector is a $12B industry fragmented across thousands of manual procurement processes. Paper invoices. 180-day payment cycles. Zero visibility into spend. Coastal resorts in Sharm and Hurghada rely on suppliers 400km away in Cairo, with logistics costs eating 15-20% of every order.
+                Egypt&apos;s hospitality sector is fragmented across thousands of manual procurement processes. Paper invoices. Extended payment cycles. Zero visibility into spend. Coastal resorts in Sharm and Hurghada rely on suppliers primarily based in Cairo, with logistics costs significantly impacting every order.
               </p>
               <p className="text-[14px] text-white/40 leading-relaxed">
                 Existing tools are either generic global platforms that ignore ETA compliance, or legacy ERPs with procurement modules built for a different era. There was no Egypt-specific, hospitality-native operating system. Until now.
@@ -101,16 +101,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Traction Stats */}
+      {/* Early Traction */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Early Traction</h2>
-          <div className="grid md:grid-cols-4 gap-6 max-w-3xl mx-auto text-center">
+          <div className="grid md:grid-cols-2 gap-6 max-w-xl mx-auto text-center">
             {[
-              { value: "480+", label: "Properties Onboarded" },
-              { value: "680+", label: "Verified Suppliers" },
-              { value: "2,400+", label: "SKUs Listed" },
               { value: "6", label: "Governorates Covered" },
+              { value: "—", label: "Properties — Coming Soon" },
             ].map((s) => (
               <div key={s.label}>
                 <p className="text-[28px] font-medium mb-1" style={{ color: "#84cc16" }}>{s.value}</p>
@@ -118,6 +116,7 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+          <p className="text-center text-[12px] text-white/20 mt-6">Supplier and property counts will be published once onboarding is complete.</p>
         </div>
       </section>
 

@@ -89,9 +89,8 @@ export default function HotelsPage() {
       {/* Stats */}
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto text-center">
+          <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto text-center">
             {[
-              { value: "40%", label: "Average Procurement Cost Reduction" },
               { value: "24h", label: "Supplier Settlement via Factoring" },
               { value: "6", label: "Governorates with Logistics Coverage" },
             ].map((s) => (

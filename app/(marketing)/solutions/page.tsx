@@ -35,7 +35,7 @@ const solutions = [
   {
     icon: Landmark,
     title: "For Factoring Companies",
-    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector is a $12B market.",
+    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector.",
     features: ["Pre-verified invoices", "Competitive bidding", "Non-recourse", "Bank-direct settlement", "Risk scoring"],
     href: "/register?sector=cashflow",
     cta: "Register Grantor",
@@ -157,9 +157,6 @@ export default function SolutionsPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
               Get Started <ArrowRight size={14} />
-            </Link>
-            <Link href="/compliance" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              View Compliance
             </Link>
           </div>
         </div>

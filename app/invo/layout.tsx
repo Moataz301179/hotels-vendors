@@ -93,7 +93,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
               Marketplace Engine
             </div>
             <div className="text-[10px] mt-0.5" style={{ color: TEXT_MUTED }}>
-              Supabase · Live
+              PostgreSQL · Prisma
             </div>
           </div>
         </div>

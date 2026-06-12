@@ -146,7 +146,7 @@ export default function ETACenterPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl font-bold tracking-tight text-white">ETA E-Invoicing Center</h1>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold uppercase tracking-wider">Live</span>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold uppercase tracking-wider">ETA</span>
           </div>
           <p className="text-sm text-white/40 mt-0.5">Egyptian Tax Authority compliance, submission tracking, and digital signature management</p>
         </div>

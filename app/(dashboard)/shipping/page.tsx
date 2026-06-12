@@ -122,7 +122,7 @@ export default function LogisticsPortalPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Logistics Command Center</h1>
-          <p className="text-sm text-white/40 mt-0.5">Real-time fleet tracking, route optimization, and delivery management</p>
+          <p className="text-sm text-white/40 mt-0.5">Fleet tracking, route optimization, and delivery management</p>
         </div>
       </motion.div>
 
@@ -248,7 +248,7 @@ export default function LogisticsPortalPage() {
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
               <MapPin size={14} className="text-white/40" />
-              Live Routes
+              Routes
             </h3>
             <div className="aspect-video rounded-lg bg-white/[0.03] border border-white/[0.04] flex items-center justify-center">
               <div className="text-center">

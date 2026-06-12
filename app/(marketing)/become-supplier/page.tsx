@@ -214,7 +214,7 @@ export default function SupplierOnboardingPage() {
               <span className="text-[#D4A843]">Hospitality Supply Network</span>
             </h1>
             <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
-              Get direct access to 52+ verified hotel properties, guaranteed payments through embedded factoring, and shared-route logistics that cut your delivery costs. No bidding wars. No hidden fees.
+              Get direct access to verified hotel properties, guaranteed payments through embedded factoring, and shared-route logistics that cut your delivery costs. No bidding wars. No hidden fees.
             </p>
           </div>
         </div>

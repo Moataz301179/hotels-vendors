@@ -17,13 +17,7 @@ import {
 /* ─────────────────────────────────────────
    MOCK DATA — Replace with API calls
    ───────────────────────────────────────── */
-const CAMPAIGNS = [
-  { id: "C-2026-041", name: "Summer Coastal Push", channel: "LinkedIn", status: "active", budget: "45,000 EGP", spent: "32,400 EGP", leads: 128, ctr: "4.2%" },
-  { id: "C-2026-040", name: "Supplier Onboarding Drive", channel: "WhatsApp", status: "active", budget: "20,000 EGP", spent: "18,100 EGP", leads: 342, ctr: "12.8%" },
-  { id: "C-2026-039", name: "Ramadan Hospitality Week", channel: "Email", status: "completed", budget: "15,000 EGP", spent: "14,850 EGP", leads: 89, ctr: "6.5%" },
-  { id: "C-2026-038", name: "Cairo Hotel Expo Booth", channel: "Event", status: "completed", budget: "80,000 EGP", spent: "79,200 EGP", leads: 56, ctr: "—" },
-  { id: "C-2026-037", name: "Instagram Reels Pilot", channel: "Instagram", status: "paused", budget: "10,000 EGP", spent: "4,200 EGP", leads: 23, ctr: "2.1%" },
-];
+const CAMPAIGNS: { id: string; name: string; channel: string; status: string; budget: string; spent: string; leads: number; ctr: string }[] = [];
 
 const CONTENT_CALENDAR = [
   { date: "May 5", title: "Supplier Success: Nile Textiles", type: "Case Study", channel: "LinkedIn", status: "scheduled" },
@@ -33,19 +27,9 @@ const CONTENT_CALENDAR = [
   { date: "May 12", title: "ETA Compliance Webinar", type: "Webinar", channel: "Email + LinkedIn", status: "scheduled" },
 ];
 
-const SOCIAL_METRICS = [
-  { platform: "LinkedIn", followers: "2,340", engagement: "5.8%", posts: 24, leads: 87 },
-  { platform: "Instagram", followers: "1,120", engagement: "8.2%", posts: 18, leads: 34 },
-  { platform: "Facebook", followers: "890", engagement: "3.4%", posts: 12, leads: 21 },
-];
+const SOCIAL_METRICS: { platform: string; followers: string; engagement: string; posts: number; leads: number }[] = [];
 
-const RECENT_LEADS = [
-  { name: "Grand Nile Hotel", source: "LinkedIn Ad", status: "qualified", date: "2h ago", value: "High" },
-  { name: "Cairo Plastics Co.", source: "WhatsApp Blast", status: "new", date: "4h ago", value: "Medium" },
-  { name: "Alexandria Resort Group", source: "Expo Booth", status: "qualified", date: "1d ago", value: "High" },
-  { name: "Delta Linens", source: "Referral", status: "contacted", date: "1d ago", value: "Medium" },
-  { name: "Red Sea Distributors", source: "Email Campaign", status: "new", date: "2d ago", value: "Low" },
-];
+const RECENT_LEADS: { name: string; source: string; status: string; date: string; value: string }[] = [];
 
 /* ───────────────────────────────────────── */
 

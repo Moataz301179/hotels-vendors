@@ -321,7 +321,7 @@ export default function CreditLineApplicationPage() {
                   <NumberInput label="Existing Debt / Loans" value={financials.existingDebt} onChange={(v) => setFinancials({ ...financials, existingDebt: v })} icon={<AlertCircle className="w-4 h-4" />} />
                 </div>
 
-                {/* Live Score Preview */}
+                {/* Score Preview */}
                 <div className="mt-6 p-4 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
                   <div className="flex items-center justify-between">
                     <div>
