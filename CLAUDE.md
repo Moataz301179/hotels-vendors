@@ -1,5 +1,8 @@
 # Hotels Vendors — Platform Context for Agents
 
+## ⚠️ FIRST ACTION IN EVERY SESSION
+**Read `PROJECT_STATE.md` before doing anything else.** It contains the current deployment state, known incomplete work, and critical rules. Not reading it causes repeated mistakes, wasted sessions, and broken deployments.
+
 ## Business Model
 - **Fixed-price catalogs** (no bidding/auctions)
 - **Per-hotel negotiated credit limits** (Net-30, Net-60 terms)
@@ -45,3 +48,23 @@
 - Tailwind CSS v4
 - Prisma 7 + SQLite (dev) → PostgreSQL (prod)
 - No external UI libraries (no shadcn, no MUI)
+
+## ⚠️ CRITICAL: Deployment Rules (MUST FOLLOW)
+
+**Vercel is connected to GitHub repo `Moataz301179/hotels-vendors` (default branch: `main`).**
+**Every push to `main` triggers an automatic production deployment.**
+
+After EVERY code change session:
+1. Commit changes in the worktree
+2. Sync to main: `git checkout worktree-hotels-vendors-main -- <files>`
+3. Commit + push to main: `git add -A && git commit -m "..." && git push origin main`
+4. Vercel auto-deploys — verify at https://hotelsvendors.com
+
+**NEVER commit only to the worktree. `main` must always be current.**
+
+## ⚠️ Strict Verification Checklist (BEFORE declaring any task complete)
+
+- **RBAC Isolation:** Whenever editing backend routes, always ensure role-based access control (RBAC) isolates Hotel scopes from Supplier configurations. No cross-tenant data leakage.
+- **Liability Disclaimer:** Every transaction failure pathway must log and output the mandatory disclaimer: *"Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults."*
+- **Test Before Complete:** Before declaring a task complete, run `npx vitest run` to ensure zero regressions. For financial/decimal calculations, verify zero arithmetic errors with explicit tolerance checks.
+- **No Duplicate Repos/Projects:** Never create duplicate GitHub repos or Vercel projects. Use only `Moataz301179/hotels-vendors` (GitHub) and `hotels-vendors` (Vercel).
