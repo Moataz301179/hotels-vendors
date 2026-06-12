@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useInView, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   BrainCircuit,
@@ -10,7 +10,6 @@ import {
   Banknote,
   ShieldCheck,
   Store,
-  ChevronRight,
   Building2,
   Landmark,
   Truck,
@@ -21,25 +20,16 @@ import {
   TrendingUp,
   CheckCircle,
   Shield,
-  CreditCard,
-  Calendar,
   FileText,
   Send,
   Sparkles,
   CircuitBoard,
   Wallet,
   LineChart,
-  ArrowUpRight,
   Play,
-  ChevronDown,
-  ChevronUp,
-  Users,
-  Globe,
-  Lock,
   Cpu,
-  Fingerprint,
   Server,
-  Eye,
+  ArrowUpRight,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
@@ -48,26 +38,6 @@ import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboa
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 import { IPadFrame } from "@/components/marketing/ipad-frame";
-import { ForexWidget } from "@/components/marketing/forex-widget";
-
-// ─── Animated Counter Hook ─────────────────────────────────────────
-function useCounter(end: number, duration = 2000, start = 0, inView = false) {
-  const [count, setCount] = useState(start);
-  useEffect(() => {
-    if (!inView) return;
-    let startTime: number | null = null;
-    let raf: number;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setCount(Math.floor(progress * (end - start) + start));
-      if (progress < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [end, duration, start, inView]);
-  return count;
-}
 
 // ─── RevealSection ────────────────────────────────────────────────
 function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -82,31 +52,6 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
       className={className}
     >
       {children}
-    </motion.div>
-  );
-}
-
-// ─── Scroll-Triggered Counter ──────────────────────────────────────
-function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = "#84cc16" }: {
-  end: number; suffix?: string; prefix?: string; label: string; icon: React.ElementType; color?: string;
-}) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const count = useCounter(end, 2200, 0, inView);
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
-      className="rounded-2xl p-6 text-center hover-lift"
-      style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-    >
-      <Icon size={18} className="mx-auto mb-3" style={{ color: "rgba(255,255,255,0.15)" }} />
-      <p className="text-[32px] font-bold text-white mb-1">
-        {prefix}{count.toLocaleString()}{suffix}
-      </p>
-      <p className="text-[10px] text-white/25 uppercase tracking-wider font-medium">{label}</p>
     </motion.div>
   );
 }
@@ -151,7 +96,7 @@ const SECTORS: SectorData[] = [
     hook: "Suppliers get paid in 24 hours. You keep net-60+. No more chasing decentralized hotel properties across regional clusters for 180 days. On-site GRN validation unlocks non-recourse, bank-direct early payment factoring — programmatically.",
     bullets: [
       "Net-60+ terms without balance-sheet liability — off-balance-sheet by design",
-      "Suppliers paid in 24 hours via competitive bidding among 4+ licensed grantors",
+      "Suppliers paid in 24 hours via competitive bidding among licensed grantors",
       "Automated interest accrual, settlement reconciliation, and late-repayment protocols",
     ],
     placeholder: "Enter Company / Property Group Name",
@@ -189,27 +134,6 @@ const SECTORS: SectorData[] = [
   },
 ];
 
-// ─── Market Index Data ────────────────────────────────────────────
-const marketIndex = [
-  { product: "Fresh Chicken", unit: "kg", price: 68.5, change: "+2.1%", up: true },
-  { product: "Beef Fillet", unit: "kg", price: 285.0, change: "+1.4%", up: true },
-  { product: "Sea Bass", unit: "kg", price: 195.0, change: "-0.8%", up: false },
-  { product: "Lamb Shoulder", unit: "kg", price: 245.0, change: "+3.2%", up: true },
-  { product: "Olive Oil", unit: "L", price: 92.0, change: "+5.1%", up: true },
-  { product: "Basmati Rice", unit: "kg", price: 48.5, change: "-1.2%", up: false },
-  { product: "Fresh Milk", unit: "L", price: 22.0, change: "0.0%", up: true },
-  { product: "Eggs (local)", unit: "30pc", price: 145.0, change: "+4.3%", up: true },
-  { product: "Tomatoes", unit: "kg", price: 18.5, change: "-8.5%", up: false },
-  { product: "Potatoes", unit: "kg", price: 12.0, change: "-2.1%", up: false },
-];
-
-const liveRates = [
-  { label: "USD/EGP", value: "50.85", change: "-0.12", source: "CBE" },
-  { label: "EUR/EGP", value: "54.20", change: "+0.34", source: "Market" },
-  { label: "Inflation", value: "24.1%", change: "-0.8", source: "CAPMAS" },
-  { label: "CBE Rate", value: "49.45", change: "-0.05", source: "CBE" },
-];
-
 const PIPELINE = [
   { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings with pre-occurrence blockades enforced.", icon: BrainCircuit },
   { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits at property-branch-department level.", icon: ShieldCheck },
@@ -221,8 +145,8 @@ const PIPELINE = [
 const FEATURES = [
   { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns. Auto-generates POs against budget ceilings — before a single pound leaves your account.", color: "#84cc16" },
   { icon: Receipt, title: "ETA E-Invoicing V2 Pipeline", desc: "Direct Egyptian Tax Authority API integration. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt. Zero-exposure regulatory shield.", color: "#84cc16" },
-  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching. Cold-chain capable with real-time GPS tracking.", color: "#84cc16" },
-  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct IBAN settlement. Suppliers paid in 24 hours. Hotels preserve net-60+ working capital.", color: "#84cc16" },
+  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching for significant cost reduction. Cold-chain capable with real-time GPS tracking.", color: "#84cc16" },
+  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among licensed grantors. Non-recourse, bank-direct IBAN settlement. Suppliers paid in 24 hours. Hotels preserve net-60+ working capital.", color: "#84cc16" },
   { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail on every transaction state transition.", color: "#84cc16" },
   { icon: BarChart3, title: "Cost Control & Anomaly Detection", desc: "Real-time spend analysis, pricing deviation alerts, and budget optimization across every property, department, and vendor. AI flags anomalies before they compound.", color: "#84cc16" },
   { icon: Cpu, title: "Offline-First Data Resilience", desc: "Secure local caching stores serialized transaction arrays during connectivity drops. Auto-queued sync with ETA portal on reconnection — zero data loss, zero manual re-entry. Built for Egyptian hotel network realities.", color: "#84cc16" },
@@ -230,9 +154,9 @@ const FEATURES = [
 
 const TRUST_BADGES = [
   { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
-  { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
-  { icon: Globe, label: "6 Governorates Covered", desc: "Coastal + Inland" },
-  { icon: Zap, label: "24-Hour Settlement", desc: "Bank-direct factoring" },
+  { icon: Server, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
+  { icon: Building2, label: "6 Governorates Covered", desc: "Coastal + Inland" },
+  { icon: Clock, label: "24-Hour Settlement", desc: "Bank-direct factoring" },
 ];
 
 // ─── Main Page ────────────────────────────────────────────────────
@@ -243,15 +167,7 @@ export default function HomePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.96]);
-  const smoothOpacity = useSpring(heroOpacity, { stiffness: 100, damping: 30 });
-  const smoothScale = useSpring(heroScale, { stiffness: 100, damping: 30 });
-
   const currentSector = SECTORS.find((s) => s.key === activeSector)!;
-  const doubledIndex = [...marketIndex, ...marketIndex];
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -278,29 +194,13 @@ export default function HomePage() {
     <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
       <MarketingNav />
 
-      {/* ── Market Index Ticker ── */}
-      <div style={{ backgroundColor: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
-        <div className="marquee-container">
-          <div className="marquee-content">
-            {doubledIndex.map((item, i) => (
-              <div key={i} className="inline-flex items-center gap-2 px-5 py-2.5">
-                <span className="text-[11px] text-white/30">{item.product}</span>
-                <span className="text-[11px] font-medium text-white/60">EGP {item.price.toFixed(1)}/{item.unit}</span>
-                <span className={`text-[10px] font-medium ${item.up ? "text-[#22C55E]" : "text-[#EF4444]"}`}>{item.change}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* ═══════════════════════════════════════════
           HERO — B2B Value Prop + iPad Sector Dashboard
-          Mobile-first: stacks vertically, iPad below copy
           ═══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative pt-24 sm:pt-28 pb-12 sm:pb-20 overflow-hidden">
+      <section className="relative pt-24 sm:pt-28 pb-12 sm:pb-20 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.04) 0%, transparent 70%)" }} />
 
-        <motion.div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
           {/* Mobile-first grid: stacks on mobile, side-by-side on lg */}
           <div className="grid lg:grid-cols-5 gap-8 lg:gap-10 items-start">
             {/* ── Left: Value Prop + CTAs ── */}
@@ -313,7 +213,7 @@ export default function HomePage() {
                 style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
               >
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-                <span className="text-[9px] sm:text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
+                <span className="text-[9px] sm:text-[10px] text-white/50 font-medium uppercase tracking-wider">Egypt&apos;s B2B Hospitality Infrastructure</span>
               </motion.div>
 
               <motion.h1
@@ -338,14 +238,6 @@ export default function HomePage() {
               >
                 HotelsVendors sits between your procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital engine — <strong className="text-white/70">automating the entire flow</strong> from AI demand forecasting to ETA-compliant settlement.
               </motion.p>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.5 }}
-                className="text-[12px] sm:text-[13px] text-white/30 leading-relaxed max-w-lg mb-6 sm:mb-8"
-              >
-                680+ suppliers. 4 licensed funders. 6 governorates. All connected. All live.
-              </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -361,28 +253,16 @@ export default function HomePage() {
                 </Link>
               </motion.div>
 
-              {/* Social proof — mobile compact */}
+              {/* Social proof — honest, no fake numbers */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="flex items-center gap-4 sm:gap-6 flex-wrap"
               >
-                <div className="flex -space-x-2">
-                  {[
-                    { abbr: "SM", bg: "rgba(132,204,22,0.15)", color: "#84cc16" },
-                    { abbr: "EF", bg: "rgba(34,197,94,0.15)", color: "#22C55E" },
-                    { abbr: "CC", bg: "rgba(59,130,246,0.15)", color: "#3B82F6" },
-                    { abbr: "SB", bg: "rgba(212,168,67,0.15)", color: "#D4A843" },
-                  ].map((a, i) => (
-                    <div key={i} className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: a.bg, border: "2px solid #000000" }}>
-                      <span className="text-[7px] sm:text-[8px]" style={{ color: a.color, fontWeight: 700 }}>{a.abbr}</span>
-                    </div>
-                  ))}
-                </div>
                 <div className="text-[9px] sm:text-[10px] text-white/25 leading-tight">
-                  <span className="text-white/50 font-medium">Stella Di Mare · Egyptian Fresh Foods</span>
-                  <br /><span className="text-white/20">CI Capital · Shark-Breaker Logistics</span>
+                  <span className="text-white/50 font-medium">Built for Egypt&apos;s hospitality sector</span>
+                  <br /><span className="text-white/20">Red Sea coastal properties · Cairo · Alexandria · North Coast</span>
                 </div>
               </motion.div>
             </div>
@@ -447,48 +327,21 @@ export default function HomePage() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Honest label — not "Live" */}
+              <p className="text-[9px] text-white/15 text-center mt-3">
+                Dashboard preview — illustrative interface
+              </p>
             </div>
           </div>
 
-          {/* ── Below Hero: Forex Widget + Live Rates (supplementary) ── */}
+          {/* ── Below Hero: Platform capabilities summary ── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 sm:mt-14">
-            <ForexWidget />
-            {/* Live activity feed — shows platform is alive */}
+            {/* Compliance & Security */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="rounded-2xl p-4"
-              style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Zap size={12} style={{ color: "#84cc16" }} />
-                <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Live Activity</span>
-                <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "#84cc16" }} />
-              </div>
-              <div className="space-y-2.5">
-                {[
-                  { text: "PO-2024-0892 issued", sub: "Stella Di Mare → Egyptian Fresh Foods", time: "2m ago", color: "#84cc16" },
-                  { text: "Invoice INV-4451 factored", sub: "EGP 87,500 · CI Capital · 2.1%", time: "8m ago", color: "#3B82F6" },
-                  { text: "Shipment SH-009 delivered", sub: "Shark-Breaker · 4 suppliers consolidated", time: "15m ago", color: "#D4A843" },
-                  { text: "Payment settled", sub: "EGP 48,500 → Supplier IBAN ****4521", time: "32m ago", color: "#22C55E" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: item.color }} />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] text-white/50 font-medium">{item.text}</p>
-                      <p className="text-[8px] text-white/20 truncate">{item.sub}</p>
-                    </div>
-                    <span className="text-[8px] text-white/15 flex-shrink-0">{item.time}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-            {/* Quick trust + CTA card */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
               className="rounded-2xl p-4"
               style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
             >
@@ -499,9 +352,9 @@ export default function HomePage() {
               <div className="space-y-2">
                 {[
                   { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
-                  { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
-                  { icon: Fingerprint, label: "SHA-256 Audit Trail", desc: "Every transaction state" },
-                  { icon: Server, label: "ISO 27001 / SOC 2 Ready", desc: "Institutional-grade security" },
+                  { icon: Server, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
+                  { icon: FileText, label: "SHA-256 Audit Trail", desc: "Every transaction state" },
+                  { icon: Zap, label: "ISO 27001 / SOC 2 Ready", desc: "Institutional-grade security" },
                 ].map((badge) => (
                   <div key={badge.label} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.01)" }}>
                     <badge.icon size={10} style={{ color: "#84cc16" }} />
@@ -512,16 +365,67 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <Link href="/sandbox" className="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 text-[10px] font-semibold rounded-lg transition-all" style={{ backgroundColor: "rgba(132,204,22,0.1)", color: "#84cc16", border: "1px solid rgba(132,204,22,0.15)" }}>
-                <Play size={10} /> Explore Interactive Sandbox
-              </Link>
+            </motion.div>
+
+            {/* Platform Features */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <BrainCircuit size={12} style={{ color: "#84cc16" }} />
+                <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Platform Capabilities</span>
+              </div>
+              <div className="space-y-2">
+                {[
+                  "AI demand forecasting (14-day forward)",
+                  "Automated PO generation & budget blockades",
+                  "ETA e-invoicing with RSA-2048 signing",
+                  "Embedded reverse factoring",
+                  "Shared-route logistics consolidation",
+                  "Real-time anomaly detection",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.01)" }}>
+                    <CheckCircle size={9} style={{ color: "#84cc16" }} />
+                    <p className="text-[9px] text-white/40">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Quick CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="rounded-2xl p-4"
+              style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles size={12} style={{ color: "#84cc16" }} />
+                <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Get Started</span>
+              </div>
+              <p className="text-[11px] text-white/35 leading-relaxed mb-4">
+                Explore the platform with our interactive sandbox or request institutional onboarding for your property group.
+              </p>
+              <div className="space-y-2">
+                <Link href="/sandbox" className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 text-[10px] font-semibold rounded-lg transition-all" style={{ backgroundColor: "rgba(132,204,22,0.1)", color: "#84cc16", border: "1px solid rgba(132,204,22,0.15)" }}>
+                  <Play size={10} /> Explore Interactive Sandbox
+                </Link>
+                <Link href="/register" className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 text-[10px] font-semibold rounded-lg transition-all" style={{ backgroundColor: "rgba(132,204,22,0.1)", color: "#84cc16", border: "1px solid rgba(132,204,22,0.15)" }}>
+                  Request Onboarding <ArrowRight size={10} />
+                </Link>
+              </div>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          TRUST BAR — Animated Scroll
+          TRUST BAR
           ═══════════════════════════════════════════ */}
       <RevealSection>
         <div className="py-10 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#050505" }}>
@@ -744,22 +648,6 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          ANIMATED STATS
-          ═══════════════════════════════════════════ */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Counter end={680} suffix="+" label="Verified Suppliers" icon={Store} />
-            <Counter end={94} suffix="%" label="Forecast Accuracy" icon={TrendingUp} />
-            <Counter end={24} suffix="h" label="Supplier Settlement" icon={Clock} />
-            <Counter end={40} suffix="%" label="Logistics Cost Reduction" icon={Truck} />
-          </div>
-        </div>
-      </section>
-
-      <hr className="section-divider" />
-
-      {/* ═══════════════════════════════════════════
           THREE PILLARS — Staggered Scroll Reveal
           ═══════════════════════════════════════════ */}
       <section className="py-20">
@@ -831,7 +719,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-3 gap-5">
             {[
               { icon: <FileText size={18} style={{ color: "#84cc16" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. GS1/EGS product tax code mapping with Alphabetical Canonical flattening logic. Clear token handling rules. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing. Phase 1 & 2 fully covered.", badges: ["GS1/EGS Tax Code Mapping", "Alphabetical Canonical Flattening", "ETA UUID · RSA-2048", "Phase 1 & 2 Compliant", "Clear Token Handling Rules"], bg: "rgba(132,204,22,0.1)" },
-              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Technology Layer — Not a Financial Intermediary", desc: "HotelsVendors is a technology orchestration layer. We never touch capital. Funders fund. Suppliers receive. Hotels owe. Capital routes programmatically from licensed grantor desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals, settlement reconciliation, and late-repayment protocols.", badges: ["Technology Layer Only", "No Capital Custody", "Programmatic Routing", "Bank-Direct IBAN Settlement", "Auto Accrual & Reconciliation"], bg: "rgba(34,197,94,0.1)" },
+              { icon: <Banknote size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Technology Layer — Not a Financial Intermediary", desc: "HotelsVendors is a technology orchestration layer. We never touch capital. Funders fund. Suppliers receive. Hotels owe. Capital routes programmatically from licensed grantor desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals, settlement reconciliation, and late-repayment protocols.", badges: ["Technology Layer Only", "No Capital Custody", "Programmatic Routing", "Bank-Direct IBAN Settlement", "Auto Accrual & Reconciliation"], bg: "rgba(34,197,94,0.1)" },
               { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness with clean, real-time risk parameters. FRA Anti-Fraud Compliance via three-way matching gate: PO + ETA UUID + Signed Digital GRN. ISO/IEC 27001 and SOC 2 Type II audit-ready architecture.", badges: ["I-Score Ready", "FRA Anti-Fraud — 3-Way Match", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
             ].map((card, i) => (
               <RevealSection key={card.title} delay={i * 0.1}>
@@ -861,7 +749,6 @@ export default function HomePage() {
 
           {/* ── SLA & Resilience Badges ── */}
           <div className="mt-8 space-y-4">
-            {/* SLA Uptime Commitment */}
             <RevealSection delay={0.35}>
               <div className="rounded-xl p-4 flex items-center gap-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
@@ -872,13 +759,9 @@ export default function HomePage() {
                     <strong className="text-white/60">99.99% Uptime Target — Operational Integrity Protocol:</strong> Hosting infrastructure maintains redundant, multi-zone configurations with automated failover — keeping transaction data streams running without interruption. Architecture aligned with CIB and Paymob aggregator SLA expectations.
                   </p>
                 </div>
-                <div className="flex-shrink-0">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-                </div>
               </div>
             </RevealSection>
 
-            {/* Offline-First Fallback */}
             <RevealSection delay={0.4}>
               <div className="rounded-xl p-4 flex items-center gap-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(59,130,246,0.08)" }}>
@@ -888,9 +771,6 @@ export default function HomePage() {
                   <p className="text-[11px] text-white/40 leading-relaxed">
                     <strong className="text-white/60">Offline-First Resilience:</strong> The platform utilizes a secure local caching layer to store serialized transaction data arrays safely during connectivity interruptions. Queued submissions sync automatically with the ETA portal the moment connectivity recovers — zero data loss, zero manual re-entry.
                   </p>
-                </div>
-                <div className="flex-shrink-0">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#3B82F6" }} />
                 </div>
               </div>
             </RevealSection>

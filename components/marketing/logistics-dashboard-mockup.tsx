@@ -2,22 +2,17 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import {
   Truck, Package, MapPin, Banknote, TrendingUp, CheckCircle2,
   Clock, ArrowUpRight, Search, Bell, Navigation,
 } from "lucide-react";
 
 const kpiCards = [
-  { label: "Active Loads", value: "7", change: "+3", up: true, color: "#D4A843" },
-  { label: "Truck Utilization", value: "94%", change: "+8%", up: true, color: "#84cc16" },
-  { label: "On-Time Rate", value: "98.2%", change: "+1.4%", up: true, color: "#22C55E" },
-  { label: "This Week", value: "EGP 42K", change: "+15%", up: true, color: "#3B82F6" },
-];
-
-const routes = [
-  { id: "RT-009", from: "Cairo Hub", to: "Sharm El-Sheikh", load: "4 suppliers", eta: "14h", status: "In Transit", color: "#3B82F6" },
-  { id: "RT-010", from: "Alexandria", to: "Hurghada", load: "3 suppliers", eta: "18h", status: "Loading", color: "#D4A843" },
-  { id: "RT-011", from: "Cairo Hub", to: "Marsa Alam", load: "2 suppliers", eta: "22h", status: "Scheduled", color: "#84cc16" },
+  { label: "Active Loads", value: "—", change: "—", up: true, color: "#D4A843" },
+  { label: "Truck Utilization", value: "—", change: "—", up: true, color: "#84cc16" },
+  { label: "On-Time Rate", value: "—", change: "—", up: true, color: "#22C55E" },
+  { label: "This Week", value: "—", change: "—", up: true, color: "#3B82F6" },
 ];
 
 export function LogisticsDashboardMockup() {
@@ -45,10 +40,16 @@ export function LogisticsDashboardMockup() {
           </div>
         </div>
         <div className="p-4">
+          {/* Header — with HV logo */}
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-[13px] font-semibold text-white">Logistics Control</h3>
-              <p className="text-[9px] text-white/25">Shark-Breaker · Coastal Operations</p>
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <Image src="/knight-icon.svg" alt="HV" width={18} height={18} className="object-contain" />
+              </div>
+              <div>
+                <h3 className="text-[13px] font-semibold text-white">Logistics Control</h3>
+                <p className="text-[9px] text-white/25">Your Fleet · Your Account</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-20 h-6 rounded-md flex items-center gap-1 px-2" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -56,7 +57,7 @@ export function LogisticsDashboardMockup() {
                 <span className="text-[8px] text-white/15">Search...</span>
               </div>
               <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(212,168,67,0.15)" }}>
-                <span className="text-[7px]" style={{ color: "#D4A843", fontWeight: 700 }}>SB</span>
+                <span className="text-[7px]" style={{ color: "#D4A843", fontWeight: 700 }}>LF</span>
               </div>
             </div>
           </div>
@@ -78,10 +79,14 @@ export function LogisticsDashboardMockup() {
           <div className="rounded-lg p-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
             <div className="flex items-center justify-between mb-2.5">
               <span className="text-[9px] font-medium text-white/40">Active Routes</span>
-              <span className="text-[8px]" style={{ color: "#D4A843" }}>Live GPS ✓</span>
+              <span className="text-[8px]" style={{ color: "#D4A843" }}>GPS Tracking</span>
             </div>
             <div className="space-y-2">
-              {routes.map((route) => (
+              {[
+                { id: "RT-001", from: "Hub A", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#3B82F6" },
+                { id: "RT-002", from: "Hub B", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#D4A843" },
+                { id: "RT-003", from: "Hub C", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#84cc16" },
+              ].map((route) => (
                 <div key={route.id} className="flex items-center justify-between p-2 rounded-md" style={{ backgroundColor: "rgba(255,255,255,0.01)" }}>
                   <div className="flex items-center gap-2 min-w-0">
                     <Navigation size={8} style={{ color: route.color }} />
@@ -91,7 +96,6 @@ export function LogisticsDashboardMockup() {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-2">
-                    <p className="text-[8px] text-white/40">ETA {route.eta}</p>
                     <p className="text-[7px]" style={{ color: route.color }}>{route.status}</p>
                   </div>
                 </div>
@@ -102,15 +106,14 @@ export function LogisticsDashboardMockup() {
           <div className="mt-3 rounded-lg p-2.5 flex items-center justify-between" style={{ backgroundColor: "rgba(212,168,67,0.03)", border: "1px solid rgba(212,168,67,0.06)" }}>
             <div className="flex items-center gap-2">
               <Banknote size={10} style={{ color: "#D4A843" }} />
-              <span className="text-[8px] text-white/40">Next payout: <span className="font-medium" style={{ color: "#D4A843" }}>EGP 28,500</span> · 4h</span>
+              <span className="text-[8px] text-white/40">Payouts activate after POD verification</span>
             </div>
-            <span className="text-[7px] font-medium" style={{ color: "#D4A843" }}>Auto-settlement · POD Verified</span>
+            <span className="text-[7px] font-medium" style={{ color: "#D4A843" }}>Auto-settlement</span>
           </div>
         </div>
       </div>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "#0f0f0f", border: "1px solid rgba(212,168,67,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#D4A843" }} />
-        <span className="text-[8px] font-medium" style={{ color: "#D4A843" }}>7 Trucks · 94% Utilization</span>
+        <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Illustrative Preview</span>
       </motion.div>
     </motion.div>
   );

@@ -2,23 +2,17 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import {
   Building2, ShoppingCart, Receipt, Truck, Banknote, TrendingUp, TrendingDown,
   CheckCircle2, Clock, AlertCircle, ArrowUpRight, Search, Bell,
 } from "lucide-react";
 
 const kpiCards = [
-  { label: "Open POs", value: "24", change: "+3", up: true, color: "#84cc16" },
-  { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "#3B82F6" },
-  { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "#D4A843" },
-  { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "#22C55E" },
-];
-
-const recentActivity = [
-  { icon: CheckCircle2, text: "PO-2024-0892 approved", time: "2m ago", color: "#22C55E" },
-  { icon: Clock, text: "Invoice #INV-4451 pending ETA", time: "8m ago", color: "#D4A843" },
-  { icon: Truck, text: "Shipment SH-009 in transit", time: "15m ago", color: "#3B82F6" },
-  { icon: AlertCircle, text: "Budget alert: F&B > 85%", time: "32m ago", color: "#EF4444" },
+  { label: "Open POs", value: "—", change: "—", up: true, color: "#84cc16" },
+  { label: "Pending Invoices", value: "—", change: "—", up: false, color: "#3B82F6" },
+  { label: "Active Deliveries", value: "—", change: "—", up: true, color: "#D4A843" },
+  { label: "Factored This Month", value: "—", change: "—", up: true, color: "#22C55E" },
 ];
 
 const chartBars = [35, 52, 45, 68, 55, 72, 60, 85, 70, 90, 78, 95];
@@ -50,11 +44,16 @@ export function HotelDashboardMockup() {
           </div>
         </div>
         <div className="p-4">
-          {/* Header */}
+          {/* Header — with HV logo */}
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-[13px] font-semibold text-white">Hotel Dashboard</h3>
-              <p className="text-[9px] text-white/25">Stella Di Mare Resort · Sharm El-Sheikh</p>
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <Image src="/knight-icon.svg" alt="HV" width={18} height={18} className="object-contain" />
+              </div>
+              <div>
+                <h3 className="text-[13px] font-semibold text-white">Hotel Dashboard</h3>
+                <p className="text-[9px] text-white/25">Your Property · Your Account</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-20 h-6 rounded-md flex items-center gap-1 px-2" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -103,12 +102,17 @@ export function HotelDashboardMockup() {
             <div className="col-span-2 rounded-lg p-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
               <span className="text-[9px] font-medium text-white/40 block mb-2">Activity</span>
               <div className="space-y-2">
-                {recentActivity.map((item, i) => (
+                {[
+                  { icon: CheckCircle2, text: "Connect your account to view activity", time: "", color: "#22C55E" },
+                  { icon: Clock, text: "Data will appear after first transaction", time: "", color: "#D4A843" },
+                  { icon: Truck, text: "Link suppliers to track deliveries", time: "", color: "#3B82F6" },
+                  { icon: AlertCircle, text: "Set budget alerts in Settings", time: "", color: "#EF4444" },
+                ].map((item, i) => (
                   <div key={i} className="flex items-start gap-1.5">
                     <item.icon size={8} className="mt-0.5 flex-shrink-0" style={{ color: item.color }} />
                     <div className="min-w-0">
                       <p className="text-[7px] text-white/40 leading-tight truncate">{item.text}</p>
-                      <p className="text-[6px] text-white/15">{item.time}</p>
+                      {item.time && <p className="text-[6px] text-white/15">{item.time}</p>}
                     </div>
                   </div>
                 ))}
@@ -126,14 +130,13 @@ export function HotelDashboardMockup() {
                 </div>
               ))}
             </div>
-            <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>PO-2024-0892</span>
+            <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>Workflow Pipeline</span>
           </div>
         </div>
       </div>
-      {/* Floating badge */}
+      {/* Honest label — not "Live" */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "#0f0f0f", border: "1px solid rgba(132,204,22,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-        <span className="text-[8px] font-medium" style={{ color: "#84cc16" }}>Live · ETA Connected</span>
+        <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Illustrative Preview</span>
       </motion.div>
     </motion.div>
   );

@@ -65,10 +65,28 @@ function RegisterPage() {
   });
 
   useEffect(() => {
-    const roleParam = searchParams.get("role");
-    const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
-    if (roleParam && validRoles.includes(roleParam.toUpperCase() as StakeholderRole)) {
-      setForm((prev) => ({ ...prev, role: roleParam.toUpperCase() as StakeholderRole }));
+    // Support both `role` param (direct) and `sector` param (from landing page)
+    const roleParam = searchParams.get("role") || searchParams.get("sector");
+    const sectorToRole: Record<string, StakeholderRole> = {
+      procurement: "HOTEL",
+      cashflow: "SUPPLIER",
+      fintech: "FACTORING",
+      ai: "LOGISTICS",
+      hotel: "HOTEL",
+      supplier: "SUPPLIER",
+      factoring: "FACTORING",
+      logistics: "LOGISTICS",
+    };
+    if (roleParam) {
+      const mapped = sectorToRole[roleParam.toLowerCase()];
+      if (mapped) {
+        setForm((prev) => ({ ...prev, role: mapped }));
+      } else {
+        const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
+        if (validRoles.includes(roleParam.toUpperCase() as StakeholderRole)) {
+          setForm((prev) => ({ ...prev, role: roleParam.toUpperCase() as StakeholderRole }));
+        }
+      }
     }
   }, [searchParams]);
 
