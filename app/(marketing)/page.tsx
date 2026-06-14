@@ -954,34 +954,3 @@ export default function HomePage() {
     </main>
   );
 }
-
-      <MarketingFooter />
-    </main>
-  );
-}
-{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
-                  style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}
-                >
-                  Explore Interactive Sandbox
-                </motion.a>
-                <motion.a
-                  href="/marketplace"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
-                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
-                >
-                  <Sparkles size={14} /> View Marketplace
-                </motion.a>
-              </div>
-              <p className="text-[10px] text-white/20 mt-6">Dedicated onboarding · Integration audit included · Zero liability for logistics or collection defaults</p>
-            </motion.div>
-          </RevealSection>
-        </div>
-      </section>
-
-      <MarketingFooter />
-    </main>
-  );
-}
