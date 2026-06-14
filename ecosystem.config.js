@@ -14,9 +14,10 @@
 module.exports = {
   apps: [
     {
-      name: "hotels-vendors",
-      script: "server.js",
-      cwd: "/var/www/hotels-vendors/current",
+      name: "hotelsvendors",
+      script: "npm",
+      args: "start",
+      cwd: "/var/www/hotelsvendors-v2/current",
       instances: "max",
       exec_mode: "cluster",
       autorestart: true,

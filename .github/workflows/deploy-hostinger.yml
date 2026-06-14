@@ -34,7 +34,7 @@ jobs:
             echo "═══════════════════════════════════════════"
 
             # 1. Go to the root where .git lives
-            cd /var/www/hotels-vendors
+            cd /var/www/hotelsvendors-v2
             
             echo "[1/7] Updating source code..."
             git fetch origin main
@@ -43,8 +43,8 @@ jobs:
             # 2. Resolve the 'current' symlink problem
             # We ensure the code is updated in the root, and we update the symlink to point to root
             # (Simplifying the structure to avoid release-folder confusion)
-            ln -sfn /var/www/hotels-vendors /var/www/hotels-vendors/current
-            cd /var/www/hotels-vendors/current
+            ln -sfn /var/www/hotelsvendors-v2 /var/www/hotelsvendors-v2/current
+            cd /var/www/hotelsvendors-v2/current
 
             echo "[2/7] Cleaning old modules..."
             rm -rf node_modules
@@ -61,7 +61,7 @@ jobs:
 
             echo "[6/7] HARD RESTART of application..."
             # Delete process to clear memory and force new code load
-            pm2 delete hotels-vendors || true
+            pm2 delete hotelsvendors || true
             pm2 start ecosystem.config.js --env production
             pm2 save
 
