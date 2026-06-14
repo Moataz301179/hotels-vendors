@@ -1,4 +1,4 @@
-name: Deploy to Hostinger VPS (Native)
+name: Deploy to Hostinger VPS (Native - Hard Reset)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Native Build & Deploy
+    name: Forced Native Deploy
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -25,51 +25,57 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Native Deploy to VPS
+      - name: Forced Deploy to VPS
         run: |
           ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
             set -e
             echo "═══════════════════════════════════════════"
-            echo "  Hotels Vendors — Native Auto Deploy Started"
-            echo "  Commit: ${{ github.sha }}"
-            echo "  Method: PM2 + Bare Metal"
+            echo "  FORCED DEPLOYMENT STARTED"
             echo "═══════════════════════════════════════════"
 
-            # 1. Navigate to project root
+            # 1. Go to the root where .git lives
             cd /var/www/hotels-vendors
-
-            # 2. Pull latest code
-            echo "[1/6] Updating source code..."
+            
+            echo "[1/7] Updating source code..."
             git fetch origin main
             git reset --hard origin/main
 
-            # 3. Install dependencies
-            echo "[2/6] Installing dependencies..."
+            # 2. Resolve the 'current' symlink problem
+            # We ensure the code is updated in the root, and we update the symlink to point to root
+            # (Simplifying the structure to avoid release-folder confusion)
+            ln -sfn /var/www/hotels-vendors /var/www/hotels-vendors/current
+            cd /var/www/hotels-vendors/current
+
+            echo "[2/7] Cleaning old modules..."
+            rm -rf node_modules
+
+            echo "[3/7] Installing dependencies..."
             npm ci --legacy-peer-deps
 
-            # 4. Database migrations
-            echo "[3/6] Running Prisma migrations..."
+            echo "[4/7] Database migrations..."
+            npx prisma generate
             npx prisma migrate deploy
 
-            # 5. Production build
-            echo "[4/6] Building application..."
+            echo "[5/7] Production build..."
             npm run build
 
-            # 6. PM2 Reload
-            echo "[5/6] Reloading application with PM2..."
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            echo "[6/7] HARD RESTART of application..."
+            # Delete process to clear memory and force new code load
+            pm2 delete hotels-vendors || true
+            pm2 start ecosystem.config.js --env production
+            pm2 save
 
-            echo "[6/6] Health check..."
-            sleep 5
-            curl -sI http://localhost:3000/api/health | grep "200 OK" || echo "Warning: Health check failed"
+            echo "[7/7] Verifying update..."
+            sleep 10
+            curl -sI http://localhost:3000/api/health | grep "200 OK" || (echo "HEALTH CHECK FAILED" && exit 1)
 
             echo "═══════════════════════════════════════════"
-            echo "  Native Deploy Complete"
+            echo "  DEPLOYMENT VERIFIED AND LIVE"
             echo "═══════════════════════════════════════════"
           EOF
 
       - name: Verify deployment
         run: |
-          sleep 10
+          sleep 15
           curl -sfI https://www.hotelsvendors.com/api/health || echo "Health check failed — check server logs"
 
