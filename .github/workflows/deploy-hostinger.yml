@@ -1,4 +1,4 @@
-name: Deploy to Hostinger VPS
+name: Deploy to Hostinger VPS (Native)
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
 
 jobs:
   deploy:
-    name: Build & Deploy to Hostinger (Docker Compose)
+    name: Native Build & Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
@@ -25,40 +25,46 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to VPS (Docker Compose)
+      - name: Native Deploy to VPS
         run: |
           ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
             set -e
             echo "═══════════════════════════════════════════"
-            echo "  Hotels Vendors — Auto Deploy Started"
+            echo "  Hotels Vendors — Native Auto Deploy Started"
             echo "  Commit: ${{ github.sha }}"
-            echo "  Method: Docker Compose"
+            echo "  Method: PM2 + Bare Metal"
             echo "═══════════════════════════════════════════"
 
+            # 1. Navigate to project root
             cd /var/www/hotels-vendors
 
-            echo "[1/5] Pulling latest code..."
+            # 2. Pull latest code
+            echo "[1/6] Updating source code..."
             git fetch origin main
             git reset --hard origin/main
 
-            echo "[2/5] Running Prisma migrations..."
-            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
+            # 3. Install dependencies
+            echo "[2/6] Installing dependencies..."
+            npm ci --legacy-peer-deps
 
-            echo "[3/5] Building all services..."
-            docker compose -f docker-compose.swarm.yml build --no-cache
+            # 4. Database migrations
+            echo "[3/6] Running Prisma migrations..."
+            npx prisma migrate deploy
 
-            echo "[4/5] Starting full stack..."
-            docker compose -f docker-compose.swarm.yml up -d
+            # 5. Production build
+            echo "[4/6] Building application..."
+            npm run build
 
-            echo "[5/5] Health checks..."
-            sleep 10
-            APP_STATUS=$(docker inspect --format='{{.State.Status}}' hv-app 2>/dev/null || echo "unknown")
-            WORKER_STATUS=$(docker inspect --format='{{.State.Status}}' hv-swarm-worker 2>/dev/null || echo "unknown")
-            echo "  App:     $APP_STATUS"
-            echo "  Worker:  $WORKER_STATUS"
+            # 6. PM2 Reload
+            echo "[5/6] Reloading application with PM2..."
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+
+            echo "[6/6] Health check..."
+            sleep 5
+            curl -sI http://localhost:3000/api/health | grep "200 OK" || echo "Warning: Health check failed"
 
             echo "═══════════════════════════════════════════"
-            echo "  Deploy Complete"
+            echo "  Native Deploy Complete"
             echo "═══════════════════════════════════════════"
           EOF
 
@@ -66,3 +72,4 @@ jobs:
         run: |
           sleep 10
           curl -sfI https://www.hotelsvendors.com/api/health || echo "Health check failed — check server logs"
+
