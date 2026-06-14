@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Clock } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingNav() {
