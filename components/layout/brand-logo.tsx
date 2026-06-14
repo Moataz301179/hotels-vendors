@@ -11,10 +11,10 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  sm: { icon: 28, text: 14, tracking: "-0.01em" },
-  md: { icon: 36, text: 16, tracking: "-0.02em" },
-  lg: { icon: 48, text: 20, tracking: "-0.02em" },
-  xl: { icon: 64, text: 26, tracking: "-0.03em" },
+  sm: { icon: 28, text: 13, slogan: 8, tracking: "-0.01em" },
+  md: { icon: 36, text: 16, slogan: 10, tracking: "-0.02em" },
+  lg: { icon: 48, text: 20, slogan: 12, tracking: "-0.02em" },
+  xl: { icon: 64, text: 26, slogan: 15, tracking: "-0.03em" },
 };
 
 export function BrandLogo({
@@ -25,41 +25,51 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
   const color = variant === "dark" ? "#ffffff" : "#0B0F1A";
-  const bgColor = variant === "dark" ? "#000000" : "#000000";
-  const borderColor = variant === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.1)";
+  const bgColor = "#000000"; // Black background for the logo container
+  const borderColor = "rgba(255,255,255,0.15)";
 
   return (
     <div className={cn("flex items-center gap-2.5 shrink-0", className)}>
-      {/* Knight / Horse head logo — chess piece in white on black */}
+      {/* Chess Knight logo in white on a black background container */}
       <div
-        className="relative flex items-center justify-center rounded-lg overflow-hidden"
+        className="relative flex items-center justify-center rounded-lg overflow-hidden border"
         style={{
           width: dims.icon,
           height: dims.icon,
           backgroundColor: bgColor,
-          border: `1px solid ${borderColor}`,
+          borderColor: borderColor,
         }}
       >
         <Image
-          src="/knight-icon.svg"
-          alt="HotelsVendors — Knight"
+          src="/logo-brand.jpg"
+          alt="Hotels Vendors"
           width={Math.round(dims.icon * 0.65)}
           height={Math.round(dims.icon * 0.65)}
           className="object-contain"
         />
       </div>
       {showText && (
-        <span
-          style={{
-            color,
-            fontWeight: 600,
-            fontSize: dims.text,
-            letterSpacing: dims.tracking,
-            lineHeight: 1,
-          }}
-        >
-          HotelsVendors
-        </span>
+        <div className="flex flex-col justify-center select-none">
+          <span
+            className="font-bold tracking-tight leading-none"
+            style={{
+              color,
+              fontSize: dims.text,
+              letterSpacing: dims.tracking,
+            }}
+          >
+            Hotels Vendors
+          </span>
+          <span
+            className="tracking-wider uppercase font-medium opacity-65 mt-0.5 leading-none"
+            style={{
+              color: variant === "dark" ? "rgba(255,255,255,0.7)" : "rgba(11,15,26,0.7)",
+              fontSize: dims.slogan,
+            }}
+          >
+            Smarter Together
+          </span>
+        </div>
       )}
     </div>
   );
