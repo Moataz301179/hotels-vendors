@@ -35,7 +35,7 @@ jobs:
             echo "  Method: Docker Compose"
             echo "═══════════════════════════════════════════"
 
-            cd /var/www/hotelsvendors
+            cd /var/www/hotels-vendors
 
             echo "[1/5] Pulling latest code..."
             git fetch origin main
