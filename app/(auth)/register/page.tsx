@@ -25,7 +25,6 @@ function RegisterSkeleton() {
         <div className="h-12 bg-white/[0.04] rounded" />
       </div>
     </div>
-  </div>
   );
 }
 

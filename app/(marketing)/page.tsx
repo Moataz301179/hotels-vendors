@@ -954,17 +954,6 @@ export default function HomePage() {
     </main>
   );
 }
-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
-                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
-                >
-                  <Sparkles size={14} /> View Marketplace
-                </motion.a>
-              </div>
-              <p className="text-[10px] text-white/20 mt-6">Dedicated onboarding · Integration audit included · Zero liability for logistics or collection defaults</p>
-            </motion.div>
-          </RevealSection>
-        </div>
-      </section>
 
       <MarketingFooter />
     </main>
