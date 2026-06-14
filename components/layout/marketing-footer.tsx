@@ -63,6 +63,7 @@ export function MarketingFooter() {
             <ul className="space-y-2.5">
               {[
                 { label: "About", href: "/about" },
+                { label: "Admin Control Panel", href: "/admin" },
                 { label: "Sign In", href: "/login" },
                 { label: "Get Started", href: "/register" },
               ].map((item) => (

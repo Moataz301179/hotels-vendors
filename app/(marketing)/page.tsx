@@ -38,6 +38,15 @@ import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboa
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 import { IPadFrame } from "@/components/marketing/ipad-frame";
+import { HeroVisual } from "@/components/marketing/hero-visual";
+import { SectorVisual } from "@/components/marketing/sector-visual";
+import { PillarVisual } from "@/components/marketing/pillar-visual";
+
+// ─── RevealSection ────────────────────────────────────────────────
+
+// ─── RevealSection ────────────────────────────────────────────────
+
+// ─── RevealSection ────────────────────────────────────────────────
 
 // ─── RevealSection ────────────────────────────────────────────────
 function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -121,8 +130,8 @@ const SECTORS: SectorData[] = [
     key: "ai",
     label: "AI Automation",
     icon: Cpu,
-    accent: "#D4A843",
-    accentMuted: "rgba(212,168,67,0.1)",
+    accent: "#6366f1",
+    accentMuted: "rgba(99,102,241,0.1)",
     hook: "Autonomous agents running your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues with automatic retry and escalation, and real-time telemetry across every transaction.",
     bullets: [
       "Autonomous agent orchestration with self-healing protocols and circuit-breaker patterns",
@@ -195,9 +204,36 @@ export default function HomePage() {
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
+          MARKET INDEX TICKER
+          ═══════════════════════════════════════════ */}
+      <div className="fixed top-16 left-0 right-0 z-40 h-9 border-b border-white/10 bg-white/[0.03] backdrop-blur-xl flex items-center overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+        <div className="flex items-center gap-4 whitespace-nowrap animate-ticker">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex items-center gap-8 px-4">
+              {[
+                { item: "Fresh Linen", change: "+2.4%", up: true },
+                { item: "Industrial Detergent", change: "-1.1%", up: false },
+                { item: "Kitchenware Bulk", change: "+0.8%", up: true },
+                { item: "Pool Chemicals", change: "-0.5%", up: false },
+                { item: "Guest Amenities", change: "+1.2%", up: true },
+                { item: "HVAC Filters", change: "+0.3%", up: true },
+              ].map((ticker) => (
+                <div key={ticker.item} className="flex items-center gap-2">
+                  <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">{ticker.item}</span>
+                  <span className={`text-[10px] font-mono font-bold ${ticker.up ? "text-green-400" : "text-red-400"}`}>
+                    {ticker.change} {ticker.up ? "▲" : "▼"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════
           HERO — B2B Value Prop + iPad Sector Dashboard
           ═══════════════════════════════════════════ */}
-      <section className="relative pt-24 sm:pt-28 pb-12 sm:pb-20 overflow-hidden">
+      <section className="relative pt-32 sm:pt-36 pb-12 sm:pb-20 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.04) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
@@ -220,36 +256,35 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[30px] sm:text-[42px] md:text-[52px] lg:text-[56px] leading-[1.04] tracking-tight mb-4 sm:mb-6"
-                style={{ color: "#ffffff", fontWeight: 700 }}
+                className="text-[32px] sm:text-[48px] md:text-[60px] lg:text-[64px] leading-[1.0] tracking-tight mb-6"
+                style={{ color: "#ffffff", fontWeight: 800 }}
               >
-                Your Suppliers Get Paid
+                Institutional-Grade<br />
+                <span className="text-gradient-lime">Hospitality Rails.</span>
                 <br />
-                <span className="text-gradient-lime">In 24 Hours.</span>
-                <br />
-                <span className="text-white/60">You Keep Net-60+.</span>
+                <span className="text-white/50 font-medium">Zero Debt. Absolute Compliance.</span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.4 }}
-                className="text-[14px] sm:text-[15px] text-white/50 leading-relaxed max-w-lg mb-2 sm:mb-3"
+                className="text-[15px] sm:text-[17px] text-white/50 leading-relaxed max-w-lg mb-8"
               >
-                HotelsVendors sits between your procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital engine — <strong className="text-white/70">automating the entire flow</strong> from AI demand forecasting to ETA-compliant settlement.
+                HotelsVendors is the vertical operating system for Egyptian hospitality. We synchronize the <strong>HV Governance Layer</strong> with the <strong>INVO Infrastructure Engine</strong> to automate procurement, secure cashflow, and enforce ETA compliance at scale.
               </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8"
+                className="flex flex-wrap gap-3 mb-8"
               >
-                <Link href="/register" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-                  Request Institutional Onboarding <ArrowRight size={14} />
+                <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-bold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.3)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+                  Deploy Infrastructure <ArrowRight size={16} />
                 </Link>
-                <Link href="/sandbox" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
-                  <Play size={13} /> Try Sandbox
+                <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.4)", color: "#84cc16" }}>
+                  <Play size={15} /> Launch Architecture Sandbox
                 </Link>
               </motion.div>
 
@@ -269,8 +304,9 @@ export default function HomePage() {
 
             {/* ── Right: iPad-Framed Sector Dashboard ── */}
             <div className="lg:col-span-2 order-2">
-              {/* Sector tabs — horizontal scroll on mobile */}
-              <div className="flex gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+              <HeroVisual>
+                {/* Sector tabs — horizontal scroll on mobile */}
+                <div className="flex gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
                 {[
                   { key: "procurement" as SectorKey, label: "Hotel", icon: Building2, accent: "#84cc16" },
                   { key: "cashflow" as SectorKey, label: "Supplier", icon: Store, accent: "#22C55E" },
@@ -332,7 +368,9 @@ export default function HomePage() {
               <p className="text-[9px] text-white/15 text-center mt-3">
                 Dashboard preview — illustrative interface
               </p>
-            </div>
+              </HeroVisual>
+              </div>
+
           </div>
 
           {/* ── Below Hero: Platform capabilities summary ── */}
@@ -574,70 +612,74 @@ export default function HomePage() {
                   </Link>
                 </div>
 
-                {/* Right: Signup Form */}
-                <div className="lg:col-span-2 rounded-2xl p-6" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <h4 className="text-[14px] font-bold text-white mb-1">Request Access</h4>
-                  <p className="text-[11px] text-white/30 mb-5">We&apos;ll match you to the right onboarding flow.</p>
+                {/* Right: Visual + Signup Form */}
+                <div className="lg:col-span-2 flex flex-col gap-6">
+                  <SectorVisual sector={activeSector} accentColor={currentSector.accent} />
+                  
+                  <div className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <h4 className="text-[14px] font-bold text-white mb-1">Request Access</h4>
+                    <p className="text-[11px] text-white/30 mb-5">We&apos;ll match you to the right onboarding flow.</p>
 
-                  {submitSuccess ? (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="rounded-xl p-5 text-center"
-                      style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
-                    >
-                      <CheckCircle2 size={28} className="mx-auto mb-3" style={{ color: "#22C55E" }} />
-                      <p className="text-[13px] font-medium text-white mb-1">Application Received</p>
-                      <p className="text-[11px] text-white/40">Our team will contact you within 24 hours.</p>
-                    </motion.div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-3">
-                      <div>
-                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Company / Property</label>
-                        <input
-                          type="text"
-                          value={companyName}
-                          onChange={(e) => setCompanyName(e.target.value)}
-                          placeholder={currentSector.placeholder}
-                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
-                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
-                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
-                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Work Email</label>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="you@company.com"
-                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
-                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
-                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
-                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting || !companyName.trim() || !email.trim()}
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: currentSector.accent, color: "#000000" }}
+                    {submitSuccess ? (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="rounded-xl p-5 text-center"
+                        style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
                       >
-                        {isSubmitting ? (
-                          <span className="flex items-center gap-2">
-                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                            Submitting…
-                          </span>
-                        ) : (
-                          <>Submit Application <Send size={13} /></>
-                        )}
-                      </button>
-                      <p className="text-[10px] text-white/20 text-center">
-                        Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · Data orchestration only · No liability for logistics or collection
-                      </p>
-                    </form>
-                  )}
+                        <CheckCircle2 size={28} className="mx-auto mb-3" style={{ color: "#22C55E" }} />
+                        <p className="text-[13px] font-medium text-white mb-1">Application Received</p>
+                        <p className="text-[11px] text-white/40">Our team will contact you within 24 hours.</p>
+                      </motion.div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-3">
+                        <div>
+                          <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Company / Property</label>
+                          <input
+                            type="text"
+                            value={companyName}
+                            onChange={(e) => setCompanyName(e.target.value)}
+                            placeholder={currentSector.placeholder}
+                            className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                            style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                            onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                            onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Work Email</label>
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@company.com"
+                            className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                            style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                            onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                            onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={isSubmitting || !companyName.trim() || !email.trim()}
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          style={{ backgroundColor: currentSector.accent, color: "#000000" }}
+                        >
+                          {isSubmitting ? (
+                            <span className="flex items-center gap-2">
+                              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                              Submitting…
+                            </span>
+                          ) : (
+                            <>Submit Application <Send size={13} /></>
+                          )}
+                        </button>
+                        <p className="text-[10px] text-white/20 text-center">
+                          Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · Data orchestration only · No liability for logistics or collection
+                        </p>
+                      </form>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -666,9 +708,9 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Stretch working capital to net-90+ without corporate debt.", href: "/register", cta: "Schedule Procurement Audit", color: "#84cc16" },
-              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. No more 180-day collection chases across regional hotel clusters. On-site GRN validation unlocks non-recourse, bank-direct settlement.", href: "/register", cta: "Request Capital Assessment", color: "#22C55E" },
-              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow — not paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail.", href: "/register", cta: "Schedule Integration Audit", color: "#3B82F6" },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Stretch working capital to net-90+ without corporate debt.", href: "/register", cta: "Schedule Procurement Audit", color: "#84cc16", type: "engine" as const },
+              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. No more 180-day collection chases across regional hotel clusters. On-site GRN validation unlocks non-recourse, bank-direct settlement.", href: "/register", cta: "Request Capital Assessment", color: "#22C55E", type: "capital" as const },
+              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow — not paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail.", href: "/register", cta: "Schedule Integration Audit", color: "#3B82F6", type: "shield" as const },
             ].map((role, i) => (
               <RevealSection key={role.title} delay={i * 0.12}>
                 <motion.div
@@ -677,6 +719,7 @@ export default function HomePage() {
                   className="rounded-2xl p-0 overflow-hidden h-full"
                   style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
+                  <PillarVisual type={role.type} accentColor={role.color} />
                   <div className="h-1.5" style={{ background: `linear-gradient(to right, ${role.color}, ${role.color}88)` }} />
                   <div className="p-7">
                     <div className="flex items-center gap-3 mb-5">
@@ -886,6 +929,48 @@ export default function HomePage() {
                   href="/sandbox"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
+                  style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}
+                >
+                  Explore Interactive Sandbox
+                </motion.a>
+                <motion.a
+                  href="/marketplace"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
+                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
+                >
+                  <Sparkles size={14} /> View Marketplace
+                </motion.a>
+              </div>
+              <p className="text-[10px] text-white/20 mt-6">Dedicated onboarding · Integration audit included · Zero liability for logistics or collection defaults</p>
+            </motion.div>
+          </RevealSection>
+        </div>
+      </section>
+
+      <MarketingFooter />
+    </main>
+  );
+}
+8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
+                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
+                >
+                  <Sparkles size={14} /> View Marketplace
+                </motion.a>
+              </div>
+              <p className="text-[10px] text-white/20 mt-6">Dedicated onboarding · Integration audit included · Zero liability for logistics or collection defaults</p>
+            </motion.div>
+          </RevealSection>
+        </div>
+      </section>
+
+      <MarketingFooter />
+    </main>
+  );
+}
+{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
                   style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}
                 >

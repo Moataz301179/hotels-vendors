@@ -19,7 +19,7 @@ export function MarketingNav() {
     { label: "Platform", href: "/platform" },
     { label: "Marketplace", href: "/marketplace" },
     { label: "Factoring", href: "/factoring-service" },
-    { label: "Logistics", href: "/logistics-service" },
+    { label: "INVO Infra", href: "/logistics-service" },
     { label: "Pricing", href: "/pricing" },
   ];
 
@@ -27,7 +27,7 @@ export function MarketingNav() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-border ${
         scrolled
-          ? "bg-black/95 backdrop-blur-sm"
+          ? "bg-gradient-to-b from-black/95 via-black/80 to-transparent backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -38,6 +38,25 @@ export function MarketingNav() {
             HotelsVendors
           </span>
         </Link>
+
+        {/* Fintech Widget */}
+        <div className="hidden xl:flex items-center gap-6 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md">
+          <div className="flex items-center gap-2 border-r border-white/10 pr-4">
+            <Clock size={12} className="text-white/40" />
+            <span className="text-[10px] font-mono text-white/60">{currentTime}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-white/30 uppercase font-medium">USD/EGP</span>
+              <span className="text-[11px] font-mono text-white font-semibold">48.24 <span className="text-green-400 text-[9px]">▲</span></span>
+            </div>
+            <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
+              <TrendingUp size={12} className="text-[#84cc16]" />
+              <span className="text-[10px] text-white/30 uppercase font-medium">Avg Factoring</span>
+              <span className="text-[11px] font-mono text-white font-semibold">1.85%</span>
+            </div>
+          </div>
+        </div>
 
         <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((item) => (

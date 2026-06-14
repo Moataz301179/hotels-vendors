@@ -11,10 +11,10 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  sm: { icon: 28, text: 13, slogan: 8, tracking: "-0.01em" },
-  md: { icon: 36, text: 16, slogan: 10, tracking: "-0.02em" },
-  lg: { icon: 48, text: 20, slogan: 12, tracking: "-0.02em" },
-  xl: { icon: 64, text: 26, slogan: 15, tracking: "-0.03em" },
+  sm: { icon: 32, text: 15, slogan: 9, tracking: "0.05em" },
+  md: { icon: 40, text: 18, slogan: 11, tracking: "0.08em" },
+  lg: { icon: 56, text: 24, slogan: 14, tracking: "0.1em" },
+  xl: { icon: 72, text: 32, slogan: 18, tracking: "0.12em" },
 };
 
 export function BrandLogo({

@@ -56,10 +56,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(132,204,22,0.1)",
     description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
     steps: [
-      { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Illustrative: Forecast output will show predicted quantities per category with budget blockade.", icon: BarChart3 },
-      { title: "Auto PO Generation", description: "POs are auto-created against your budget ceilings and sent to pre-mandated suppliers.", action: "Issue PO", result: "Illustrative: PO routes through authority matrix. Suppliers receive notification.", icon: ShoppingCart },
-      { title: "Three-Way Match", description: "When goods arrive, the system validates PO + ETA UUID + Signed Delivery Note.", action: "Receive shipment", result: "Illustrative: Three-way match validates delivery. Invoice auto-generates on clearance.", icon: CheckCircle2 },
-      { title: "Factoring Settlement", description: "Pre-cleared invoice enters competitive bidding. Supplier paid in 24hrs. You keep net-60.", action: "Submit invoice to factoring pool", result: "Illustrative: Licensed grantors bid. Supplier settles within 24 hours.", icon: Banknote },
+      { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "HV Engine predicts demand $\rightarrow$ INVO Rails identify nearest suppliers with matching SKUs.", icon: BarChart3 },
+      { title: "Auto PO Generation", description: "POs are auto-created against your budget ceilings and sent to pre-mandated suppliers.", action: "Issue PO", result: "HV Authority Matrix validates $\rightarrow$ INVO API publishes order to Supplier Feed.", icon: ShoppingCart },
+      { title: "Three-Way Match", description: "When goods arrive, the system validates PO + ETA UUID + Signed Delivery Note.", action: "Receive shipment", result: "HV checks digital signature $\rightarrow$ INVO validates ETA UUID $\rightarrow$ Invoice auto-generates.", icon: CheckCircle2 },
+      { title: "Factoring Settlement", description: "Pre-cleared invoice enters competitive bidding. Supplier paid in 24hrs. You keep net-60.", action: "Submit invoice to factoring pool", result: "HV signals payment guarantee $\rightarrow$ INVO Payment Rails settle supplier via Bank-Direct IBAN.", icon: Banknote },
     ],
   },
   {

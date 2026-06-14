@@ -4,29 +4,8 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  User,
-  ArrowRight,
-  Check,
-  AlertTriangle,
-  Hotel,
-  Store,
-  Landmark,
-  Truck,
-} from "lucide-react";
-
-type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
-
-const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType }[] = [
-  { value: "HOTEL", label: "Hotel / Property", icon: Hotel },
-  { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store },
-  { value: "FACTORING", label: "Factoring Company", icon: Landmark },
-  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck },
-];
+import { BrandLogo } from "@/components/layout/brand-logo";
+import { BaseRegisterForm } from "@/components/auth/registration/base-register-form";
 
 export default function RegisterPageWrapper() {
   return (
@@ -46,276 +25,78 @@ function RegisterSkeleton() {
         <div className="h-12 bg-white/[0.04] rounded" />
       </div>
     </div>
+  </div>
   );
 }
 
 function RegisterPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [registered, setRegistered] = useState(false);
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "HOTEL" as StakeholderRole,
-  });
+  const [sector, setSector] = useState<string | null>(null);
 
   useEffect(() => {
-    // Support both `role` param (direct) and `sector` param (from landing page)
-    const roleParam = searchParams.get("role") || searchParams.get("sector");
-    const sectorToRole: Record<string, StakeholderRole> = {
-      procurement: "HOTEL",
-      cashflow: "SUPPLIER",
-      fintech: "FACTORING",
-      ai: "LOGISTICS",
-      hotel: "HOTEL",
-      supplier: "SUPPLIER",
-      factoring: "FACTORING",
-      logistics: "LOGISTICS",
-    };
-    if (roleParam) {
-      const mapped = sectorToRole[roleParam.toLowerCase()];
-      if (mapped) {
-        setForm((prev) => ({ ...prev, role: mapped }));
-      } else {
-        const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
-        if (validRoles.includes(roleParam.toUpperCase() as StakeholderRole)) {
-          setForm((prev) => ({ ...prev, role: roleParam.toUpperCase() as StakeholderRole }));
-        }
-      }
+    const sectorParam = searchParams.get("sector") || searchParams.get("role");
+    if (sectorParam) {
+      setSector(sectorParam.toLowerCase());
     }
   }, [searchParams]);
 
-  const updateForm = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setError("");
+  const sectorToRole: Record<string, string> = {
+    procurement: "HOTEL",
+    cashflow: "SUPPLIER",
+    fintech: "FACTORING",
+    ai: "LOGISTICS",
+    hotel: "HOTEL",
+    supplier: "SUPPLIER",
+    factoring: "FACTORING",
+    logistics: "LOGISTICS",
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  const activeRole = sector ? sectorToRole[sector] : null;
 
-    if (!form.name || !form.email || !form.password) {
-      setError("Please fill in all required fields");
-      setLoading(false);
-      return;
-    }
-    if (form.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/v1/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: form.role.toLowerCase(),
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          accountType: "business",
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setRegistered(true);
-        setTimeout(() => router.push("/login"), 2000);
-      } else {
-        setError(data.error || "Registration failed");
-      }
-    } catch {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!activeRole) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 py-20" style={{ backgroundColor: "#000000" }}>
+        <div className="w-full max-w-md text-center space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center mb-8"
+          >
+            <BrandLogo variant="light" size="md" />
+          </motion.div>
+          <div className="p-8 rounded-2xl border border-white/[0.06] bg-[#0a0a0a] space-y-4">
+            <h2 className="text-xl font-medium text-white">Access Denied</h2>
+            <p className="text-sm text-white/40">
+              Please select your stakeholder sector from the landing page to begin the correct onboarding process.
+            </p>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all"
+              style={{ backgroundColor: "#84cc16", color: "#000000" }}
+            >
+              Return to Landing Page
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-20" style={{ backgroundColor: "#000000" }}>
       <div className="w-full max-w-md">
-        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-8 justify-center"
+          className="flex items-center justify-center mb-8"
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-            <span className="text-black font-bold text-lg">HV</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-medium tracking-tight text-white">HotelsVendors</h1>
-            <p className="text-[10px] text-white/30 uppercase tracking-wider">B2B Procurement Egypt</p>
-          </div>
+          <BrandLogo variant="light" size="md" />
         </motion.div>
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
-          className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
-        >
-          {registered ? (
-            <div className="p-8 text-center space-y-6">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
-                style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)" }}
-              >
-                <Check className="w-10 h-10 text-[#22C55E]" />
-              </motion.div>
-              <div>
-                <h2 className="text-xl font-medium text-white">Welcome aboard, {form.name}!</h2>
-                <p className="text-sm text-white/40 mt-2 max-w-sm mx-auto">
-                  Your account has been created successfully. Redirecting you to sign in...
-                </p>
-              </div>
-            </div>
-          ) : (
-            <>
-              {/* Header */}
-              <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-                <h2 className="text-lg font-medium text-white">Create your account</h2>
-                <p className="text-sm text-white/40 mt-1">
-                  Quick signup — only name, email & password required
-                </p>
-              </div>
+        <BaseRegisterForm role={activeRole} onSuccess={() => {}} />
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="p-8 space-y-5">
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm"
-                    style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#EF4444" }}
-                  >
-                    <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                    <span>{error}</span>
-                  </motion.div>
-                )}
-
-                {/* Role Selection */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    I am a...
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {ROLES.map((role) => {
-                      const Icon = role.icon;
-                      return (
-                        <button
-                          key={role.value}
-                          type="button"
-                          onClick={() => updateForm("role", role.value)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
-                            form.role === role.value
-                              ? "text-black"
-                              : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
-                          }`}
-                          style={form.role === role.value ? { backgroundColor: "#84cc16", borderColor: "#84cc16" } : {}}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {role.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Name */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type="text"
-                      value={form.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
-                      placeholder="Your full name"
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => updateForm("email", e.target.value)}
-                      placeholder="you@example.com"
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={form.password}
-                      onChange={(e) => updateForm("password", e.target.value)}
-                      placeholder="Min 6 characters"
-                      required
-                      minLength={6}
-                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-                  style={{ backgroundColor: "#84cc16", color: "#000000" }}
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <span>Create Account</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-            </>
-          )}
-        </motion.div>
-
-        {/* Footer */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
