@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
@@ -7,23 +7,10 @@ import { LanguageProvider } from "@/lib/i18n/language-context";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-sans",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
+  preload: false,
+  weight: ["300", "400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -121,7 +108,7 @@ export default function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`h-full ${plusJakarta.variable} ${jetbrainsMono.variable} ${inter.variable}`}
+      className={`h-full ${plusJakarta.variable}`}
     >
       <head>
         <link rel="dns-prefetch" href="https://hotels-vendors.com" />

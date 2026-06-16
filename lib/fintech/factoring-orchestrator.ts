@@ -645,7 +645,7 @@ export async function orchestrateConsolidatedFactoring(
   };
 
   const hotel = ci.hotel;
-  const grossAmount = ci.total;
+  const grossAmount = Number(ci.total);
 
   // ── Stage 1: Risk Assessment ───────────────────────────────
   let riskAssessment;
@@ -755,7 +755,7 @@ export async function orchestrateConsolidatedFactoring(
   const factoringCommissionAmount = (grossAmount * advanceRate) * factoringCommissionRate;
 
   // Stream 3: Hotel Admin Fee
-  const hotelAdminFeeRate = ci.hotelAdminFeeRate ?? 0.01;
+  const hotelAdminFeeRate = Number(ci.hotelAdminFeeRate ?? 0.01);
   const hotelAdminFeeAmount = grossAmount * hotelAdminFeeRate;
 
   // ── Yield Spread Guard Verification ──
@@ -815,7 +815,7 @@ export async function orchestrateConsolidatedFactoring(
       where: { id: invoice.id },
       data: {
         acceleratedCashRate: cashRate,
-        cashDiscountDelta: discountAmount - (invoice.total * factorDiscountRate),
+        cashDiscountDelta: discountAmount - (Number(invoice.total) * factorDiscountRate),
       },
     });
   }

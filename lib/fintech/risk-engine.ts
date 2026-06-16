@@ -134,8 +134,8 @@ export async function assessRisk(hotelId: string, tenantId?: string): Promise<Ri
   const paymentHistoryScore = await calculatePaymentHistoryScore(hotel.invoices);
 
   // Factor 2: Credit Utilization (20%)
-  const creditLimit = hotel.creditLimit ?? 0;
-  const creditUsed = hotel.creditUsed ?? 0;
+  const creditLimit = Number(hotel.creditLimit ?? 0);
+  const creditUsed = Number(hotel.creditUsed ?? 0);
   const facilityUtilized = hotel.creditFacilities.reduce((sum, f) => sum + Number(f.utilized), 0);
   const facilityLimit = hotel.creditFacilities.reduce((sum, f) => sum + Number(f.limit), 0);
   const totalLimit = creditLimit + facilityLimit;

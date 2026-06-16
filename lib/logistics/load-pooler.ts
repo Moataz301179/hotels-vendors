@@ -206,7 +206,7 @@ export async function formBundles(): Promise<BundleCluster[]> {
       hotelId: order.hotelId,
       hotelZone: detectDeliveryZone(order.hotel.city),
       totalWeight: order.items.reduce((s, i) => s + i.quantity, 0),
-      totalValue: order.total,
+      totalValue: Number(order.total),
       temperatureReq,
       urgency: "STANDARD", // TODO: Add urgency field to order
       requestedDeliveryDate: order.deliveryDate || new Date(),

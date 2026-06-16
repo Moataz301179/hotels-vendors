@@ -171,9 +171,9 @@ export async function buildPriceBenchmark(sku: string): Promise<PriceBenchmark |
     return {
       sku,
       category: product.category,
-      fairPriceMin: product.unitPrice * 0.85,
-      fairPriceMax: product.unitPrice * 1.15,
-      marketAverage: product.unitPrice,
+      fairPriceMin: Number(product.unitPrice) * 0.85,
+      fairPriceMax: Number(product.unitPrice) * 1.15,
+      marketAverage: Number(product.unitPrice),
       lastUpdated: new Date(),
       sampleSize: orderItems.length,
     };

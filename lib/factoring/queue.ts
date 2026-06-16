@@ -121,8 +121,8 @@ export function createFactoringWorker(): Worker {
           }
 
           const totalNum = Number(invoice.total);
-          const platformFee = request.platformFee || totalNum * 0.025;
-          const partnerFee = request.factoringFee || 0;
+          const platformFee = Number(request.platformFee) || totalNum * 0.025;
+          const partnerFee = Number(request.factoringFee) || 0;
           const netDisbursement = totalNum - platformFee - partnerFee;
 
           const partner = getPartner(request.factoringCompanyId || "");

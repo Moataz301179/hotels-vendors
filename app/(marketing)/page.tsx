@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef, useState, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   ArrowRight,
   BrainCircuit,
@@ -30,6 +31,7 @@ import {
   Cpu,
   Server,
   ArrowUpRight,
+  MoveRight,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
@@ -234,6 +236,17 @@ export default function HomePage() {
           HERO — B2B Value Prop + iPad Sector Dashboard
           ═══════════════════════════════════════════ */}
       <section className="relative pt-32 sm:pt-36 pb-12 sm:pb-20 overflow-hidden">
+        {/* Hero background image with overlay */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.03]"
+            priority
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #000000 0%, transparent 30%, transparent 70%, #000000 100%)" }} />
+        </div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.04) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
@@ -244,12 +257,11 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 sm:mb-6"
-                style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-                <span className="text-[9px] sm:text-[10px] text-white/50 font-medium uppercase tracking-wider">Egypt&apos;s B2B Hospitality Infrastructure</span>
+                transition={{ duration: 0.6, delay: 0.1 }}className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 sm:mb-6"
+                    style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
+                    <span className="text-[9px] sm:text-[10px] text-white/50 font-medium uppercase tracking-wider">Egyptian Tax Authority — Direct E-Invoicing Integration</span>
               </motion.div>
 
               <motion.h1
@@ -259,10 +271,13 @@ export default function HomePage() {
                 className="text-[32px] sm:text-[48px] md:text-[60px] lg:text-[64px] leading-[1.0] tracking-tight mb-6"
                 style={{ color: "#ffffff", fontWeight: 800 }}
               >
-                Institutional-Grade<br />
-                <span className="text-gradient-lime">Hospitality Rails.</span>
+                <span className="text-gradient-lime">ETA-Compliant</span>
                 <br />
-                <span className="text-white/50 font-medium">Zero Debt. Absolute Compliance.</span>
+                <span className="text-white/50 font-medium">by Design.</span>
+                <br />
+                Hospitality Procurement
+                <br />
+                <span className="text-white/50 font-medium">by Default.</span>
               </motion.h1>
 
               <motion.p
@@ -271,7 +286,7 @@ export default function HomePage() {
                 transition={{ duration: 0.7, delay: 0.4 }}
                 className="text-[15px] sm:text-[17px] text-white/50 leading-relaxed max-w-lg mb-8"
               >
-                HotelsVendors is the vertical operating system for Egyptian hospitality. We synchronize the <strong>HV Governance Layer</strong> with the <strong>INVO Infrastructure Engine</strong> to automate procurement, secure cashflow, and enforce ETA compliance at scale.
+                Egypt&apos;s first hospitality procurement platform natively integrated with the <strong>Egyptian Tax Authority e-invoicing API</strong>. Every invoice is RSA-2048 signed, UUID-validated, and submitted in real-time. AI-automated purchasing, shared-route logistics, and 24-hour supplier settlement — all ETA-compliant by design.
               </motion.p>
 
               <motion.div
@@ -281,10 +296,10 @@ export default function HomePage() {
                 className="flex flex-wrap gap-3 mb-8"
               >
                 <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-bold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.3)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
-                  Deploy Infrastructure <ArrowRight size={16} />
+                  Request Onboarding <ArrowRight size={16} />
                 </Link>
                 <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.4)", color: "#84cc16" }}>
-                  <Play size={15} /> Launch Architecture Sandbox
+                  <Play size={15} /> Explore Interactive Sandbox
                 </Link>
               </motion.div>
 
@@ -496,12 +511,22 @@ export default function HomePage() {
           SECTOR ROUTER — Dynamic Tab System
           ═══════════════════════════════════════════ */}
       <section id="platform" className="py-20 relative overflow-hidden">
+        {/* Section background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.02]"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #000000 0%, transparent 30%, transparent 70%, #000000 100%)" }} />
+        </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(132,204,22,0.02) 0%, transparent 60%)" }} />
 
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <RevealSection>
             <div className="text-center mb-10">
-              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Platform Overview</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
                 Four Engines. One Operating System.
               </h2>
@@ -692,11 +717,21 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           THREE PILLARS — Staggered Scroll Reveal
           ═══════════════════════════════════════════ */}
-      <section className="py-20">
+      <section className="py-20 relative overflow-hidden">
+        {/* Section background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.015]"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #000000 0%, transparent 40%, transparent 60%, #000000 100%)" }} />
+        </div>
         <div className="mx-auto max-w-7xl px-6">
           <RevealSection>
             <div className="text-center mb-14">
-              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Integrated Solution</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-4">
                 Procurement + Fintech + AI.<br />One Settlement Engine.
               </h2>
@@ -748,7 +783,17 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           INFRASTRUCTURE & COMPLIANCE
           ═══════════════════════════════════════════ */}
-      <section className="py-20" style={{ backgroundColor: "#0a0a0a" }}>
+      <section className="py-20 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+        {/* Section background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.02]"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #0a0a0a 0%, transparent 30%, transparent 70%, #0a0a0a 100%)" }} />
+        </div>
         <div className="mx-auto max-w-7xl px-6">
           <RevealSection>
             <div className="text-center mb-14">
@@ -834,21 +879,24 @@ export default function HomePage() {
               <h2 className="text-[26px] font-bold text-white">Seven Infrastructure Pillars</h2>
             </div>
           </RevealSection>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
             {FEATURES.map((f, i) => (
-              <RevealSection key={f.title} delay={i * 0.08}>
-                <motion.div
-                  whileHover={{ y: -3, borderColor: "rgba(132,204,22,0.2)" }}
-                  className="rounded-2xl p-6 h-full"
-                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 60}ms` }}
-                >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                    <f.icon size={20} style={{ color: "#84cc16" }} />
-                  </div>
-                  <h3 className="text-[14px] font-bold mb-2 text-white">{f.title}</h3>
-                  <p className="text-[12px] text-white/40 leading-relaxed">{f.desc}</p>
-                </motion.div>
-              </RevealSection>
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -6, borderColor: "rgba(132,204,22,0.25)", boxShadow: "0 12px 40px rgba(132,204,22,0.06)" }}
+                className="rounded-2xl p-6 h-full cursor-default group"
+                style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                  <f.icon size={20} style={{ color: "#84cc16" }} />
+                </div>
+                <h3 className="text-[14px] font-bold mb-2 text-white transition-colors duration-300 group-hover:text-[#84cc16]">{f.title}</h3>
+                <p className="text-[12px] text-white/40 leading-relaxed">{f.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -859,7 +907,17 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           HOW IT WORKS — Staggered Pipeline
           ═══════════════════════════════════════════ */}
-      <section className="py-20">
+      <section className="py-20 relative overflow-hidden">
+        {/* Section background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.015]"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #000000 0%, transparent 30%, transparent 70%, #000000 100%)" }} />
+        </div>
         <div className="mx-auto max-w-7xl px-6">
           <RevealSection>
             <div className="text-center mb-12">
@@ -867,27 +925,35 @@ export default function HomePage() {
               <h2 className="text-[26px] font-bold text-white">From Forecast to Settlement</h2>
             </div>
           </RevealSection>
-          <div className="grid md:grid-cols-5 gap-4">
+          <div className="grid md:grid-cols-5 gap-4 relative">
+            {/* Connecting line between steps */}
+            <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(to right, rgba(132,204,22,0.2), rgba(132,204,22,0.05), rgba(132,204,22,0.2))" }} />
             {PIPELINE.map((step, i) => (
-              <RevealSection key={step.step} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="rounded-2xl p-6 text-center h-full"
-                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <div className="text-[28px] font-bold leading-none mb-3" style={{ color: "rgba(132,204,22,0.08)" }}>{step.step}</div>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(132,204,22,0.08)", border: "1px solid rgba(132,204,22,0.12)" }}>
-                    <step.icon size={18} style={{ color: "#84cc16" }} />
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -6, borderColor: "rgba(132,204,22,0.25)" }}
+                className="rounded-2xl p-6 text-center h-full relative group"
+                style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                {/* Step number - large background */}
+                <div className="text-[32px] font-bold leading-none mb-3 transition-all duration-300 group-hover:opacity-100" style={{ color: "rgba(132,204,22,0.08)" }}>{step.step}</div>
+                {/* Icon container with pulse animation */}
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(132,204,22,0.15)]" style={{ backgroundColor: "rgba(132,204,22,0.08)", border: "1px solid rgba(132,204,22,0.12)" }}>
+                  <step.icon size={18} style={{ color: "#84cc16" }} />
+                </div>
+                <h3 className="text-[13px] font-bold mb-2 text-white transition-colors duration-300 group-hover:text-[#84cc16]">{step.title}</h3>
+                <p className="text-[11px] text-white/35 leading-relaxed">{step.desc}</p>
+                {/* Arrow connector */}
+                {i < PIPELINE.length - 1 && (
+                  <div className="hidden md:flex absolute top-[54px] -right-3 z-10 items-center justify-center w-6 h-6 rounded-full transition-all duration-300 group-hover:bg-[rgba(132,204,22,0.1)]" style={{ backgroundColor: "rgba(132,204,22,0.05)" }}>
+                    <MoveRight size={12} style={{ color: "rgba(132,204,22,0.3)" }} />
                   </div>
-                  <h3 className="text-[13px] font-bold mb-2 text-white">{step.title}</h3>
-                  <p className="text-[11px] text-white/35 leading-relaxed">{step.desc}</p>
-                  {i < PIPELINE.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-2.5 text-white/10">
-                      <ArrowRight size={16} />
-                    </div>
-                  )}
-                </motion.div>
-              </RevealSection>
+                )}
+              </motion.div>
             ))}
           </div>
         </div>
@@ -899,6 +965,16 @@ export default function HomePage() {
           CTA — Final Conversion
           ═══════════════════════════════════════════ */}
       <section className="py-24 relative overflow-hidden">
+        {/* CTA background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1920&q=80"
+            alt=""
+            fill
+            className="object-cover opacity-[0.025]"
+          />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, #000000 40%, transparent 70%)" }} />
+        </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(132,204,22,0.05) 0%, transparent 70%)" }} />
         <div className="mx-auto max-w-7xl px-6 text-center relative">
           <RevealSection>

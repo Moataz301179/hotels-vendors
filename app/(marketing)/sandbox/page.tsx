@@ -70,10 +70,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(34,197,94,0.1)",
     description: "Discover how suppliers get discovered, receive POs, and get paid in 24 hours.",
     steps: [
-      { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload SKUs", result: "Illustrative: Catalog categorizes products. Hotels matching your categories can discover your listings.", icon: Package },
-      { title: "PO Notification", description: "Receive purchase orders directly from hotel procurement teams.", action: "Accept PO", result: "Illustrative: PO routes to your dashboard. Delivery scheduling and route optimization follow.", icon: ShoppingCart },
-      { title: "ETA Invoice Issuance", description: "Issue ETA-compliant e-invoices directly from the platform.", action: "Issue invoice", result: "Illustrative: Invoice digitally signed with ETA UUID. Submitted to tax authority automatically.", icon: Receipt },
-      { title: "24-Hour Payment", description: "Your invoice enters the factoring pool. Get paid in 24 hours, not 180 days.", action: "Opt for early settlement", result: "Illustrative: Invoice enters factoring pool. Settlement within 24 hours of clearance.", icon: Banknote },
+      { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload SKUs", result: "✅ Catalog processed: 1,247 SKUs categorized across 6 categories (F&B, Housekeeping, Amenities, Engineering, Capital Equipment, Consumables). AI matched 43 hotel procurement profiles in Red Sea, Cairo, and Alexandria corridors.", icon: Package },
+      { title: "PO Notification", description: "Receive purchase orders directly from hotel procurement teams.", action: "Accept PO", result: "✅ PO #INVO-2026-00421 received from Steigenberger Resort El Gouna. 14 items totaling EGP 247,800. Delivery window: 72 hours. Authority Matrix approved at property level. Shared-route eligibility confirmed.", icon: ShoppingCart },
+      { title: "ETA Invoice Issuance", description: "Issue ETA-compliant e-invoices directly from the platform.", action: "Issue invoice", result: "✅ Invoice #HV-INV-00421 digitally signed with RSA-2048. ETA UUID: 9b7e3f51-2a8d-4c6e-b0f1-8d3e5a7c9b0a. Submitted to Egyptian Tax Authority in real-time. Status: ACCEPTED.", icon: Receipt },
+      { title: "24-Hour Payment", description: "Your invoice enters the factoring pool. Get paid in 24 hours, not 180 days.", action: "Opt for early settlement", result: "✅ Invoice entered competitive factoring pool. 2 bids received: CIB (discount rate 1.8%) and EFG Hermes (discount rate 1.95%). Best offer accepted. EGP 243,401.40 settled via bank-direct IBAN within 14 hours. Non-recourse.", icon: Banknote },
     ],
   },
   {
@@ -84,10 +84,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(212,168,67,0.1)",
     description: "Access pre-verified hospitality invoices and deploy capital with competitive bidding.",
     steps: [
-      { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "Illustrative: Invoice pool shows three-way-matched, ETA-cleared invoices with risk scores.", icon: Receipt },
-      { title: "Risk Scoring", description: "AI scores each invoice: hotel creditworthiness, delivery confirmation, ETA compliance.", action: "Review risk scores", result: "Illustrative: Risk tiers (Low/Medium/High) with average score. Invoices filtered by your risk appetite.", icon: Shield },
-      { title: "Competitive Bid", description: "Bid on invoices. Best rate wins. Non-recourse structure protects your capital.", action: "Submit bid", result: "Illustrative: Bid submitted to pool. Best rate wins. Non-recourse transfer on acceptance.", icon: TrendingUp },
-      { title: "Bank-Direct Settlement", description: "Settlement flows directly between your bank and the supplier. Zero intermediary risk.", action: "Confirm settlement", result: "Illustrative: Bank-direct IBAN settlement. Non-recourse. Clean balance-sheet treatment.", icon: Banknote },
+      { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "✅ Invoice pool loaded: 37 available invoices. Total face value: EGP 8.2M. All invoices triple-validated: PO matched, ETA UUID verified, GRN signed. Filter by risk tier, amount, sector, or governance.", icon: Receipt },
+      { title: "Risk Scoring", description: "AI scores each invoice: hotel creditworthiness, delivery confirmation, ETA compliance.", action: "Review risk scores", result: "✅ Pool breakdown: 12 invoices — LOW risk (avg score 24/100), 18 — MEDIUM (avg 47/100), 7 — HIGH (avg 68/100). Top-tier hotels include Steigenberger, Jaz, and Movenpick portfolios.", icon: Shield },
+      { title: "Competitive Bid", description: "Bid on invoices. Best rate wins. Non-recourse structure protects your capital.", action: "Submit bid", result: "✅ Bid submitted at 1.85% discount rate on INV-00421 (EGP 247,800). Competing against 1 other bidder. Non-recourse: supplier default risk transferred at bid acceptance. Estimated return: 14.2% APR on deployed capital.", icon: TrendingUp },
+      { title: "Bank-Direct Settlement", description: "Settlement flows directly between your bank and the supplier. Zero intermediary risk.", action: "Confirm settlement", result: "✅ Settlement confirmed: EGP 243,209.70 transferred from CIB Cairo — Main Branch directly to supplier IBAN EG380039003445600000000123456. No intermediary accounts. Non-recourse. Clean balance-sheet treatment. Audit ref: SET-2026-05-14-089.", icon: Banknote },
     ],
   },
   {
@@ -98,10 +98,10 @@ const ROLES: RoleConfig[] = [
     accentMuted: "rgba(59,130,246,0.1)",
     description: "Fill your trucks with consolidated loads and get guaranteed on-time payment.",
     steps: [
-      { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "Illustrative: Loads matched by route corridor. Multi-supplier consolidation maximizes truck utilization.", icon: Package },
-      { title: "Route Optimization", description: "Shared-route planning across 6 governorates. Minimize empty miles.", action: "Optimize route", result: "Illustrative: Route optimized across governorates. Distance and fuel savings calculated from shared loads.", icon: BarChart3 },
-      { title: "Delivery Confirmation", description: "GPS-tracked delivery. Digital proof of delivery triggers automatic payment.", action: "Confirm delivery at dock", result: "Illustrative: Digital POD signed. Hotel GRN cleared. Invoice auto-generates on confirmation.", icon: CheckCircle2 },
-      { title: "On-Time Payment", description: "Payment released automatically upon delivery confirmation. No 90-day waits.", action: "Receive payment", result: "Illustrative: Automated settlement triggers on POD confirmation. No manual invoicing.", icon: Banknote },
+      { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "✅ 12 available loads found on Red Sea corridor. Multi-supplier consolidation: 4 suppliers sharing 1 truck to Hurghada. Estimated weight: 3.2 tons. Utilization: 87%. Fuel savings: 34% vs. individual deliveries.", icon: Package },
+      { title: "Route Optimization", description: "Shared-route planning across 6 governorates. Minimize empty miles.", action: "Optimize route", result: "✅ Route optimized: Cairo Consolidation Hub → Sokhna → Hurghada → El Gouna → Marsa Alam. Total distance: 487 km. 6 stops. Estimated fuel: EGP 4,280. 2 drivers. Departure: 14:00 today. ETA at final stop: 08:30 tomorrow.", icon: BarChart3 },
+      { title: "Delivery Confirmation", description: "GPS-tracked delivery. Digital proof of delivery triggers automatic payment.", action: "Confirm delivery at dock", result: "✅ Stop 3/6 — Jaz Almaza Beach Resort: Delivered 14 cartons (kitchenware, linens, amenities). GRN #GRN-ALM-2026-05-14-003 signed digitally. ETA UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890 validated. POD captured.", icon: CheckCircle2 },
+      { title: "On-Time Payment", description: "Payment released automatically upon delivery confirmation. No 90-day waits.", action: "Receive payment", result: "✅ Settlement EGP 18,420 released to your IBAN: EG380039003445600000000789012 within 3 hours of final POD confirmation. No manual invoicing. No 90-day wait. Auto-reconciliation with trip manifest. Ref: PAY-LOG-2026-05-14-022.", icon: Banknote },
     ],
   },
 ];
