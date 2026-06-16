@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { transformManyToMarketplace, toPrismaCategory } from "@/lib/marketplace/category-mapper";
 import { ProductCategory, ProductStatus } from "@prisma/client";
+import { authenticate } from "@/lib/api-utils";
 import { z } from "zod";
 
 // ── GET: Public Catalog ───────────────────────────────────────
@@ -117,10 +118,9 @@ const CreateProductSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Read auth context from middleware-injected headers
-    const userId = request.headers.get("x-user-id");
-    const platformRole = request.headers.get("x-platform-role");
-    const tenantId = request.headers.get("x-tenant-id");
+    // Authenticate from JWT session — NEVER trust client headers
+    const auth = await authenticate(request);
+    const { userId, platformRole, tenantId } = auth;
 
     // Reject if not authenticated
     if (!userId || !platformRole) {

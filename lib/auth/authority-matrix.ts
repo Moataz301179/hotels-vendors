@@ -252,15 +252,19 @@ export async function evaluateAuthority(
   // Merge DB rules with built-in rules (DB overrides built-in if same priority)
   const allRules = mergeRules(BUILT_IN_RULES, dbRules.map(r => ({
     ...r,
+    name: r.name || "",
+    minValue: Number(r.minValue),
+    maxValue: Number(r.maxValue),
+    supplierTier: r.supplierTier as SupplierTier | null | undefined,
     requiresPaymentGuarantee: false,
     requiresEtaValidation: false,
     requiresDualSignOff: false,
-  })) as AuthorityRule[]);
+  })));
 
   // 4. Evaluate each rule in priority order
   for (const rule of allRules) {
     const match = checkRuleMatch(rule, {
-      total: order.total,
+      total: Number(order.total),
       hotel: { tier: order.hotel.tier, riskTier: order.hotel.riskTier },
       supplier: { tier: order.supplier.tier },
       requesterRole: order.requesterId ? ctx.userRole : null,
@@ -271,7 +275,7 @@ export async function evaluateAuthority(
     if (rule.requiresPaymentGuarantee && !order.paymentGuaranteed) {
       // For HIGH/CRITICAL risk, offer Smart Fixes
       if (riskAssessment.riskTier === "HIGH" || riskAssessment.riskTier === "CRITICAL") {
-        const smartFixes = await generateSmartFixes(orderId, order.hotelId, order.total, ctx.tenantId);
+        const smartFixes = await generateSmartFixes(orderId, order.hotelId, Number(order.total), ctx.tenantId);
         return {
           action: "SMART_FIX_REQUIRED",
           rule,

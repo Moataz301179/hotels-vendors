@@ -34,11 +34,29 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = validateBody(InvoiceCreateSchema, body);
 
+  // Cross-entity validation: verify order, hotel, and supplier belong to the same tenant
+  const order = await prisma.order.findUnique({
+    where: { id: data.orderId },
+    select: { tenantId: true, hotelId: true, supplierId: true },
+  });
+  if (!order) {
+    return error("Order not found", 404);
+  }
+  if (order.tenantId !== auth.tenantId) {
+    return error("Order does not belong to your tenant", 403);
+  }
+  if (order.hotelId !== data.hotelId) {
+    return error("Hotel does not match the order", 422);
+  }
+  if (order.supplierId !== data.supplierId) {
+    return error("Supplier does not match the order", 422);
+  }
+
   const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CREATE_INVOICE", amount: data.total });
 
   const invoice = await prisma.invoice.create({
     data: {
-          tenantId: auth.tenantId,
+      tenantId: auth.tenantId,
       invoiceNumber: data.invoiceNumber,
       orderId: data.orderId,
       hotelId: data.hotelId,

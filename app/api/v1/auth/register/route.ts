@@ -126,8 +126,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: data.email },
+  const user = await prisma.user.findFirst({
+    where: { email: data.email, tenantId: tenant.id },
   });
 
   if (!user) {

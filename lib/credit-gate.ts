@@ -27,7 +27,7 @@ export async function checkCreditLimit(
   });
 
   const uncapturedTotal = uncapturedOrders.reduce(
-    (sum, o) => sum + (o.total ?? 0),
+    (sum, o) => sum + Number(o.total ?? 0),
     0
   );
 

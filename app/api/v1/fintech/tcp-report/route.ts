@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         return Response.json({ error: "Order not found" }, { status: 404 });
       }
 
-      orderTotal = order.total;
+      orderTotal = Number(order.total);
       hotelName = order.hotel.name;
       hotelId = order.hotelId;
       orderId = order.id;

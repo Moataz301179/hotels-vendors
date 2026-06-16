@@ -10,9 +10,20 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const tenantId = auth.tenantId;
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
+  // Scope by the user's entity linkage for proper RLS
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    select: { hotelId: true, supplierId: true },
+  });
+
   const where: Record<string, unknown> = { tenantId };
-  // TODO: Scope by actual hotelId/supplierId based on user's entity linkage
-  // Currently simplified — full RLS will filter by tenantId only
+  
+  // Scope to user's specific hotel or supplier
+  if (auth.platformRole === "HOTEL" && user?.hotelId) {
+    where.hotelId = user.hotelId;
+  } else if (auth.platformRole === "SUPPLIER" && user?.supplierId) {
+    where.supplierId = user.supplierId;
+  }
 
   if (query.search) {
     where.orderNumber = { contains: query.search };
@@ -54,7 +65,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       propertyId: data.propertyId,
       outletId: data.outletId,
       supplierId: data.supplierId,
-      requesterId: data.requesterId,
+      requesterId: auth.userId,
       subtotal,
       vatAmount,
       total,

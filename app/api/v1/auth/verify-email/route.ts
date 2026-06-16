@@ -23,10 +23,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Verification token has expired. Please request a new one.", 400);
   }
 
-  await prisma.user.update({
+  const userByEmail = await prisma.user.findFirst({
     where: { email: verification.email },
-    data: { emailVerifiedAt: new Date() },
   });
+  if (userByEmail) {
+    await prisma.user.update({
+      where: { id: userByEmail.id },
+      data: { emailVerifiedAt: new Date() },
+    });
+  }
 
   await prisma.emailVerificationToken.delete({ where: { id: verification.id } });
 

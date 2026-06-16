@@ -125,7 +125,7 @@ export function createEtaWorker(): Worker {
           itemsDiscount: 0,
           discount: { amount: 0 },
           taxableItems: [
-            { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
+            { taxType: "T1" as const, amount: Number(item.total) * 0.14, subType: "V001", rate: 14 },
           ],
         })),
         totalSalesAmount: invoice.subtotal,

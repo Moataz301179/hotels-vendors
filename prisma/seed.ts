@@ -294,7 +294,7 @@ async function main() {
       status: "ACTIVE",
       maxFacility: 10000000,
       interestRate: 0.022,
-      rate: 0.018,
+      feeRate: 0.018,
       tenantId: factoringTenant.id,
     },
   });

@@ -9,7 +9,18 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
   const query = validateQuery(PaginationSchema, request.nextUrl.searchParams);
 
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    select: { supplierId: true },
+  });
+
   const where: Record<string, unknown> = { tenantId: auth.tenantId };
+
+  // Scope to the supplier's own orders only
+  if (!user?.supplierId) {
+    return success({ orders: [], pagination: { page: query.page, limit: query.limit, total: 0, totalPages: 0 } });
+  }
+  where.supplierId = user.supplierId;
 
   if (query.search) {
     where.orderNumber = { contains: query.search };

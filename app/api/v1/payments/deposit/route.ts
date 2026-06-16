@@ -30,7 +30,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (order.paymentGuaranteed) return error("Deposit already paid", 400);
   if (order.paymentGuaranteeMethod?.startsWith("DEPOSIT_PAYMOB")) return error("Deposit already pending", 409);
 
-  const depositAmount = Math.round(order.total * 0.2 * 100); // 20% in cents
+  const depositAmount = Math.round(Number(order.total) * 0.2 * 100); // 20% in cents
 
   const { paymentUrl, paymobOrderId } = await createDepositPayment({
     orderId: order.id,

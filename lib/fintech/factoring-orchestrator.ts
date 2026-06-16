@@ -115,7 +115,7 @@ export async function orchestrateFactoring(
 
   const hotel = invoice.hotel;
   const supplier = invoice.supplier;
-  const grossAmount = invoice.total;
+  const grossAmount = Number(invoice.total);
 
   // ── Stage 1: Risk Assessment ───────────────────────────────
   let riskAssessment: RiskAssessment;

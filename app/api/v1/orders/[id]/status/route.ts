@@ -19,11 +19,12 @@ const UpdateStatusSchema = z.object({
   reason: z.string().optional(),
 });
 
-export const PATCH = apiRoute(async (request: NextRequest) => {
+export const PATCH = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "order:approve");
-  const id = request.nextUrl.pathname.split("/").pop();
-  if (!id) return error("Order ID required", 400);
+  const resolved = await params;
+  if (!resolved) return error("Missing parameter", 400);
+  const { id } = resolved;
 
   const body = await request.json();
   const parsed = UpdateStatusSchema.safeParse(body);

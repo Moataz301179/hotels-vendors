@@ -156,11 +156,37 @@ export async function audit(
 }
 
 // ─────────────────────────────────────────
-// 6. RESPONSE HELPERS
+// 6. JSON SERIALIZATION — Decimal → Number
+// ─────────────────────────────────────────
+
+/**
+ * Recursively convert Prisma Decimls to plain numbers.
+ * Prevents Decimal values from serializing as strings in JSON responses.
+ */
+function serializeResponse(value: unknown): unknown {
+  // Check for Prisma Decimal (has toNumber method)
+  if (value !== null && typeof value === "object" && "toNumber" in (value as Record<string, unknown>)) {
+    return (value as { toNumber: () => number }).toNumber();
+  }
+  if (Array.isArray(value)) {
+    return value.map(serializeResponse);
+  }
+  if (value !== null && typeof value === "object") {
+    const obj: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      obj[k] = serializeResponse(v);
+    }
+    return obj;
+  }
+  return value;
+}
+
+// ─────────────────────────────────────────
+// 7. RESPONSE HELPERS
 // ─────────────────────────────────────────
 
 export function success<T>(data: T, status = 200): NextResponse {
-  return NextResponse.json({ success: true, data }, { status });
+  return NextResponse.json(serializeResponse({ success: true, data }), { status });
 }
 
 export function error(message: string, status = 500): NextResponse {

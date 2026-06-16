@@ -19,8 +19,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const email = data.email;
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email },
+    orderBy: { createdAt: "desc" },
     include: { hotel: true },
   });
 

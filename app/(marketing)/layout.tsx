@@ -1,3 +1,4 @@
+import MarketingFooter from "@/components/marketing-footer";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 

@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     const payload = validateLeadPayload(body);
 
     // Idempotency: check if lead already exists
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findFirst({
       where: { email: payload.email },
       select: { id: true, name: true, email: true, sector: true, status: true, createdAt: true },
     });
@@ -98,30 +98,64 @@ export async function POST(request: NextRequest) {
 
     // Create lead as placeholder user (no tenant yet — will be assigned during onboarding)
     const lead = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
+      // Use LeadCapture model (no FK constraints) instead of creating an invalid User
+      const lead = await tx.leadCapture.create({
         data: {
-          email: payload.email,
-          name: payload.companyName,
           companyName: payload.companyName,
-          role: "DEPARTMENT_HEAD",
-          status: "INACTIVE",
-          platformRole: payload.sector === "SUPPLIER" ? "SUPPLIER" : "HOTEL",
-          sector: (payload.sector as any) || null,
-          tenantId: "pending-onboarding", // Will be replaced during signup
-          roleId: "pending",              // Will be assigned during onboarding
-          canOverride: false,
+          email: payload.email,
+          sector: payload.sector as any || null,
+          role: payload.sector || null,
+          source: "landing-page-signup",
+          status: "new",
         },
       });
+
+      // Also create a lightweight user reference with the platform tenant
+      const platformTenant = await tx.tenant.findUnique({ where: { slug: "platform" } });
+      if (platformTenant) {
+        const platformOwnerRole = await tx.role.findFirst({
+          where: { tenantId: platformTenant.id, name: "Platform Admin" },
+        });
+        if (platformOwnerRole) {
+          const existing = await tx.user.findFirst({
+            where: { email: payload.email, tenantId: platformTenant.id },
+          });
+          if (existing) {
+            await tx.user.update({
+              where: { id: existing.id },
+              data: {
+                companyName: payload.companyName,
+                sector: (payload.sector as any) || null,
+              },
+            });
+          } else {
+            await tx.user.create({
+              data: {
+                email: payload.email,
+                name: payload.companyName,
+                companyName: payload.companyName,
+                role: "DEPARTMENT_HEAD",
+                status: "INACTIVE",
+                platformRole: payload.sector === "SUPPLIER" ? "SUPPLIER" : "HOTEL",
+                sector: (payload.sector as any) || null,
+                tenantId: platformTenant.id,
+                roleId: platformOwnerRole.id,
+                canOverride: false,
+              },
+            });
+          }
+        }
+      }
 
       // Audit log for lead pipeline tracking
       await tx.auditLog.create({
         data: {
           action: "LEAD_CAPTURED",
           entityType: "USER",
-          entityId: user.id,
+          entityId: lead.id,
           actorId: "landing-page",
           actorRole: "PUBLIC",
-          tenantId: "pending-onboarding",
+          tenantId: platformTenant?.id || "system",
           afterState: JSON.stringify({
             email: payload.email,
             companyName: payload.companyName,
@@ -132,7 +166,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      return user;
+      return lead;
     });
 
     return NextResponse.json(

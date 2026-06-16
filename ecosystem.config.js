@@ -17,7 +17,7 @@ module.exports = {
       name: "hotelsvendors",
       script: "npm",
       args: "start",
-      cwd: "/var/www/hotelsvendors-v2/current",
+      cwd: "/var/www/hotels-vendors/current",
       instances: "max",
       exec_mode: "cluster",
       autorestart: true,

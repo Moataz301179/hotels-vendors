@@ -23,7 +23,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Too many requests. Please try again later.", 429);
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email: email.toLowerCase() },
   });
 

@@ -160,8 +160,8 @@ model Hotel {
   roomCount   Int?
   tier        HotelTier   @default(CORE)
   status      HotelStatus @default(ACTIVE)
-  creditLimit Float?
-  creditUsed  Float?      @default(0)
+  creditLimit Decimal?
+  creditUsed  Decimal?      @default(0)
 
   // Risk scoring
   riskScore Int?      @default(50) // 0-100, higher = riskier
@@ -242,7 +242,7 @@ enum PropertyType {
 
 model User {
   id          String      @id @default(cuid())
-  email       String      @unique
+  email       String
   name        String
   companyName String?
   phone       String?
@@ -299,6 +299,7 @@ model User {
   sampleRequests SampleRequest[]
 
   @@index([sector])
+  @@unique([tenantId, email])
 }
 
 enum UserRole {
@@ -357,7 +358,7 @@ model Supplier {
   governorate   String
 
   phone   String?
-  email   String  @unique
+  email   String
   website String?
 
   description String?
@@ -396,6 +397,8 @@ model Supplier {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, email])
 }
 
 model DeliveryZone {
@@ -403,7 +406,7 @@ model DeliveryZone {
   zone    String
   minDays Int
   maxDays Int
-  fee     Float
+  fee     Decimal
 
   supplierId String
   supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
@@ -446,7 +449,7 @@ model Product {
   category    ProductCategory
   subcategory String?
 
-  unitPrice Float
+  unitPrice Decimal
   currency  String @default("EGP")
 
   volumeTiers String?
@@ -505,32 +508,32 @@ enum ProductStatus {
 
 model Order {
   id          String @id @default(cuid())
-  orderNumber String @unique
+  orderNumber String
 
   status OrderStatus @default(DRAFT)
 
-  subtotal  Float
-  vatAmount Float
-  total     Float
+  subtotal  Decimal
+  vatAmount Decimal
+  total     Decimal
   currency  String @default("EGP")
 
   deliveryDate         DateTime?
   deliveryInstructions String?
 
   hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Restrict)
 
   propertyId String?
-  property   Property? @relation(fields: [propertyId], references: [id])
+  property   Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 
   outletId String?
-  outlet   Outlet? @relation(fields: [outletId], references: [id])
+  outlet   Outlet? @relation(fields: [outletId], references: [id], onDelete: SetNull)
 
   supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
 
   requesterId String
-  requester   User   @relation(fields: [requesterId], references: [id])
+  requester   User   @relation(fields: [requesterId], references: [id], onDelete: Restrict)
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -548,7 +551,7 @@ model Order {
 
   checkoutGroupId   String?
   shippingMethod    String?
-  shippingCost      Float?    @default(0)
+  shippingCost      Decimal?    @default(0)
   estimatedDelivery DateTime?
 
   poNumber        String?
@@ -561,13 +564,15 @@ model Order {
   updatedAt          DateTime            @updatedAt
   creditTransactions CreditTransaction[]
   tripStops          TripStop[]
+
+  @@unique([tenantId, orderNumber])
 }
 
 model OrderItem {
   id        String @id @default(cuid())
   quantity  Int
-  unitPrice Float
-  total     Float
+  unitPrice Decimal
+  total     Decimal
 
   receivedQuantity Int?
   returnedQuantity Int?    @default(0)
@@ -577,7 +582,7 @@ model OrderItem {
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   notes String?
 }
@@ -629,7 +634,7 @@ enum ApprovalAction {
 
 model Invoice {
   id            String @id @default(cuid())
-  invoiceNumber String @unique
+  invoiceNumber String
 
   // ETA Compliance
   etaUuid          String?   @unique
@@ -644,16 +649,16 @@ model Invoice {
   descriptionAr String? // Line item description (Arabic) — الوصف
 
   // Financial
-  subtotal  Float
-  vatRate   Float  @default(14.00)
-  vatAmount Float
-  total     Float
+  subtotal  Decimal
+  vatRate   Decimal  @default(14.00)
+  vatAmount Decimal
+  total     Decimal
   currency  String @default("EGP")
 
-  returnedAmount       Float?    @default(0)
-  retentionRate        Float?    @default(0)
-  retentionAmount      Float?    @default(0)
-  netPayable           Float?
+  returnedAmount       Decimal?    @default(0)
+  retentionRate        Decimal?    @default(0)
+  retentionAmount      Decimal?    @default(0)
+  netPayable           Decimal?
   retentionReleaseDate DateTime?
 
   issueDate DateTime
@@ -664,13 +669,13 @@ model Invoice {
   paymentStatus PaymentStatus @default(UNPAID)
 
   orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
 
   hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Restrict)
 
   supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -685,7 +690,7 @@ model Invoice {
   // The platform does NOT hold cash or charge factoring fees
   factoringStatus      FactoringStatus    @default(NOT_FACTORABLE)
   factoringCompanyId   String?
-  factoringCompany     FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
+  factoringCompany     FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id], onDelete: SetNull)
   factoringRequests    FactoringRequest[]
   acceleratedCashRate  Decimal            @default(0) // Early payment discount rate applied
   supplierDiscountRate Decimal            @default(0) // Supplier's cash discount rate for early payment
@@ -701,6 +706,8 @@ model Invoice {
   updatedAt          DateTime            @updatedAt
   payments           Payment[]
   creditTransactions CreditTransaction[]
+
+  @@unique([tenantId, invoiceNumber])
 }
 
 enum EtaStatus {
@@ -761,8 +768,8 @@ model AuthorityRule {
   id String @id @default(cuid())
 
   role         UserRole
-  minValue     Float
-  maxValue     Float
+  minValue     Decimal
+  maxValue     Decimal
   category     String?
   supplierTier String?
 
@@ -817,7 +824,7 @@ model SpendRecord {
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   category   ProductCategory
-  amount     Float
+  amount     Decimal
   orderCount Int
 
   createdAt DateTime @default(now())
@@ -870,7 +877,9 @@ model FactoringCompany {
   contactEmail String?
   contactPhone String?
   status       FactoringCompanyStatus @default(ACTIVE)
-  maxFacility  Float?
+  maxFacility  Decimal?
+  interestRate Decimal?
+  feeRate      Decimal?
 
   invoices          Invoice[]
   creditTxns        CreditTransaction[]
@@ -888,14 +897,14 @@ model FactoringCompany {
 model CreditTransaction {
   id          String        @id @default(cuid())
   type        CreditTxnType
-  amount      Float
+  amount      Decimal
   description String?
 
   hotelId String
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   factoringCompanyId String?
-  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id])
+  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id], onDelete: SetNull)
 
   orderId   String?
   order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
@@ -932,28 +941,28 @@ model FactoringRequest {
   consolidatedInvoice   ConsolidatedInvoice? @relation(fields: [consolidatedInvoiceId], references: [id], onDelete: Cascade)
 
   invoiceId String?  @unique
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
 
-  requestedAmount Float
+  requestedAmount Decimal
   requestedAt     DateTime @default(now())
 
   factoringCompanyId String
-  factoringCompany   FactoringCompany @relation(fields: [factoringCompanyId], references: [id])
+  factoringCompany   FactoringCompany @relation(fields: [factoringCompanyId], references: [id], onDelete: Restrict)
 
   status    FactoringRequestStatus @default(PENDING)
   riskScore Int?                   @default(50)
   riskTier  RiskTier               @default(MEDIUM)
 
   // Terms set by the factoring partner (not the platform)
-  advanceRate        Float @default(0.90)
-  discountRate       Float @default(0.02)
-  membershipDiscount Float @default(0)
+  advanceRate        Decimal @default(0.90)
+  discountRate       Decimal @default(0.02)
+  membershipDiscount Decimal @default(0)
 
-  grossAmount     Float?
-  factoringFee    Float? // Charged by factoring partner, not platform
-  disbursedAmount Float?
-  platformFee     Float? @default(0) // Platform referral fee (invoiced off-chain)
-  platformFeeRate Float? @default(0.005) // 0.5% default referral rate
+  grossAmount     Decimal?
+  factoringFee    Decimal? // Charged by factoring partner, not platform
+  disbursedAmount Decimal?
+  platformFee     Decimal? @default(0) // Platform referral fee (invoiced off-chain)
+  platformFeeRate Decimal? @default(0.005) // 0.5% default referral rate
 
   disbursedAt DateTime?
   settledAt   DateTime?
@@ -1004,7 +1013,7 @@ model InvoSubscription {
   status InvoSubscriptionStatus @default(ACTIVE)
 
   // Flat monthly SaaS fee
-  monthlyFee    Float     @default(500)
+  monthlyFee    Decimal     @default(500)
   currency      String    @default("EGP")
   startedAt     DateTime  @default(now())
   expiresAt     DateTime
@@ -1035,9 +1044,9 @@ model DocumentProcessing {
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Flat processing fee per document (NOT a financial spread)
-  processingFee    Float               @default(5.00)
+  processingFee    Decimal               @default(5.00)
   documentsCount   Int                 @default(1)
-  totalFee         Float               @default(5.00)
+  totalFee         Decimal               @default(5.00)
   currency         String              @default("EGP")
   status           DocProcessingStatus @default(PENDING)
   processedAt      DateTime?
@@ -1289,7 +1298,7 @@ enum DocCategory {
 model Payment {
   id            String @id @default(cuid())
   paymentNumber String @unique
-  amount        Float
+  amount        Decimal
   currency      String @default("EGP")
 
   method PaymentMethod @default(BANK_TRANSFER)
@@ -1318,7 +1327,7 @@ model PaymentTransaction {
   payment         Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
   gatewayRef      String   @unique
   transactionType String?  @default("PAYOUT")
-  amount          Float
+  amount          Decimal
   currency        String   @default("EGP")
   status          String   @default("PENDING")
   observedMethod  String?
@@ -1357,9 +1366,9 @@ model CreditFacility {
   hotel              Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   factoringCompanyId String
   factoringCompany   FactoringCompany     @relation(fields: [factoringCompanyId], references: [id], onDelete: Cascade)
-  limit              Float
-  utilized           Float                @default(0)
-  interestRate       Float
+  limit              Decimal
+  utilized           Decimal                @default(0)
+  interestRate       Decimal
   status             CreditFacilityStatus @default(PENDING)
   approvedAt         DateTime?
   expiresAt          DateTime?
@@ -1378,7 +1387,7 @@ model ConsolidatedOrder {
   tripId       String?
   trip         Trip?        @relation(fields: [tripId], references: [id])
   status       String       @default("PENDING")
-  totalValue   Float        @default(0)
+  totalValue   Decimal        @default(0)
   deliveryDate DateTime?
 
   tenantId String
@@ -1397,9 +1406,9 @@ model ConsolidatedInvoice {
   invoiceNumber String             @unique
   status        ConsolidatedStatus @default(DRAFT)
 
-  subtotal  Float
-  vatAmount Float
-  total     Float
+  subtotal  Decimal
+  vatAmount Decimal
+  total     Decimal
   currency  String @default("EGP")
 
   issueDate DateTime  @default(now())
@@ -1407,7 +1416,7 @@ model ConsolidatedInvoice {
   paidDate  DateTime?
 
   hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Restrict)
 
   invoices Invoice[]
 
@@ -1415,8 +1424,8 @@ model ConsolidatedInvoice {
 
   tenantId            String
   tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  hotelAdminFeeAmount Float?   @default(0) // Admin fee charged to hotel for consolidated invoice
-  hotelAdminFeeRate   Float?   @default(0.01) // 1% default admin fee rate
+  hotelAdminFeeAmount Decimal?   @default(0)
+  hotelAdminFeeRate   Decimal?   @default(0.01)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }
@@ -1470,13 +1479,13 @@ model JournalEntry {
 
   lines String
 
-  totalDebit  Float
-  totalCredit Float
+  totalDebit  Decimal
+  totalCredit Decimal
 
   status JournalStatus @default(POSTED)
 
   hotelId String?
-  hotel   Hotel?  @relation(fields: [hotelId], references: [id])
+  hotel   Hotel?  @relation(fields: [hotelId], references: [id], onDelete: SetNull)
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -1521,7 +1530,7 @@ model Cart {
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -1534,8 +1543,8 @@ model CartItem {
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
-  unitPrice Float
-  total     Float
+  unitPrice Decimal
+  total     Decimal
   notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2225,7 +2234,7 @@ model SocialCampaign {
   targetRoles String[]
   platforms   SocialPlatform[]
 
-  budgetEgp Float?
+  budgetEgp Decimal?
   startDate DateTime
   endDate   DateTime?
 
@@ -2368,31 +2377,31 @@ model CreditLineApplication {
   cfoName        String?
   cfoPhone       String?
 
-  annualRevenue      Float?
-  netProfit          Float?
-  totalAssets        Float?
-  currentAssets      Float?
-  totalLiabilities   Float?
-  currentLiabilities Float?
-  bankBalance        Float?
-  monthlyPurchases   Float?
-  avgPaymentDays     Float?
-  existingDebt       Float?
+  annualRevenue      Decimal?
+  netProfit          Decimal?
+  totalAssets        Decimal?
+  currentAssets      Decimal?
+  totalLiabilities   Decimal?
+  currentLiabilities Decimal?
+  bankBalance        Decimal?
+  monthlyPurchases   Decimal?
+  avgPaymentDays     Decimal?
+  existingDebt       Decimal?
 
   propertyDeed        Boolean @default(false)
   bankGuarantee       Boolean @default(false)
   personalGuarantee   Boolean @default(false)
   equipmentCollateral Boolean @default(false)
-  depositAmount       Float?
+  depositAmount       Decimal?
 
   creditScore      Int?
-  recommendedLimit Float?
+  recommendedLimit Decimal?
   aiAnalysisReport String? @db.Text
   aiRiskFlags      String?
 
   factoringCompanyId   String?
-  approvedLimit        Float?
-  approvedInterestRate Float?
+  approvedLimit        Decimal?
+  approvedInterestRate Decimal?
   approvedAt           DateTime?
 
   rejectedReason String?
@@ -2411,7 +2420,7 @@ model PromoCode {
   id           String    @id @default(cuid())
   code         String    @unique
   discountType PromoType
-  value        Float
+  value        Decimal
   maxUses      Int?
   usedCount    Int       @default(0)
 
@@ -2444,7 +2453,7 @@ model Dispute {
 
   reason         String
   evidenceUrls   String?
-  amountDisputed Float
+  amountDisputed Decimal
 
   status     DisputeStatus        @default(OPEN)
   resolution String?

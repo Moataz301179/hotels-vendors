@@ -18,8 +18,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
   ]);
 
   const platformFeeRate = 0.025;
-  const monthlyGmv = monthlyInvoices.reduce((s, i) => s + i.total, 0);
-  const yearlyGmv = yearlyInvoices.reduce((s, i) => s + i.total, 0);
+  const monthlyGmv = monthlyInvoices.reduce((s, i) => s + Number(i.total), 0);
+  const yearlyGmv = yearlyInvoices.reduce((s, i) => s + Number(i.total), 0);
 
   return success({
     fees: {

@@ -72,6 +72,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Some products were not found", 400);
   }
 
+  // Verify all products belong to the user's tenant
+  if (products.some((p) => p.tenantId !== auth.tenantId)) {
+    return error("Some products do not belong to your tenant", 403);
+  }
+
   const productMap = new Map(products.map((p) => [p.id, p]));
 
   // Group items by supplier
@@ -175,7 +180,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
           },
         });
 
-        orders.push(order);
+        orders.push({
+          id: order.id,
+          orderNumber: order.orderNumber,
+          supplier: order.supplier,
+          total: Number(order.total),
+          status: order.status,
+        });
         orderIndex++;
       }
 

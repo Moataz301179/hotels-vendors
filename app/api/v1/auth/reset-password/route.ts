@@ -30,7 +30,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Reset token has expired. Please request a new one.", 400);
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email: resetToken.email },
   });
 

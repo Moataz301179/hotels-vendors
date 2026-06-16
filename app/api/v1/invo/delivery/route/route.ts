@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function requireAuth(request: NextRequest): boolean {
+function requireAuth(request: NextRequest): { authorized: boolean; error?: string } {
   const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+  const apiKey = process.env.INVO_SERVICE_KEY;
+  if (!apiKey) {
+    return { authorized: false, error: "Service key not configured" };
+  }
+  if (!authHeader?.includes(apiKey)) {
+    return { authorized: false, error: "Unauthorized" };
+  }
+  return { authorized: true };
 }
 
 export async function POST(request: NextRequest) {

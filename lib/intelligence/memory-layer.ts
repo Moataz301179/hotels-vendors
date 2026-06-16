@@ -164,7 +164,7 @@ export async function buildPriceBenchmark(sku: string): Promise<PriceBenchmark |
     take: 100,
   });
 
-  const orderItems = ordersWithProduct.flatMap((o) => o.items.map((i) => ({ ...i, createdAt: o.createdAt })));
+  const orderItems = ordersWithProduct.flatMap((o) => o.items.map((i) => ({ ...i, unitPrice: Number(i.unitPrice), createdAt: o.createdAt })));
 
   if (orderItems.length < 5) {
     // Not enough data
@@ -179,7 +179,7 @@ export async function buildPriceBenchmark(sku: string): Promise<PriceBenchmark |
     };
   }
 
-  const prices = orderItems.map((item) => item.unitPrice).sort((a, b) => a - b);
+  const prices = orderItems.map((item) => Number(item.unitPrice)).sort((a, b) => a - b);
   const min = prices[0];
   const max = prices[prices.length - 1];
   const avg = prices.reduce((s, p) => s + p, 0) / prices.length;
@@ -233,11 +233,11 @@ export async function detectAnomalies(supplierId: string): Promise<AnomalyAlert[
       take: 20,
       select: { createdAt: true, items: { where: { productId: product.id }, select: { unitPrice: true } } },
     });
-    const recentItems = recentOrdersWithProduct.flatMap((o) => o.items.map((i) => ({ ...i, createdAt: o.createdAt })));
+    const recentItems = recentOrdersWithProduct.flatMap((o) => o.items.map((i) => ({ ...i, unitPrice: Number(i.unitPrice), createdAt: o.createdAt })));
 
     if (recentItems.length >= 5) {
-      const recentPrices = recentItems.slice(0, 5).map((i) => i.unitPrice);
-      const olderPrices = recentItems.slice(5).map((i) => i.unitPrice);
+      const recentPrices = recentItems.slice(0, 5).map((i) => Number(i.unitPrice));
+      const olderPrices = recentItems.slice(5).map((i) => Number(i.unitPrice));
       const recentAvg = recentPrices.reduce((s, p) => s + p, 0) / recentPrices.length;
       const olderAvg = olderPrices.length > 0
         ? olderPrices.reduce((s, p) => s + p, 0) / olderPrices.length
@@ -376,7 +376,7 @@ export async function generateAutoOptimizations(entityId: string, entityType: "H
 // 6. HELPERS
 // ─────────────────────────────────────────
 
-function calculatePricingStability(products: { unitPrice: number; updatedAt: Date }[]): number {
+function calculatePricingStability(products: { unitPrice: number | { toNumber: () => number }; updatedAt: Date }[]): number {
   if (products.length === 0) return 0.5;
   // More recent updates = less stable
   const recentUpdates = products.filter((p) => {

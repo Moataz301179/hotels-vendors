@@ -49,7 +49,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     hotelName: invoice.hotel.name,
     hotelRiskScore: risk.compositeScore,
     hotelRiskTier: risk.riskTier,
-    invoiceAmount: invoice.total,
+    invoiceAmount: Number(invoice.total),
     invoiceCurrency: "EGP",
     invoiceDueDate: invoice.dueDate || new Date(),
     etaUuid: invoice.etaUuid || "",

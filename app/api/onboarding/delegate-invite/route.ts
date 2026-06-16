@@ -175,8 +175,8 @@ export async function POST(request: NextRequest) {
 
     // Check if invitee already exists as an active user
     if (payload.email) {
-      const existingUser = await prisma.user.findUnique({
-        where: { email: payload.email },
+      const existingUser = await prisma.user.findFirst({
+        where: { email: payload.email, tenantId: payload.tenantId },
       });
 
       if (existingUser && existingUser.status === "ACTIVE") {
@@ -216,8 +216,8 @@ export async function POST(request: NextRequest) {
       let delegateUser;
 
       if (payload.email) {
-        const existing = await tx.user.findUnique({
-          where: { email: payload.email },
+        const existing = await tx.user.findFirst({
+          where: { email: payload.email, tenantId: payload.tenantId },
         });
 
         if (existing) {

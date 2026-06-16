@@ -43,7 +43,11 @@ function validateEtaCredentials(body: Record<string, string>): EtaCredentials {
 }
 
 function encryptSecret(secret: string): string {
-  const key = Buffer.from(process.env.ETA_ENCRYPTION_KEY || "default-key-32-chars-long!!!!!", "utf-8");
+  const encryptionKey = process.env.ETA_ENCRYPTION_KEY;
+  if (!encryptionKey) {
+    throw new Error("ETA_ENCRYPTION_KEY environment variable is required");
+  }
+  const key = Buffer.from(encryptionKey, "utf-8");
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
   let encrypted = cipher.update(secret, "utf-8", "hex");
