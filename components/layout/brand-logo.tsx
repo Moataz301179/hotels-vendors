@@ -27,27 +27,18 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
   const color = variant === "dark" ? "#ffffff" : "#0B0F1A";
-  const bgColor = "#000000"; // Black background for the logo container
-  const borderColor = "rgba(255,255,255,0.15)";
 
   return (
     <div className={cn("flex items-center gap-2.5 shrink-0", className)}>
-      {/* Chess Knight logo in white on a black background container */}
-      <div
-        className="relative flex items-center justify-center rounded-lg overflow-hidden border"
-        style={{
-          width: dims.icon,
-          height: dims.icon,
-          backgroundColor: bgColor,
-          borderColor: borderColor,
-        }}
-      >
+      {/* Chess Knight logo — clean, no background box */}
+      <div className="relative flex items-center justify-center" style={{ width: dims.icon, height: dims.icon }}>
         <Image
           src="/logo-brand.jpg"
           alt="Hotels Vendors"
-          width={Math.round(dims.icon * 0.65)}
-          height={Math.round(dims.icon * 0.65)}
+          width={dims.icon}
+          height={dims.icon}
           className="object-contain"
+          style={{ width: '100%', height: '100%' }}
         />
       </div>
       {showText && (
