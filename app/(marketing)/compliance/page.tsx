@@ -25,7 +25,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Tax Compliance",
     icon: FileCheck,
-    color: "#84cc16",
+    color: "#FFB000",
     standards: [
       { name: "ETA E-Invoicing — Phase 1 & 2", status: "Compliant", desc: "Direct integration with Egyptian Tax Authority e-invoicing API. RSA 2048-bit digital signing, cryptographic UUID validation, real-time submission.", ref: "Law 67/2018" },
       { name: "GS1/EGS Tax Code Mapping", status: "Implemented", desc: "Alphabetical Canonical flattening logic for product tax codes. Clear token handling rules for accurate ETA submission.", ref: "ETA Technical Spec" },
@@ -98,7 +98,7 @@ const LEGAL_FRAMEWORKS = [
 ];
 
 const AUDIT_CERTIFICATIONS = [
-  { icon: FileCheck, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority e-invoicing", color: "#84cc16" },
+  { icon: FileCheck, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority e-invoicing", color: "#FFB000" },
   { icon: Shield, label: "FRA Anti-Fraud — 3-Way Match", desc: "PO + ETA UUID + Signed GRN", color: "#22C55E" },
   { icon: Lock, label: "AES-256-GCM at Rest", desc: "Enterprise data encryption", color: "#3B82F6" },
   { icon: Server, label: "99.99% Uptime SLA", desc: "Multi-zone redundant infrastructure", color: "#D4A843" },
@@ -177,14 +177,14 @@ export default function CompliancePage() {
       <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <Gavel size={24} className="mx-auto mb-3" style={{ color: "#84cc16" }} />
+            <Gavel size={24} className="mx-auto mb-3" style={{ color: "#FFB000" }} />
             <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2">Applicable Egyptian Laws & Regulations</h2>
             <p className="text-[14px] text-white/40 max-w-xl mx-auto">The platform is designed to comply with the following Egyptian legal frameworks:</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {LEGAL_FRAMEWORKS.map((law) => (
               <div key={law.code} className="rounded-xl p-5 transition-all hover:border-white/15" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <span className="text-[10px] font-mono font-medium" style={{ color: "#84cc16" }}>{law.code}</span>
+                <span className="text-[10px] font-mono font-medium" style={{ color: "#FFB000" }}>{law.code}</span>
                 <h3 className="text-[13px] font-medium text-white mt-1 mb-2">{law.name}</h3>
                 <p className="text-[11px] text-white/40 leading-relaxed">{law.desc}</p>
               </div>
@@ -196,10 +196,10 @@ export default function CompliancePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Building2 size={28} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <Building2 size={28} className="mx-auto mb-6" style={{ color: "#FFB000" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Need a Compliance Walkthrough?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Schedule a dedicated session with our compliance team to review how HotelsVendors meets your regulatory requirements.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
             Request Compliance Review <ArrowRight size={14} />
           </Link>
         </div>

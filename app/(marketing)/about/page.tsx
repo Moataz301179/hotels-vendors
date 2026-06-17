@@ -21,7 +21,7 @@ export default function AboutPage() {
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,176,0,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">About</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -44,7 +44,7 @@ export default function AboutPage() {
               { icon: Banknote, label: "Embedded Finance", desc: "Factoring from day one" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <b.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -60,7 +60,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <Eye size={24} className="mb-4" style={{ color: "#84cc16" }} />
+              <Eye size={24} className="mb-4" style={{ color: "#FFB000" }} />
               <h2 className="text-[20px] font-medium text-white mb-4">The Market Gap</h2>
               <p className="text-[14px] text-white/40 leading-relaxed mb-4">
                 Egypt&apos;s hospitality sector is fragmented across thousands of manual procurement processes. Paper invoices. Extended payment cycles. Zero visibility into spend. Coastal resorts in Sharm and Hurghada rely on suppliers primarily based in Cairo, with logistics costs significantly impacting every order.
@@ -70,7 +70,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div>
-              <Target size={24} className="mb-4" style={{ color: "#84cc16" }} />
+              <Target size={24} className="mb-4" style={{ color: "#FFB000" }} />
               <h2 className="text-[20px] font-medium text-white mb-4">Our Focus</h2>
               <p className="text-[14px] text-white/40 leading-relaxed mb-4">
                 We serve coastal hotels in Sharm El-Sheikh and Hurghada first, then Cairo, Alexandria, and the North Coast. These are 100-500 room resorts with multiple F&B outlets, pools, spas, and water sports — properties where procurement complexity is highest and the pain is most acute.
@@ -89,12 +89,12 @@ export default function AboutPage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">What Drives Us</h2>
           <div className="grid md:grid-cols-4 gap-4">
             {[
-              { icon: Shield, title: "Compliance First", desc: "ETA e-invoicing, FRA anti-fraud, and cryptographic audit trails are built in — not bolted on as an afterthought.", color: "#84cc16" },
+              { icon: Shield, title: "Compliance First", desc: "ETA e-invoicing, FRA anti-fraud, and cryptographic audit trails are built in — not bolted on as an afterthought.", color: "#FFB000" },
               { icon: Globe, title: "Egypt-Focused", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements. Not a generic global platform with Arabic added.", color: "#22C55E" },
               { icon: Zap, title: "AI-Native", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture — not features added later.", color: "#3B82F6" },
               { icon: Target, title: "Hospitality-Only", desc: "We do not serve every industry. We serve hospitality better than anyone else. Depth over breadth.", color: "#D4A843" },
             ].map((v) => (
-              <div key={v.title} className="rounded-xl p-6 text-center transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={v.title} className="rounded-xl p-6 text-center transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <v.icon size={24} className="mx-auto mb-3" style={{ color: v.color }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{v.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{v.desc}</p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
               { value: "—", label: "Properties — Coming Soon" },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-[28px] font-medium mb-1" style={{ color: "#84cc16" }}>{s.value}</p>
+                <p className="text-[28px] font-medium mb-1" style={{ color: "#FFB000" }}>{s.value}</p>
                 <p className="text-[11px] text-white/30">{s.label}</p>
               </div>
             ))}
@@ -126,11 +126,11 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <Users size={28} className="mx-auto mb-6" style={{ color: "#FFB000" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Want to Learn More?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,176,0,0.2)]" style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}>
               Get Started <ArrowRight size={14} />
             </Link>
             <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

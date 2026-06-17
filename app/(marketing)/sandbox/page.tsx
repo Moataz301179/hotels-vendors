@@ -52,7 +52,7 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#84cc16",
+    color: "#FFB000",
     accentMuted: "rgba(132,204,22,0.1)",
     description: "Forecast demand, auto-generate POs, validate three-way matches, and settle via factoring.",
     steps: [
@@ -322,11 +322,11 @@ export default function SandboxPage() {
             className="text-center mb-10"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid rgba(132,204,22,0.12)", backgroundColor: "rgba(132,204,22,0.04)" }}>
-              <Zap size={11} style={{ color: "#84cc16" }} />
+              <Zap size={11} style={{ color: "#FFB000" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
-              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, #84cc16, #a3e635)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
+              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, #FFB000, #a3e635)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
             </h1>
             <p className="text-[13px] text-white/50 max-w-2xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting,<br className="hidden md:block" />
@@ -596,7 +596,7 @@ export default function SandboxPage() {
                             <Link
                               href="/register"
                               className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
-                              style={{ backgroundColor: "#84cc16", color: "#000000" }}
+                              style={{ backgroundColor: "#FFB000", color: "#000000" }}
                             >
                               Get Full Access <ArrowRight size={13} />
                             </Link>

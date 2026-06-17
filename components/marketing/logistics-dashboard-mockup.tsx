@@ -10,7 +10,7 @@ import {
 
 const kpiCards = [
   { label: "Active Loads", value: "12", change: "3 new today", up: true, color: "#D4A843" },
-  { label: "Truck Utilization", value: "87%", change: "+12% MoM", up: true, color: "#84cc16" },
+  { label: "Truck Utilization", value: "87%", change: "+12% MoM", up: true, color: "#FFB000" },
   { label: "On-Time Rate", value: "94%", change: "+2.1%", up: true, color: "#22C55E" },
   { label: "Deliveries/Wk", value: "47", change: "Target: 45", up: true, color: "#3B82F6" },
 ];

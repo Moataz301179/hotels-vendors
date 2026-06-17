@@ -10,7 +10,7 @@ import {
 
 const kpiCards = [
   { label: "Pool Size", value: "EGP 8.2M", change: "37 invoices", up: true, color: "#3B82F6" },
-  { label: "Active Bids", value: "3", change: "2 new today", up: true, color: "#84cc16" },
+  { label: "Active Bids", value: "3", change: "2 new today", up: true, color: "#FFB000" },
   { label: "Avg Return", value: "14.2%", change: "APR", up: true, color: "#22C55E" },
   { label: "Risk Score", value: "24/100", change: "Low avg", up: true, color: "#D4A843" },
 ];

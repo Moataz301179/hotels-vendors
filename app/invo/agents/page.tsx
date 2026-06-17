@@ -8,7 +8,7 @@ const BORDER = "rgba(60,64,67,0.50)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#84cc16";
+const ACCENT_LIME = "#FFB000";
 
 const AGENT_PIPELINE = [
   { id: "agent_1_ingestion", name: "Ingestion", desc: "Parse and validate incoming invoices", icon: "📥" },

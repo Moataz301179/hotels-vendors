@@ -71,8 +71,8 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
 }
 
 // ─── Template Styling Constants ───────────────────────────────────
-const ACCENT = "#0a1628";
-const ACCENT_LIGHT = "#1a2744";
+const ACCENT = "#FFB000";
+const ACCENT_LIGHT = "#FFC233";
 const EMERALD = "#10B981";
 
 // ─── Sector Router Data ───────────────────────────────────────────

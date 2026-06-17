@@ -81,7 +81,7 @@ export default function PricingPage() {
 
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,176,0,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Pricing</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -103,7 +103,7 @@ export default function PricingPage() {
               { icon: Scale, label: "ETA Compliance Ready", desc: "Funding fee disclosure" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <b.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -117,9 +117,9 @@ export default function PricingPage() {
       {/* How Pricing Works */}
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="rounded-2xl p-6 max-w-3xl mx-auto" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(132,204,22,0.1)" }}>
+          <div className="rounded-2xl p-6 max-w-3xl mx-auto" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,176,0,0.1)" }}>
             <h2 className="text-[14px] font-semibold text-white mb-4 flex items-center gap-2">
-              <Info size={16} style={{ color: "#84cc16" }} />
+              <Info size={16} style={{ color: "#FFB000" }} />
               How HotelsVendors Generates Revenue
             </h2>
             <div className="space-y-4 text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
@@ -132,7 +132,7 @@ export default function PricingPage() {
               <p>
                 <strong className="text-white/70">3. No Hidden Costs:</strong> There are no per-transaction commissions, no document processing fees, and no surprise charges. Your subscription covers the full platform — from AI forecasting to ETA compliance to settlement. Revenue is generated when value is created through the factoring process, not on every purchase order.
               </p>
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: "rgba(132,204,22,0.04)", border: "1px solid rgba(132,204,22,0.08)" }}>
+              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: "rgba(255,176,0,0.04)", border: "1px solid rgba(255,176,0,0.08)" }}>
                 <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
                   <strong className="text-white/60">Regulatory Note:</strong> Funding Fees (HV) are disclosed in accordance with FRA Anti-Fraud Compliance (three-way matching gate: PO + ETA UUID + Signed Digital GRN) and ETA e-invoicing regulations. All fees are itemized in the factoring bid terms and settlement documentation.
                 </p>
@@ -150,16 +150,16 @@ export default function PricingPage() {
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className="rounded-2xl p-7 flex flex-col transition-all hover:border-[#84cc16]/10"
+                className="rounded-2xl p-7 flex flex-col transition-all hover:border-[#FFB000]/10"
                 style={{
                   backgroundColor: tier.highlighted ? "#0a0a0a" : "#080808",
-                  border: tier.highlighted ? "1px solid rgba(132,204,22,0.2)" : "1px solid rgba(255,255,255,0.06)",
+                  border: tier.highlighted ? "1px solid rgba(255,176,0,0.2)" : "1px solid rgba(255,255,255,0.06)",
                 }}
               >
                 {tier.highlighted && (
-                  <span className="text-[10px] font-medium text-[#84cc16] uppercase tracking-wider mb-3">Most Popular</span>
+                  <span className="text-[10px] font-medium text-[#FFB000] uppercase tracking-wider mb-3">Most Popular</span>
                 )}
-                <tier.icon size={20} className="mb-3" style={{ color: tier.highlighted ? "#84cc16" : "rgba(255,255,255,0.3)" }} />
+                <tier.icon size={20} className="mb-3" style={{ color: tier.highlighted ? "#FFB000" : "rgba(255,255,255,0.3)" }} />
                 <h3 className="text-[18px] font-medium text-white mb-1">{tier.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-[32px] font-medium text-white">{tier.price}</span>
@@ -174,7 +174,7 @@ export default function PricingPage() {
                 <ul className="space-y-2.5 mb-6 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
-                      <Check size={13} className="flex-shrink-0 mt-0.5" style={{ color: "#84cc16" }} />
+                      <Check size={13} className="flex-shrink-0 mt-0.5" style={{ color: "#FFB000" }} />
                       <span className="text-[11px] text-white/50">{f}</span>
                     </li>
                   ))}
@@ -183,7 +183,7 @@ export default function PricingPage() {
                   href="/register"
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-medium transition-all"
                   style={tier.highlighted
-                    ? { backgroundColor: "#84cc16", color: "#000000" }
+                    ? { backgroundColor: "#FFB000", color: "#000000" }
                     : { border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }
                   }
                 >
@@ -219,7 +219,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Get Your Custom Quote</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Tell us about your property portfolio. We'll build a subscription plan that fits your size, volume, and factoring needs.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,176,0,0.2)]" style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}>
             Get a Quote <ArrowRight size={14} />
           </Link>
         </div>

@@ -43,7 +43,7 @@ export default function HotelsPage() {
             From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
               Register Your Property <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -59,7 +59,7 @@ export default function HotelsPage() {
           <div className="flex flex-wrap justify-center gap-8">
             {trustBadges.map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <b.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -76,8 +76,8 @@ export default function HotelsPage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-4" style={{ color: "#84cc16" }} />
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <f.icon size={20} className="mb-4" style={{ color: "#FFB000" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
               </div>
@@ -95,7 +95,7 @@ export default function HotelsPage() {
               { value: "6", label: "Governorates with Logistics Coverage" },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-[32px] font-medium mb-1" style={{ color: "#84cc16" }}>{s.value}</p>
+                <p className="text-[32px] font-medium mb-1" style={{ color: "#FFB000" }}>{s.value}</p>
                 <p className="text-[11px] text-white/30">{s.label}</p>
               </div>
             ))}
@@ -114,8 +114,8 @@ export default function HotelsPage() {
               { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
               { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
             ].map((r) => (
-              <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <r.icon size={16} style={{ color: "#84cc16" }} />
+              <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <r.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[13px] font-medium text-white">{r.region}</p>
                   <p className="text-[11px] text-white/30">{r.props}</p>
@@ -129,10 +129,10 @@ export default function HotelsPage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <Users size={28} className="mx-auto mb-6" style={{ color: "#FFB000" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Transform Your Procurement?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
             Get Started Free <ArrowRight size={14} />
           </Link>
         </div>

@@ -144,10 +144,10 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
     <div className="space-y-3">
       {/* Stats Row */}
       <div className="flex gap-2">
-        <StatCard label="Total Spend" value="EGP 2.4M" change="+12.3% vs LY" color="#84cc16" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
-        <StatCard label="Active POs" value="18" change="+4 this week" color="#84cc16" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>} />
-        <StatCard label="Forecast Acc." value="94%" change="+2.1%" color="#84cc16" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>} />
-        <StatCard label="Savings" value="EGP 187K" change="+5.4%" color="#84cc16" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
+        <StatCard label="Total Spend" value="EGP 2.4M" change="+12.3% vs LY" color="#FFB000" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
+        <StatCard label="Active POs" value="18" change="+4 this week" color="#FFB000" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>} />
+        <StatCard label="Forecast Acc." value="94%" change="+2.1%" color="#FFB000" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>} />
+        <StatCard label="Savings" value="EGP 187K" change="+5.4%" color="#FFB000" icon={() => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
       </div>
 
       {/* Chart Area */}
@@ -162,10 +162,10 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
               <span className="text-[8px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>AI Demand Forecast</span>
               <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.2)" }}>Next 14 days • Occupancy-based prediction</p>
             </div>
-            {completedSteps.has(0) && <span className="text-[8px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: "#84cc1615", color: "#84cc16" }}>Forecast Active</span>}
+            {completedSteps.has(0) && <span className="text-[8px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: "#FFB00015", color: "#FFB000" }}>Forecast Active</span>}
           </div>
           <MiniBarChart
-            color="#84cc16"
+            color="#FFB000"
             data={[
               { label: "Mon", value: 340, target: 320 },
               { label: "Tue", value: 310, target: 300 },
@@ -177,11 +177,11 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
           />
           <div className="flex items-center gap-3 mt-2">
             <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: "#84cc16", opacity: 0.6 }} />
+              <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: "#FFB000", opacity: 0.6 }} />
               <span className="text-[7px]" style={{ color: "rgba(255,255,255,0.25)" }}>Predicted</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-2 h-[2px] rounded-sm" style={{ backgroundColor: "#84cc16", opacity: 0.4 }} />
+              <div className="w-2 h-[2px] rounded-sm" style={{ backgroundColor: "#FFB000", opacity: 0.4 }} />
               <span className="text-[7px]" style={{ color: "rgba(255,255,255,0.25)" }}>Target</span>
             </div>
           </div>
@@ -197,15 +197,15 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
         >
           <div className="flex items-center justify-between mb-2.5">
             <span className="text-[8px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Recent Purchase Orders</span>
-            <span className="text-[8px]" style={{ color: "#84cc16" }}>View All →</span>
+            <span className="text-[8px]" style={{ color: "#FFB000" }}>View All →</span>
           </div>
           <MiniTable
-            color="#84cc16"
+            color="#FFB000"
             headers={["PO #", "Supplier", "Items", "Total", "Status"]}
             rows={[
-              ["PO-0421", "Egyptian Linen Co.", "14 items", "EGP 247.8K", { text: "Approved", color: "#84cc16" }],
+              ["PO-0421", "Egyptian Linen Co.", "14 items", "EGP 247.8K", { text: "Approved", color: "#FFB000" }],
               ["PO-0420", "Nile Chemical Supply", "8 items", "EGP 89.2K", { text: "Pending", color: "#D4A843" }],
-              ["PO-0419", "Cairo Kitchenware", "22 items", "EGP 312.5K", { text: "Approved", color: "#84cc16" }],
+              ["PO-0419", "Cairo Kitchenware", "22 items", "EGP 312.5K", { text: "Approved", color: "#FFB000" }],
               ["PO-0418", "Delta Amenities", "6 items", "EGP 45.1K", { text: "Delivered", color: "#3B82F6" }],
             ]}
           />
@@ -221,30 +221,30 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-[8px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>Three-Way Match — Validated</span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: "#84cc1615", color: "#84cc16" }}>● All Matched</span>
+            <span className="text-[8px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: "#FFB00015", color: "#FFB000" }}>● All Matched</span>
           </div>
           <div className="flex items-center justify-center gap-0">
             <div className="flex-1 text-center">
-              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#84cc1615", border: "2px solid #84cc16" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#84cc16" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/></svg>
+              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#FFB00015", border: "2px solid #FFB000" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFB000" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/></svg>
               </div>
-              <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>PO</span>
+              <span className="text-[7px] font-medium" style={{ color: "#FFB000" }}>PO</span>
               <p className="text-[6px]" style={{ color: "rgba(255,255,255,0.2)" }}>#INVO-00421</p>
             </div>
             <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/></svg>
             <div className="flex-1 text-center">
-              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#84cc1615", border: "2px solid #84cc16" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#84cc16" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#FFB00015", border: "2px solid #FFB000" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFB000" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               </div>
-              <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>GRN</span>
+              <span className="text-[7px] font-medium" style={{ color: "#FFB000" }}>GRN</span>
               <p className="text-[6px]" style={{ color: "rgba(255,255,255,0.2)" }}>Signed Digital</p>
             </div>
             <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/></svg>
             <div className="flex-1 text-center">
-              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#84cc1615", border: "2px solid #84cc16" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#84cc16" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+              <div className="w-10 h-10 rounded-full mx-auto mb-1 flex items-center justify-center" style={{ backgroundColor: "#FFB00015", border: "2px solid #FFB000" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFB000" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
               </div>
-              <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>ETA UUID</span>
+              <span className="text-[7px] font-medium" style={{ color: "#FFB000" }}>ETA UUID</span>
               <p className="text-[6px]" style={{ color: "rgba(255,255,255,0.2)" }}>9b7e3f51</p>
             </div>
           </div>
@@ -256,11 +256,11 @@ function HotelDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-3.5" style={{ backgroundColor: "#84cc1608", border: "1px solid #84cc1620" }}
+          className="rounded-xl p-3.5" style={{ backgroundColor: "#FFB00008", border: "1px solid #FFB00020" }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#84cc16" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span className="text-[9px] font-semibold" style={{ color: "#84cc16" }}>Settlement Complete — Net-60 Terms Active</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFB000" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span className="text-[9px] font-semibold" style={{ color: "#FFB000" }}>Settlement Complete — Net-60 Terms Active</span>
           </div>
           <p className="text-[8px]" style={{ color: "rgba(255,255,255,0.35)" }}>
             EGP 247,800 invoice settled via factoring pool. EGP 243,401.40 transferred to supplier. You pay in 60 days.
@@ -672,7 +672,7 @@ function AdminDashboard({ completedSteps, currentStep }: { completedSteps: Set<n
           <div className="space-y-2">
             {[
               { item: "Subscription Fees", amount: "EGP 198K", pct: 23, color: "#A855F7" },
-              { item: "Funding Fees (HV)", amount: "EGP 512K", pct: 60, color: "#84cc16" },
+              { item: "Funding Fees (HV)", amount: "EGP 512K", pct: 60, color: "#FFB000" },
               { item: "Logistics Margin", amount: "EGP 93K", pct: 11, color: "#3B82F6" },
               { item: "Value-Added Services", amount: "EGP 44K", pct: 6, color: "#D4A843" },
             ].map((item) => (
@@ -857,7 +857,7 @@ export function SandboxDashboard({ role, completedSteps, currentStep }: Dashboar
       <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "rgba(255,255,255,0.01)" }}>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#22C55E" }} />
-          <span className="text-[9px] font-medium" style={{ color: "#84cc16" }}>Live Sandbox</span>
+          <span className="text-[9px] font-medium" style={{ color: "#FFB000" }}>Live Sandbox</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-[7px] px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.2)" }}>
@@ -885,7 +885,7 @@ export function EmptySandboxState() {
   return (
     <div className="rounded-2xl p-10 flex flex-col items-center justify-center text-center" style={{ backgroundColor: "#080808", border: "1px solid rgba(255,255,255,0.06)", minHeight: "400px" }}>
       <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(132,204,22,0.06)" }}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#84cc16" strokeWidth="1.5" opacity={0.4}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFB000" strokeWidth="1.5" opacity={0.4}>
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
           <line x1="8" y1="21" x2="16" y2="21" />
           <line x1="12" y1="17" x2="12" y2="21" />

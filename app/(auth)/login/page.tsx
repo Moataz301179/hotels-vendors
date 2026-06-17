@@ -71,7 +71,7 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-3 mb-8 justify-center"
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#FFB000" }}>
             <span className="text-black font-bold text-lg">HV</span>
           </div>
           <div>
@@ -134,7 +134,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@hotel.com or admin"
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 focus:ring-1 focus:ring-[#FFB000]/20 transition-all"
                 />
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 focus:ring-1 focus:ring-[#FFB000]/20 transition-all"
                 />
                 <button
                   type="button"
@@ -169,7 +169,7 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
                 <input
                   type="checkbox"
-                  className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#84cc16]"
+                  className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#FFB000]"
                 />
                 <span>Remember me</span>
               </label>
@@ -202,7 +202,7 @@ export default function LoginPage() {
                 </button>
                 <Link
                   href="/forgot-password"
-                  className="text-[#84cc16] hover:opacity-80 transition-opacity font-medium"
+                  className="text-[#FFB000] hover:opacity-80 transition-opacity font-medium"
                 >
                   Forgot password?
                 </Link>
@@ -214,7 +214,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-              style={{ backgroundColor: "#84cc16", color: "#000000" }}
+              style={{ backgroundColor: "#FFB000", color: "#000000" }}
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -252,7 +252,7 @@ export default function LoginPage() {
           className="text-center text-sm text-white/30 mt-6"
         >
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
+          <Link href="/register" className="text-[#FFB000] hover:opacity-80 font-medium transition-opacity">
             Create account
           </Link>
         </motion.p>

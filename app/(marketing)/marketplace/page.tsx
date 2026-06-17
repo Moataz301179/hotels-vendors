@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "#84cc16" },
+  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "#FFB000" },
   { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "#22C55E" },
   { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#3B82F6" },
   { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "#D4A843" },
@@ -51,15 +51,15 @@ export default function MarketplacePage() {
             <div className="flex gap-2">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                <input type="text" placeholder="Search products, suppliers, or categories..." className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 transition-all" />
+                <input type="text" placeholder="Search products, suppliers, or categories..." className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 transition-all" />
               </div>
-              <button className="px-5 py-3.5 rounded-xl flex items-center gap-2 text-[13px] font-medium" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              <button className="px-5 py-3.5 rounded-xl flex items-center gap-2 text-[13px] font-medium" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
                 <Filter size={14} /> Filter
               </button>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>Start Selling <ArrowRight size={14} /></Link>
+            <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>Start Selling <ArrowRight size={14} /></Link>
             <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Supplier</Link>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function MarketplacePage() {
               { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <b.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -110,8 +110,8 @@ export default function MarketplacePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {supplierFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-4" style={{ color: "#84cc16" }} />
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <f.icon size={20} className="mb-4" style={{ color: "#FFB000" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
               </div>
@@ -132,7 +132,7 @@ export default function MarketplacePage() {
             ].map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
-                  <item.icon size={20} style={{ color: "#84cc16" }} />
+                  <item.icon size={20} style={{ color: "#FFB000" }} />
                 </div>
                 <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Step {item.step}</span>
                 <h3 className="text-[14px] font-medium text-white mt-1 mb-2">{item.title}</h3>
@@ -148,7 +148,7 @@ export default function MarketplacePage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Register as a supplier and get paid in 24 hours, not 90.</p>
-          <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+          <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
             Register as Supplier <ArrowRight size={14} />
           </Link>
         </div>

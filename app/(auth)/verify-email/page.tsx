@@ -115,7 +115,7 @@ function VerifyEmailForm() {
                 </div>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0a1628] hover:bg-[#070f1a] text-white text-sm font-medium transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FFB000] hover:bg-[#CC8C00] text-white text-sm font-medium transition-colors"
                 >
                   Sign In
                   <ArrowRight className="w-4 h-4" />

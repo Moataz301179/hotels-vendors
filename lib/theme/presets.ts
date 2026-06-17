@@ -34,17 +34,17 @@ export const PRESETS: ThemePreset[] = [
   {
     id: "hotels-vendors",
     name: "Hotels Vendors",
-    description: "Dark blue-black on pure black. Institutional fintech identity.",
+    description: "Vibrant gold on deep navy. Premium institutional fintech identity.",
     accent: {
-      50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#93a3e0",
-      400: "#4f5b8a", 500: "#0a1628", 600: "#070f1a", 700: "#050a14",
-      800: "#03060c", 900: "#010204",
+      50: "#fff8e6", 100: "#ffedb3", 200: "#ffe080", 300: "#ffd44d",
+      400: "#ffc426", 500: "#FFB000", 600: "#cc8c00", 700: "#996900",
+      800: "#664600", 900: "#332300",
     },
     bg: {
-      background: "#000000",
-      surface: "#050505",
-      surfaceRaised: "#0a0a0a",
-      surfaceHover: "#121212",
+      background: "#0B0F1A",
+      surface: "#0F1320",
+      surfaceRaised: "#141828",
+      surfaceHover: "#1C2032",
     },
     fg: {
       primary: "#f0f0f0",

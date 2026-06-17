@@ -20,7 +20,7 @@ const pillars = [
     icon: BrainCircuit,
     num: "01",
     title: "AI Demand Forecasting",
-    color: "#84cc16",
+    color: "#FFB000",
     desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio. Auto-generates POs against budget ceilings.",
     features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "Budget blockade enforcement"],
   },
@@ -66,7 +66,7 @@ export default function PlatformPage() {
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -87,7 +87,7 @@ export default function PlatformPage() {
               { icon: BarChart3, label: "Analytics", desc: "Spend visibility" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#84cc16" }} />
+                <b.icon size={16} style={{ color: "#FFB000" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -102,7 +102,7 @@ export default function PlatformPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-4">
           {pillars.map((p) => (
-            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-[#84cc16]/10" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-[#FFB000]/10" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-4 gap-6 items-start">
                 <div className="lg:col-span-3">
                   <div className="flex items-center gap-3 mb-3">
@@ -145,7 +145,7 @@ export default function PlatformPage() {
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(132,204,22,0.08)" }}>
-                  <b.icon size={16} style={{ color: "#84cc16" }} />
+                  <b.icon size={16} style={{ color: "#FFB000" }} />
                 </div>
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
@@ -160,11 +160,11 @@ export default function PlatformPage() {
       {/* CTA */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Cpu size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <Cpu size={32} className="mx-auto mb-6" style={{ color: "#FFB000" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Purpose-built for Egyptian hospitality groups managing coastal and inland properties.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

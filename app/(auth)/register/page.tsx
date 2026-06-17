@@ -73,7 +73,7 @@ function RegisterPage() {
             <Link
               href="/"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all"
-              style={{ backgroundColor: "#84cc16", color: "#000000" }}
+              style={{ backgroundColor: "#FFB000", color: "#000000" }}
             >
               Return to Landing Page
             </Link>
@@ -108,7 +108,7 @@ function RegisterPage() {
           className="text-center text-sm text-white/30 mt-6"
         >
           Already have an account?{" "}
-          <Link href="/login" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
+          <Link href="/login" className="text-[#FFB000] hover:opacity-80 font-medium transition-opacity">
             Sign in
           </Link>
         </motion.p>

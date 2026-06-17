@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-const ACCENT = "#0a1628";
+const ACCENT = "#FFB000";
 
 export default function PortalPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function PortalPage() {
       amount: "EGP 34,100",
       etaId: "Null (Authentication Failed)",
       status: "Rejected by ETA SDK" as const,
-      statusColor: "crimson" as const,
+      statusColor: "yellow" as const,
     },
   ]);
 
@@ -155,7 +155,7 @@ export default function PortalPage() {
               <span className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">14 Invoices</span>
             </div>
             <div className="rounded-2xl p-6 shadow-sm"
-              style={{ backgroundColor: "#0a162808", border: "1px solid #0a162820" }}
+              style={{ backgroundColor: "rgba(255,176,0,0.08)", border: "1px solid rgba(255,176,0,0.2)" }}
             >
               <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: ACCENT }}>Critical System Alerts</span>
               <div className="flex items-center justify-between">
@@ -215,7 +215,7 @@ export default function PortalPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        {row.statusColor === "crimson" ? (
+                        {row.statusColor === "yellow" ? (
                           <button onClick={() => { setModalOpen(true); setClientId("eta_fix_attempt_2026_ledger"); }} className="font-bold underline" style={{ color: ACCENT }}>
                             Fix Error
                           </button>

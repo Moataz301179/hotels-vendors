@@ -30,7 +30,7 @@ const sidebarItems = [
 ];
 
 const kpiCards = [
-  { label: "Open POs", value: "24", change: "+3", up: true, color: "#84cc16" },
+  { label: "Open POs", value: "24", change: "+3", up: true, color: "#FFB000" },
   { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "#3B82F6" },
   { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "#D4A843" },
   { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "#22C55E" },
@@ -109,7 +109,7 @@ export function DashboardMockup() {
               className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
               style={{ backgroundColor: "rgba(132,204,22,0.1)", border: "1px solid rgba(132,204,22,0.2)" }}
             >
-              <span className="text-[10px]" style={{ color: "#84cc16", fontWeight: 700 }}>HV</span>
+              <span className="text-[10px]" style={{ color: "#FFB000", fontWeight: 700 }}>HV</span>
             </div>
 
             {sidebarItems.map((item) => (
@@ -123,7 +123,7 @@ export function DashboardMockup() {
               >
                 <item.icon
                   size={15}
-                  style={{ color: item.active ? "#84cc16" : "rgba(255,255,255,0.2)" }}
+                  style={{ color: item.active ? "#FFB000" : "rgba(255,255,255,0.2)" }}
                 />
               </div>
             ))}
@@ -155,7 +155,7 @@ export function DashboardMockup() {
                   className="w-6 h-6 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: "rgba(132,204,22,0.15)" }}
                 >
-                  <span className="text-[7px] font-bold" style={{ color: "#84cc16" }}>AM</span>
+                  <span className="text-[7px] font-bold" style={{ color: "#FFB000" }}>AM</span>
                 </div>
               </div>
             </div>
@@ -206,7 +206,7 @@ export function DashboardMockup() {
                       className="flex-1 rounded-t-sm"
                       style={{
                         height: `${h}%`,
-                        backgroundColor: i === chartBars.length - 1 ? "#84cc16" : "rgba(132,204,22,0.12)",
+                        backgroundColor: i === chartBars.length - 1 ? "#FFB000" : "rgba(132,204,22,0.12)",
                         transition: "height 0.3s ease",
                       }}
                     />
@@ -261,7 +261,7 @@ export function DashboardMockup() {
                       style={{
                         backgroundColor:
                           step.status === "done" ? "#22C55E" :
-                          step.status === "active" ? "#84cc16" :
+                          step.status === "active" ? "#FFB000" :
                           "rgba(255,255,255,0.1)",
                       }}
                     />
@@ -270,7 +270,7 @@ export function DashboardMockup() {
                       style={{
                         color:
                           step.status === "done" ? "rgba(255,255,255,0.4)" :
-                          step.status === "active" ? "#84cc16" :
+                          step.status === "active" ? "#FFB000" :
                           "rgba(255,255,255,0.15)",
                       }}
                     >
@@ -282,7 +282,7 @@ export function DashboardMockup() {
                   </div>
                 ))}
               </div>
-              <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>PO-2024-0892</span>
+              <span className="text-[7px] font-medium" style={{ color: "#FFB000" }}>PO-2024-0892</span>
             </div>
           </div>
         </div>
@@ -300,8 +300,8 @@ export function DashboardMockup() {
           boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
         }}
       >
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
-        <span className="text-[8px] font-medium" style={{ color: "#84cc16" }}>Live · ETA Connected</span>
+        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#FFB000" }} />
+        <span className="text-[8px] font-medium" style={{ color: "#FFB000" }}>Live · ETA Connected</span>
       </motion.div>
     </motion.div>
   );
