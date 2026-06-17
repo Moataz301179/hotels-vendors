@@ -155,7 +155,7 @@ export default function PortalPage() {
               <span className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">14 Invoices</span>
             </div>
             <div className="rounded-2xl p-6 shadow-sm"
-              style={{ backgroundColor: "#8B000008", border: "1px solid #8B000020" }}
+              style={{ backgroundColor: "#0a162808", border: "1px solid #0a162820" }}
             >
               <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: ACCENT }}>Critical System Alerts</span>
               <div className="flex items-center justify-between">

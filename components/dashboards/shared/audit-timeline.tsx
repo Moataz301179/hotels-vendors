@@ -31,7 +31,7 @@ const ACTION_CONFIG: Record<string, { icon: LucideIcon; color: string; label: st
   APPROVE: { icon: CheckCircle2, color: "text-emerald-400", label: "Approved" },
   REJECT: { icon: XCircle, color: "text-red-400", label: "Rejected" },
   DISPUTE: { icon: AlertTriangle, color: "text-amber-400", label: "Disputed" },
-  SUBMIT_GRN: { icon: FileCheck, color: "text-[#8B0000]", label: "GRN Submitted" },
+  SUBMIT_GRN: { icon: FileCheck, color: "text-[#0a1628]", label: "GRN Submitted" },
   CONFIRM_DELIVERY: { icon: Package, color: "text-emerald-400", label: "Delivery Confirmed" },
   SHIP: { icon: Truck, color: "text-blue-400", label: "Shipped" },
   SUBMIT_INVOICE: { icon: FileText, color: "text-[#D4A843]", label: "Invoice Submitted" },
