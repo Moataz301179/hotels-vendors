@@ -12,7 +12,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="sm" />
+              <BrandLogo variant="dark" size="md" />
             </div>
             <p className="text-[12px] text-white/50 leading-relaxed max-w-xs">
               Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.

@@ -60,70 +60,40 @@ export async function executeLLM(
 
   const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
 
+  const ollamaUrl = process.env.OLLAMA_URL;
+  const ollamaModel = process.env.OLLAMA_MODEL;
   const groqKey = process.env.GROQ_API_KEY;
   const xaiKey = process.env.XAI_API_KEY;
 
-  // Try Groq first (free tier, fast)
-  if (groqKey) {
+  // Primary: Ollama (Local/VPS - Zero Cost)
+  if (ollamaUrl && ollamaModel) {
     try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch(`${ollamaUrl}/api/chat`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${groqKey}`,
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
+          model: ollamaModel,
           messages,
-          temperature,
-          max_tokens: maxTokens,
-          response_format: jsonMode ? { type: "json_object" } : undefined,
+          options: {
+            temperature,
+            num_predict: maxTokens,
+          },
+          stream: false,
+          format: jsonMode ? "json" : undefined,
         }),
       });
       if (res.ok) {
         const data = await res.json();
         return {
-          content: data.choices?.[0]?.message?.content || "",
-          provider: "groq",
-          model: "llama-3.3-70b-versatile",
+          content: data.message?.content || "",
+          provider: "ollama",
+          model: ollamaModel,
           latencyMs: Date.now() - startTime,
-          tokensUsed: data.usage?.total_tokens,
+          tokensUsed: data.prompt_eval + (data.eval_count || 0),
         };
       }
-    } catch {
-      // fall through to fallback
-    }
-  }
-
-  // Fallback to xAI Grok
-  if (xaiKey) {
-    try {
-      const res = await fetch("https://api.x.ai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${xaiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "grok-4-1-fast",
-          messages,
-          temperature,
-          max_tokens: maxTokens,
-          response_format: jsonMode ? { type: "json_object" } : undefined,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return {
-          content: data.choices?.[0]?.message?.content || "",
-          provider: "xai",
-          model: "grok-4-1-fast",
-          latencyMs: Date.now() - startTime,
-          tokensUsed: data.usage?.total_tokens,
-        };
-      }
-    } catch {
-      // fall through
+    } catch (e) {
+      console.error("[LLM Router] Ollama Error:", e);
     }
   }
 
