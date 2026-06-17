@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Clock, TrendingUp } from "lucide-react";
+import { Menu, X, Clock, TrendingUp, Sun, Moon } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { useTheme } from "@/components/theme/theme-provider";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const { mode, toggleMode } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -45,9 +47,6 @@ export function MarketingNav() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
           <BrandLogo variant="dark" size="sm" />
-          <span className="text-[15px] font-medium tracking-tight text-white">
-            HotelsVendors
-          </span>
         </Link>
 
         {/* Fintech Widget */}
@@ -81,7 +80,17 @@ export function MarketingNav() {
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-2">
+          {/* Theme toggle */}
+          <button
+            onClick={toggleMode}
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-white/10"
+            style={{ color: "rgba(255,255,255,0.5)" }}
+            title={mode === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {mode === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
+
           <Link
             href="/login"
             className="text-[14px] font-medium text-white/50 hover:text-white transition-colors"

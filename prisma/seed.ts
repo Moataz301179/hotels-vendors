@@ -186,7 +186,7 @@ async function main() {
 
   const hotelPassword = await hashPassword("HotelOwner123!");
   const hotelUser = await prisma.user.upsert({
-    where: { email: "hotel.owner@nilegrand.com" },
+    where: { tenantId_email: { tenantId: hotelTenant.id, email: "hotel.owner@nilegrand.com" } },
     update: {},
     create: {
       email: "hotel.owner@nilegrand.com",
@@ -244,7 +244,7 @@ async function main() {
 
   const supplierPassword = await hashPassword("SupplierOwner123!");
   const supplierUser = await prisma.user.upsert({
-    where: { email: "supplier.owner@deltafood.com" },
+    where: { tenantId_email: { tenantId: supplierTenant.id, email: "supplier.owner@deltafood.com" } },
     update: {},
     create: {
       email: "supplier.owner@deltafood.com",
@@ -301,7 +301,7 @@ async function main() {
 
   const factoringPassword = await hashPassword("FactoringOwner123!");
   const factoringUser = await prisma.user.upsert({
-    where: { email: "factoring.owner@cairocapital.com" },
+    where: { tenantId_email: { tenantId: factoringTenant.id, email: "factoring.owner@cairocapital.com" } },
     update: {},
     create: {
       email: "factoring.owner@cairocapital.com",
@@ -423,7 +423,7 @@ async function main() {
   const adminPassword = await hashPassword("Cheetos123");
   const adminRole = createdRoles["Platform Admin"];
   await prisma.user.upsert({
-    where: { email: "Admin" },
+    where: { tenantId_email: { tenantId: platformTenant.id, email: "Admin" } },
     update: { passwordHash: adminPassword },
     create: {
       email: "Admin",

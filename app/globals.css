@@ -121,6 +121,66 @@ html[data-accent="invo"] {
 }
 
 /* ── Base ── */
+/* ── Light Mode Overrides ── */
+html[data-mode="light"] {
+  --bg-canvas: #f8f9fa;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f0f1f3;
+  --bg-surface-3: #e8e9eb;
+  --background: #f8f9fa;
+  --surface: #ffffff;
+  --surface-raised: #f0f1f3;
+  --surface-hover: #e8e9eb;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a5a;
+  --text-tertiary: #8888a0;
+  --text-muted: #aaaabc;
+  --foreground: #1a1a2e;
+  --foreground-secondary: #4a4a5a;
+  --foreground-tertiary: #8888a0;
+  --foreground-muted: #aaaabc;
+  --border-invisible: rgba(0, 0, 0, 0.04);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-visible: rgba(0, 0, 0, 0.12);
+  --border-accent: rgba(132, 204, 22, 0.25);
+}
+
+html[data-mode="light"] .nav-border {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ── Light mode: override hardcoded inline backgrounds ── */
+html[data-mode="light"] main {
+  background-color: var(--bg-canvas) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-mode="light"] .bg-dark-section {
+  background-color: var(--bg-surface-1) !important;
+}
+
+html[data-mode="light"] .bg-dark-card {
+  background-color: var(--surface) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+html[data-mode="light"] section {
+  background-color: var(--bg-surface-1) !important;
+}
+
+html[data-mode="light"] footer {
+  background-color: var(--bg-surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+html[data-mode="light"] .text-white\/50, html[data-mode="light"] .text-white\/60, html[data-mode="light"] .text-white\/40, html[data-mode="light"] .text-white\/30, html[data-mode="light"] .text-white\/20 {
+  color: var(--text-secondary) !important;
+}
+
+html[data-mode="light"] h1, html[data-mode="light"] h2, html[data-mode="light"] h3, html[data-mode="light"] .text-white {
+  color: var(--text-primary) !important;
+}
+
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg-canvas);
@@ -470,9 +530,10 @@ h1, h2, h3, h4, h5, h6,
    SECTION DIVIDERS
    ═══════════════════════════════════════════════════════════════ */
 .section-divider {
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--border-subtle), transparent);
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(132,204,22,0.08), rgba(132,204,22,0.15), rgba(132,204,22,0.08), transparent);
   border: none;
+  margin: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════

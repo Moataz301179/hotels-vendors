@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BrainCircuit, Receipt, Truck, Banknote, ShieldCheck, BarChart3, Cpu, Lock, Zap } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "B2B Hospitality Operating System | Procurement + Fintech + AI Automation | HotelsVendors",
@@ -51,6 +53,7 @@ const pillars = [
 export default function PlatformPage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
@@ -170,6 +173,7 @@ export default function PlatformPage() {
           </div>
         </div>
       </section>
+          <MarketingFooter />
     </main>
   );
 }

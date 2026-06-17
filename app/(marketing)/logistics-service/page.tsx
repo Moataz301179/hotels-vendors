@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Truck, MapPin, Clock, TrendingDown, Shield, Thermometer, Route, Banknote, PackageCheck } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "Coastal Hotel Logistics Egypt | Shared-Route Delivery | HotelsVendors",
@@ -34,6 +36,7 @@ const features = [
 export default function LogisticsServicePage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)" }} />
@@ -126,6 +129,7 @@ export default function LogisticsServicePage() {
           </div>
         </div>
       </section>
+          <MarketingFooter />
     </main>
   );
 }

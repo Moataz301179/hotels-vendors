@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
@@ -55,6 +57,7 @@ const solutions = [
 export default function SolutionsPage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
@@ -161,6 +164,7 @@ export default function SolutionsPage() {
           </div>
         </div>
       </section>
+          <MarketingFooter />
     </main>
   );
 }

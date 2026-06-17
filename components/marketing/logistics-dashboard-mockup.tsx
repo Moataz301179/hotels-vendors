@@ -9,10 +9,16 @@ import {
 } from "lucide-react";
 
 const kpiCards = [
-  { label: "Active Loads", value: "—", change: "—", up: true, color: "#D4A843" },
-  { label: "Truck Utilization", value: "—", change: "—", up: true, color: "#84cc16" },
-  { label: "On-Time Rate", value: "—", change: "—", up: true, color: "#22C55E" },
-  { label: "This Week", value: "—", change: "—", up: true, color: "#3B82F6" },
+  { label: "Active Loads", value: "12", change: "3 new today", up: true, color: "#D4A843" },
+  { label: "Truck Utilization", value: "87%", change: "+12% MoM", up: true, color: "#84cc16" },
+  { label: "On-Time Rate", value: "94%", change: "+2.1%", up: true, color: "#22C55E" },
+  { label: "Deliveries/Wk", value: "47", change: "Target: 45", up: true, color: "#3B82F6" },
+];
+
+const routes = [
+  { id: "RT-021", from: "Cairo Hub", to: "Hurghada Corridor", load: "4 suppliers", eta: "22:15", status: "Active", color: "#22C55E" },
+  { id: "RT-022", from: "Alex Hub", to: "North Coast", load: "3 suppliers", eta: "16:30", status: "Loading", color: "#3B82F6" },
+  { id: "RT-023", from: "Suez Hub", to: "Sharm El Sheikh", load: "5 suppliers", eta: "05:30", status: "Scheduled", color: "#D4A843" },
 ];
 
 export function LogisticsDashboardMockup() {
@@ -43,21 +49,21 @@ export function LogisticsDashboardMockup() {
           {/* Header — with HV logo */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <Image src="/knight-icon.svg" alt="HV" width={18} height={18} className="object-contain" />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.15)" }}>
+                <Image src="/logo-brand.jpg" alt="HV" width={34} height={34} className="object-contain" />
               </div>
               <div>
                 <h3 className="text-[13px] font-semibold text-white">Logistics Control</h3>
-                <p className="text-[9px] text-white/25">Your Fleet · Your Account</p>
+                <p className="text-[9px] text-white/25">Red Sea Fleet · GPS Active</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-20 h-6 rounded-md flex items-center gap-1 px-2" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <Search size={9} style={{ color: "rgba(255,255,255,0.2)" }} />
-                <span className="text-[8px] text-white/15">Search...</span>
+                <span className="text-[8px] text-white/15">Search routes...</span>
               </div>
               <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(212,168,67,0.15)" }}>
-                <span className="text-[7px]" style={{ color: "#D4A843", fontWeight: 700 }}>LF</span>
+                <span className="text-[7px]" style={{ color: "#D4A843", fontWeight: 700 }}>RF</span>
               </div>
             </div>
           </div>
@@ -81,12 +87,8 @@ export function LogisticsDashboardMockup() {
               <span className="text-[9px] font-medium text-white/40">Active Routes</span>
               <span className="text-[8px]" style={{ color: "#D4A843" }}>GPS Tracking</span>
             </div>
-            <div className="space-y-2">
-              {[
-                { id: "RT-001", from: "Hub A", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#3B82F6" },
-                { id: "RT-002", from: "Hub B", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#D4A843" },
-                { id: "RT-003", from: "Hub C", to: "Destination", load: "Multi-supplier", eta: "—", status: "Link fleet to activate", color: "#84cc16" },
-              ].map((route) => (
+            <div className="space-y-1.5">
+              {routes.map((route) => (
                 <div key={route.id} className="flex items-center justify-between p-2 rounded-md" style={{ backgroundColor: "rgba(255,255,255,0.01)" }}>
                   <div className="flex items-center gap-2 min-w-0">
                     <Navigation size={8} style={{ color: route.color }} />
@@ -96,7 +98,8 @@ export function LogisticsDashboardMockup() {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-2">
-                    <p className="text-[7px]" style={{ color: route.color }}>{route.status}</p>
+                    <p className="text-[7px] font-medium" style={{ color: route.color }}>{route.status}</p>
+                    <p className="text-[6px] text-white/15">ETA {route.eta}</p>
                   </div>
                 </div>
               ))}
@@ -106,7 +109,7 @@ export function LogisticsDashboardMockup() {
           <div className="mt-3 rounded-lg p-2.5 flex items-center justify-between" style={{ backgroundColor: "rgba(212,168,67,0.03)", border: "1px solid rgba(212,168,67,0.06)" }}>
             <div className="flex items-center gap-2">
               <Banknote size={10} style={{ color: "#D4A843" }} />
-              <span className="text-[8px] text-white/40">Payouts activate after POD verification</span>
+              <span className="text-[8px] text-white/50">EGP 18,420 released — 3 hours post-POD</span>
             </div>
             <span className="text-[7px] font-medium" style={{ color: "#D4A843" }}>Auto-settlement</span>
           </div>

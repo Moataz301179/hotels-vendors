@@ -6,15 +6,16 @@ import Image from "next/image";
 interface BrandLogoProps {
   className?: string;
   variant?: "dark" | "light";
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   showText?: boolean;
 }
 
 const SIZE_MAP = {
-  sm: { icon: 32, text: 15, slogan: 9, tracking: "0.05em" },
-  md: { icon: 40, text: 18, slogan: 11, tracking: "0.08em" },
-  lg: { icon: 56, text: 24, slogan: 14, tracking: "0.1em" },
-  xl: { icon: 72, text: 32, slogan: 18, tracking: "0.12em" },
+  xs: { icon: 36, text: 14, slogan: 8, tracking: "0.04em" },
+  sm: { icon: 48, text: 18, slogan: 11, tracking: "0.05em" },
+  md: { icon: 72, text: 28, slogan: 16, tracking: "0.08em" },
+  lg: { icon: 96, text: 38, slogan: 22, tracking: "0.1em" },
+  xl: { icon: 120, text: 48, slogan: 28, tracking: "0.12em" },
 };
 
 export function BrandLogo({

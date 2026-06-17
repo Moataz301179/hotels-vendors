@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Banknote, Clock, Shield, TrendingUp, Check, Landmark, FileCheck, BarChart3, Users } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
@@ -32,6 +34,7 @@ const funderFeatures = [
 export default function FactoringServicePage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(212,168,67,0.04) 0%, transparent 70%)" }} />
@@ -127,6 +130,7 @@ export default function FactoringServicePage() {
           </div>
         </div>
       </section>
+          <MarketingFooter />
     </main>
   );
 }

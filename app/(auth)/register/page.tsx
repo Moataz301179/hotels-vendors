@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { BaseRegisterForm } from "@/components/auth/registration/base-register-form";
+import { RoleBenefits, type StakeholderRole } from "@/components/auth/role-benefits";
 
 export default function RegisterPageWrapper() {
   return (
@@ -94,6 +95,10 @@ function RegisterPage() {
           <BrandLogo variant="light" size="md" />
         </motion.div>
 
+        {/* Sector-specific benefits */}
+        <div className="mb-8">
+          <RoleBenefits role={activeRole as StakeholderRole} variant="compact" />
+        </div>
         <BaseRegisterForm role={activeRole} onSuccess={() => {}} />
 
         <motion.p

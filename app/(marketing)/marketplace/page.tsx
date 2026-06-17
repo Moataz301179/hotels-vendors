@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3 } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "B2B Hospitality Marketplace Egypt | Verified Hotel Suppliers | HotelsVendors",
@@ -33,6 +35,7 @@ const supplierFeatures = [
 export default function MarketplacePage() {
   return (
     <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
@@ -56,8 +59,8 @@ export default function MarketplacePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>Start Selling <ArrowRight size={14} /></Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
+            <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>Start Selling <ArrowRight size={14} /></Link>
+            <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Supplier</Link>
           </div>
         </div>
       </section>
@@ -145,11 +148,12 @@ export default function MarketplacePage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Register as a supplier and get paid in 24 hours, not 90.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+          <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
             Register as Supplier <ArrowRight size={14} />
           </Link>
         </div>
       </section>
+      <MarketingFooter />
     </main>
   );
 }

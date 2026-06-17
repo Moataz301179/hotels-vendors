@@ -11,23 +11,23 @@ import {
   Landmark,
   Truck,
   CheckCircle2,
+  BarChart3,
   ShoppingCart,
   Receipt,
   Banknote,
-  BarChart3,
-  Package,
-  Clock,
-  TrendingUp,
-  Shield,
-  Zap,
-  Play,
   RotateCcw,
   Sparkles,
+  Play,
+  Package,
+  Shield,
+  TrendingUp,
+  Zap,
+  ShieldCheck,
+  Monitor,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-
-type Role = "hotel" | "supplier" | "factoring" | "shipping";
+import { SandboxDashboard, EmptySandboxState, type Role } from "@/components/marketing/sandbox-dashboard";
 
 interface RoleConfig {
   key: Role;
@@ -43,8 +43,8 @@ interface SandboxStep {
   title: string;
   description: string;
   action: string;
-  result: string;
   icon: React.ElementType;
+  detail: string;
 }
 
 const ROLES: RoleConfig[] = [
@@ -54,12 +54,36 @@ const ROLES: RoleConfig[] = [
     icon: Building2,
     color: "#84cc16",
     accentMuted: "rgba(132,204,22,0.1)",
-    description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
+    description: "Forecast demand, auto-generate POs, validate three-way matches, and settle via factoring.",
     steps: [
-      { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "HV Engine predicts demand $\rightarrow$ INVO Rails identify nearest suppliers with matching SKUs.", icon: BarChart3 },
-      { title: "Auto PO Generation", description: "POs are auto-created against your budget ceilings and sent to pre-mandated suppliers.", action: "Issue PO", result: "HV Authority Matrix validates $\rightarrow$ INVO API publishes order to Supplier Feed.", icon: ShoppingCart },
-      { title: "Three-Way Match", description: "When goods arrive, the system validates PO + ETA UUID + Signed Delivery Note.", action: "Receive shipment", result: "HV checks digital signature $\rightarrow$ INVO validates ETA UUID $\rightarrow$ Invoice auto-generates.", icon: CheckCircle2 },
-      { title: "Factoring Settlement", description: "Pre-cleared invoice enters competitive bidding. Supplier paid in 24hrs. You keep net-60.", action: "Submit invoice to factoring pool", result: "HV signals payment guarantee $\rightarrow$ INVO Payment Rails settle supplier via Bank-Direct IBAN.", icon: Banknote },
+      {
+        title: "AI Demand Forecast",
+        description: "The engine analyzes occupancy, events, and 12-month consumption history to predict needs.",
+        action: "Generate 14-day forecast",
+        icon: BarChart3,
+        detail: "HV Engine predicts 3,420 room-nights with 94% accuracy across 6 categories (F&B, Housekeeping, Amenities, Engineering, Consumables, Capital Equipment).",
+      },
+      {
+        title: "Auto PO Generation",
+        description: "POs are auto-created against budget ceilings and routed to pre-mandated suppliers.",
+        action: "Issue PO",
+        icon: ShoppingCart,
+        detail: "14-item PO generated for EGP 247,800. Authority Matrix validated at property level. Budget utilization: 68% of Q3 allocation.",
+      },
+      {
+        title: "Three-Way Match",
+        description: "System validates PO + ETA UUID + Signed GRN. All must match before payment.",
+        action: "Receive shipment",
+        icon: Shield,
+        detail: "PO #INVO-00421 matched with ETA UUID 9b7e3f51 and digital GRN #GRN-ALM-003. All three signatures cryptographically verified.",
+      },
+      {
+        title: "Factoring Settlement",
+        description: "Pre-cleared invoice enters competitive factoring. Supplier paid in 24hrs. You keep net-60.",
+        action: "Submit to factoring pool",
+        icon: Banknote,
+        detail: "Invoice entered competitive pool. 2 bids received (1.85% vs 1.95%). Best rate accepted. EGP 243,401.40 settled via bank-direct IBAN.",
+      },
     ],
   },
   {
@@ -68,12 +92,36 @@ const ROLES: RoleConfig[] = [
     icon: Store,
     color: "#22C55E",
     accentMuted: "rgba(34,197,94,0.1)",
-    description: "Discover how suppliers get discovered, receive POs, and get paid in 24 hours.",
+    description: "List products, receive POs, issue ETA-compliant invoices, and get paid in 24 hours.",
     steps: [
-      { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload SKUs", result: "✅ Catalog processed: 1,247 SKUs categorized across 6 categories (F&B, Housekeeping, Amenities, Engineering, Capital Equipment, Consumables). AI matched 43 hotel procurement profiles in Red Sea, Cairo, and Alexandria corridors.", icon: Package },
-      { title: "PO Notification", description: "Receive purchase orders directly from hotel procurement teams.", action: "Accept PO", result: "✅ PO #INVO-2026-00421 received from Steigenberger Resort El Gouna. 14 items totaling EGP 247,800. Delivery window: 72 hours. Authority Matrix approved at property level. Shared-route eligibility confirmed.", icon: ShoppingCart },
-      { title: "ETA Invoice Issuance", description: "Issue ETA-compliant e-invoices directly from the platform.", action: "Issue invoice", result: "✅ Invoice #HV-INV-00421 digitally signed with RSA-2048. ETA UUID: 9b7e3f51-2a8d-4c6e-b0f1-8d3e5a7c9b0a. Submitted to Egyptian Tax Authority in real-time. Status: ACCEPTED.", icon: Receipt },
-      { title: "24-Hour Payment", description: "Your invoice enters the factoring pool. Get paid in 24 hours, not 180 days.", action: "Opt for early settlement", result: "✅ Invoice entered competitive factoring pool. 2 bids received: CIB (discount rate 1.8%) and EFG Hermes (discount rate 1.95%). Best offer accepted. EGP 243,401.40 settled via bank-direct IBAN within 14 hours. Non-recourse.", icon: Banknote },
+      {
+        title: "Catalog Upload",
+        description: "Upload your product catalog. AI categorizes and matches you to hotel demand.",
+        action: "Upload SKUs",
+        icon: Package,
+        detail: "1,247 SKUs categorized across 6 categories. AI matched 43 hotel procurement profiles in Red Sea, Cairo, and Alexandria corridors.",
+      },
+      {
+        title: "PO Notification",
+        description: "Receive purchase orders directly from hotel procurement teams with delivery windows.",
+        action: "Accept PO",
+        icon: ShoppingCart,
+        detail: "PO #INVO-00421 from Steigenberger Resort El Gouna: 14 items, EGP 247,800. Delivery window: 72 hours. Shared-route eligible.",
+      },
+      {
+        title: "ETA Invoice Issuance",
+        description: "Issue ETA-compliant e-invoices with digital signatures and cryptographic validation.",
+        action: "Issue invoice",
+        icon: Receipt,
+        detail: "Invoice #HV-INV-00421 RSA-2048 signed. ETA UUID: 9b7e3f51-2a8d-4c6e-b0f1-8d3e5a7c9b0a. Submitted real-time. Status: ACCEPTED.",
+      },
+      {
+        title: "24-Hour Payment",
+        description: "Invoice enters factoring pool. Get paid in 24 hours, not 180 days.",
+        action: "Opt for early settlement",
+        icon: Banknote,
+        detail: "EGP 243,401.40 settled via bank-direct IBAN within 14 hours. Non-recourse. Zero risk to supplier.",
+      },
     ],
   },
   {
@@ -82,12 +130,36 @@ const ROLES: RoleConfig[] = [
     icon: Landmark,
     color: "#D4A843",
     accentMuted: "rgba(212,168,67,0.1)",
-    description: "Access pre-verified hospitality invoices and deploy capital with competitive bidding.",
+    description: "Access pre-verified invoices, score risk AI, bid competitively, and settle bank-direct.",
     steps: [
-      { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "✅ Invoice pool loaded: 37 available invoices. Total face value: EGP 8.2M. All invoices triple-validated: PO matched, ETA UUID verified, GRN signed. Filter by risk tier, amount, sector, or governance.", icon: Receipt },
-      { title: "Risk Scoring", description: "AI scores each invoice: hotel creditworthiness, delivery confirmation, ETA compliance.", action: "Review risk scores", result: "✅ Pool breakdown: 12 invoices — LOW risk (avg score 24/100), 18 — MEDIUM (avg 47/100), 7 — HIGH (avg 68/100). Top-tier hotels include Steigenberger, Jaz, and Movenpick portfolios.", icon: Shield },
-      { title: "Competitive Bid", description: "Bid on invoices. Best rate wins. Non-recourse structure protects your capital.", action: "Submit bid", result: "✅ Bid submitted at 1.85% discount rate on INV-00421 (EGP 247,800). Competing against 1 other bidder. Non-recourse: supplier default risk transferred at bid acceptance. Estimated return: 14.2% APR on deployed capital.", icon: TrendingUp },
-      { title: "Bank-Direct Settlement", description: "Settlement flows directly between your bank and the supplier. Zero intermediary risk.", action: "Confirm settlement", result: "✅ Settlement confirmed: EGP 243,209.70 transferred from CIB Cairo — Main Branch directly to supplier IBAN EG380039003445600000000123456. No intermediary accounts. Non-recourse. Clean balance-sheet treatment. Audit ref: SET-2026-05-14-089.", icon: Banknote },
+      {
+        title: "Invoice Pool Access",
+        description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.",
+        action: "Browse available invoices",
+        icon: Receipt,
+        detail: "37 invoices available. Total face value: EGP 8.2M. All triple-validated (PO + ETA UUID + GRN). Filter by risk tier, sector, or governance.",
+      },
+      {
+        title: "Risk Scoring",
+        description: "AI scores each invoice on hotel creditworthiness, delivery confirmation, and ETA compliance.",
+        action: "Review risk scores",
+        icon: Shield,
+        detail: "12 LOW (avg 24/100), 18 MEDIUM (avg 47/100), 7 HIGH (avg 68/100). Top-tier hotels: Steigenberger, Jaz, Movenpick.",
+      },
+      {
+        title: "Competitive Bid",
+        description: "Bid on invoices. Best rate wins. Non-recourse protects your capital.",
+        action: "Submit bid",
+        icon: TrendingUp,
+        detail: "Bid placed at 1.85% on INV-00421 (EGP 247,800). Est. return: 14.2% APR. Non-recourse: risk transfers at acceptance.",
+      },
+      {
+        title: "Bank-Direct Settlement",
+        description: "Settlement flows directly between your bank and supplier. Zero intermediary risk.",
+        action: "Confirm settlement",
+        icon: Banknote,
+        detail: "EGP 243,209.70 transferred CIB → Supplier IBAN EG380039003445600000000123456. Clean balance-sheet treatment.",
+      },
     ],
   },
   {
@@ -96,12 +168,112 @@ const ROLES: RoleConfig[] = [
     icon: Truck,
     color: "#3B82F6",
     accentMuted: "rgba(59,130,246,0.1)",
-    description: "Fill your trucks with consolidated loads and get guaranteed on-time payment.",
+    description: "Fill trucks with consolidated loads, optimize routes, and get paid in hours.",
     steps: [
-      { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "✅ 12 available loads found on Red Sea corridor. Multi-supplier consolidation: 4 suppliers sharing 1 truck to Hurghada. Estimated weight: 3.2 tons. Utilization: 87%. Fuel savings: 34% vs. individual deliveries.", icon: Package },
-      { title: "Route Optimization", description: "Shared-route planning across 6 governorates. Minimize empty miles.", action: "Optimize route", result: "✅ Route optimized: Cairo Consolidation Hub → Sokhna → Hurghada → El Gouna → Marsa Alam. Total distance: 487 km. 6 stops. Estimated fuel: EGP 4,280. 2 drivers. Departure: 14:00 today. ETA at final stop: 08:30 tomorrow.", icon: BarChart3 },
-      { title: "Delivery Confirmation", description: "GPS-tracked delivery. Digital proof of delivery triggers automatic payment.", action: "Confirm delivery at dock", result: "✅ Stop 3/6 — Jaz Almaza Beach Resort: Delivered 14 cartons (kitchenware, linens, amenities). GRN #GRN-ALM-2026-05-14-003 signed digitally. ETA UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890 validated. POD captured.", icon: CheckCircle2 },
-      { title: "On-Time Payment", description: "Payment released automatically upon delivery confirmation. No 90-day waits.", action: "Receive payment", result: "✅ Settlement EGP 18,420 released to your IBAN: EG380039003445600000000789012 within 3 hours of final POD confirmation. No manual invoicing. No 90-day wait. Auto-reconciliation with trip manifest. Ref: PAY-LOG-2026-05-14-022.", icon: Banknote },
+      {
+        title: "Load Matching",
+        description: "AI matches your available capacity to multi-supplier delivery requests.",
+        action: "View available loads",
+        icon: Package,
+        detail: "12 loads on Red Sea corridor. Multi-supplier consolidation: 4 suppliers sharing 1 truck. Utilization: 87%. Fuel savings: 34%.",
+      },
+      {
+        title: "Route Optimization",
+        description: "Shared-route planning minimizes empty miles across 6 governorates.",
+        action: "Optimize route",
+        icon: BarChart3,
+        detail: "Cairo → Sokhna → Hurghada → El Gouna → Marsa Alam. 487 km, 6 stops. Fuel: EGP 4,280. ETA: 08:30 tomorrow.",
+      },
+      {
+        title: "Delivery Confirmation",
+        description: "GPS-tracked delivery with digital proof for automatic payment trigger.",
+        action: "Confirm delivery",
+        icon: Shield,
+        detail: "Stop 3/6 — Jaz Almaza: 14 cartons delivered. GRN #GRN-ALM-003 signed. ETA UUID validated. POD captured.",
+      },
+      {
+        title: "On-Time Payment",
+        description: "Payment released automatically upon delivery confirmation. No 90-day waits.",
+        action: "Receive payment",
+        icon: Banknote,
+        detail: "EGP 18,420 settled within 3 hours of final POD. Auto-reconciled with trip manifest. No manual invoicing needed.",
+      },
+    ],
+  },
+  {
+    key: "admin",
+    label: "Admin / Operator",
+    icon: Monitor,
+    color: "#A855F7",
+    accentMuted: "rgba(168,85,247,0.1)",
+    description: "Monitor platform health, manage tenants, audit transactions, and track revenue.",
+    steps: [
+      {
+        title: "Tenant Management",
+        description: "Onboard and manage hotel groups, suppliers, funders, and logistics providers.",
+        action: "View tenant dashboard",
+        icon: Building2,
+        detail: "24 active tenants across 4 tiers. 12 on trial, 8 enterprise, 4 onboarding. Platform GMV: EGP 18.2M. Fee revenue: EGP 847K.",
+      },
+      {
+        title: "Revenue Monitoring",
+        description: "Track platform fee revenue by stream: subscription, funding fees (HV), logistics margin.",
+        action: "Review revenue breakdown",
+        icon: BarChart3,
+        detail: "Subscription: EGP 198K (23%). Funding Fees (HV): EGP 512K (60%). Logistics Margin: EGP 93K (11%). Value-Added: EGP 44K (6%). Total: EGP 847K.",
+      },
+      {
+        title: "Audit Log Review",
+        description: "Immutable SHA-256 audit trail of every transaction state transition on the platform.",
+        action: "View audit log",
+        icon: Shield,
+        detail: "1,247 audit events today. 99.97% automated. 3 manual escalations — all resolved. Full cryptographic chain from PO creation to settlement.",
+      },
+      {
+        title: "System Health",
+        description: "Real-time monitoring of platform uptime, queue depths, and ETA bridge status.",
+        action: "Confirm health status",
+        icon: TrendingUp,
+        detail: "Uptime: 99.99% (30d). Avg response: 187ms. ETA bridge: Connected. Queue depth: 12 pending. Zero active escalations.",
+      },
+    ],
+  },
+  {
+    key: "eta-officer",
+    label: "ETA Compliance Officer",
+    icon: ShieldCheck,
+    color: "#F97316",
+    accentMuted: "rgba(249,115,22,0.1)",
+    description: "Monitor ETA submission pipeline, validate invoice compliance, and audit signatures.",
+    steps: [
+      {
+        title: "Submission Queue",
+        description: "Monitor real-time ETA e-invoicing submission pipeline for all platform invoices.",
+        action: "Check submission queue",
+        icon: Receipt,
+        detail: "47 invoices submitted today. All RSA-2048 signed. UUIDs: 47/47 validated by ETA Portal. Queue clear. No dead-letter messages.",
+      },
+      {
+        title: "Three-Way Validation",
+        description: "Verify PO + ETA UUID + Signed Digital GRN match before invoice acceptance.",
+        action: "Run validation check",
+        icon: Shield,
+        detail: "PO-00421 ✓ | ETA UUID 9b7e3f51 ✓ (ETAPortal: ACCEPTED) | RSA-2048 Signature ✓ | GRN #GRN-ALM-003 ✓ | GS1/EGS Tax Codes: 14/14 ✓",
+      },
+      {
+        title: "FRA Compliance Audit",
+        description: "Run anti-fraud compliance checks per FRA requirements on all transactions.",
+        action: "Generate compliance report",
+        icon: CheckCircle2,
+        detail: "3-Way Match Gate: 100% pass rate. SHA-256 Audit Trail: Complete. AES-256-GCM: Enabled. Tenant RLS: Active. TLS 1.3: Enforced.",
+      },
+      {
+        title: "Compliance Sign-Off",
+        description: "Final compliance sign-off for daily batch — all invoices meet ETA Phase 1 & 2.",
+        action: "Approve batch",
+        icon: TrendingUp,
+        detail: "Batch 2026-05-14: 47/47 invoices accepted. 0 rejections. 0 failed signatures. ETA compliance rate: 100%. FRA audit: Clean.",
+      },
     ],
   },
 ];
@@ -121,9 +293,12 @@ export default function SandboxPage() {
     setIsRunning(true);
     setTimeout(() => {
       setCompletedSteps((prev) => new Set([...prev, stepIndex]));
+      if (stepIndex < totalSteps - 1) {
+        setCurrentStep(stepIndex + 1);
+      }
       setIsRunning(false);
     }, 1200);
-  }, []);
+  }, [totalSteps]);
 
   const handleReset = useCallback(() => {
     setCurrentStep(0);
@@ -135,32 +310,33 @@ export default function SandboxPage() {
     <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
       <MarketingNav />
 
-      <section className="pt-28 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
+      <section className="pt-24 pb-16 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.025) 0%, transparent 70%)" }} />
 
-        <div className="relative z-10 mx-auto max-w-5xl px-6">
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.5 }}
+            className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(132,204,22,0.15)", backgroundColor: "rgba(132,204,22,0.04)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid rgba(132,204,22,0.12)", backgroundColor: "rgba(132,204,22,0.04)" }}>
               <Zap size={11} style={{ color: "#84cc16" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
-            <h1 className="text-[clamp(28px,4vw,44px)] font-bold tracking-tight text-white mb-4">
-              Try HotelsVendors.<br /><span className="text-gradient-lime">No Sign-Up Required.</span>
+            <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
+              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, #84cc16, #a3e635)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
             </h1>
-            <p className="text-[14px] text-white/40 max-w-xl mx-auto leading-relaxed">
-              Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting, ETA compliance, and embedded factoring work together.
+            <p className="text-[13px] text-white/50 max-w-2xl mx-auto leading-relaxed">
+              Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting,<br className="hidden md:block" />
+              ETA compliance, and embedded factoring work together in one unified platform.
             </p>
           </motion.div>
 
-          {/* Role Selector */}
           <AnimatePresence mode="wait">
             {!selectedRole ? (
+              /* ─── Role Selection Grid ─── */
               <motion.div
                 key="roles"
                 initial={{ opacity: 0, y: 20 }}
@@ -168,33 +344,47 @@ export default function SandboxPage() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                <p className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-5 text-center">Choose Your Role</p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {ROLES.map((r, i) => (
-                    <motion.button
-                      key={r.key}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.08 }}
-                      whileHover={{ y: -3, borderColor: r.color + "40" }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setSelectedRole(r.key)}
-                      className="rounded-xl p-5 text-left transition-all"
-                      style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-                    >
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: r.accentMuted }}>
-                        <r.icon size={20} style={{ color: r.color }} />
-                      </div>
-                      <h3 className="text-[13px] font-semibold text-white mb-1">{r.label}</h3>
-                      <p className="text-[10px] text-white/30 leading-relaxed">{r.description}</p>
-                      <div className="mt-3 flex items-center gap-1 text-[10px] font-medium" style={{ color: r.color }}>
-                        Start <ArrowRight size={10} />
-                      </div>
-                    </motion.button>
-                  ))}
+                <p className="text-[10px] font-medium text-white/25 uppercase tracking-[0.15em] mb-5 text-center">
+                  Choose Your Stakeholder Role
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
+                  {ROLES.map((r, i) => {
+                    const Icon = r.icon;
+                    return (
+                      <motion.button
+                        key={r.key}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.08 }}
+                        whileHover={{ y: -4, borderColor: r.color + "50", boxShadow: `0 8px 30px ${r.color}10` }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setSelectedRole(r.key)}
+                        className="rounded-xl p-5 text-left transition-all"
+                        style={{
+                          backgroundColor: "#0a0a0a",
+                          border: "1px solid rgba(255,255,255,0.06)",
+                        }}
+                      >
+                        <div
+                          className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                          style={{ backgroundColor: r.accentMuted }}
+                        >
+                          <Icon size={22} style={{ color: r.color }} />
+                        </div>
+                        <h3 className="text-[14px] font-semibold text-white mb-1.5">{r.label}</h3>
+                        <p className="text-[11px] leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+                          {r.description}
+                        </p>
+                        <div className="flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: r.color }}>
+                          Launch Demo <ArrowRight size={11} />
+                        </div>
+                      </motion.button>
+                    );
+                  })}
                 </div>
               </motion.div>
             ) : (
+              /* ─── Split Layout: Steps + Dashboard ─── */
               <motion.div
                 key="sandbox"
                 initial={{ opacity: 0, y: 20 }}
@@ -202,175 +392,236 @@ export default function SandboxPage() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                {/* Back + Role header */}
-                <div className="flex items-center justify-between mb-6">
+                {/* Toolbar */}
+                <div className="flex items-center justify-between mb-6 pb-4 border-b" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
                   <button
                     onClick={() => { setSelectedRole(null); handleReset(); }}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-white/60 transition-colors"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
                   >
-                    <ArrowLeft size={12} /> All Roles
+                    <ArrowLeft size={13} /> All Roles
                   </button>
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: role!.accentMuted }}>
-                      {RoleIcon && <RoleIcon size={13} style={{ color: role!.color }} />}
+
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: role!.accentMuted }}>
+                      {RoleIcon && <RoleIcon size={15} style={{ color: role!.color }} />}
                     </div>
-                    <span className="text-[11px] font-medium text-white/50">{role!.label}</span>
+                    <span className="text-[13px] font-medium">{role!.label}</span>
                   </div>
+
                   <button
                     onClick={handleReset}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-white/60 transition-colors"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
                   >
-                    <RotateCcw size={11} /> Reset
+                    <RotateCcw size={12} /> Reset
                   </button>
                 </div>
 
-                {/* Progress bar */}
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] text-white/25">Step {Math.min(currentStep + 1, totalSteps)} of {totalSteps}</span>
-                    <span className="text-[10px] text-white/25">{completedSteps.size}/{totalSteps} completed</span>
+                {/* Split Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* ── Left: Steps ── */}
+                  <div>
+                    {/* Progress */}
+                    <div className="mb-5">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+                          Step {Math.min(currentStep + 1, totalSteps)} of {totalSteps}
+                        </span>
+                        <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+                          {completedSteps.size}/{totalSteps} completed
+                        </span>
+                      </div>
+                      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: role!.color }}
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${(completedSteps.size / totalSteps) * 100}%` }}
+                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Steps List */}
+                    <div className="space-y-2.5">
+                      {role!.steps.map((step, i) => {
+                        const isCompleted = completedSteps.has(i);
+                        const isCurrent = !isCompleted && (i === currentStep || (i < completedSteps.size || (i === completedSteps.size && i === currentStep)));
+                        const isLocked = i > currentStep && !isCompleted && i > completedSteps.size;
+
+                        return (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.06 }}
+                            className="rounded-xl overflow-hidden transition-all"
+                            style={{
+                              backgroundColor: isCurrent ? "rgba(255,255,255,0.02)" : "#0a0a0a",
+                              border: `1px solid ${
+                                isCompleted ? role!.color + "30"
+                                : isCurrent ? "rgba(255,255,255,0.1)"
+                                : "rgba(255,255,255,0.04)"
+                              }`,
+                              opacity: isLocked ? 0.45 : 1,
+                            }}
+                          >
+                            <div className="p-4">
+                              <div className="flex items-start gap-3.5">
+                                {/* Step Icon */}
+                                <div
+                                  className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                                  style={{
+                                    backgroundColor: isCompleted
+                                      ? role!.color + "18"
+                                      : "rgba(255,255,255,0.04)",
+                                  }}
+                                >
+                                  {isCompleted ? (
+                                    <CheckCircle2 size={17} style={{ color: role!.color }} />
+                                  ) : (
+                                    <step.icon size={16} style={{ color: isCurrent ? role!.color : "rgba(255,255,255,0.15)" }} />
+                                  )}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  {/* Step header */}
+                                  <div className="flex items-center gap-2 mb-0.5">
+                                    <span className="text-[8px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.18)" }}>
+                                      Step {String(i + 1).padStart(2, "0")}
+                                    </span>
+                                    {isCompleted && (
+                                      <span
+                                        className="text-[7px] px-1.5 py-0.5 rounded font-medium"
+                                        style={{ backgroundColor: role!.color + "12", color: role!.color }}
+                                      >
+                                        Done
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <h3 className="text-[14px] font-semibold text-white mb-1">{step.title}</h3>
+                                  <p className="text-[11px] leading-relaxed mb-2.5" style={{ color: "rgba(255,255,255,0.3)" }}>
+                                    {step.description}
+                                  </p>
+
+                                  {/* Detail / Result */}
+                                  <AnimatePresence>
+                                    {isCompleted && (
+                                      <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="mb-2.5"
+                                      >
+                                        <div
+                                          className="rounded-lg p-2.5"
+                                          style={{
+                                            backgroundColor: role!.color + "04",
+                                            border: `1px solid ${role!.color}10`,
+                                          }}
+                                        >
+                                          <p className="text-[9px] font-medium mb-1" style={{ color: role!.color }}>
+                                            ✓ Result:
+                                          </p>
+                                          <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
+                                            {step.detail}
+                                          </p>
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+
+                                  {/* Action button */}
+                                  {isCurrent && !isCompleted && (
+                                    <button
+                                      onClick={() => handleStartStep(i)}
+                                      disabled={isRunning}
+                                      className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold rounded-lg transition-all disabled:opacity-50"
+                                      style={{ backgroundColor: role!.color, color: "#000000" }}
+                                    >
+                                      {isRunning ? (
+                                        <>
+                                          <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                          </svg>
+                                          Processing…
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Play size={11} /> {step.action}
+                                        </>
+                                      )}
+                                    </button>
+                                  )}
+
+                                  {isLocked && (
+                                    <div className="flex items-center gap-1.5">
+                                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                                      </svg>
+                                      <span className="text-[9px]" style={{ color: "rgba(255,255,255,0.12)" }}>
+                                        Complete previous step to unlock
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Completion State */}
+                    <AnimatePresence>
+                      {allCompleted && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                          className="mt-5 rounded-xl p-5 text-center"
+                          style={{ backgroundColor: role!.color + "06", border: `1px solid ${role!.color}20` }}
+                        >
+                          <Sparkles size={24} className="mx-auto mb-3" style={{ color: role!.color }} />
+                          <h3 className="text-[16px] font-bold text-white mb-1">Workflow Complete</h3>
+                          <p className="text-[11px] mb-4 max-w-sm mx-auto" style={{ color: "rgba(255,255,255,0.4)" }}>
+                            You&apos;ve walked through the full {role!.label.toLowerCase()} workflow — exactly how HotelsVendors operates in production with real ETA compliance, cryptographic audit trails, and automated settlement.
+                          </p>
+                          <div className="flex flex-wrap justify-center gap-3">
+                            <Link
+                              href="/register"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
+                              style={{ backgroundColor: "#84cc16", color: "#000000" }}
+                            >
+                              Get Full Access <ArrowRight size={13} />
+                            </Link>
+                            <button
+                              onClick={handleReset}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-medium rounded-lg"
+                              style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}
+                            >
+                              <RotateCcw size={12} /> Run Again
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: role!.color }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${(completedSteps.size / totalSteps) * 100}%` }}
-                      transition={{ duration: 0.5 }}
+
+                  {/* ── Right: Live Dashboard ── */}
+                  <div className="lg:sticky lg:top-24 lg:self-start">
+                    <SandboxDashboard
+                      role={selectedRole}
+                      completedSteps={completedSteps}
+                      currentStep={currentStep}
                     />
                   </div>
                 </div>
-
-                {/* Steps */}
-                <div className="space-y-3">
-                  {role!.steps.map((step, i) => {
-                    const isCompleted = completedSteps.has(i);
-                    const isCurrent = i === currentStep;
-                    const isLocked = i > currentStep;
-
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="rounded-xl overflow-hidden"
-                        style={{
-                          backgroundColor: isCurrent ? "rgba(255,255,255,0.02)" : "#0a0a0a",
-                          border: `1px solid ${isCompleted ? role!.color + "30" : isCurrent ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.04)"}`,
-                          opacity: isLocked ? 0.5 : 1,
-                        }}
-                      >
-                        <div className="p-5">
-                          <div className="flex items-start gap-4">
-                            <div
-                              className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                              style={{
-                                backgroundColor: isCompleted ? role!.color + "20" : "rgba(255,255,255,0.04)",
-                              }}
-                            >
-                              {isCompleted ? (
-                                <CheckCircle2 size={16} style={{ color: role!.color }} />
-                              ) : (
-                                <step.icon size={16} style={{ color: isCurrent ? role!.color : "rgba(255,255,255,0.2)" }} />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[9px] font-medium text-white/20 uppercase tracking-wider">Step {String(i + 1).padStart(2, "0")}</span>
-                                {isCompleted && <span className="text-[8px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: role!.color + "15", color: role!.color }}>Done</span>}
-                              </div>
-                              <h3 className="text-[14px] font-semibold text-white mb-1">{step.title}</h3>
-                              <p className="text-[11px] text-white/35 leading-relaxed mb-3">{step.description}</p>
-
-                              <AnimatePresence>
-                                {isCompleted && (
-                                  <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className="mb-3"
-                                  >
-                                    <div className="rounded-lg p-3" style={{ backgroundColor: role!.color + "06", border: `1px solid ${role!.color}15` }}>
-                                      <p className="text-[10px] font-medium mb-1" style={{ color: role!.color }}>Result:</p>
-                                      <p className="text-[11px] text-white/50 leading-relaxed">{step.result}</p>
-                                    </div>
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-
-                              {isCurrent && !isCompleted && (
-                                <button
-                                  onClick={() => handleStartStep(i)}
-                                  disabled={isRunning}
-                                  className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold rounded-lg transition-all disabled:opacity-50"
-                                  style={{ backgroundColor: role!.color, color: "#000000" }}
-                                >
-                                  {isRunning ? (
-                                    <>
-                                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                                      Processing…
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Play size={11} /> {step.action}
-                                    </>
-                                  )}
-                                </button>
-                              )}
-
-                              {isLocked && (
-                                <p className="text-[10px] text-white/15">Complete previous step to unlock</p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Step connector */}
-                        {i < totalSteps - 1 && (
-                          <div className="px-5 pb-2">
-                            <div className="w-px h-4 ml-[17px]" style={{ backgroundColor: completedSteps.has(i) ? role!.color + "30" : "rgba(255,255,255,0.04)" }} />
-                          </div>
-                        )}
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                {/* Completion state */}
-                <AnimatePresence>
-                  {allCompleted && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className="mt-8 rounded-2xl p-8 text-center"
-                      style={{ backgroundColor: "#0a0a0a", border: `1px solid ${role!.color}25` }}
-                    >
-                      <Sparkles size={28} className="mx-auto mb-4" style={{ color: role!.color }} />
-                      <h3 className="text-[18px] font-bold text-white mb-2">Workflow Complete</h3>
-                      <p className="text-[12px] text-white/40 mb-6 max-w-md mx-auto">
-                        You&apos;ve just walked through the full {role!.label.toLowerCase()} workflow. This is exactly how HotelsVendors operates in production — with real ETA compliance, cryptographic audit trails, and automated settlement.
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-3">
-                        <Link
-                          href="/register"
-                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]"
-                          style={{ backgroundColor: "#84cc16", color: "#000000" }}
-                        >
-                          Get Full Access <ArrowRight size={14} />
-                        </Link>
-                        <button
-                          onClick={handleReset}
-                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
-                          style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
-                        >
-                          <RotateCcw size={13} /> Run Again
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>
