@@ -123,7 +123,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0B0F1A" id="theme-color-meta" />
+        <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -131,14 +131,13 @@ export default function RootLayout({
                 try {
                   var mode = localStorage.getItem('hv-theme-mode') || 'dark';
                   if (mode === 'light') {
-                    document.documentElement.setAttribute('data-mode', 'light');
+                    document.documentElement.setAttribute('data-theme', 'light');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#F8F9FA');
+                    if (meta) meta.setAttribute('content', '#f8f9fa');
                   } else {
-                    document.documentElement.setAttribute('data-mode', 'dark');
                     document.documentElement.removeAttribute('data-theme');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#0B0F1A');
+                    if (meta) meta.setAttribute('content', '#121212');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
