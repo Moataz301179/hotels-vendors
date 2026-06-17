@@ -857,7 +857,7 @@ export function SandboxDashboard({ role, completedSteps, currentStep }: Dashboar
       <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "rgba(255,255,255,0.01)" }}>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#22C55E" }} />
-          <span className="text-[9px] font-medium" style={{ color: "rgba(255,255,255,0.3)" }}>Live Sandbox</span>
+          <span className="text-[9px] font-medium" style={{ color: "#84cc16" }}>Live Sandbox</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-[7px] px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.2)" }}>

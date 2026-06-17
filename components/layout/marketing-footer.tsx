@@ -12,7 +12,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="md" />
+              <BrandLogo variant="dark" size="sm" />
             </div>
             <p className="text-[12px] text-white/50 leading-relaxed max-w-xs">
               Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.
@@ -62,8 +62,8 @@ export function MarketingFooter() {
             <ul className="space-y-2.5">
               {[
                 { label: "About", href: "/about" },
-                { label: "Admin Control Panel", href: "/admin" },
-                { label: "Support", href: "/support" },
+                { label: "Privacy", href: "/privacy" },
+                { label: "Terms", href: "/terms" },
                 { label: "Sign In", href: "/login" },
                 { label: "Get Started", href: "/register" },
               ].map((item) => (

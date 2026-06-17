@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, AlertTriangle } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
-
+import { ArrowRight, Check, AlertTriangle, Eye, EyeOff } from "lucide-react";
 interface BaseRegisterFormProps {
   role: string;
   onSuccess: () => void;
@@ -166,9 +164,9 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors flex items-center justify-center"
                   >
-                    {showPassword ? "🙈" : "👁️"}
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
                 </div>
               </div>

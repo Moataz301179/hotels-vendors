@@ -52,12 +52,6 @@ import { SectorVisual } from "@/components/marketing/sector-visual";
 import { PillarVisual } from "@/components/marketing/pillar-visual";
 
 // ─── RevealSection ────────────────────────────────────────────────
-
-// ─── RevealSection ────────────────────────────────────────────────
-
-// ─── RevealSection ────────────────────────────────────────────────
-
-// ─── RevealSection ────────────────────────────────────────────────
 function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
@@ -798,11 +792,11 @@ export default function HomePage() {
               </div>
 
               {/* Video preview area */}
-              <div className="relative aspect-video flex items-center justify-center" style={{ background: "linear-gradient(135deg, rgba(132,204,22,0.03), rgba(99,102,241,0.03))" }}>
+              <Link href="/sandbox" className="relative block aspect-video flex items-center justify-center group" style={{ background: "linear-gradient(135deg, rgba(132,204,22,0.03), rgba(99,102,241,0.03))" }}>
                 {/* Play button overlay */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transition-all"
+                  className="w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transition-all group-hover:shadow-[0_0_40px_rgba(132,204,22,0.25)]"
                   style={{ backgroundColor: "rgba(132,204,22,0.15)", border: "2px solid rgba(132,204,22,0.3)" }}
                 >
                   <Play size={24} style={{ color: "#84cc16", marginLeft: 2 }} />
@@ -813,11 +807,16 @@ export default function HomePage() {
                   <div className="text-[120px] font-bold tracking-tight" style={{ color: "#84cc16" }}>HV</div>
                 </div>
 
-                {/* Duration badge */}
-                <div className="absolute bottom-3 right-3 px-2 py-1 rounded text-[9px] font-mono" style={{ backgroundColor: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.5)" }}>
-                  04:32
+                {/* Preview badge */}
+                <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                  <span className="px-2 py-1 rounded text-[8px] font-medium backdrop-blur-sm" style={{ backgroundColor: "rgba(0,0,0,0.6)", color: "#84cc16", border: "1px solid rgba(132,204,22,0.2)" }}>
+                    Try the Sandbox →
+                  </span>
                 </div>
-              </div>
+
+                {/* Hover overlay hint */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg" />
+              </Link>
 
               {/* Controls bar */}
               <div className="flex items-center justify-between px-4 py-2.5 border-t" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
