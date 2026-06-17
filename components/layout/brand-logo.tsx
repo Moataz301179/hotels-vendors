@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme/theme-provider";
 
 interface BrandLogoProps {
   className?: string;
@@ -20,12 +21,14 @@ const SIZE_MAP = {
 
 export function BrandLogo({
   className,
-  variant = "light",
+  variant: variantProp,
   size = "md",
   showText = true,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const color = variant === "dark" ? "#ffffff" : "#0B0F1A";
+  const { mode } = useTheme();
+  const variant = variantProp || (mode === "dark" ? "dark" : "light");
+  const color = variant === "dark" ? "#ffffff" : "#111827";
 
   return (
     <div className={cn("flex items-center gap-2.5 shrink-0", className)}>

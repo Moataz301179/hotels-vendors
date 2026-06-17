@@ -103,6 +103,233 @@ body {
   font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
 }
 ::selection { background: var(--accent-muted); color: var(--text-inverse); }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — Complete Override
+   ═══════════════════════════════════════════════════════════════ */
+html[data-mode="light"] {
+  --bg-canvas: #F8F9FA;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #F3F4F6;
+  --bg-surface-3: #E5E7EB;
+
+  --background: #F8F9FA;
+  --surface: #FFFFFF;
+  --surface-raised: #F3F4F6;
+  --surface-hover: #E5E7EB;
+
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-tertiary: #9CA3AF;
+  --text-muted: #D1D5DB;
+  --text-inverse: #FFFFFF;
+
+  --foreground: #111827;
+  --foreground-secondary: #4B5563;
+  --foreground-tertiary: #9CA3AF;
+  --foreground-muted: #D1D5DB;
+
+  --border-invisible: rgba(0, 0, 0, 0.04);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-visible: rgba(0, 0, 0, 0.12);
+  --border-accent: rgba(255, 176, 0, 0.30);
+
+  /* Accent colors stay the same */
+  --accent-base: #FFB000;
+  --accent-light: #FFC233;
+  --accent-dark: #CC8C00;
+  --accent-muted: rgba(255, 176, 0, 0.12);
+  --accent-glow: rgba(255, 176, 0, 0.15);
+  --accent-text: #0B0F1A;
+
+  --emerald-base: #10B981;
+  --emerald-light: #34D399;
+  --emerald-muted: rgba(16, 185, 129, 0.10);
+
+  --error: #EF4444;
+  --success: #22C55E;
+  --warning: #EAB308;
+  --info: #3B82F6;
+
+  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-glow-accent: 0 0 40px rgba(255, 176, 0, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ── Light mode: background overrides for hardcoded classes ── */
+html[data-mode="light"] .bg-black,
+html[data-mode="light"] [style*="background-color: #000000"],
+html[data-mode="light"] [style*="background: #000"],
+html[data-mode="light"] [style*="background-color: #0a0a0a"],
+html[data-mode="light"] [style*="background-color: #050505"],
+html[data-mode="light"] [style*="background-color: #030303"],
+html[data-mode="light"] [style*="background-color: #0B0F1A"],
+html[data-mode="light"] section,
+html[data-mode="light"] .bg-zinc-950,
+html[data-mode="light"] .bg-zinc-900 {
+  background-color: var(--bg-surface-1) !important;
+}
+
+html[data-mode="light"] main {
+  background-color: var(--bg-canvas) !important;
+}
+
+html[data-mode="light"] footer {
+  background-color: var(--bg-surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+/* ── Light mode: text color overrides ── */
+html[data-mode="light"] .text-white,
+html[data-mode="light"] h1,
+html[data-mode="light"] h2,
+html[data-mode="light"] h3,
+html[data-mode="light"] h4,
+html[data-mode="light"] .text-white\/80,
+html[data-mode="light"] .text-white\/90 {
+  color: var(--text-primary) !important;
+}
+
+html[data-mode="light"] .text-white\/60,
+html[data-mode="light"] .text-white\/50,
+html[data-mode="light"] .text-white\/40,
+html[data-mode="light"] .text-white\/30,
+html[data-mode="light"] .text-white\/20,
+html[data-mode="light"] .text-zinc-400,
+html[data-mode="light"] .text-zinc-500,
+html[data-mode="light"] .text-zinc-300 {
+  color: var(--text-secondary) !important;
+}
+
+html[data-mode="light"] .text-zinc-400 { color: var(--text-secondary) !important; }
+
+html[data-mode="light"] [style*="color: rgba(255,255,255,0."],
+html[data-mode="light"] [style*="color: rgba(255, 255, 255, 0."],
+html[data-mode="light"] .text-white\/15,
+html[data-mode="light"] .text-white\/10,
+html[data-mode="light"] .text-white\/5 {
+  color: var(--text-tertiary) !important;
+}
+
+/* ── Light mode: border overrides ── */
+html[data-mode="light"] .border-white\/5,
+html[data-mode="light"] .border-white\/10,
+html[data-mode="light"] .border-white\/\[0\.06\],
+html[data-mode="light"] .border-white\/\[0\.08\],
+html[data-mode="light"] .border-white\/\[0\.04\],
+html[data-mode="light"] [style*="border-color: rgba(255,255,255,0."],
+html[data-mode="light"] [style*="border-color: rgba(255, 255, 255, 0."],
+html[data-mode="light"] .nav-border {
+  border-color: var(--border-subtle) !important;
+}
+
+/* ── Light mode: surface/container overrides ── */
+html[data-mode="light"] [style*="background-color: rgba(255,255,255,0."] {
+  background-color: var(--bg-surface-2) !important;
+}
+
+html[data-mode="light"] [style*="background-color: rgba(0,0,0,0.6)"] {
+  background-color: var(--bg-surface-2) !important;
+}
+
+html[data-mode="light"] [style*="background-color: #0a0a0a"],
+html[data-mode="light"] [style*="background-color: #0B0F1A"] {
+  background-color: var(--bg-surface-1) !important;
+}
+
+/* ── Light mode: gradient text ── */
+html[data-mode="light"] .text-gradient-lime {
+  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Light mode: scrollbar ── */
+html[data-mode="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Light mode: header nav ── */
+html[data-mode="light"] .nav-border {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-mode="light"] header[class*="bg-gradient"],
+html[data-mode="light"] header[class*="from-black"] {
+  background: var(--bg-surface-1) !important;
+  backdrop-filter: none !important;
+}
+
+html[data-mode="light"] header button[class*="text-zinc-400"],
+html[data-mode="light"] header nav a[class*="text-zinc-400"] {
+  color: var(--text-secondary) !important;
+}
+
+html[data-mode="light"] header nav a:hover {
+  color: var(--accent-dark) !important;
+}
+
+/* ── Light mode: footer ── */
+html[data-mode="light"] footer .text-zinc-500 { color: var(--text-tertiary) !important; }
+html[data-mode="light"] footer .text-zinc-400 { color: var(--text-secondary) !important; }
+
+/* ── Light mode: dark hover states ── */
+html[data-mode="light"] [class*="hover:bg-white/"]:hover {
+  background-color: var(--bg-surface-2) !important;
+}
+
+html[data-mode="light"] .hover\:bg-white\/\[0\.04\]:hover {
+  background-color: var(--bg-surface-2) !important;
+}
+
+/* ── Light mode: surface-card hover ── */
+html[data-mode="light"] .surface-card {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+html[data-mode="light"] .surface-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* ── Light mode: section dividers ── */
+html[data-mode="light"] .section-divider {
+  background: linear-gradient(to right, transparent, rgba(255, 176, 0, 0.08), rgba(255, 176, 0, 0.15), rgba(255, 176, 0, 0.08), transparent);
+}
+
+/* ── Light mode: placeholder text ── */
+html[data-mode="light"] .surface-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Light mode: hero section ── */
+html[data-mode="light"] .bg-zinc-950 {
+  background-color: var(--bg-surface-1) !important;
+}
+
+/* ── Light mode: forms ── */
+html[data-mode="light"] input,
+html[data-mode="light"] select,
+html[data-mode="light"] textarea {
+  background-color: var(--bg-surface-1) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Light mode: hover border accent ── */
+html[data-mode="light"] .hover\:border-\[\#84cc16\]\/10:hover,
+html[data-mode="light"] .hover\:border-\[\#84cc16\]\/20:hover,
+html[data-mode="light"] .hover\:border-\[\#FFB000\]\/10:hover,
+html[data-mode="light"] .hover\:border-\[\#FFB000\]\/20:hover {
+  border-color: var(--accent-base) !important;
+}
+
+/* ── Light mode: mobile menu ── */
+html[data-mode="light"] [class*="bg-black/98"] {
+  background-color: var(--bg-surface-1) !important;
+}
+html[data-mode="light"] [class*="bg-black/95"] {
+  background-color: var(--bg-surface-1) !important;
+}
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }

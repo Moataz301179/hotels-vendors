@@ -35,7 +35,7 @@ export function MarketingNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-auto min-h-[80px] py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="md" />
+          <BrandLogo size="md" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
@@ -43,7 +43,10 @@ export function MarketingNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="px-4 py-2 text-[14px] font-medium rounded-lg text-zinc-400 hover:text-white hover:text-amber-400 transition-colors"
+              className="px-4 py-2 text-[14px] font-medium rounded-lg transition-colors"
+              style={{ color: "var(--foreground-secondary)" }}
+              onMouseEnter={(e) => e.target.style.color = mode === "dark" ? "var(--accent-base)" : "var(--accent-dark)"}
+              onMouseLeave={(e) => e.target.style.color = "var(--foreground-secondary)"}
             >
               {item.label}
             </Link>
@@ -54,8 +57,10 @@ export function MarketingNav() {
           {/* Theme toggle */}
           <button
             onClick={toggleMode}
-            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-white/10"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+            style={{ color: "var(--foreground-secondary)" }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}
+            onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
             title={mode === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {mode === "dark" ? <Sun size={14} /> : <Moon size={14} />}
@@ -63,21 +68,23 @@ export function MarketingNav() {
 
           <Link
             href="/login"
-            className="text-[14px] font-medium text-zinc-400 hover:text-white transition-colors"
+            className="text-[14px] font-medium transition-colors"
+            style={{ color: "var(--foreground-secondary)" }}
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all"
-            style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}
+            className="inline-flex items-center text-[13px] py-2 px-5 font-medium rounded-lg transition-all"
+            style={{ backgroundColor: "var(--accent-base)", color: "#0B0F1A" }}
           >
             Get Started Free
           </Link>
         </div>
 
         <button
-          className="lg:hidden p-2 rounded-lg text-zinc-400 hover:text-white transition-colors"
+          className="lg:hidden p-2 rounded-lg transition-colors"
+          style={{ color: "var(--foreground-secondary)" }}
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -85,13 +92,18 @@ export function MarketingNav() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden bg-black/98 border-t border-white/5 backdrop-blur-md animate-fade-in-up">
+        <div className="lg:hidden animate-fade-in-up"
+          style={{ backgroundColor: "var(--bg-surface-1)", borderTop: "1px solid var(--border-subtle)" }}
+        >
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="block py-2.5 text-[14px] font-medium text-zinc-400 hover:text-white transition-colors"
+                className="block py-2.5 text-[14px] font-medium transition-colors"
+                style={{ color: "var(--foreground-secondary)" }}
+                onMouseEnter={(e) => e.target.style.color = "var(--accent-base)"}
+                onMouseLeave={(e) => e.target.style.color = "var(--foreground-secondary)"}
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -100,14 +112,15 @@ export function MarketingNav() {
             <div className="pt-4 flex gap-3">
               <Link
                 href="/login"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/10 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-colors"
+                style={{ border: "1px solid var(--border-visible)", color: "var(--foreground-secondary)" }}
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
                 className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
-                style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}
+                style={{ backgroundColor: "var(--accent-base)", color: "#0B0F1A" }}
               >
                 Get Started
               </Link>
