@@ -16,7 +16,7 @@ const SIZE_MAP = {
   md: { icon: 72, text: 28, slogan: 16, tracking: "0.08em" },
   lg: { icon: 96, text: 38, slogan: 22, tracking: "0.1em" },
   xl: { icon: 120, text: 48, slogan: 28, tracking: "0.12em" },
-  xxl: { icon: 108, text: 42, slogan: 24, tracking: "0.12em" },
+  xxl: { icon: 108, text: 14, slogan: 8, tracking: "0.04em" },
 };
 
 export function BrandLogo({
