@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
@@ -178,6 +178,17 @@ export default function HomePage() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [cairoTime, setCairoTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCairoTime(now.toLocaleTimeString("en-EG", { hour12: false, timeZone: "Africa/Cairo" }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const currentSector = SECTORS.find((s) => s.key === activeSector)!;
 
@@ -214,23 +225,28 @@ export default function HomePage() {
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-8 px-4">
               {[
+                { item: "Cairo", change: cairoTime, isClock: true },
+                { item: "USD/EGP", change: "48.24", up: true, isRate: true },
+                { item: "EUR/EGP", change: "58.34", up: false, isRate: true },
                 { item: "Fresh Linen", change: "+2.4%", up: true },
                 { item: "Industrial Detergent", change: "-1.1%", up: false },
                 { item: "Kitchenware Bulk", change: "+0.8%", up: true },
                 { item: "Pool Chemicals", change: "-0.5%", up: false },
                 { item: "Guest Amenities", change: "+1.2%", up: true },
                 { item: "HVAC Filters", change: "+0.3%", up: true },
-                { item: "USD/EGP", change: "51.25", up: true, isRate: true },
-                { item: "EUR/EGP", change: "58.34", up: false, isRate: true },
                 { item: "CBE Lending Rate", change: "20.0%", up: false, isRate: true },
                 { item: "Inflation (May)", change: "14.6%", up: false, isRate: true },
                 { item: "Avg Factoring", change: "1.85%", up: true, isRate: true },
               ].map((ticker) => (
                 <div key={ticker.item} className="flex items-center gap-2">
                   <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">{ticker.item}</span>
-                  <span className={`text-[10px] font-mono font-bold ${ticker.up ? "text-green-400" : "text-red-400"}`}>
-                    {ticker.change} {ticker.isRate ? "○" : (ticker.up ? "▲" : "▼")}
-                  </span>
+                  {ticker.isClock ? (
+                    <span className="text-[10px] font-mono font-bold text-white/70">{ticker.change}</span>
+                  ) : (
+                    <span className={`text-[10px] font-mono font-bold ${ticker.up ? "text-green-400" : "text-red-400"}`}>
+                      {ticker.change} {ticker.isRate ? "○" : (ticker.up ? "▲" : "▼")}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

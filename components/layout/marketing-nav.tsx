@@ -2,30 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Clock, TrendingUp, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useTheme } from "@/components/theme/theme-provider";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState("");
   const { mode, toggleMode } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString("en-EG", { hour12: false, timeZone: "Africa/Cairo" }));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   const navLinks = [
@@ -44,29 +33,10 @@ export function MarketingNav() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-6 h-auto min-h-[120px] py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="xs" />
+          <BrandLogo variant="dark" size="xxl" />
         </Link>
-
-        {/* Fintech Widget */}
-        <div className="hidden xl:flex items-center gap-6 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md">
-          <div className="flex items-center gap-2 border-r border-white/10 pr-4">
-            <Clock size={12} className="text-white/40" />
-            <span className="text-[10px] font-mono text-white/60">{currentTime}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] text-white/30 uppercase font-medium">USD/EGP</span>
-              <span className="text-[11px] font-mono text-white font-semibold">48.24 <span className="text-green-400 text-[9px]">▲</span></span>
-            </div>
-            <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
-              <TrendingUp size={12} className="text-[#84cc16]" />
-              <span className="text-[10px] text-white/30 uppercase font-medium">Avg Factoring</span>
-              <span className="text-[11px] font-mono text-white font-semibold">1.85%</span>
-            </div>
-          </div>
-        </div>
 
         <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((item) => (
