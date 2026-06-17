@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface BrandLogoProps {
   className?: string;
@@ -30,16 +29,32 @@ export function BrandLogo({
 
   return (
     <div className={cn("flex items-center gap-2.5 shrink-0", className)}>
-      {/* Chess Knight logo — clean, no background box */}
-      <div className="relative flex items-center justify-center" style={{ width: dims.icon, height: dims.icon }}>
-        <Image
-          src="/logo-brand.jpg"
-          alt="Hotels Vendors"
-          width={dims.icon}
-          height={dims.icon}
-          className="object-contain"
-          style={{ width: '100%', height: '100%' }}
-        />
+      {/* Interlocking HV SVG Monogram — clean, no background box */}
+      <div
+        className="relative flex items-center justify-center"
+        style={{ width: dims.icon, height: dims.icon }}
+      >
+        <svg
+          viewBox="0 0 100 100"
+          className="fill-none stroke-current"
+          style={{
+            width: "100%",
+            height: "100%",
+            color: color,
+            strokeWidth: 6.5,
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+          }}
+        >
+          {/* Left pillar — H vertical stem */}
+          <path d="M 30 20 L 30 80" />
+          {/* Diagonal bridging — interlocking H and V */}
+          <path d="M 30 50 L 70 50" />
+          {/* Right dynamic loop — V and padlock interlocking */}
+          <path d="M 70 20 L 70 65 C 70 75, 55 80, 45 80" />
+          {/* Modern geometric style cuts */}
+          <path d="M 50 35 L 70 20" />
+        </svg>
       </div>
       {showText && (
         <div className="flex flex-col justify-center select-none">
@@ -54,9 +69,9 @@ export function BrandLogo({
             Hotels Vendors
           </span>
           <span
-            className="tracking-wider uppercase font-medium opacity-65 mt-0.5 leading-none"
+            className="tracking-wider uppercase font-medium opacity-80 mt-0.5 leading-none"
             style={{
-              color: variant === "dark" ? "rgba(255,255,255,0.7)" : "rgba(11,15,26,0.7)",
+              color: variant === "dark" ? "#10B981" : "#059669",
               fontSize: dims.slogan,
             }}
           >

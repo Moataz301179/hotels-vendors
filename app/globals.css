@@ -1,10 +1,9 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS + INVO — DUAL-THEME DESIGN SYSTEM v7
-   HotelsVendors: Muted Lime accent (#8EF26E) — Procurement Marketplace
-   INVO: Gold accent (#D4A843) — Factoring & Financial Services
-   OLED black background (#000000), white text, institutional premium feel.
+   HOTELS VENDORS — TEMPLATE-ALIGNED DESIGN SYSTEM
+   Crimson (#8B0000) accent · Inter + Playfair Display typography
+   OLED Black background · Institutional premium feel
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -35,14 +34,19 @@
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(132, 204, 22, 0.20);
+  --border-accent: rgba(139, 0, 0, 0.20);
 
-  /* ── HotelsVendors Accent (Muted Lime) ── */
-  --accent-base: #84cc16;
-  --accent-light: #a3e635;
-  --accent-dark: #6ba111;
-  --accent-muted: rgba(132, 204, 22, 0.10);
-  --accent-glow: rgba(132, 204, 22, 0.12);
+  /* ── CRIMSON ACCENT (Template Match) ── */
+  --accent-base: #8B0000;
+  --accent-light: #A52A2A;
+  --accent-dark: #5C0000;
+  --accent-muted: rgba(139, 0, 0, 0.10);
+  --accent-glow: rgba(139, 0, 0, 0.15);
+
+  /* ── Emerald Tagline Accent ── */
+  --emerald-base: #10B981;
+  --emerald-light: #34D399;
+  --emerald-muted: rgba(16, 185, 129, 0.10);
 
   /* ── INVO Accent (Gold/Amber) ── */
   --invo-base: #D4A843;
@@ -50,14 +54,6 @@
   --invo-dark: #b8922e;
   --invo-muted: rgba(212, 168, 67, 0.10);
   --invo-glow: rgba(212, 168, 67, 0.12);
-
-  /* ── Neon Frame Accents ── */
-  --neon-turquoise: #00E5CC;
-  --neon-turquoise-muted: rgba(0, 229, 204, 0.10);
-  --neon-turquoise-glow: rgba(0, 229, 204, 0.15);
-  --neon-orange: #FF8C00;
-  --neon-orange-muted: rgba(255, 140, 0, 0.10);
-  --neon-orange-glow: rgba(255, 140, 0, 0.15);
 
   /* ── Semantic ── */
   --error: #EF4444;
@@ -67,7 +63,7 @@
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-red: 0 0 40px rgba(132, 204, 22, 0.08);
+  --shadow-glow-crimson: 0 0 40px rgba(139, 0, 0, 0.08);
   --shadow-glow-gold: 0 0 40px rgba(212, 168, 67, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
@@ -75,26 +71,6 @@
   --header-height: 64px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
-}
-
-/* ── INVO accent overrides ── */
-html[data-accent="invo"] {
-  --accent-base: #D4A843;
-  --accent-light: #e0b856;
-  --accent-dark: #b8922e;
-  --accent-muted: rgba(212, 168, 67, 0.10);
-  --accent-glow: rgba(212, 168, 67, 0.12);
-  --border-accent: rgba(212, 168, 67, 0.20);
-}
-
-/* ── Neon Frame Accents for Hover ── */
-.hover-frame-turquoise:hover {
-  border-color: #00E5CC !important;
-  box-shadow: 0 0 20px rgba(0, 229, 204, 0.15), inset 0 0 20px rgba(0, 229, 204, 0.03);
-}
-.hover-frame-orange:hover {
-  border-color: #FF8C00 !important;
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.15), inset 0 0 20px rgba(255, 140, 0, 0.03);
 }
 
 @theme inline {
@@ -109,18 +85,19 @@ html[data-accent="invo"] {
   --color-accent-base: var(--accent-base);
   --color-accent-light: var(--accent-light);
   --color-accent-dark: var(--accent-dark);
+  --color-emerald-base: var(--emerald-base);
   --color-border-subtle: var(--border-subtle);
   --color-border-visible: var(--border-visible);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ── Base ── */
 /* ── Light Mode Overrides ── */
 html[data-mode="light"] {
   --bg-canvas: #f8f9fa;
@@ -142,42 +119,31 @@ html[data-mode="light"] {
   --border-invisible: rgba(0, 0, 0, 0.04);
   --border-subtle: rgba(0, 0, 0, 0.08);
   --border-visible: rgba(0, 0, 0, 0.12);
-  --border-accent: rgba(132, 204, 22, 0.25);
+  --border-accent: rgba(139, 0, 0, 0.25);
 }
 
 html[data-mode="light"] .nav-border {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* ── Light mode: override hardcoded inline backgrounds ── */
 html[data-mode="light"] main {
   background-color: var(--bg-canvas) !important;
   color: var(--text-primary) !important;
 }
 
-html[data-mode="light"] .bg-dark-section {
-  background-color: var(--bg-surface-1) !important;
-}
+html[data-mode="light"] .bg-dark-section { background-color: var(--bg-surface-1) !important; }
+html[data-mode="light"] .bg-dark-card { background-color: var(--surface) !important; border-color: var(--border-subtle) !important; }
+html[data-mode="light"] section { background-color: var(--bg-surface-1) !important; }
+html[data-mode="light"] footer { background-color: var(--bg-surface-1) !important; border-color: var(--border-subtle) !important; }
 
-html[data-mode="light"] .bg-dark-card {
-  background-color: var(--surface) !important;
-  border-color: var(--border-subtle) !important;
-}
-
-html[data-mode="light"] section {
-  background-color: var(--bg-surface-1) !important;
-}
-
-html[data-mode="light"] footer {
-  background-color: var(--bg-surface-1) !important;
-  border-color: var(--border-subtle) !important;
-}
-
-html[data-mode="light"] .text-white\/50, html[data-mode="light"] .text-white\/60, html[data-mode="light"] .text-white\/40, html[data-mode="light"] .text-white\/30, html[data-mode="light"] .text-white\/20 {
+html[data-mode="light"] .text-white\/50, html[data-mode="light"] .text-white\/60,
+html[data-mode="light"] .text-white\/40, html[data-mode="light"] .text-white\/30,
+html[data-mode="light"] .text-white\/20 {
   color: var(--text-secondary) !important;
 }
 
-html[data-mode="light"] h1, html[data-mode="light"] h2, html[data-mode="light"] h3, html[data-mode="light"] .text-white {
+html[data-mode="light"] h1, html[data-mode="light"] h2, html[data-mode="light"] h3,
+html[data-mode="light"] .text-white {
   color: var(--text-primary) !important;
 }
 
@@ -200,12 +166,6 @@ body {
   html { scroll-behavior: auto; }
 }
 
-/* ── FONT WEIGHT ENFORCEMENT — NO BOLD ── */
-h1, h2, h3, h4, h5, h6,
-.font-bold, .font-extrabold, .font-black {
-  font-weight: 500 !important;
-}
-
 /* ── Thin header border ── */
 .nav-border {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -220,17 +180,17 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .text-gradient-lime {
-  background: linear-gradient(90deg, #8EF26E 0%, #22C55E 50%, #3B82F6 100%);
+  background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* ── Hero glows ── */
-.hero-glow-red {
+.hero-glow-crimson {
   position: relative;
 }
-.hero-glow-red::before {
+.hero-glow-crimson::before {
   content: '';
   position: absolute;
   top: -20%;
@@ -238,21 +198,6 @@ h1, h2, h3, h4, h5, h6,
   width: 600px;
   height: 600px;
   background: radial-gradient(circle, rgba(139,0,0,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-glow-gold {
-  position: relative;
-}
-.hero-glow-gold::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -361,7 +306,7 @@ h1, h2, h3, h4, h5, h6,
 .btn-gold:hover {
   background: var(--invo-light);
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px var(--invo-gold);
+  box-shadow: 0 4px 20px var(--invo-glow);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -531,7 +476,7 @@ h1, h2, h3, h4, h5, h6,
    ═══════════════════════════════════════════════════════════════ */
 .section-divider {
   height: 2px;
-  background: linear-gradient(to right, transparent, rgba(132,204,22,0.08), rgba(132,204,22,0.15), rgba(132,204,22,0.08), transparent);
+  background: linear-gradient(to right, transparent, rgba(139,0,0,0.08), rgba(139,0,0,0.15), rgba(139,0,0,0.08), transparent);
   border: none;
   margin: 0;
 }
@@ -557,16 +502,3 @@ h1, h2, h3, h4, h5, h6,
    ═══════════════════════════════════════════════════════════════ */
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
-
-/* ═══════════════════════════════════════════════════════════════
-   LAYERED COMPOSITION
-   ═══════════════════════════════════════════════════════════════ */
-.layered-visual { position: relative; }
-.layered-visual > *:nth-child(1) { position: relative; z-index: 3; }
-.layered-visual > *:nth-child(2) {
-  position: absolute; top: -1rem; right: -1rem; z-index: 2; opacity: 0.6; transform: scale(0.95);
-}
-.layered-visual > *:nth-child(3) {
-  position: absolute; top: -2rem; right: -2rem; z-index: 1; opacity: 0.3; transform: scale(0.9);
-}
-

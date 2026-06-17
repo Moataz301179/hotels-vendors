@@ -18,11 +18,11 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "Platform", href: "/platform" },
     { label: "Marketplace", href: "/marketplace" },
-    { label: "Factoring", href: "/factoring-service" },
-    { label: "INVO Infra", href: "/logistics-service" },
-    { label: "Pricing", href: "/pricing" },
+    { label: "Hotel Solutions", href: "/solutions" },
+    { label: "Hotel Dashboard", href: "/sandbox" },
+    { label: "Supplier Portal", href: "/become-supplier" },
+    { label: "ETA Compliance", href: "/compliance" },
   ];
 
   return (
@@ -33,9 +33,9 @@ export function MarketingNav() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 h-auto min-h-[120px] py-3 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-6 h-auto min-h-[80px] py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="xxl" />
+          <BrandLogo variant="dark" size="md" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
@@ -43,7 +43,7 @@ export function MarketingNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="px-4 py-2 text-[14px] font-medium rounded-lg text-white/50 hover:text-white transition-colors"
+              className="px-4 py-2 text-[14px] font-medium rounded-lg text-zinc-400 hover:text-white hover:text-amber-400 transition-colors"
             >
               {item.label}
             </Link>
@@ -63,21 +63,21 @@ export function MarketingNav() {
 
           <Link
             href="/login"
-            className="text-[14px] font-medium text-white/50 hover:text-white transition-colors"
+            className="text-[14px] font-medium text-zinc-400 hover:text-white transition-colors"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-            style={{ backgroundColor: "#84cc16", color: "#000000" }}
+            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,0,0,0.3)]"
+            style={{ backgroundColor: "#8B0000", color: "#ffffff" }}
           >
-            Get Started
+            Get Started Free
           </Link>
         </div>
 
         <button
-          className="lg:hidden p-2 rounded-lg text-white/50 hover:text-white transition-colors"
+          className="lg:hidden p-2 rounded-lg text-zinc-400 hover:text-white transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -91,7 +91,7 @@ export function MarketingNav() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="block py-2.5 text-[14px] font-medium text-white/50 hover:text-white transition-colors"
+                className="block py-2.5 text-[14px] font-medium text-zinc-400 hover:text-white transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -100,14 +100,14 @@ export function MarketingNav() {
             <div className="pt-4 flex gap-3">
               <Link
                 href="/login"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/10 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/10 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
                 className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
-                style={{ backgroundColor: "#84cc16", color: "#000000" }}
+                style={{ backgroundColor: "#8B0000", color: "#ffffff" }}
               >
                 Get Started
               </Link>

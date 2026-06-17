@@ -10,7 +10,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
   display: "swap",
   preload: false,
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     google: "google-site-verification-code",
   },
   other: {
-    "msapplication-TileColor": "#F97316",
+    "msapplication-TileColor": "#8B0000",
     "msapplication-TileImage": "/logo-icon-white.png",
     "theme-color": "#0C0814",
   },
@@ -111,6 +111,9 @@ export default function RootLayout({
       className={`h-full ${plusJakarta.variable}`}
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
         <link rel="dns-prefetch" href="https://hotels-vendors.com" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
@@ -183,7 +186,7 @@ export default function RootLayout({
       <body
         className="min-h-full flex flex-col antialiased"
         style={{
-          fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          fontFamily: "'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           background: "var(--bg-canvas)",
         }}
       >
