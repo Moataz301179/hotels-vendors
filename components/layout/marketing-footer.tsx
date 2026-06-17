@@ -91,7 +91,7 @@ export function MarketingFooter() {
         {/* Data Privacy & Cookie Clause */}
         <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)" }}>
           <div className="flex items-start gap-3">
-            <Lock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "rgba(139,0,0,0.5)" }} />
+            <Lock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "rgba(10,22,40,0.5)" }} />
             <div>
               <p className="text-[11px] text-zinc-500 leading-relaxed">
                 <strong className="text-zinc-400">Data Isolation & Privacy Commitment:</strong> HotelsVendors processes enterprise financial data exclusively as a technical data orchestrator under explicit data processing agreements. All corporate transaction data, invoice payloads, and ETA submission records are handled with AES-256-GCM encryption at rest and TLS 1.3 in transit. Data is logically isolated per tenant with zero cross-contenant exposure. Session cookies are strictly necessary for platform operation and do not track user behavior for advertising purposes. Full compliance with Egyptian data protection regulations. For data processing inquiries, contact the Data Controller at <span className="text-zinc-400">privacy@hotelsvendors.com</span>.
@@ -124,15 +124,15 @@ export function MarketingFooter() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-[12px] text-zinc-500">
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5" style={{ color: "#8B0000" }} />
+              <Shield className="w-3.5 h-3.5" style={{ color: "#0a1628" }} />
               Bank-grade security
             </span>
             <span className="flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5" style={{ color: "#8B0000" }} />
+              <FileCheck className="w-3.5 h-3.5" style={{ color: "#0a1628" }} />
               ETA compliant
             </span>
             <span className="flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5" style={{ color: "#8B0000" }} />
+              <Lock className="w-3.5 h-3.5" style={{ color: "#0a1628" }} />
               Data isolated
             </span>
           </div>

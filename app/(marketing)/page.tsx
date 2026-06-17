@@ -71,8 +71,8 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
 }
 
 // ─── Template Styling Constants ───────────────────────────────────
-const CRIMSON = "#8B0000";
-const CRIMSON_LIGHT = "#A52A2A";
+const ACCENT = "#0a1628";
+const ACCENT_LIGHT = "#1a2744";
 const EMERALD = "#10B981";
 
 // ─── Sector Router Data ───────────────────────────────────────────
@@ -95,8 +95,8 @@ const SECTORS: SectorData[] = [
     key: "procurement",
     label: "Digital Procurement",
     icon: CircuitBoard,
-    accent: CRIMSON,
-    accentMuted: "rgba(139,0,0,0.1)",
+    accent: ACCENT,
+    accentMuted: "rgba(10,22,40,0.15)",
     hook: "Cashflow preservation engine, not an administrative expense. Enforce strict pre-occurrence budget blockades at the resort branch level while stretching working capital cycles to net-90+ without taking on corporate debt.",
     bullets: [
       "14-day forward demand forecasting from occupancy curves, events, and seasonality",
@@ -250,7 +250,7 @@ export default function HomePage() {
     {
       id: 1,
       tag: "Invoice Factoring",
-      tagColor: CRIMSON,
+      tagColor: ACCENT,
       title: "Unlock Cash Flow\nwith Invoice Factoring",
       desc: "Suppliers get paid early. Hotels keep their net-30/60 payment terms. No more cash flow crunches. Our financial partners fund your invoices within 24 hours.",
       bg: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
@@ -260,7 +260,7 @@ export default function HomePage() {
     {
       id: 2,
       tag: "Easy Integration",
-      tagColor: CRIMSON,
+      tagColor: ACCENT,
       title: "Connect Your PMS,\nERP or POS in Minutes",
       desc: "Pre-built connectors for your existing hotel systems. No IT team required. Plug Hotels Vendors into your existing tech stack. Go live in under a day.",
       bg: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
@@ -344,7 +344,7 @@ export default function HomePage() {
                 <Link
                   href={slide.cta1.href}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-xl transition-all transform hover:-translate-y-0.5"
-                  style={{ backgroundColor: CRIMSON, color: "#ffffff" }}
+                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
                 >
                   {slide.cta1.label}
                 </Link>
@@ -407,7 +407,7 @@ export default function HomePage() {
               style={{ borderColor: "rgba(255,255,255,0.05)" }}
             >
               <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: CRIMSON }}>Egyptian Market First</span>
+                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Egyptian Market First</span>
                 <h3 className="font-serif text-3xl font-semibold mb-3 text-white">ETA Document Signatures</h3>
                 <p className="text-zinc-400 font-light max-w-lg">Fully aligned with the Egyptian Tax Authority e-invoicing SDK. We canonicalize, sign, and securely transfer standard data without interrupting business.</p>
               </div>
@@ -425,7 +425,7 @@ export default function HomePage() {
               style={{ borderColor: "rgba(255,255,255,0.05)" }}
             >
               <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: CRIMSON }}>Compliance</span>
+                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Compliance</span>
                 <h3 className="font-serif text-2xl font-semibold mb-3 text-white">Vendor Audits</h3>
                 <p className="text-zinc-400 font-light text-sm">We verify Tax Cards and Commercial Registries before suppliers hit your feed.</p>
               </div>
@@ -450,7 +450,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6">
                 <div className="h-1.5 bg-zinc-900 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full" style={{ backgroundColor: CRIMSON, width: "78%" }} />
+                  <div className="h-full rounded-full" style={{ backgroundColor: ACCENT, width: "78%" }} />
                 </div>
                 <div className="flex justify-between text-[11px] text-zinc-500 mt-2">
                   <span>Current Payout Rate</span>
@@ -464,7 +464,7 @@ export default function HomePage() {
               style={{ borderColor: "rgba(255,255,255,0.05)" }}
             >
               <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: CRIMSON }}>Data Flow</span>
+                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Data Flow</span>
                 <h3 className="font-serif text-3xl font-semibold mb-3 text-white">Zero Cloud Liability</h3>
                 <p className="text-zinc-400 font-light max-w-lg">We serve purely as a technical integration router. All private API keys, cryptographic tokens, and billing records reside under absolute secure cloud policies.</p>
               </div>
@@ -494,8 +494,8 @@ export default function HomePage() {
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${CRIMSON}15` }}>
-                    <badge.icon size={16} style={{ color: CRIMSON }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${ACCENT}20` }}>
+                    <badge.icon size={16} style={{ color: ACCENT }} />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-white/60">{badge.label}</p>
@@ -544,7 +544,7 @@ export default function HomePage() {
           SECTOR ROUTER — Dynamic Tab System
           ═══════════════════════════════════════════ */}
       <section id="platform" className="py-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: `radial-gradient(circle, ${CRIMSON}04 0%, transparent 70%)` }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: `radial-gradient(circle, ${ACCENT}08 0%, transparent 70%)` }} />
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <RevealSection>
             <div className="text-center mb-10">
@@ -644,7 +644,7 @@ export default function HomePage() {
                   <Link
                     href={`/register?sector=${activeSector}`}
                     className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all"
-                    style={{ backgroundColor: currentSector.accent, color: "#000000" }}
+                    style={{ backgroundColor: currentSector.accent, color: "#ffffff" }}
                   >
                     Schedule {currentSector.label} Audit <ArrowRight size={14} />
                   </Link>
@@ -687,7 +687,7 @@ export default function HomePage() {
                         </div>
                         <button type="submit" disabled={isSubmitting || !companyName.trim() || !email.trim()}
                           className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          style={{ backgroundColor: currentSector.accent, color: "#000000" }}
+                          style={{ backgroundColor: currentSector.accent, color: "#ffffff" }}
                         >
                           {isSubmitting ? (
                             <span className="flex items-center gap-2">
@@ -716,7 +716,7 @@ export default function HomePage() {
       <section id="supplier" className="py-24 px-6 lg:px-12 bg-zinc-950 border-t border-white/5">
         <div className="max-w-4xl mx-auto bg-black border border-white/5 rounded-3xl p-8 lg:p-12">
           <div className="text-center mb-12">
-            <span className="text-xs font-bold tracking-widest uppercase block mb-2" style={{ color: CRIMSON }}>Onboarding Application</span>
+            <span className="text-xs font-bold tracking-widest uppercase block mb-2" style={{ color: ACCENT }}>Onboarding Application</span>
             <h2 className="font-serif text-3xl lg:text-4xl font-semibold mb-4 text-white">Register as a Verified Partner</h2>
             <p className="text-zinc-500 text-sm max-w-md mx-auto">Input your company profiles below. Our vetting teams will process your registration profile inside our unified system ledger.</p>
           </div>
@@ -731,7 +731,7 @@ export default function HomePage() {
                   onChange={(e) => setCompanyName(e.target.value)}
                   className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                   style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = CRIMSON }}
+                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
                   onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
                 />
               </div>
@@ -743,7 +743,7 @@ export default function HomePage() {
                   onChange={(e) => setTaxId(e.target.value)}
                   className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                   style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = CRIMSON }}
+                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
                   onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
                 />
               </div>
@@ -757,7 +757,7 @@ export default function HomePage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                   style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = CRIMSON }}
+                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
                   onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
                 />
               </div>
@@ -777,7 +777,7 @@ export default function HomePage() {
             
             <button type="submit" disabled={isSubmitting}
               className="w-full font-bold py-4 rounded-xl transition-all tracking-wider text-xs uppercase disabled:opacity-40"
-              style={{ backgroundColor: CRIMSON, color: "#ffffff" }}
+              style={{ backgroundColor: ACCENT, color: "#ffffff" }}
             >
               {isSubmitting ? "Processing..." : "Submit Digital Registration Profile"}
             </button>
@@ -804,7 +804,7 @@ export default function HomePage() {
             </div>
           </RevealSection>
           <div className="grid md:grid-cols-5 gap-4 relative">
-            <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-px" style={{ background: `linear-gradient(to right, ${CRIMSON}30, ${CRIMSON}10, ${CRIMSON}30)` }} />
+            <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-px" style={{ background: `linear-gradient(to right, ${ACCENT}30, ${ACCENT}10, ${ACCENT}30)` }} />
             {PIPELINE.map((step, i) => (
               <motion.div
                 key={step.step}
@@ -812,21 +812,21 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -6, borderColor: `${CRIMSON}25` }}
+                whileHover={{ y: -6, borderColor: `${ACCENT}30` }}
                 className="rounded-2xl p-6 text-center h-full relative group"
                 style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
               >
-                <div className="text-[32px] font-bold leading-none mb-3" style={{ color: `${CRIMSON}20` }}>{step.step}</div>
+                <div className="text-[32px] font-bold leading-none mb-3" style={{ color: `${ACCENT}20` }}>{step.step}</div>
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: `${CRIMSON}15`, border: `1px solid ${CRIMSON}12` }}
+                  style={{ backgroundColor: `${ACCENT}20`, border: `1px solid ${ACCENT}15` }}
                 >
-                  <step.icon size={18} style={{ color: CRIMSON }} />
+                  <step.icon size={18} style={{ color: ACCENT }} />
                 </div>
-                <h3 className="text-[13px] font-bold mb-2 text-white transition-colors duration-300" style={{ color: CRIMSON }}>{step.title}</h3>
+                <h3 className="text-[13px] font-bold mb-2 text-white transition-colors duration-300" style={{ color: ACCENT }}>{step.title}</h3>
                 <p className="text-[11px] text-white/50 leading-relaxed">{step.desc}</p>
                 {i < PIPELINE.length - 1 && (
-                  <div className="hidden md:flex absolute top-[54px] -right-3 z-10 items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: `${CRIMSON}08` }}>
-                    <MoveRight size={12} style={{ color: `${CRIMSON}30` }} />
+                  <div className="hidden md:flex absolute top-[54px] -right-3 z-10 items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: `${ACCENT}20` }}>
+                    <MoveRight size={12} style={{ color: `${ACCENT}50` }} />
                   </div>
                 )}
               </motion.div>
@@ -852,7 +852,7 @@ export default function HomePage() {
           </RevealSection>
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings.", href: "/register", cta: "Schedule Procurement Audit", color: CRIMSON, type: "engine" as const },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings.", href: "/register", cta: "Schedule Procurement Audit", color: ACCENT, type: "engine" as const },
               { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. On-site GRN validation unlocks non-recourse settlement.", href: "/register", cta: "Request Capital Assessment", color: EMERALD, type: "capital" as const },
               { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching.", href: "/register", cta: "Schedule Integration Audit", color: "#3B82F6", type: "shield" as const },
             ].map((role, i) => (
@@ -909,7 +909,7 @@ export default function HomePage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all"
-                  style={{ backgroundColor: CRIMSON, color: "#ffffff" }}
+                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
                 >
                   Request Institutional Onboarding <ArrowRight size={15} />
                 </motion.a>
@@ -918,7 +918,7 @@ export default function HomePage() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all"
-                  style={{ border: `1px solid ${CRIMSON}40`, color: CRIMSON }}
+                  style={{ border: `1px solid ${ACCENT}40`, color: ACCENT }}
                 >
                   Explore Interactive Sandbox
                 </motion.a>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-const CRIMSON = "#8B0000";
+const ACCENT = "#0a1628";
 
 export default function PortalPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -75,9 +75,9 @@ export default function PortalPage() {
           <nav className="space-y-1.5">
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block mb-3 pl-3">Main Portal</span>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-white"
-              style={{ borderLeft: `2px solid ${CRIMSON}` }}
+              style={{ borderLeft: `2px solid ${ACCENT}` }}
             >
-              <svg className="w-4 h-4" style={{ color: CRIMSON }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" style={{ color: ACCENT }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
               </svg>
               Invoice Ledger
@@ -111,7 +111,7 @@ export default function PortalPage() {
         <div className="p-6 border-t border-white/5 bg-zinc-950/40">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
-              style={{ backgroundColor: `${CRIMSON}20`, border: `1px solid ${CRIMSON}30`, color: CRIMSON }}
+              style={{ backgroundColor: `${ACCENT}20`, border: `1px solid ${ACCENT}30`, color: ACCENT }}
             >
               HR
             </div>
@@ -157,10 +157,10 @@ export default function PortalPage() {
             <div className="rounded-2xl p-6 shadow-sm"
               style={{ backgroundColor: "#8B000008", border: "1px solid #8B000020" }}
             >
-              <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: CRIMSON }}>Critical System Alerts</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: ACCENT }}>Critical System Alerts</span>
               <div className="flex items-center justify-between">
-                <span className="text-2xl lg:text-3xl font-bold tracking-tight" style={{ color: CRIMSON }}>3 Errors</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded uppercase" style={{ backgroundColor: CRIMSON, color: "#ffffff" }}>Requires Action</span>
+                <span className="text-2xl lg:text-3xl font-bold tracking-tight" style={{ color: ACCENT }}>3 Errors</span>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded uppercase" style={{ backgroundColor: ACCENT, color: "#ffffff" }}>Requires Action</span>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function PortalPage() {
               <button
                 onClick={triggerInvoiceGeneration}
                 className="text-xs px-3.5 py-2 rounded-xl transition-all font-semibold w-full sm:w-auto"
-                style={{ backgroundColor: CRIMSON, color: "#ffffff" }}
+                style={{ backgroundColor: ACCENT, color: "#ffffff" }}
               >
                 Simulate Automated Invoice Generation
               </button>
@@ -200,15 +200,15 @@ export default function PortalPage() {
                         <span
                           className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"
                           style={{
-                            backgroundColor: row.statusColor === "emerald" ? "#10B98115" : row.statusColor === "amber" ? "#F59E0B15" : `${CRIMSON}15`,
-                            border: row.statusColor === "emerald" ? "1px solid #10B98125" : row.statusColor === "amber" ? "1px solid #F59E0B25" : `1px solid ${CRIMSON}25`,
-                            color: row.statusColor === "emerald" ? "#059669" : row.statusColor === "amber" ? "#D97706" : CRIMSON,
+                            backgroundColor: row.statusColor === "emerald" ? "#10B98115" : row.statusColor === "amber" ? "#F59E0B15" : `${ACCENT}15`,
+                            border: row.statusColor === "emerald" ? "1px solid #10B98125" : row.statusColor === "amber" ? "1px solid #F59E0B25" : `1px solid ${ACCENT}25`,
+                            color: row.statusColor === "emerald" ? "#059669" : row.statusColor === "amber" ? "#D97706" : ACCENT,
                           }}
                         >
                           <span
                             className="w-1.5 h-1.5 rounded-full"
                             style={{
-                              backgroundColor: row.statusColor === "emerald" ? "#10B981" : row.statusColor === "amber" ? "#F59E0B" : CRIMSON,
+                              backgroundColor: row.statusColor === "emerald" ? "#10B981" : row.statusColor === "amber" ? "#F59E0B" : ACCENT,
                             }}
                           />
                           {row.status}
@@ -216,7 +216,7 @@ export default function PortalPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         {row.statusColor === "crimson" ? (
-                          <button onClick={() => { setModalOpen(true); setClientId("eta_fix_attempt_2026_ledger"); }} className="font-bold underline" style={{ color: CRIMSON }}>
+                          <button onClick={() => { setModalOpen(true); setClientId("eta_fix_attempt_2026_ledger"); }} className="font-bold underline" style={{ color: ACCENT }}>
                             Fix Error
                           </button>
                         ) : (
@@ -298,7 +298,7 @@ export default function PortalPage() {
                 <button
                   type="submit"
                   className="flex-1 font-bold py-3.5 rounded-xl transition-all text-xs uppercase tracking-wider"
-                  style={{ backgroundColor: CRIMSON, color: "#ffffff" }}
+                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
                 >
                   Apply Changes
                 </button>

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — TEMPLATE-ALIGNED DESIGN SYSTEM
-   Crimson (#8B0000) accent · Inter + Playfair Display typography
+   HOTELS VENDORS — DARK BLUE-BLACK DESIGN SYSTEM
+   Dark Navy (#0a1628) accent · Inter + Playfair Display typography
    OLED Black background · Institutional premium feel
    ═══════════════════════════════════════════════════════════════ */
 
@@ -34,14 +34,14 @@
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(139, 0, 0, 0.20);
+  --border-accent: rgba(10, 22, 40, 0.30);
 
-  /* ── CRIMSON ACCENT (Template Match) ── */
-  --accent-base: #8B0000;
-  --accent-light: #A52A2A;
-  --accent-dark: #5C0000;
-  --accent-muted: rgba(139, 0, 0, 0.10);
-  --accent-glow: rgba(139, 0, 0, 0.15);
+  /* ── DARK BLUE-BLACK ACCENT ── */
+  --accent-base: #0a1628;
+  --accent-light: #1a2744;
+  --accent-dark: #050a14;
+  --accent-muted: rgba(10, 22, 40, 0.15);
+  --accent-glow: rgba(10, 22, 40, 0.10);
 
   /* ── Emerald Tagline Accent ── */
   --emerald-base: #10B981;
@@ -63,7 +63,7 @@
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-crimson: 0 0 40px rgba(139, 0, 0, 0.08);
+  --shadow-glow-accent: 0 0 40px rgba(10, 22, 40, 0.08);
   --shadow-glow-gold: 0 0 40px rgba(212, 168, 67, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
@@ -119,7 +119,7 @@ html[data-mode="light"] {
   --border-invisible: rgba(0, 0, 0, 0.04);
   --border-subtle: rgba(0, 0, 0, 0.08);
   --border-visible: rgba(0, 0, 0, 0.12);
-  --border-accent: rgba(139, 0, 0, 0.25);
+  --border-accent: rgba(10, 22, 40, 0.25);
 }
 
 html[data-mode="light"] .nav-border {
@@ -172,8 +172,8 @@ body {
 }
 
 /* ── Gradient text ── */
-.text-gradient-red-gold {
-  background: linear-gradient(90deg, #8B0000 0%, #D4A843 100%);
+.text-gradient-accent {
+  background: linear-gradient(90deg, #0a1628 0%, #1a2744 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -187,17 +187,17 @@ body {
 }
 
 /* ── Hero glows ── */
-.hero-glow-crimson {
+.hero-glow-accent {
   position: relative;
 }
-.hero-glow-crimson::before {
+.hero-glow-accent::before {
   content: '';
   position: absolute;
   top: -20%;
   right: -10%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(139,0,0,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(10,22,40,0.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -476,7 +476,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 .section-divider {
   height: 2px;
-  background: linear-gradient(to right, transparent, rgba(139,0,0,0.08), rgba(139,0,0,0.15), rgba(139,0,0,0.08), transparent);
+  background: linear-gradient(to right, transparent, rgba(10,22,40,0.08), rgba(10,22,40,0.15), rgba(10,22,40,0.08), transparent);
   border: none;
   margin: 0;
 }
