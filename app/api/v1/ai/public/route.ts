@@ -62,6 +62,11 @@ export async function POST(request: NextRequest) {
       preferredModel: "auto",
     });
 
+    // If LLM returned unavailable (Ollama down, no fallback), throw to trigger rule-based fallback
+    if (result.provider === "none" || result.content === "Service unavailable.") {
+      throw new Error("LLM provider unavailable — using rule-based fallback");
+    }
+
     return Response.json({
       success: true,
       data: {
