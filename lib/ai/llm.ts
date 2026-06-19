@@ -29,7 +29,7 @@ export interface RouterResult {
 }
 
 /**
- * Execute LLM call via Groq (primary) or xAI fallback.
+ * Execute LLM call via Ollama only (free, self-hosted on VPS).
  * Stripped of swarm-specific circuit breaker and health tracking.
  */
 export async function executeLLM(
@@ -105,48 +105,7 @@ export async function executeLLM(
     }
   }
 
-  // Fallback: xAI Grok
-  const xaiKey = process.env.XAI_API_KEY;
-  if (xaiKey) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 15000);
-
-      const res = await fetch("https://api.x.ai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${xaiKey}`,
-        },
-        body: JSON.stringify({
-          model: "grok-3-mini",
-          messages,
-          temperature,
-          max_tokens: maxTokens,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (res.ok) {
-        const data = await res.json();
-        const content = data.choices?.[0]?.message?.content || "";
-        if (content.trim()) {
-          return {
-            content: content.trim(),
-            provider: "xai",
-            model: "grok-3-mini",
-            latencyMs: Date.now() - startTime,
-          };
-        }
-      }
-    } catch (e) {
-      console.error("[LLM Router] xAI Error:", e);
-    }
-  }
-
-  // Ultimate fallback: return empty but structured
+  // No fallback — Ollama only
   return {
     content: jsonMode ? "{}" : "Service unavailable.",
     provider: "none",
