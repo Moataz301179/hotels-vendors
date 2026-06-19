@@ -27,27 +27,17 @@ const ICON_SIZE_MAP = {
   xxl: 96,
 };
 
-function KnightIcon({ size, color }: { size: number; color: string }) {
+function KnightIcon({ size, variant }: { size: number; variant: "dark" | "light" }) {
+  const src = variant === "dark" ? "/logo-horse-only.svg" : "/logo-horse-only.svg";
   return (
-    <svg
+    <img
+      src={src}
+      alt="HotelsVendors"
       width={size}
       height={size}
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      className={variant === "light" ? "brightness-0" : ""}
       style={{ width: size, height: size }}
-    >
-      <defs>
-        <linearGradient id={`kg-${size}`} x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor={color} />
-          <stop offset="100%" stopColor="#00E5CC" />
-        </linearGradient>
-      </defs>
-      <path d="M65 15 L75 25 L70 35 L80 45 L70 60 L55 55 L45 65 L35 60 L30 70 L25 65 L30 50 L40 45 L35 35 L45 25 L55 30 L65 15Z" fill={`url(#kg-${size})`} />
-      <path d="M35 60 L30 70 L25 65 L30 50Z" fill={color} opacity="0.4" />
-      <path d="M55 30 L65 15 L60 25Z" fill="#00E5CC" opacity="0.3" />
-      <circle cx="58" cy="38" r="3" fill="#ffffff" opacity="0.9" />
-    </svg>
+    />
   );
 }
 
@@ -64,7 +54,7 @@ export function BrandLogo({
 
   return (
     <div className={cn("flex items-center gap-2 shrink-0", className)}>
-      <KnightIcon size={iconSize} color={accentColor} />
+      <KnightIcon size={iconSize} variant={variant} />
       {showText && (
         <div className="flex flex-col justify-center select-none">
           <span

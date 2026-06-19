@@ -5,10 +5,12 @@ import Link from "next/link";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useTheme } from "@/components/theme/theme-provider";
+import { RegistrationWizard } from "@/components/auth/registration-wizard";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
   const { mode, toggleMode } = useTheme();
   const isLight = mode === "light";
 
@@ -19,13 +21,14 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "Solutions", href: "/solutions" },
+    { label: "For Hotels", href: "/register/hotel" },
+    { label: "For Suppliers", href: "/register/supplier" },
+    { label: "For Funders", href: "/register/funder" },
     { label: "Sandbox", href: "/sandbox" },
-    { label: "Suppliers", href: "/become-supplier" },
-    { label: "Compliance", href: "/compliance" },
   ];
 
   return (
+    <>
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
@@ -81,9 +84,9 @@ export function MarketingNav() {
             Sign In
           </Link>
 
-          <Link
-            href="/register"
-            className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-lg transition-all hover:opacity-90 hover:shadow-lg"
+          <button
+            onClick={() => setWizardOpen(true)}
+            className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-lg transition-all hover:opacity-90 hover:shadow-lg cursor-pointer"
             style={{
               background: isLight
                 ? "linear-gradient(135deg, #FF6B00, #FF8C38)"
@@ -92,7 +95,7 @@ export function MarketingNav() {
             }}
           >
             Get Started
-          </Link>
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -146,17 +149,20 @@ export function MarketingNav() {
               >
                 Sign In
               </Link>
-              <Link
-                href="/register"
-                className="flex-1 text-center py-2.5 text-[12px] font-semibold rounded-lg transition-all text-white"
+              <button
+                onClick={() => { setMobileOpen(false); setWizardOpen(true); }}
+                className="flex-1 text-center py-2.5 text-[12px] font-semibold rounded-lg transition-all text-white cursor-pointer"
                 style={{ background: "linear-gradient(135deg, #FF6B00, #FF8C38)" }}
               >
                 Get Started
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       )}
     </header>
+
+    <RegistrationWizard isOpen={wizardOpen} onClose={() => setWizardOpen(false)} />
+  </>
   );
 }
