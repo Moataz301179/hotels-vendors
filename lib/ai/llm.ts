@@ -60,15 +60,16 @@ export async function executeLLM(
 
   const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
 
-  const ollamaUrl = process.env.OLLAMA_URL;
-  const ollamaModel = process.env.OLLAMA_MODEL;
-  const groqKey = process.env.GROQ_API_KEY;
-  const xaiKey = process.env.XAI_API_KEY;
+  const ollamaUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
+  const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
 
   // Primary: Ollama (Local/VPS - Zero Cost)
-  if (ollamaUrl && ollamaModel) {
+  if (ollamaUrl) {
     try {
-      const res = await fetch(`${ollamaUrl}/api/chat`, {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+
+      const res = await fetch(`${ollamaUrl.replace(/\/$/, "")}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -81,19 +82,67 @@ export async function executeLLM(
           stream: false,
           format: jsonMode ? "json" : undefined,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeout);
+
       if (res.ok) {
         const data = await res.json();
-        return {
-          content: data.message?.content || "",
-          provider: "ollama",
-          model: ollamaModel,
-          latencyMs: Date.now() - startTime,
-          tokensUsed: data.prompt_eval + (data.eval_count || 0),
-        };
+        const content = data.message?.content || data.response || "";
+        if (content.trim()) {
+          return {
+            content: content.trim(),
+            provider: "ollama",
+            model: ollamaModel,
+            latencyMs: Date.now() - startTime,
+          };
+        }
       }
+      console.error("[LLM Router] Ollama response not ok:", res.status);
     } catch (e) {
       console.error("[LLM Router] Ollama Error:", e);
+    }
+  }
+
+  // Fallback: xAI Grok
+  const xaiKey = process.env.XAI_API_KEY;
+  if (xaiKey) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
+      const res = await fetch("https://api.x.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${xaiKey}`,
+        },
+        body: JSON.stringify({
+          model: "grok-3-mini",
+          messages,
+          temperature,
+          max_tokens: maxTokens,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (res.ok) {
+        const data = await res.json();
+        const content = data.choices?.[0]?.message?.content || "";
+        if (content.trim()) {
+          return {
+            content: content.trim(),
+            provider: "xai",
+            model: "grok-3-mini",
+            latencyMs: Date.now() - startTime,
+          };
+        }
+      }
+    } catch (e) {
+      console.error("[LLM Router] xAI Error:", e);
     }
   }
 

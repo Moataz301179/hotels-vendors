@@ -28,11 +28,11 @@ Key facts about HotelsVendors:
 Answer questions concisely and accurately. If you don't know something, say so honestly. Always be helpful and professional.`;
 
 async function callOllama(message: string, conversationId?: string): Promise<string> {
-  const vpsUrl = process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
+  const vpsUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
 
   if (!vpsUrl) {
-    throw new Error("VPS_API_URL not configured");
+    throw new Error("Ollama URL not configured. Set OLLAMA_URL, NEXT_PUBLIC_VPS_API_URL, or VPS_API_URL");
   }
 
   // Build conversation context if we have history

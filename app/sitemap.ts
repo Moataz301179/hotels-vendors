@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pricing",
     "/marketplace",
     "/become-supplier",
+    "/sandbox",
+    "/compliance",
     "/social-media",
     "/login",
     "/register",

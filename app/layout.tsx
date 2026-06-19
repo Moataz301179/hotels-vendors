@@ -16,8 +16,8 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
-    template: "%s | Hotels Vendors",
+    default: "HotelsVendors | Digital Procurement Hub for B2B Hospitality",
+    template: "%s | HotelsVendors",
   },
   description:
     "Egypt's leading B2B procurement platform for hotels. Connect with verified suppliers, streamline logistics, and unlock factoring liquidity — all with integrated ETA e-invoicing compliance.",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     locale: "en_EG",
     url: "https://hotels-vendors.com",
     siteName: "Hotels Vendors",
-    title: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
+    title: "HotelsVendors | Digital Procurement Hub for B2B Hospitality",
     description:
       "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
     images: [
@@ -51,13 +51,13 @@ export const metadata: Metadata = {
         url: "/hotelsvendors-logo.png",
         width: 1200,
         height: 630,
-        alt: "Hotels Vendors — Smarter Together",
+        alt: "HotelsVendors — Smarter Together",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hotels Vendors | Digital Procurement Hub",
+    title: "HotelsVendors | Digital Procurement Hub",
     description:
       "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
     images: ["/hotelsvendors-logo.png"],

@@ -19,11 +19,10 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "Marketplace", href: "/marketplace" },
-    { label: "Hotel Solutions", href: "/solutions" },
-    { label: "Hotel Dashboard", href: "/sandbox" },
-    { label: "Supplier Portal", href: "/become-supplier" },
-    { label: "ETA Compliance", href: "/compliance" },
+    { label: "Solutions", href: "/solutions" },
+    { label: "Sandbox", href: "/sandbox" },
+    { label: "Suppliers", href: "/become-supplier" },
+    { label: "Compliance", href: "/compliance" },
   ];
 
   return (
@@ -31,25 +30,27 @@ export function MarketingNav() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? isLight
-            ? "bg-white/95 backdrop-blur-md shadow-md border-b border-black/[0.06]"
-            : "bg-black/95 backdrop-blur-md shadow-lg border-b border-white/[0.06]"
+            ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-black/[0.06]"
+            : "bg-[#07090f]/95 backdrop-blur-md shadow-lg border-b border-white/[0.06]"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 h-auto min-h-[72px] py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 relative z-10">
+      <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
+        {/* Logo — consistent uppercase */}
+        <Link href="/" className="relative z-10">
           <BrandLogo variant={isLight ? "light" : "dark"} size="md" />
         </Link>
 
+        {/* Nav links */}
         <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className={`px-4 py-2 text-[14px] font-medium rounded-lg transition-colors ${
+              className={`px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-lg transition-colors ${
                 isLight
-                  ? "text-gray-600 hover:text-gray-900 hover:bg-purple-50"
-                  : "text-zinc-400 hover:text-white hover:text-amber-400"
+                  ? "text-gray-500 hover:text-gray-900 hover:bg-purple-50"
+                  : "text-white/50 hover:text-white hover:bg-white/[0.06]"
               }`}
             >
               {item.label}
@@ -57,16 +58,15 @@ export function MarketingNav() {
           ))}
         </nav>
 
+        {/* Right actions */}
         <div className="hidden lg:flex items-center gap-2">
-          {/* Theme toggle */}
           <button
             onClick={toggleMode}
             className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
               isLight
-                ? "text-gray-500 hover:text-purple-700 hover:bg-purple-50"
-                : "text-white/50 hover:text-white hover:bg-white/10"
+                ? "text-gray-400 hover:text-purple-700 hover:bg-purple-50"
+                : "text-white/40 hover:text-white hover:bg-white/[0.06]"
             }`}
-            title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
             aria-label="Toggle theme"
           >
             {isLight ? <Moon size={16} /> : <Sun size={16} />}
@@ -74,24 +74,31 @@ export function MarketingNav() {
 
           <Link
             href="/login"
-            className={`text-[14px] font-medium transition-colors ${
-              isLight ? "text-gray-600 hover:text-gray-900" : "text-zinc-400 hover:text-white"
+            className={`text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors ${
+              isLight ? "text-gray-600 hover:text-gray-900" : "text-white/60 hover:text-white"
             }`}
           >
             Sign In
           </Link>
+
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all"
-            style={{ backgroundColor: isLight ? "#581c87" : "#FFB000", color: "#ffffff" }}
+            className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-lg transition-all hover:opacity-90 hover:shadow-lg"
+            style={{
+              background: isLight
+                ? "linear-gradient(135deg, #FF6B00, #FF8C38)"
+                : "linear-gradient(135deg, #FF6B00, #FF8C38)",
+              color: "#ffffff",
+            }}
           >
-            Get Started Free
+            Get Started
           </Link>
         </div>
 
+        {/* Mobile toggle */}
         <button
           className={`lg:hidden p-2 rounded-lg transition-colors ${
-            isLight ? "text-gray-600 hover:text-gray-900" : "text-zinc-400 hover:text-white"
+            isLight ? "text-gray-600 hover:text-gray-900" : "text-white/60 hover:text-white"
           }`}
           onClick={() => setMobileOpen(!mobileOpen)}
         >
@@ -99,49 +106,50 @@ export function MarketingNav() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className={`lg:hidden backdrop-blur-md animate-fade-in-up ${
-          isLight ? "bg-white/98 border-t border-black/[0.06]" : "bg-black/98 border-t border-white/5"
+        <div className={`lg:hidden backdrop-blur-md ${
+          isLight ? "bg-white/98 border-t border-black/[0.06]" : "bg-[#07090f]/98 border-t border-white/[0.04]"
         }`}>
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`block py-2.5 text-[14px] font-medium transition-colors ${
-                  isLight ? "text-gray-600 hover:text-gray-900" : "text-zinc-400 hover:text-white"
+                className={`block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors ${
+                  isLight ? "text-gray-500 hover:text-gray-900" : "text-white/50 hover:text-white"
                 }`}
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4 flex items-center gap-3">
+            <div className="pt-4 flex items-center gap-3 border-t" style={{ borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)" }}>
               <button
                 onClick={toggleMode}
-                className={`flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium rounded-lg border transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2.5 text-[12px] font-medium rounded-lg border transition-colors ${
                   isLight
-                    ? "border-gray-200 text-gray-600 hover:bg-purple-50"
-                    : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+                    ? "border-gray-200 text-gray-500 hover:bg-purple-50"
+                    : "border-white/10 text-white/40 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {isLight ? <Moon size={14} /> : <Sun size={14} />}
-                {isLight ? "Dark Mode" : "Light Mode"}
+                {isLight ? "Dark" : "Light"}
               </button>
               <Link
                 href="/login"
-                className={`flex-1 text-center py-2.5 text-[13px] font-medium border rounded-lg transition-colors ${
+                className={`flex-1 text-center py-2.5 text-[12px] font-medium border rounded-lg transition-colors ${
                   isLight
-                    ? "border-gray-200 text-gray-600 hover:bg-gray-50"
-                    : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+                    ? "border-gray-200 text-gray-500 hover:bg-gray-50"
+                    : "border-white/10 text-white/40 hover:text-white hover:bg-white/5"
                 }`}
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all text-white"
-                style={{ backgroundColor: isLight ? "#581c87" : "#FFB000" }}
+                className="flex-1 text-center py-2.5 text-[12px] font-semibold rounded-lg transition-all text-white"
+                style={{ background: "linear-gradient(135deg, #FF6B00, #FF8C38)" }}
               >
                 Get Started
               </Link>

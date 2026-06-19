@@ -43,17 +43,32 @@ import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-moc
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 
-// ─── Color System (Hercules Neon) ─────────────────────────────────
+// ─── Color System (Neon Orange + Turquoise) ──────────────────────
 const C = {
-  green: "#39ff7e",
-  greenMuted: "rgba(57,255,126,0.1)",
-  greenBorder: "rgba(57,255,126,0.3)",
-  orange: "#ff7e1a",
-  orangeMuted: "rgba(255,126,26,0.1)",
-  orangeBorder: "rgba(255,126,26,0.3)",
-  purple: "#c455ff",
-  purpleMuted: "rgba(196,85,255,0.1)",
-  purpleBorder: "rgba(196,85,255,0.3)",
+  // Primary: Neon Orange
+  primary: "#FF6B00",
+  primaryMuted: "rgba(255,107,0,0.1)",
+  primaryBorder: "rgba(255,107,0,0.3)",
+  primaryGlow: "rgba(255,107,0,0.15)",
+  // Secondary: Turquoise / Cyan Neon
+  secondary: "#00E5CC",
+  secondaryMuted: "rgba(0,229,204,0.1)",
+  secondaryBorder: "rgba(0,229,204,0.3)",
+  secondaryGlow: "rgba(0,229,204,0.15)",
+  // Accent: Deep Violet
+  accent: "#A855F7",
+  accentMuted: "rgba(168,85,247,0.1)",
+  accentBorder: "rgba(168,85,247,0.3)",
+  // Aliases for backwards compat in this file
+  orange: "#FF6B00",
+  orangeMuted: "rgba(255,107,0,0.1)",
+  orangeBorder: "rgba(255,107,0,0.3)",
+  green: "#00E5CC",       // turquoise replaces green
+  greenMuted: "rgba(0,229,204,0.1)",
+  greenBorder: "rgba(0,229,204,0.3)",
+  purple: "#A855F7",
+  purpleMuted: "rgba(168,85,247,0.1)",
+  purpleBorder: "rgba(168,85,247,0.3)",
   bg: "#07090f",
   card: "rgba(255,255,255,0.03)",
   border: "rgba(255,255,255,0.06)",
@@ -130,7 +145,7 @@ function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = C.g
 
 // ─── Data ──────────────────────────────────────────────────────────
 const TRUST_BADGES = [
-  { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
+  { icon: Shield, label: "ETA E-Invoicing", desc: "Egyptian Tax Authority" },
   { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
   { icon: Globe, label: "6 Governorates Covered", desc: "Coastal + Inland" },
   { icon: Zap, label: "48-Hour Settlement", desc: "Bank-direct factoring" },
@@ -144,10 +159,10 @@ const STATS = [
 ];
 
 const HOW_IT_WORKS = [
-  { step: "01", title: "Hotels Join Free", desc: "Register your property group on HotelsVendors. Our AI agent guides you through ETA-compliant onboarding in minutes — no paperwork.", color: C.green, borderColor: C.greenBorder },
-  { step: "02", title: "Discover on INVO", desc: "Browse INVO — our vendor marketplace aggregated via API and plugin integrations from global supply networks. Find, compare, and order.", color: C.orange, borderColor: C.orangeBorder },
-  { step: "03", title: "Checkout & Pay", desc: "HotelsVendors handles checkout, multi-currency payments, and bank transfers. AI agents forecast your spend and flag compliance gaps.", color: C.purple, borderColor: C.purpleBorder },
-  { step: "04", title: "Suppliers Get Paid Fast", desc: "Vendors request reverse factoring. Our swarm agents validate, authorise, and disburse within 48 hours — fully compliant with FRA.", color: C.green, borderColor: C.greenBorder },
+  { step: "01", title: "Hotels Join Free", desc: "Register on HotelsVendors. AI-guided ETA-compliant onboarding in minutes — no paperwork, no credit card.", color: C.secondary, borderColor: C.secondaryBorder },
+  { step: "02", title: "Discover on INVO", desc: "Browse 680+ verified suppliers on INVO — our vendor marketplace. Real-time catalogs, AI-powered matching.", color: C.primary, borderColor: C.primaryBorder },
+  { step: "03", title: "Checkout & Pay", desc: "HotelsVendors handles checkout, multi-gateway payments, and bank transfers. AI forecasts spend and flags compliance gaps.", color: C.accent, borderColor: C.accentBorder },
+  { step: "04", title: "Suppliers Get Paid in 48h", desc: "Vendors request reverse factoring via Settlement & Capital. Competitive bidding, bank-direct disbursement, FRA compliant.", color: C.secondary, borderColor: C.secondaryBorder },
 ];
 
 const FEATURES = [
@@ -199,73 +214,109 @@ export default function HomePage() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: C.bg, color: "#ffffff" }}>
       <MarketingNav />
-      <MarketTicker />
 
       {/* ═══════════════════════════════════════════
-          HERO
+          HERO — with large logo, 3-layer consistent messaging
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-12">
         {/* Neon glow orbs */}
-        <div className="absolute top-1/3 left-1/4 w-80 h-80 rounded-full blur-[160px] pointer-events-none" style={{ background: C.green, opacity: 0.06 }} />
-        <div className="absolute bottom-1/4 right-1/5 w-60 h-60 rounded-full blur-[130px] pointer-events-none" style={{ background: C.purple, opacity: 0.05 }} />
+        <div className="absolute top-1/4 left-1/6 w-[500px] h-[400px] rounded-full blur-[200px] pointer-events-none" style={{ background: C.primary, opacity: 0.07 }} />
+        <div className="absolute bottom-1/4 right-1/6 w-[400px] h-[300px] rounded-full blur-[180px] pointer-events-none" style={{ background: C.secondary, opacity: 0.05 }} />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] tracking-wider uppercase mb-6 border"
-            style={{ borderColor: C.purpleBorder, background: C.purpleMuted, color: C.purple }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] tracking-wider uppercase mb-8 border"
+            style={{ borderColor: C.accentBorder, background: C.accentMuted, color: C.accent }}
           >
             <Sparkles size={12} />
-            Egypt & MENA's First · AI-Native B2B Hotel Procurement Platform
+            Egypt & MENA&apos;s First · AI-Native B2B Hotel Procurement Platform
           </motion.div>
 
-          {/* Title — semibold, not bold */}
-          <motion.h1
+          {/* Logo + Brand Name Row */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-[36px] sm:text-[48px] md:text-[56px] font-semibold tracking-[0.08em] text-white leading-[1.1] mb-5 uppercase"
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="flex items-center justify-center gap-5 mb-6"
           >
-            Hotels Vendors
-          </motion.h1>
+            {/* Large Knight Logo with glow overlay */}
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full blur-2xl opacity-40" style={{ background: C.primary }} />
+              <svg width="88" height="88" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
+                <defs>
+                  <linearGradient id="heroLogoGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor={C.primary} />
+                    <stop offset="100%" stopColor={C.secondary} />
+                  </linearGradient>
+                </defs>
+                <path d="M65 15 L75 25 L70 35 L80 45 L70 60 L55 55 L45 65 L35 60 L30 70 L25 65 L30 50 L40 45 L35 35 L45 25 L55 30 L65 15Z" fill="url(#heroLogoGrad)" />
+                <path d="M35 60 L30 70 L25 65 L30 50Z" fill={C.primary} opacity="0.5" />
+                <path d="M55 30 L65 15 L60 25Z" fill={C.secondary} opacity="0.3" />
+                <circle cx="58" cy="38" r="3" fill="#ffffff" opacity="0.9" />
+              </svg>
+            </div>
+
+            {/* Brand name — ALL CAPS consistent with hero title */}
+            <h1
+              className="text-[40px] sm:text-[52px] md:text-[64px] font-semibold leading-[1.05] tracking-[0.06em] uppercase"
+              style={{
+                background: `linear-gradient(135deg, ${C.primary} 0%, ${C.secondary} 100%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              HOTELS<br />VENDORS
+            </h1>
+          </motion.div>
+
+          {/* Subtitle — 3 layers clearly named */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="text-[18px] md:text-[22px] text-white font-medium mb-4 tracking-wide"
+          >
+            Three Layers. One Network. Zero Friction.
+          </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-[17px] md:text-[20px] text-white/90 mb-3 font-normal tracking-wide"
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="text-[14px] md:text-[15px] text-white/60 max-w-3xl mx-auto mb-4 font-normal leading-relaxed"
           >
-            The Intelligent Procurement Network — <span className="text-white/65">Hotels, Vendors & Capital Connected.</span>
+            <span style={{ color: C.secondary }}>HotelsVendors</span> is the procurement operating system — AI forecasting, checkout, ETA compliance.
+            <span style={{ color: C.primary }}> INVO</span> is the vendor marketplace — 680+ verified suppliers, real-time catalogs.
+            <span style={{ color: C.accent }}> Settlement & Capital</span> is the financial layer — reverse factoring, 48h payout, FRA compliant.
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-[14px] text-white/55 max-w-2xl mx-auto mb-8 font-normal leading-relaxed"
+            className="text-[13px] text-white/40 max-w-2xl mx-auto mb-8 font-normal"
           >
-            For the first time in Egypt and the broader MENA region, hotels and their entire supply chain operate inside one unified, AI-governed platform.{" "}
-            <span style={{ color: C.green }}>HotelsVendors</span> orchestrates procurement, payments, compliance, and financing — while{" "}
-            <span style={{ color: C.orange }}>INVO</span>, its vendor marketplace sub-layer, aggregates supplier networks via API. Both platforms are free to join. We earn only when value is exchanged.
+            All three layers are free to join. We earn only when value is exchanged — transparent fees, zero hidden costs.
           </motion.p>
 
           {/* Trust pills */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-3 mb-8 text-[11px]"
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="flex flex-wrap justify-center gap-2.5 mb-8 text-[11px]"
           >
             {[
-              { label: "ETA Compliant", color: C.green },
-              { label: "FRA Registered", color: C.orange },
-              { label: "ISO 27001", color: C.purple },
-              { label: "Free to Start", color: C.green },
+              { label: "ETA E-Invoicing", color: C.secondary },
+              { label: "FRA Framework Ready", color: C.primary },
+              { label: "Bank-Grade Security", color: C.accent },
+              { label: "Free to Start", color: C.secondary },
             ].map((pill) => (
-              <span key={pill.label} className="px-3 py-1 rounded-full border font-medium" style={{ borderColor: pill.color + "55", color: pill.color, background: pill.color + "10" }}>
+              <span key={pill.label} className="px-3 py-1 rounded-full border font-medium" style={{ borderColor: pill.color + "50", color: pill.color, background: pill.color + "10" }}>
                 {pill.label}
               </span>
             ))}
@@ -275,16 +326,16 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.45 }}
             className="flex flex-col sm:flex-row gap-3 justify-center"
           >
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-7 py-3 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.green, color: "#07090f" }}>
-              <CreditCard size={16} />
-              Explore the Sandbox Demo
+            <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3.5 text-[14px] font-semibold rounded-lg transition-all hover:shadow-lg hover:opacity-90" style={{ background: `linear-gradient(135deg, ${C.primary}, #FF8C38)`, color: "#ffffff" }}>
+              Get Started Free
+              <ArrowRight size={16} />
             </Link>
-            <Link href="/solutions" className="inline-flex items-center gap-2 px-7 py-3 text-[13px] font-normal rounded-md border transition-all hover:bg-white/5" style={{ borderColor: C.purpleBorder, color: C.purple }}>
-              <MessageSquare size={16} />
-              Talk to the AI Agent
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-8 py-3.5 text-[14px] font-medium rounded-lg border transition-all hover:bg-white/[0.04]" style={{ borderColor: C.accentBorder, color: C.accent }}>
+              <Play size={15} />
+              Explore Sandbox
             </Link>
           </motion.div>
 
@@ -293,15 +344,18 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-16 flex justify-center"
+            className="mt-12 flex justify-center"
           >
-            <a href="#stats" className="flex flex-col items-center gap-2 text-white/30 hover:text-white/60 transition-colors cursor-pointer">
-              <span className="text-[10px] tracking-widest uppercase">Discover</span>
+            <a href="#layers" className="flex flex-col items-center gap-2 text-white/30 hover:text-white/60 transition-colors cursor-pointer">
+              <span className="text-[10px] tracking-widest uppercase">Explore the Three Layers</span>
               <ChevronDown size={16} className="animate-bounce" />
             </a>
           </motion.div>
         </div>
       </section>
+
+      {/* Market Ticker — below hero, not in header */}
+      <MarketTicker />
 
       {/* ═══════════════════════════════════════════
           STATS STRIP
@@ -412,9 +466,9 @@ export default function HomePage() {
                   subtitleAr: "نظام المشتريات",
                   desc: "Hotel-facing workspace. AI forecasting, multi-gateway checkout, ETA compliance, reverse factoring requests, and budget control — all in one dashboard.",
                   descAr: "مساحة عمل فندقية. تنبؤ ذكي، دفع متعدد البوابات، امتثال ضريبي، تمويل عكسي، وتحكم في الميزانية — كل ذلك في لوحة تحكم واحدة.",
-                  color: C.green,
-                  borderColor: C.greenBorder,
-                  mutedColor: C.greenMuted,
+                  color: C.secondary,
+                  borderColor: C.secondaryBorder,
+                  mutedColor: C.secondaryMuted,
                   features: ["AI demand forecasting", "ETA e-invoicing", "Budget authority matrix", "Multi-gateway payments"],
                   dashboard: HotelDashboardMockup,
                 },
@@ -659,12 +713,12 @@ export default function HomePage() {
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: C.greenMuted }}>
-                    <badge.icon size={16} style={{ color: C.green }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: i % 2 === 0 ? C.secondaryMuted : C.primaryMuted }}>
+                    <badge.icon size={16} style={{ color: i % 2 === 0 ? C.secondary : C.primary }} />
                   </div>
                   <div>
-                    <p className="text-[12px] font-medium text-white/60">{badge.label}</p>
-                    <p className="text-[10px] text-white/25 font-normal">{badge.desc}</p>
+                    <p className="text-[12px] font-medium text-white/70">{badge.label}</p>
+                    <p className="text-[10px] text-white/40 font-normal">{badge.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -755,14 +809,14 @@ export default function HomePage() {
               AI-automated procurement. Cashflow optimization. The smartest B2B fintech. All in one platform — with cryptographic ETA compliance, automated settlement, and zero manual reconciliation.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:opacity-90" style={{ background: C.green, color: "#07090f" }}>
-                Request Enterprise Access <ArrowRight size={15} />
+              <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3.5 text-[14px] font-semibold rounded-xl transition-all hover:opacity-90 hover:shadow-lg" style={{ background: `linear-gradient(135deg, ${C.primary}, #FF8C38)`, color: "#ffffff" }}>
+                Get Started Free <ArrowRight size={15} />
               </Link>
-              <Link href="/platform" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-normal rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: `1px solid ${C.border}`, color: "rgba(255,255,255,0.6)" }}>
-                <Sparkles size={14} /> Explore Platform
+              <Link href="/sandbox" className="inline-flex items-center gap-2 px-8 py-3.5 text-[14px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: `1px solid ${C.secondaryBorder}`, color: C.secondary }}>
+                <Sparkles size={14} /> Explore Sandbox
               </Link>
             </div>
-            <p className="text-[11px] text-white/20 mt-6 font-normal">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
+            <p className="text-[11px] text-white/30 mt-6 font-normal">No credit card required · Free to start · Dedicated onboarding</p>
           </RevealSection>
         </div>
       </section>
@@ -773,7 +827,7 @@ export default function HomePage() {
       <section className="py-16 border-t" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0a0a0a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] block mb-3" style={{ color: "#FFB000" }}>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] block mb-3" style={{ color: C.primary }}>
               Security & Compliance · الأمان والامتثال
             </span>
             <h2 className="text-[26px] sm:text-[32px] font-semibold tracking-tight text-white mb-3">
@@ -787,12 +841,12 @@ export default function HomePage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: Shield, title: "ETA Phase 1 & 2 Compliant", titleAr: "متوافق مع الفوترة الإلكترونية — المرحلة الأولى والثانية", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: "#22C55E" },
-              { icon: Lock, title: "AES-256-GCM Encryption", titleAr: "تشفير AES-256-GCM", desc: "All data at rest encrypted using AES-256-GCM. Keys rotated every 90 days via AWS KMS.", color: "#3B82F6" },
-              { icon: CheckCircle, title: "ISO 27001 Aligned", titleAr: "متوافق مع معيار ISO 27001", desc: "Information security management aligned with ISO 27001. Regular third-party audits and penetration testing.", color: "#FFB000" },
-              { icon: Globe, title: "Data Residency — Egypt", titleAr: "إقامة البيانات — مصر", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction without consent.", color: "#8B5CF6" },
-              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", titleAr: "متوافق مع مكافحة الاحتيال", desc: "Three-way matching (PO + UUID + Delivery Note), SHA-256 audit trails, real-time fraud detection.", color: "#EF4444" },
-              { icon: Users, title: "Tenant Data Isolation", titleAr: "عزل بيانات المستأجرين", desc: "Each hotel/supplier/funder in fully isolated data scope. Cross-tenant access is architecturally impossible.", color: "#06B6D4" },
+              { icon: Shield, title: "ETA Phase 1 & 2 Compliant", titleAr: "متوافق مع الفوترة الإلكترونية — المرحلة الأولى والثانية", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: C.secondary },
+              { icon: Lock, title: "AES-256-GCM Encryption", titleAr: "تشفير AES-256-GCM", desc: "All data at rest encrypted using AES-256-GCM. Keys rotated every 90 days.", color: C.primary },
+              { icon: CheckCircle, title: "ISO 27001 Aligned", titleAr: "متوافق مع معيار ISO 27001", desc: "Information security management aligned with ISO 27001. Regular third-party audits and penetration testing.", color: C.accent },
+              { icon: Globe, title: "Data Residency — Egypt", titleAr: "إقامة البيانات — مصر", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction without consent.", color: C.secondary },
+              { icon: ShieldCheck, title: "FRA Anti-Fraud Framework", titleAr: "إطار مكافحة الاحتيال", desc: "Three-way matching (PO + UUID + Delivery Note), SHA-256 audit trails, real-time fraud detection.", color: C.primary },
+              { icon: Users, title: "Tenant Data Isolation", titleAr: "عزل بيانات المستأجرين", desc: "Each hotel/supplier/funder in fully isolated data scope. Cross-tenant access is architecturally impossible.", color: C.accent },
             ].map((cert) => (
               <div key={cert.title} className="rounded-2xl p-6 transition-all hover:scale-[1.01]" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-start justify-between mb-4">
@@ -809,12 +863,12 @@ export default function HomePage() {
           </div>
 
           {/* Legal disclaimer */}
-          <div className="mt-8 rounded-xl p-5 text-center" style={{ backgroundColor: "rgba(255,176,0,0.03)", border: "1px solid rgba(255,176,0,0.08)" }}>
-            <p className="text-[12px] text-white/50">
-              <strong style={{ color: "#FFB000" }}>Restaurants for E-Marketing</strong> operates as a <strong className="text-white/60">technical data orchestrator</strong> — not a bank, not a payment service provider, not a factoring company.
+          <div className="mt-8 rounded-xl p-5 text-center" style={{ backgroundColor: C.primaryMuted, border: `1px solid ${C.primaryBorder}` }}>
+            <p className="text-[12px] text-white/60">
+              <strong style={{ color: C.primary }}>Restaurants for E-Marketing</strong> operates as a <strong className="text-white/70">technical data orchestrator</strong> — not a bank, not a payment service provider, not a factoring company.
               All financial flows are processed through licensed institutions. Zero liability for counterparty collection defaults.
             </p>
-            <p className="text-[11px] mt-2 text-white/30" dir="rtl">
+            <p className="text-[11px] mt-2 text-white/40" dir="rtl">
               تعمل مطاعم للتسويق الإلكتروني كمنسق بيانات تقني — ليست بنكاً ولا مزود خدمات دفع. جميع التدفقات المالية تتم عبر مؤسسات مرخصة. مسؤولية صفرية عن تعثر تحصيل الطرف الآخر.
             </p>
           </div>
