@@ -99,11 +99,20 @@ export default function MarketingLayout({
 }) {
   return (
     <ThemeProvider>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-      />
-      {children}
+      <div
+        className="min-h-screen"
+        style={{
+          fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+          background: "#000000",
+          color: "#ffffff",
+        }}
+      >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
+        {children}
+      </div>
     </ThemeProvider>
   );
 }
