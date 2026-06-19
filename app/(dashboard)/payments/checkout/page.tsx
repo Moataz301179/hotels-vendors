@@ -122,6 +122,7 @@ export default function CheckoutPage() {
         onSuccess={handleSuccess}
         onError={handleError}
         onCancel={handleCancel}
+        iframeBaseUrl="https://accept-alpha.paymob.com"
       />
 
       <p className="mt-6 text-center text-xs text-gray-400">

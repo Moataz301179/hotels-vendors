@@ -15,8 +15,10 @@ const PAYMOB_PUBLIC_KEY = process.env.PAYMOB_PUBLIC_KEY;
 const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY;
 const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
 const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID || "";
+const PAYMOB_IFRAME_ID_INSTALLMENT = process.env.PAYMOB_IFRAME_ID_INSTALLMENT || "";
 const PAYMOB_HMAC_SECRET = process.env.PAYMOB_HMAC_SECRET;
 const PAYMOB_BASE_URL = process.env.PAYMOB_BASE_URL || "https://accept.paymob.com/api";
+const PAYMOB_IFRAME_BASE_URL = process.env.PAYMOB_IFRAME_BASE_URL || "https://accept.paymob.com";
 const PAYMOB_MODE = process.env.PAYMOB_MODE || "test";
 
 const BASE_URL = PAYMOB_BASE_URL;
@@ -140,7 +142,7 @@ export async function createDepositPayment(request: DepositRequest): Promise<{
     }
   );
 
-  const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`;
+  const paymentUrl = `${PAYMOB_IFRAME_BASE_URL}/api/acceptance/iframes/${PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`;
   return { paymentUrl, paymobOrderId };
 }
 
@@ -221,7 +223,9 @@ export const paymobConfig = {
   secretKey: PAYMOB_SECRET_KEY,
   integrationId: PAYMOB_INTEGRATION_ID,
   iframeId: PAYMOB_IFRAME_ID,
+  iframeIdInstallment: PAYMOB_IFRAME_ID_INSTALLMENT,
   baseUrl: BASE_URL,
+  iframeBaseUrl: PAYMOB_IFRAME_BASE_URL,
   mode: PAYMOB_MODE,
   isTest: PAYMOB_MODE === "test",
 };

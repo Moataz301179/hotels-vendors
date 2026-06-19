@@ -111,6 +111,7 @@ interface PaymobPaymentFlowProps {
   description?: string;
   referenceType?: "SUBSCRIPTION" | "DOCUMENT_FEE" | "MARKETPLACE_COMMISSION";
   referenceId?: string;
+  iframeBaseUrl?: string;
   onSuccess?: (transactionId: string) => void;
   onError?: (error: string) => void;
   onCancel?: () => void;
@@ -125,6 +126,7 @@ export function PaymobPaymentFlow({
   description,
   referenceType,
   referenceId,
+  iframeBaseUrl,
   onSuccess,
   onError,
   onCancel,
@@ -217,6 +219,7 @@ export function PaymobPaymentFlow({
     <PaymobIframe
       paymentKey={paymentKey}
       iframeId={iframeId}
+      baseUrl={iframeBaseUrl}
       onSuccess={onSuccess}
       onError={onError}
       onCancel={onCancel}

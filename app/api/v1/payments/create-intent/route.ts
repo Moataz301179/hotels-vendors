@@ -61,8 +61,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   const iframeId = process.env.PAYMOB_IFRAME_ID;
+  const iframeBaseUrl = process.env.PAYMOB_IFRAME_BASE_URL || "https://accept.paymob.com";
   const paymentUrl = iframeId
-    ? `https://accept.paymob.com/api/acceptance/iframes/${iframeId}?payment_token=${paymentKey}`
+    ? `${iframeBaseUrl}/api/acceptance/iframes/${iframeId}?payment_token=${paymentKey}`
     : null;
 
   await audit({
