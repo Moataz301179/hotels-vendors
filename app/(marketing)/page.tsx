@@ -35,6 +35,8 @@ import {
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
+import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 
 // ─── Color System (Hercules Neon) ─────────────────────────────────
 const C = {
@@ -451,13 +453,7 @@ export default function HomePage() {
                   </Link>
                 </div>
                 <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: C.greenBorder, boxShadow: `0 0 40px 2px ${C.green}18` }}>
-                  <div className="h-72 bg-gradient-to-br from-white/5 to-white/[0.02] flex items-center justify-center">
-                    <Building2 size={64} style={{ color: C.green }} className="opacity-20" />
-                  </div>
-                  <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: C.greenBorder, background: "rgba(7,9,15,0.75)" }}>
-                    <div className="text-[11px] font-medium mb-1" style={{ color: C.green }}>app.hotelsvendors.com/hotel/dashboard</div>
-                    <div className="text-[13px] font-medium text-white">Hotel Procurement Hub — AI-Powered</div>
-                  </div>
+                  <HotelDashboardMockup />
                 </div>
               </motion.div>
             ) : (
@@ -495,13 +491,7 @@ export default function HomePage() {
                   </Link>
                 </div>
                 <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: C.orangeBorder, boxShadow: `0 0 40px 2px ${C.orange}18` }}>
-                  <div className="h-72 bg-gradient-to-br from-white/5 to-white/[0.02] flex items-center justify-center">
-                    <Store size={64} style={{ color: C.orange }} className="opacity-20" />
-                  </div>
-                  <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: C.orangeBorder, background: "rgba(7,9,15,0.75)" }}>
-                    <div className="text-[11px] font-medium mb-1" style={{ color: C.orange }}>invo.hotelsvendors.com/marketplace</div>
-                    <div className="text-[13px] font-medium text-white">INVO Vendor Marketplace — API-Aggregated</div>
-                  </div>
+                  <SupplierDashboardMockup />
                 </div>
               </motion.div>
             )}

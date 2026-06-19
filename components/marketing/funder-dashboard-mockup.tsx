@@ -51,7 +51,7 @@ export function FunderDashboardMockup() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.15)" }}>
-                <Image src="/logo-brand.jpg" alt="HV" width={34} height={34} className="object-contain" />
+                <Image src="/knight-icon.svg" alt="HV" width={34} height={34} className="object-contain" />
               </div>
               <div>
                 <h3 className="text-[13px] font-semibold text-white">Funder Portal</h3>

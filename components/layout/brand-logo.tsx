@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -9,13 +10,26 @@ interface BrandLogoProps {
   showText?: boolean;
 }
 
-const SIZE_MAP = {
-  xs: { icon: 32, text: 12, slogan: 8, tracking: "0.04em" },
-  sm: { icon: 40, text: 14, slogan: 10, tracking: "0.05em" },
-  md: { icon: 56, text: 18, slogan: 12, tracking: "0.08em" },
-  lg: { icon: 72, text: 24, slogan: 14, tracking: "0.1em" },
-  xl: { icon: 88, text: 32, slogan: 18, tracking: "0.12em" },
-  xxl: { icon: 108, text: 36, slogan: 16, tracking: "0.04em" },
+const TEXT_SIZE_MAP = {
+  xs: { text: 12, slogan: 8, tracking: "0.04em" },
+  sm: { text: 14, slogan: 10, tracking: "0.05em" },
+  md: { text: 18, slogan: 12, tracking: "0.08em" },
+  lg: { text: 24, slogan: 14, tracking: "0.1em" },
+  xl: { text: 32, slogan: 18, tracking: "0.12em" },
+  xxl: { text: 36, slogan: 16, tracking: "0.04em" },
+};
+
+/**
+ * Icon size fills the header height (80px) with padding.
+ * For the nav bar, we want the horse icon to be ~56px tall (header 80px - 24px padding).
+ */
+const ICON_SIZE_MAP = {
+  xs: 32,
+  sm: 40,
+  md: 56,
+  lg: 72,
+  xl: 88,
+  xxl: 108,
 };
 
 export function BrandLogo({
@@ -24,46 +38,30 @@ export function BrandLogo({
   size = "md",
   showText = true,
 }: BrandLogoProps) {
-  const dims = SIZE_MAP[size];
+  const textDims = TEXT_SIZE_MAP[size];
+  const iconSize = ICON_SIZE_MAP[size];
   const color = variant === "dark" ? "#ffffff" : "#0B0F1A";
 
   return (
     <div className={cn("flex items-center gap-2.5 shrink-0", className)}>
-      {/* Interlocking HV SVG Monogram — clean, no background box */}
-      <div
-        className="relative flex items-center justify-center"
-        style={{ width: dims.icon, height: dims.icon }}
-      >
-        <svg
-          viewBox="0 0 100 100"
-          className="fill-none stroke-current"
-          style={{
-            width: "100%",
-            height: "100%",
-            color: color,
-            strokeWidth: 6.5,
-            strokeLinecap: "round",
-            strokeLinejoin: "round",
-          }}
-        >
-          {/* Left pillar — H vertical stem */}
-          <path d="M 30 20 L 30 80" />
-          {/* Diagonal bridging — interlocking H and V */}
-          <path d="M 30 50 L 70 50" />
-          {/* Right dynamic loop — V and padlock interlocking */}
-          <path d="M 70 20 L 70 65 C 70 75, 55 80, 45 80" />
-          {/* Modern geometric style cuts */}
-          <path d="M 50 35 L 70 20" />
-        </svg>
-      </div>
+      {/* Chess horse logo — fills header height */}
+      <Image
+        src="/knight-icon.svg"
+        alt="HotelsVendors"
+        width={iconSize}
+        height={iconSize}
+        className="object-contain"
+        priority
+        style={{ width: iconSize, height: iconSize }}
+      />
       {showText && (
         <div className="flex flex-col justify-center select-none">
           <span
-            className="font-bold tracking-tight leading-none"
+            className="font-semibold tracking-tight leading-none"
             style={{
               color,
-              fontSize: dims.text,
-              letterSpacing: dims.tracking,
+              fontSize: textDims.text,
+              letterSpacing: textDims.tracking,
             }}
           >
             Hotels Vendors
@@ -71,8 +69,8 @@ export function BrandLogo({
           <span
             className="tracking-wider uppercase font-medium opacity-80 mt-0.5 leading-none"
             style={{
-              color: variant === "dark" ? "#10B981" : "#059669",
-              fontSize: dims.slogan,
+              color: variant === "dark" ? "#39ff7e" : "#059669",
+              fontSize: textDims.slogan,
             }}
           >
             Smarter Together
