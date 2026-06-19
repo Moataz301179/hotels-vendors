@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useEffect, useCallback } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useInView, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   ArrowRight,
   BrainCircuit,
@@ -11,6 +10,7 @@ import {
   Banknote,
   ShieldCheck,
   Store,
+  ChevronRight,
   Building2,
   Landmark,
   Truck,
@@ -21,37 +21,44 @@ import {
   TrendingUp,
   CheckCircle,
   Shield,
+  CreditCard,
+  Calendar,
   FileText,
   Send,
   Sparkles,
   CircuitBoard,
   Wallet,
   LineChart,
-  Play,
-  Cpu,
-  Server,
   ArrowUpRight,
-  MoveRight,
-  FileCheck,
-  Fingerprint,
-  Stamp,
-  ScanLine,
-  MonitorPlay,
-  Video,
-  ChevronLeft,
-  ChevronRight,
+  Play,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  Globe,
+  Lock,
+  Cpu,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { PublicChatbot } from "@/components/ai-assistant/public-chatbot";
-import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
-import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
-import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
-import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
-import { IPadFrame } from "@/components/marketing/ipad-frame";
-import { HeroVisual } from "@/components/marketing/hero-visual";
-import { SectorVisual } from "@/components/marketing/sector-visual";
-import { PillarVisual } from "@/components/marketing/pillar-visual";
+
+// ─── Animated Counter Hook ─────────────────────────────────────────
+function useCounter(end: number, duration = 2000, start = 0, inView = false) {
+  const [count, setCount] = useState(start);
+  useEffect(() => {
+    if (!inView) return;
+    let startTime: number | null = null;
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * (end - start) + start));
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [end, duration, start, inView]);
+  return count;
+}
 
 // ─── RevealSection ────────────────────────────────────────────────
 function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -60,9 +67,9 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1], delay }}
+      initial={{ opacity: 0, y: 32 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -70,10 +77,30 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
   );
 }
 
-// ─── Template Styling Constants ───────────────────────────────────
-const ACCENT = "#FFB000";
-const ACCENT_LIGHT = "#FFC233";
-const EMERALD = "#10B981";
+// ─── Scroll-Triggered Counter ──────────────────────────────────────
+function Counter({ end, suffix = "", prefix = "", label, icon: Icon, color = "#39FF14" }: {
+  end: number; suffix?: string; prefix?: string; label: string; icon: React.ElementType; color?: string;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const count = useCounter(end, 2200, 0, inView);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5 }}
+      className="rounded-2xl p-6 text-center hover-lift"
+      style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+    >
+      <Icon size={18} className="mx-auto mb-3" style={{ color: "rgba(255,255,255,0.15)" }} />
+      <p className="text-[32px] font-bold text-white mb-1">
+        {prefix}{count.toLocaleString()}{suffix}
+      </p>
+      <p className="text-[10px] text-white/25 uppercase tracking-wider font-medium">{label}</p>
+    </motion.div>
+  );
+}
 
 // ─── Sector Router Data ───────────────────────────────────────────
 type SectorKey = "procurement" | "cashflow" | "fintech" | "ai";
@@ -95,13 +122,13 @@ const SECTORS: SectorData[] = [
     key: "procurement",
     label: "Digital Procurement",
     icon: CircuitBoard,
-    accent: ACCENT,
-    accentMuted: "rgba(10,22,40,0.15)",
-    hook: "Cashflow preservation engine, not an administrative expense. Enforce strict pre-occurrence budget blockades at the resort branch level while stretching working capital cycles to net-90+ without taking on corporate debt.",
+    accent: "#39FF14",
+    accentMuted: "rgba(57,255,20,0.1)",
+    hook: "AI-automated SaaS procurement that predicts demand, generates POs against budget ceilings, and enforces pre-occurrence blockades — before a single pound leaves your account.",
     bullets: [
-      "14-day forward demand forecasting from occupancy curves, events, and seasonality",
-      "Pre-occurrence budget blockades at property-branch-department level",
-      "Automated three-way matching: PO + ETA UUID + Signed Digital GRN",
+      "14-day forward demand forecasting from occupancy curves",
+      "Pre-occurrence budget blockades at property-branch level",
+      "Automated three-way matching: PO + ETA UUID + GRN",
     ],
     placeholder: "Enter Hotel / Resort Group Name",
     features: ["AI Demand Forecasting", "Budget Blockades", "ETA Compliance", "Multi-Property"],
@@ -110,13 +137,13 @@ const SECTORS: SectorData[] = [
     key: "cashflow",
     label: "Cashflow Optimization",
     icon: Wallet,
-    accent: EMERALD,
-    accentMuted: "rgba(16,185,129,0.1)",
-    hook: "Suppliers get paid in 24 hours. You keep net-60+. No more chasing decentralized hotel properties across regional clusters for 180 days. On-site GRN validation unlocks non-recourse, bank-direct early payment factoring — programmatically.",
+    accent: "#22C55E",
+    accentMuted: "rgba(34,197,94,0.1)",
+    hook: "Stretch working capital to net-60+ without balance-sheet debt. Embedded reverse factoring pays suppliers in 24 hours while you keep your cash longer.",
     bullets: [
-      "Net-60+ terms without balance-sheet liability — off-balance-sheet by design",
-      "Suppliers paid in 24 hours via competitive bidding among licensed grantors",
-      "Automated interest accrual, settlement reconciliation, and late-repayment protocols",
+      "Net-60+ terms without balance-sheet liability",
+      "Suppliers paid in 24 hours via competitive bidding",
+      "Automated interest accrual and settlement reconciliation",
     ],
     placeholder: "Enter Company / Property Group Name",
     features: ["Net-60+ Terms", "24h Settlement", "Zero Debt", "Auto Accrual"],
@@ -127,11 +154,11 @@ const SECTORS: SectorData[] = [
     icon: LineChart,
     accent: "#3B82F6",
     accentMuted: "rgba(59,130,246,0.1)",
-    hook: "Pre-cleared, high-velocity corporate deal flow — not unverified, paper-shuffled SME invoices. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching before entering your bidding pool.",
+    hook: "The smartest fintech layer for Egyptian B2B. Every invoice passes tenant validation, ETA cryptographic verification, and automated three-way matching before entering the factoring pool.",
     bullets: [
-      "SHA-256 cryptographic audit trail on every transaction state transition",
-      "Non-recourse factoring with bank-direct IBAN settlement — no intermediary accounts",
-      "AI-driven risk scoring: hotel creditworthiness, repayment velocity, sector concentration",
+      "SHA-256 cryptographic audit trail on every transition",
+      "Non-recourse factoring with bank-direct settlement",
+      "Automated scoring: PO + ETA UUID + Signed Delivery Note",
     ],
     placeholder: "Enter Financial Institution / Fund Name",
     features: ["Crypto Audit Trail", "Non-Recourse", "Bank-Direct", "Risk Scoring"],
@@ -140,32 +167,62 @@ const SECTORS: SectorData[] = [
     key: "ai",
     label: "AI Automation",
     icon: Cpu,
-    accent: "#6366f1",
-    accentMuted: "rgba(99,102,241,0.1)",
-    hook: "Autonomous agents running your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues with automatic retry and escalation, and real-time telemetry across every transaction.",
+    accent: "#D4A843",
+    accentMuted: "rgba(212,168,67,0.1)",
+    hook: "Autonomous agents that run your entire procurement workflow — from demand prediction to settlement. Self-healing error handling, dead-letter queues, and real-time telemetry.",
     bullets: [
-      "Autonomous agent orchestration with self-healing protocols and circuit-breaker patterns",
-      "Real-time anomaly detection across all transactions — pricing, volume, velocity",
-      "Dead-letter queue with automatic retry, escalation, and human-in-the-loop fallback",
+      "Autonomous agent orchestration with self-healing protocols",
+      "Real-time anomaly detection across all transactions",
+      "Dead-letter queue with automatic retry and escalation",
     ],
     placeholder: "Enter Enterprise / Group Name",
     features: ["Agent Orchestration", "Self-Healing", "Anomaly Detection", "Dead-Letter Queue"],
   },
 ];
 
+// ─── Market Index Data ────────────────────────────────────────────
+const marketIndex = [
+  { product: "Fresh Chicken", unit: "kg", price: 68.5, change: "+2.1%", up: true },
+  { product: "Beef Fillet", unit: "kg", price: 285.0, change: "+1.4%", up: true },
+  { product: "Sea Bass", unit: "kg", price: 195.0, change: "-0.8%", up: false },
+  { product: "Lamb Shoulder", unit: "kg", price: 245.0, change: "+3.2%", up: true },
+  { product: "Olive Oil", unit: "L", price: 92.0, change: "+5.1%", up: true },
+  { product: "Basmati Rice", unit: "kg", price: 48.5, change: "-1.2%", up: false },
+  { product: "Fresh Milk", unit: "L", price: 22.0, change: "0.0%", up: true },
+  { product: "Eggs (local)", unit: "30pc", price: 145.0, change: "+4.3%", up: true },
+  { product: "Tomatoes", unit: "kg", price: 18.5, change: "-8.5%", up: false },
+  { product: "Potatoes", unit: "kg", price: 12.0, change: "-2.1%", up: false },
+];
+
+const liveRates = [
+  { label: "USD/EGP", value: "50.85", change: "-0.12", source: "CBE" },
+  { label: "EUR/EGP", value: "54.20", change: "+0.34", source: "Market" },
+  { label: "Inflation", value: "24.1%", change: "-0.8", source: "CAPMAS" },
+  { label: "CBE Rate", value: "49.45", change: "-0.05", source: "CBE" },
+];
+
 const PIPELINE = [
-  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings with pre-occurrence blockades enforced.", icon: BrainCircuit },
-  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits at property-branch-department level.", icon: ShieldCheck },
-  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed with RSA-2048 and submitted to ETA in real-time. On-site GRN clearance triggers cryptographic UUID validation the millisecond goods land.", icon: Receipt },
-  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation across 6 governorates. Multi-supplier load matching. 48-hour delivery guarantee. Cold-chain capable with real-time GPS.", icon: Truck },
-  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding pool. Funders bid. Supplier paid in 24hrs via bank-direct IBAN. Hotel keeps net-60+. Non-recourse.", icon: Banknote },
+  { step: "01", title: "AI Forecast & PO Generation", desc: "Engine predicts demand 14 days ahead from occupancy, events, and seasonality. Auto-generates POs against budget ceilings.", icon: BrainCircuit },
+  { step: "02", title: "Authority Matrix Approval", desc: "POs route through your corporate authority matrix. Pre-occurrence budget blockades enforce spending limits.", icon: ShieldCheck },
+  { step: "03", title: "ETA Invoice & GRN Clearance", desc: "Invoices digitally signed and submitted to Tax Authority. On-site GRN clearance triggers UUID validation.", icon: Receipt },
+  { step: "04", title: "Logistics & Delivery", desc: "Shared-route consolidation. Multi-supplier load matching. 48-hour delivery guarantee to any Egyptian governorate.", icon: Truck },
+  { step: "05", title: "Factoring & Settlement", desc: "Pre-cleared invoices enter competitive bidding. Funders bid. Supplier paid in 24hrs. Hotel keeps net-60+.", icon: Banknote },
+];
+
+const FEATURES = [
+  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns across every property.", color: "#39FF14" },
+  { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation at point of goods receipt.", color: "#39FF14" },
+  { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: "#39FF14" },
+  { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 24 hours.", color: "#39FF14" },
+  { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: "#39FF14" },
+  { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: "#39FF14" },
 ];
 
 const TRUST_BADGES = [
   { icon: Shield, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority" },
-  { icon: Server, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
-  { icon: Building2, label: "6 Governorates Covered", desc: "Coastal + Inland" },
-  { icon: Clock, label: "24-Hour Settlement", desc: "Bank-direct factoring" },
+  { icon: Lock, label: "AES-256-GCM Encryption", desc: "At-rest credential security" },
+  { icon: Globe, label: "6 Governorates Covered", desc: "Coastal + Inland" },
+  { icon: Zap, label: "24-Hour Settlement", desc: "Bank-direct factoring" },
 ];
 
 // ─── Main Page ────────────────────────────────────────────────────
@@ -173,36 +230,20 @@ export default function HomePage() {
   const [activeSector, setActiveSector] = useState<SectorKey>("procurement");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
-  const [taxId, setTaxId] = useState("");
-  const [domainRole, setDomainRole] = useState("hotel");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [cairoTime, setCairoTime] = useState("");
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const totalSlides = 2;
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCairoTime(now.toLocaleTimeString("en-EG", { hour12: false, timeZone: "Africa/Cairo" }));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Auto-rotate carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev >= totalSlides ? 1 : prev + 1));
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.96]);
+  const smoothOpacity = useSpring(heroOpacity, { stiffness: 100, damping: 30 });
+  const smoothScale = useSpring(heroScale, { stiffness: 100, damping: 30 });
 
   const currentSector = SECTORS.find((s) => s.key === activeSector)!;
+  const doubledIndex = [...marketIndex, ...marketIndex];
 
-  // Quick-access form (no taxId required)
-  const handleQuickSubmit = useCallback(async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyName.trim() || !email.trim()) return;
     setIsSubmitting(true);
@@ -223,263 +264,169 @@ export default function HomePage() {
     }
   }, [companyName, email, activeSector]);
 
-  // Full onboarding form (includes taxId + domainRole)
-  const handleFullSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!companyName.trim() || !email.trim() || !taxId.trim()) return;
-    setIsSubmitting(true);
-    try {
-      await fetch("/api/v1/leads/capture", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ companyName, email, taxId, domainRole, sector: activeSector }),
-      });
-      setSubmitSuccess(true);
-      setCompanyName("");
-      setEmail("");
-      setTaxId("");
-      setTimeout(() => setSubmitSuccess(false), 4000);
-    } catch {
-      // silent fail
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [companyName, email, taxId, domainRole, activeSector]);
-
-  const heroSlides = [
-    {
-      id: 1,
-      tag: "Invoice Factoring",
-      tagColor: ACCENT,
-      title: "Unlock Cash Flow\nwith Invoice Factoring",
-      desc: "Suppliers get paid early. Hotels keep their net-30/60 payment terms. No more cash flow crunches. Our financial partners fund your invoices within 24 hours.",
-      bg: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
-      cta1: { label: "Learn More", href: "/solutions" },
-      cta2: { label: "Get Started Free", href: "/register" },
-    },
-    {
-      id: 2,
-      tag: "Easy Integration",
-      tagColor: ACCENT,
-      title: "Connect Your PMS,\nERP or POS in Minutes",
-      desc: "Pre-built connectors for your existing hotel systems. No IT team required. Plug Hotels Vendors into your existing tech stack. Go live in under a day.",
-      bg: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
-      cta1: { label: "Book a Demo", href: "/register" },
-      cta2: { label: "Get Started Free", href: "/register" },
-    },
-  ];
-
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
       <MarketingNav />
 
-      {/* ═══════════════════════════════════════════
-          MARKET INDEX TICKER
-          ═══════════════════════════════════════════ */}
-      <div className="fixed top-16 left-0 right-0 z-40 h-9 border-b border-white/10 bg-white/[0.03] backdrop-blur-xl flex items-center overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-        <div className="flex items-center gap-4 whitespace-nowrap animate-ticker">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-8 px-4">
-              {[
-                { item: "Cairo", change: cairoTime, isClock: true },
-                { item: "USD/EGP", change: "48.24", up: true, isRate: true },
-                { item: "EUR/EGP", change: "58.34", up: false, isRate: true },
-                { item: "Fresh Linen", change: "+2.4%", up: true },
-                { item: "Industrial Detergent", change: "-1.1%", up: false },
-                { item: "Kitchenware Bulk", change: "+0.8%", up: true },
-                { item: "Pool Chemicals", change: "-0.5%", up: false },
-                { item: "Guest Amenities", change: "+1.2%", up: true },
-                { item: "HVAC Filters", change: "+0.3%", up: true },
-                { item: "CBE Lending Rate", change: "20.0%", up: false, isRate: true },
-                { item: "Inflation (May)", change: "14.6%", up: false, isRate: true },
-                { item: "Avg Factoring", change: "1.85%", up: true, isRate: true },
-              ].map((ticker) => (
-                <div key={ticker.item} className="flex items-center gap-2">
-                  <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">{ticker.item}</span>
-                  {ticker.isClock ? (
-                    <span className="text-[10px] font-mono font-bold text-white/70">{ticker.change}</span>
-                  ) : (
-                    <span className={`text-[10px] font-mono font-bold ${ticker.up ? "text-green-400" : "text-red-400"}`}>
-                      {ticker.change} {ticker.isRate ? "○" : (ticker.up ? "▲" : "▼")}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
+      {/* ── Market Index Ticker ── */}
+      <div style={{ backgroundColor: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+        <div className="marquee-container">
+          <div className="marquee-content">
+            {doubledIndex.map((item, i) => (
+              <div key={i} className="inline-flex items-center gap-2 px-5 py-2.5">
+                <span className="text-[11px] text-white/30">{item.product}</span>
+                <span className="text-[11px] font-medium text-white/60">EGP {item.price.toFixed(1)}/{item.unit}</span>
+                <span className={`text-[10px] font-medium ${item.up ? "text-[#22C55E]" : "text-[#EF4444]"}`}>{item.change}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ═══════════════════════════════════════════
-          CAROUSEL HERO — Template Matching
+          HERO — Parallax Scroll + Animated Entry
           ═══════════════════════════════════════════ */}
-      <section className="relative h-[85vh] w-full overflow-hidden bg-zinc-950">
-        {heroSlides.map((slide) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentSlide === slide.id ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10" />
-            <Image
-              src={slide.bg}
-              alt=""
-              fill
-              className="object-cover object-center opacity-45"
-              priority={slide.id === 1}
-            />
-            <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 lg:px-24 max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-6 self-start"
-                style={{ backgroundColor: `${slide.tagColor}20`, border: `1px solid ${slide.tagColor}30`, color: slide.tagColor }}
+      <section ref={heroRef} className="relative pt-28 pb-20 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,20,0.04) 0%, transparent 70%)" }} />
+
+        <motion.div className="relative z-10 mx-auto max-w-7xl px-6" style={{ opacity: smoothOpacity, scale: smoothScale }}>
+          <div className="grid lg:grid-cols-5 gap-10 items-start">
+            <div className="lg:col-span-3">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
+                style={{ border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "rgba(255,255,255,0.02)" }}
               >
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: slide.tagColor }} />
-                {slide.tag}
-              </div>
-              <h1 className="font-serif text-5xl lg:text-7xl font-semibold leading-tight text-white mb-6 whitespace-pre-line">
-                {slide.title}
-              </h1>
-              <p className="text-zinc-400 text-base lg:text-lg max-w-xl mb-8 font-light leading-relaxed">
-                {slide.desc}
-              </p>
-              <div className="flex items-center gap-4">
-                <Link
-                  href={slide.cta1.href}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-xl transition-all transform hover:-translate-y-0.5"
-                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
-                >
-                  {slide.cta1.label}
-                </Link>
-                <Link
-                  href={slide.cta2.href}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-xl transition-all"
-                  style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#ffffff" }}
-                >
-                  {slide.cta2.label}
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#39FF14" }} />
+                <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Live · Egypt&apos;s B2B Hospitality Infrastructure</span>
+              </motion.div>
 
-        {/* Carousel Controls */}
-        <div className="absolute bottom-8 right-6 lg:right-12 z-30 flex items-center gap-4">
-          <div className="flex gap-1.5">
-            {[1, 2].map((dot) => (
-              <button
-                key={dot}
-                onClick={() => setCurrentSlide(dot)}
-                className={`h-1 rounded-full cursor-pointer transition-all ${currentSlide === dot ? "w-8 bg-white" : "w-8 bg-white/30"}`}
-              />
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setCurrentSlide((prev) => (prev <= 1 ? totalSlides : prev - 1))}
-              className="p-2.5 rounded-full transition-colors"
-              style={{ backgroundColor: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-[36px] sm:text-[48px] md:text-[58px] font-bold leading-[1.02] tracking-tight mb-6"
+                style={{ color: "#ffffff" }}
+              >
+                AI-Automated Procurement.
+                <br />
+                <span className="text-gradient-lime">Smartest B2B Fintech.</span>
+                <br />
+                One Platform.
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.4 }}
+                className="text-[15px] text-white/50 leading-relaxed max-w-lg mb-3"
+              >
+                HotelsVendors is the all-in-one operating system that sits between your property&apos;s procurement desk, your supplier&apos;s balance sheet, and your funder&apos;s capital deployment engine — combining <strong className="text-white/70">AI-automated SaaS digital procurement</strong>, <strong className="text-white/70">cashflow optimization</strong>, and the <strong className="text-white/70">smartest B2B fintech</strong> layer for Egyptian hospitality.
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="text-[13px] text-white/30 leading-relaxed max-w-lg mb-8"
+              >
+                No balance-sheet debt. No 180-day collection chases. No unverified paper. Just cryptographic compliance, automated settlement, and zero manual reconciliation.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="flex flex-wrap gap-3 mb-8"
+              >
+                <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]" style={{ backgroundColor: "#39FF14", color: "#000000" }}>
+                  Request Enterprise Access <ArrowRight size={15} />
+                </Link>
+                <Link href="#platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+                  <Play size={13} /> Watch 2-Min Demo
+                </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                className="flex items-center gap-6 flex-wrap"
+              >
+                <div className="flex -space-x-2">
+                  {["AI", "ETA", "B2B", "HV"].map((a, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "2px solid #000000" }}>
+                      <span className="text-[8px] font-bold text-white/30">{a}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[10px] text-white/25">
+                  <span className="text-white/50 font-medium">Trusted by 680+ suppliers</span>
+                  <br />across Egypt&apos;s hospitality sector
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="lg:col-span-2 space-y-4"
             >
-              <ChevronLeft className="w-5 h-5 text-white" />
-            </button>
-            <button
-              onClick={() => setCurrentSlide((prev) => (prev >= totalSlides ? 1 : prev + 1))}
-              className="p-2.5 rounded-full transition-colors"
-              style={{ backgroundColor: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              <ChevronRight className="w-5 h-5 text-white" />
-            </button>
+              <div className="rounded-2xl p-5" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Live Market Rates</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#22C55E" }} />
+                    <span className="text-[10px] text-white/25">Real-time</span>
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  {liveRates.map((rate, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded-lg transition-colors hover:bg-white/[0.02]">
+                      <div>
+                        <p className="text-[12px] font-medium text-white/70">{rate.label}</p>
+                        <p className="text-[10px] text-white/25">{rate.source}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[14px] font-mono font-medium text-white/80">{rate.value}</p>
+                        <p className={`text-[10px] font-medium ${rate.change.startsWith("+") ? "text-[#22C55E]" : "text-[#EF4444]"}`}>{rate.change}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="rounded-2xl p-4 text-center"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <p className="text-[22px] font-bold" style={{ color: "#39FF14" }}>24h</p>
+                  <p className="text-[9px] text-white/25 uppercase tracking-wider">Settlement</p>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="rounded-2xl p-4 text-center"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <p className="text-[22px] font-bold text-[#22C55E]">40%</p>
+                  <p className="text-[9px] text-white/25 uppercase tracking-wider">Cost Cut</p>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          BENTO GRID FEATURES — Template Matching
-          ═══════════════════════════════════════════ */}
-      <section id="solutions" className="py-24 px-6 lg:px-12 bg-black border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl lg:text-5xl font-semibold mb-4 text-white">Unified B2B Operations</h2>
-            <p className="text-zinc-500 max-w-2xl mx-auto text-base">One modern dashboard to orchestrate Egyptian Tax requirements, automated vendor verification, and immediate capital financing.</p>
-          </div>
-
-          {/* Bento Layout Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Box 1: Wide 2x1 — ETA Document Signatures */}
-            <div                className="md:col-span-2 bg-zinc-950 border rounded-3xl p-8 transition-all flex flex-col justify-between group"
-              style={{ borderColor: "rgba(255,255,255,0.05)" }}
-            >
-              <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Egyptian Market First</span>
-                <h3 className="font-serif text-3xl font-semibold mb-3 text-white">ETA Document Signatures</h3>
-                <p className="text-zinc-400 font-light max-w-lg">Fully aligned with the Egyptian Tax Authority e-invoicing SDK. We canonicalize, sign, and securely transfer standard data without interrupting business.</p>
-              </div>
-              <div className="mt-8 bg-black/50 border border-white/5 rounded-2xl p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: EMERALD }} />
-                  <span className="text-xs tracking-wider text-zinc-300 font-medium">Automatic Token Expiration Management</span>
-                </div>
-                <span className="text-[10px] text-zinc-500 font-bold bg-zinc-900 border border-white/5 px-2 py-1 rounded">JWT Active</span>
-              </div>
-            </div>
-
-            {/* Box 2: Square 1x1 — Vendor Audits */}
-            <div className="bg-zinc-950 border rounded-3xl p-8 transition-all flex flex-col justify-between group"
-              style={{ borderColor: "rgba(255,255,255,0.05)" }}
-            >
-              <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Compliance</span>
-                <h3 className="font-serif text-2xl font-semibold mb-3 text-white">Vendor Audits</h3>
-                <p className="text-zinc-400 font-light text-sm">We verify Tax Cards and Commercial Registries before suppliers hit your feed.</p>
-              </div>
-              <div className="mt-6 flex justify-center">
-                <span className="text-xs font-semibold rounded-full inline-flex items-center gap-1.5 px-3 py-1.5"
-                  style={{ color: EMERALD, backgroundColor: `${EMERALD}15`, border: `1px solid ${EMERALD}25` }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  100% Tax Compliant
-                </span>
-              </div>
-            </div>
-
-            {/* Box 3: Square 1x1 — Cash Liquidity */}
-            <div className="bg-zinc-950 border rounded-3xl p-8 transition-all flex flex-col justify-between group"
-              style={{ borderColor: "rgba(255,255,255,0.05)" }}
-            >
-              <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3 text-zinc-400">FinTech Core</span>
-                <h3 className="font-serif text-2xl font-semibold mb-3 text-white">Cash Liquidity</h3>
-                <p className="text-zinc-400 font-light text-sm">Never stall operations again. Turn outstanding invoices into liquid cash balances in hours.</p>
-              </div>
-              <div className="mt-6">
-                <div className="h-1.5 bg-zinc-900 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full" style={{ backgroundColor: ACCENT, width: "78%" }} />
-                </div>
-                <div className="flex justify-between text-[11px] text-zinc-500 mt-2">
-                  <span>Current Payout Rate</span>
-                  <span className="font-bold text-zinc-300">78% / Day 1</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Box 4: Wide 2x1 — Zero Cloud Liability */}
-            <div                className="md:col-span-2 bg-zinc-950 border rounded-3xl p-8 transition-all flex flex-col justify-between group"
-              style={{ borderColor: "rgba(255,255,255,0.05)" }}
-            >
-              <div>
-                <span className="text-xs font-bold tracking-widest uppercase block mb-3" style={{ color: ACCENT }}>Data Flow</span>
-                <h3 className="font-serif text-3xl font-semibold mb-3 text-white">Zero Cloud Liability</h3>
-                <p className="text-zinc-400 font-light max-w-lg">We serve purely as a technical integration router. All private API keys, cryptographic tokens, and billing records reside under absolute secure cloud policies.</p>
-              </div>
-              <div className="mt-8 flex gap-2 flex-wrap">
-                <span className="text-xs text-zinc-400 bg-zinc-900 border border-white/5 px-3 py-1.5 rounded-lg font-medium">B2B Procurement</span>
-                <span className="text-xs text-zinc-400 bg-zinc-900 border border-white/5 px-3 py-1.5 rounded-lg font-medium">Frictionless API</span>
-                <span className="text-xs text-zinc-400 bg-zinc-900 border border-white/5 px-3 py-1.5 rounded-lg font-medium">Secure Environment</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          TRUST BAR
+          TRUST BAR — Animated Scroll
           ═══════════════════════════════════════════ */}
       <RevealSection>
         <div className="py-10 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#050505" }}>
@@ -494,12 +441,12 @@ export default function HomePage() {
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${ACCENT}20` }}>
-                    <badge.icon size={16} style={{ color: ACCENT }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(57,255,20,0.08)" }}>
+                    <badge.icon size={16} style={{ color: "#39FF14" }} />
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-white/60">{badge.label}</p>
-                    <p className="text-[9px] text-white/40">{badge.desc}</p>
+                    <p className="text-[9px] text-white/25">{badge.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -509,55 +456,25 @@ export default function HomePage() {
       </RevealSection>
 
       {/* ═══════════════════════════════════════════
-          INTEGRATION PARTNERS
-          ═══════════════════════════════════════════ */}
-      <RevealSection>
-        <div className="py-14" style={{ backgroundColor: "#030303" }}>
-          <div className="mx-auto max-w-7xl px-6">
-            <p className="text-[9px] font-medium text-white/20 uppercase tracking-[0.15em] mb-6 text-center">Integrated Payment & Fintech Partners</p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-              {[
-                { name: "Paymob", desc: "Payment aggregation" },
-                { name: "Fawry", desc: "Bill presentment & payments" },
-                { name: "valU", desc: "BNPL & consumer finance" },
-                { name: "valU B2B", desc: "Business financing" },
-                { name: "CIB", desc: "Corporate banking" },
-              ].map((partner) => (
-                <div key={partner.name} className="flex flex-col items-center gap-1.5">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>{partner.name}</span>
-                  </div>
-                  <span className="text-[8px]" style={{ color: "rgba(255,255,255,0.2)" }}>{partner.desc}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-[8px] text-white/15 text-center mt-6 max-w-xl mx-auto leading-relaxed">
-              HotelsVendors integrates with Egypt&apos;s leading payment and fintech infrastructure.
-            </p>
-          </div>
-        </div>
-      </RevealSection>
-
-      <hr className="section-divider" />
-
-      {/* ═══════════════════════════════════════════
           SECTOR ROUTER — Dynamic Tab System
           ═══════════════════════════════════════════ */}
       <section id="platform" className="py-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: `radial-gradient(circle, ${ACCENT}08 0%, transparent 70%)` }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center bottom, rgba(57,255,20,0.02) 0%, transparent 60%)" }} />
+
         <div className="mx-auto max-w-7xl px-6 relative z-10">
           <RevealSection>
             <div className="text-center mb-10">
-              <span className="text-[11px] font-semibold text-white/50 uppercase tracking-[0.15em] mb-2 block">Platform Overview</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
                 Four Engines. One Operating System.
               </h2>
-              <p className="text-white/50 text-[14px] max-w-2xl mx-auto leading-relaxed">
+              <p className="text-white/40 text-[14px] max-w-2xl mx-auto leading-relaxed">
                 AI-automated procurement, cashflow optimization, B2B fintech, and autonomous AI agents — all running on a single multi-tenant platform with cryptographic ETA compliance.
               </p>
             </div>
           </RevealSection>
 
+          {/* ── Sector Tabs ── */}
           <RevealSection>
             <div className="flex flex-wrap justify-center gap-2 mb-10">
               {SECTORS.map((sector) => {
@@ -592,6 +509,7 @@ export default function HomePage() {
             </div>
           </RevealSection>
 
+          {/* ── Dynamic Sector Content ── */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSector}
@@ -601,6 +519,7 @@ export default function HomePage() {
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <div className="grid lg:grid-cols-5 gap-6 items-start">
+                {/* Left: Hook + Bullets */}
                 <div className="lg:col-span-3 rounded-2xl p-8" style={{ backgroundColor: "#0a0a0a", border: `1px solid ${currentSector.accent}15` }}>
                   <div className="flex items-center gap-3 mb-5">
                     <motion.div
@@ -617,7 +536,11 @@ export default function HomePage() {
                       <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: currentSector.accent }}>Your Workflow, Re-Engineered</p>
                     </div>
                   </div>
-                  <p className="text-[15px] text-white/60 leading-relaxed mb-6">{currentSector.hook}</p>
+
+                  <p className="text-[15px] text-white/60 leading-relaxed mb-6">
+                    {currentSector.hook}
+                  </p>
+
                   <div className="space-y-3 mb-8">
                     {currentSector.bullets.map((bullet, i) => (
                       <motion.div
@@ -634,6 +557,7 @@ export default function HomePage() {
                       </motion.div>
                     ))}
                   </div>
+
                   <div className="flex flex-wrap gap-2 mb-6">
                     {currentSector.features.map((f) => (
                       <span key={f} className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ backgroundColor: currentSector.accentMuted, color: currentSector.accent }}>
@@ -641,66 +565,80 @@ export default function HomePage() {
                       </span>
                     ))}
                   </div>
+
                   <Link
                     href={`/register?sector=${activeSector}`}
-                    className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all"
-                    style={{ backgroundColor: currentSector.accent, color: "#ffffff" }}
+                    className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.15)]"
+                    style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                   >
-                    Schedule {currentSector.label} Audit <ArrowRight size={14} />
+                    Get Started with {currentSector.label} <ArrowRight size={14} />
                   </Link>
                 </div>
 
-                <div className="lg:col-span-2 flex flex-col gap-6">
-                  <SectorVisual sector={activeSector} accentColor={currentSector.accent} />
-                  
-                  <div className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <h4 className="text-[14px] font-bold text-white mb-1">Request Access</h4>
-                    <p className="text-[11px] text-white/30 mb-5">We&apos;ll match you to the right onboarding flow.</p>
-                    {submitSuccess ? (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="rounded-xl p-5 text-center"
-                        style={{ backgroundColor: `${EMERALD}10`, border: `1px solid ${EMERALD}25` }}
+                {/* Right: Signup Form */}
+                <div className="lg:col-span-2 rounded-2xl p-6" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <h4 className="text-[14px] font-bold text-white mb-1">Request Access</h4>
+                  <p className="text-[11px] text-white/30 mb-5">We&apos;ll match you to the right onboarding flow.</p>
+
+                  {submitSuccess ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="rounded-xl p-5 text-center"
+                      style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
+                    >
+                      <CheckCircle2 size={28} className="mx-auto mb-3" style={{ color: "#22C55E" }} />
+                      <p className="text-[13px] font-medium text-white mb-1">Application Received</p>
+                      <p className="text-[11px] text-white/40">Our team will contact you within 24 hours.</p>
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                      <div>
+                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Company / Property</label>
+                        <input
+                          type="text"
+                          value={companyName}
+                          onChange={(e) => setCompanyName(e.target.value)}
+                          placeholder={currentSector.placeholder}
+                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Work Email</label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="you@company.com"
+                          className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all focus:ring-1"
+                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                          onFocus={(e) => { e.target.style.borderColor = currentSector.accent + "40"; }}
+                          onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || !companyName.trim() || !email.trim()}
+                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        style={{ backgroundColor: currentSector.accent, color: "#000000" }}
                       >
-                        <CheckCircle2 size={28} className="mx-auto mb-3" style={{ color: EMERALD }} />
-                        <p className="text-[13px] font-medium text-white mb-1">Application Received</p>
-                        <p className="text-[11px] text-white/40">Our team will contact you within 24 hours.</p>
-                      </motion.div>
-                    ) : (
-                      <form onSubmit={handleQuickSubmit} className="space-y-3">
-                        <div>
-                          <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Company / Property</label>
-                          <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)}
-                            placeholder={currentSector.placeholder}
-                            className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all"
-                            style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-white/30 uppercase tracking-wider font-medium mb-1.5 block">Work Email</label>
-                          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@company.com"
-                            className="w-full px-4 py-3 rounded-xl text-[13px] text-white placeholder:text-white/15 outline-none transition-all"
-                            style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
-                          />
-                        </div>
-                        <button type="submit" disabled={isSubmitting || !companyName.trim() || !email.trim()}
-                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          style={{ backgroundColor: currentSector.accent, color: "#ffffff" }}
-                        >
-                          {isSubmitting ? (
-                            <span className="flex items-center gap-2">
-                              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                              Submitting…
-                            </span>
-                          ) : (
-                            <>Submit Application <Send size={13} /></>
-                          )}
-                        </button>
-                      </form>
-                    )}
-                  </div>
+                        {isSubmitting ? (
+                          <span className="flex items-center gap-2">
+                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                            Submitting…
+                          </span>
+                        ) : (
+                          <>Submit Application <Send size={13} /></>
+                        )}
+                      </button>
+                      <p className="text-[10px] text-white/20 text-center">
+                        Engine: <span className="font-medium" style={{ color: currentSector.accent }}>{currentSector.label}</span> · No credit card required
+                      </p>
+                    </form>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -711,126 +649,15 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          ONBOARDING LEAD GENERATION — Template Matching
+          ANIMATED STATS
           ═══════════════════════════════════════════ */}
-      <section id="supplier" className="py-24 px-6 lg:px-12 bg-zinc-950 border-t border-white/5">
-        <div className="max-w-4xl mx-auto bg-black border border-white/5 rounded-3xl p-8 lg:p-12">
-          <div className="text-center mb-12">
-            <span className="text-xs font-bold tracking-widest uppercase block mb-2" style={{ color: ACCENT }}>Onboarding Application</span>
-            <h2 className="font-serif text-3xl lg:text-4xl font-semibold mb-4 text-white">Register as a Verified Partner</h2>
-            <p className="text-zinc-500 text-sm max-w-md mx-auto">Input your company profiles below. Our vetting teams will process your registration profile inside our unified system ledger.</p>
-          </div>
-
-          <form onSubmit={handleFullSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Company Name</label>
-                <input
-                  type="text" required placeholder="e.g. Red Sea Hospitality Ltd"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Egyptian Tax Registration ID</label>
-                <input
-                  type="text" required placeholder="XXX-XXX-XXX"
-                  value={taxId}
-                  onChange={(e) => setTaxId(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Primary Contact Email</label>
-                <input
-                  type="email" required placeholder="procurement@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                  onFocus={(e) => { e.target.style.borderColor = ACCENT }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Company Domain Role</label>
-                <select
-                  value={domainRole}
-                  onChange={(e) => setDomainRole(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
-                >
-                  <option value="hotel">Hospitality Operator (Hotel)</option>
-                  <option value="vendor">Verified Product Supplier (Vendor)</option>
-                </select>
-              </div>
-            </div>
-            
-            <button type="submit" disabled={isSubmitting}
-              className="w-full font-bold py-4 rounded-xl transition-all tracking-wider text-xs uppercase disabled:opacity-40"
-              style={{ backgroundColor: ACCENT, color: "#ffffff" }}
-            >
-              {isSubmitting ? "Processing..." : "Submit Digital Registration Profile"}
-            </button>
-          </form>
-          
-          {submitSuccess && (
-            <div className="mt-6 rounded-xl p-4 text-center" style={{ backgroundColor: `${EMERALD}10`, border: `1px solid ${EMERALD}25` }}>
-              <span className="text-sm font-semibold block" style={{ color: EMERALD }}>✓ Application Successfully Received</span>
-              <span className="text-xs text-zinc-500 mt-1 block">Data profile matched with local Prisma models and staged for verification.</span>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          HOW IT WORKS — Staggered Pipeline
-          ═══════════════════════════════════════════ */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <RevealSection>
-            <div className="text-center mb-12">
-              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-1 block">Operational Workflow</span>
-              <h2 className="text-[26px] font-bold text-white">From Forecast to Settlement</h2>
-            </div>
-          </RevealSection>
-          <div className="grid md:grid-cols-5 gap-4 relative">
-            <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-px" style={{ background: `linear-gradient(to right, ${ACCENT}30, ${ACCENT}10, ${ACCENT}30)` }} />
-            {PIPELINE.map((step, i) => (
-              <motion.div
-                key={step.step}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -6, borderColor: `${ACCENT}30` }}
-                className="rounded-2xl p-6 text-center h-full relative group"
-                style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                <div className="text-[32px] font-bold leading-none mb-3" style={{ color: `${ACCENT}20` }}>{step.step}</div>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: `${ACCENT}20`, border: `1px solid ${ACCENT}15` }}
-                >
-                  <step.icon size={18} style={{ color: ACCENT }} />
-                </div>
-                <h3 className="text-[13px] font-bold mb-2 text-white transition-colors duration-300" style={{ color: ACCENT }}>{step.title}</h3>
-                <p className="text-[11px] text-white/50 leading-relaxed">{step.desc}</p>
-                {i < PIPELINE.length - 1 && (
-                  <div className="hidden md:flex absolute top-[54px] -right-3 z-10 items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: `${ACCENT}20` }}>
-                    <MoveRight size={12} style={{ color: `${ACCENT}50` }} />
-                  </div>
-                )}
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <Counter end={680} suffix="+" label="Verified Suppliers" icon={Store} />
+            <Counter end={94} suffix="%" label="Forecast Accuracy" icon={TrendingUp} />
+            <Counter end={24} suffix="h" label="Supplier Settlement" icon={Clock} />
+            <Counter end={40} suffix="%" label="Logistics Cost Reduction" icon={Truck} />
           </div>
         </div>
       </section>
@@ -838,27 +665,35 @@ export default function HomePage() {
       <hr className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          THREE PILLARS
+          THREE PILLARS — Staggered Scroll Reveal
           ═══════════════════════════════════════════ */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <RevealSection>
             <div className="text-center mb-14">
-              <span className="text-[11px] font-semibold text-white/50 uppercase tracking-[0.15em] mb-2 block">Integrated Solution</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">All-in-One Platform</span>
               <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-4">
                 Procurement + Fintech + AI.<br />One Settlement Engine.
               </h2>
+              <p className="text-white/40 text-[14px] max-w-2xl mx-auto leading-relaxed">
+                Every transaction simultaneously serves the hotel&apos;s cashflow mandate, the supplier&apos;s liquidity requirement, and the funder&apos;s asset-quality threshold — with zero manual reconciliation.
+              </p>
             </div>
           </RevealSection>
+
           <div className="grid lg:grid-cols-3 gap-5">
             {[
-              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Cashflow preservation, not administrative overhead. Predict demand 14 days ahead. Auto-generate POs against budget ceilings.", href: "/register", cta: "Schedule Procurement Audit", color: ACCENT, type: "engine" as const },
-              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Suppliers paid in 24 hours via competitive reverse factoring. You keep net-60+. On-site GRN validation unlocks non-recourse settlement.", href: "/register", cta: "Request Capital Assessment", color: EMERALD, type: "capital" as const },
-              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Pre-cleared, high-velocity corporate deal flow. Every asset passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching.", href: "/register", cta: "Schedule Integration Audit", color: "#3B82F6", type: "shield" as const },
+              { icon: CircuitBoard, title: "AI-Automated Procurement", subtitle: "The Engine", desc: "Predict demand 14 days ahead. Auto-generate POs against budget ceilings. Enforce pre-occurrence blockades. Every purchase order is validated before it leaves your desk.", href: "/register", cta: "Start Procurement", color: "#39FF14" },
+              { icon: Wallet, title: "Cashflow Optimization", subtitle: "The Capital", desc: "Net-60+ working capital without balance-sheet debt. Suppliers paid in 24 hours via competitive reverse factoring. You keep your cash longer.", href: "/register", cta: "Optimize Cashflow", color: "#22C55E" },
+              { icon: LineChart, title: "B2B Smartest Fintech", subtitle: "The Shield", desc: "Every invoice passes tenant validation, ETA cryptographic UUID verification, and automated three-way matching. SHA-256 audit trail on every transition.", href: "/register", cta: "Deploy Capital", color: "#3B82F6" },
             ].map((role, i) => (
               <RevealSection key={role.title} delay={i * 0.12}>
-                <motion.div whileHover={{ y: -4 }} className="rounded-2xl p-0 overflow-hidden h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <PillarVisual type={role.type} accentColor={role.color} />
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="rounded-2xl p-0 overflow-hidden h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
                   <div className="h-1.5" style={{ background: `linear-gradient(to right, ${role.color}, ${role.color}88)` }} />
                   <div className="p-7">
                     <div className="flex items-center gap-3 mb-5">
@@ -870,11 +705,142 @@ export default function HomePage() {
                         <p className="text-[10px] uppercase tracking-[0.15em] font-semibold" style={{ color: role.color }}>{role.subtitle}</p>
                       </div>
                     </div>
-                    <p className="text-[12px] text-white/50 leading-relaxed mb-6">{role.desc}</p>
+                    <p className="text-[12px] text-white/40 leading-relaxed mb-6">{role.desc}</p>
                     <Link href={role.href} className="inline-flex items-center gap-1.5 text-[11px] font-semibold py-2.5 px-4 rounded-xl transition-all" style={{ color: role.color, border: `1px solid ${role.color}30` }}>
                       {role.cta} <ArrowRight size={12} />
                     </Link>
                   </div>
+                </motion.div>
+              </RevealSection>
+            ))}
+          </div>
+          <p className="text-zinc-500 text-sm max-w-2xl mx-auto mt-12 text-center">
+            A dual-layer architecture — INVO handles the "what" and "how" of procurement, while HotelsVendors handles the "when" and "who pays".
+          </p>
+        </div>
+      </section>
+
+      <hr className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          INFRASTRUCTURE & COMPLIANCE
+          ═══════════════════════════════════════════ */}
+      <section className="py-20" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <RevealSection>
+            <div className="text-center mb-14">
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Infrastructure & Compliance</span>
+              <h2 className="text-[clamp(26px,3.5vw,40px)] font-bold tracking-tight text-white mb-4">
+                Regulatory Shield. Settlement Engine.<br />Cryptographic Audit Trail.
+              </h2>
+            </div>
+          </RevealSection>
+
+          <div className="grid lg:grid-cols-3 gap-5">
+            {[
+              { icon: <FileText size={18} style={{ color: "#39FF14" }} />, title: "ETA V2 API Pipeline", subtitle: "Zero-Exposure Regulatory Shield", desc: "Direct integration with the Egyptian Tax Authority&apos;s e-invoicing API. Cryptographic UUID validation fires the millisecond goods arrive at the property. Automated RSA 2048-bit digital signing.", badge: "ETA UUID · RSA-2048 · Phase 1 & 2", badgeIcon: <Shield size={13} style={{ color: "#39FF14" }} />, bg: "rgba(57,255,20,0.1)" },
+              { icon: <CreditCard size={18} style={{ color: "#22C55E" }} />, title: "Standalone Payment & Clearing", subtitle: "Bank-Direct Settlement Engine", desc: "Capital routes programmatically from funder desks straight to supplier IBANs — no intermediary accounts, no manual wire approvals. Automated interest accruals and settlement reconciliation.", badge: "Programmatic Routing · Auto Accrual", badgeIcon: <Zap size={13} style={{ color: "#22C55E" }} />, bg: "rgba(34,197,94,0.1)" },
+              { icon: <Shield size={18} style={{ color: "#3B82F6" }} />, title: "Institutional Alignment", subtitle: "Compliance & Security Frameworks", desc: "Built for institutional-grade deployment. I-Score Assessment Readiness, FRA Anti-Fraud Compliance, and alignment against ISO/IEC 27001 & SOC 2 Type II control frameworks.", badges: ["I-Score Ready", "FRA Anti-Fraud", "ISO 27001", "SOC 2 Type II"], bg: "rgba(59,130,246,0.1)" },
+            ].map((card, i) => (
+              <RevealSection key={card.title} delay={i * 0.1}>
+                <motion.div whileHover={{ y: -3 }} className="rounded-2xl p-6 h-full" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: card.bg }}>
+                      {card.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-[14px] font-bold text-white">{card.title}</h3>
+                      <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>{card.subtitle}</p>
+                    </div>
+                  </div>
+                  <p className="text-[12px] text-white/40 leading-relaxed mb-4">{card.desc}</p>
+                  {"badges" in card && card.badges ? (
+                    <div className="space-y-1.5">
+                      {card.badges.map((badge, j) => (
+                        <div key={j} className="flex items-center gap-2 p-2 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+                          <CheckCircle size={11} style={{ color: "#3B82F6" }} />
+                          <span className="text-[10px] text-white/40">{badge}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+                      {card.badgeIcon}
+                      <span className="text-[10px] text-white/25">{card.badge}</span>
+                    </div>
+                  )}
+                </motion.div>
+              </RevealSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          PLATFORM CAPABILITIES — Scroll Reveal Grid
+          ═══════════════════════════════════════════ */}
+      <section className="py-20" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <RevealSection>
+            <div className="mb-10">
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-1 block">Platform Capabilities</span>
+              <h2 className="text-[26px] font-bold text-white">Six Infrastructure Pillars</h2>
+            </div>
+          </RevealSection>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURES.map((f, i) => (
+              <RevealSection key={f.title} delay={i * 0.08}>
+                <motion.div
+                  whileHover={{ y: -3, borderColor: "rgba(57,255,20,0.2)" }}
+                  className="rounded-2xl p-6 h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)", transitionDelay: `${i * 60}ms` }}
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                    <f.icon size={20} style={{ color: "#39FF14" }} />
+                  </div>
+                  <h3 className="text-[14px] font-bold mb-2 text-white">{f.title}</h3>
+                  <p className="text-[12px] text-white/40 leading-relaxed">{f.desc}</p>
+                </motion.div>
+              </RevealSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          HOW IT WORKS — Staggered Pipeline
+          ═══════════════════════════════════════════ */}
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <RevealSection>
+            <div className="text-center mb-12">
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-1 block">Operational Workflow</span>
+              <h2 className="text-[26px] font-bold text-white">From Forecast to Settlement</h2>
+            </div>
+          </RevealSection>
+          <div className="grid md:grid-cols-5 gap-4">
+            {PIPELINE.map((step, i) => (
+              <RevealSection key={step.step} delay={i * 0.1}>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  className="rounded-2xl p-6 text-center h-full"
+                  style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <div className="text-[28px] font-bold leading-none mb-3" style={{ color: "rgba(57,255,20,0.08)" }}>{step.step}</div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(57,255,20,0.08)", border: "1px solid rgba(57,255,20,0.12)" }}>
+                    <step.icon size={18} style={{ color: "#39FF14" }} />
+                  </div>
+                  <h3 className="text-[13px] font-bold mb-2 text-white">{step.title}</h3>
+                  <p className="text-[11px] text-white/35 leading-relaxed">{step.desc}</p>
+                  {i < PIPELINE.length - 1 && (
+                    <div className="hidden md:block absolute top-1/2 -right-2.5 text-white/10">
+                      <ArrowRight size={16} />
+                    </div>
+                  )}
                 </motion.div>
               </RevealSection>
             ))}
@@ -888,6 +854,7 @@ export default function HomePage() {
           CTA — Final Conversion
           ═══════════════════════════════════════════ */}
       <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(57,255,20,0.05) 0%, transparent 70%)" }} />
         <div className="mx-auto max-w-7xl px-6 text-center relative">
           <RevealSection>
             <motion.div
@@ -896,7 +863,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200 }}
             >
-              <span className="text-[11px] font-semibold text-white/50 uppercase tracking-[0.15em] mb-2 block">Enterprise Onboarding</span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2 block">Enterprise Onboarding</span>
               <h2 className="text-[clamp(28px,4vw,42px)] font-bold mb-5 tracking-tight text-white">
                 Your Procurement Infrastructure Shouldn&apos;t<br />Depend on Spreadsheets
               </h2>
@@ -908,37 +875,28 @@ export default function HomePage() {
                   href="/register"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all"
-                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]"
+                  style={{ backgroundColor: "#39FF14", color: "#000000" }}
                 >
-                  Request Institutional Onboarding <ArrowRight size={15} />
+                  Request Enterprise Access <ArrowRight size={15} />
                 </motion.a>
                 <motion.a
-                  href="/sandbox"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all"
-                  style={{ border: `1px solid ${ACCENT}40`, color: ACCENT }}
-                >
-                  Explore Interactive Sandbox
-                </motion.a>
-                <motion.a
-                  href="/marketplace"
+                  href="/platform"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
                 >
-                  <Sparkles size={14} /> View Marketplace
+                  <Sparkles size={14} /> Explore Platform
                 </motion.a>
               </div>
+              <p className="text-[10px] text-white/20 mt-6">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
             </motion.div>
           </RevealSection>
         </div>
       </section>
 
       <MarketingFooter />
-      <PublicChatbot />
     </main>
   );
 }

@@ -54,7 +54,7 @@ const ROLES: RoleConfig[] = [
     icon: Building2,
     color: "#FFB000",
     accentMuted: "rgba(132,204,22,0.1)",
-    description: "Forecast demand, auto-generate POs, validate three-way matches, and settle via factoring.",
+    description: "Use the HotelsVendors orchestrator to manage compliance, payments, and factoring for your procurement needs.",
     steps: [
       {
         title: "AI Demand Forecast",
@@ -92,7 +92,7 @@ const ROLES: RoleConfig[] = [
     icon: Store,
     color: "#22C55E",
     accentMuted: "rgba(34,197,94,0.1)",
-    description: "List products, receive POs, issue ETA-compliant invoices, and get paid in 24 hours.",
+    description: "Use the INVO marketplace aggregator to receive orders and the HotelsVendors fintech layer to get paid fast.",
     steps: [
       {
         title: "Catalog Upload",
@@ -130,7 +130,7 @@ const ROLES: RoleConfig[] = [
     icon: Landmark,
     color: "#D4A843",
     accentMuted: "rgba(212,168,67,0.1)",
-    description: "Access pre-verified invoices, score risk AI, bid competitively, and settle bank-direct.",
+    description: "Use the HotelsVendors fintech orchestrator to access pre-verified invoices and settle via bank-direct payments.",
     steps: [
       {
         title: "Invoice Pool Access",
@@ -168,7 +168,7 @@ const ROLES: RoleConfig[] = [
     icon: Truck,
     color: "#3B82F6",
     accentMuted: "rgba(59,130,246,0.1)",
-    description: "Fill trucks with consolidated loads, optimize routes, and get paid in hours.",
+    description: "Use the INVO marketplace aggregator to find loads and the HotelsVendors compliance layer to ensure digital proof of delivery.",
     steps: [
       {
         title: "Load Matching",
@@ -206,7 +206,7 @@ const ROLES: RoleConfig[] = [
     icon: Monitor,
     color: "#A855F7",
     accentMuted: "rgba(168,85,247,0.1)",
-    description: "Monitor platform health, manage tenants, audit transactions, and track revenue.",
+    description: "Monitor platform health, manage tenants, audit transactions, and track revenue via the HotelsVendors orchestrator.",
     steps: [
       {
         title: "Tenant Management",
@@ -244,7 +244,7 @@ const ROLES: RoleConfig[] = [
     icon: ShieldCheck,
     color: "#F97316",
     accentMuted: "rgba(249,115,22,0.1)",
-    description: "Monitor ETA submission pipeline, validate invoice compliance, and audit signatures.",
+    description: "Use the HotelsVendors compliance SaaS to monitor ETA submission pipelines and validate cryptographic signatures.",
     steps: [
       {
         title: "Submission Queue",

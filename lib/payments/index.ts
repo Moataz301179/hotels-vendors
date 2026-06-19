@@ -12,6 +12,8 @@
 
 export { fawryAdapter } from "./fawry";
 export { instapayAdapter } from "./instapay";
+export { createDepositPayment, getTransactionStatus, paymobConfig } from "./paymob";
+export type { DepositRequest } from "./paymob";
 
 // ─────────────────────────────────────────
 // 2. TYPE RE-EXPORTS
@@ -41,10 +43,12 @@ export type {
 
 import { fawryAdapter } from "./fawry";
 import { instapayAdapter } from "./instapay";
+import { paymobConfig } from "./paymob";
 
 export const paymentAdapters = {
   fawry: fawryAdapter,
   instapay: instapayAdapter,
+  paymob: paymobConfig,
 } as const;
 
 export type PaymentProvider = keyof typeof paymentAdapters;
@@ -59,6 +63,8 @@ export function isMockMode(provider: PaymentProvider): boolean {
       return !process.env.FAWRY_MERCHANT_CODE || !process.env.FAWRY_SECRET || process.env.FAWRY_MOCK === "true";
     case "instapay":
       return !process.env.INSTAPAY_API_KEY || !process.env.INSTAPAY_SECRET || process.env.INSTAPAY_MOCK === "true";
+    case "paymob":
+      return !process.env.PAYMOB_API_KEY || paymobConfig.isTest;
     default:
       return true;
   }

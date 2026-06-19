@@ -11,11 +11,15 @@
  */
 
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
+const PAYMOB_PUBLIC_KEY = process.env.PAYMOB_PUBLIC_KEY;
+const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY;
 const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
-const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID || "YOUR_IFRAME_ID";
+const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID || "";
 const PAYMOB_HMAC_SECRET = process.env.PAYMOB_HMAC_SECRET;
+const PAYMOB_BASE_URL = process.env.PAYMOB_BASE_URL || "https://accept.paymob.com/api";
+const PAYMOB_MODE = process.env.PAYMOB_MODE || "test";
 
-const BASE_URL = "https://accept.paymob.com/api";
+const BASE_URL = PAYMOB_BASE_URL;
 
 interface PaymobAuthResponse {
   token: string;
@@ -182,3 +186,42 @@ export function verifyPaymobCallback(
 
   return calculated === receivedHmac;
 }
+
+// ── Transaction Status Lookup ───────────────────────────────────
+
+export async function getTransactionStatus(
+  transactionId: number
+): Promise<{
+  success: boolean;
+  pending: boolean;
+  amountCents: number;
+  currency: string;
+  orderId: number;
+  [key: string]: unknown;
+}> {
+  const authToken = await getAuthToken();
+  const res = await fetch(`${BASE_URL}/acceptance/transactions/${transactionId}`, {
+    headers: { Authorization: `Bearer ${authToken}` },
+  });
+  const data = await res.json();
+  return {
+    success: data.success === true,
+    pending: data.pending === true,
+    amountCents: data.amount_cents || 0,
+    currency: data.currency || "EGP",
+    orderId: data.order?.id || 0,
+    ...data,
+  };
+}
+
+// ── Config Export ───────────────────────────────────────────────
+
+export const paymobConfig = {
+  publicKey: PAYMOB_PUBLIC_KEY,
+  secretKey: PAYMOB_SECRET_KEY,
+  integrationId: PAYMOB_INTEGRATION_ID,
+  iframeId: PAYMOB_IFRAME_ID,
+  baseUrl: BASE_URL,
+  mode: PAYMOB_MODE,
+  isTest: PAYMOB_MODE === "test",
+};

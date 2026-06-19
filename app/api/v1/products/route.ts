@@ -199,6 +199,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Phase C3: Supplier product limit check
+    if (platformRole !== "ADMIN") {
+      const invoSub = await prisma.invoSubscription.findFirst({
+        where: { supplierId: supplierId },
+      });
+      const maxProducts = invoSub?.maxProducts ?? 100;
+      const currentProductCount = await prisma.product.count({
+        where: { supplierId: supplierId },
+      });
+      if (currentProductCount >= maxProducts) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Product limit reached (${currentProductCount}/${maxProducts}). Upgrade your plan to add more products.`,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     const prismaCategory = toPrismaCategory(data.category);
   // eslint-disable-next-line no-console
   console.log(`[Products API] Creating product with category: ${data.category} → ${prismaCategory}`);

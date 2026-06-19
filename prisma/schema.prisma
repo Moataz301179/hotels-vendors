@@ -82,6 +82,42 @@ model Tenant {
   swarmJobs           SwarmJob[]
   paymentTransactions PaymentTransaction[]
   etaCredential       EtaCredential?
+
+
+  // Phase A1: Seat & account limits
+  maxUsers  Int @default(5)
+  seatCount Int @default(5)
+
+  // V2.0 REFACTOR: New model relations
+  rfqRequests         RfqRequest[]
+  otpDeliveries       OtpDelivery[]
+  returnRequests      ReturnRequest[]
+  creditNotes         CreditNote[]
+  notifications       Notification[]
+  carriers            Carrier[]
+  deliveryJobs        DeliveryJob[]
+  integrations        Integration[]
+  autoAcceptRules     SupplierAutoAcceptRule[]
+  apiKeys             ApiKey[]
+  webhookEndpoints    WebhookEndpoint[]
+  fraudRules          FraudRule[]
+  fraudAlerts         FraudAlert[]
+  virtualAccounts     VirtualAccount[]
+  discountOffers      DynamicDiscountOffer[]
+  cashFlowForecasts   CashFlowForecast[]
+
+  // Phase C1: Demand forecasts
+  demandForecasts     DemandForecast[]
+
+  // Phase C2: Auto-reorder + stock
+  autoReorderRules    AutoReorderRule[]
+  stockTransactions   StockTransaction[]
+
+  // Phase D1: Banners
+  banners             Banner[]
+
+  // Phase E1: AI Usage
+  aiUsages            AiUsage[]
 }
 
 enum TenantType {
@@ -185,6 +221,33 @@ model Hotel {
   creditFacilities   CreditFacility[]
   tripStops          TripStop[]
   payments           Payment[]
+
+  // V2.0 REFACTOR: Integration config
+  integrations       Integration[]
+
+  // V2.0 REFACTOR: Virtual accounts
+  virtualAccounts    VirtualAccount[]
+
+  // V2.0 REFACTOR: Cash flow forecasts
+  cashFlowForecasts  CashFlowForecast[]
+
+  // V2.0 REFACTOR: Credit notes
+  creditNotes        CreditNote[]
+
+  // V2.0 REFACTOR: Return requests
+  returnRequests     ReturnRequest[]
+
+  // V2.0 REFACTOR: RFQ requests
+  rfqRequests        RfqRequest[]
+
+  // Phase A1: Seat & account limits
+  maxUsers Int @default(10)
+
+  // Phase C1: Demand forecasts
+  demandForecasts DemandForecast[]
+
+  // Phase C2: Auto-reorder rules
+  autoReorderRules AutoReorderRule[]
 }
 
 model Property {
@@ -298,6 +361,22 @@ model User {
   reviews        ProductReview[]
   sampleRequests SampleRequest[]
 
+  // V2.0 REFACTOR: Notification preferences
+  notificationPreference NotificationPreference?
+
+  // V2.0 REFACTOR: Notifications
+  notifications   Notification[]
+
+  // V2.0 REFACTOR: Carrier relation
+  carrierId       String?
+  carrier         Carrier?         @relation(fields: [carrierId], references: [id], onDelete: SetNull)
+
+  // Phase A2: Checkout double-verification
+  confirmedOrders Order[] @relation("OrderConfirmer")
+
+  // Phase A3: Phone verification
+  phoneVerifiedAt DateTime?
+  phoneVerificationTokens PhoneVerificationToken[]
   @@index([sector])
   @@unique([tenantId, email])
 }
@@ -398,6 +477,31 @@ model Supplier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // V2.0 REFACTOR: Auto-accept rules
+  autoAcceptRules SupplierAutoAcceptRule?
+
+  // V2.0 REFACTOR: Reliability score
+  reliabilityScore Float?  @default(0)
+  fulfillmentRate  Float?  @default(0)
+  returnRate       Float?  @default(0)
+  avgResponseTime  Int?
+
+  // V2.0 REFACTOR: API keys
+  apiKeys          ApiKey[]
+  webhookEndpoints WebhookEndpoint[]
+
+  // V2.0 REFACTOR: Credit notes
+  creditNotes      CreditNote[]
+
+  // V2.0 REFACTOR: RFQ responses
+  rfqResponses     RfqResponse[]
+
+  // V2.0 REFACTOR: Dynamic discount offers
+  discountOffers   DynamicDiscountOffer[]
+
+  // Phase C2: Auto-reorder rules
+  autoReorderRules AutoReorderRule[]
+
   @@unique([tenantId, email])
 }
 
@@ -485,6 +589,26 @@ model Product {
   updatedAt DateTime        @updatedAt
   cartItems CartItem[]
   reviews   ProductReview[]
+
+  // V2.0 REFACTOR: Barcode support
+  barcode         String?
+  barcodeType     String?
+
+  // V2.0 REFACTOR: AI classification
+  aiCategory      String?
+  aiConfidence    Float?
+  aiClassifiedAt  DateTime?
+  manuallyVerified Boolean @default(false)
+
+  // V2.0 REFACTOR: RFQ items
+  rfqItems        RfqItem[]
+
+  // Phase C1: Demand forecasts
+  demandForecasts DemandForecast[]
+
+  // Phase C2: Auto-reorder + stock
+  autoReorderRules AutoReorderRule[]
+  stockTransactions StockTransaction[]
 }
 
 enum ProductCategory {
@@ -565,6 +689,32 @@ model Order {
   creditTransactions CreditTransaction[]
   tripStops          TripStop[]
 
+  // V2.0 REFACTOR: RFQ support
+  rfqId              String?
+  rfq                RfqRequest?         @relation("RfqOrder", fields: [rfqId], references: [id])
+  orderType          OrderType           @default(DIRECT)
+
+  // V2.0 REFACTOR: OTP delivery (one-to-many: multiple attempts/retries)
+  otpDeliveries      OtpDelivery[]
+
+  // V2.0 REFACTOR: Split order support
+  parentOrderId      String?
+  parentOrder        Order?              @relation("OrderSplit", fields: [parentOrderId], references: [id])
+  childOrders        Order[]             @relation("OrderSplit")
+  isSplitOrder       Boolean             @default(false)
+
+  // V2.0 REFACTOR: Return support
+  returnRequests      ReturnRequest[]
+
+  // V2.0 REFACTOR: Delivery jobs
+  deliveryJobs        DeliveryJob[]
+
+  // Phase A2: Checkout double-verification
+  confirmationToken String? @unique
+  confirmationSentAt DateTime?
+  confirmedById String?
+  confirmedAt DateTime?
+  confirmedBy User? @relation("OrderConfirmer", fields: [confirmedById], references: [id])
   @@unique([tenantId, orderNumber])
 }
 
@@ -585,6 +735,9 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   notes String?
+
+  // V2.0 REFACTOR: Return items
+  returnItems ReturnItem[]
 }
 
 model OrderApproval {
@@ -601,6 +754,9 @@ model OrderApproval {
   beforeState String?
   afterState  String?
 
+  // Phase A4: Authority chain workflow
+  stepIndex Int @default(0)
+
   createdAt DateTime @default(now())
 
   @@index([orderId, approverId])
@@ -610,6 +766,7 @@ enum OrderStatus {
   DRAFT
   PENDING_APPROVAL
   APPROVED
+  PENDING_CONFIRMATION
   REJECTED
   CONFIRMED
   IN_TRANSIT
@@ -626,6 +783,7 @@ enum ApprovalAction {
   ESCALATED
   AUTO_APPROVED
   ADMIN_OVERRIDE
+  PENDING_CHAIN_APPROVAL
 }
 
 // ─────────────────────────────────────────
@@ -707,6 +865,16 @@ model Invoice {
   payments           Payment[]
   creditTransactions CreditTransaction[]
 
+  // V2.0 REFACTOR: Credit notes
+  creditNotes        CreditNote[]
+
+  // V2.0 REFACTOR: Dynamic discounting
+  discountOffers     DynamicDiscountOffer[]
+
+  // V2.0 REFACTOR: Virtual account
+  virtualAccountId   String?
+  virtualAccount     VirtualAccount?     @relation(fields: [virtualAccountId], references: [id])
+
   @@unique([tenantId, invoiceNumber])
 }
 
@@ -785,6 +953,12 @@ model AuthorityRule {
   action AuthorityAction
 
   routeToRole UserRole?
+
+  // Phase A4: Authority chain workflow
+  approvalChain String? // JSON array of roles: ["GM", "FINANCIAL_CONTROLLER"]
+
+  // Phase D2: Factoring eligibility
+  canRequestFactoring Boolean @default(false)
 
   hotelId  String?
   tenantId String?
@@ -971,6 +1145,9 @@ model FactoringRequest {
   isNonRecourse   Boolean @default(true)
   partnerResponse String?
 
+  // Phase D2: Factoring eligibility rules
+  approvedByChain String? // JSON array of approver IDs
+
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -1012,6 +1189,9 @@ model InvoSubscription {
   plan   InvoPlan               @default(STARTER)
   status InvoSubscriptionStatus @default(ACTIVE)
 
+  // Phase A1: Seat & product limits
+  maxUsers    Int @default(3)
+  maxProducts Int @default(100)
   // Flat monthly SaaS fee
   monthlyFee    Decimal     @default(500)
   currency      String    @default("EGP")
@@ -1126,6 +1306,9 @@ model Trip {
   stops              TripStop[]
   consolidatedOrders ConsolidatedOrder[]
 
+  // V2.0 REFACTOR: Delivery jobs
+  deliveryJobs       DeliveryJob[]
+
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -1158,6 +1341,12 @@ model TripStop {
   podPhotoUrl  String?
   signatureUrl String?
   notes        String?
+
+  // V2.0 REFACTOR: OTP delivery for this stop
+  otpDelivery  OtpDelivery?
+
+  // V2.0 REFACTOR: Delivery jobs for this stop
+  deliveryJobs DeliveryJob[]
 
   createdAt DateTime @default(now())
 }
@@ -1319,6 +1508,15 @@ model Payment {
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
   transactions PaymentTransaction[]
+
+  // V2.0 REFACTOR: Gateway integration
+  gatewayRef       String?  @unique
+  gatewayName      String?
+  gatewayResponse  String?
+  instapayRef      String?
+
+  // V2.0 REFACTOR: Virtual account
+  virtualAccountId String?
 }
 
 model PaymentTransaction {
@@ -2069,6 +2267,21 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 }
 
+// Phase A3: Phone verification token
+model PhoneVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone     String
+  code      String   // 6-digit OTP
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([phone])
+}
+
 // ─────────────────────────────────────────
 // 25. USER ADDRESSES
 // ─────────────────────────────────────────
@@ -2126,12 +2339,15 @@ model AiUsage {
   id            String   @id @default(cuid())
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   messagesToday Int      @default(0)
   tokensToday   Int      @default(0)
   messagesTotal Int      @default(0)
   tokensTotal   Int      @default(0)
   quotaResetAt  DateTime @default(now())
   plan          AiPlan   @default(FREE)
+  onboardingProgress String? // JSON blob for wizard state
   updatedAt     DateTime @updatedAt
 }
 
@@ -2178,6 +2394,14 @@ model SampleRequest {
   quantity        Int          @default(1)
   notes           String?
   deliveryAddress String?
+
+  // Phase B3: Sample request workflow
+  supplierId        String?
+  approvedById      String?
+  approvedAt        DateTime?
+  convertedToOrderId String?   @unique
+  trackingNumber    String?
+
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 }
@@ -2188,6 +2412,19 @@ enum SampleStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+// Phase B3: Sample request audit trail
+model SampleRequestLog {
+  id              String   @id @default(cuid())
+  sampleRequestId String
+  action          String   // CREATED, APPROVED, REJECTED, SHIPPED, CONVERTED
+  actorId         String?
+  actorRole       String?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  @@index([sampleRequestId])
 }
 
 // ─────────────────────────────────────────
@@ -2510,4 +2747,1093 @@ model LeadCapture {
   @@index([sector])
   @@index([email])
   @@index([status])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// V2.0 SCHEMA EXTENSIONS — 2026-06-19
+// 20 new models + 7 model refactors
+// ═══════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────
+// 37. BIDDING / RFQ SYSTEM
+// ─────────────────────────────────────────
+
+model RfqRequest {
+  id                    String    @id @default(cuid())
+  rfqNumber             String    @unique
+  title                 String
+  description           String?
+  status                RfqStatus @default(DRAFT)
+
+  hotelId               String
+  hotel                 Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId              String
+  tenant                Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdById           String
+
+  responseDeadline      DateTime
+  expectedDeliveryDate  DateTime?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  publishedAt           DateTime?
+  closedAt              DateTime?
+
+  items                 RfqItem[]
+  responses             RfqResponse[]
+
+  selectedResponseId    String?      @unique
+  selectedResponse      RfqResponse? @relation("SelectedResponse", fields: [selectedResponseId], references: [id])
+  selectionReason       String?
+
+  autoConvertToPo       Boolean      @default(true)
+  generatedOrderId      String?
+
+  // V2.0 REFACTOR: Orders generated from this RFQ
+  orders                Order[]      @relation("RfqOrder")
+
+  @@index([hotelId, status])
+  @@index([tenantId, status])
+  @@index([responseDeadline])
+}
+
+model RfqItem {
+  id                String     @id @default(cuid())
+  rfqId             String
+  rfq               RfqRequest @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+
+  productCategory   ProductCategory
+  productName       String
+  description       String?
+  quantity          Int
+  unitOfMeasure     String     @default("kg")
+  qualitySpecs      String?
+
+  productId         String?
+  product           Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  targetPrice       Decimal?
+  currency          String     @default("EGP")
+
+  responses         RfqItemResponse[]
+
+  createdAt         DateTime   @default(now())
+}
+
+model RfqResponse {
+  id              String             @id @default(cuid())
+  rfqId           String
+  rfq             RfqRequest         @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+
+  supplierId      String
+  supplier        Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  status          RfqResponseStatus  @default(DRAFT)
+
+  totalPrice      Decimal
+  currency        String             @default("EGP")
+  deliveryDays    Int
+  shippingMethod  ShippingMethod     @default(SUPPLIER_SELF)
+  notes           String?
+  validUntil      DateTime
+
+  items           RfqItemResponse[]
+
+  selectedOrders  RfqRequest[]       @relation("SelectedResponse")
+  rank            Int?
+
+  submittedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@unique([rfqId, supplierId])
+  @@index([rfqId, status])
+  @@index([supplierId])
+}
+
+model RfqItemResponse {
+  id              String     @id @default(cuid())
+  rfqResponseId   String
+  rfqResponse     RfqResponse @relation(fields: [rfqResponseId], references: [id], onDelete: Cascade)
+  rfqItemId       String
+  rfqItem         RfqItem    @relation(fields: [rfqItemId], references: [id], onDelete: Cascade)
+
+  unitPrice       Decimal
+  availableQuantity Int
+  totalPrice      Decimal
+  deliveryDays    Int
+  notes           String?
+
+  isPartial       Boolean    @default(false)
+}
+
+enum RfqStatus {
+  DRAFT
+  PUBLISHED
+  OPEN
+  CLOSED
+  AWARDED
+  CONVERTED_TO_PO
+  CANCELLED
+  EXPIRED
+}
+
+enum RfqResponseStatus {
+  DRAFT
+  SUBMITTED
+  SHORTLISTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum ShippingMethod {
+  SUPPLIER_SELF
+  PLATFORM_LOGISTICS
+  THIRD_PARTY
+}
+
+// ─────────────────────────────────────────
+// 38. OTP DELIVERY CONFIRMATION
+// ─────────────────────────────────────────
+
+model OtpDelivery {
+  id              String      @id @default(cuid())
+  otpCode         String      @unique
+
+  orderId         String
+  order           Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  tripStopId      String?     @unique
+  tripStop        TripStop?   @relation(fields: [tripStopId], references: [id], onDelete: SetNull)
+
+  receiverName    String?
+  receiverPhone   String
+  receiverUserId  String?
+  receiverEmail   String?     // Phase B1: OTP email channel
+  deliveryChannel String      @default("SMS") // SMS | WHATSAPP | EMAIL
+
+  status          OtpStatus   @default(PENDING)
+  generatedAt     DateTime    @default(now())
+  expiresAt       DateTime
+  verifiedAt      DateTime?
+  verifiedById    String?
+
+  deliveryPhotoUrl String?
+  signatureUrl    String?
+  notes           String?
+
+  parentOtpId     String?
+  parentOtp       OtpDelivery? @relation("OtpRetry", fields: [parentOtpId], references: [id])
+  retries         OtpDelivery[] @relation("OtpRetry")
+
+  tenantId        String
+  tenant          Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // V2.0 REFACTOR: Delivery job reference
+  deliveryJob     DeliveryJob?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([orderId])
+  @@index([otpCode])
+  @@index([status, expiresAt])
+}
+
+enum OtpStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+  CANCELLED
+  MAX_RETRIES_EXCEEDED
+}
+
+// ─────────────────────────────────────────
+// 39. RETURN & CREDIT NOTE WORKFLOW
+// ─────────────────────────────────────────
+
+model ReturnRequest {
+  id              String       @id @default(cuid())
+  returnNumber    String       @unique
+
+  orderId         String
+  order           Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  initiatedById   String
+  hotelId         String
+  hotel           Hotel        @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  status          ReturnStatus @default(PENDING_SUPPLIER_RESPONSE)
+
+  reason          ReturnReason
+  description     String?
+  evidenceUrls    String?
+
+  items           ReturnItem[]
+
+  resolution      ReturnResolution?
+  resolvedAt      DateTime?
+  resolvedById    String?
+
+  totalReturnAmount Decimal    @default(0)
+  creditNoteId      String?   @unique
+  creditNote        CreditNote? @relation(fields: [creditNoteId], references: [id])
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([orderId, status])
+  @@index([hotelId])
+  @@index([tenantId])
+}
+
+model ReturnItem {
+  id              String           @id @default(cuid())
+  returnRequestId String
+  returnRequest   ReturnRequest    @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+
+  orderItemId     String
+  orderItem       OrderItem        @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  quantity        Int
+  reason          ReturnReason
+  description     String?
+  evidenceUrls    String?
+
+  status          ReturnItemStatus @default(PENDING)
+  approvedQuantity Int?
+  rejectedReason  String?
+  refundAmount    Decimal?
+
+  createdAt       DateTime         @default(now())
+}
+
+model CreditNote {
+  id              String          @id @default(cuid())
+  creditNoteNumber String         @unique
+
+  returnRequest   ReturnRequest?
+
+  invoiceId       String
+  invoice         Invoice         @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  supplierId      String
+  supplier        Supplier        @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  hotelId         String
+  hotel           Hotel           @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  tenantId        String
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  status          CreditNoteStatus @default(ISSUED)
+
+  subtotal        Decimal
+  vatAmount       Decimal
+  total           Decimal
+  currency        String          @default("EGP")
+
+  appliedToInvoiceId String?
+  refundedAmount     Decimal?
+
+  issuedAt        DateTime        @default(now())
+  appliedAt       DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([invoiceId])
+  @@index([supplierId])
+  @@index([hotelId])
+}
+
+enum ReturnStatus {
+  PENDING_SUPPLIER_RESPONSE
+  SUPPLIER_ACCEPTED
+  SUPPLIER_REJECTED
+  PARTIALLY_ACCEPTED
+  UNDER_INVESTIGATION
+  ESCALATED_TO_ADMIN
+  RESOLVED
+  CANCELLED
+}
+
+enum ReturnReason {
+  DAMAGED
+  WRONG_ITEM
+  QUALITY_ISSUE
+  OVER_DELIVERED
+  EXPIRED
+  NEAR_EXPIRY
+  OTHER
+}
+
+enum ReturnItemStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PARTIALLY_APPROVED
+}
+
+enum ReturnResolution {
+  FULL_RETURN
+  PARTIAL_RETURN
+  REPLACEMENT
+  CREDIT_NOTE
+  REFUND
+  REJECTED
+}
+
+enum CreditNoteStatus {
+  ISSUED
+  APPLIED
+  REFUNDED
+  CANCELLED
+}
+
+// ─────────────────────────────────────────
+// 40. NOTIFICATION SYSTEM
+// ─────────────────────────────────────────
+
+model Notification {
+  id              String              @id @default(cuid())
+
+  userId          String
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  type            NotificationType
+  title           String
+  body            String
+  priority        NotificationPriority @default(NORMAL)
+
+  entityType      String?
+  entityId        String?
+
+  readAt          DateTime?
+  sentViaEmail    Boolean             @default(false)
+  sentViaSms      Boolean             @default(false)
+  sentViaPush     Boolean             @default(false)
+
+  actionUrl       String?
+
+  createdAt       DateTime            @default(now())
+  expiresAt       DateTime?
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@index([entityType, entityId])
+  @@index([tenantId])
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  preferences     String
+
+  quietHoursStart String?
+  quietHoursEnd   String?
+  timezone        String   @default("Africa/Cairo")
+
+  updatedAt       DateTime @updatedAt
+}
+
+enum NotificationType {
+  ORDER_CREATED
+  ORDER_APPROVED
+  ORDER_REJECTED
+  ORDER_CONFIRMED_BY_SUPPLIER
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  ORDER_DISPUTED
+  ORDER_CANCELLED
+
+  RFQ_PUBLISHED
+  RFX_RESPONSE_RECEIVED
+  RFX_AWARDED
+
+  OTP_GENERATED
+  DELIVERY_CONFIRMED
+  DELIVERY_FAILED
+
+  INVOICE_SUBMITTED
+  INVOICE_VALIDATED
+  INVOICE_DISPUTED
+  INVOICE_PAID
+
+  FACTORING_REQUESTED
+  FACTORING_BID_RECEIVED
+  FACTORING_ACCEPTED
+  FACTORING_DISBURSED
+
+  RETURN_REQUESTED
+  RETURN_APPROVED
+  RETURN_REJECTED
+  CREDIT_NOTE_ISSUED
+
+  PAYMENT_RECEIVED
+  PAYMENT_OVERDUE
+  PAYMENT_REMINDER
+
+  CREDIT_LIMIT_WARNING
+  CREDIT_SCORE_UPDATED
+  FRAUD_ALERT
+  SYSTEM_MAINTENANCE
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ─────────────────────────────────────────
+// 41. CARRIER / SHIPPING MANAGEMENT
+// ─────────────────────────────────────────
+
+model Carrier {
+  id              String         @id @default(cuid())
+  name            String
+  legalName       String?
+  taxId           String?        @unique
+  commercialReg   String?
+
+  contactEmail    String?
+  contactPhone    String?
+  contactPerson   String?
+
+  fleetSize       Int?
+  hasReefer       Boolean        @default(false)
+  hasFrozen       Boolean        @default(false)
+  hasChilled      Boolean        @default(false)
+
+  coverageAreas   String?
+
+  status          CarrierStatus  @default(PENDING_VERIFICATION)
+  reliabilityScore Float?        @default(0)
+  rating          Float?         @default(0)
+
+  bankAccount     String?
+  bankName        String?
+  paymentTerms    String         @default("NET_48")
+
+  users           User[]
+  rates           CarrierRate[]
+  deliveryJobs    DeliveryJob[]
+
+  tenantId        String
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([status])
+  @@index([tenantId])
+}
+
+model CarrierRate {
+  id              String           @id @default(cuid())
+  carrierId       String
+  carrier         Carrier          @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+
+  fromGovernorate String
+  toGovernorate   String
+  fromCity        String?
+  toCity          String?
+
+  rateType        CarrierRateType  @default(PER_KG)
+  baseRate        Decimal
+  minCharge       Decimal?
+  fuelSurcharge   Decimal?         @default(0)
+  currency        String           @default("EGP")
+
+  minWeight       Decimal?
+  maxWeight       Decimal?
+  estimatedDays   Int?
+
+  temperatureZone TemperatureZone  @default(AMBIENT)
+
+  validFrom       DateTime         @default(now())
+  validUntil      DateTime?
+  isActive        Boolean          @default(true)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([carrierId, fromGovernorate, toGovernorate])
+}
+
+model DeliveryJob {
+  id              String             @id @default(cuid())
+  jobNumber       String             @unique
+
+  carrierId       String
+  carrier         Carrier            @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+
+  orderId         String
+  order           Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  tripId          String?
+  trip            Trip?              @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  tripStopId      String?
+  tripStop        TripStop?          @relation(fields: [tripStopId], references: [id], onDelete: SetNull)
+
+  pickupAddress   String
+  pickupContact   String?
+  pickupPhone     String?
+  pickupDate      DateTime?
+  pickedUpAt      DateTime?
+
+  deliveryAddress String
+  deliveryContact String?
+  deliveryPhone   String?
+  deliveryDate    DateTime?
+  deliveredAt     DateTime?
+
+  status          DeliveryJobStatus  @default(ASSIGNED)
+
+  shippingCost    Decimal
+  platformFee     Decimal           @default(0)
+  carrierPayout   Decimal           @default(0)
+  currency        String            @default("EGP")
+  paidToCarrier   Boolean           @default(false)
+  carrierPaidAt   DateTime?
+
+  podPhotoUrl     String?
+  signatureUrl    String?
+  otpDeliveryId   String?           @unique
+  otpDelivery     OtpDelivery?       @relation(fields: [otpDeliveryId], references: [id])
+
+  temperatureLog  String?
+  tempViolation   Boolean           @default(false)
+
+  tenantId        String
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([carrierId, status])
+  @@index([orderId])
+  @@index([status, deliveryDate])
+}
+
+enum CarrierStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  BLACKLISTED
+}
+
+enum CarrierRateType {
+  PER_KG
+  PER_KM
+  PER_TRIP
+  FLAT_RATE
+}
+
+enum TemperatureZone {
+  AMBIENT
+  CHILLED
+  FROZEN
+}
+
+enum DeliveryJobStatus {
+  ASSIGNED
+  ACCEPTED_BY_CARRIER
+  PICKED_UP
+  IN_TRANSIT
+  ARRIVED
+  DELIVERED
+  FAILED
+  CANCELLED
+  RETURNED
+}
+
+// ─────────────────────────────────────────
+// 42. ERP/PMS INTEGRATION LAYER
+// ─────────────────────────────────────────
+
+model Integration {
+  id              String           @id @default(cuid())
+
+  hotelId         String
+  hotel           Hotel            @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  integrationType IntegrationType
+  providerName    String
+
+  config          String
+  credentials     String?
+
+  syncDirection   SyncDirection    @default(BIDIRECTIONAL)
+  syncFrequency   SyncFrequency    @default(HOURLY)
+  lastSyncAt      DateTime?
+  lastSyncStatus  String?
+  isActive        Boolean          @default(true)
+
+  fieldMapping    String?
+
+  logs            ConnectorLog[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([hotelId, integrationType])
+}
+
+model ConnectorLog {
+  id              String       @id @default(cuid())
+  integrationId   String
+  integration     Integration  @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  syncType        String
+  direction       String
+  status          String
+  recordsProcessed Int?
+  recordsFailed   Int?
+  errorMessage    String?
+  details         String?
+
+  startedAt       DateTime
+  completedAt     DateTime?
+
+  createdAt       DateTime     @default(now())
+
+  @@index([integrationId, createdAt])
+}
+
+enum IntegrationType {
+  OPERA_CLOUD
+  OPERA_ON_PREMISE
+  PROTEL
+  SAP
+  ORACLE_ERP
+  SUN_FINANCE
+  CSV_EXCEL
+  API_DIRECT
+  MANUAL
+}
+
+enum SyncDirection {
+  INBOUND
+  OUTBOUND
+  BIDIRECTIONAL
+}
+
+enum SyncFrequency {
+  REALTIME
+  EVERY_15_MIN
+  HOURLY
+  DAILY
+  WEEKLY
+  MANUAL
+}
+
+// ─────────────────────────────────────────
+// 43. SUPPLIER AUTO-ACCEPT RULES
+// ─────────────────────────────────────────
+
+model SupplierAutoAcceptRule {
+  id              String   @id @default(cuid())
+  supplierId      String   @unique
+  supplier        Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  isActive        Boolean  @default(true)
+
+  maxOrderAmount  Decimal?
+  maxQuantity     Json?
+  categories      ProductCategory[]
+  excludedProducts String?
+
+  useListedPrice  Boolean  @default(true)
+  autoDiscount    Json?
+
+  notifyOnAutoAccept Boolean @default(true)
+  alertOnLargeOrder  Boolean  @default(true)
+  largeOrderThreshold Decimal?
+
+  redFlags        String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// 44. API KEY MANAGEMENT
+// ─────────────────────────────────────────
+
+model ApiKey {
+  id              String       @id @default(cuid())
+  keyHash         String       @unique
+  keyPrefix       String
+
+  name            String
+  description     String?
+
+  supplierId      String?
+  supplier        Supplier?    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  scopes          String[]
+  rateLimitPerMinute Int       @default(60)
+
+  status          ApiKeyStatus @default(ACTIVE)
+  lastUsedAt      DateTime?
+  expiresAt       DateTime?
+
+  webhooks        WebhookEndpoint[]
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([supplierId])
+  @@index([tenantId])
+  @@index([keyPrefix])
+}
+
+model WebhookEndpoint {
+  id              String    @id @default(cuid())
+  url             String
+  secret          String
+
+  events          String[]
+
+  apiKeyId        String?
+  apiKey          ApiKey?   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  supplierId      String?
+  supplier        Supplier? @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  isActive        Boolean   @default(true)
+  lastTriggeredAt DateTime?
+  failureCount    Int       @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([apiKeyId])
+  @@index([supplierId])
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+// ─────────────────────────────────────────
+// 45. FRAUD DETECTION
+// ─────────────────────────────────────────
+
+model FraudRule {
+  id              String           @id @default(cuid())
+  name            String
+  description     String?
+  ruleType        FraudRuleType
+  config          String
+  severity        FraudSeverity    @default(MEDIUM)
+  isActive        Boolean          @default(true)
+  autoAction      FraudAutoAction  @default(ALERT_ONLY)
+
+  tenantId        String
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  alerts          FraudAlert[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model FraudAlert {
+  id              String            @id @default(cuid())
+  ruleId          String
+  rule            FraudRule         @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  entityType      String
+  entityId        String
+  description     String
+  evidence        String?
+
+  severity        FraudSeverity
+  status          FraudAlertStatus  @default(OPEN)
+
+  resolvedById    String?
+  resolvedAt      DateTime?
+  resolution      String?
+
+  tenantId        String
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([entityType, entityId])
+  @@index([status, severity])
+}
+
+enum FraudRuleType {
+  PRICE_ANOMALY
+  DUPLICATE_INVOICE
+  UNUSUAL_ORDER
+  PHANTOM_SUPPLIER
+  RAPID_FIRE
+  CIRCULAR_TRADING
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FraudAutoAction {
+  ALERT_ONLY
+  FLAG_FOR_REVIEW
+  BLOCK_TRANSACTION
+  SUSPEND_ENTITY
+}
+
+enum FraudAlertStatus {
+  OPEN
+  UNDER_INVESTIGATION
+  CONFIRMED_FRAUD
+  FALSE_POSITIVE
+  RESOLVED
+}
+
+// ─────────────────────────────────────────
+// 46. VIRTUAL ACCOUNTS & DYNAMIC DISCOUNTING
+// ─────────────────────────────────────────
+
+model VirtualAccount {
+  id              String               @id @default(cuid())
+  accountNumber   String               @unique
+
+  hotelId         String
+  hotel           Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  balance         Decimal              @default(0)
+  currency        String               @default("EGP")
+
+  bankName        String?
+  bankAccountNumber String?
+
+  status          VirtualAccountStatus @default(ACTIVE)
+
+  // V2.0 REFACTOR: Invoices linked to this virtual account
+  invoices        Invoice[]
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([hotelId])
+}
+
+model DynamicDiscountOffer {
+  id              String              @id @default(cuid())
+
+  invoiceId       String
+  invoice         Invoice             @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  supplierId      String
+  supplier        Supplier            @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  originalDueDate DateTime
+  earlyPayDate    DateTime
+  discountPercent Decimal
+  discountAmount  Decimal
+  earlyPayAmount  Decimal
+
+  status          DiscountOfferStatus @default(PENDING)
+
+  acceptedAt      DateTime?
+  paidAt          DateTime?
+
+  tenantId        String
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([invoiceId])
+  @@index([status])
+}
+
+model CashFlowForecast {
+  id              String   @id @default(cuid())
+
+  hotelId         String
+  hotel           Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  forecastDate    DateTime
+  period          String
+
+  expectedOutflows Decimal
+  expectedInflows  Decimal
+  netPosition      Decimal
+
+  recommendations  String?
+
+  actualOutflows   Decimal?
+  accuracyScore    Float?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([hotelId, period])
+}
+
+enum VirtualAccountStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum DiscountOfferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  PAID
+}
+
+// ─────────────────────────────────────────
+// 47. ORDER TYPE ENUM
+// ─────────────────────────────────────────
+
+enum OrderType {
+  DIRECT
+  RFQ
+  AI_GENERATED
+  AUTO_REORDER
+}
+
+// ─────────────────────────────────────────
+// Phase C1: Demand Forecast
+// ─────────────────────────────────────────
+
+model DemandForecast {
+  id              String   @id @default(cuid())
+  hotelId         String
+  hotel           Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  forecastDate    DateTime
+  predictedQuantity Decimal
+  confidence      Decimal
+  modelVersion    String
+  actualQuantity  Decimal?
+  accuracyScore   Decimal?
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([hotelId, forecastDate])
+  @@index([productId])
+}
+
+// ─────────────────────────────────────────
+// Phase C2: Auto-Reorder
+// ─────────────────────────────────────────
+
+model AutoReorderRule {
+  id              String   @id @default(cuid())
+  hotelId         String
+  hotel           Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplierId      String?
+  supplier        Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  minStock        Decimal
+  reorderQuantity Decimal
+  isActive        Boolean  @default(true)
+  lastTriggeredAt DateTime?
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([hotelId, productId])
+  @@index([isActive])
+}
+
+model StockTransaction {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity        Decimal
+  type            StockTransactionType
+  referenceType   String?  // ORDER, ADJUSTMENT, REORDER
+  referenceId     String?
+  balanceAfter    Decimal
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+
+  @@index([productId, createdAt])
+  @@index([type])
+}
+
+enum StockTransactionType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+// ─────────────────────────────────────────
+// Phase D1: Advertisement Banners
+// ─────────────────────────────────────────
+
+model Banner {
+  id              String   @id @default(cuid())
+  title           String
+  subtitle        String?
+  imageUrl        String
+  targetUrl       String
+  placement       BannerPlacement
+  startDate       DateTime
+  endDate         DateTime
+  maxImpressions  Int?
+  impressionCount Int      @default(0)
+  clickCount      Int      @default(0)
+  isActive        Boolean  @default(true)
+  targetAudience  BannerAudience @default(ALL)
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([placement, isActive])
+  @@index([startDate, endDate])
+}
+
+enum BannerPlacement {
+  HOMEPAGE_HERO
+  DASHBOARD_SIDEBAR
+  CATALOG_TOP
+  CHECKOUT_BOTTOM
+}
+
+enum BannerAudience {
+  ALL
+  HOTEL
+  SUPPLIER
 }
