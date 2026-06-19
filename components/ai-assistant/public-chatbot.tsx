@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Sparkles } from "lucide-react";
 import { ChatShell } from "./chat-shell";
 import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
+import { useTheme } from "@/components/theme/theme-provider";
 
 const PUBLIC_PRESETS = [
-  "What is Hotels Vendors?",
+  "What is HotelsVendors?",
   "How does the free trial work?",
   "What suppliers are available?",
   "How much can my hotel save?",
@@ -18,13 +18,45 @@ interface Message {
   content: string;
 }
 
+function RobotFaceIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Head */}
+      <rect x="10" y="16" width="44" height="36" rx="8" fill={color} opacity="0.15" stroke={color} strokeWidth="2.5"/>
+      {/* Antenna base */}
+      <rect x="29" y="8" width="6" height="10" rx="2" fill={color}/>
+      {/* Antenna ball */}
+      <circle cx="32" cy="6" r="4" fill={color}/>
+      {/* Left eye */}
+      <circle cx="22" cy="32" r="5" fill={color} opacity="0.2"/>
+      <circle cx="22" cy="32" r="2.5" fill={color}/>
+      {/* Right eye */}
+      <circle cx="42" cy="32" r="5" fill={color} opacity="0.2"/>
+      <circle cx="42" cy="32" r="2.5" fill={color}/>
+      {/* Mouth */}
+      <rect x="20" y="42" width="24" height="4" rx="2" fill={color} opacity="0.3"/>
+      {/* Mouth teeth/grid lines */}
+      <line x1="24" y1="42" x2="24" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
+      <line x1="28" y1="42" x2="28" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
+      <line x1="32" y1="42" x2="32" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
+      <line x1="36" y1="42" x2="36" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
+      <line x1="40" y1="42" x2="40" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
+      {/* Side bolts */}
+      <circle cx="12" cy="28" r="2" fill={color} opacity="0.4"/>
+      <circle cx="52" cy="28" r="2" fill={color} opacity="0.4"/>
+    </svg>
+  );
+}
+
 export function PublicChatbot() {
+  const { mode } = useTheme();
+  const isLight = mode === "light";
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
-        "Welcome to Hotels Vendors! I'm your Public Guide. Ask me anything about our platform, suppliers, pricing, or how to get started.",
+        "Welcome to HotelsVendors! I'm your AI guide. Ask me anything about our platform, suppliers, pricing, or how to get started.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -87,16 +119,26 @@ export function PublicChatbot() {
     [input, loading]
   );
 
+  const accentColor = isLight ? "#581c87" : "#FFB000";
+
   return (
     <>
       {/* Floating Button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-white text-accent-base shadow-lg shadow-black/20 hover:bg-accent-base hover:text-white transition-all flex items-center justify-center hover:scale-110 border border-black/[0.08]"
-          title="HotelsVendors Guide"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all flex items-center justify-center hover:scale-110 border"
+          style={{
+            backgroundColor: isLight ? "#ffffff" : "#0B0F1A",
+            borderColor: isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)",
+            color: accentColor,
+            boxShadow: isLight
+              ? "0 4px 20px rgba(0,0,0,0.12)"
+              : "0 4px 20px rgba(0,0,0,0.4)",
+          }}
+          title="HotelsVendors AI Guide"
         >
-          <Sparkles size={22} />
+          <RobotFaceIcon size={26} color={accentColor} />
         </button>
       )}
 
@@ -104,18 +146,25 @@ export function PublicChatbot() {
       <ChatShell
         open={open}
         onClose={() => setOpen(false)}
-        title="Public Guide"
-        subtitle="Ask about HotelsVendors"
-        subtitleColor="bg-pink-400"
+        title="AI Guide"
+        subtitle="Powered by HotelsVendors Intelligence"
+        subtitleColor={isLight ? "bg-purple-500" : "bg-pink-400"}
+        accentColor={accentColor}
         footer={
           <>
             {/* Presets */}
-            <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5 border-t border-white/[0.04] shrink-0">
+            <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5 border-t shrink-0"
+              style={{ borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.04)" }}>
               {PUBLIC_PRESETS.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => handleSend(prompt)}
-                  className="px-2 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-[11px] text-white/40 hover:text-white/70 hover:border-white/[0.12] transition-colors"
+                  className="px-2 py-1 rounded-md text-[11px] transition-colors"
+                  style={{
+                    backgroundColor: isLight ? "rgba(0,0,0,0.03)" : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)"}`,
+                    color: isLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.4)",
+                  }}
                 >
                   {prompt}
                 </button>
@@ -128,21 +177,24 @@ export function PublicChatbot() {
               onSend={() => handleSend()}
               disabled={loading}
               placeholder="Ask about our platform..."
+              accentColor={accentColor}
             />
             {remaining !== null && remaining <= 2 && (
-              <p className="text-[9px] text-white/20 text-center pb-1">
+              <p className="text-[9px] text-center pb-1"
+                style={{ color: isLight ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.2)" }}>
                 {remaining === 0
                   ? "Free limit reached. Sign up for unlimited access."
                   : `${remaining} free question${remaining === 1 ? "" : "s"} remaining`}
               </p>
             )}
-            <p className="text-[9px] text-white/15 text-center pb-1.5">
-              Powered by Hotels Vendors Intelligence Engine
+            <p className="text-[9px] text-center pb-1.5"
+              style={{ color: isLight ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.15)" }}>
+              Powered by HotelsVendors Intelligence Engine
             </p>
           </>
         }
       >
-        <MessageList messages={messages} isLoading={loading} />
+        <MessageList messages={messages} isLoading={loading} accentColor={accentColor} />
       </ChatShell>
     </>
   );

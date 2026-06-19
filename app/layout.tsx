@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
 import { LanguageProvider } from "@/lib/i18n/language-context";
+import { PublicChatbot } from "@/components/ai-assistant/public-chatbot";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -195,6 +196,7 @@ export default function RootLayout({
             <ThemeProvider>{children}</ThemeProvider>
           </NotificationProvider>
         </LanguageProvider>
+        <PublicChatbot />
       </body>
     </html>
   );

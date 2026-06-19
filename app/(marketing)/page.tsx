@@ -32,11 +32,16 @@ import {
   Lock,
   Cpu,
   MessageSquare,
+  Landmark,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketTicker } from "@/components/marketing/market-ticker";
+import { SecurityCertificates } from "@/components/marketing/security-certificates";
+import { FAQSection } from "@/components/marketing/faq-section";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
+import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 
 // ─── Color System (Hercules Neon) ─────────────────────────────────
 const C = {
@@ -164,7 +169,7 @@ const PIPELINE = [
 
 // ─── Main Page ────────────────────────────────────────────────────
 export default function HomePage() {
-  const [activeLayer, setActiveLayer] = useState<"hv" | "invo">("hv");
+  const [activeLayer, setActiveLayer] = useState<"hv" | "invo" | "capital">("hv");
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -194,6 +199,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: C.bg, color: "#ffffff" }}>
       <MarketingNav />
+      <MarketTicker />
 
       {/* ═══════════════════════════════════════════
           HERO
@@ -381,38 +387,120 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          DUAL LAYER ARCHITECTURE
+          THREE-LAYER ARCHITECTURE
           ═══════════════════════════════════════════ */}
-      <section id="invo" className="py-24 border-y" style={{ borderColor: C.purple + "18" }}>
+      <section id="layers" className="py-24 border-y" style={{ borderColor: C.purple + "18" }}>
         <div className="max-w-6xl mx-auto px-6">
           <RevealSection>
             <div className="text-center mb-12">
-              <span className={`${Label}`} style={{ color: C.purple }}>Dual-Layer Architecture</span>
-              <h2 className={`${H2} mt-3 mb-4 text-white`}>Two Platforms. One Network.</h2>
-              <p className="text-white/50 text-[15px] max-w-2xl mx-auto font-normal">Each layer has its own workspace, user base, and purpose — connected by AI agents and shared settlement infrastructure.</p>
+              <span className={`${Label}`} style={{ color: C.purple }}>Three-Layer Architecture · بنية ثلاثية الطبقات</span>
+              <h2 className={`${H2} mt-3 mb-4 text-white`}>Three Layers. One Unified Network.</h2>
+              <p className="text-white/50 text-[15px] max-w-2xl mx-auto font-normal">Each layer serves a distinct stakeholder — connected by AI agents, shared settlement, and cryptographic compliance. Together, they form Egypt&apos;s hospitality procurement infrastructure.</p>
+              <p className="text-white/30 text-[13px] max-w-xl mx-auto mt-2" dir="rtl">كل طبقة تخدم طرفًا محددًا — متصلة بالعملاء الذكيين والتسوية المشتركة والامتثال التشفيري. معًا، تشكل بنية تحتية لمشتريات الضيافة في مصر.</p>
             </div>
           </RevealSection>
 
-          {/* Layer switcher */}
+          {/* Layer cards — always visible */}
           <RevealSection>
-            <div className="flex justify-center mb-10">
+            <div className="grid md:grid-cols-3 gap-5 mb-12">
+              {[
+                {
+                  icon: Building2,
+                  title: "HotelsVendors",
+                  titleAr: "هوتيلز فيندورز",
+                  subtitle: "Procurement OS",
+                  subtitleAr: "نظام المشتريات",
+                  desc: "Hotel-facing workspace. AI forecasting, multi-gateway checkout, ETA compliance, reverse factoring requests, and budget control — all in one dashboard.",
+                  descAr: "مساحة عمل فندقية. تنبؤ ذكي، دفع متعدد البوابات، امتثال ضريبي، تمويل عكسي، وتحكم في الميزانية — كل ذلك في لوحة تحكم واحدة.",
+                  color: C.green,
+                  borderColor: C.greenBorder,
+                  mutedColor: C.greenMuted,
+                  features: ["AI demand forecasting", "ETA e-invoicing", "Budget authority matrix", "Multi-gateway payments"],
+                  dashboard: HotelDashboardMockup,
+                },
+                {
+                  icon: Store,
+                  title: "INVO",
+                  titleAr: "إنفو",
+                  subtitle: "Vendor Marketplace",
+                  subtitleAr: "سوق الموردين",
+                  desc: "Supplier-facing marketplace. Aggregated catalogs via API, AI-powered vendor discovery, 24-hour onboarding, real-time inventory sync across 6 governorates.",
+                  descAr: "سوق موردين مُجمّع. كتالوجات عبر واجهات برمجة، اكتشاف ذكي للموردين، تسجيل في 24 ساعة، مزامنة مخزون فورية عبر 6 محافظات.",
+                  color: C.orange,
+                  borderColor: C.orangeBorder,
+                  mutedColor: C.orangeMuted,
+                  features: ["680+ verified suppliers", "AI vendor matching", "Real-time catalog sync", "24h supplier onboarding"],
+                  dashboard: SupplierDashboardMockup,
+                },
+                {
+                  icon: Landmark,
+                  title: "Settlement & Capital",
+                  titleAr: "التسوية ورأس المال",
+                  subtitle: "Financial Infrastructure",
+                  subtitleAr: "البنية التحتية المالية",
+                  desc: "Financial layer. Reverse factoring with competitive bidding, 48-hour supplier payout, bank-direct settlement, FRA anti-fraud compliance, and cryptographic audit trails.",
+                  descAr: "الطبقة المالية. تمويل عكسي بتنافس تسعيري، دفع للموردين في 48 ساعة، تسوية بنكية مباشرة، امتثال مكافحة الاحتيال، ومسارات تدقيق تشفيرية.",
+                  color: C.purple,
+                  borderColor: C.purpleBorder,
+                  mutedColor: C.purpleMuted,
+                  features: ["48h reverse factoring", "Multi-funder bidding", "Bank-direct settlement", "FRA anti-fraud compliance"],
+                  dashboard: FunderDashboardMockup,
+                },
+              ].map((layer) => (
+                <motion.div
+                  key={layer.title}
+                  whileHover={{ y: -4, borderColor: layer.color + "66" }}
+                  className="rounded-2xl p-6 flex flex-col"
+                  style={{ backgroundColor: C.card, border: `1px solid ${layer.borderColor}` }}
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: layer.mutedColor }}>
+                      <layer.icon size={20} style={{ color: layer.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-[15px] font-semibold text-white">{layer.title}</h3>
+                      <p className="text-[10px] text-white/30" dir="rtl">{layer.titleAr}</p>
+                    </div>
+                  </div>
+                  <p className="text-[11px] font-medium mb-1" style={{ color: layer.color }}>{layer.subtitle}</p>
+                  <p className="text-[10px] text-white/25 mb-2" dir="rtl">{layer.subtitleAr}</p>
+                  <p className="text-[12px] text-white/45 leading-relaxed mb-3 flex-1">{layer.desc}</p>
+                  <p className="text-[11px] text-white/30 leading-relaxed mb-4" dir="rtl">{layer.descAr}</p>
+                  <ul className="space-y-1.5">
+                    {layer.features.map((f) => (
+                      <li key={f} className="flex items-center gap-2 text-[11px] text-white/50">
+                        <CheckCircle size={12} className="shrink-0" style={{ color: layer.color }} />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
+          </RevealSection>
+
+          {/* Interactive layer detail */}
+          <RevealSection>
+            <div className="flex justify-center mb-8">
               <div className="inline-flex border rounded-xl p-1 gap-1" style={{ borderColor: C.greenBorder, background: C.bg }}>
-                <button
-                  onClick={() => setActiveLayer("hv")}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
-                  style={{ background: activeLayer === "hv" ? C.green : "transparent", color: activeLayer === "hv" ? "#07090f" : "rgba(255,255,255,0.5)" }}
-                >
-                  <Building2 size={18} />
-                  HotelsVendors
-                </button>
-                <button
-                  onClick={() => setActiveLayer("invo")}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
-                  style={{ background: activeLayer === "invo" ? C.orange : "transparent", color: activeLayer === "invo" ? "#07090f" : "rgba(255,255,255,0.5)" }}
-                >
-                  <Store size={18} />
-                  INVO
-                </button>
+                {[
+                  { key: "hv", label: "HotelsVendors", icon: Building2, color: C.green },
+                  { key: "invo", label: "INVO", icon: Store, color: C.orange },
+                  { key: "capital", label: "Settlement & Capital", icon: Landmark, color: C.purple },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveLayer(tab.key as "hv" | "invo" | "capital")}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
+                    style={{
+                      background: activeLayer === tab.key ? tab.color : "transparent",
+                      color: activeLayer === tab.key ? "#07090f" : "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    <tab.icon size={16} />
+                    {tab.label}
+                  </button>
+                ))}
               </div>
             </div>
           </RevealSection>
@@ -430,7 +518,7 @@ export default function HomePage() {
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium tracking-widest uppercase mb-4" style={{ borderColor: C.greenBorder, color: C.green, background: C.greenMuted }}>
                     <Building2 size={14} />
-                    Hotel Layer
+                    HotelsVendors · نظام المشتريات
                   </div>
                   <h3 className={`${H3} mb-4 text-white`}>The Checkout & Payments Brain</h3>
                   <p className="text-white/50 text-[14px] leading-relaxed mb-6 font-normal">HotelsVendors is the hotel-facing workspace. It aggregates procurement, forecasts spending, processes payments via integrated gateways, and gives access to factoring and compliance services — all powered by AI swarm agents.</p>
@@ -448,15 +536,15 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/register" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.green, color: "#07090f" }}>
-                    Explore HotelsVendors <ArrowRight size={15} />
+                  <Link href="/register/hotel" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.green, color: "#07090f" }}>
+                    Register as Hotel <ArrowRight size={15} />
                   </Link>
                 </div>
                 <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: C.greenBorder, boxShadow: `0 0 40px 2px ${C.green}18` }}>
                   <HotelDashboardMockup />
                 </div>
               </motion.div>
-            ) : (
+            ) : activeLayer === "invo" ? (
               <motion.div
                 key="invo"
                 initial={{ opacity: 0, y: 12 }}
@@ -468,7 +556,7 @@ export default function HomePage() {
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium tracking-widest uppercase mb-4" style={{ borderColor: C.orangeBorder, color: C.orange, background: C.orangeMuted }}>
                     <Store size={14} />
-                    Vendor Marketplace Layer
+                    INVO · سوق الموردين
                   </div>
                   <h3 className={`${H3} mb-4 text-white`}>The B2B Procurement Marketplace</h3>
                   <p className="text-white/50 text-[14px] leading-relaxed mb-6 font-normal">INVO is the vendor-facing sub-layer — a smart marketplace aggregated from partner networks via APIs and plugins. Suppliers list their catalogs, hotels discover and order, and every transaction flows up to HotelsVendors for settlement.</p>
@@ -486,12 +574,50 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.orange, color: "#07090f" }}>
-                    Explore INVO <ArrowRight size={15} />
+                  <Link href="/register/supplier" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.orange, color: "#07090f" }}>
+                    Register as Supplier <ArrowRight size={15} />
                   </Link>
                 </div>
                 <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: C.orangeBorder, boxShadow: `0 0 40px 2px ${C.orange}18` }}>
                   <SupplierDashboardMockup />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="capital"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3 }}
+                className="grid md:grid-cols-2 gap-8 items-center"
+              >
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium tracking-widest uppercase mb-4" style={{ borderColor: C.purpleBorder, color: C.purple, background: C.purpleMuted }}>
+                    <Landmark size={14} />
+                    Settlement & Capital · التسوية ورأس المال
+                  </div>
+                  <h3 className={`${H3} mb-4 text-white`}>The Financial Infrastructure Layer</h3>
+                  <p className="text-white/50 text-[14px] leading-relaxed mb-6 font-normal">The settlement layer connects licensed funders, banks, and suppliers. Reverse factoring with competitive bidding, 48-hour payout, bank-direct settlement, and FRA anti-fraud compliance — all cryptographically audited.</p>
+                  <ul className="flex flex-col gap-3 mb-8">
+                    {[
+                      "Reverse factoring with multi-funder competitive bidding",
+                      "48-hour supplier payout — bank-direct settlement",
+                      "FRA anti-fraud compliance with three-way matching",
+                      "SHA-256 cryptographic audit trails on every transaction",
+                      "Non-recourse factoring — zero liability for counterparty default",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-[13px] text-white/70 font-normal">
+                        <CheckCircle size={15} className="mt-0.5 shrink-0" style={{ color: C.purple }} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/register/funder" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-medium rounded-md transition-all hover:opacity-90" style={{ background: C.purple, color: "#ffffff" }}>
+                    Register as Funder <ArrowRight size={15} />
+                  </Link>
+                </div>
+                <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: C.purpleBorder, boxShadow: `0 0 40px 2px ${C.purple}18` }}>
+                  <FunderDashboardMockup />
                 </div>
               </motion.div>
             )}
@@ -638,6 +764,80 @@ export default function HomePage() {
             </div>
             <p className="text-[11px] text-white/20 mt-6 font-normal">No credit card required · 14-day enterprise trial · Dedicated onboarding</p>
           </RevealSection>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECURITY & COMPLIANCE CERTIFICATES
+          ═══════════════════════════════════════════ */}
+      <section className="py-16 border-t" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-10">
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] block mb-3" style={{ color: "#FFB000" }}>
+              Security & Compliance · الأمان والامتثال
+            </span>
+            <h2 className="text-[26px] sm:text-[32px] font-semibold tracking-tight text-white mb-3">
+              Bank-Grade Security Infrastructure
+            </h2>
+            <p className="text-[14px] text-white/50 max-w-2xl mx-auto leading-relaxed">
+              Every transaction, every invoice, every data point — protected by cryptographic standards trusted by Egypt&apos;s financial institutions.
+              <br />
+              <span dir="rtl" className="text-[13px] text-white/35">كل معاملة، كل فاتورة، كل نقطة بيانات — محمية بمعايير تشفير تثق بها المؤسسات المالية المصرية.</span>
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { icon: Shield, title: "ETA Phase 1 & 2 Compliant", titleAr: "متوافق مع الفوترة الإلكترونية — المرحلة الأولى والثانية", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: "#22C55E" },
+              { icon: Lock, title: "AES-256-GCM Encryption", titleAr: "تشفير AES-256-GCM", desc: "All data at rest encrypted using AES-256-GCM. Keys rotated every 90 days via AWS KMS.", color: "#3B82F6" },
+              { icon: CheckCircle, title: "ISO 27001 Aligned", titleAr: "متوافق مع معيار ISO 27001", desc: "Information security management aligned with ISO 27001. Regular third-party audits and penetration testing.", color: "#FFB000" },
+              { icon: Globe, title: "Data Residency — Egypt", titleAr: "إقامة البيانات — مصر", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction without consent.", color: "#8B5CF6" },
+              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", titleAr: "متوافق مع مكافحة الاحتيال", desc: "Three-way matching (PO + UUID + Delivery Note), SHA-256 audit trails, real-time fraud detection.", color: "#EF4444" },
+              { icon: Users, title: "Tenant Data Isolation", titleAr: "عزل بيانات المستأجرين", desc: "Each hotel/supplier/funder in fully isolated data scope. Cross-tenant access is architecturally impossible.", color: "#06B6D4" },
+            ].map((cert) => (
+              <div key={cert.title} className="rounded-2xl p-6 transition-all hover:scale-[1.01]" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: cert.color + "15" }}>
+                    <cert.icon size={20} style={{ color: cert.color }} />
+                  </div>
+                  <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: cert.color + "15", color: cert.color }}>Active</span>
+                </div>
+                <h3 className="text-[14px] font-semibold text-white/80 mb-1">{cert.title}</h3>
+                <p className="text-[10px] text-white/30 mb-3" dir="rtl">{cert.titleAr}</p>
+                <p className="text-[12px] text-white/50 leading-relaxed">{cert.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Legal disclaimer */}
+          <div className="mt-8 rounded-xl p-5 text-center" style={{ backgroundColor: "rgba(255,176,0,0.03)", border: "1px solid rgba(255,176,0,0.08)" }}>
+            <p className="text-[12px] text-white/50">
+              <strong style={{ color: "#FFB000" }}>Restaurants for E-Marketing</strong> operates as a <strong className="text-white/60">technical data orchestrator</strong> — not a bank, not a payment service provider, not a factoring company.
+              All financial flows are processed through licensed institutions. Zero liability for counterparty collection defaults.
+            </p>
+            <p className="text-[11px] mt-2 text-white/30" dir="rtl">
+              تعمل مطاعم للتسويق الإلكتروني كمنسق بيانات تقني — ليست بنكاً ولا مزود خدمات دفع. جميع التدفقات المالية تتم عبر مؤسسات مرخصة. مسؤولية صفرية عن تعثر تحصيل الطرف الآخر.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FAQ
+          ═══════════════════════════════════════════ */}
+      <section className="py-20 border-t" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#000000" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-12">
+            <span className="text-[11px] font-medium text-white/40 uppercase tracking-[0.15em] block mb-3">FAQ · الأسئلة الشائعة</span>
+            <h2 className="text-[26px] sm:text-[32px] font-semibold tracking-tight text-white mb-3">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-[14px] text-white/50 max-w-2xl mx-auto leading-relaxed">
+              Everything you need to know about HotelsVendors — onboarding, compliance, suppliers, factoring, and how the platform works.
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <FAQSection />
+          </div>
         </div>
       </section>
 

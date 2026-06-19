@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import Image from "next/image";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import {
   Truck, Package, MapPin, Banknote, TrendingUp, CheckCircle2,
   Clock, ArrowUpRight, Search, Bell, Navigation,
@@ -50,7 +50,7 @@ export function LogisticsDashboardMockup() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.15)" }}>
-                <Image src="/knight-icon.svg" alt="HV" width={34} height={34} className="object-contain" />
+                <BrandLogo size="xs" showText={false} />
               </div>
               <div>
                 <h3 className="text-[13px] font-semibold text-white">Logistics Control</h3>

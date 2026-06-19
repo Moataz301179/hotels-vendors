@@ -1,6 +1,7 @@
 "use client";
 
 import { Send } from "lucide-react";
+import { useTheme } from "@/components/theme/theme-provider";
 
 interface ChatInputProps {
   input: string;
@@ -8,11 +9,22 @@ interface ChatInputProps {
   onSend: () => void;
   disabled?: boolean;
   placeholder?: string;
+  accentColor?: string;
 }
 
-export function ChatInput({ input, onChange, onSend, disabled, placeholder }: ChatInputProps) {
+export function ChatInput({ input, onChange, onSend, disabled, placeholder, accentColor }: ChatInputProps) {
+  const { mode } = useTheme();
+  const isLight = mode === "light";
+  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FFB000");
+
   return (
-    <div className="px-3 py-3 border-t border-white/[0.06] bg-white/[0.02] shrink-0">
+    <div
+      className="px-3 py-3 border-t shrink-0"
+      style={{
+        borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)",
+        backgroundColor: isLight ? "rgba(0,0,0,0.02)" : "rgba(255,255,255,0.02)",
+      }}
+    >
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -26,12 +38,19 @@ export function ChatInput({ input, onChange, onSend, disabled, placeholder }: Ch
           }}
           placeholder={placeholder || "Ask anything..."}
           disabled={disabled}
-          className="flex-1 h-10 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-accent-base/40 transition-colors disabled:opacity-50"
+          className={`flex-1 h-10 px-3 rounded-lg text-sm outline-none transition-colors disabled:opacity-50 ${isLight ? "bg-gray-50 border-gray-200 text-gray-800 placeholder:text-gray-400" : "bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20"}`}
+          style={{
+            border: `1px solid ${isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)"}`,
+          }}
         />
         <button
           onClick={onSend}
           disabled={!input.trim() || disabled}
-          className="w-10 h-10 rounded-lg bg-accent-base text-white flex items-center justify-center hover:bg-[#b91c1c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="w-10 h-10 rounded-lg flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          style={{
+            backgroundColor: effectiveAccent,
+            color: isLight ? "#ffffff" : "#0B0F1A",
+          }}
         >
           <Send size={16} />
         </button>
