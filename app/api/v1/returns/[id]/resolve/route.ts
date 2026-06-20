@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ReturnStatus } from "@prisma/client";
 import { ReturnResolveSchema } from "@/lib/zod";
 import { apiRoute, authenticate, validateBody, success, error, audit, requirePermission } from "@/lib/api-utils";
 
@@ -40,7 +41,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
       }
     }
 
-    let newStatus: string;
+    let newStatus: ReturnStatus;
     if (data.resolution === "REJECTED") {
       newStatus = "SUPPLIER_REJECTED";
     } else if (["FULL_RETURN", "PARTIAL_RETURN", "REPLACEMENT"].includes(data.resolution)) {
@@ -79,7 +80,6 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
       const creditNote = await tx.creditNote.create({
         data: {
           creditNoteNumber,
-          returnRequestId: id,
           invoiceId: invoice.id,
           supplierId: returnRequest.order.supplierId,
           hotelId: returnRequest.hotelId,

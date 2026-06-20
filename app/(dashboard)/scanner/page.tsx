@@ -17,6 +17,22 @@ interface Product {
 
 type ScanAction = "received" | "damaged" | "missing" | null;
 
+/* BarcodeDetector is a Web API not in all TS lib targets */
+interface BarcodeDetectorResult {
+  rawValue: string;
+  format: string;
+  boundingBox: DOMRectReadOnly;
+  cornerPoints: { x: number; y: number }[];
+}
+interface BarcodeDetectorInstance {
+  detect(image: ImageBitmapSource): Promise<BarcodeDetectorResult[]>;
+}
+declare global {
+  interface Window {
+    BarcodeDetector: new (options?: { formats: string[] }) => BarcodeDetectorInstance;
+  }
+}
+
 export default function ScannerPage() {
   const [scanning, setScanning] = useState(false);
   const [manualEntry, setManualEntry] = useState(false);
@@ -25,7 +41,7 @@ export default function ScannerPage() {
   const [scanAction, setScanAction] = useState<ScanAction>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const detectorRef = useRef<BarcodeDetector | null>(null);
+  const detectorRef = useRef<BarcodeDetectorInstance | null>(null);
 
   const barcodeUrl = lastScanned ? `/api/v1/products/barcode?barcode=${encodeURIComponent(lastScanned)}` : null;
   const { data: scanResult, loading: scanLoading } = useApi<{ product: Product }>(barcodeUrl || "");
@@ -33,7 +49,9 @@ export default function ScannerPage() {
 
   useEffect(() => {
     if ("BarcodeDetector" in window) {
-      detectorRef.current = new BarcodeDetector({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Ctor = (window as any).BarcodeDetector;
+      detectorRef.current = new Ctor({
         formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39", "qr_code"],
       });
     }
