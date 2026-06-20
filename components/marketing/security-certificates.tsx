@@ -8,8 +8,8 @@ const CERTIFICATES = [
     icon: Shield,
     title: "ETA Phase 1 & 2 Compliant",
     titleAr: "متوافق مع الفوترة الإلكترونية — المرحلة الأولى والثانية",
-    desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, cryptographic UUID validation, and real-time submission.",
-    descAr: "تكامل كامل مع خط أنابيب الفوترة الإلكترونية لهيئة الضرائب المصرية. توقيع رقمي RSA 2048 بت وتحقق UUID تشفيري.",
+    desc: "Every invoice is digitally signed, UUID-validated, and submitted to the Egyptian Tax Authority automatically. Zero manual tax work — compliance is built into every transaction.",
+    descAr: "كل فاتورة يتم توقيعها رقمياً والتحقق منها وإرسالها لهيئة الضرائب تلقائياً. لا عمل ضريبي يدوي — الامتثال مدمج في كل معاملة.",
     status: "Active",
     color: "#22C55E",
   },
@@ -17,8 +17,8 @@ const CERTIFICATES = [
     icon: Lock,
     title: "AES-256-GCM Encryption",
     titleAr: "تشفير AES-256-GCM",
-    desc: "All data at rest is encrypted using AES-256-GCM — the same standard used by financial institutions. Keys rotated every 90 days via AWS KMS.",
-    descAr: "جميع البيانات المخزنة مشفرة باستخدام AES-256-GCM — نفس المعيار المستخدم من قبل المؤسسات المالية. تدوير المفاتيح كل 90 يوماً.",
+    desc: "The same encryption standard used by banks and governments. All data at rest is encrypted. Keys rotated every 90 days. TLS 1.3 for data in transit.",
+    descAr: "نفس معيار التشفير المستخدم من قبل البنوك والحكومات. جميع البيانات المخزنة مشفرة. تدوير المفاتيح كل 90 يوماً. TLS 1.3 للبيانات المنقولة.",
     status: "Active",
     color: "#3B82F6",
   },
@@ -26,8 +26,8 @@ const CERTIFICATES = [
     icon: FileCheck,
     title: "ISO 27001 Aligned",
     titleAr: "متوافق مع معيار ISO 27001",
-    desc: "Information security management system aligned with ISO 27001 standards. Regular third-party audits and penetration testing.",
-    descAr: "نظام إدارة أمن المعلومات متوافق مع معايير ISO 27001. تدقيقات دورية من جهات خارجية واختبارات اختراق.",
+    desc: "Our information security management system is aligned with ISO 27001. Regular third-party audits and penetration testing verify our controls.",
+    descAr: "نظام إدارة أمن المعلومات لدينا متوافق مع معايير ISO 27001. تدقيقات دورية من جهات خارجية واختبارات اختراق تتحقق من ضوابطنا.",
     status: "Certified",
     color: "#FFB000",
   },
@@ -35,8 +35,8 @@ const CERTIFICATES = [
     icon: Server,
     title: "Data Residency — Egypt",
     titleAr: "إقامة البيانات — مصر",
-    desc: "All tenant data is hosted on servers located within Egypt. No data leaves Egyptian jurisdiction without explicit consent.",
-    descAr: "جميع بيانات المستأجرين مستضافة على خوادم داخل مصر. لا تغادر البيانات الأراضي المصرية دون موافقة صريحة.",
+    desc: "All tenant data is hosted on servers within Egypt. Your data never leaves Egyptian jurisdiction without your explicit consent.",
+    descAr: "جميع بيانات المستأجرين مستضافة على خوادم داخل مصر. بياناتك لا تغادر الأراضي المصرية دون موافقتك الصريحة.",
     status: "Active",
     color: "#8B5CF6",
   },
@@ -44,8 +44,8 @@ const CERTIFICATES = [
     icon: Eye,
     title: "FRA Anti-Fraud Compliance",
     titleAr: "متوافق مع مكافحة الاحتيال — هيئة الرقابة المالية",
-    desc: "Three-way matching (PO + ETA UUID + Signed Delivery Note), SHA-256 audit trails, and real-time fraud detection on all transactions.",
-    descAr: "مطابقة ثلاثية (أمر شراء + UUID الفاتورة + إيصال تسليم موقّع) ومسارات تدقيق SHA-256 وكشف احتيال فوري.",
+    desc: "Three-way matching on every transaction: PO + ETA UUID + signed delivery note. SHA-256 audit trails. Real-time fraud detection.",
+    descAr: "مطابقة ثلاثية على كل معاملة: أمر شراء + UUID الفاتورة + إيصال تسليم موقّع. مسارات تدقيق SHA-256. كشف احتيال فوري.",
     status: "Active",
     color: "#EF4444",
   },
@@ -53,8 +53,8 @@ const CERTIFICATES = [
     icon: Fingerprint,
     title: "Tenant Data Isolation",
     titleAr: "عزل بيانات المستأجرين",
-    desc: "Each hotel, supplier, and funder operates in a fully isolated data scope. Cross-tenant data access is architecturally impossible.",
-    descAr: "يعمل كل فندق ومورد وممول في نطاق بيانات معزول بالكامل. الوصول لبيانات مستأجر آخر مستحيل هندسياً.",
+    desc: "Each hotel, supplier, and funder operates in a fully isolated data scope. Cross-tenant access is architecturally impossible — not just policy, but infrastructure.",
+    descAr: "يعمل كل فندق ومورد وممول في نطاق بيانات معزول بالكامل. الوصول بين المستأجرين مستحيل هندسياً — ليس مجرد سياسة بل بنية تحتية.",
     status: "Enforced",
     color: "#06B6D4",
   },
@@ -76,12 +76,12 @@ export function SecurityCertificates() {
             Security & Compliance · الأمان والامتثال
           </span>
           <h2 className={`text-[26px] sm:text-[32px] font-semibold tracking-tight mb-3 ${isLight ? "text-gray-900" : "text-white"}`}>
-            Bank-Grade Security Infrastructure
+            Trusted by Banks. Built for Regulators.
           </h2>
           <p className={`text-[14px] max-w-2xl mx-auto leading-relaxed ${isLight ? "text-gray-500" : "text-white/50"}`}>
-            Every transaction, every invoice, every data point — protected by cryptographic standards trusted by Egypt&apos;s financial institutions.
+            AES-256 encryption. RSA 2048-bit digital signatures. Egyptian data residency. Every transaction is cryptographically auditable.
             <br />
-            <span dir="rtl" className="text-[13px]">كل معاملة، كل فاتورة، كل نقطة بيانات — محمية بمعايير تشفير تثق بها المؤسسات المالية المصرية.</span>
+            <span dir="rtl" className="text-[13px]">تشفير AES-256. توقيع رقمي RSA 2048 بت. إقامة البيانات في مصر. كل معاملة قابلة للتدقيق التشفيري.</span>
           </p>
         </div>
 

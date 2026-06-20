@@ -140,13 +140,13 @@ export default function HomePage() {
       tagline: "Procurement OS",
       color: turquoise,
       colorMuted: turquoiseMuted,
-      desc: "Hotel-facing workspace. AI forecasting, multi-gateway checkout, ETA compliance, reverse factoring requests, and budget control — all in one dashboard.",
+      desc: "Your hotel&apos;s command centre. AI predicts what you need before you run out, automates purchase orders, and keeps every invoice ETA-compliant — so your team stops chasing paperwork and starts saving money.",
       features: [
-        "AI-powered spend forecasting and budget alerts",
-        "Multi-gateway checkout (cards, SWIFT, local banks)",
-        "Reverse factoring requests with automated authorisation",
-        "ETA & FRA compliance engine built-in",
-        "Swarm agents handle documentation at every workflow stage",
+        "AI demand forecasting — 94% accuracy across 14-day windows",
+        "Multi-gateway payments: cards, SWIFT, local bank transfers",
+        "One-click reverse factoring requests with automated approval flows",
+        "ETA & FRA compliance engine — zero manual tax work",
+        "AI agents auto-generate POs, delivery notes, and reconciliation reports",
       ],
       cta: { label: "Register as Hotel", href: "/register/hotel" },
       dashboard: HotelDashboardMockup,
@@ -158,13 +158,13 @@ export default function HomePage() {
       tagline: "Vendor Marketplace",
       color: accent,
       colorMuted: accentMuted,
-      desc: "Supplier-facing marketplace. Aggregated catalogs via API, AI-powered vendor discovery, 24-hour onboarding, real-time inventory sync across 6 governorates.",
+      desc: "680+ verified suppliers in one searchable marketplace. Hotels find, compare, and order everything from fresh produce to pool chemicals — with real-time pricing, live inventory, and AI-powered vendor matching.",
       features: [
-        "Plug-and-play integration with existing supplier marketplaces",
-        "AI chatbot helps hotels find the right vendor instantly",
-        "Vendor onboarding in under 24 hours",
-        "Real-time catalog sync across all connected networks",
-        "Automated pricing and availability updates",
+        "680+ verified suppliers across 6 Egyptian governorates",
+        "AI chatbot matches hotels to the right vendor in seconds",
+        "Supplier onboarding in under 24 hours — not weeks",
+        "Real-time catalog and inventory sync via API",
+        "Automated price benchmarking across competing vendors",
       ],
       cta: { label: "Register as Supplier", href: "/register/supplier" },
       dashboard: SupplierDashboardMockup,
@@ -176,13 +176,13 @@ export default function HomePage() {
       tagline: "Financial Infrastructure",
       color: "#A855F7",
       colorMuted: "rgba(168,85,247,0.10)",
-      desc: "Financial layer. Reverse factoring with competitive bidding, 48-hour supplier payout, bank-direct settlement, FRA anti-fraud compliance, and cryptographic audit trails.",
+      desc: "Suppliers get paid in 48 hours — not 60 days. Licensed funders compete to finance your receivables at the best rate. The hotel keeps its original payment terms. Everyone wins.",
       features: [
-        "Reverse factoring with multi-funder competitive bidding",
-        "48-hour supplier payout — bank-direct settlement",
-        "FRA anti-fraud compliance with three-way matching",
-        "SHA-256 cryptographic audit trails on every transaction",
-        "Non-recourse factoring — zero liability for counterparty default",
+        "Competitive multi-funder bidding drives down factoring fees",
+        "Suppliers paid within 48 hours via direct bank settlement",
+        "FRA anti-fraud compliance: PO + ETA UUID + signed delivery note",
+        "SHA-256 cryptographic audit trail on every transaction",
+        "Non-recourse structure — zero liability if the counterparty defaults",
       ],
       cta: { label: "Register as Funder", href: "/register/funder" },
       dashboard: FunderDashboardMockup,
@@ -259,12 +259,12 @@ export default function HomePage() {
                 className="text-[28px] md:text-[40px] lg:text-[46px] font-normal text-white mb-5 leading-[1.15]"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
-                Smarter Procurement
+                Procurement That
                 <br />
-                for Coastal Hotels
+                Pays for Itself
               </h1>
               <p className="text-[14px] md:text-[16px] text-white/50 max-w-md mb-8 leading-relaxed">
-                AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure — purpose-built for Egypt&apos;s hospitality sector.
+                Cut procurement costs by 15–25%, settle suppliers in 48 hours, and stay ETA-compliant automatically. The operating system for Egypt&apos;s hospitality supply chain.
               </p>
 
               {/* CTAs */}
@@ -289,7 +289,7 @@ export default function HomePage() {
 
               {/* Trust badges */}
               <div className="flex flex-wrap gap-2">
-                {["ETA E-Invoicing", "FRA Compliant", "Bank-Grade Security", "Free to Start"].map((label) => (
+                {["680+ Verified Suppliers", "ETA Compliant", "94% Forecast Accuracy", "Free to Start"].map((label) => (
                   <span
                     key={label}
                     className="px-3 py-1.5 rounded-full text-[11px] font-medium text-white/40"
@@ -347,10 +347,10 @@ export default function HomePage() {
                 Three-Layer Architecture
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                Built for Every Stakeholder
+                One Platform, Three Stakeholders
               </h2>
               <p className="text-[13px] text-white/40 max-w-md mx-auto leading-relaxed">
-                Each layer serves a distinct role — connected by AI agents, shared settlement, and cryptographic compliance.
+                Hotels buy. Suppliers sell. Funders finance. AI agents orchestrate every transaction end to end.
               </p>
             </div>
           </Reveal>
@@ -415,9 +415,9 @@ export default function HomePage() {
                   </span>
                 </div>
                 <h3 className="text-[16px] md:text-[20px] font-medium text-white mb-3 leading-tight">
-                  {activeLayer === 0 ? "The Checkout & Payments Brain" :
-                   activeLayer === 1 ? "The B2B Procurement Marketplace" :
-                   "The Financial Infrastructure Layer"}
+                  {activeLayer === 0 ? "Stop Guessing What to Order" :
+                   activeLayer === 1 ? "Every Supplier You Need, One Search" :
+                   "Suppliers Paid in 48 Hours — Not 60 Days"}
                 </h3>
                 <p className="text-[13px] text-white/45 leading-relaxed mb-6">{active.desc}</p>
                 <ul className="space-y-2.5 mb-6">
@@ -457,10 +457,10 @@ export default function HomePage() {
                 Platform Overview
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                See HotelsVendors in Action
+                See How It Works
               </h2>
               <p className="text-[13px] text-white/40 max-w-md mx-auto">
-                Watch how Egypt&apos;s leading hospitality procurement platform connects hotels, suppliers, and funders in one unified ecosystem.
+                Watch how hotels, suppliers, and funders connect on one platform — from AI-powered forecasting to 48-hour supplier settlement.
               </p>
             </div>
           </Reveal>
@@ -513,20 +513,20 @@ export default function HomePage() {
                 How It Works
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                From Forecast to Settlement
+                Live in 24 Hours, Saving in 30 Days
               </h2>
               <p className="text-[13px] text-white/40 max-w-md mx-auto">
-                No subscription. No setup cost. AI agents guide you from registration to your first compliant transaction.
+                No subscription. No setup fee. No credit card. AI agents handle the complexity — you handle the savings.
               </p>
             </div>
           </Reveal>
 
           <div className="grid md:grid-cols-4 gap-4">
             {[
-              { step: "01", title: "Join Free", desc: "Register in minutes. AI-guided onboarding, no paperwork, no credit card.", icon: Building2 },
-              { step: "02", title: "Discover & Order", desc: "Browse 680+ verified suppliers on INVO. AI-powered matching and real-time catalogs.", icon: Store },
-              { step: "03", title: "Checkout & Pay", desc: "Multi-gateway payments, ETA-compliant invoicing, AI spend forecasting.", icon: BrainCircuit },
-              { step: "04", title: "Settle in 48h", desc: "Suppliers request reverse factoring. Competitive bidding. Bank-direct disbursement.", icon: Banknote },
+              { step: "01", title: "Join Free", desc: "AI-guided registration in under 5 minutes. No paperwork, no credit card, no commitment.", icon: Building2 },
+              { step: "02", title: "Discover & Order", desc: "Search 680+ verified suppliers. AI matches you to the best vendor for every product.", icon: Store },
+              { step: "03", title: "Checkout & Pay", desc: "Pay via card, SWIFT, or bank transfer. Every invoice is ETA-compliant automatically.", icon: BrainCircuit },
+              { step: "04", title: "Settle in 48h", desc: "Suppliers opt for early payment. Funders compete. Supplier gets paid — hotel keeps Net-30/60 terms.", icon: Banknote },
             ].map((item, i) => {
               const StepIcon = item.icon;
               return (
@@ -559,19 +559,19 @@ export default function HomePage() {
                 Platform Capabilities
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                Six Infrastructure Pillars
+                Built for Hospitality. Compliant by Default.
               </h2>
             </div>
           </Reveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {[
-              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns." },
-              { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation." },
-              { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching." },
-              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 48 hours." },
-              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail." },
-              { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor." },
+              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "Predict what you&apos;ll need 14 days out — factoring in occupancy, events, and seasonality. 94% accuracy means less waste, fewer emergency orders, and tighter budgets." },
+              { icon: Receipt, title: "ETA E-Invoicing — Automatic", desc: "Every invoice is digitally signed, UUID-validated, and submitted to the Egyptian Tax Authority automatically. Zero manual tax work. Zero compliance risk." },
+              { icon: Truck, title: "Shared-Route Logistics", desc: "AI consolidates deliveries across suppliers and properties. Cut logistics costs by up to 40% — critical for remote Red Sea and South Sinai resorts." },
+              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Suppliers request early payment. Licensed funders compete on rate. Supplier gets cash in 48 hours. Hotel keeps its Net-30/60 terms. Everyone wins." },
+              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Three-way matching (PO + ETA UUID + signed delivery note) on every transaction. SHA-256 audit trails. Real-time fraud detection. Fully FRA-compliant." },
+              { icon: BarChart3, title: "Cost Control & Analytics", desc: "Real-time spend visibility across every property, department, and vendor. AI flags anomalies, benchmarks prices, and surfaces savings opportunities automatically." },
             ].map((f, i) => {
               const Icon = f.icon;
               return (
@@ -603,10 +603,10 @@ export default function HomePage() {
                 Security & Compliance
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                Bank-Grade Security
+                Trusted by Banks. Built for Regulators.
               </h2>
               <p className="text-[13px] text-white/40 max-w-md mx-auto">
-                Every transaction, every invoice, every data point — protected by cryptographic standards trusted by Egypt&apos;s financial institutions.
+                AES-256 encryption. RSA 2048-bit digital signatures. Egyptian data residency. Every transaction is cryptographically auditable.
               </p>
             </div>
           </Reveal>
@@ -663,10 +663,10 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto px-6 text-center relative">
           <Reveal>
             <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-4">
-              Stop Managing Procurement in Spreadsheets
+              Your Supply Chain Is Leaking Money
             </h2>
             <p className="text-[13px] text-white/40 mb-8 max-w-md mx-auto leading-relaxed">
-              AI-automated procurement. Cashflow optimization. Cryptographic ETA compliance. All in one platform — free to start.
+              Every manual PO, every late invoice, every untracked delivery — it adds up. HotelsVendors plugs the leaks. Free to start, live in 24 hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
@@ -700,7 +700,7 @@ export default function HomePage() {
                 FAQ
               </span>
               <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
-                Frequently Asked Questions
+                Questions? Answered.
               </h2>
             </div>
           </Reveal>
