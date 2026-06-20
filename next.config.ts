@@ -2,6 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
+  // Enable React DevTools and source-map-backed editing in Chrome DevTools
+  // Allows "Save for Overrides" to persist changes from browser to local filesystem
+  productionBrowserSourceMaps: true,
+  compiler: {
+    // Preserve component names in production for easier debugging
+    reactRemoveProperties: false,
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
