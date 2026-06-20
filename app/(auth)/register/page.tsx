@@ -15,7 +15,7 @@ const SECTORS = [
     icon: Building2,
     label: "Hotel / Resort",
     labelAr: "فندق / منتجع",
-    color: "#22C55E",
+    color: "#00E5FF",
     description: "AI procurement, budget control, ETA compliance, embedded factoring",
     descriptionAr: "مشتريات ذكية، تحكم في الميزانية، امتثال ضريبي، تمويل مدمج",
     benefits: [
@@ -182,7 +182,7 @@ export default function RegisterPage() {
             className="mt-10 flex flex-wrap justify-center gap-6"
           >
             {[
-              { icon: Shield, label: "Bank-grade security", color: "#22C55E" },
+              { icon: Shield, label: "Bank-grade security", color: "#00E5FF" },
               { icon: Zap, label: "Free to start", color: "#FFB000" },
               { icon: Clock, label: "24h onboarding", color: "#3B82F6" },
               { icon: Banknote, label: "No credit card required", color: "#A855F7" },

@@ -32,18 +32,19 @@ import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-moc
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN SYSTEM — Single source of truth for this page
-   Accent: #FFB000 (yellow) · Secondary: #10B981 (emerald)
+   Accent: #FFB000 (neon orange) · Secondary: #00E5FF (turquoise)
    Background: #0B0F1A · Surfaces: #0F1320 → #141828 → #1C2032
    ═══════════════════════════════════════════════════════════════ */
 
 const accent = "#FFB000";
 const accentMuted = "rgba(255,176,0,0.10)";
 const accentBorder = "rgba(255,176,0,0.25)";
-const emerald = "#10B981";
-const emeraldMuted = "rgba(16,185,129,0.10)";
+const turquoise = "#00E5FF";
+const turquoiseMuted = "rgba(0,229,255,0.10)";
 const surface1 = "#0F1320";
 const surface2 = "#141828";
 const borderSubtle = "rgba(255,255,255,0.06)";
@@ -91,7 +92,7 @@ function Stat({ end, suffix = "", prefix = "", label }: { end: number; suffix?: 
   const count = useCounter(end, 2200, active);
   return (
     <div ref={ref} className="text-center">
-      <div className="text-[36px] md:text-[44px] font-semibold tracking-tight text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+      <div className="text-[24px] md:text-[28px] font-medium tracking-tight text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
         {prefix}{count.toLocaleString()}{suffix}
       </div>
       <div className="text-[12px] text-white/40 mt-1 uppercase tracking-[0.08em]">{label}</div>
@@ -135,8 +136,8 @@ export default function HomePage() {
       icon: Building2,
       title: "HotelsVendors",
       tagline: "Procurement OS",
-      color: emerald,
-      colorMuted: emeraldMuted,
+      color: turquoise,
+      colorMuted: turquoiseMuted,
       desc: "Hotel-facing workspace. AI forecasting, multi-gateway checkout, ETA compliance, reverse factoring requests, and budget control — all in one dashboard.",
       features: [
         "AI-powered spend forecasting and budget alerts",
@@ -195,67 +196,44 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative pt-32 pb-24 md:pt-44 md:pb-32 overflow-hidden">
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-24 overflow-hidden">
         {/* Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full pointer-events-none" style={{ background: `radial-gradient(ellipse, ${accentMuted} 0%, transparent 70%)` }} />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          {/* Badge */}
+        <div className="relative z-10 max-w-5xl mx-auto px-6">
+          {/* Brand lockup — centered */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-medium uppercase tracking-[0.12em] mb-10"
-            style={{ border: `1px solid ${accentBorder}`, background: accentMuted, color: accent }}
-          >
-            <Sparkles size={12} />
-            Egypt & MENA&apos;s First · AI-Native B2B Hotel Procurement Platform
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-[40px] sm:text-[56px] md:text-[72px] font-semibold leading-[1.05] tracking-tight text-white mb-6"
+            transition={{ duration: 0.6 }}
+            className="flex justify-center mb-8"
           >
-            Egypt&apos;s Hospitality
-            <br />
-            Procurement Infrastructure
-          </motion.h1>
+            <BrandLogo variant="dark" size="xxl" />
+          </motion.div>
 
-          {/* Subheadline */}
+          {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-[16px] md:text-[18px] text-white/50 max-w-2xl mx-auto mb-4 leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="text-[13px] md:text-[14px] text-white/45 max-w-xl mx-auto text-center mb-8 leading-relaxed"
           >
-            AI-powered procurement, supplier marketplace, and embedded financial infrastructure — built for coastal hotels and their supply chain across Egypt.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-[13px] text-white/30 max-w-xl mx-auto mb-10"
-          >
-            Free to join. Transparent fees only when value is exchanged. No credit card required.
+            Egypt&apos;s B2B hospitality procurement platform — AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure for coastal hotels and their supply chain.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center"
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center mb-8"
           >
-            <button onClick={() => setWizardOpen(true)} className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-semibold rounded-xl transition-all hover:opacity-90 hover:shadow-lg cursor-pointer" style={{ background: accent, color: "#0B0F1A" }}>
+            <button onClick={() => setWizardOpen(true)} className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:opacity-90 cursor-pointer" style={{ background: accent, color: "#0B0F1A" }}>
               Get Started Free
-              <ArrowRight size={16} />
+              <ArrowRight size={15} />
             </button>
-            <Link href="/sandbox" className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-medium rounded-xl border transition-all hover:bg-white/[0.04]" style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}>
-              <Play size={15} />
+            <Link href="/sandbox" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-medium rounded-xl border transition-all hover:bg-white/[0.04]" style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}>
+              <Play size={14} />
               Explore Sandbox
             </Link>
           </motion.div>
@@ -264,8 +242,8 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-3 mt-10"
+            transition={{ delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-2.5"
           >
             {[
               "ETA E-Invoicing",
@@ -273,17 +251,17 @@ export default function HomePage() {
               "Bank-Grade Security",
               "Free to Start",
             ].map((label) => (
-              <span key={label} className="px-3 py-1 rounded-full text-[11px] font-medium text-white/40" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)" }}>
+              <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-medium text-white/35" style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
                 {label}
               </span>
             ))}
           </motion.div>
 
           {/* Scroll */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-16 flex justify-center">
-            <a href="#layers" className="flex flex-col items-center gap-2 text-white/20 hover:text-white/40 transition-colors">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="mt-12 flex justify-center">
+            <a href="#layers" className="flex flex-col items-center gap-1.5 text-white/20 hover:text-white/40 transition-colors">
               <span className="text-[10px] tracking-[0.15em] uppercase">Explore the Platform</span>
-              <ChevronDown size={16} className="animate-bounce" />
+              <ChevronDown size={14} className="animate-bounce" />
             </a>
           </motion.div>
         </div>
@@ -319,7 +297,7 @@ export default function HomePage() {
               <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
                 Three-Layer Architecture
               </span>
-              <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-4">
+              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
                 Built for Every Stakeholder
               </h2>
               <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed">
@@ -387,7 +365,7 @@ export default function HomePage() {
                     {active.title} · {active.tagline}
                   </span>
                 </div>
-                <h3 className="text-[24px] md:text-[30px] font-semibold text-white mb-4 leading-tight">
+                <h3 className="text-[18px] md:text-[22px] font-medium text-white mb-4 leading-tight">
                   {activeLayer === 0 ? "The Checkout & Payments Brain" :
                    activeLayer === 1 ? "The B2B Procurement Marketplace" :
                    "The Financial Infrastructure Layer"}
@@ -423,10 +401,10 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-6">
           <Reveal>
             <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: emerald }}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: turquoise }}>
                 How It Works
               </span>
-              <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-4">
+              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
                 From Forecast to Settlement
               </h2>
               <p className="text-[15px] text-white/40 max-w-lg mx-auto">
@@ -467,10 +445,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-6">
           <Reveal>
             <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: emerald }}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: turquoise }}>
                 Platform Capabilities
               </span>
-              <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-4">
+              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
                 Six Infrastructure Pillars
               </h2>
             </div>
@@ -478,19 +456,19 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns.", color: emerald },
-              { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation.", color: emerald },
-              { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: emerald },
-              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 48 hours.", color: emerald },
-              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: emerald },
-              { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: emerald },
+              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns.", color: turquoise },
+              { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation.", color: turquoise },
+              { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: turquoise },
+              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 48 hours.", color: turquoise },
+              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: turquoise },
+              { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: turquoise },
             ].map((f, i) => {
               const Icon = f.icon;
               return (
                 <Reveal key={f.title} delay={i * 0.06}>
                   <div className="rounded-2xl p-6 h-full transition-all hover:-translate-y-1" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: emeraldMuted }}>
-                      <Icon size={20} style={{ color: emerald }} />
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: turquoiseMuted }}>
+                      <Icon size={20} style={{ color: turquoise }} />
                     </div>
                     <h3 className="text-[14px] font-semibold text-white mb-2">{f.title}</h3>
                     <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -515,7 +493,7 @@ export default function HomePage() {
               <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
                 Security & Compliance
               </span>
-              <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-4">
+              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
                 Bank-Grade Security
               </h2>
               <p className="text-[15px] text-white/40 max-w-xl mx-auto">
@@ -526,11 +504,11 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
             {[
-              { icon: Shield, title: "ETA Phase 1 & 2 Compliant", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: emerald },
+              { icon: Shield, title: "ETA Phase 1 & 2 Compliant", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: turquoise },
               { icon: ShieldCheck, title: "FRA Anti-Fraud Framework", desc: "Three-way matching (PO + UUID + Delivery Note), SHA-256 audit trails, real-time fraud detection.", color: accent },
               { icon: Zap, title: "AES-256-GCM Encryption", desc: "All data at rest encrypted. Keys rotated every 90 days. TLS 1.3 in transit.", color: "#3B82F6" },
               { icon: CheckCircle, title: "ISO 27001 Aligned", desc: "Information security management aligned with ISO 27001. Regular third-party audits.", color: "#A855F7" },
-              { icon: Clock, title: "Data Residency — Egypt", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction.", color: emerald },
+              { icon: Clock, title: "Data Residency — Egypt", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction.", color: turquoise },
               { icon: Banknote, title: "Tenant Data Isolation", desc: "Each hotel/supplier/funder in fully isolated data scope. Cross-tenant access is architecturally impossible.", color: accent },
             ].map((cert, i) => {
               const Icon = cert.icon;
@@ -574,7 +552,7 @@ export default function HomePage() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, ${accentMuted} 0%, transparent 70%)` }} />
         <div className="max-w-3xl mx-auto px-6 text-center relative">
           <Reveal>
-            <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-5">
+            <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-5">
               Stop Managing Procurement
               <br />
               in Spreadsheets
@@ -605,7 +583,7 @@ export default function HomePage() {
               <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
                 FAQ
               </span>
-              <h2 className="text-[32px] md:text-[44px] font-semibold tracking-tight text-white mb-4">
+              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
                 Frequently Asked Questions
               </h2>
             </div>
