@@ -98,8 +98,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
         commercialReg: data.commercialReg,
         phone: data.phone,
         tenantId: tenant.id,
-        status: "ACTIVE", // Auto-approve for testing
+        status: "PENDING_VERIFICATION",
         tier: "CORE",
+        bankName: data.bankName || null,
+        bankAccount: data.bankAccount || null,
+        paymobMerchantId: data.paymobMerchantId || null,
       },
     });
     await prisma.user.create({
@@ -113,7 +116,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
-        status: "ACTIVE",
+        status: "PENDING_VERIFICATION",
+        licenseNumber: data.licenseNumber || null,
+        bankName: data.bankName || null,
+        bankAccount: data.bankAccount || null,
+        paymobMerchantId: data.paymobMerchantId || null,
       },
     });
     await prisma.user.create({
@@ -186,7 +193,18 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: tenant.id,
     actorId: user.id,
     actorRole: user.platformRole,
-    afterState: { email: user.email, platformRole: user.platformRole, type: data.type, accountType, tenantId: tenant.id },
+    afterState: {
+      email: user.email,
+      platformRole: user.platformRole,
+      type: data.type,
+      accountType,
+      tenantId: tenant.id,
+      taxId: data.taxId || null,
+      commercialReg: data.commercialReg || null,
+      bankName: data.bankName || null,
+      hasPaymob: !!data.paymobMerchantId,
+      licenseNumber: data.licenseNumber || null,
+    },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });
@@ -195,8 +213,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
     token,
     user: { id: user.id, email: user.email, name: user.name, role: user.role, platformRole: user.platformRole, accountType: user.accountType },
     hotel,
-    supplier,
-    factoringCompany,
+    supplier: supplier ? { ...supplier, bankAccount: undefined, paymobMerchantId: undefined } : undefined,
+    factoringCompany: factoringCompany ? { ...factoringCompany, bankAccount: undefined, paymobMerchantId: undefined } : undefined,
     tenantId: tenant.id,
+    verificationPending: data.type === "supplier" || data.type === "factoring",
   }, 201);
 });

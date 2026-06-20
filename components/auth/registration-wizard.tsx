@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ArrowRight, ArrowLeft, Building2, Store, Landmark, Truck,
   CheckCircle2, Loader2, Sparkles, Mail, Lock, MapPin, Users,
-  Package, Banknote, Shield, ChevronRight,
+  Package, Banknote, Shield, ChevronRight, Receipt, CreditCard, Phone,
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
@@ -16,7 +16,7 @@ import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashb
 /* ─── Types ─── */
 
 type Role = "hotel" | "supplier" | "funder" | "logistics" | null;
-type Step = 1 | 2 | 3 | 4 | 5;
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface WizardData {
   role: Role;
@@ -27,10 +27,15 @@ interface WizardData {
   contactName: string;
   email: string;
   password: string;
+  phone: string;
   city: string;
   taxId: string;
+  commercialReg: string;
   licenseNumber: string;
   coverage: string;
+  bankName: string;
+  bankAccount: string;
+  paymobMerchantId: string;
 }
 
 interface Message {
@@ -81,8 +86,9 @@ const STEPS = [
   { num: 1, label: "I am a..." },
   { num: 2, label: "Details" },
   { num: 3, label: "Company" },
-  { num: 4, label: "Account" },
-  { num: 5, label: "Preview" },
+  { num: 4, label: "Verification" },
+  { num: 5, label: "Account" },
+  { num: 6, label: "Preview" },
 ] as const;
 
 const CAPACITY_OPTIONS = [
@@ -112,10 +118,15 @@ export function RegistrationWizard({
     contactName: "",
     email: "",
     password: "",
+    phone: "",
     city: "",
     taxId: "",
+    commercialReg: "",
     licenseNumber: "",
     coverage: "",
+    bankName: "",
+    bankAccount: "",
+    paymobMerchantId: "",
   });
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -189,15 +200,20 @@ export function RegistrationWizard({
           name: data.contactName,
           email: data.email,
           password: data.password,
+          phone: data.phone || "",
           accountType: "business",
           companyName: data.companyName,
           taxId: data.taxId || "",
+          commercialReg: data.commercialReg || "",
           city: data.city || "",
           governorate: data.coverage || "",
           subCategory: data.subCategory,
           supplyCategories: data.supplyCategories,
           capacity: data.capacity,
           licenseNumber: data.licenseNumber || "",
+          bankName: data.bankName || "",
+          bankAccount: data.bankAccount || "",
+          paymobMerchantId: data.paymobMerchantId || "",
         }),
       });
       const json = await res.json();
@@ -217,14 +233,15 @@ export function RegistrationWizard({
     switch (step) {
       case 1: return !!data.role;
       case 2: return !!data.subCategory && !!data.capacity;
-      case 3: return !!data.companyName.trim() && !!data.contactName.trim() && !!data.city.trim();
-      case 4: return !!data.email.trim() && data.password.length >= 6;
-      case 5: return true;
+      case 3: return !!data.companyName.trim() && !!data.contactName.trim() && !!data.city.trim() && !!data.phone.trim();
+      case 4: return !!data.taxId.trim() && !!data.commercialReg.trim() && !!data.bankName.trim() && !!data.bankAccount.trim() && (data.role === "funder" ? !!data.licenseNumber.trim() : true);
+      case 5: return !!data.email.trim() && data.password.length >= 8;
+      case 6: return true;
       default: return false;
     }
   };
 
-  const nextStep = () => { if (canProceed() && step < 5) setStep((step + 1) as Step); };
+  const nextStep = () => { if (canProceed() && step < 6) setStep((step + 1) as Step); };
   const prevStep = () => { if (step > 1) setStep((step - 1) as Step); };
 
   if (!isOpen) return null;
@@ -289,15 +306,16 @@ export function RegistrationWizard({
                 {step === 1 && <StepRole data={data} update={update} />}
                 {step === 2 && config && <StepDetails data={data} update={update} config={config} />}
                 {step === 3 && <StepCompany data={data} update={update} />}
-                {step === 4 && <StepAccount data={data} update={update} error={error} />}
-                {step === 5 && config && <StepPreview data={data} config={config} DashboardComponent={DashboardComponent!} messages={messages} input={input} setInput={setInput} onSend={handleSend} loading={loading} messagesEndRef={messagesEndRef} />}
+                {step === 4 && <StepVerification data={data} update={update} config={config!} />}
+                {step === 5 && <StepAccount data={data} update={update} error={error} />}
+                {step === 6 && config && <StepPreview data={data} config={config} DashboardComponent={DashboardComponent!} messages={messages} input={input} setInput={setInput} onSend={handleSend} loading={loading} messagesEndRef={messagesEndRef} />}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
         {/* Footer */}
-        {!registered && step < 5 && (
+        {!registered && step < 6 && (
           <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             <button onClick={step === 1 ? onClose : prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> {step === 1 ? "Cancel" : "Back"}
@@ -308,7 +326,7 @@ export function RegistrationWizard({
           </div>
         )}
 
-        {step === 5 && !registered && (
+        {step === 6 && !registered && (
           <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             <button onClick={prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> Back
@@ -471,16 +489,58 @@ function StepCompany({ data, update }: { data: WizardData; update: <K extends ke
       <div className="space-y-4 max-w-lg">
         <FieldInput label="Company / Property Name" value={data.companyName} onChange={(v) => update("companyName", v)} placeholder="e.g. Stella Di Mare Resort" icon={Building2} required />
         <FieldInput label="Your Full Name" value={data.contactName} onChange={(v) => update("contactName", v)} placeholder="Your name" icon={Users} required />
+        <FieldInput label="Phone Number" value={data.phone} onChange={(v) => update("phone", v)} placeholder="+20 1XX XXX XXXX" icon={Phone} required />
         <FieldInput label="City" value={data.city} onChange={(v) => update("city", v)} placeholder="e.g. Hurghada" icon={MapPin} required />
 
-        {data.role === "supplier" && (
-          <FieldInput label="Tax ID" value={data.taxId} onChange={(v) => update("taxId", v)} placeholder="Egyptian Tax Authority ID" icon={Shield} />
-        )}
-        {data.role === "funder" && (
-          <FieldInput label="FRA License Number" value={data.licenseNumber} onChange={(v) => update("licenseNumber", v)} placeholder="e.g. FRA-2024-001" icon={Banknote} />
-        )}
         {data.role === "logistics" && (
           <FieldInput label="Coverage Areas" value={data.coverage} onChange={(v) => update("coverage", v)} placeholder="e.g. Cairo, Hurghada, Sharm" icon={MapPin} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 4 — Legal Verification & Banking
+   ═══════════════════════════════════════════════════════════════ */
+
+function StepVerification({ data, update, config }: { data: WizardData; update: <K extends keyof WizardData>(key: K, value: WizardData[K]) => void; config: typeof ROLE_CONFIG[string] }) {
+  return (
+    <div>
+      <h3 className="text-[20px] font-semibold text-white mb-2">Legal Verification & Banking</h3>
+      <p className="text-[13px] text-white/40 mb-2">Required for ETA e-invoicing compliance and payout processing.</p>
+      <p className="text-[11px] text-white/25 mb-6">بيانات التحقق القانوني مطلوبة للفوترة الإلكترونية ومعالجة المدفوعات</p>
+
+      {/* Legal verification note */}
+      <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "rgba(255,176,0,0.06)", border: "1px solid rgba(255,176,0,0.15)" }}>
+        <p className="font-medium text-[#FFB000] mb-1">Why we need this</p>
+        <p className="text-white/40">
+          {data.role === "funder" && "FRA license verification is mandatory for factoring companies operating in Egypt. Your account will be activated after document review (typically 24 hours)."}
+          {data.role === "supplier" && "Tax ID and Commercial Registration are required for ETA e-invoicing. Bank account is needed for reverse factoring payouts."}
+          {data.role === "hotel" && "Tax ID and Commercial Registration are required for ETA e-invoicing compliance and payment processing."}
+          {data.role === "logistics" && "Tax ID and Commercial Registration are required for settlement processing."}
+        </p>
+      </div>
+
+      <div className="space-y-4 max-w-lg">
+        <div className="mb-2">
+          <p className="text-[11px] font-medium text-white/50 uppercase tracking-wider mb-3">Legal Documents</p>
+        </div>
+        <FieldInput label="Tax ID (الرقم الضريبي)" value={data.taxId} onChange={(v) => update("taxId", v)} placeholder="e.g. 123-456-789" icon={Shield} required />
+        <FieldInput label="Commercial Registration No." value={data.commercialReg} onChange={(v) => update("commercialReg", v)} placeholder="e.g. CR-12345" icon={Receipt} required />
+
+        {data.role === "funder" && (
+          <FieldInput label="FRA License Number" value={data.licenseNumber} onChange={(v) => update("licenseNumber", v)} placeholder="e.g. FRA-2024-001" icon={Banknote} required />
+        )}
+
+        <div className="pt-3 mb-2">
+          <p className="text-[11px] font-medium text-white/50 uppercase tracking-wider mb-3">Banking & Payout</p>
+        </div>
+        <FieldInput label="Bank Name" value={data.bankName} onChange={(v) => update("bankName", v)} placeholder="e.g. CIB, NBE, QNB" icon={Landmark} required />
+        <FieldInput label="Bank Account (IBAN)" value={data.bankAccount} onChange={(v) => update("bankAccount", v)} placeholder="EGXX XXXX XXXX XXXX" icon={CreditCard} required />
+
+        {(data.role === "supplier" || data.role === "funder") && (
+          <FieldInput label="Paymob Merchant ID (optional)" value={data.paymobMerchantId} onChange={(v) => update("paymobMerchantId", v)} placeholder="Connect Paymob for instant payout settlement" icon={CreditCard} />
         )}
       </div>
     </div>
@@ -505,7 +565,7 @@ function StepAccount({ data, update, error }: { data: WizardData; update: <K ext
 
       <div className="space-y-4 max-w-lg">
         <FieldInput label="Email Address" value={data.email} onChange={(v) => update("email", v)} placeholder="you@company.com" icon={Mail} type="email" required />
-        <FieldInput label="Password" value={data.password} onChange={(v) => update("password", v)} placeholder="Min 6 characters" icon={Lock} type="password" required />
+        <FieldInput label="Password" value={data.password} onChange={(v) => update("password", v)} placeholder="Min 8 characters" icon={Lock} type="password" required />
       </div>
 
       <p className="text-[11px] text-white/20 mt-4">By registering, you agree to our Terms of Service and Privacy Policy.</p>

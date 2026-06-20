@@ -456,6 +456,9 @@ model Supplier {
   bankAccount String?
   bankName    String?
 
+  // ── Paymob Integration ──
+  paymobMerchantId String?
+
   // ── INVO SaaS Subscription (replaces old saasSubscriptionPlan) ──
   invoSubscription InvoSubscription?
 
@@ -523,6 +526,7 @@ model DeliveryZone {
 
 enum SupplierStatus {
   PENDING
+  PENDING_VERIFICATION
   ACTIVE
   SUSPENDED
   REJECTED
@@ -1055,6 +1059,16 @@ model FactoringCompany {
   interestRate Decimal?
   feeRate      Decimal?
 
+  // ── Legal Verification ──
+  licenseNumber String?
+
+  // ── Banking & Payout ──
+  bankName    String?
+  bankAccount String?
+
+  // ── Paymob Integration ──
+  paymobMerchantId String?
+
   invoices          Invoice[]
   creditTxns        CreditTransaction[]
   creditFacilities  CreditFacility[]
@@ -1096,6 +1110,7 @@ model CreditTransaction {
 
 enum FactoringCompanyStatus {
   ACTIVE
+  PENDING_VERIFICATION
   SUSPENDED
   CLOSED
 }

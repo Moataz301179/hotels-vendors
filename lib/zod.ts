@@ -250,7 +250,7 @@ export const BusinessRegisterSchema = z.object({
   type: z.enum(["hotel", "supplier", "factoring", "shipping"]),
   name: z.string().min(2),
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   phone: z.string().optional(),
   city: z.string().optional(),
   governorate: z.string().optional(),
@@ -260,6 +260,10 @@ export const BusinessRegisterSchema = z.object({
   crDocumentUrl: z.string().optional(),
   taxDocumentUrl: z.string().optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
+  bankName: z.string().optional(),
+  bankAccount: z.string().optional(),
+  paymobMerchantId: z.string().optional(),
+  licenseNumber: z.string().optional(),
 });
 
 export const LoginSchema = z.object({
