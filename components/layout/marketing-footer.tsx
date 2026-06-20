@@ -23,28 +23,26 @@ const socialLinks = [
 
 export function MarketingFooter() {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isHercules = mode === "hercules";
   const isOriginal = mode === "original";
-  const accent = isOriginal ? "#ED1C24" : "#FF6B00";
-  const secondary = "#00E5CC";
+  const accent = isHercules ? "#D4AF37" : isOriginal ? "#ED1C24" : "#84CC16";
+  const bgColor = isHercules ? "#0a1628" : "#000000";
+  const borderColor = isHercules ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.06)";
 
   return (
     <footer
       className="border-t"
-      style={{
-        borderColor: isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.06)",
-        backgroundColor: isLight ? "#ffffff" : isOriginal ? "#000000" : "#0B0F1A",
-      }}
+      style={{ borderColor, backgroundColor: bgColor }}
     >
       <div className="mx-auto max-w-7xl px-8 pt-12 pb-8">
         {/* Top section: Logo + columns */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
-          {/* Brand — spans 2 cols on mobile */}
+          {/* Brand */}
           <div className="col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant={isLight ? "light" : "dark"} size="md" />
+              <BrandLogo variant="dark" size="md" />
             </div>
-            <p className={`text-[12px] leading-relaxed max-w-xs mb-5 ${isLight ? "text-gray-600" : "text-white/60"}`}>
+            <p className="text-[12px] leading-relaxed max-w-xs mb-5 text-white/60">
               Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.
             </p>
             <div className="flex items-center gap-3">
@@ -66,7 +64,7 @@ export function MarketingFooter() {
 
           {/* Platform */}
           <div>
-            <h4 className={`text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 ${isLight ? "text-gray-900" : "text-white"}`}>
+            <h4 className="text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 text-white">
               Platform
             </h4>
             <ul className="space-y-2.5">
@@ -77,7 +75,7 @@ export function MarketingFooter() {
                 { label: "Pricing", href: "/pricing" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className={`text-[13px] transition-colors ${isLight ? "text-gray-500 hover:text-gray-900" : "text-white/50 hover:text-white"}`}>
+                  <Link href={item.href} className="text-[13px] transition-colors text-white/50 hover:text-white">
                     {item.label}
                   </Link>
                 </li>
@@ -87,7 +85,7 @@ export function MarketingFooter() {
 
           {/* Stakeholders */}
           <div>
-            <h4 className={`text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 ${isLight ? "text-gray-900" : "text-white"}`}>
+            <h4 className="text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 text-white">
               Stakeholders
             </h4>
             <ul className="space-y-2.5">
@@ -98,7 +96,7 @@ export function MarketingFooter() {
                 { label: "Logistics", href: "/register/logistics" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className={`text-[13px] transition-colors ${isLight ? "text-gray-500 hover:text-gray-900" : "text-white/50 hover:text-white"}`}>
+                  <Link href={item.href} className="text-[13px] transition-colors text-white/50 hover:text-white">
                     {item.label}
                   </Link>
                 </li>
@@ -108,7 +106,7 @@ export function MarketingFooter() {
 
           {/* Company */}
           <div>
-            <h4 className={`text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 ${isLight ? "text-gray-900" : "text-white"}`}>
+            <h4 className="text-[12px] font-semibold uppercase tracking-[0.1em] mb-4 text-white">
               Company
             </h4>
             <ul className="space-y-2.5">
@@ -121,7 +119,7 @@ export function MarketingFooter() {
                 { label: "Get Started", href: "/register" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className={`text-[13px] transition-colors ${isLight ? "text-gray-500 hover:text-gray-900" : "text-white/50 hover:text-white"}`}>
+                  <Link href={item.href} className="text-[13px] transition-colors text-white/50 hover:text-white">
                     {item.label}
                   </Link>
                 </li>
@@ -131,24 +129,23 @@ export function MarketingFooter() {
         </div>
 
         {/* Divider */}
-        <div className="border-t pt-6 mb-5" style={{ borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)" }}>
-          {/* Legal entity */}
-          <p className={`text-[11px] leading-relaxed text-center mb-5 ${isLight ? "text-gray-500" : "text-white/40"}`}>
-            Platform owned and operated by <strong style={{ color: accent }}>Restaurants for E-Marketing</strong> · Tax ID: <span className={isLight ? "text-gray-600" : "text-white/50"}>704226146</span> · Commercial Registry: <span className={isLight ? "text-gray-600" : "text-white/50"}>105300900196948</span>
+        <div className="border-t pt-6 mb-5" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+          <p className="text-[11px] leading-relaxed text-center mb-5 text-white/40">
+            Platform owned and operated by <strong style={{ color: accent }}>Restaurants for E-Marketing</strong> · Tax ID: <span className="text-white/50">704226146</span> · Commercial Registry: <span className="text-white/50">105300900196948</span>
           </p>
         </div>
 
         {/* Security badges */}
         <div className="flex flex-wrap items-center justify-center gap-5 mb-6">
-          <span className={`flex items-center gap-1.5 text-[11px] font-medium ${isLight ? "text-gray-600" : "text-white/60"}`}>
+          <span className="flex items-center gap-1.5 text-[11px] font-medium text-white/60">
             <Shield className="w-3.5 h-3.5" style={{ color: accent }} />
             Bank-grade security
           </span>
-          <span className={`flex items-center gap-1.5 text-[11px] font-medium ${isLight ? "text-gray-600" : "text-white/60"}`}>
-            <FileCheck className="w-3.5 h-3.5" style={{ color: secondary }} />
+          <span className="flex items-center gap-1.5 text-[11px] font-medium text-white/60">
+            <FileCheck className="w-3.5 h-3.5" style={{ color: accent }} />
             ETA compliant · متوافق مع الفوترة الإلكترونية
           </span>
-          <span className={`flex items-center gap-1.5 text-[11px] font-medium ${isLight ? "text-gray-600" : "text-white/60"}`}>
+          <span className="flex items-center gap-1.5 text-[11px] font-medium text-white/60">
             <Lock className="w-3.5 h-3.5" style={{ color: accent }} />
             Data isolated · بيانات معزولة
           </span>
@@ -156,10 +153,10 @@ export function MarketingFooter() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className={`text-[11px] ${isLight ? "text-gray-400" : "text-white/30"}`}>
+          <p className="text-[11px] text-white/30">
             &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </p>
-          <div className={`flex items-center gap-4 text-[11px] ${isLight ? "text-gray-400" : "text-white/30"}`}>
+          <div className="flex items-center gap-4 text-[11px] text-white/30">
             <Link href="/privacy" className="hover:opacity-70 transition-opacity">Privacy</Link>
             <span className="opacity-20">|</span>
             <Link href="/terms" className="hover:opacity-70 transition-opacity">Terms</Link>

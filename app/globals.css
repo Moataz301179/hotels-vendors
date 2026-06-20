@@ -1,54 +1,50 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — INSTITUTIONAL FINANCE DESIGN SYSTEM
-   Dark Navy (#0B0F1A) · Yellow (#FFB000) accent
-   Inspired by slategray-tapir-217626.hostingersite.com
-   Premium dark finance UI with generous whitespace
+   HOTELS VENDORS — 3-THEME DESIGN SYSTEM
    ═══════════════════════════════════════════════════════════════ */
 
-:root {
+/* ═══════════════════════════════════════════════════════════════
+   DEFAULT / WIMBLEDON THEME
+   Black bg · White text · Light grey surfaces · Lime green accent
+   ═══════════════════════════════════════════════════════════════ */
+:root, [data-theme="wimbledon"] {
   /* ── Background Layers ── */
-  --bg-canvas: #0B0F1A;
-  --bg-surface-1: #0F1320;
-  --bg-surface-2: #141828;
-  --bg-surface-3: #1C2032;
+  --bg-canvas: #000000;
+  --bg-surface-1: #111111;
+  --bg-surface-2: #1a1a1a;
+  --bg-surface-3: #222222;
 
-  --background: #0B0F1A;
-  --surface: #0F1320;
-  --surface-raised: #141828;
-  --surface-hover: #1C2032;
+  --background: #000000;
+  --surface: #111111;
+  --surface-raised: #1a1a1a;
+  --surface-hover: #222222;
 
   /* ── Text Hierarchy ── */
-  --text-primary: #F2F4F7;
-  --text-secondary: #9CA3AF;
-  --text-tertiary: #6B7280;
-  --text-muted: #4B5563;
-  --text-inverse: #0B0F1A;
+  --text-primary: #ffffff;
+  --text-secondary: #c0c0c0;
+  --text-tertiary: #888888;
+  --text-muted: #5a5a5a;
+  --text-inverse: #000000;
 
-  --foreground: #F2F4F7;
-  --foreground-secondary: #9CA3AF;
-  --foreground-tertiary: #6B7280;
-  --foreground-muted: #4B5563;
+  --foreground: #ffffff;
+  --foreground-secondary: #c0c0c0;
+  --foreground-tertiary: #888888;
+  --foreground-muted: #5a5a5a;
 
   /* ── Borders ── */
-  --border-invisible: rgba(255, 255, 255, 0.04);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-visible: rgba(255, 255, 255, 0.12);
-  --border-accent: rgba(255, 176, 0, 0.30);
+  --border-invisible: rgba(255, 255, 255, 0.03);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-visible: rgba(255, 255, 255, 0.10);
+  --border-accent: rgba(132, 204, 22, 0.35);
 
-  /* ── YELLOW ACCENT (#FFB000) ── */
-  --accent-base: #FFB000;
-  --accent-light: #FFC233;
-  --accent-dark: #CC8C00;
-  --accent-muted: rgba(255, 176, 0, 0.12);
-  --accent-glow: rgba(255, 176, 0, 0.15);
-  --accent-text: #0B0F1A;
-
-  /* ── Emerald Tagline Accent ── */
-  --emerald-base: #10B981;
-  --emerald-light: #34D399;
-  --emerald-muted: rgba(16, 185, 129, 0.10);
+  /* ── Lime Green Accent ── */
+  --accent-base: #84CC16;
+  --accent-light: #A3E635;
+  --accent-dark: #65A30D;
+  --accent-muted: rgba(132, 204, 22, 0.10);
+  --accent-glow: rgba(132, 204, 22, 0.15);
+  --accent-text: #000000;
 
   /* ── Semantic ── */
   --error: #EF4444;
@@ -57,12 +53,12 @@
   --info: #3B82F6;
 
   /* ── Shadows ── */
-  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow-accent: 0 0 40px rgba(255, 176, 0, 0.08);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow-accent: 0 0 40px rgba(132, 204, 22, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 
   /* ── Layout ── */
-  --header-height: 80px;
+  --header-height: 68px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
 }
@@ -79,7 +75,6 @@
   --color-accent-base: var(--accent-base);
   --color-accent-light: var(--accent-light);
   --color-accent-dark: var(--accent-dark);
-  --color-emerald-base: var(--emerald-base);
   --color-border-subtle: var(--border-subtle);
   --color-border-visible: var(--border-visible);
   --color-success: var(--success);
@@ -93,61 +88,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   LIGHT THEME — Black / White / Dark Violet / Blue
-   ═══════════════════════════════════════════════════════════════ */
-[data-theme="light"] {
-  --bg-canvas: #ffffff;
-  --bg-surface-1: #f8f9fa;
-  --bg-surface-2: #f0f1f3;
-  --bg-surface-3: #e8e9eb;
-
-  --background: #ffffff;
-  --surface: #f8f9fa;
-  --surface-raised: #f0f1f3;
-  --surface-hover: #e8e9eb;
-
-  --text-primary: #0B0F1A;
-  --text-secondary: #4B5563;
-  --text-tertiary: #6B7280;
-  --text-muted: #9CA3AF;
-  --text-inverse: #ffffff;
-
-  --foreground: #0B0F1A;
-  --foreground-secondary: #4B5563;
-  --foreground-tertiary: #6B7280;
-  --foreground-muted: #9CA3AF;
-
-  --border-invisible: rgba(0, 0, 0, 0.04);
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-visible: rgba(0, 0, 0, 0.12);
-  --border-accent: rgba(88, 28, 135, 0.30);
-
-  --accent-base: #581c87;
-  --accent-light: #7c3aed;
-  --accent-dark: #3b0764;
-  --accent-muted: rgba(88, 28, 135, 0.10);
-  --accent-glow: rgba(88, 28, 135, 0.12);
-  --accent-text: #ffffff;
-
-  --emerald-base: #059669;
-  --emerald-light: #10b981;
-  --emerald-muted: rgba(5, 150, 105, 0.10);
-
-  --error: #dc2626;
-  --success: #16a34a;
-  --warning: #ca8a04;
-  --info: #2563eb;
-
-  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --shadow-glow-accent: 0 0 40px rgba(88, 28, 135, 0.06);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ORIGINAL THEME — Pure OLED Black + Brand Identity Colors
-   Background: #000000 (true OLED black)
-   Accent: #ED1C24 (HotelsVendors red)
-   Text: #ffffff on pure black
+   ORIGINAL THEME — Red (#ED1C24) + White + Black + Grey (#6D6E71)
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="original"] {
   --bg-canvas: #000000;
@@ -163,13 +104,13 @@
   --text-primary: #ffffff;
   --text-secondary: #b0b0b0;
   --text-tertiary: #808080;
-  --text-muted: #5a5a5a;
+  --text-muted: #6D6E71;
   --text-inverse: #000000;
 
   --foreground: #ffffff;
   --foreground-secondary: #b0b0b0;
   --foreground-tertiary: #808080;
-  --foreground-muted: #5a5a5a;
+  --foreground-muted: #6D6E71;
 
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
@@ -184,10 +125,6 @@
   --accent-glow: rgba(237, 28, 36, 0.18);
   --accent-text: #ffffff;
 
-  --emerald-base: #10B981;
-  --emerald-light: #34D399;
-  --emerald-muted: rgba(16, 185, 129, 0.10);
-
   --error: #EF4444;
   --success: #22C55E;
   --warning: #EAB308;
@@ -198,6 +135,58 @@
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   HERCULES THEME — Navy Blue + Gold + White
+   Font: Hercules (loaded from cdnfonts.com/css/hercules-2)
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="hercules"] {
+  --bg-canvas: #0a1628;
+  --bg-surface-1: #0f1d35;
+  --bg-surface-2: #152542;
+  --bg-surface-3: #1c2f52;
+
+  --background: #0a1628;
+  --surface: #0f1d35;
+  --surface-raised: #152542;
+  --surface-hover: #1c2f52;
+
+  --text-primary: #f0f4f8;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+  --text-inverse: #0a1628;
+
+  --foreground: #f0f4f8;
+  --foreground-secondary: #94a3b8;
+  --foreground-tertiary: #64748b;
+  --foreground-muted: #475569;
+
+  --border-invisible: rgba(255, 255, 255, 0.03);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-visible: rgba(255, 255, 255, 0.10);
+  --border-accent: rgba(212, 175, 55, 0.35);
+
+  /* Gold accent */
+  --accent-base: #D4AF37;
+  --accent-light: #E8C547;
+  --accent-dark: #B8960C;
+  --accent-muted: rgba(212, 175, 55, 0.12);
+  --accent-glow: rgba(212, 175, 55, 0.18);
+  --accent-text: #0a1628;
+
+  --error: #EF4444;
+  --success: #22C55E;
+  --warning: #EAB308;
+  --info: #3B82F6;
+
+  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow-accent: 0 0 40px rgba(212, 175, 55, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════ */
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg-canvas);
@@ -232,29 +221,6 @@ body {
   background-clip: text;
 }
 
-.text-gradient-lime {
-  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Hero glows ── */
-.hero-glow-accent {
-  position: relative;
-}
-.hero-glow-accent::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255,176,0,0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    SURFACE UTILITIES
    ═══════════════════════════════════════════════════════════════ */
@@ -265,7 +231,7 @@ body {
   transition: all 0.3s var(--ease-out-expo);
 }
 .surface-card:hover {
-  border-color: rgba(255, 176, 0, 0.2);
+  border-color: var(--border-visible);
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.5);
 }
@@ -339,7 +305,7 @@ body {
 .btn-ghost:hover {
   background: rgba(255,255,255,0.04);
   color: #fff;
-  border-color: rgba(255, 176, 0, 0.3);
+  border-color: var(--accent-base);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -373,7 +339,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1, transform: translateY(0); }
 }
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -393,11 +359,21 @@ body {
   animation: shimmer 1.5s infinite;
 }
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 15s linear infinite;
+}
+@media (max-width: 768px) {
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
+  }
 }
 
 .animate-ticker {
-  animation: marquee 20s linear infinite;
+  animation: marquee 15s linear infinite;
+}
+@media (max-width: 768px) {
+  .animate-ticker {
+    animation: marquee 25s linear infinite;
+  }
 }
 
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
@@ -424,12 +400,22 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FRAME UTILITIES
+   FRAME UTILITIES — Outlined borders on hover
    ═══════════════════════════════════════════════════════════════ */
 .frame { border: 1px solid var(--border-invisible); }
 .frame-strong { border: 1px solid var(--border-subtle); }
 .frame-accent { border: 1px solid var(--border-accent); }
 .frame-hover:hover { border-color: var(--border-subtle); }
+
+/* ── Outlined frame border on hover for cards ── */
+.card-outlined {
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.2s ease;
+}
+.card-outlined:hover {
+  border-color: var(--accent-base);
+  box-shadow: 0 0 0 1px var(--accent-base);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    MARQUEE
@@ -442,11 +428,11 @@ body {
 }
 .marquee-content {
   display: inline-flex;
-  animation: marquee 40s linear infinite;
+  animation: marquee 15s linear infinite;
 }
 @media (max-width: 768px) {
   .marquee-content {
-    animation: marquee 18s linear infinite;
+    animation: marquee 25s linear infinite;
   }
 }
 
@@ -510,7 +496,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 .section-divider {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 176, 0, 0.08), rgba(255, 176, 0, 0.15), rgba(255, 176, 0, 0.08), transparent);
+  background: linear-gradient(to right, transparent, var(--accent-muted), var(--accent-glow), var(--accent-muted), transparent);
   border: none;
   margin: 0;
 }
@@ -538,7 +524,7 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════
-   WHITESPACE ENHANCEMENTS — Increased padding & spacing
+   WHITESPACE ENHANCEMENTS
    ═══════════════════════════════════════════════════════════════ */
 .section-padding {
   padding-top: 5rem;
@@ -555,7 +541,7 @@ body {
   gap: 3rem;
 }
 @media (min-width: 1024px) {
-  .section-gap {
+  section-gap {
     gap: 5rem;
   }
 }

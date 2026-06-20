@@ -34,15 +34,16 @@ import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — B2B Enterprise SaaS
-   Primary: #0F172A (navy) · Accent: #0369A1 (enterprise blue)
-   CTA: #FFB000 (amber) · Secondary: #00E5FF (turquoise)
-   Background: #0B0F1A · Surfaces: #0F1320 → #141828
+   DESIGN SYSTEM — HotelsVendors Dark Theme
+   Background: #000000 (OLED black) · Surfaces: #0B0F1A / #0F1320
+   Text: #FFFFFF (white) — headings in Playfair Display serif
+   Accent: #FF6B00 (neon orange) — decorative only: borders, hovers, frames
+   NO colored text for headings or body
    ═══════════════════════════════════════════════════════════════ */
 
-const accent = "#FFB000";
-const accentMuted = "rgba(255,176,0,0.10)";
-const accentBorder = "rgba(255,176,0,0.25)";
+const accent = "#FF6B00";
+const accentMuted = "rgba(255,107,0,0.10)";
+const accentBorder = "rgba(255,107,0,0.25)";
 const turquoise = "#00E5FF";
 const turquoiseMuted = "rgba(0,229,255,0.10)";
 const enterpriseBlue = "#0369A1";
@@ -195,86 +196,122 @@ export default function HomePage() {
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════════════════════
-          HERO — Brand-centric, enterprise-grade
+          HERO — Two-column: marketing text left, dashboard right
+          Big brand logo top-center · Playfair Display headings
+          OLED black bg · neon orange accent (decorative only)
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden">
-        {/* Subtle glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full pointer-events-none opacity-60" style={{ background: `radial-gradient(ellipse, ${accentMuted} 0%, transparent 70%)` }} />
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden" style={{ backgroundColor: "#000000" }}>
+        {/* Subtle orange glow behind logo */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full pointer-events-none opacity-40" style={{ background: `radial-gradient(ellipse, ${accentMuted} 0%, transparent 70%)` }} />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6">
-          {/* Brand lockup — centered, logo left + text right */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          {/* Brand logo — top center, extra large */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center gap-6 mb-8"
+            className="flex items-center justify-center mb-12 md:mb-16"
           >
             <BrandLogo variant="dark" size="xxl" />
           </motion.div>
 
-          {/* Value proposition — single clear line */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-[13px] md:text-[14px] text-white/50 max-w-lg mx-auto text-center mb-8 leading-relaxed"
-          >
-            Egypt&apos;s B2B hospitality procurement platform — AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure for coastal hotels.
-          </motion.p>
-
-          {/* CTAs — primary + secondary */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center mb-8"
-          >
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg transition-all hover:opacity-90 cursor-pointer"
-              style={{ background: accent, color: "#0B0F1A" }}
+          {/* Two-column: dashboard mockup LEFT, marketing title RIGHT */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Left: Dashboard mockup in tablet frame */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="relative"
             >
-              Get Started Free
-              <ArrowRight size={14} />
-            </button>
-            <Link
-              href="/sandbox"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg border transition-all hover:bg-white/[0.04]"
-              style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}
-            >
-              <Play size={13} />
-              Explore Sandbox
-            </Link>
-          </motion.div>
-
-          {/* Trust badges — compact row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
-            className="flex flex-wrap justify-center gap-2"
-          >
-            {["ETA E-Invoicing", "FRA Compliant", "Bank-Grade Security", "Free to Start"].map((label) => (
-              <span
-                key={label}
-                className="px-2.5 py-1 rounded-full text-[10px] font-medium text-white/35"
-                style={{ border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}
+              {/* Tablet/iPad frame */}
+              <div
+                className="relative rounded-[28px] p-3 shadow-2xl"
+                style={{
+                  background: "linear-gradient(145deg, #1a1a1a, #0d0d0d)",
+                  border: "2px solid rgba(255,255,255,0.08)",
+                  boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)",
+                }}
               >
-                {label}
-              </span>
-            ))}
-          </motion.div>
+                {/* Screen bezel highlight */}
+                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                {/* Camera notch */}
+                <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/[0.06]" />
+                {/* Screen content */}
+                <div className="rounded-[20px] overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <HotelDashboardMockup />
+                </div>
+              </div>
+              {/* Reflection glow */}
+              <div
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full blur-xl opacity-30"
+                style={{ background: accent }}
+              />
+            </motion.div>
+
+            {/* Right: Marketing content */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+            >
+              <h1
+                className="text-[28px] md:text-[40px] lg:text-[46px] font-normal text-white mb-5 leading-[1.15]"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              >
+                Smarter Procurement
+                <br />
+                for Coastal Hotels
+              </h1>
+              <p className="text-[14px] md:text-[16px] text-white/50 max-w-md mb-8 leading-relaxed">
+                AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure — purpose-built for Egypt&apos;s hospitality sector.
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                <button
+                  onClick={() => setWizardOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] font-semibold rounded-xl transition-all hover:opacity-90 cursor-pointer"
+                  style={{ background: accent, color: "#ffffff" }}
+                >
+                  Get Started Free
+                  <ArrowRight size={16} />
+                </button>
+                <Link
+                  href="/sandbox"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] font-medium rounded-xl border transition-all hover:bg-white/[0.04]"
+                  style={{ borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)" }}
+                >
+                  <Play size={14} />
+                  Explore Sandbox
+                </Link>
+              </div>
+
+              {/* Trust badges */}
+              <div className="flex flex-wrap gap-2">
+                {["ETA E-Invoicing", "FRA Compliant", "Bank-Grade Security", "Free to Start"].map((label) => (
+                  <span
+                    key={label}
+                    className="px-3 py-1.5 rounded-full text-[11px] font-medium text-white/40"
+                    style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
           {/* Scroll indicator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-10 flex justify-center"
+            transition={{ delay: 0.7 }}
+            className="mt-14 flex justify-center"
           >
             <a href="#layers" className="flex flex-col items-center gap-1 text-white/20 hover:text-white/40 transition-colors">
-              <span className="text-[9px] tracking-[0.15em] uppercase">Explore</span>
-              <ChevronDown size={13} className="animate-bounce" />
+              <span className="text-[10px] tracking-[0.15em] uppercase">Explore</span>
+              <ChevronDown size={14} className="animate-bounce" />
             </a>
           </motion.div>
         </div>
@@ -328,10 +365,10 @@ export default function HomePage() {
                   <button
                     key={layer.key}
                     onClick={() => setActiveLayer(i as 0 | 1 | 2)}
-                    className="text-left rounded-xl p-5 transition-all cursor-pointer"
+                    className="text-left rounded-xl p-5 transition-all cursor-pointer card-outlined"
                     style={{
                       background: isActive ? surface2 : surface1,
-                      border: `1px solid ${isActive ? "rgba(255,255,255,0.10)" : borderSubtle}`,
+                      borderColor: isActive ? "rgba(255,255,255,0.10)" : undefined,
                     }}
                   >
                     <div className="flex items-center gap-2.5 mb-3">
@@ -410,6 +447,62 @@ export default function HomePage() {
       <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
 
       {/* ═══════════════════════════════════════════════════════════
+          VIDEO SPACE — Platform overview video
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <Reveal>
+            <div className="text-center mb-10">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: accent }}>
+                Platform Overview
+              </span>
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
+                See HotelsVendors in Action
+              </h2>
+              <p className="text-[13px] text-white/40 max-w-md mx-auto">
+                Watch how Egypt&apos;s leading hospitality procurement platform connects hotels, suppliers, and funders in one unified ecosystem.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <div
+              className="relative rounded-2xl overflow-hidden mx-auto max-w-4xl"
+              style={{
+                border: `1px solid ${borderVisible}`,
+                background: surface1,
+                aspectRatio: "16/9",
+              }}
+            >
+              {/* Video placeholder — replace src with actual video URL */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}
+                >
+                  <Play size={24} style={{ color: accent }} className="ml-1" />
+                </div>
+                <p className="text-[13px] text-white/30">Video coming soon</p>
+                <p className="text-[11px] text-white/20">16:9 · Platform walkthrough</p>
+              </div>
+              {/* Uncomment when video is ready:
+              <video
+                className="w-full h-full object-cover"
+                controls
+                poster="/video-poster.jpg"
+                playsInline
+              >
+                <source src="/videos/platform-overview.mp4" type="video/mp4" />
+              </video>
+              */}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
+
+      {/* ═══════════════════════════════════════════════════════════
           HOW IT WORKS — 4 steps
           ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 md:py-24">
@@ -438,7 +531,7 @@ export default function HomePage() {
               const StepIcon = item.icon;
               return (
                 <Reveal key={item.step} delay={i * 0.08}>
-                  <div className="rounded-xl p-5 h-full" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
+                  <div className="rounded-xl p-5 h-full card-outlined" style={{ background: surface1 }}>
                     <div className="text-[10px] font-medium text-white/20 mb-2 uppercase tracking-wider">Step {item.step}</div>
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
                       <StepIcon size={15} className="text-white/40" />
@@ -483,7 +576,7 @@ export default function HomePage() {
               const Icon = f.icon;
               return (
                 <Reveal key={f.title} delay={i * 0.05}>
-                  <div className="rounded-xl p-5 h-full transition-all hover:-translate-y-0.5" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
+                  <div className="rounded-xl p-5 h-full transition-all hover:-translate-y-0.5 card-outlined" style={{ background: surface1 }}>
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: turquoiseMuted }}>
                       <Icon size={16} style={{ color: turquoise }} />
                     </div>

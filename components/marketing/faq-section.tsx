@@ -127,7 +127,7 @@ const CATEGORIES = ["All", "General", "Platform", "Suppliers", "Pricing", "Compl
 
 export function FAQSection() {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const [activeCategory, setActiveCategory] = useState("All");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 

@@ -9,11 +9,10 @@ export default function OfflinePage() {
   useEffect(() => {
     try {
       const mode = localStorage.getItem("hv-theme-mode");
-      if (mode === "light") setBg("#ffffff");
-      else if (mode === "original") setBg("#000000");
-      else setBg("#0B0F1A");
+      if (mode === "hercules") setBg("#0a1628");
+      else setBg("#000000");
     } catch {
-      setBg("#0B0F1A");
+      setBg("#000000");
     }
   }, []);
 

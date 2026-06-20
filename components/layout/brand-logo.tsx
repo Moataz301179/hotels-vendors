@@ -12,21 +12,21 @@ interface BrandLogoProps {
 }
 
 const TEXT_SIZE_MAP = {
-  xs: { text: 11, slogan: 8, tracking: "0.06em" },
-  sm: { text: 13, slogan: 9, tracking: "0.08em" },
-  md: { text: 16, slogan: 10, tracking: "0.1em" },
-  lg: { text: 22, slogan: 12, tracking: "0.12em" },
-  xl: { text: 28, slogan: 14, tracking: "0.14em" },
-  xxl: { text: 34, slogan: 14, tracking: "0.06em" },
+  xs: { text: 14, slogan: 10, tracking: "0.06em" },
+  sm: { text: 18, slogan: 12, tracking: "0.08em" },
+  md: { text: 22, slogan: 14, tracking: "0.1em" },
+  lg: { text: 32, slogan: 16, tracking: "0.12em" },
+  xl: { text: 40, slogan: 18, tracking: "0.14em" },
+  xxl: { text: 48, slogan: 20, tracking: "0.06em" },
 };
 
 const ICON_SIZE_MAP = {
-  xs: 24,
-  sm: 32,
-  md: 40,
-  lg: 52,
-  xl: 64,
-  xxl: 88,
+  xs: 48,
+  sm: 64,
+  md: 80,
+  lg: 120,
+  xl: 160,
+  xxl: 220,
 };
 
 function LogoSVG({ size, color }: { size: number; color: string }) {
@@ -113,11 +113,10 @@ export function BrandLogo({
   const iconSize = ICON_SIZE_MAP[size];
 
   const isOriginal = forceColor === "original" || (forceColor !== "bw" && mode === "original");
-  const isDark = mode === "dark" || mode === "original";
 
   let iconColor: string;
   if (forceColor === "bw" || (!isOriginal && forceColor !== "original")) {
-    iconColor = variant === "light" ? "#0B0F1A" : isDark ? "#ffffff" : "#0B0F1A";
+    iconColor = variant === "light" ? "#0B0F1A" : "#ffffff";
   } else {
     iconColor = variant === "light" ? "#333132" : "#ffffff";
   }

@@ -62,7 +62,7 @@ const CERTIFICATES = [
 
 export function SecurityCertificates() {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
 
   return (
     <section className="py-16">

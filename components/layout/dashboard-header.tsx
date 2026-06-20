@@ -104,7 +104,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
           aria-label="Cycle theme"
           title={`Theme: ${mode}`}
         >
-          {mode === "dark" ? <Sun size={18} /> : mode === "light" ? <Moon size={18} /> : <Palette size={18} className="text-red-400" />}
+          {mode === "hercules" ? <Palette size={18} className="text-amber-400" /> : mode === "original" ? <Palette size={18} className="text-red-400" /> : <Sun size={18} />}
         </button>
 
         <button

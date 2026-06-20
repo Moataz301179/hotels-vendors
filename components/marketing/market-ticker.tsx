@@ -8,10 +8,9 @@ interface TickerItem {
   nameEn: string;
   price: number;
   unit: string;
-  change: number; // percentage
+  change: number;
 }
 
-// Seed data — most demanded hotel products in Egypt
 const SEED_ITEMS: TickerItem[] = [
   { nameAr: "مواد غذائية طازجة", nameEn: "Fresh Food Supplies", price: 185, unit: "كجم", change: 0 },
   { nameAr: "مستلزمات نظافة", nameEn: "Cleaning Supplies", price: 42, unit: "لتر", change: 0 },
@@ -34,13 +33,11 @@ const SEED_ITEMS: TickerItem[] = [
 ];
 
 function randomChange() {
-  // Random between -3% and +3%, biased slightly positive
   return +(Math.random() * 6 - 2.5).toFixed(2);
 }
 
 export function MarketTicker() {
   const { mode } = useTheme();
-  const isLight = mode === "light";
   const [items, setItems] = useState<TickerItem[]>(SEED_ITEMS);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -59,31 +56,36 @@ export function MarketTicker() {
     };
   }, []);
 
-  // Double the items for seamless marquee
   const doubled = [...items, ...items];
+
+  // Theme-aware colors
+  const isHercules = mode === "hercules";
+  const isOriginal = mode === "original";
+  const accentColor = isHercules ? "#D4AF37" : isOriginal ? "#ED1C24" : "#84CC16";
+  const bgColor = isHercules ? "#0a1628" : "#050505";
+  const borderColor = isHercules ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)";
+  const textColor = isHercules ? "#f0f4f8" : "#ffffff";
+  const textMuted = isHercules ? "#94a3b8" : "rgba(255,255,255,0.70)";
+  const textFaint = isHercules ? "#64748b" : "rgba(255,255,255,0.30)";
+  const textPrice = isHercules ? "#94a3b8" : "rgba(255,255,255,0.40)";
+  const sepColor = isHercules ? "#475569" : "rgba(255,255,255,0.10)";
 
   return (
     <div
       className="w-full overflow-hidden border-y py-2.5"
-      style={{
-        borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.04)",
-        backgroundColor: isLight ? "#f8f7fc" : "#050505",
-      }}
+      style={{ borderColor, backgroundColor: bgColor }}
     >
       <div className="flex items-center">
         {/* Fixed label */}
         <div
           className="shrink-0 px-4 py-1.5 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2 border-r"
-          style={{
-            color: isLight ? "#581c87" : "#FFB000",
-            borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)",
-          }}
+          style={{ color: accentColor, borderColor }}
         >
-          <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: isLight ? "#581c87" : "#FFB000" }} />
+          <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
           <span>مؤشر السوق · Market Index</span>
         </div>
 
-        {/* Scrolling marquee */}
+        {/* Scrolling marquee — 15s desktop, 25s mobile */}
         <div className="overflow-hidden flex-1">
           <div className="flex animate-marquee whitespace-nowrap">
             {doubled.map((item, i) => {
@@ -93,9 +95,9 @@ export function MarketTicker() {
                   key={`${item.nameEn}-${i}`}
                   className="inline-flex items-center gap-2 px-5 text-[11px]"
                 >
-                  <span className={isLight ? "text-gray-700" : "text-white/70"}>{item.nameAr}</span>
-                  <span className={isLight ? "text-gray-400" : "text-white/30"}>·</span>
-                  <span className={`font-mono ${isLight ? "text-gray-500" : "text-white/40"}`}>
+                  <span style={{ color: textMuted }}>{item.nameAr}</span>
+                  <span style={{ color: textFaint }}>·</span>
+                  <span className="font-mono" style={{ color: textPrice }}>
                     {item.price} ج.م/{item.unit}
                   </span>
                   <span
@@ -105,7 +107,7 @@ export function MarketTicker() {
                     {isUp ? "▲" : "▼"}
                     {Math.abs(item.change).toFixed(1)}%
                   </span>
-                  <span className={isLight ? "text-gray-200" : "text-white/10"}>|</span>
+                  <span style={{ color: sepColor }}>|</span>
                 </div>
               );
             })}

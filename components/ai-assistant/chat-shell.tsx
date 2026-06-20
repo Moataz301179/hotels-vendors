@@ -26,7 +26,7 @@ export function ChatShell({
   footer,
 }: ChatShellProps) {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
 
   if (!open) return null;
 

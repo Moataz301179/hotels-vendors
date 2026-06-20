@@ -19,7 +19,7 @@ interface MessageListProps {
 
 export function MessageList({ messages, isLoading, accentColor }: MessageListProps) {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const scrollRef = useRef<HTMLDivElement>(null);
   const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FFB000");
 

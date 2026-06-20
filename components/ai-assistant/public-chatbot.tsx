@@ -50,7 +50,7 @@ function RobotFaceIcon({ size = 24, color = "currentColor" }: { size?: number; c
 
 export function PublicChatbot() {
   const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {

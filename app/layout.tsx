@@ -115,6 +115,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+        <link href="https://fonts.cdnfonts.com/css/hercules-2" rel="stylesheet" />
         <link rel="dns-prefetch" href="https://hotels-vendors.com" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
@@ -130,19 +131,17 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'original';
-                  if (mode === 'light') {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#f8f9fa');
-                  } else if (mode === 'original') {
-                    document.documentElement.setAttribute('data-theme', 'original');
-                    var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#000000');
+                  var mode = localStorage.getItem('hv-theme-mode') || 'wimbledon';
+                  if (mode === 'wimbledon' || mode === 'original' || mode === 'hercules') {
+                    document.documentElement.setAttribute('data-theme', mode);
                   } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#0B0F1A');
+                    document.documentElement.setAttribute('data-theme', 'wimbledon');
+                  }
+                  var meta = document.getElementById('theme-color-meta');
+                  if (meta) {
+                    if (mode === 'hercules') meta.setAttribute('content', '#0a1628');
+                    else if (mode === 'original') meta.setAttribute('content', '#000000');
+                    else meta.setAttribute('content', '#000000');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
