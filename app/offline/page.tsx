@@ -1,9 +1,22 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { useTheme } from "@/components/theme/theme-provider";
 
 export default function OfflinePage() {
-  const { mode } = useTheme();
-  const bg = mode === "original" ? "#000000" : mode === "light" ? "#ffffff" : "#0B0F1A";
+  const [bg, setBg] = useState("#0B0F1A");
+
+  useEffect(() => {
+    try {
+      const mode = localStorage.getItem("hv-theme-mode");
+      if (mode === "light") setBg("#ffffff");
+      else if (mode === "original") setBg("#000000");
+      else setBg("#0B0F1A");
+    } catch {
+      setBg("#0B0F1A");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: bg }}>
       <div className="text-center space-y-4 max-w-sm">
