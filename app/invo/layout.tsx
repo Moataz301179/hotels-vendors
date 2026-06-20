@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 // ── Stripe Palette ──
 const BG_PAGE = "#f7f8fa";
@@ -39,12 +40,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="px-5 py-5 border-b" style={{ borderColor: BORDER }}>
           <Link href="/invo/dashboard" className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold"
-              style={{ backgroundColor: ACCENT, color: "#ffffff" }}
-            >
-              HV
-            </div>
+            <BrandLogo variant="light" size="xs" showText={false} forceColor="bw" />
             <div>
               <span className="text-sm font-semibold tracking-tight" style={{ color: TEXT_PRIMARY }}>
                 HotelsVendors

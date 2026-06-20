@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Palette } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useTheme } from "@/components/theme/theme-provider";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
@@ -11,8 +11,9 @@ export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
-  const { mode, toggleMode } = useTheme();
+  const { mode, cycleMode } = useTheme();
   const isLight = mode === "light";
+  const isOriginal = mode === "original";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -34,7 +35,9 @@ export function MarketingNav() {
         scrolled
           ? isLight
             ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-black/[0.06]"
-            : "bg-[#07090f]/95 backdrop-blur-md shadow-lg border-b border-white/[0.06]"
+            : isOriginal
+              ? "bg-[#000000]/95 backdrop-blur-md shadow-lg border-b border-white/[0.06]"
+              : "bg-[#07090f]/95 backdrop-blur-md shadow-lg border-b border-white/[0.06]"
           : "bg-transparent"
       }`}
     >
@@ -64,15 +67,15 @@ export function MarketingNav() {
         {/* Right actions */}
         <div className="hidden lg:flex items-center gap-2">
           <button
-            onClick={toggleMode}
+            onClick={cycleMode}
             className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
               isLight
                 ? "text-gray-400 hover:text-purple-700 hover:bg-purple-50"
                 : "text-white/40 hover:text-white hover:bg-white/[0.06]"
             }`}
-            aria-label="Toggle theme"
+            aria-label="Cycle theme"
           >
-            {isLight ? <Moon size={16} /> : <Sun size={16} />}
+            {isLight ? <Moon size={16} /> : isOriginal ? <Palette size={16} className="text-red-400" /> : <Sun size={16} />}
           </button>
 
           <Link
@@ -112,7 +115,7 @@ export function MarketingNav() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className={`lg:hidden backdrop-blur-md ${
-          isLight ? "bg-white/98 border-t border-black/[0.06]" : "bg-[#07090f]/98 border-t border-white/[0.04]"
+          isLight ? "bg-white/98 border-t border-black/[0.06]" : isOriginal ? "bg-[#000000]/98 border-t border-white/[0.06]" : "bg-[#07090f]/98 border-t border-white/[0.04]"
         }`}>
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
@@ -129,15 +132,15 @@ export function MarketingNav() {
             ))}
             <div className="pt-4 flex items-center gap-3 border-t" style={{ borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)" }}>
               <button
-                onClick={toggleMode}
+                onClick={cycleMode}
                 className={`flex items-center gap-2 px-4 py-2.5 text-[12px] font-medium rounded-lg border transition-colors ${
                   isLight
                     ? "border-gray-200 text-gray-500 hover:bg-purple-50"
                     : "border-white/10 text-white/40 hover:text-white hover:bg-white/5"
                 }`}
               >
-                {isLight ? <Moon size={14} /> : <Sun size={14} />}
-                {isLight ? "Dark" : "Light"}
+                {isLight ? <Moon size={14} /> : isOriginal ? <Palette size={14} className="text-red-400" /> : <Sun size={14} />}
+                {isLight ? "Dark" : isOriginal ? "Original" : "Light"}
               </button>
               <Link
                 href="/login"

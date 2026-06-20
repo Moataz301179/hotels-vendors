@@ -62,6 +62,8 @@ export async function executeLLM(
 
   const ollamaUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const openRouterModel = process.env.OPENROUTER_MODEL || "openrouter/owl-alpha";
 
   // Primary: Ollama (Local/VPS - Zero Cost)
   if (ollamaUrl) {
@@ -105,7 +107,51 @@ export async function executeLLM(
     }
   }
 
-  // No fallback — Ollama only
+  // Fallback: OpenRouter (free tier models)
+  if (openRouterKey) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${openRouterKey}`,
+          "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+          "X-Title": "HotelsVendors",
+        },
+        body: JSON.stringify({
+          model: openRouterModel,
+          messages,
+          temperature,
+          max_tokens: maxTokens,
+          response_format: jsonMode ? { type: "json_object" } : undefined,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (res.ok) {
+        const data = await res.json();
+        const content = data.choices?.[0]?.message?.content || "";
+        if (content.trim()) {
+          return {
+            content: content.trim(),
+            provider: "openrouter",
+            model: openRouterModel,
+            latencyMs: Date.now() - startTime,
+          };
+        }
+      }
+      console.error("[LLM Router] OpenRouter response not ok:", res.status);
+    } catch (e) {
+      console.error("[LLM Router] OpenRouter Error:", e);
+    }
+  }
+
+  // No provider available
   return {
     content: jsonMode ? "{}" : "Service unavailable.",
     provider: "none",

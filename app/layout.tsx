@@ -130,15 +130,19 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
+                  var mode = localStorage.getItem('hv-theme-mode') || 'original';
                   if (mode === 'light') {
                     document.documentElement.setAttribute('data-theme', 'light');
                     var meta = document.getElementById('theme-color-meta');
                     if (meta) meta.setAttribute('content', '#f8f9fa');
-                  } else {
-                    document.documentElement.removeAttribute('data-theme');
+                  } else if (mode === 'original') {
+                    document.documentElement.setAttribute('data-theme', 'original');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#121212');
+                    if (meta) meta.setAttribute('content', '#000000');
+                  } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    var meta = document.getElementById('theme-color-meta');
+                    if (meta) meta.setAttribute('content', '#0B0F1A');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

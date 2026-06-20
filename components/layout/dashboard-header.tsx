@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon, Palette } from "lucide-react";
 import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { useTheme } from "@/components/theme/theme-provider";
 
 interface UserData {
   id: string;
@@ -35,25 +36,10 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
   const { totalItems, toggleCart } = useCart();
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("hv-theme");
-    if (saved === "light" || saved === "dark") {
-      setTheme(saved);
-      document.documentElement.classList.toggle("light-mode", saved === "light");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("hv-theme", next);
-    document.documentElement.classList.toggle("light-mode", next === "light");
-  };
+  const { mode, cycleMode } = useTheme();
 
   return (
-    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#111827]/90 border-b border-white/[0.05]">
+    <header className={`h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] ${mode === "original" ? "bg-[#000000]/90" : "bg-[#111827]/90"}`}>
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
@@ -113,11 +99,12 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         </Link>
 
         <button
-          onClick={toggleTheme}
+          onClick={cycleMode}
           className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block"
-          aria-label="Toggle theme"
+          aria-label="Cycle theme"
+          title={`Theme: ${mode}`}
         >
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          {mode === "dark" ? <Sun size={18} /> : mode === "light" ? <Moon size={18} /> : <Palette size={18} className="text-red-400" />}
         </button>
 
         <button

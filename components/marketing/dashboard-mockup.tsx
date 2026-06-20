@@ -19,6 +19,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: true },
@@ -104,12 +105,9 @@ export function DashboardMockup() {
             className="w-[52px] flex-shrink-0 py-3 flex flex-col items-center gap-1"
             style={{ backgroundColor: "#080808", borderRight: "1px solid rgba(255,255,255,0.04)" }}
           >
-            {/* HV Logo */}
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
-              style={{ backgroundColor: "rgba(132,204,22,0.1)", border: "1px solid rgba(132,204,22,0.2)" }}
-            >
-              <span className="text-[10px]" style={{ color: "#FFB000", fontWeight: 700 }}>HV</span>
+            {/* Logo */}
+            <div className="mb-3">
+              <BrandLogo size="xs" showText={false} />
             </div>
 
             {sidebarItems.map((item) => (

@@ -17,6 +17,7 @@ import {
   X,
   LogOut,
 } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 interface DashboardShellProps {
   children: ReactNode;
@@ -84,22 +85,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
         {/* Logo */}
         <div style={{ padding: "16px 20px", borderBottom: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/dashboard" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                backgroundColor: ACCENT,
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 700,
-              }}
-            >
-              HV
-            </div>
+            <BrandLogo variant="light" size="xs" showText={false} forceColor="bw" />
             <div>
               <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>HotelsVendors</span>
               <span style={{ display: "block", fontSize: 10, fontWeight: 600, color: ACCENT, textTransform: "uppercase", letterSpacing: 0.06 }}>Dashboard</span>

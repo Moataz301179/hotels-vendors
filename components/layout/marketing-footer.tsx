@@ -24,7 +24,8 @@ const socialLinks = [
 export function MarketingFooter() {
   const { mode } = useTheme();
   const isLight = mode === "light";
-  const accent = "#FF6B00";
+  const isOriginal = mode === "original";
+  const accent = isOriginal ? "#ED1C24" : "#FF6B00";
   const secondary = "#00E5CC";
 
   return (
@@ -32,7 +33,7 @@ export function MarketingFooter() {
       className="border-t"
       style={{
         borderColor: isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.06)",
-        backgroundColor: isLight ? "#ffffff" : "#000000",
+        backgroundColor: isLight ? "#ffffff" : isOriginal ? "#000000" : "#0B0F1A",
       }}
     >
       <div className="mx-auto max-w-7xl px-8 pt-12 pb-8">

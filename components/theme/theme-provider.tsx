@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type AccentMode = "orange" | "lime";
-export type ThemeMode = "dark" | "light";
+export type ThemeMode = "dark" | "light" | "original";
 
 interface ThemeContextType {
   accent: AccentMode;
@@ -12,6 +12,7 @@ interface ThemeContextType {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
   toggleMode: () => void;
+  cycleMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -21,15 +22,18 @@ const ThemeContext = createContext<ThemeContextType>({
   mode: "dark",
   setMode: () => {},
   toggleMode: () => {},
+  cycleMode: () => {},
 });
 
 export function useTheme() {
   return useContext(ThemeContext);
 }
 
+const MODES: ThemeMode[] = ["dark", "light", "original"];
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [accent, setAccentState] = useState<AccentMode>("orange");
-  const [mode, setModeState] = useState<ThemeMode>("dark");
+  const [mode, setModeState] = useState<ThemeMode>("original");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -43,18 +47,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
 
     const savedMode = localStorage.getItem("hv-theme-mode") as ThemeMode | null;
-    if (savedMode === "light" || savedMode === "dark") {
+    if (savedMode === "light" || savedMode === "dark" || savedMode === "original") {
       setModeState(savedMode);
-      document.documentElement.setAttribute("data-mode", savedMode);
+      document.documentElement.setAttribute("data-theme", savedMode);
     } else {
-      document.documentElement.setAttribute("data-mode", "dark");
+      // Default to original theme
+      setModeState("original");
+      document.documentElement.setAttribute("data-theme", "original");
+      localStorage.setItem("hv-theme-mode", "original");
     }
   }, []);
 
-  const setAccent = (mode: AccentMode) => {
-    setAccentState(mode);
-    localStorage.setItem("hv-accent-mode", mode);
-    document.documentElement.setAttribute("data-accent", mode);
+  const setAccent = (m: AccentMode) => {
+    setAccentState(m);
+    localStorage.setItem("hv-accent-mode", m);
+    document.documentElement.setAttribute("data-accent", m);
   };
 
   const toggleAccent = () => {
@@ -65,11 +72,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setMode = (newMode: ThemeMode) => {
     setModeState(newMode);
     localStorage.setItem("hv-theme-mode", newMode);
-    document.documentElement.setAttribute("data-mode", newMode);
+    document.documentElement.setAttribute("data-theme", newMode);
   };
 
   const toggleMode = () => {
     const next = mode === "dark" ? "light" : "dark";
+    setMode(next);
+  };
+
+  const cycleMode = () => {
+    const idx = MODES.indexOf(mode);
+    const next = MODES[(idx + 1) % MODES.length];
     setMode(next);
   };
 
@@ -78,7 +91,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ThemeContext.Provider value={{ accent, setAccent, toggleAccent, mode, setMode, toggleMode }}>
+    <ThemeContext.Provider value={{ accent, setAccent, toggleAccent, mode, setMode, toggleMode, cycleMode }}>
       {children}
     </ThemeContext.Provider>
   );

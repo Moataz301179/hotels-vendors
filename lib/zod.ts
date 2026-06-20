@@ -279,3 +279,47 @@ export const PaginationSchema = z.object({
   sortBy: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
+
+/* ── Return Schemas ── */
+export const ReturnItemSchema = z.object({
+  orderItemId: z.string().cuid(),
+  quantity: z.number().int().positive(),
+  reason: z.enum(["DAMAGED", "WRONG_ITEM", "QUALITY_ISSUE", "OVER_DELIVERED", "EXPIRED", "NEAR_EXPIRY", "OTHER"]),
+  description: z.string().optional(),
+  evidenceUrls: z.string().optional(),
+});
+
+export const ReturnCreateSchema = z.object({
+  orderId: z.string().cuid(),
+  reason: z.enum(["DAMAGED", "WRONG_ITEM", "QUALITY_ISSUE", "OVER_DELIVERED", "EXPIRED", "NEAR_EXPIRY", "OTHER"]),
+  description: z.string().optional(),
+  evidenceUrls: z.string().optional(),
+  items: z.array(ReturnItemSchema).min(1, "At least one item is required"),
+});
+
+export const ReturnResolveSchema = z.object({
+  resolution: z.enum(["FULL_RETURN", "PARTIAL_RETURN", "REPLACEMENT", "CREDIT_NOTE", "REFUND", "REJECTED"]),
+  itemActions: z.array(z.object({
+    returnItemId: z.string().cuid(),
+    action: z.enum(["APPROVE", "REJECT", "PARTIAL_APPROVE"]),
+    approvedQuantity: z.number().int().min(0).optional(),
+    rejectedReason: z.string().optional(),
+  })).optional(),
+  notes: z.string().optional(),
+});
+
+/* ── Delivery Confirmation Schemas ── */
+export const OtpGenerateSchema = z.object({
+  deliveryJobId: z.string().cuid(),
+  receiverPhone: z.string().min(10),
+  receiverName: z.string().optional(),
+  deliveryChannel: z.enum(["SMS", "WHATSAPP", "EMAIL"]).default("SMS"),
+});
+
+export const DeliveryConfirmSchema = z.object({
+  deliveryJobId: z.string().cuid(),
+  otpCode: z.string().length(6),
+  podPhotoUrl: z.string().optional(),
+  signatureUrl: z.string().optional(),
+  notes: z.string().optional(),
+});

@@ -16,6 +16,9 @@ const PRECACHE_URLS = [
   "/login",
   "/hotel",
   "/hotel/catalog",
+  "/scanner",
+  "/returns",
+  "/deliveries",
   OFFLINE_PAGE,
 ];
 

@@ -5,8 +5,8 @@
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#121212",
-  "background_color": "#121212",
+  "theme_color": "#000000",
+  "background_color": "#000000",
   "categories": ["business", "productivity", "finance"],
   "lang": "en",
   "dir": "ltr",
@@ -56,6 +56,20 @@
       "short_name": "Login",
       "description": "Sign in to your account",
       "url": "/login",
+      "icons": [{ "src": "/logo-icon-white.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Scanner",
+      "short_name": "Scanner",
+      "description": "Scan product barcodes",
+      "url": "/scanner",
+      "icons": [{ "src": "/logo-icon-white.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Deliveries",
+      "short_name": "Deliveries",
+      "description": "View and confirm deliveries",
+      "url": "/deliveries",
       "icons": [{ "src": "/logo-icon-white.png", "sizes": "192x192" }]
     }
   ]

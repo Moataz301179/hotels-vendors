@@ -143,6 +143,61 @@
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   ORIGINAL THEME — Pure OLED Black + Brand Identity Colors
+   Background: #000000 (true OLED black)
+   Accent: #ED1C24 (HotelsVendors red)
+   Text: #ffffff on pure black
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="original"] {
+  --bg-canvas: #000000;
+  --bg-surface-1: #0a0a0a;
+  --bg-surface-2: #111111;
+  --bg-surface-3: #1a1a1a;
+
+  --background: #000000;
+  --surface: #0a0a0a;
+  --surface-raised: #111111;
+  --surface-hover: #1a1a1a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --text-muted: #5a5a5a;
+  --text-inverse: #000000;
+
+  --foreground: #ffffff;
+  --foreground-secondary: #b0b0b0;
+  --foreground-tertiary: #808080;
+  --foreground-muted: #5a5a5a;
+
+  --border-invisible: rgba(255, 255, 255, 0.03);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-visible: rgba(255, 255, 255, 0.10);
+  --border-accent: rgba(237, 28, 36, 0.35);
+
+  /* Brand red accent */
+  --accent-base: #ED1C24;
+  --accent-light: #FF3333;
+  --accent-dark: #CC1820;
+  --accent-muted: rgba(237, 28, 36, 0.12);
+  --accent-glow: rgba(237, 28, 36, 0.18);
+  --accent-text: #ffffff;
+
+  --emerald-base: #10B981;
+  --emerald-light: #34D399;
+  --emerald-muted: rgba(16, 185, 129, 0.10);
+
+  --error: #EF4444;
+  --success: #22C55E;
+  --warning: #EAB308;
+  --info: #3B82F6;
+
+  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.8);
+  --shadow-glow-accent: 0 0 40px rgba(237, 28, 36, 0.1);
+  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg-canvas);
@@ -171,7 +226,7 @@ body {
 
 /* ── Gradient text ── */
 .text-gradient-accent {
-  background: linear-gradient(135deg, #FFB000 0%, #FFC233 100%);
+  background: linear-gradient(135deg, var(--accent-base) 0%, var(--accent-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
