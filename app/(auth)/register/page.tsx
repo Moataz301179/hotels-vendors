@@ -81,7 +81,7 @@ const SECTORS = [
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#000000" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0B0F1A" }}>
       <MarketingNav />
 
       <div className="flex-1 px-6 py-24">
@@ -102,7 +102,7 @@ export default function RegisterPage() {
             transition={{ delay: 0.1 }}
             className="text-center mb-12"
           >
-            <h1 className="text-[28px] md:text-[36px] font-medium text-white mb-3">
+            <h1 className="text-[20px] md:text-[24px] font-medium text-white mb-3">
               Choose Your Role
             </h1>
             <p className="text-[14px] text-white/40 max-w-lg mx-auto">
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                     href={`/register/${sector.key}`}
                     className="block rounded-2xl p-6 h-full transition-all group hover:scale-[1.02]"
                     style={{
-                      backgroundColor: "#0a0a0a",
+                      backgroundColor: "#0F1320",
                       border: "1px solid rgba(255,255,255,0.06)",
                     }}
                   >

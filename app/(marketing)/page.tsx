@@ -16,7 +16,6 @@ import {
   Zap,
   Clock,
   CheckCircle2,
-  TrendingUp,
   CheckCircle,
   Shield,
   Sparkles,
@@ -35,9 +34,10 @@ import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Single source of truth for this page
-   Accent: #FFB000 (neon orange) · Secondary: #00E5FF (turquoise)
-   Background: #0B0F1A · Surfaces: #0F1320 → #141828 → #1C2032
+   DESIGN SYSTEM — B2B Enterprise SaaS
+   Primary: #0F172A (navy) · Accent: #0369A1 (enterprise blue)
+   CTA: #FFB000 (amber) · Secondary: #00E5FF (turquoise)
+   Background: #0B0F1A · Surfaces: #0F1320 → #141828
    ═══════════════════════════════════════════════════════════════ */
 
 const accent = "#FFB000";
@@ -45,21 +45,22 @@ const accentMuted = "rgba(255,176,0,0.10)";
 const accentBorder = "rgba(255,176,0,0.25)";
 const turquoise = "#00E5FF";
 const turquoiseMuted = "rgba(0,229,255,0.10)";
+const enterpriseBlue = "#0369A1";
 const surface1 = "#0F1320";
 const surface2 = "#141828";
 const borderSubtle = "rgba(255,255,255,0.06)";
 const borderVisible = "rgba(255,255,255,0.10)";
 
-/* ─── Reveal animation ─── */
+/* ─── Reveal animation (respects reduced-motion) ─── */
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -92,10 +93,10 @@ function Stat({ end, suffix = "", prefix = "", label }: { end: number; suffix?: 
   const count = useCounter(end, 2200, active);
   return (
     <div ref={ref} className="text-center">
-      <div className="text-[24px] md:text-[28px] font-medium tracking-tight text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
+      <div className="text-[22px] md:text-[26px] font-medium tracking-tight text-white" style={{ fontVariantNumeric: "tabular-nums" }}>
         {prefix}{count.toLocaleString()}{suffix}
       </div>
-      <div className="text-[12px] text-white/40 mt-1 uppercase tracking-[0.08em]">{label}</div>
+      <div className="text-[11px] text-white/40 mt-1 uppercase tracking-[0.08em]">{label}</div>
     </div>
   );
 }
@@ -194,74 +195,86 @@ export default function HomePage() {
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════════════════════
-          HERO
+          HERO — Brand-centric, enterprise-grade
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-24 overflow-hidden">
-        {/* Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full pointer-events-none" style={{ background: `radial-gradient(ellipse, ${accentMuted} 0%, transparent 70%)` }} />
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden">
+        {/* Subtle glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full pointer-events-none opacity-60" style={{ background: `radial-gradient(ellipse, ${accentMuted} 0%, transparent 70%)` }} />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6">
-          {/* Brand lockup — centered */}
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          {/* Brand lockup — centered, logo left + text right */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center mb-8"
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center gap-6 mb-8"
           >
             <BrandLogo variant="dark" size="xxl" />
           </motion.div>
 
-          {/* Subtitle */}
+          {/* Value proposition — single clear line */}
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="text-[13px] md:text-[14px] text-white/45 max-w-xl mx-auto text-center mb-8 leading-relaxed"
-          >
-            Egypt&apos;s B2B hospitality procurement platform — AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure for coastal hotels and their supply chain.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-[13px] md:text-[14px] text-white/50 max-w-lg mx-auto text-center mb-8 leading-relaxed"
+          >
+            Egypt&apos;s B2B hospitality procurement platform — AI-powered purchasing, verified supplier marketplace, and embedded financial infrastructure for coastal hotels.
+          </motion.p>
+
+          {/* CTAs — primary + secondary */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-3 justify-center mb-8"
           >
-            <button onClick={() => setWizardOpen(true)} className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:opacity-90 cursor-pointer" style={{ background: accent, color: "#0B0F1A" }}>
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg transition-all hover:opacity-90 cursor-pointer"
+              style={{ background: accent, color: "#0B0F1A" }}
+            >
               Get Started Free
-              <ArrowRight size={15} />
+              <ArrowRight size={14} />
             </button>
-            <Link href="/sandbox" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-medium rounded-xl border transition-all hover:bg-white/[0.04]" style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}>
-              <Play size={14} />
+            <Link
+              href="/sandbox"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg border transition-all hover:bg-white/[0.04]"
+              style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}
+            >
+              <Play size={13} />
               Explore Sandbox
             </Link>
           </motion.div>
 
-          {/* Trust pills */}
+          {/* Trust badges — compact row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-2.5"
+            transition={{ delay: 0.35 }}
+            className="flex flex-wrap justify-center gap-2"
           >
-            {[
-              "ETA E-Invoicing",
-              "FRA Compliant",
-              "Bank-Grade Security",
-              "Free to Start",
-            ].map((label) => (
-              <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-medium text-white/35" style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
+            {["ETA E-Invoicing", "FRA Compliant", "Bank-Grade Security", "Free to Start"].map((label) => (
+              <span
+                key={label}
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium text-white/35"
+                style={{ border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}
+              >
                 {label}
               </span>
             ))}
           </motion.div>
 
-          {/* Scroll */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="mt-12 flex justify-center">
-            <a href="#layers" className="flex flex-col items-center gap-1.5 text-white/20 hover:text-white/40 transition-colors">
-              <span className="text-[10px] tracking-[0.15em] uppercase">Explore the Platform</span>
-              <ChevronDown size={14} className="animate-bounce" />
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-10 flex justify-center"
+          >
+            <a href="#layers" className="flex flex-col items-center gap-1 text-white/20 hover:text-white/40 transition-colors">
+              <span className="text-[9px] tracking-[0.15em] uppercase">Explore</span>
+              <ChevronDown size={13} className="animate-bounce" />
             </a>
           </motion.div>
         </div>
@@ -273,42 +286,41 @@ export default function HomePage() {
       <MarketTicker />
 
       {/* ═══════════════════════════════════════════════════════════
-          STATS — Single clean row
+          STATS — Compact row
           ═══════════════════════════════════════════════════════════ */}
-      <section className="py-20 border-y" style={{ borderColor: borderSubtle }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6">
+      <section className="py-14 border-y" style={{ borderColor: borderSubtle }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
             <Stat end={680} suffix="+" label="Verified Suppliers" />
             <Stat end={94} suffix="%" label="Forecast Accuracy" />
             <Stat end={48} suffix="h" label="Supplier Settlement" />
-            <Stat end={40} suffix="%" label="Logistics Cost Reduction" />
+            <Stat end={40} suffix="%" label="Cost Reduction" />
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════
-          THREE-LAYER ARCHITECTURE — The core section
+          THREE-LAYER ARCHITECTURE
           ═══════════════════════════════════════════════════════════ */}
-      <section id="layers" className="py-24 md:py-32">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section header */}
+      <section id="layers" className="py-20 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
+            <div className="text-center mb-12">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: accent }}>
                 Three-Layer Architecture
               </span>
-              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
                 Built for Every Stakeholder
               </h2>
-              <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed">
-                Each layer serves a distinct role — connected by AI agents, shared settlement, and cryptographic compliance. Together, they form Egypt&apos;s hospitality procurement infrastructure.
+              <p className="text-[13px] text-white/40 max-w-md mx-auto leading-relaxed">
+                Each layer serves a distinct role — connected by AI agents, shared settlement, and cryptographic compliance.
               </p>
             </div>
           </Reveal>
 
-          {/* Layer cards — 3-up grid, clean */}
+          {/* Layer cards */}
           <Reveal>
-            <div className="grid md:grid-cols-3 gap-4 mb-16">
+            <div className="grid md:grid-cols-3 gap-3 mb-12">
               {layers.map((layer, i) => {
                 const Icon = layer.icon;
                 const isActive = activeLayer === i;
@@ -316,28 +328,28 @@ export default function HomePage() {
                   <button
                     key={layer.key}
                     onClick={() => setActiveLayer(i as 0 | 1 | 2)}
-                    className="text-left rounded-2xl p-6 transition-all cursor-pointer"
+                    className="text-left rounded-xl p-5 transition-all cursor-pointer"
                     style={{
                       background: isActive ? surface2 : surface1,
-                      border: `1px solid ${isActive ? "rgba(255,255,255,0.12)" : borderSubtle}`,
+                      border: `1px solid ${isActive ? "rgba(255,255,255,0.10)" : borderSubtle}`,
                     }}
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                        <Icon size={20} className="text-white/60" />
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                        <Icon size={16} className="text-white/60" />
                       </div>
                       <div>
-                        <h3 className="text-[15px] font-semibold text-white">{layer.title}</h3>
-                        <p className="text-[11px] font-medium text-white/30">{layer.tagline}</p>
+                        <h3 className="text-[13px] font-medium text-white">{layer.title}</h3>
+                        <p className="text-[10px] font-medium text-white/30">{layer.tagline}</p>
                       </div>
                     </div>
-                    <p className="text-[13px] text-white/40 leading-relaxed mb-4">{layer.desc}</p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <p className="text-[12px] text-white/40 leading-relaxed mb-3">{layer.desc}</p>
+                    <div className="flex flex-wrap gap-1">
                       {(i === 0 ? ["AI Forecasting", "ETA Compliance", "Factoring"] :
                         i === 1 ? ["680+ Suppliers", "24h Onboarding", "API Sync"] :
                         ["48h Payout", "Multi-Funder", "FRA Compliant"]
                       ).map((tag) => (
-                        <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-medium text-white/30" style={{ background: "rgba(255,255,255,0.04)" }}>
+                        <span key={tag} className="px-1.5 py-0.5 rounded text-[9px] font-medium text-white/30" style={{ background: "rgba(255,255,255,0.03)" }}>
                           {tag}
                         </span>
                       ))}
@@ -348,42 +360,46 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          {/* Active layer detail — side by side */}
+          {/* Active layer detail */}
           <AnimatePresence mode="wait">
             <motion.div
               key={active.key}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.35 }}
-              className="grid md:grid-cols-2 gap-10 items-center"
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+              className="grid md:grid-cols-2 gap-8 items-center"
             >
               <div>
-                <div className="flex items-center gap-2 mb-5">
-                  <active.icon size={20} style={{ color: active.color }} />
-                  <span className="text-[12px] font-medium uppercase tracking-[0.1em]" style={{ color: active.color }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <active.icon size={16} style={{ color: active.color }} />
+                  <span className="text-[10px] font-medium uppercase tracking-[0.1em]" style={{ color: active.color }}>
                     {active.title} · {active.tagline}
                   </span>
                 </div>
-                <h3 className="text-[18px] md:text-[22px] font-medium text-white mb-4 leading-tight">
+                <h3 className="text-[16px] md:text-[20px] font-medium text-white mb-3 leading-tight">
                   {activeLayer === 0 ? "The Checkout & Payments Brain" :
                    activeLayer === 1 ? "The B2B Procurement Marketplace" :
                    "The Financial Infrastructure Layer"}
                 </h3>
-                <p className="text-[14px] text-white/45 leading-relaxed mb-8">{active.desc}</p>
-                <ul className="space-y-3 mb-8">
+                <p className="text-[13px] text-white/45 leading-relaxed mb-6">{active.desc}</p>
+                <ul className="space-y-2.5 mb-6">
                   {active.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-[13px] text-white/60">
-                      <CheckCircle2 size={16} className="mt-0.5 shrink-0" style={{ color: active.color }} />
+                    <li key={f} className="flex items-start gap-2 text-[12px] text-white/55">
+                      <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: active.color }} />
                       {f}
                     </li>
                   ))}
                 </ul>
-                <Link href={active.cta.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:opacity-90" style={{ background: active.color, color: activeLayer === 1 ? "#0B0F1A" : "#ffffff" }}>
-                  {active.cta.label} <ArrowRight size={14} />
+                <Link
+                  href={active.cta.href}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-medium rounded-lg transition-all hover:opacity-90"
+                  style={{ background: active.color, color: activeLayer === 1 ? "#0B0F1A" : "#ffffff" }}
+                >
+                  {active.cta.label} <ArrowRight size={13} />
                 </Link>
               </div>
-              <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${borderVisible}` }}>
+              <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${borderVisible}` }}>
                 <active.dashboard />
               </div>
             </motion.div>
@@ -391,87 +407,44 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Divider */}
-      <hr className="section-divider" />
+      <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
 
       {/* ═══════════════════════════════════════════════════════════
-          HOW IT WORKS — 4 steps, clean horizontal
+          HOW IT WORKS — 4 steps
           ═══════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-5xl mx-auto px-6">
+      <section className="py-20 md:py-24">
+        <div className="max-w-4xl mx-auto px-6">
           <Reveal>
-            <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: turquoise }}>
+            <div className="text-center mb-12">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: turquoise }}>
                 How It Works
               </span>
-              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
                 From Forecast to Settlement
               </h2>
-              <p className="text-[15px] text-white/40 max-w-lg mx-auto">
+              <p className="text-[13px] text-white/40 max-w-md mx-auto">
                 No subscription. No setup cost. AI agents guide you from registration to your first compliant transaction.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-4">
             {[
               { step: "01", title: "Join Free", desc: "Register in minutes. AI-guided onboarding, no paperwork, no credit card.", icon: Building2 },
               { step: "02", title: "Discover & Order", desc: "Browse 680+ verified suppliers on INVO. AI-powered matching and real-time catalogs.", icon: Store },
               { step: "03", title: "Checkout & Pay", desc: "Multi-gateway payments, ETA-compliant invoicing, AI spend forecasting.", icon: BrainCircuit },
               { step: "04", title: "Settle in 48h", desc: "Suppliers request reverse factoring. Competitive bidding. Bank-direct disbursement.", icon: Banknote },
-            ].map((item, i) => (
-              <Reveal key={item.step} delay={i * 0.1}>
-                <div className="rounded-2xl p-6 h-full" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
-                  <div className="text-[11px] font-medium text-white/20 mb-3 uppercase tracking-wider">Step {item.step}</div>
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                    <item.icon size={18} className="text-white/40" />
-                  </div>
-                  <h3 className="text-[15px] font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-[12px] text-white/35 leading-relaxed">{item.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <hr className="section-divider" />
-
-      {/* ═══════════════════════════════════════════════════════════
-          PLATFORM CAPABILITIES — 6 pillars, bento-style
-          ═══════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-32" style={{ background: "#080B14" }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <Reveal>
-            <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: turquoise }}>
-                Platform Capabilities
-              </span>
-              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
-                Six Infrastructure Pillars
-              </h2>
-            </div>
-          </Reveal>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns.", color: turquoise },
-              { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation.", color: turquoise },
-              { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching.", color: turquoise },
-              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 48 hours.", color: turquoise },
-              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail.", color: turquoise },
-              { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor.", color: turquoise },
-            ].map((f, i) => {
-              const Icon = f.icon;
+            ].map((item, i) => {
+              const StepIcon = item.icon;
               return (
-                <Reveal key={f.title} delay={i * 0.06}>
-                  <div className="rounded-2xl p-6 h-full transition-all hover:-translate-y-1" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: turquoiseMuted }}>
-                      <Icon size={20} style={{ color: turquoise }} />
+                <Reveal key={item.step} delay={i * 0.08}>
+                  <div className="rounded-xl p-5 h-full" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
+                    <div className="text-[10px] font-medium text-white/20 mb-2 uppercase tracking-wider">Step {item.step}</div>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
+                      <StepIcon size={15} className="text-white/40" />
                     </div>
-                    <h3 className="text-[14px] font-semibold text-white mb-2">{f.title}</h3>
-                    <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
+                    <h3 className="text-[13px] font-medium text-white mb-1.5">{item.title}</h3>
+                    <p className="text-[11px] text-white/35 leading-relaxed">{item.desc}</p>
                   </div>
                 </Reveal>
               );
@@ -480,49 +453,94 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Divider */}
-      <hr className="section-divider" />
+      <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
 
       {/* ═══════════════════════════════════════════════════════════
-          TRUST & SECURITY — Consolidated, not scattered
+          PLATFORM CAPABILITIES — 6 pillars
           ═══════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-6xl mx-auto px-6">
+      <section className="py-20 md:py-24" style={{ background: "#080B14" }}>
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <div className="text-center mb-16">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
+            <div className="text-center mb-12">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: turquoise }}>
+                Platform Capabilities
+              </span>
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
+                Six Infrastructure Pillars
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions analyzing occupancy curves, booked events, and historical consumption patterns." },
+              { icon: Receipt, title: "ETA E-Invoicing V2", desc: "Native Egyptian Tax Authority API pipeline. RSA 2048-bit digital signing with cryptographic UUID validation." },
+              { icon: Truck, title: "Shared-Route Logistics", desc: "AI-driven route consolidation across 6 governorates. Up to 40% cost reduction via intelligent multi-supplier load matching." },
+              { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Competitive bidding among 4+ licensed grantors. Non-recourse, bank-direct settlement. Suppliers paid in 48 hours." },
+              { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Mandatory three-way matching: PO + ETA UUID + Signed Digital Delivery Note. SHA-256 cryptographic audit trail." },
+              { icon: BarChart3, title: "Cost Control Engine", desc: "Real-time spend analysis, anomaly detection, and budget optimization across every property, department, and vendor." },
+            ].map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <Reveal key={f.title} delay={i * 0.05}>
+                  <div className="rounded-xl p-5 h-full transition-all hover:-translate-y-0.5" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: turquoiseMuted }}>
+                      <Icon size={16} style={{ color: turquoise }} />
+                    </div>
+                    <h3 className="text-[12px] font-medium text-white mb-1.5">{f.title}</h3>
+                    <p className="text-[11px] text-white/35 leading-relaxed">{f.desc}</p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
+
+      {/* ═══════════════════════════════════════════════════════════
+          TRUST & SECURITY
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <Reveal>
+            <div className="text-center mb-12">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: accent }}>
                 Security & Compliance
               </span>
-              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
                 Bank-Grade Security
               </h2>
-              <p className="text-[15px] text-white/40 max-w-xl mx-auto">
+              <p className="text-[13px] text-white/40 max-w-md mx-auto">
                 Every transaction, every invoice, every data point — protected by cryptographic standards trusted by Egypt&apos;s financial institutions.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
             {[
               { icon: Shield, title: "ETA Phase 1 & 2 Compliant", desc: "Full integration with Egyptian Tax Authority e-invoicing pipeline. RSA 2048-bit digital signing, UUID validation.", color: turquoise },
               { icon: ShieldCheck, title: "FRA Anti-Fraud Framework", desc: "Three-way matching (PO + UUID + Delivery Note), SHA-256 audit trails, real-time fraud detection.", color: accent },
-              { icon: Zap, title: "AES-256-GCM Encryption", desc: "All data at rest encrypted. Keys rotated every 90 days. TLS 1.3 in transit.", color: "#3B82F6" },
+              { icon: Zap, title: "AES-256-GCM Encryption", desc: "All data at rest encrypted. Keys rotated every 90 days. TLS 1.3 in transit.", color: enterpriseBlue },
               { icon: CheckCircle, title: "ISO 27001 Aligned", desc: "Information security management aligned with ISO 27001. Regular third-party audits.", color: "#A855F7" },
               { icon: Clock, title: "Data Residency — Egypt", desc: "All tenant data hosted on servers within Egypt. No data leaves Egyptian jurisdiction.", color: turquoise },
               { icon: Banknote, title: "Tenant Data Isolation", desc: "Each hotel/supplier/funder in fully isolated data scope. Cross-tenant access is architecturally impossible.", color: accent },
             ].map((cert, i) => {
               const Icon = cert.icon;
               return (
-                <Reveal key={cert.title} delay={i * 0.06}>
-                  <div className="rounded-2xl p-6 h-full" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: cert.color + "15" }}>
-                        <Icon size={18} style={{ color: cert.color }} />
+                <Reveal key={cert.title} delay={i * 0.05}>
+                  <div className="rounded-xl p-5 h-full" style={{ background: surface1, border: `1px solid ${borderSubtle}` }}>
+                    <div className="flex items-center gap-2.5 mb-2.5">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: cert.color + "12" }}>
+                        <Icon size={14} style={{ color: cert.color }} />
                       </div>
-                      <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider" style={{ background: cert.color + "15", color: cert.color }}>Active</span>
+                      <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full uppercase tracking-wider" style={{ background: cert.color + "12", color: cert.color }}>
+                        Active
+                      </span>
                     </div>
-                    <h3 className="text-[13px] font-semibold text-white/80 mb-2">{cert.title}</h3>
-                    <p className="text-[12px] text-white/40 leading-relaxed">{cert.desc}</p>
+                    <h3 className="text-[12px] font-medium text-white/80 mb-1.5">{cert.title}</h3>
+                    <p className="text-[11px] text-white/40 leading-relaxed">{cert.desc}</p>
                   </div>
                 </Reveal>
               );
@@ -531,8 +549,8 @@ export default function HomePage() {
 
           {/* Legal disclaimer */}
           <Reveal>
-            <div className="rounded-xl p-5 text-center" style={{ background: accentMuted, border: `1px solid ${accentBorder}` }}>
-              <p className="text-[12px] text-white/50 leading-relaxed">
+            <div className="rounded-lg p-4 text-center" style={{ background: accentMuted, border: `1px solid ${accentBorder}` }}>
+              <p className="text-[11px] text-white/50 leading-relaxed">
                 <strong style={{ color: accent }}>Restaurants for E-Marketing</strong> operates as a{" "}
                 <strong className="text-white/60">technical data orchestrator</strong> — not a bank, not a payment service provider, not a factoring company.
                 All financial flows are processed through licensed institutions. Zero liability for counterparty collection defaults.
@@ -542,33 +560,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Divider */}
-      <hr className="section-divider" />
+      <hr style={{ borderColor: borderSubtle, borderTop: "1px solid", margin: 0 }} />
 
       {/* ═══════════════════════════════════════════════════════════
-          CTA — Single focused conversion section
+          CTA — Single focused conversion
           ═══════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, ${accentMuted} 0%, transparent 70%)` }} />
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
+      <section className="py-20 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-40" style={{ background: `radial-gradient(ellipse at center, ${accentMuted} 0%, transparent 70%)` }} />
+        <div className="max-w-2xl mx-auto px-6 text-center relative">
           <Reveal>
-            <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-5">
-              Stop Managing Procurement
-              <br />
-              in Spreadsheets
+            <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-4">
+              Stop Managing Procurement in Spreadsheets
             </h2>
-            <p className="text-[15px] text-white/40 mb-10 max-w-lg mx-auto leading-relaxed">
+            <p className="text-[13px] text-white/40 mb-8 max-w-md mx-auto leading-relaxed">
               AI-automated procurement. Cashflow optimization. Cryptographic ETA compliance. All in one platform — free to start.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button onClick={() => setWizardOpen(true)} className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-semibold rounded-xl transition-all hover:opacity-90 cursor-pointer" style={{ background: accent, color: "#0B0F1A" }}>
-                Get Started Free <ArrowRight size={16} />
+              <button
+                onClick={() => setWizardOpen(true)}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg transition-all hover:opacity-90 cursor-pointer"
+                style={{ background: accent, color: "#0B0F1A" }}
+              >
+                Get Started Free <ArrowRight size={14} />
               </button>
-              <Link href="/sandbox" className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-medium rounded-xl border transition-all hover:bg-white/[0.04]" style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}>
-                <Sparkles size={14} /> Explore Sandbox
+              <Link
+                href="/sandbox"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-medium rounded-lg border transition-all hover:bg-white/[0.04]"
+                style={{ borderColor: borderVisible, color: "rgba(255,255,255,0.6)" }}
+              >
+                <Sparkles size={13} /> Explore Sandbox
               </Link>
             </div>
-            <p className="text-[11px] text-white/25 mt-6">No credit card required · Free to start · Dedicated onboarding</p>
+            <p className="text-[10px] text-white/25 mt-5">No credit card required · Free to start · Dedicated onboarding</p>
           </Reveal>
         </div>
       </section>
@@ -576,14 +599,14 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           FAQ
           ═══════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-32 border-t" style={{ borderColor: borderSubtle, background: "#060810" }}>
-        <div className="max-w-4xl mx-auto px-6">
+      <section className="py-20 md:py-24 border-t" style={{ borderColor: borderSubtle, background: "#060810" }}>
+        <div className="max-w-3xl mx-auto px-6">
           <Reveal>
-            <div className="text-center mb-14">
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: accent }}>
+            <div className="text-center mb-10">
+              <span className="text-[10px] font-medium uppercase tracking-[0.15em] mb-2 block" style={{ color: accent }}>
                 FAQ
               </span>
-              <h2 className="text-[20px] md:text-[24px] font-medium tracking-tight text-white mb-4">
+              <h2 className="text-[18px] md:text-[22px] font-medium tracking-tight text-white mb-3">
                 Frequently Asked Questions
               </h2>
             </div>
