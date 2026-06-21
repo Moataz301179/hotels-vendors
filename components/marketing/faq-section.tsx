@@ -144,13 +144,13 @@ export function FAQSection() {
             className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all"
             style={{
               backgroundColor: activeCategory === cat
-                ? (isLight ? "#581c87" : "#FFB000")
+                ? (isLight ? "#581c87" : "#FF6B00")
                 : (isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"),
               color: activeCategory === cat
                 ? "#ffffff"
                 : (isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.4)"),
               border: `1px solid ${activeCategory === cat
-                ? (isLight ? "#581c87" : "#FFB000")
+                ? (isLight ? "#581c87" : "#FF6B00")
                 : (isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)")}`,
             }}
           >
@@ -171,7 +171,7 @@ export function FAQSection() {
                 backgroundColor: isLight ? "#ffffff" : "rgba(255,255,255,0.02)",
                 border: `1px solid ${isLight
                   ? (isOpen ? "rgba(88,28,135,0.2)" : "rgba(0,0,0,0.06)")
-                  : (isOpen ? "rgba(255,176,0,0.2)" : "rgba(255,255,255,0.06)")}`,
+                  : (isOpen ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.06)")}`,
               }}
             >
               <button
@@ -182,8 +182,8 @@ export function FAQSection() {
                   <span
                     className="text-[10px] font-medium px-2 py-0.5 rounded"
                     style={{
-                      backgroundColor: isLight ? "rgba(88,28,135,0.08)" : "rgba(255,176,0,0.08)",
-                      color: isLight ? "#581c87" : "#FFB000",
+                      backgroundColor: isLight ? "rgba(88,28,135,0.08)" : "rgba(255,107,0,0.08)",
+                      color: isLight ? "#581c87" : "#FF6B00",
                     }}
                   >
                     {faq.category}
@@ -195,7 +195,7 @@ export function FAQSection() {
                 <ChevronDown
                   size={16}
                   className={`shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
-                  style={{ color: isLight ? "#581c87" : "#FFB000" }}
+                  style={{ color: isLight ? "#581c87" : "#FF6B00" }}
                 />
               </button>
 

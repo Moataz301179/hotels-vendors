@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const kpiCards = [
-  { label: "Open POs", value: "18", change: "+4 wk", up: true, color: "#FFB000" },
+  { label: "Open POs", value: "18", change: "+4 wk", up: true, color: "#FF6B00" },
   { label: "Pending Invoices", value: "EGP 847K", change: "12 invoices", up: false, color: "#3B82F6" },
   { label: "Active Deliveries", value: "7", change: "ETA: 2 today", up: true, color: "#D4A843" },
   { label: "Factored MTD", value: "EGP 1.2M", change: "+32% MoM", up: true, color: "#22C55E" },
@@ -20,7 +20,7 @@ const chartLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Se
 
 const activityFeed = [
   { icon: CheckCircle2, text: "PO #INVO-0421 approved — Steigenberger El Gouna", time: "12 min ago", color: "#22C55E" },
-  { icon: Receipt, text: "Invoice #HV-00419 validated — ETA UUID confirmed", time: "1 hr ago", color: "#FFB000" },
+  { icon: Receipt, text: "Invoice #HV-00419 validated — ETA UUID confirmed", time: "1 hr ago", color: "#FF6B00" },
   { icon: Truck, text: "Delivery #DLV-033 arrived at Jaz Almaza Resort", time: "2 hr ago", color: "#3B82F6" },
   { icon: Banknote, text: "Settlement EGP 243K released — 24h factoring", time: "3 hr ago", color: "#D4A843" },
 ];
@@ -71,7 +71,7 @@ export function HotelDashboardMockup() {
                 <Bell size={10} style={{ color: "rgba(255,255,255,0.25)" }} />
               </div>
               <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(132,204,22,0.15)" }}>
-                <span className="text-[7px]" style={{ color: "#FFB000", fontWeight: 700 }}>AM</span>
+                <span className="text-[7px]" style={{ color: "#FF6B00", fontWeight: 700 }}>AM</span>
               </div>
             </div>
           </div>
@@ -99,7 +99,7 @@ export function HotelDashboardMockup() {
               </div>
               <div className="flex items-end gap-[3px] h-12">
                 {chartBars.map((h, i) => (
-                  <div key={i} className="flex-1 rounded-t-sm transition-all duration-300 hover:opacity-100" style={{ height: `${h}%`, backgroundColor: i === chartBars.length - 1 ? "#FFB000" : "rgba(132,204,22,0.12)", opacity: i === chartBars.length - 1 ? 1 : 0.6 }} />
+                  <div key={i} className="flex-1 rounded-t-sm transition-all duration-300 hover:opacity-100" style={{ height: `${h}%`, backgroundColor: i === chartBars.length - 1 ? "#FF6B00" : "rgba(132,204,22,0.12)", opacity: i === chartBars.length - 1 ? 1 : 0.6 }} />
                 ))}
               </div>
               <div className="flex justify-between mt-1.5">
@@ -126,13 +126,13 @@ export function HotelDashboardMockup() {
             <div className="flex items-center gap-3">
               {[{ label: "Forecast", status: "done" }, { label: "PO Sent", status: "done" }, { label: "Invoice", status: "active" }, { label: "Delivery", status: "pending" }, { label: "Settled", status: "pending" }].map((step, i) => (
                 <div key={step.label} className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: step.status === "done" ? "#22C55E" : step.status === "active" ? "#FFB000" : "rgba(255,255,255,0.1)" }} />
-                  <span className="text-[7px]" style={{ color: step.status === "done" ? "rgba(255,255,255,0.4)" : step.status === "active" ? "#FFB000" : "rgba(255,255,255,0.15)" }}>{step.label}</span>
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: step.status === "done" ? "#22C55E" : step.status === "active" ? "#FF6B00" : "rgba(255,255,255,0.1)" }} />
+                  <span className="text-[7px]" style={{ color: step.status === "done" ? "rgba(255,255,255,0.4)" : step.status === "active" ? "#FF6B00" : "rgba(255,255,255,0.15)" }}>{step.label}</span>
                   {i < 4 && <div className="w-3 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />}
                 </div>
               ))}
             </div>
-            <span className="text-[7px] font-medium" style={{ color: "#FFB000" }}>PO #INVO-0421</span>
+            <span className="text-[7px] font-medium" style={{ color: "#FF6B00" }}>PO #INVO-0421</span>
           </div>
         </div>
       </div>
