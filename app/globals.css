@@ -36,15 +36,15 @@
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(132, 204, 22, 0.35);
+  --border-accent: rgba(255, 107, 0, 0.35);
 
-  /* ── Lime Green Accent ── */
-  --accent-base: #84CC16;
-  --accent-light: #A3E635;
-  --accent-dark: #65A30D;
-  --accent-muted: rgba(132, 204, 22, 0.10);
-  --accent-glow: rgba(132, 204, 22, 0.15);
-  --accent-text: #000000;
+  /* ── Neon Orange Accent (Dark Theme) ── */
+  --accent-base: #FF6B00;
+  --accent-light: #FF8A33;
+  --accent-dark: #CC5500;
+  --accent-muted: rgba(255, 107, 0, 0.10);
+  --accent-glow: rgba(255, 107, 0, 0.15);
+  --accent-text: #ffffff;
 
   /* ── Semantic ── */
   --error: #EF4444;
@@ -54,7 +54,7 @@
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-accent: 0 0 40px rgba(132, 204, 22, 0.08);
+  --shadow-glow-accent: 0 0 40px rgba(255, 107, 0, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 
   /* ── Layout ── */
