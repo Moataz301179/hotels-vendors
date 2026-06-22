@@ -27,9 +27,6 @@ import {
   Server,
   Eye,
   Fingerprint,
-  Users,
-  Target,
-  Layers,
 } from "lucide-react";
 import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
@@ -41,10 +38,8 @@ import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-m
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { BentoCard } from "@/components/marketing/bento-card";
-import { MetricCard } from "@/components/marketing/metric-card";
-import { TrustBanner } from "@/components/marketing/trust-banner";
+import { EnterpriseTrustBanner } from "@/components/marketing/enterprise-trust-banner";
 import { FAQAccordion } from "@/components/marketing/faq-accordion";
-import { useCounter } from "@/hooks/use-counter";
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -272,34 +267,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   2. STATS BAR (replaces old stats section)
-   ═══════════════════════════════════════════════════════════ */
-function StatsBar() {
-  return (
-    <section id="stats" className="py-16 md:py-20" style={{ borderTop: `1px solid ${B1}`, borderBottom: `1px solid ${B1}` }}>
-      <div className="max-w-6xl mx-auto px-6">
-        <Reveal>
-          <div className="text-center mb-12">
-            <SectionLabel>By the Numbers</SectionLabel>
-            <SectionHeading>What We&apos;re Building Toward</SectionHeading>
-          </div>
-        </Reveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
-          <MetricCard end={680} suffix="+" label="Verified Suppliers" description="Across 6 governorates" />
-          <MetricCard end={94} suffix="%" label="Forecast Accuracy" description="14-day AI predictions" highlight />
-          <MetricCard end={48} suffix="h" label="Supplier Settlement" description="Via reverse factoring" />
-          <MetricCard end={40} suffix="%" label="Cost Reduction" description="Shared-route logistics" />
-        </div>
-        <p className="text-center text-[10px] text-white/20 mt-8 tracking-wide">
-          Targets based on pilot program projections · Updated quarterly
-        </p>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   3. VALUE SPLIT — Hotels vs Suppliers vs Funders
+   2. VALUE SPLIT — Hotels vs Suppliers vs Funders
    ═══════════════════════════════════════════════════════════ */
 function ValueSplitSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -935,8 +903,7 @@ export default function HomePage() {
 
       <HeroSection onCTAClick={openWizard} />
       <MarketTicker />
-      <StatsBar />
-      <TrustBanner />
+      <EnterpriseTrustBanner />
       <ValueSplitSection onCTAClick={openWizard} />
       <FeatureBentoGrid />
       <ProcurementFlowVisualizer />
