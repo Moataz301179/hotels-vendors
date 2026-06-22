@@ -1,0 +1,18 @@
+{
+  "workflow": "Hotels Vendors Enterprise Build",
+  "typography": "Plus Jakarta Sans",
+  "layers": {
+    "1_marketplace": {
+      "focus": "B2B Hospitality Sourcing & Vendor Directory",
+      "components": ["VendorNetwork", "SmartSourcingGrid", "RFQEngine"]
+    },
+    "2_financing": {
+      "focus": "E-Invoicing Compliance & Embedded Financial Automation",
+      "components": ["InvoicingPortal", "PaymentGateway", "AuthorityValidation"]
+    },
+    "3_orchestration": {
+      "focus": "End-to-End Procurement Lifecycle Analytics & Workflow Automation",
+      "components": ["AnalyticsDashboard", "LifecycleVisualizer", "GovernanceAudit"]
+    }
+  }
+}

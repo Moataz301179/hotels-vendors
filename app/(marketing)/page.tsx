@@ -38,6 +38,15 @@ import { EnterpriseTrustBanner } from "@/components/marketing/enterprise-trust-b
 import { FAQAccordion } from "@/components/marketing/faq-accordion";
 import { ProblemSolutionSplit } from "@/components/marketing/problem-solution-split";
 import { FeatureBentoGrid } from "@/components/marketing/feature-bento-grid";
+import { VendorNetwork } from "@/components/marketing/vendor-network";
+import { SmartSourcingGrid } from "@/components/marketing/smart-sourcing-grid";
+import { RFQEngine } from "@/components/marketing/rfq-engine";
+import { InvoicingPortal } from "@/components/marketing/invoicing-portal";
+import { PaymentGateway } from "@/components/marketing/payment-gateway";
+import { AuthorityValidation } from "@/components/marketing/authority-validation";
+import { AnalyticsDashboard } from "@/components/marketing/analytics-dashboard";
+import { LifecycleVisualizer } from "@/components/marketing/lifecycle-visualizer";
+import { GovernanceAudit } from "@/components/marketing/governance-audit";
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -866,6 +875,18 @@ export default function HomePage() {
       <ValueSplitSection onCTAClick={openWizard} />
       <ProblemSolutionSplit />
       <FeatureBentoGrid />
+
+      {/* ═══ 3-LAYER ENTERPRISE ARCHITECTURE ═══ */}
+      <VendorNetwork />
+      <SmartSourcingGrid />
+      <RFQEngine />
+      <InvoicingPortal />
+      <PaymentGateway />
+      <AuthorityValidation />
+      <AnalyticsDashboard />
+      <LifecycleVisualizer />
+      <GovernanceAudit />
+
       <ProcurementFlowVisualizer />
       <PricingSection onCTAClick={openWizard} />
       <SocialProof />
