@@ -541,7 +541,117 @@ body {
   gap: 3rem;
 }
 @media (min-width: 1024px) {
-  section-gap {
+  .section-gap {
     gap: 5rem;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASS MORPHISM
+   ═══════════════════════════════════════════════════════════════ */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.glass-strong {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOW EFFECTS
+   ═══════════════════════════════════════════════════════════════ */
+.glow-accent {
+  box-shadow: 0 0 40px rgba(255, 107, 0, 0.08), 0 0 80px rgba(255, 107, 0, 0.04);
+}
+.glow-accent-sm {
+  box-shadow: 0 0 20px rgba(255, 107, 0, 0.12), 0 0 40px rgba(255, 107, 0, 0.06);
+}
+.glow-accent-lg {
+  box-shadow: 0 0 60px rgba(255, 107, 0, 0.10), 0 0 120px rgba(255, 107, 0, 0.05), 0 0 180px rgba(255, 107, 0, 0.03);
+}
+.text-glow-accent {
+  text-shadow: 0 0 20px rgba(255, 107, 0, 0.4), 0 0 40px rgba(255, 107, 0, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRADIENT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(255, 107, 0, 0.05), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.gradient-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 107, 0, 0.3), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BACKDROP EFFECTS
+   ═══════════════════════════════════════════════════════════════ */
+.backdrop-dark {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS — EXPANDED
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 0, 0.08); }
+  50% { box-shadow: 0 0 40px rgba(255, 107, 0, 0.15); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.5s var(--ease-out-expo) both;
+}
+.animate-slide-up {
+  animation: slideUp 0.8s var(--ease-out-expo) both;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-TRIGGERED REVEAL
+   ═══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
