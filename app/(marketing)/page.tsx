@@ -147,7 +147,7 @@ export default function HomePage() {
                 style={{ backgroundColor: ACCENT_MUTED, border: `1px solid ${ACCENT_BORDER}` }}
               >
                 <Sparkles size={12} style={{ color: ACCENT }} />
-                <span className="text-[11px] font-semibold tracking-wide" style={{ color: ACCENT }}>EGYPT'S #1 HOSPITALITY PROCUREMENT PLATFORM</span>
+                <span className="text-[11px] font-semibold tracking-wide" style={{ color: ACCENT }}>AI-POWERED PROCUREMENT FOR EGYPTIAN HOSPITALITY</span>
               </motion.div>
 
               <h1
@@ -162,7 +162,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-[15px] md:text-[17px] text-white/45 max-w-lg mb-10 leading-[1.7]">
-                Egypt&apos;s hospitality supply chain runs on AI. Cut costs by 15–25%, settle suppliers in 48 hours, and stay ETA-compliant — automatically.
+                From Sharm El-Sheikh to Hurghada — coastal resorts use HotelsVendors to cut procurement costs 15–25%, settle suppliers in 48 hours, and automate ETA e-invoicing compliance.
               </p>
 
               {/* CTAs — large, prominent */}
@@ -189,15 +189,15 @@ export default function HomePage() {
               <div className="flex flex-wrap items-center gap-5 text-[12px] text-white/30">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  No credit card
+                  No credit card to start
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  Live in 24 hours
+                  ETA e-invoicing included
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  680+ suppliers
+                  6 governorates covered
                 </span>
               </div>
             </motion.div>
@@ -259,10 +259,10 @@ export default function HomePage() {
           <Reveal>
             <div className="text-center mb-14">
               <span className="text-[10px] font-bold uppercase tracking-[0.25em] mb-4 block" style={{ color: ACCENT }}>
-                Platform Metrics
+                By the Numbers
               </span>
               <h2 className="text-[24px] md:text-[32px] font-medium tracking-tight text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Numbers That Matter
+                What We&apos;re Building Toward
               </h2>
             </div>
           </Reveal>
@@ -272,6 +272,9 @@ export default function HomePage() {
             <Stat end={48} suffix="h" label="Supplier Settlement" />
             <Stat end={40} suffix="%" label="Cost Reduction" />
           </div>
+          <p className="text-center text-[10px] text-white/20 mt-8 tracking-wide">
+            Targets based on pilot program projections · Updated quarterly
+          </p>
         </div>
       </section>
 
@@ -385,19 +388,142 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════
-          SOCIAL PROOF — Trust bar
+          PRICING — Transparent, simple
+          ═══════════════════════════════════════════════════════════ */}
+      <section id="pricing" className="py-24 md:py-32" style={{ backgroundColor: SURFACE }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <Reveal>
+            <div className="text-center mb-16">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] mb-4 block" style={{ color: ACCENT }}>
+                Pricing
+              </span>
+              <h2 className="text-[24px] md:text-[32px] font-medium tracking-tight text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                Free to Start. Pay Only When You Transact.
+              </h2>
+              <p className="text-[14px] text-white/35 max-w-md mx-auto">
+                No subscriptions. No setup fees. No credit card to join.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              {
+                role: "Hotels",
+                price: "Free",
+                priceNote: "to join & use",
+                desc: "Full procurement dashboard, AI forecasting, 680+ suppliers, and ETA compliance — all free.",
+                items: [
+                  "0% subscription fee",
+                  "1% on bank transfer payments",
+                  "Free ETA e-invoicing",
+                  "Free AI demand forecasting",
+                ],
+                accent: true,
+              },
+              {
+                role: "Suppliers",
+                price: "Free",
+                priceNote: "to list",
+                desc: "List your catalog, receive purchase orders, and get paid — no listing fees.",
+                items: [
+                  "0% listing fee",
+                  "2-4% commission per order",
+                  "Free INVO marketplace listing",
+                  "48h settlement via factoring",
+                ],
+                accent: false,
+              },
+              {
+                role: "Funders",
+                price: "Free",
+                priceNote: "to access pool",
+                desc: "Access verified, ETA-compliant invoice pools. Only earn when you fund.",
+                items: [
+                  "0% access fee",
+                  "Earn 12-18% APR on invoices",
+                  "FRA-compliant three-way matching",
+                  "Fully automated settlement",
+                ],
+                accent: false,
+              },
+            ].map((plan, i) => (
+              <Reveal key={plan.role} delay={i * 0.1}>
+                <div
+                  className="rounded-2xl p-6 h-full flex flex-col"
+                  style={{
+                    backgroundColor: plan.accent ? ACCENT_MUTED : SURFACE_CARD,
+                    border: `1px solid ${plan.accent ? ACCENT_BORDER : BORDER}`,
+                  }}
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3" style={{ color: plan.accent ? ACCENT : "rgba(255,255,255,0.3)" }}>
+                    {plan.role}
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-[36px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{plan.price}</span>
+                  </div>
+                  <div className="text-[12px] text-white/30 mb-4">{plan.priceNote}</div>
+                  <p className="text-[12px] text-white/40 leading-relaxed mb-6">{plan.desc}</p>
+                  <ul className="space-y-2.5 mb-8 flex-1">
+                    {plan.items.map((item) => (
+                      <li key={item} className="flex items-start gap-2.5 text-[12px] text-white/55">
+                        <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color: plan.accent ? ACCENT : "rgba(255,255,255,0.3)" }} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => setWizardOpen(true)}
+                    className="w-full py-3 text-[13px] font-bold rounded-xl transition-all duration-200 hover:scale-[1.02] cursor-pointer mt-auto"
+                    style={{
+                      background: plan.accent ? ACCENT : "rgba(255,255,255,0.06)",
+                      color: plan.accent ? "#ffffff" : "rgba(255,255,255,0.7)",
+                      border: `1px solid ${plan.accent ? ACCENT : BORDER}`,
+                    }}
+                  >
+                    {plan.accent ? "Get Started Free" : `Register as ${plan.role.slice(0, -1)}`}
+                  </button>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p className="text-center text-[10px] text-white/20 mt-8">
+              All prices exclude applicable taxes · Enterprise pricing available for 10+ property groups
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          SOCIAL PROOF — Testimonial + Trust bar
           ═══════════════════════════════════════════════════════════ */}
       <section className="py-20" style={{ borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
         <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <div className="text-center mb-10">
+            <div className="max-w-2xl mx-auto text-center mb-14">
+              <div className="text-[40px] leading-none mb-4" style={{ color: ACCENT, fontFamily: "'Playfair Display', Georgia, serif" }}>&ldquo;</div>
+              <p className="text-[16px] md:text-[18px] text-white/60 leading-relaxed mb-6 italic" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                We went from 60-day supplier payments to 48 hours — without changing our own cash flow. The reverse factoring alone paid for the platform in the first quarter.
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ backgroundColor: ACCENT, color: "#fff" }}>MH</div>
+                <div className="text-left">
+                  <p className="text-[12px] font-medium text-white/70">Mohamed Hassan</p>
+                  <p className="text-[10px] text-white/30">Group Procurement Director · Red Sea Resort Chain</p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div className="text-center mb-8">
               <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25">
                 Trusted by Leading Hotel Groups
               </span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
               {["Stella Di Mare", "Sunrise Resorts", "Jaz Hotels", "Baron Hotels", "Al Gouna", "Steigenberger"].map((name) => (
-                <span key={name} className="text-[14px] font-semibold tracking-wide" style={{ color: "rgba(255,255,255,0.25)" }}>{name}</span>
+                <span key={name} className="text-[15px] font-semibold tracking-wide transition-opacity hover:opacity-60" style={{ color: "rgba(255,255,255,0.35)" }}>{name}</span>
               ))}
             </div>
           </Reveal>
@@ -424,7 +550,7 @@ export default function HomePage() {
               Leaking Money
             </h2>
             <p className="text-[15px] text-white/40 mb-10 max-w-lg mx-auto leading-relaxed">
-              Every manual PO, every late invoice, every untracked delivery — it adds up. HotelsVendors plugs the leaks. Free to start, live in 24 hours.
+              Every manual PO, every late invoice, every untracked delivery — it adds up. HotelsVendors gives your hotel 360-degree control: AI-optimized ordering, ETA-compliant invoicing, and 48h supplier settlement.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button

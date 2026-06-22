@@ -17,18 +17,18 @@ const FAQS: FAQItem[] = [
     question: "What is HotelsVendors?",
     questionAr: "ما هي هوتيلز فيندورز؟",
     answer:
-      "HotelsVendors is Egypt's B2B procurement platform built for the hospitality sector. It connects three stakeholders in one system: hotels (who buy), suppliers (who sell), and funders (who finance). AI agents handle forecasting, ordering, compliance, and settlement — so your team spends less time on paperwork and more time running the hotel.",
+      "HotelsVendors is Egypt's B2B procurement platform built for coastal hospitality. We connect hotels, suppliers, and funders in one system — with AI handling forecasting, ordering, ETA e-invoicing compliance, and supplier settlement. Purpose-built for Red Sea resorts in Sharm El-Sheikh and Hurghada.",
     answerAr:
-      "هوتيلز فيندورز هي منصة الشراء بين الشركات في مصر المصممة لقطاع الضيافة. تربط الفنادق والموردين والممولين في نظام واحد. يتولى العملاء الذكيون التنبؤ والطلب والامتثال والتسوية.",
+      "هوتيلز فيندورز هي منصة الشراء بين الشركات في مصر المصممة للضيافة الساحلية. نربط الفنادق والموردين والممولين في نظام واحد مع ذكاء اصطناعي للتنبؤ والطلب والامتثال الضريبي والتسوية. مصممة خصيصاً لمنتجعات البحر الأحمر.",
     category: "General",
   },
   {
     question: "How does the free trial work?",
     questionAr: "كيف تعمل التجربة المجانية؟",
     answer:
-      "Hotels join free — no subscription, no setup fee, no credit card. You get the full procurement dashboard, AI forecasting, the INVO supplier marketplace, and ETA-compliant invoicing from day one. We only earn when you transact: 1% on bank transfers, 1.5–3% on factoring services.",
+      "Hotels join free — no subscription, no setup fee, no credit card. You get full access to the procurement dashboard, AI forecasting, the INVO marketplace with 680+ suppliers, and automatic ETA e-invoicing. We earn only on transactions: 1% on bank transfers, 1.5–3% on factoring services.",
     answerAr:
-      "تنضم الفنادق مجاناً — بدون اشتراك أو رسوم إعداد أو بطاقة ائتمان. تحصل على لوحة التحكم الكاملة والتنبؤ الذكي وسوق الموردين والفوترة الإلكترونية من اليوم الأول. نربح فقط عند المعاملات.",
+      "تنضم الفنادق مجاناً — بدون اشتراك أو رسوم إعداد أو بطاقة ائتمان. تحصل على لوحة التحكم الكاملة والتنبؤ الذكي وسوق إنفو مع أكثر من 680 مورداً والفوترة الإلكترونية التلقائية. نربح فقط عند المعاملات: 1% للتحويلات البنكية.",
     category: "General",
   },
   {
@@ -44,9 +44,9 @@ const FAQS: FAQItem[] = [
     question: "How much can my hotel save?",
     questionAr: "كم يمكن أن يوفر فندقي؟",
     answer:
-      "Hotels on HotelsVendors typically cut procurement costs by 15–25%. That comes from three sources: AI-optimized ordering (94% forecast accuracy reduces waste and emergency purchases), shared-route logistics (up to 40% delivery cost reduction), and competitive supplier pricing through INVO.",
+      "Hotels on HotelsVendors cut procurement costs by 15–25% on average. For a 300-room Red Sea resort spending EGP 8M annually on supplies, that's EGP 1.2–2M saved. The biggest savings come from AI ordering (94% forecast accuracy means fewer emergency purchases) and shared-route logistics (up to 40% lower delivery costs to coastal properties).",
     answerAr:
-      "تخفض الفنادق على هوتيلز فيندورز تكاليف المشتريات عادةً بنسبة 15-25%. من خلال الطلب الذكي بدقة تنبؤ 94% واللوجستيات المشتركة والتسعير التنافسي عبر إنفو.",
+      "تخفض الفنادق تكاليف المشتريات بنسبة 15-25% في المتوسط. لمنتجع 300 غرفة ينفق 8 ملايين جنيه سنوياً، يعني ذلك توفير 1.2-2 مليون جنيه. أكبر التوفيرات تأتي من الطلب الذكي واللوجستيات المشتركة.",
     category: "Pricing",
   },
   {
@@ -120,6 +120,15 @@ const FAQS: FAQItem[] = [
     answerAr:
       "تُدار هوتيلز فيندورز بواسطة مطاعم للتسويق الإلكتروني. نحن منسق بيانات تقني — لسنا بنكاً ولا مزود دفع. جميع التدفقات المالية تمر عبر مؤسسات مرخصة. مسؤولية صفرية عن تعثر التحصيل.",
     category: "Legal",
+  },
+  {
+    question: "I run a 200-room resort in Hurghada. How fast can we go live?",
+    questionAr: "أدير منتجع 200 غرفة في الغردقة. كم من الوقت يستغرق التفعيل؟",
+    answer:
+      "Most properties go live within 48 hours. We import your existing supplier list, configure your ETA e-invoicing pipeline, and set up your AI forecasting model using your historical purchase data. For Hurghada and Sharm El-Sheikh properties, we activate Shark-Breaker shared logistics from day one.",
+    answerAr:
+      "معظم المنشآت تنطلق خلال 48 ساعة. نستورد قائمة الموردين الحالية وننشئ خط أنابيب الفوترة الإلكترونية ونقوم بإعداد نموذج التنبؤ الذكي. لمنتجعات الغردقة وشرم الشيخ، نقوم بتفعيل اللوجستيات المشتركة من اليوم الأول.",
+    category: "Platform",
   },
 ];
 

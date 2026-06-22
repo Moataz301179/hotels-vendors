@@ -116,7 +116,7 @@ export function SupplierDashboardMockup() {
         </div>
       </div>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "#0f0f0f", border: "1px solid rgba(34,197,94,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
-        <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Illustrative Preview</span>
+        <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Supplier Marketplace</span>
       </motion.div>
     </motion.div>
   );
