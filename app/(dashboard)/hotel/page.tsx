@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { CheckoutModal } from "@/components/dashboard/checkout-modal";
 import { FinancialDashboard } from "@/components/dashboard/financial-dashboard";
 
@@ -8,14 +9,20 @@ export default function HotelDashboardPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-[1600px] mx-auto space-y-6"
+      style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+    >
       {/* Page Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 600, color: "#1a1f36", margin: 0 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 600, color: "#ffffff", margin: 0 }}>
             Hotel Procurement Portal
           </h1>
-          <p style={{ fontSize: 13, color: "#8898aa", margin: "4px 0 0 0" }}>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.40)", margin: "4px 0 0 0" }}>
             Track spend, manage orders, and monitor inventory across all properties
           </p>
         </div>
@@ -25,8 +32,8 @@ export default function HotelDashboardPage() {
             fontSize: 13,
             fontWeight: 500,
             padding: "10px 20px",
-            backgroundColor: "#635bff",
-            color: "#fff",
+            backgroundColor: "#FF6B00",
+            color: "#ffffff",
             border: "none",
             borderRadius: 6,
             cursor: "pointer",
@@ -39,6 +46,6 @@ export default function HotelDashboardPage() {
       <FinancialDashboard />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
-    </div>
+    </motion.div>
   );
 }

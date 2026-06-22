@@ -71,7 +71,7 @@ export default function ReturnsPage() {
           </h1>
           <p className="text-xs text-white/40 mt-0.5">Manage return requests for delivered orders</p>
         </div>
-        <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-black text-sm font-semibold hover:bg-amber-400 transition-colors">
+        <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-base text-white text-sm font-semibold hover:bg-amber-400 transition-colors">
           <Plus size={14} /> New Return
         </button>
       </div>

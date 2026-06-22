@@ -192,7 +192,7 @@ export default function ScannerPage() {
                 <button
                   onClick={handleManualSubmit}
                   disabled={barcodeInput.length < 3}
-                  className="w-full py-3 rounded-xl bg-amber-500 text-black font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-full py-3 rounded-xl bg-accent-base text-white font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Look Up Product
                 </button>
@@ -204,7 +204,7 @@ export default function ScannerPage() {
               <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center space-y-4">
                 <Camera size={48} className="text-white/15 mx-auto" />
                 <p className="text-sm text-white/40">Point camera at product barcode</p>
-                <button onClick={startCamera} className="px-6 py-3 rounded-xl bg-amber-500 text-black font-semibold">
+                <button onClick={startCamera} className="px-6 py-3 rounded-xl bg-accent-base text-white font-semibold">
                   Open Camera
                 </button>
                 <button onClick={() => setManualEntry(true)} className="block mx-auto text-xs text-white/30 hover:text-white/50">
@@ -276,7 +276,7 @@ export default function ScannerPage() {
                       <button onClick={() => setScanAction(null)} className="flex-1 py-2.5 rounded-xl border border-white/[0.1] text-white/60 text-sm">
                         Cancel
                       </button>
-                      <button onClick={handleReset} className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm">
+                      <button onClick={handleReset} className="flex-1 py-2.5 rounded-xl bg-accent-base text-white font-semibold text-sm">
                         Confirm
                       </button>
                     </div>

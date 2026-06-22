@@ -35,16 +35,15 @@ const NAV_ITEMS = [
   { href: "/dashboard/shipping", label: "Logistics", icon: Truck },
 ];
 
-const BG_PAGE = "#f7f8fa";
-const BG_SURFACE = "#ffffff";
-const BG_SIDEBAR = "#ffffff";
-const BORDER = "#e3e8ee";
-const TEXT_PRIMARY = "#1a1f36";
-const TEXT_SECONDARY = "#525f7f";
-const TEXT_MUTED = "#8898aa";
-const ACCENT = "#635bff";
-const ACCENT_LIGHT = "#ededff";
-const ACCENT_HOVER = "#5851db";
+const BG_PAGE = "#000000";
+const BG_SURFACE = "#0a0a0a";
+const BG_SIDEBAR = "#0a0a0a";
+const BORDER = "rgba(255,255,255,0.06)";
+const TEXT_PRIMARY = "#ffffff";
+const TEXT_SECONDARY = "rgba(255,255,255,0.50)";
+const TEXT_MUTED = "rgba(255,255,255,0.30)";
+const ACCENT = "#FF6B00";
+const ACCENT_LIGHT = "rgba(255,107,0,0.12)";
 const SIDEBAR_WIDTH = 256;
 const HEADER_HEIGHT = 56;
 
@@ -59,7 +58,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          style={{ position: "fixed", inset: 0, zIndex: 40, backgroundColor: "rgba(0,0,0,0.3)" }}
+          style={{ position: "fixed", inset: 0, zIndex: 40, backgroundColor: "rgba(0,0,0,0.6)" }}
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -85,7 +84,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
         {/* Logo */}
         <div style={{ padding: "16px 20px", borderBottom: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/dashboard" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-            <BrandLogo variant="light" size="xs" showText={false} forceColor="bw" />
+            <BrandLogo variant="dark" size="xs" showText={false} forceColor="bw" />
             <div>
               <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_PRIMARY }}>HotelsVendors</span>
               <span style={{ display: "block", fontSize: 10, fontWeight: 600, color: ACCENT, textTransform: "uppercase", letterSpacing: 0.06 }}>Dashboard</span>
@@ -128,7 +127,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
 
         {/* User section */}
         <div style={{ padding: "12px 16px", borderTop: `1px solid ${BORDER}` }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 8, backgroundColor: BG_PAGE }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 8, backgroundColor: BG_SURFACE }}>
             <UserCircle size={28} color={ACCENT} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: TEXT_PRIMARY, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -195,7 +194,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
             </button>
             <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6, display: "flex", position: "relative" }}>
               <Bell size={18} color={TEXT_MUTED} />
-              <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#df1b41", border: "1px solid #fff" }} />
+              <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#df1b41", border: "1px solid #0a0a0a" }} />
             </button>
             <div
               style={{

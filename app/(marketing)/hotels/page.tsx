@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Building2, MapPin, CheckCircle2, TrendingUp, ShieldCheck, Clock, Banknote, BrainCircuit, FileCheck, Users } from "lucide-react";
+import { MarketingNav } from "@/components/layout/marketing-nav";
+import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
@@ -30,113 +32,117 @@ const trustBadges = [
 
 export default function HotelsPage() {
   return (
-    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">For Hotels</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Stop Chasing Suppliers.<br /><span className="text-gradient-lime">Start Commanding<br />Your Supply Chain.</span>
-          </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
-              Register Your Property <ArrowRight size={14} />
-            </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Explore Platform
-            </Link>
+    <>
+      <MarketingNav />
+      <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+        {/* Hero */}
+        <section className="pt-28 pb-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,0,0.04) 0%, transparent 70%)" }} />
+          <div className="relative z-10 mx-auto max-w-7xl px-6">
+            <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">For Hotels</span>
+            <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
+              Stop Chasing Suppliers.<br /><span className="text-gradient-accent">Start Commanding<br />Your Supply Chain.</span>
+            </h1>
+            <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
+              From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,107,0,0.2)]" style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}>
+                Register Your Property <ArrowRight size={14} />
+              </Link>
+              <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+                Explore Platform
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Trust Badges */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {trustBadges.map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#FFB000" }} />
-                <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
+        {/* Trust Badges */}
+        <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="flex flex-wrap justify-center gap-8">
+              {trustBadges.map((b) => (
+                <div key={b.label} className="flex items-center gap-3">
+                  <b.icon size={16} style={{ color: "#FF6B00" }} />
+                  <div>
+                    <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                    <p className="text-[9px] text-white/25">{b.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Grid */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-4" style={{ color: "#FFB000" }} />
-                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto text-center">
-            {[
-              { value: "24h", label: "Supplier Settlement via Factoring" },
-              { value: "6", label: "Governorates with Logistics Coverage" },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-[32px] font-medium mb-1" style={{ color: "#FFB000" }}>{s.value}</p>
-                <p className="text-[11px] text-white/30">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Coverage */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Where We Operate</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { region: "Sharm El-Sheikh", props: "120+ properties", icon: MapPin },
-              { region: "Hurghada / Red Sea", props: "95+ properties", icon: MapPin },
-              { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
-              { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
-            ].map((r) => (
-              <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#FFB000]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <r.icon size={16} style={{ color: "#FFB000" }} />
-                <div>
-                  <p className="text-[13px] font-medium text-white">{r.region}</p>
-                  <p className="text-[11px] text-white/30">{r.props}</p>
+        {/* Features Grid */}
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-6">
+            <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {features.map((f) => (
+                <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <f.icon size={20} className="mb-4" style={{ color: "#FF6B00" }} />
+                  <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
+                  <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#FFB000" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Transform Your Procurement?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
-            Get Started Free <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
-    </main>
+        {/* Stats */}
+        <section className="py-16" style={{ backgroundColor: "#050505" }}>
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto text-center">
+              {[
+                { value: "24h", label: "Supplier Settlement via Factoring" },
+                { value: "6", label: "Governorates with Logistics Coverage" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <p className="text-[32px] font-medium mb-1" style={{ color: "#FF6B00" }}>{s.value}</p>
+                  <p className="text-[11px] text-white/30">{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Coverage */}
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-6">
+            <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Where We Operate</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { region: "Sharm El-Sheikh", props: "120+ properties", icon: MapPin },
+                { region: "Hurghada / Red Sea", props: "95+ properties", icon: MapPin },
+                { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
+                { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
+              ].map((r) => (
+                <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <r.icon size={16} style={{ color: "#FF6B00" }} />
+                  <div>
+                    <p className="text-[13px] font-medium text-white">{r.region}</p>
+                    <p className="text-[11px] text-white/30">{r.props}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-6 text-center">
+            <Users size={28} className="mx-auto mb-6" style={{ color: "#FF6B00" }} />
+            <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Transform Your Procurement?</h2>
+            <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,107,0,0.2)]" style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}>
+              Get Started Free <ArrowRight size={14} />
+            </Link>
+          </div>
+        </section>
+      </main>
+      <MarketingFooter />
+    </>
   );
 }

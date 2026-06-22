@@ -180,7 +180,7 @@ export default function DeliveriesPage() {
               </div>
               <button
                 onClick={() => { setShowOtpModal(false); handleConfirmDelivery(selectedJob.id); }}
-                className="w-full py-3 rounded-xl bg-amber-500 text-black font-semibold text-sm"
+                className="w-full py-3 rounded-xl bg-accent-base text-white font-semibold text-sm"
               >
                 Send OTP & Confirm
               </button>

@@ -73,9 +73,9 @@ function VerifyEmailForm() {
       >
         <BrandLogo variant="dark" size="md" />
         <div>
-          <h1 className="text-lg font-bold tracking-tight text-white">Hotels Vendors</h1>
+          <h1 className="text-lg font-bold tracking-tight text-white">HotelsVendors</h1>
           <p className="text-[10px] text-white/40 uppercase tracking-wider">
-            Digital Procurement Hub
+            B2B Procurement Egypt
           </p>
         </div>
       </motion.div>
@@ -115,7 +115,7 @@ function VerifyEmailForm() {
                 </div>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FFB000] hover:bg-[#CC8C00] text-white text-sm font-medium transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FF6B00] hover:bg-[#CC5500] text-white text-sm font-medium transition-colors"
                 >
                   Sign In
                   <ArrowRight className="w-4 h-4" />
