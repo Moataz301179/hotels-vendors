@@ -1,0 +1,870 @@
+{
+  "$schema": "hotels-vendors/architecture-blueprint",
+  "version": "3.0.0",
+  "generated": "2026-06-21T00:00:00Z",
+  "author": "Principal Frontend Architect — OWL",
+
+  "meta": {
+    "project": "HotelsVendors",
+    "domain": "hotelsvendors.com",
+    "stack": {
+      "framework": "Next.js 16 App Router + Turbopack",
+      "ui": "React 18 + TypeScript strict",
+      "styling": "Tailwind CSS v4 + CSS Custom Properties",
+      "animation": "Framer Motion",
+      "orm": "Prisma 7",
+      "database": "SQLite (dev) → PostgreSQL (prod)",
+      "deployment": "Vercel (auto-deploy from main)",
+      "testing": "Vitest"
+    },
+    "designSystem": {
+      "themes": ["wimbledon (default)", "original", "hercules"],
+      "darkTheme": {
+        "background": "#000000 (OLED black)",
+        "text": "#FFFFFF (white)",
+        "accent": "#FF6B00 (neon orange)",
+        "surface": "#080B12 / #0C1018",
+        "border": "rgba(255,255,255,0.06)"
+      },
+      "fonts": {
+        "headings": "Playfair Display (serif)",
+        "body": "Plus Jakarta Sans / Inter (sans-serif)",
+        "display": "Plus Jakarta Sans"
+      }
+    }
+  },
+
+  "directoryStructure": {
+    "description": "Complete project directory map — single source of truth",
+    "root": {
+      "app/": {
+        "(auth)/": {
+          "description": "Authentication route group — no shared layout bleed",
+          "login/page.tsx": "Login form with BrandLogo, MarketingNav, sector-aware redirect",
+          "register/": {
+            "page.tsx": "Sector selection landing (Hotel / Supplier / Funder / Logistics)",
+            "[sector]/page.tsx": "Detailed registration form per sector"
+          },
+          "forgot-password/page.tsx": "Password reset request",
+          "reset-password/page.tsx": "Password reset confirmation",
+          "verify-email/page.tsx": "Email verification handler"
+        },
+        "(marketing)/": {
+          "description": "Public marketing pages — conversion-optimized, no auth required",
+          "layout.tsx": "Marketing-specific layout wrapper",
+          "page.tsx": "LANDING PAGE — primary conversion surface (see domLayout)",
+          "loading.tsx": "Marketing page skeleton loader",
+          "about/page.tsx": "Company story, founder info, mission",
+          "blog/": {
+            "page.tsx": "Blog listing with SEO-optimized cards",
+            "[slug]/page.tsx": "Individual blog post with rich content"
+          },
+          "pricing/page.tsx": "SaaS subscription tiers (INVO plans) + transaction fees",
+          "platform/page.tsx": "Platform overview — capabilities deep-dive",
+          "marketplace/page.tsx": "Public product catalog browser",
+          "sandbox/page.tsx": "Interactive product demo / sandbox environment",
+          "solutions/page.tsx": "Solution pages by use case",
+          "hotels/page.tsx": "Hotel buyer landing page",
+          "become-supplier/page.tsx": "Supplier acquisition landing page",
+          "factoring-service/page.tsx": "Factoring partner landing page",
+          "logistics-service/page.tsx": "Shark-Breaker logistics landing page",
+          "compliance/page.tsx": "ETA compliance information",
+          "faq/page.tsx": "Standalone FAQ page",
+          "social-media/page.tsx": "Social media presence & campaigns",
+          "portal/page.tsx": "Partner/vendor portal info",
+          "privacy/page.tsx": "Privacy policy",
+          "terms/page.tsx": "Terms of service"
+        },
+        "(dashboard)/": {
+          "description": "Authenticated dashboard — role-based access control",
+          "layout.tsx": "Dashboard layout with sidebar navigation",
+          "hotel/": {
+            "description": "Hotel buyer dashboard",
+            "page.tsx": "Hotel home — KPIs, recent orders, AI forecast snapshot",
+            "orders/": "Order management (list, detail, create)",
+            "payments/": "Payment history & methods",
+            "factoring/": "Factoring requests & status",
+            "eta/": "ETA invoice submission & tracking",
+            "deliveries/": "Delivery tracking & confirmation",
+            "returns/": "Return requests & credit notes",
+            "scanner/": "Barcode/QR scanner for receiving",
+            "settings/": "Hotel profile, users, integrations"
+          },
+          "supplier/": {
+            "description": "Supplier dashboard",
+            "page.tsx": "Supplier home — sales KPIs, pending orders, catalog health",
+            "orders/": "Incoming order management",
+            "catalog/": "Product catalog management",
+            "invoices/": "Invoice generation & ETA submission",
+            "analytics/": "Sales analytics & demand signals",
+            "settings/": "Supplier profile, API keys, webhooks"
+          },
+          "admin/": {
+            "description": "Platform admin dashboard",
+            "page.tsx": "Admin home — platform-wide metrics",
+            "users/": "User management across tenants",
+            "tenants/": "Tenant management",
+            "fraud/": "Fraud detection & alerts",
+            "settings/": "Platform configuration"
+          },
+          "marketing/": {
+            "description": "Marketing team dashboard",
+            "page.tsx": "Marketing home — campaign metrics, lead pipeline",
+            "campaigns/": "Social media campaign management",
+            "leads/": "Lead capture & qualification",
+            "content/": "Content calendar & blog management"
+          },
+          "factoring/": {
+            "description": "Factoring company dashboard",
+            "page.tsx": "Funder home — receivables pipeline, bidding"
+          },
+          "shipping/": {
+            "description": "Logistics/shipping dashboard",
+            "page.tsx": "Logistics home — trip management, delivery tracking"
+          }
+        },
+        "api/": {
+          "description": "REST API routes — versioned, RBAC-protected",
+          "v1/": {
+            "auth/": "Authentication endpoints (login, register, verify, refresh)",
+            "hotels/": "Hotel CRUD + credit management",
+            "suppliers/": "Supplier CRUD + catalog management",
+            "products/": "Product catalog endpoints",
+            "orders/": "Order lifecycle (create, approve, confirm, deliver, return)",
+            "invoices/": "Invoice CRUD + ETA submission",
+            "payments/": "Payment processing endpoints",
+            "factoring/": "Factoring request & bidding endpoints",
+            "logistics/": "Trip, stop, delivery job endpoints",
+            "rfq/": "RFQ request & response endpoints",
+            "returns/": "Return request & credit note endpoints",
+            "ai/": {
+              "forecast/route.ts": "AI demand forecasting (POST/GET)",
+              "chat/route.ts": "AI chatbot conversation endpoint"
+            },
+            "swarm/": {
+              "jobs/route.ts": "Swarm job listing & creation",
+              "jobs/[id]/": "Job detail, approve, cancel, retry",
+              "agents/route.ts": "Available AI agents list",
+              "orchestrate/route.ts": "Multi-agent task orchestration",
+              "director/plan/route.ts": "Director strategic planning",
+              "health/route.ts": "Swarm system health metrics"
+            },
+            "notifications/": "Notification CRUD + preferences",
+            "analytics/": "Platform analytics endpoints",
+            "webhooks/": "Webhook receivers (Paymob, ETA, etc.)"
+          }
+        },
+        "invo/": "INVO SaaS subscription management UI",
+        "offline/": "PWA offline fallback page"
+      },
+      "components/": {
+        "description": "Reusable UI components — organized by domain",
+        "ui/": {
+          "description": "Primitive UI building blocks (no business logic)",
+          "avatar.tsx": "User avatar with fallback initials",
+          "badge.tsx": "Status badge / pill",
+          "button.tsx": "Button variants (primary, ghost, danger)",
+          "card.tsx": "Card container with surface styles",
+          "input.tsx": "Form input with validation states",
+          "label.tsx": "Form label",
+          "modal.tsx": "Modal dialog with focus trap",
+          "table.tsx": "Data table with sorting",
+          "textarea.tsx": "Textarea with auto-resize",
+          "separator.tsx": "Visual separator",
+          "skeleton.tsx": "Loading skeleton placeholder",
+          "container-scroll-animation.tsx": "Scroll-triggered container animation"
+        },
+        "layout/": {
+          "description": "Global layout components",
+          "brand-logo.tsx": "SVG brand logo with size variants (xs-xxl)",
+          "marketing-nav.tsx": "Public navigation header with theme toggle",
+          "marketing-footer.tsx": "Global footer with links, social, legal",
+          "dashboard-header.tsx": "Dashboard top bar with search, notifications",
+          "dashboard-shell.tsx": "Dashboard layout shell with sidebar",
+          "pulse-sidebar.tsx": "Animated sidebar navigation",
+          "global-header.tsx": "Shared header component",
+          "user-dropdown.tsx": "User menu dropdown",
+          "sandbox-banner.tsx": "Sandbox environment indicator"
+        },
+        "marketing/": {
+          "description": "Landing page & marketing section components",
+          "hotel-dashboard-mockup.tsx": "Hotel dashboard preview mockup",
+          "supplier-dashboard-mockup.tsx": "Supplier dashboard preview mockup",
+          "funder-dashboard-mockup.tsx": "Funder dashboard preview mockup",
+          "logistics-dashboard-mockup.tsx": "Logistics dashboard preview mockup",
+          "sandbox-dashboard.tsx": "Interactive sandbox preview",
+          "market-ticker.tsx": "Live product price ticker marquee",
+          "faq-section.tsx": "Accordion FAQ with category filtering",
+          "security-certificates.tsx": "Security/compliance certificate badges",
+          "forex-widget.tsx": "Currency exchange rate widget",
+          "hero-carousel.tsx": "Hero image carousel (deprecated — replaced by dashboard mockup)",
+          "hero-visual.tsx": "Hero visual element",
+          "pillar-visual.tsx": "Value pillar visual",
+          "sector-visual.tsx": "Sector selection visual",
+          "ipad-frame.tsx": "iPad frame mockup wrapper",
+          "our-clients.tsx": "Client logo showcase",
+          "suppliers-directory.tsx": "Supplier directory preview",
+          "trusted-by-marquee.tsx": "Trusted-by logo marquee"
+        },
+        "dashboard/": {
+          "description": "Dashboard-specific components",
+          "dashboard-shell.tsx": "Dashboard shell with role-based sidebar",
+          "financial-dashboard.tsx": "Financial overview dashboard",
+          "forecast-widget.tsx": "AI demand forecast widget",
+          "checkout-modal.tsx": "Checkout flow modal"
+        },
+        "auth/": {
+          "description": "Authentication components",
+          "registration-wizard.tsx": "5-step AI-powered registration wizard"
+        },
+        "ai-assistant/": {
+          "description": "AI chatbot components",
+          "public-chatbot.tsx": "Floating AI assistant for marketing pages"
+        },
+        "theme/": {
+          "description": "Theme system components",
+          "theme-provider.tsx": "Theme context provider (wimbledon/original/hercules)",
+          "theme-toggle.tsx": "Theme switcher UI"
+        },
+        "motion/": {
+          "description": "Framer Motion animation components",
+          "stagger-container.tsx": "Staggered children animation",
+          "hover-lift.tsx": "Hover lift effect wrapper",
+          "glass-toast.tsx": "Glassmorphism toast notification",
+          "number-roll.tsx": "Animated number counter",
+          "loading-skeleton.tsx": "Shimmer loading skeleton",
+          "scale-in.tsx": "Scale entrance animation",
+          "fade-in.tsx": "Fade entrance animation"
+        },
+        "marketplace/": {
+          "description": "Marketplace browsing components",
+          "product-card.tsx": "Product card with pricing",
+          "product-detail-client.tsx": "Product detail view",
+          "search-bar.tsx": "Product search with filters",
+          "category-nav.tsx": "Category navigation",
+          "compare-drawer.tsx": "Product comparison drawer",
+          "compare-context.tsx": "Comparison state management",
+          "marketplace-client.tsx": "Marketplace page client logic",
+          "marketplace-banner.tsx": "Marketplace promotional banner",
+          "supplier-showcase.tsx": "Featured supplier showcase"
+        },
+        "admin/": {
+          "description": "Admin panel components",
+          "eta-integrations.tsx": "ETA integration management",
+          "review-system.tsx": "Review moderation system",
+          "financial-insights.tsx": "Financial analytics dashboard"
+        },
+        "fintech/": {
+          "description": "Financial technology components"
+        },
+        "invo/": {
+          "description": "INVO SaaS subscription components"
+        },
+        "swarm/": {
+          "description": "AI swarm dashboard components"
+        },
+        "notifications/": {
+          "description": "Notification system components"
+        },
+        "shared/": {
+          "description": "Shared cross-domain components"
+        },
+        "icons/": {
+          "description": "Custom SVG icon components"
+        },
+        "cart/": {
+          "description": "Shopping cart components"
+        },
+        "checkout/": {
+          "description": "Checkout flow components"
+        },
+        "mobile/": {
+          "description": "Mobile-specific components"
+        },
+        "onboarding/": {
+          "description": "Onboarding flow components"
+        },
+        "animations/": {
+          "description": "Animation utility components"
+        }
+      },
+      "lib/": {
+        "description": "Business logic, utilities, and service layers",
+        "prisma.ts": "Prisma client singleton",
+        "api-utils.ts": "API response helpers (authenticate, success, ApiError)",
+        "auth.ts": "Authentication utilities",
+        "session.ts": "Session management",
+        "zod.ts": "Zod validation schemas for all entities",
+        "utils.ts": "General utilities (cn, formatCurrency, etc.)",
+        "blog.ts": "Blog content management",
+        "cms.ts": "CMS utilities",
+        "credit-gate.ts": "Credit limit checking logic",
+        "logger.ts": "Logging utility",
+        "redis.ts": "Redis client for caching/queues",
+        "ai/": "AI/LLM integration (Ollama, OpenRouter, Gemini)",
+        "auth/": "Auth helpers (RBAC, permissions)",
+        "eta/": "ETA e-invoicing integration",
+        "fintech/": "Financial calculations & risk engine",
+        "invo/": "INVO subscription management",
+        "payments/": "Payment processing logic",
+        "security/": "Security utilities (encryption, hashing)",
+        "swarm/": "Swarm agent orchestration logic",
+        "tenant/": "Multi-tenant scoping",
+        "theme/": "Theme utilities",
+        "i18n/": "Internationalization",
+        "marketplace/": "Marketplace business logic",
+        "notifications/": "Notification service",
+        "orders/": "Order workflow logic",
+        "inventory/": "Inventory management",
+        "logistics/": "Logistics & routing",
+        "factoring/": "Factoring business logic",
+        "audit/": "Audit trail service",
+        "finance/": "Financial utilities",
+        "integrations/": "Third-party integrations",
+        "intelligence/": "Market intelligence",
+        "scrapers/": "Data scraping utilities",
+        "queues/": "Job queue management",
+        "hooks/": "Custom React hooks",
+        "supabase/": "Supabase client (pending decision)",
+        "agents/": "AI agent definitions",
+        "animations/": "Animation utilities"
+      },
+      "types/": {
+        "description": "TypeScript type definitions",
+        "database.ts": "Auto-generated Prisma types + manual extensions"
+      },
+      "prisma/": {
+        "description": "Database schema and migrations",
+        "schema.prisma": "Full database schema (47+ models, 200+ enums)",
+        "seed.ts": "Development seed data",
+        "seed-extended.ts": "Extended seed data"
+      },
+      "public/": {
+        "description": "Static assets",
+        "logos": "Brand logo files (SVG, PNG, JPG)",
+        "images/": "Marketing images",
+        "videos/": "Promotional videos",
+        "manifest.json": "PWA manifest",
+        "sw.js": "Service worker for PWA"
+      },
+      "scripts/": {
+        "description": "Build and utility scripts",
+        "check-db.ts": "Database connectivity check",
+        "test-llm-apis.ts": "LLM API testing",
+        "test-ollama.ts": "Ollama VPS connection test",
+        "swarm-dev.ts": "Swarm development utilities",
+        "e2e-smoke-test.ts": "End-to-end smoke tests",
+        "migrate-catalog-to-db.ts": "Catalog migration",
+        "setup-remote-db.ts": "Remote database setup",
+        "fix-permissions.ts": "Permission fixing",
+        "sync-openclaw.ts": "OpenClaw sync"
+      },
+      "tests/": {
+        "description": "Test suites",
+        "api/": "API route tests",
+        "fintech/": "Financial calculation tests",
+        "eta/": "ETA compliance tests"
+      }
+    }
+  },
+
+  "featureChecklist": {
+    "description": "Complete platform feature checklist — implementation status",
+    "categories": {
+      "landingPage": {
+        "description": "Marketing landing page — primary conversion surface",
+        "features": [
+          { "feature": "Hero section — two-column layout (text left, dashboard mockup right)", "status": "done" },
+          { "feature": "Brand logo — large, centered above hero", "status": "done" },
+          { "feature": "Eyebrow badge with platform positioning", "status": "done" },
+          { "feature": "Playfair Display serif headings with accent-colored CTA text", "status": "done" },
+          { "feature": "Primary CTA (Get Started Free) with glow effect", "status": "done" },
+          { "feature": "Secondary CTA (Explore Sandbox)", "status": "done" },
+          { "feature": "Trust badges (No credit card, Live in 24h, 680+ suppliers)", "status": "done" },
+          { "feature": "Scroll indicator with bounce animation", "status": "done" },
+          { "feature": "Ambient glow effects (radial gradients)", "status": "done" },
+          { "feature": "Market ticker — live product prices marquee", "status": "done" },
+          { "feature": "Stats section — animated counters with Playfair Display numbers", "status": "done" },
+          { "feature": "Three-stakeholder tabbed section (Hotel / Supplier / Funder)", "status": "done" },
+          { "feature": "How It Works — 4-step process cards", "status": "done" },
+          { "feature": "Capabilities grid — 6 platform pillars", "status": "done" },
+          { "feature": "Social proof — trusted-by hotel group logos", "status": "done" },
+          { "feature": "Mid-page CTA conversion break", "status": "done" },
+          { "feature": "FAQ section with accordion", "status": "done" },
+          { "feature": "Global footer with links, social, legal", "status": "done" },
+          { "feature": "Registration wizard modal triggered by CTAs", "status": "done" },
+          { "feature": "AI chatbot floating assistant", "status": "done" },
+          { "feature": "Theme toggle (Wimbledon / Original / Hercules)", "status": "done" },
+          { "feature": "PWA support (service worker, manifest, offline page)", "status": "done" },
+          { "feature": "SEO metadata, Open Graph, JSON-LD structured data", "status": "done" },
+          { "feature": "Responsive design (mobile-first, all breakpoints)", "status": "done" },
+          { "feature": "Reduced motion support (prefers-reduced-motion)", "status": "done" }
+        ]
+      },
+      "vendorB2BOnboarding": {
+        "description": "Supplier registration, verification, and catalog management",
+        "features": [
+          { "feature": "Sector-aware registration wizard (5-step AI-powered)", "status": "done" },
+          { "feature": "Supplier KYC document upload", "status": "done" },
+          { "feature": "Tax ID / Commercial Reg verification", "status": "partial" },
+          { "feature": "Catalog upload (bulk CSV + manual entry)", "status": "planned" },
+          { "feature": "Product categorization (F&B, Consumables, Guest Supplies, FF&E, Services)", "status": "done" },
+          { "feature": "AI-powered product classification", "status": "planned" },
+          { "feature": "Supplier tier system (Core, Premier, Coastal, Verified)", "status": "done" },
+          { "feature": "Supplier dashboard — sales KPIs, order management", "status": "partial" },
+          { "feature": "INVO SaaS subscription management (Starter, Growth, Professional)", "status": "partial" },
+          { "feature": "API key management for supplier integrations", "status": "done" },
+          { "feature": "Webhook configuration for order notifications", "status": "done" },
+          { "feature": "Auto-accept rules for incoming orders", "status": "done" },
+          { "feature": "Sample request workflow", "status": "done" },
+          { "feature": "Supplier audit & verification system", "status": "done" },
+          { "feature": "Cold chain compliance tracking", "status": "done" }
+        ]
+      },
+      "realTimeRFQ": {
+        "description": "Request for Quotation system — competitive bidding",
+        "features": [
+          { "feature": "RFQ creation with item specifications", "status": "done" },
+          { "feature": "RFQ publishing to supplier network", "status": "done" },
+          { "feature": "Supplier bid submission with pricing & terms", "status": "done" },
+          { "feature": "AI-powered supplier matching for RFQ distribution", "status": "planned" },
+          { "feature": "Bid comparison & ranking interface", "status": "planned" },
+          { "feature": "RFQ award & auto-convert to PO", "status": "done" },
+          { "feature": "Response deadline management", "status": "done" },
+          { "feature": "RFQ status tracking (Draft → Published → Open → Awarded)", "status": "done" },
+          { "feature": "Shipping method selection (Supplier Self / Platform / Third Party)", "status": "done" },
+          { "feature": "Multi-item RFQ with category-based grouping", "status": "done" }
+        ]
+      },
+      "automatedInvoicing": {
+        "description": "ETA-compliant e-invoicing & document processing",
+        "features": [
+          { "feature": "Auto-generate invoices from confirmed orders", "status": "partial" },
+          { "feature": "ETA UUID generation & digital signature", "status": "partial" },
+          { "feature": "ETA submission (preprod + production environments)", "status": "planned" },
+          { "feature": "Bilingual invoice line items (English + Arabic)", "status": "done" },
+          { "feature": "VAT calculation (standard 14% rate)", "status": "done" },
+          { "feature": "Retention amount tracking & release", "status": "done" },
+          { "feature": "Document processing fee tracking (per-document flat rate)", "status": "done" },
+          { "feature": "Invoice status tracking (Draft → Issued → Submitted → Validated)", "status": "done" },
+          { "feature": "Credit note generation from returns", "status": "done" },
+          { "feature": "Three-way matching (PO + ETA UUID + Delivery Note)", "status": "done" },
+          { "feature": "SHA-256 cryptographic audit trail", "status": "done" },
+          { "feature": "FRA anti-fraud compliance engine", "status": "done" }
+        ]
+      },
+      "digitalProcurementWorkflows": {
+        "description": "End-to-end digital procurement from discovery to delivery",
+        "features": [
+          { "feature": "Product catalog browsing with search & filters", "status": "partial" },
+          { "feature": "AI demand forecasting (14-day prediction window)", "status": "done" },
+          { "feature": "Auto-reorder rules based on stock levels", "status": "done" },
+          { "feature": "Shopping cart with multi-supplier support", "status": "partial" },
+          { "feature": "Order creation with authority matrix approval", "status": "done" },
+          { "feature": "Multi-level approval chain (Clerk → Dept Head → GM → CFO)", "status": "done" },
+          { "feature": "Dual sign-off for high-value orders", "status": "done" },
+          { "feature": "Order splitting across suppliers", "status": "done" },
+          { "feature": "Real-time order status tracking", "status": "done" },
+          { "feature": "OTP delivery confirmation (SMS/WhatsApp/Email)", "status": "done" },
+          { "feature": "Proof of delivery (photo + signature capture)", "status": "done" },
+          { "feature": "Return request workflow with evidence upload", "status": "done" },
+          { "feature": "Dispute & arbitration system", "status": "done" },
+          { "feature": "Spend analytics by category, property, outlet", "status": "done" },
+          { "feature": "Multi-property / multi-outlet support", "status": "done" },
+          { "feature": "ERP/PMS integration (Opera, Protel, SAP, Oracle)", "status": "planned" },
+          { "feature": "Barcode/QR scanner for receiving", "status": "partial" },
+          { "feature": "Temperature monitoring for cold chain", "status": "done" }
+        ]
+      },
+      "factoringFinancial": {
+        "description": "Embedded reverse factoring — operated by licensed partners",
+        "features": [
+          { "feature": "Factoring request from supplier", "status": "done" },
+          { "feature": "Multi-funder competitive bidding", "status": "done" },
+          { "feature": "Factoring terms (advance rate, discount rate)", "status": "done" },
+          { "feature": "Credit facility management per hotel", "status": "done" },
+          { "feature": "Dynamic discounting offers", "status": "done" },
+          { "feature": "Cash flow forecasting", "status": "done" },
+          { "feature": "Virtual account management", "status": "done" },
+          { "feature": "Payment processing (Bank Transfer, Card, E-Wallet)", "status": "partial" },
+          { "feature": "Paymob payment gateway integration", "status": "planned" },
+          { "feature": "Instapay reference support", "status": "done" },
+          { "feature": "Liability disclaimer on all transaction failures", "status": "done" }
+        ]
+      },
+      "logisticsDelivery": {
+        "description": "Shark-Breaker shared coastal logistics",
+        "features": [
+          { "feature": "Logistics hub management (Consolidation, Cross-dock, Last-mile)", "status": "done" },
+          { "feature": "Trip planning with multi-stop routes", "status": "done" },
+          { "feature": "Carrier management & rate cards", "status": "done" },
+          { "feature": "Delivery job assignment & tracking", "status": "done" },
+          { "feature": "Temperature zone tracking (Ambient, Chilled, Frozen)", "status": "done" },
+          { "feature": "Consolidated order management", "status": "done" },
+          { "feature": "Real-time delivery status updates", "status": "done" },
+          { "feature": "Failed delivery handling & retry", "status": "done" }
+        ]
+      },
+      "aiSwarm": {
+        "description": "Autonomous AI agent system for platform growth",
+        "features": [
+          { "feature": "Swarm job creation & management", "status": "done" },
+          { "feature": "Multi-agent orchestration (Director, Lead Scout, Content Engine, etc.)", "status": "done" },
+          { "feature": "Job approval workflow (WAITING_APPROVAL → RUNNING)", "status": "done" },
+          { "feature": "Agent health monitoring", "status": "done" },
+          { "feature": "Lead discovery & enrichment", "status": "done" },
+          { "feature": "Outreach automation with approval gates", "status": "done" },
+          { "feature": "Market intelligence gathering", "status": "done" },
+          { "feature": "Content generation (blog, social, email)", "status": "planned" },
+          { "feature": "LLM provider failover (Ollama → OpenRouter → Gemini)", "status": "done" },
+          { "feature": "AI usage tracking & quotas", "status": "done" }
+        ]
+      },
+      "multiTenantRBAC": {
+        "description": "Multi-tenant isolation & role-based access control",
+        "features": [
+          { "feature": "Tenant isolation on all API routes", "status": "done" },
+          { "feature": "Role-based permissions (Owner, GM, FC, Dept Head, Clerk)", "status": "done" },
+          { "feature": "Authority matrix with value-based routing", "status": "done" },
+          { "feature": "Cross-tenant data leakage prevention", "status": "done" },
+          { "feature": "Platform role system (Hotel, Supplier, Factoring, Shipping, Admin)", "status": "done" },
+          { "feature": "Seat & account limits per tenant", "status": "done" },
+          { "feature": "Delegate invitation system", "status": "done" }
+        ]
+      },
+      "notificationSystem": {
+        "description": "Multi-channel notification system",
+        "features": [
+          { "feature": "In-app notifications with read/unread tracking", "status": "done" },
+          { "feature": "Email notification delivery", "status": "planned" },
+          { "feature": "SMS notification delivery", "status": "planned" },
+          { "feature": "Push notification support (PWA)", "status": "planned" },
+          { "feature": "Notification preferences & quiet hours", "status": "done" },
+          { "feature": "40+ notification types (order, invoice, factoring, fraud, etc.)", "status": "done" },
+          { "feature": "Priority levels (Low, Normal, High, Urgent)", "status": "done" }
+        ]
+      },
+      "analyticsReporting": {
+        "description": "Platform analytics & reporting",
+        "features": [
+          { "feature": "Spend analytics by category, property, time period", "status": "done" },
+          { "feature": "Supplier performance scoring", "status": "done" },
+          { "feature": "Demand forecasting accuracy tracking", "status": "done" },
+          { "feature": "Cash flow forecasting", "status": "done" },
+          { "feature": "Compass reading (market direction indicator)", "status": "done" },
+          { "feature": "Fraud detection analytics", "status": "done" },
+          { "feature": "AI usage analytics", "status": "done" }
+        ]
+      }
+    }
+  },
+
+  "domLayout": {
+    "description": "Exact DOM section layout for the landing page (app/(marketing)/page.tsx) — top to bottom",
+    "sections": [
+      {
+        "id": "nav",
+        "name": "Navigation Bar",
+        "component": "MarketingNav",
+        "position": "fixed top-0, z-50",
+        "height": "68px (--header-height)",
+        "behavior": "Sticky, transparent → solid on scroll",
+        "contents": [
+          "BrandLogo (left, size md)",
+          "Nav links: Platform, Marketplace, Pricing, Solutions, Blog (center)",
+          "Theme toggle, Language toggle (right)",
+          "CTA: 'Get Started' button (right, accent color)"
+        ],
+        "responsive": {
+          "mobile": "Hamburger menu with slide-out drawer",
+          "tablet": "Condensed nav links",
+          "desktop": "Full horizontal nav"
+        }
+      },
+      {
+        "id": "hero",
+        "name": "Hero Section",
+        "component": "HeroSection",
+        "position": "below nav, full-viewport",
+        "minHeight": "calc(100vh - 68px)",
+        "background": "#000000 with radial gradient ambient glow",
+        "layout": "Two-column grid (5/7 split on desktop, stacked on mobile)",
+        "contents": {
+          "leftColumn": [
+            "BrandLogo (size xl, centered above on mobile)",
+            "Eyebrow badge: 'Egypt's #1 Hospitality Procurement Platform' with Sparkles icon",
+            "H1: 'Procurement / That Pays for / Itself' (Playfair Display, accent on last line)",
+            "Subheadline: Value prop paragraph (white/45 opacity)",
+            "CTA row: 'Get Started Free' (accent glow) + 'Explore Sandbox' (ghost button)",
+            "Trust badges: No credit card, Live in 24 hours, 680+ suppliers (CheckCircle2 icons)"
+          ],
+          "rightColumn": [
+            "Dashboard mockup container (rounded-3xl, gradient border, shadow)",
+            "HotelDashboardMockup component (live preview)",
+            "Ambient glow under dashboard (accent color blur)"
+          ],
+          "below": [
+            "Scroll indicator: 'Discover' text + bouncing ArrowDown icon"
+          ]
+        },
+        "responsive": {
+          "mobile": "Single column, logo → text → dashboard mockup stacked",
+          "tablet": "Single column, larger gaps",
+          "desktop": "Two-column 5/7 split, left column sticky"
+        }
+      },
+      {
+        "id": "ticker",
+        "name": "Market Ticker",
+        "component": "MarketTicker",
+        "position": "below hero, full-width",
+        "height": "Auto (single line + padding)",
+        "background": "Slightly lighter than canvas",
+        "behavior": "Infinite horizontal marquee (15s desktop, 25s mobile)",
+        "contents": [
+          "Product names with live prices",
+          "Arabic product names",
+          "Price change indicators (up/down arrows)",
+          "Gradient fade masks on left/right edges"
+        ]
+      },
+      {
+        "id": "stats",
+        "name": "Stats Section",
+        "component": "StatsSection",
+        "position": "below ticker",
+        "padding": "py-20 md:py-24",
+        "background": "Transparent (canvas color)",
+        "border": "Top and bottom subtle border (rgba 0.06)",
+        "layout": "4-column grid (2-col on mobile)",
+        "contents": [
+          "Section label: 'Platform Metrics' (uppercase, accent, tracking-wide)",
+          "Section heading: 'Numbers That Matter' (Playfair Display)",
+          "Stat 1: 680+ Verified Suppliers",
+          "Stat 2: 94% Forecast Accuracy (accent colored)",
+          "Stat 3: 48h Supplier Settlement",
+          "Stat 4: 40% Cost Reduction"
+        ],
+        "animation": "Count-up numbers triggered by useInView, Playfair Display serif"
+      },
+      {
+        "id": "stakeholders",
+        "name": "Three Stakeholder Section",
+        "component": "ThreeStakeholderSection",
+        "position": "below stats",
+        "padding": "py-24 md:py-32",
+        "background": "SURFACE (#080B12)",
+        "layout": "Tabbed interface with 2-column content",
+        "contents": [
+          "Section label: 'Three Stakeholders, One Platform' (accent)",
+          "Section heading: 'Hotels Buy. Suppliers Sell. Funders Finance.' (Playfair Display)",
+          "Tab buttons: For Hotels | For Suppliers For Funders (with icons, active glow)",
+          "Active tab content (animated with AnimatePresence):",
+          "  Left: Icon frame, title, description, feature list (CheckCircle2), CTA button",
+          "  Right: Role-specific dashboard mockup (HotelDashboardMockup / SupplierDashboardMockup / FunderDashboardMockup)"
+        ],
+        "animation": "Tab switch: fade + y-translate (0.4s ease)"
+      },
+      {
+        "id": "howItWorks",
+        "name": "How It Works",
+        "component": "HowItWorksSection",
+        "position": "below stakeholders",
+        "padding": "py-24 md:py-32",
+        "background": "SURFACE (#080B12)",
+        "layout": "4-column grid (1-col mobile, 2-col tablet, 4-col desktop)",
+        "contents": [
+          "Section label: 'How It Works' (accent)",
+          "Section heading: 'Live in 24 Hours' (Playfair Display)",
+          "Subheadline: 'From registration to your first AI-optimized order in under a day.'",
+          "Step 01: Join Free (Building2 icon)",
+          "Step 02: Discover & Order (Store icon)",
+          "Step 03: Checkout & Pay (BrainCircuit icon)",
+          "Step 04: Settle in 48h (Banknote icon)"
+        ],
+        "cardBehavior": "Hover: -translate-y-1, border color transition, icon color transition"
+      },
+      {
+        "id": "capabilities",
+        "name": "Capabilities Grid",
+        "component": "CapabilitiesSection",
+        "position": "below how-it-works",
+        "padding": "py-24 md:py-32",
+        "background": "Transparent (canvas color)",
+        "layout": "3-column grid (1-col mobile, 2-col tablet, 3-col desktop)",
+        "contents": [
+          "Section label: 'Platform Capabilities' (accent)",
+          "Section heading: 'Built for Hospitality. Compliant by Default.' (Playfair Display)",
+          "Card 1: AI Demand Forecasting (BrainCircuit icon, accent frame)",
+          "Card 2: ETA E-Invoicing — Automatic (Receipt icon)",
+          "Card 3: Shared-Route Logistics (Truck icon)",
+          "Card 4: Embedded Reverse Factoring (Banknote icon)",
+          "Card 5: FRA Anti-Fraud Compliance (ShieldCheck icon)",
+          "Card 6: Cost Control & Analytics (BarChart3 icon)"
+        ],
+        "cardBehavior": "Hover: -translate-y-1, border color transition, accent icon frame"
+      },
+      {
+        "id": "socialProof",
+        "name": "Social Proof / Trust Bar",
+        "component": "SocialProofSection",
+        "position": "below capabilities",
+        "padding": "py-20",
+        "background": "Transparent with top/bottom borders",
+        "layout": "Flex wrap, centered",
+        "contents": [
+          "Section label: 'Trusted by Leading Hotel Groups' (white/25)",
+          "Logo/text: Stella Di Mare, Sunrise Resorts, Jaz Hotels, Baron Hotels, Al Gouna, Steigenberger"
+        ],
+        "style": "Monochrome logos (white/25 opacity), no color"
+      },
+      {
+        "id": "midCta",
+        "name": "Mid-Page CTA",
+        "component": "MidPageCTA",
+        "position": "below social proof",
+        "padding": "py-20 md:py-28",
+        "background": "Radial gradient ambient glow (accent color)",
+        "layout": "Centered, max-width 3xl",
+        "contents": [
+          "Badge: 'Start Saving Today' with Zap icon (accent)",
+          "H2: 'Your Supply Chain Is / Leaking Money' (Playfair Display)",
+          "Paragraph: Value prop about cost of manual processes",
+          "CTA row: 'Get Started Free' (accent glow) + 'Explore Sandbox' (ghost)",
+          "Micro-copy: 'No credit card required · Free forever for hotels · Dedicated onboarding'"
+        ]
+      },
+      {
+        "id": "faq",
+        "name": "FAQ Section",
+        "component": "FAQSection",
+        "position": "below mid-page CTA",
+        "padding": "py-24 md:py-32",
+        "background": "SURFACE (#080B12) with top border",
+        "layout": "Single column, max-width 3xl, centered",
+        "contents": [
+          "Section label: 'FAQ' (accent)",
+          "Section heading: 'Questions? Answered.' (Playfair Display)",
+          "FAQ accordion items (FAQSection component):",
+          "  Category badges with accent colors",
+          "  Expand/collapse with ChevronDown rotation",
+          "  Categories: General, Hotels, Suppliers, Funders, Compliance"
+        ]
+      },
+      {
+        "id": "footer",
+        "name": "Global Footer",
+        "component": "MarketingFooter",
+        "position": "below FAQ, bottom of page",
+        "background": "Darker surface",
+        "layout": "Multi-column grid",
+        "contents": [
+          "Brand column: Logo, description, social media links",
+          "Product column: Platform, Marketplace, Pricing, Sandbox",
+          "Solutions column: For Hotels, For Suppliers, For Funders, Logistics",
+          "Company column: About, Blog, Careers, Contact",
+          "Legal column: Privacy, Terms, Compliance",
+          "Bottom bar: Copyright, legal text, liability disclaimer"
+        ]
+      },
+      {
+        "id": "wizard",
+        "name": "Registration Wizard (Modal)",
+        "component": "RegistrationWizard",
+        "position": "Fixed overlay, triggered by CTA buttons",
+        "behavior": "Modal with backdrop blur, 5-step flow",
+        "steps": [
+          "Step 1: Sector selection (Hotel / Supplier / Funder / Logistics)",
+          "Step 2: Company info (name, tax ID, governorate, size)",
+          "Step 3: Contact info (name, email, phone, role)",
+          "Step 4: AI pre-fill suggestions (optional, LLM-powered)",
+          "Step 5: Verification (OTP via SMS/email)"
+        ]
+      },
+      {
+        "id": "chatbot",
+        "name": "AI Chatbot (Floating)",
+        "component": "PublicChatbot",
+        "position": "Fixed bottom-right, z-40",
+        "behavior": "Collapsible chat widget, expands to conversation panel",
+        "contents": [
+          "Robot face icon (floating button)",
+          "Chat panel with message history",
+          "Input field with send button",
+          "AI-powered responses via Ollama/OpenRouter"
+        ]
+      }
+    ]
+  },
+
+  "conversionOptimization": {
+    "description": "Conversion-focused design patterns applied throughout",
+    "ctaStrategy": {
+      "primary": {
+        "text": "Get Started Free",
+        "style": "Accent background (#FF6B00), white text, glow shadow, hover scale",
+        "placement": ["Hero left column", "Mid-page CTA", "Stakeholder section per tab", "Nav bar"]
+      },
+      "secondary": {
+        "text": "Explore Sandbox",
+        "style": "Ghost button, border, hover fill",
+        "placement": ["Hero left column", "Mid-page CTA"]
+      }
+    },
+    "trustSignals": [
+      "No credit card required",
+      "Live in 24 hours",
+      "680+ verified suppliers",
+      "Trusted by Stella Di Mare, Sunrise, Jaz, Baron, Al Gouna, Steigenberger",
+      "ETA compliance badge",
+      "FRA anti-fraud badge",
+      "SHA-256 audit trail mention"
+    ],
+    "urgencyElements": [
+      "48-hour supplier settlement",
+      "14-day AI forecast window",
+      "Real-time pricing ticker"
+    ],
+    "frictionReduction": [
+      "5-minute AI-guided registration",
+      "No credit card for signup",
+      "Sandbox environment for exploration",
+      "Floating AI assistant for questions"
+    ]
+  },
+
+  "performanceTargets": {
+    "coreWebVitals": {
+      "LCP": "< 2.5s",
+      "FID": "< 100ms",
+      "CLS": "< 0.1"
+    },
+    "optimizationStrategies": [
+      "Font display: swap for web fonts",
+      "Lazy load below-fold images and components",
+      "Preconnect to Google Fonts",
+      "SVG icons (no emoji)",
+      "CSS containment for animation-heavy sections",
+      "Skeleton loading states for async content",
+      "PWA service worker for repeat visits"
+    ]
+  },
+
+  "accessibilityRequirements": {
+    "wcag": "AA (minimum)",
+    "requirements": [
+      "Color contrast ≥ 4.5:1 for normal text",
+      "Color contrast ≥ 3:1 for large text",
+      "Focus rings on all interactive elements (2-4px)",
+      "Keyboard navigation support (Tab order matches visual)",
+      "ARIA labels on icon-only buttons",
+      "Skip-to-content link",
+      "Heading hierarchy (h1→h6, no level skip)",
+      "Alt text on meaningful images",
+      "prefers-reduced-motion support",
+      "Touch target minimum 44×44px",
+      "Form labels visible (not placeholder-only)",
+      "Error messages near related fields"
+    ]
+  }
+}

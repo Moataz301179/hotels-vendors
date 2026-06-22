@@ -20,11 +20,11 @@ export function MarketingNav() {
   }, []);
 
   const navLinks = [
-    { label: "For Hotels", href: "/register/hotel" },
-    { label: "For Suppliers", href: "/register/supplier" },
-    { label: "For Funders", href: "/register/funder" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Sandbox", href: "/sandbox" },
+    { label: "Platform", href: "/platform" },
+    { label: "Marketplace", href: "/marketplace" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Solutions", href: "/solutions" },
+    { label: "Blog", href: "/blog" },
   ];
 
   const headerBg = scrolled ? "rgba(0,0,0,0.95)" : "transparent";

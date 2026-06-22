@@ -147,7 +147,7 @@ export default function HomePage() {
                 style={{ backgroundColor: ACCENT_MUTED, border: `1px solid ${ACCENT_BORDER}` }}
               >
                 <Sparkles size={12} style={{ color: ACCENT }} />
-                <span className="text-[11px] font-semibold tracking-wide" style={{ color: ACCENT }}>AI-POWERED PROCUREMENT FOR EGYPTIAN HOSPITALITY</span>
+                <span className="text-[11px] font-semibold tracking-wide" style={{ color: ACCENT }}>EGYPT&apos;S #1 HOSPITALITY PROCUREMENT PLATFORM</span>
               </motion.div>
 
               <h1
@@ -162,7 +162,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-[15px] md:text-[17px] text-white/45 max-w-lg mb-10 leading-[1.7]">
-                From Sharm El-Sheikh to Hurghada — coastal resorts use HotelsVendors to cut procurement costs 15–25%, settle suppliers in 48 hours, and automate ETA e-invoicing compliance.
+                Egypt&apos;s coastal resorts use HotelsVendors to cut procurement costs 15–25%, settle suppliers in 48 hours via reverse factoring, and automate ETA e-invoicing — all from one platform.
               </p>
 
               {/* CTAs — large, prominent */}
@@ -185,19 +185,19 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              {/* Trust badges */}
+              {/* Trust badges — blueprint: No credit card, Live in 24h, 680+ suppliers */}
               <div className="flex flex-wrap items-center gap-5 text-[12px] text-white/30">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  No credit card to start
+                  No credit card required
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  ETA e-invoicing included
+                  Live in 24 hours
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={13} style={{ color: ACCENT }} />
-                  6 governorates covered
+                  680+ verified suppliers
                 </span>
               </div>
             </motion.div>
