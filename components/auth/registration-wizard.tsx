@@ -134,16 +134,29 @@ export function RegistrationWizard({
   const [registering, setRegistering] = useState(false);
   const [registered, setRegistered] = useState(false);
   const [error, setError] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [otpCountdown, setOtpCountdown] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen && step === 1 && messages.length === 0) {
-      setMessages([{
-        role: "assistant",
-        content: "Welcome to HotelsVendors! I'll guide you through registration in about 2 minutes.\n\nFirst — what best describes your business?",
-      }]);
+    if (isOpen) {
+      if (step === 1 && messages.length === 0) {
+        setMessages([{
+          role: "assistant",
+          content: "Welcome to HotelsVendors! I'll guide you through registration in about 2 minutes.\n\nFirst — what best describes your business?",
+        }]);
+      }
+      setOtpSent(false);
+      setOtpCode("");
+      setOtpVerified(false);
+      setOtpError("");
+      setOtpCountdown(0);
     }
-  }, [isOpen, step, messages.length]);
+  }, [isOpen]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -154,20 +167,74 @@ export function RegistrationWizard({
     setError("");
   }, []);
 
+  const applyPrefill = useCallback((extracted: Record<string, unknown>) => {
+    const mappings: Array<[keyof WizardData, string]> = [
+      ["companyName", "companyName"],
+      ["contactName", "contactName"],
+      ["phone", "phone"],
+      ["email", "email"],
+      ["city", "city"],
+      ["taxId", "taxId"],
+      ["commercialReg", "commercialReg"],
+      ["bankName", "bankName"],
+      ["bankAccount", "bankAccount"],
+      ["subCategory", "subCategory"],
+      ["capacity", "capacity"],
+      ["coverage", "coverage"],
+      ["licenseNumber", "licenseNumber"],
+      ["paymobMerchantId", "paymobMerchantId"],
+    ];
+    for (const [key, jsonKey] of mappings) {
+      const val = extracted[jsonKey];
+      if (val !== undefined && val !== null && val !== "") {
+        if (key === "supplyCategories" && Array.isArray(val)) {
+          setData((prev) => ({ ...prev, supplyCategories: val as string[] }));
+        } else {
+          setData((prev) => ({ ...prev, [key]: String(val) }));
+        }
+      }
+    }
+  }, []);
+
   const handleSend = useCallback(async (text?: string) => {
     const msg = text || input;
     if (!msg.trim() || loading) return;
 
-    setMessages((prev) => [...prev, { role: "user", content: msg.trim() }]);
+    const userMsg = msg.trim();
+    setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
     setInput("");
     setLoading(true);
 
     try {
+      // First, try to extract structured data from the message
+      const prefillRes = await fetch("/api/v1/ai/prefill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: userMsg, role: data.role || undefined }),
+      });
+      const prefillJson = await prefillRes.json();
+
+      if (prefillJson.success && prefillJson.data?.extracted) {
+        const extracted = prefillJson.data.extracted as Record<string, unknown>;
+        const fieldsFound = prefillJson.data.fieldsFound as number || 0;
+        if (fieldsFound > 0) {
+          applyPrefill(extracted);
+          const fieldNames = Object.keys(extracted).join(", ");
+          setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: `Great! I extracted ${fieldsFound} field(s) from what you said: ${fieldNames}. I've pre-filled the form for you. You can review and edit any field before completing registration.`,
+          }]);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Fallback: general Q&A via public AI
       const res = await fetch("/api/v1/ai/public", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          question: msg.trim(),
+          question: userMsg,
           context: { wizardStep: step, role: data.role, subCategory: data.subCategory },
         }),
       });
@@ -184,7 +251,7 @@ export function RegistrationWizard({
     } finally {
       setLoading(false);
     }
-  }, [input, loading, step, data.role, data.subCategory]);
+  }, [input, loading, step, data.role, data.subCategory, applyPrefill]);
 
   const handleRegister = useCallback(async () => {
     setRegistering(true);
@@ -229,12 +296,75 @@ export function RegistrationWizard({
     }
   }, [data]);
 
+  const handleSendOtp = useCallback(async () => {
+    if (!data.phone.trim()) {
+      setOtpError("Please enter a phone number first");
+      return;
+    }
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      const res = await fetch("/api/v1/auth/register/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: data.phone.trim() }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setOtpSent(true);
+        setOtpCountdown(60);
+        const interval = setInterval(() => {
+          setOtpCountdown((prev) => {
+            if (prev <= 1) { clearInterval(interval); return 0; }
+            return prev - 1;
+          });
+        }, 1000);
+        if (json.data?.code) {
+          setOtpCode(json.data.code);
+        }
+      } else {
+        setOtpError(json.error || "Failed to send OTP");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  }, [data.phone]);
+
+  const handleVerifyOtp = useCallback(async () => {
+    if (!otpCode.trim() || otpCode.trim().length !== 6) {
+      setOtpError("Please enter the 6-digit code");
+      return;
+    }
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      const res = await fetch("/api/v1/auth/register/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: data.phone.trim(), code: otpCode.trim() }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setOtpVerified(true);
+        setOtpError("");
+      } else {
+        setOtpError(json.error || "Invalid code");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  }, [otpCode, data.phone]);
+
   const canProceed = (): boolean => {
     switch (step) {
       case 1: return !!data.role;
       case 2: return !!data.subCategory && !!data.capacity;
       case 3: return !!data.companyName.trim() && !!data.contactName.trim() && !!data.city.trim() && !!data.phone.trim();
-      case 4: return !!data.taxId.trim() && !!data.commercialReg.trim() && !!data.bankName.trim() && !!data.bankAccount.trim() && (data.role === "funder" ? !!data.licenseNumber.trim() : true);
+      case 4: return !!data.taxId.trim() && !!data.commercialReg.trim() && !!data.bankName.trim() && !!data.bankAccount.trim() && (data.role === "funder" ? !!data.licenseNumber.trim() : true) && otpVerified;
       case 5: return !!data.email.trim() && data.password.length >= 8;
       case 6: return true;
       default: return false;
@@ -282,7 +412,7 @@ export function RegistrationWizard({
         {!registered && (
           <div className="flex gap-1 px-6 pt-3">
             {STEPS.map((s) => (
-              <div key={s.num} className="flex-1 h-1 rounded-full transition-colors" style={{ backgroundColor: step >= s.num ? "#FFB000" : "rgba(255,255,255,0.06)" }} />
+              <div key={s.num} className="flex-1 h-1 rounded-full transition-colors" style={{ backgroundColor: step >= s.num ? "#FF6B00" : "rgba(255,255,255,0.06)" }} />
             ))}
           </div>
         )}
@@ -297,7 +427,7 @@ export function RegistrationWizard({
                 </div>
                 <h3 className="text-xl font-medium text-white mb-2">Account Created!</h3>
                 <p className="text-sm text-white/40 mb-6">Check your email to verify your account.</p>
-                <button onClick={onClose} className="px-6 py-2.5 text-sm font-medium rounded-lg text-black" style={{ backgroundColor: "#FFB000" }}>
+                <button onClick={onClose} className="px-6 py-2.5 text-sm font-medium rounded-lg text-black" style={{ backgroundColor: "#FF6B00" }}>
                   Continue to Dashboard
                 </button>
               </motion.div>
@@ -306,7 +436,7 @@ export function RegistrationWizard({
                 {step === 1 && <StepRole data={data} update={update} />}
                 {step === 2 && config && <StepDetails data={data} update={update} config={config} />}
                 {step === 3 && <StepCompany data={data} update={update} />}
-                {step === 4 && <StepVerification data={data} update={update} config={config!} />}
+                {step === 4 && <StepVerification data={data} update={update} config={config!} otpSent={otpSent} otpCode={otpCode} setOtpCode={setOtpCode} otpVerified={otpVerified} otpLoading={otpLoading} otpError={otpError} otpCountdown={otpCountdown} onSendOtp={handleSendOtp} onVerifyOtp={handleVerifyOtp} />}
                 {step === 5 && <StepAccount data={data} update={update} error={error} />}
                 {step === 6 && config && <StepPreview data={data} config={config} DashboardComponent={DashboardComponent!} messages={messages} input={input} setInput={setInput} onSend={handleSend} loading={loading} messagesEndRef={messagesEndRef} />}
               </motion.div>
@@ -320,7 +450,7 @@ export function RegistrationWizard({
             <button onClick={step === 1 ? onClose : prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> {step === 1 ? "Cancel" : "Back"}
             </button>
-            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}>
+            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "#FF6B00", color: "#0B0F1A" }}>
               Continue <ArrowRight size={14} />
             </button>
           </div>
@@ -331,7 +461,7 @@ export function RegistrationWizard({
             <button onClick={prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> Back
             </button>
-            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#FFB000", color: "#0B0F1A" }}>
+            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#FF6B00", color: "#0B0F1A" }}>
               {registering ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
               {registering ? "Creating Account..." : "Complete Registration"}
             </button>
@@ -416,7 +546,7 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               style={{
                 backgroundColor: data.subCategory === cat ? "rgba(255,176,0,0.06)" : "rgba(255,255,255,0.02)",
                 border: `1px solid ${data.subCategory === cat ? "rgba(255,176,0,0.25)" : "rgba(255,255,255,0.06)"}`,
-                color: data.subCategory === cat ? "#FFB000" : "rgba(255,255,255,0.5)",
+                color: data.subCategory === cat ? "#FF6B00" : "rgba(255,255,255,0.5)",
               }}
             >
               <ChevronRight size={14} className={data.subCategory === cat ? "opacity-100" : "opacity-0"} />
@@ -441,7 +571,7 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
                   style={{
                     backgroundColor: selected ? "rgba(255,176,0,0.08)" : "rgba(255,255,255,0.02)",
                     border: `1px solid ${selected ? "rgba(255,176,0,0.2)" : "rgba(255,255,255,0.06)"}`,
-                    color: selected ? "#FFB000" : "rgba(255,255,255,0.4)",
+                    color: selected ? "#FF6B00" : "rgba(255,255,255,0.4)",
                   }}
                 >
                   {cat}
@@ -464,7 +594,7 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               style={{
                 backgroundColor: data.capacity === opt ? "rgba(255,176,0,0.08)" : "rgba(255,255,255,0.02)",
                 border: `1px solid ${data.capacity === opt ? "rgba(255,176,0,0.2)" : "rgba(255,255,255,0.06)"}`,
-                color: data.capacity === opt ? "#FFB000" : "rgba(255,255,255,0.4)",
+                color: data.capacity === opt ? "#FF6B00" : "rgba(255,255,255,0.4)",
               }}
             >
               {opt}
@@ -504,16 +634,91 @@ function StepCompany({ data, update }: { data: WizardData; update: <K extends ke
    STEP 4 — Legal Verification & Banking
    ═══════════════════════════════════════════════════════════════ */
 
-function StepVerification({ data, update, config }: { data: WizardData; update: <K extends keyof WizardData>(key: K, value: WizardData[K]) => void; config: typeof ROLE_CONFIG[string] }) {
+function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, otpVerified, otpLoading, otpError, otpCountdown, onSendOtp, onVerifyOtp }: {
+  data: WizardData;
+  update: <K extends keyof WizardData>(key: K, value: WizardData[K]) => void;
+  config: typeof ROLE_CONFIG[string];
+  otpSent: boolean;
+  otpCode: string;
+  setOtpCode: (v: string) => void;
+  otpVerified: boolean;
+  otpLoading: boolean;
+  otpError: string;
+  otpCountdown: number;
+  onSendOtp: () => void;
+  onVerifyOtp: () => void;
+}) {
   return (
     <div>
-      <h3 className="text-[20px] font-semibold text-white mb-2">Legal Verification & Banking</h3>
-      <p className="text-[13px] text-white/40 mb-2">Required for ETA e-invoicing compliance and payout processing.</p>
-      <p className="text-[11px] text-white/25 mb-6">بيانات التحقق القانوني مطلوبة للفوترة الإلكترونية ومعالجة المدفوعات</p>
+      <h3 className="text-[20px] font-semibold text-white mb-2">Verification & Banking</h3>
+      <p className="text-[13px] text-white/40 mb-2">Verify your phone and provide legal documents for ETA compliance.</p>
+      <p className="text-[11px] text-white/25 mb-6">تحقق من هاتفك وقدم المستندات القانونية للامتثال للفوترة الإلكترونية</p>
+
+      {/* Phone OTP Verification */}
+      <div className="mb-6 px-4 py-4 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${otpVerified ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}` }}>
+        <div className="flex items-center gap-2 mb-3">
+          <Phone size={14} style={{ color: otpVerified ? "#22C55E" : "#FF6B00" }} />
+          <span className="text-[12px] font-medium text-white/70">Phone Verification</span>
+          {otpVerified && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+              <CheckCircle2 size={10} /> Verified
+            </span>
+          )}
+        </div>
+        <p className="text-[11px] text-white/30 mb-3">We'll send a 6-digit code to {data.phone}</p>
+        {!otpVerified && (
+          <div className="flex gap-2">
+            {!otpSent ? (
+              <button
+                onClick={onSendOtp}
+                disabled={otpLoading}
+                className="px-4 py-2 text-[12px] font-medium rounded-lg transition-all disabled:opacity-50"
+                style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}
+              >
+                {otpLoading ? "Sending..." : "Send OTP"}
+              </button>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                  className="w-36 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white text-center tracking-[0.3em] placeholder:text-white/20 placeholder:tracking-normal outline-none focus:border-[rgba(255,107,0,0.3)]"
+                />
+                <button
+                  onClick={onVerifyOtp}
+                  disabled={otpLoading || otpCode.length !== 6}
+                  className="px-4 py-2 text-[12px] font-medium rounded-lg transition-all disabled:opacity-50"
+                  style={{ backgroundColor: "#22C55E", color: "#ffffff" }}
+                >
+                  {otpLoading ? "Verifying..." : "Verify"}
+                </button>
+                {otpCountdown > 0 && (
+                  <span className="text-[11px] text-white/30 self-center">{otpCountdown}s</span>
+                )}
+                {otpCountdown === 0 && (
+                  <button
+                    onClick={onSendOtp}
+                    disabled={otpLoading}
+                    className="text-[11px] text-[#FF6B00] hover:underline self-center"
+                  >
+                    Resend
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        )}
+        {otpError && (
+          <p className="text-[11px] text-red-400 mt-2">{otpError}</p>
+        )}
+      </div>
 
       {/* Legal verification note */}
       <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "rgba(255,176,0,0.06)", border: "1px solid rgba(255,176,0,0.15)" }}>
-        <p className="font-medium text-[#FFB000] mb-1">Why we need this</p>
+        <p className="font-medium text-[#FF6B00] mb-1">Why we need this</p>
         <p className="text-white/40">
           {data.role === "funder" && "FRA license verification is mandatory for factoring companies operating in Egypt. Your account will be activated after document review (typically 24 hours)."}
           {data.role === "supplier" && "Tax ID and Commercial Registration are required for ETA e-invoicing. Bank account is needed for reverse factoring payouts."}
@@ -607,7 +812,7 @@ function StepPreview({
         {/* AI Chat */}
         <div className="flex flex-col rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.01)" }}>
           <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-            <Sparkles size={14} style={{ color: "#FFB000" }} />
+            <Sparkles size={14} style={{ color: "#FF6B00" }} />
             <span className="text-[12px] font-medium text-white/60">Ask about your dashboard</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: 200, maxHeight: 300 }}>
@@ -615,7 +820,7 @@ function StepPreview({
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className="max-w-[85%] px-3 py-2 rounded-lg text-[12px] leading-relaxed" style={{
                   backgroundColor: msg.role === "user" ? "rgba(255,176,0,0.1)" : "rgba(255,255,255,0.04)",
-                  color: msg.role === "user" ? "#FFB000" : "rgba(255,255,255,0.6)",
+                  color: msg.role === "user" ? "#FF6B00" : "rgba(255,255,255,0.6)",
                 }}>
                   {msg.content}
                 </div>

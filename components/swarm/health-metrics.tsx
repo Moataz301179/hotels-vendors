@@ -29,7 +29,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
       label: "Success Rate",
       value: `${summary.successRate}%`,
       sub: `${summary.completedJobs} completed / ${summary.totalJobs} total`,
-      progress: summary.successRate,
+      progress: Math.min(100, Math.max(0, summary.successRate)),
     },
     {
       label: "Pending Jobs",
@@ -78,7 +78,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
               <div className="flex items-center gap-2">
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    model.status === "HEALTHY"
+                    model.status === "HEALTHY" || model.status === "CONFIGURED"
                       ? "bg-emerald-400"
                       : model.status === "DEGRADED"
                       ? "bg-amber-400"
@@ -91,7 +91,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
               </div>
               <span
                 className={`text-xs ${
-                  model.status === "HEALTHY"
+                  model.status === "HEALTHY" || model.status === "CONFIGURED"
                     ? "text-emerald-400"
                     : model.status === "DEGRADED"
                     ? "text-amber-400"

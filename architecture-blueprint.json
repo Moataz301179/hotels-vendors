@@ -18,6 +18,10 @@
       "testing": "Vitest"
     },
     "designSystem": {
+      "framework": "TailwindCSS",
+      "theme": "Sleek Dark/Light Hybrid (Blink Aesthetic)",
+      "typography": "Plus Jakarta Sans",
+      "borderRadius": "rounded-xl",
       "themes": ["wimbledon (default)", "original", "hercules"],
       "darkTheme": {
         "background": "#000000 (OLED black)",
@@ -26,10 +30,24 @@
         "surface": "#080B12 / #0C1018",
         "border": "rgba(255,255,255,0.06)"
       },
+      "lightTheme": {
+        "background": "#FFFFFF",
+        "text": "#0B0F1A (near black)",
+        "accent": "#FF6B00 (neon orange)",
+        "surface": "#F5F6F8 (warm grey)",
+        "border": "rgba(0,0,0,0.08)"
+      },
       "fonts": {
         "headings": "Playfair Display (serif)",
         "body": "Plus Jakarta Sans / Inter (sans-serif)",
-        "display": "Plus Jakarta Sans"
+        "display": "Plus Jakarta Sans",
+        "primary": "Plus Jakarta Sans"
+      },
+      "radius": {
+        "standard": "rounded-xl (12px)",
+        "small": "rounded-lg (8px)",
+        "pill": "rounded-full",
+        "none": "rounded-none"
       }
     }
   },

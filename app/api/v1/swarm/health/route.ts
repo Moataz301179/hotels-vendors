@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    const successRate = totalJobs > 0 ? completedJobs / totalJobs : 0;
+    const successRate = totalJobs > 0 ? Math.round((completedJobs / totalJobs) * 100) : 0;
 
     const eventsBySeverity: Record<string, number> = {};
     for (const event of recentEvents) {
@@ -43,13 +43,13 @@ export async function GET(req: NextRequest) {
         modelHealth.push({
           provider: "ollama",
           model: process.env.OLLAMA_MODEL || "llama3.2:latest",
-          status: res.ok ? "healthy" : "degraded",
+          status: res.ok ? "HEALTHY" : "DEGRADED",
         });
       } catch {
         modelHealth.push({
           provider: "ollama",
           model: process.env.OLLAMA_MODEL || "llama3.2:latest",
-          status: "unreachable",
+          status: "UNREACHABLE",
         });
       }
     }
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       modelHealth.push({
         provider: "openrouter",
         model: process.env.OPENROUTER_MODEL || "openrouter/owl-alpha",
-        status: "configured",
+        status: "CONFIGURED",
       });
     }
 
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
           failedJobs,
           pendingJobs,
           waitingApproval,
-          successRate: Math.round(successRate * 100) / 100,
+          successRate,
         },
         eventsBySeverity,
         modelHealth,

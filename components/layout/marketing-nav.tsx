@@ -27,101 +27,113 @@ export function MarketingNav() {
     { label: "Blog", href: "/blog" },
   ];
 
-  const headerBg = scrolled ? "rgba(0,0,0,0.95)" : "transparent";
-  const headerBorder = scrolled ? "rgba(255,255,255,0.06)" : "transparent";
-
   return (
     <>
-    <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        backgroundColor: headerBg,
-        borderBottom: `1px solid ${headerBorder}`,
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-      }}
-    >
-      <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
-        <Link href="/" className="relative z-10">
-          <BrandLogo variant="dark" size="md" />
-        </Link>
-
-        <nav className="hidden lg:flex items-center gap-1">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-lg transition-colors text-white/50 hover:text-white hover:bg-white/[0.06]"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden lg:flex items-center gap-2">
-          <Link
-            href="/login"
-            className="text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors text-white/60 hover:text-white"
-          >
-            Sign In
+      <header
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          backgroundColor: scrolled ? "rgba(0,0,0,0.92)" : "transparent",
+          borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.06)" : "transparent"}`,
+          backdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
+          {/* Brand */}
+          <Link href="/" className="relative z-10">
+            <BrandLogo variant="dark" size="md" />
           </Link>
 
-          <button
-            onClick={() => setWizardOpen(true)}
-            className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-lg transition-all hover:opacity-90 hover:shadow-lg cursor-pointer"
-            style={{ background: ACCENT, color: "#ffffff" }}
-          >
-            Get Started
-          </button>
-        </div>
-
-        <button
-          className="lg:hidden p-2 rounded-lg transition-colors text-white/60 hover:text-white"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
-      {mobileOpen && (
-        <div
-          className="lg:hidden backdrop-blur-md"
-          style={{
-            backgroundColor: "rgba(0,0,0,0.98)",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <div className="px-6 py-5 space-y-1">
+          {/* Desktop nav — centered */}
+          <nav className="hidden lg:flex items-center gap-0.5">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors text-white/50 hover:text-white"
-                onClick={() => setMobileOpen(false)}
+                className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-xl transition-colors text-white/50 hover:text-white hover:bg-white/[0.06]"
               >
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4 flex flex-col gap-2 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-              <Link
-                href="/login"
-                className="w-full text-center py-2.5 text-[12px] font-medium border rounded-lg transition-colors border-white/10 text-white/40 hover:text-white hover:bg-white/5"
+          </nav>
+
+          {/* Right actions */}
+          <div className="hidden lg:flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-xl transition-colors text-white/60 hover:text-white"
+            >
+              Sign In
+            </Link>
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:shadow-lg cursor-pointer"
+              style={{ background: ACCENT, color: "#ffffff" }}
+            >
+              Get Started
+            </button>
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="lg:hidden p-2 rounded-xl transition-colors text-white/60 hover:text-white"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div
+            className="lg:hidden backdrop-blur-md"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.98)",
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            <div className="px-6 py-5 space-y-1">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors text-white/50 hover:text-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div
+                className="pt-4 mt-2 flex flex-col gap-2 border-t"
+                style={{ borderColor: "rgba(255,255,255,0.06)" }}
               >
-                Sign In
-              </Link>
-              <button
-                onClick={() => { setMobileOpen(false); setWizardOpen(true); }}
-                className="w-full text-center py-2.5 text-[12px] font-semibold rounded-lg transition-all text-white cursor-pointer"
-                style={{ background: ACCENT }}
-              >
-                Get Started
-              </button>
+                <Link
+                  href="/login"
+                  className="w-full text-center py-2.5 text-[12px] font-medium border rounded-xl transition-colors border-white/10 text-white/40 hover:text-white hover:bg-white/5"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setWizardOpen(true);
+                  }}
+                  className="w-full text-center py-2.5 text-[12px] font-semibold rounded-xl transition-all text-white cursor-pointer"
+                  style={{ background: ACCENT }}
+                >
+                  Get Started
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
 
-    <RegistrationWizard isOpen={wizardOpen} onClose={() => setWizardOpen(false)} />
+      <RegistrationWizard
+        isOpen={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+      />
     </>
   );
 }

@@ -1,21 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote,
+  Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote, Sparkles,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { RegistrationWizard } from "@/components/auth/registration-wizard";
 
 const SECTORS = [
   {
     key: "hotel",
-    role: "HOTEL",
     icon: Building2,
     label: "Hotel / Resort",
     labelAr: "فندق / منتجع",
-    color: "#00E5FF",
+    color: "#22C55E",
     description: "AI procurement, budget control, ETA compliance, embedded factoring",
     descriptionAr: "مشتريات ذكية، تحكم في الميزانية، امتثال ضريبي، تمويل مدمج",
     benefits: [
@@ -24,11 +26,9 @@ const SECTORS = [
       "Reverse factoring for suppliers",
       "Multi-property budget control",
     ],
-    cta: "Register as Hotel",
   },
   {
     key: "supplier",
-    role: "SUPPLIER",
     icon: Store,
     label: "Supplier / Vendor",
     labelAr: "مورد / بائع",
@@ -41,11 +41,9 @@ const SECTORS = [
       "48-hour reverse factoring payout",
       "Real-time order notifications",
     ],
-    cta: "Register as Supplier",
   },
   {
     key: "funder",
-    role: "FACTORING",
     icon: Landmark,
     label: "Factoring Company",
     labelAr: "شركة تمويل",
@@ -58,15 +56,13 @@ const SECTORS = [
       "Bank-direct settlement",
       "FRA anti-fraud compliance",
     ],
-    cta: "Register as Funder",
   },
   {
     key: "logistics",
-    role: "LOGISTICS",
     icon: Truck,
     label: "Logistics Provider",
     labelAr: "شركة لوجستيات",
-    color: "#D4A843",
+    color: "#3B82F6",
     description: "Shared-route optimization, GPS tracking, auto-settlement on delivery",
     descriptionAr: "تحسين المسارات المشتركة، تتبع GPS، تسوية تلقائية عند التسليم",
     benefits: [
@@ -75,13 +71,22 @@ const SECTORS = [
       "Auto-settlement on POD confirmation",
       "Coastal hub model for Red Sea resorts",
     ],
-    cta: "Register as Logistics",
   },
 ];
 
 export default function RegisterPage() {
+  const searchParams = useSearchParams();
+  const sectorParam = searchParams.get("sector");
+  const [wizardOpen, setWizardOpen] = useState(!!sectorParam);
+
+  useEffect(() => {
+    if (sectorParam && SECTORS.find((s) => s.key === sectorParam)) {
+      setWizardOpen(true);
+    }
+  }, [sectorParam]);
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0B0F1A" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#000000" }}>
       <MarketingNav />
 
       <div className="flex-1 px-6 py-24">
@@ -102,14 +107,18 @@ export default function RegisterPage() {
             transition={{ delay: 0.1 }}
             className="text-center mb-12"
           >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium mb-4" style={{ backgroundColor: "rgba(255,107,0,0.08)", border: "1px solid rgba(255,107,0,0.15)", color: "#FF6B00" }}>
+              <Sparkles size={12} />
+              AI-Powered Registration — 2 minutes
+            </div>
             <h1 className="text-[20px] md:text-[24px] font-medium text-white mb-3">
               Choose Your Role
             </h1>
             <p className="text-[14px] text-white/40 max-w-lg mx-auto">
-              Select your stakeholder type to access your dedicated dashboard and begin onboarding.
+              Select your stakeholder type and our AI wizard will guide you through registration.
             </p>
             <p className="text-[12px] text-white/25 mt-1" dir="rtl">
-              اختر نوع الحساب للوصول إلى لوحة التحكم المخصصة وابدأ التسجيل
+              اختر نوع الحساب وسيقوم المساعد الذكي بتوجيهك خلال التسجيل
             </p>
           </motion.div>
 
@@ -124,11 +133,11 @@ export default function RegisterPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 + i * 0.08 }}
                 >
-                  <Link
-                    href={`/register/${sector.key}`}
-                    className="block rounded-2xl p-6 h-full transition-all group hover:scale-[1.02]"
+                  <button
+                    onClick={() => setWizardOpen(true)}
+                    className="block w-full rounded-2xl p-6 h-full transition-all group hover:scale-[1.02] text-left cursor-pointer"
                     style={{
-                      backgroundColor: "#0F1320",
+                      backgroundColor: "#0B0F1A",
                       border: "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
@@ -166,9 +175,9 @@ export default function RegisterPage() {
                       className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold transition-colors"
                       style={{ color: sector.color }}
                     >
-                      {sector.cta} <ArrowRight size={12} />
+                      Start Registration <ArrowRight size={12} />
                     </div>
-                  </Link>
+                  </button>
                 </motion.div>
               );
             })}
@@ -182,9 +191,9 @@ export default function RegisterPage() {
             className="mt-10 flex flex-wrap justify-center gap-6"
           >
             {[
-              { icon: Shield, label: "Bank-grade security", color: "#00E5FF" },
-              { icon: Zap, label: "Free to start", color: "#FFB000" },
-              { icon: Clock, label: "24h onboarding", color: "#3B82F6" },
+              { icon: Shield, label: "Bank-grade security", color: "#22C55E" },
+              { icon: Zap, label: "Free to start", color: "#FF6B00" },
+              { icon: Clock, label: "2 min registration", color: "#3B82F6" },
               { icon: Banknote, label: "No credit card required", color: "#A855F7" },
             ].map((t) => (
               <span key={t.label} className="flex items-center gap-1.5 text-[10px] text-white/30">
@@ -196,12 +205,17 @@ export default function RegisterPage() {
 
           <p className="text-center text-[12px] text-white/20 mt-6">
             Already have an account?{" "}
-            <Link href="/login" className="text-[#FFB000] hover:underline font-medium">
+            <Link href="/login" className="text-[#FF6B00] hover:underline font-medium">
               Sign in
             </Link>
           </p>
         </div>
       </div>
+
+      <RegistrationWizard
+        isOpen={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+      />
     </div>
   );
 }
