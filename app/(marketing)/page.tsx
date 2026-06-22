@@ -19,9 +19,6 @@ import {
   Sparkles,
   ArrowDown,
   Mail,
-  ChevronRight,
-  Clock,
-  Globe,
   Lock,
   FileCheck,
   Server,
@@ -37,9 +34,10 @@ import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboa
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { BentoCard } from "@/components/marketing/bento-card";
 import { EnterpriseTrustBanner } from "@/components/marketing/enterprise-trust-banner";
 import { FAQAccordion } from "@/components/marketing/faq-accordion";
+import { ProblemSolutionSplit } from "@/components/marketing/problem-solution-split";
+import { FeatureBentoGrid } from "@/components/marketing/feature-bento-grid";
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -413,45 +411,6 @@ function ValueSplitSection({ onCTAClick }: { onCTAClick: () => void }) {
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   4. FEATURE BENTO GRID — 6 platform capabilities
-   ═══════════════════════════════════════════════════════════ */
-function FeatureBentoGrid() {
-  const features = [
-    { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "Predict needs 14 days out — factoring occupancy, events, seasonality. 94% accuracy means less waste, fewer emergencies." },
-    { icon: Receipt, title: "ETA E-Invoicing — Automatic", desc: "Every invoice digitally signed, UUID-validated, submitted to Egyptian Tax Authority automatically. Zero manual tax work." },
-    { icon: Truck, title: "Shared-Route Logistics", desc: "AI consolidates deliveries across suppliers and properties. Cut logistics costs by up to 40% — critical for Red Sea resorts." },
-    { icon: Banknote, title: "Embedded Reverse Factoring", desc: "Suppliers request early payment. Licensed funders compete on rate. Supplier gets cash in 48h. Hotel keeps Net-30/60." },
-    { icon: ShieldCheck, title: "FRA Anti-Fraud Compliance", desc: "Three-way matching (PO + ETA UUID + delivery note) on every transaction. SHA-256 audit trails. Real-time fraud detection." },
-    { icon: BarChart3, title: "Cost Control & Analytics", desc: "Real-time spend visibility across every property, department, and vendor. AI flags anomalies and surfaces savings." },
-  ];
-
-  return (
-    <section className="py-24 md:py-32">
-      <div className="max-w-5xl mx-auto px-6">
-        <Reveal>
-          <div className="text-center mb-16">
-            <SectionLabel>Platform Capabilities</SectionLabel>
-            <SectionHeading>
-              Built for Hospitality.
-              <br />
-              Compliant by Default.
-            </SectionHeading>
-          </div>
-        </Reveal>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {features.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.08}>
-              <BentoCard icon={f.icon} title={f.title} description={f.desc} />
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -905,6 +864,7 @@ export default function HomePage() {
       <MarketTicker />
       <EnterpriseTrustBanner />
       <ValueSplitSection onCTAClick={openWizard} />
+      <ProblemSolutionSplit />
       <FeatureBentoGrid />
       <ProcurementFlowVisualizer />
       <PricingSection onCTAClick={openWizard} />
