@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 const ACCENT = "#FF6B00";
 
@@ -30,9 +31,9 @@ export function MarketingNav() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="marketing-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? "rgba(0,0,0,0.92)" : "transparent",
+          backgroundColor: scrolled ? "rgba(11,15,23,0.92)" : "transparent",
           borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.06)" : "transparent"}`,
           backdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none",
         }}
@@ -58,6 +59,7 @@ export function MarketingNav() {
 
           {/* Right actions */}
           <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/login"
               className="text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-xl transition-colors text-white/60 hover:text-white"
