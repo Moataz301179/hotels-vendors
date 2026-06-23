@@ -15,7 +15,7 @@ interface ChatInputProps {
 export function ChatInput({ input, onChange, onSend, disabled, placeholder, accentColor }: ChatInputProps) {
   const { mode } = useTheme();
   const isLight = false;
-  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FFB000");
+  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FF6B00");
 
   return (
     <div

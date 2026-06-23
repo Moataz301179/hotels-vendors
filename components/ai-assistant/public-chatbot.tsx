@@ -119,7 +119,7 @@ export function PublicChatbot() {
     [input, loading]
   );
 
-  const accentColor = isLight ? "#581c87" : "#FFB000";
+  const accentColor = isLight ? "#581c87" : "#FF6B00";
 
   return (
     <>

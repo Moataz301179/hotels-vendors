@@ -132,7 +132,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="relative overflow-hidden" style={{ backgroundColor: "#000000" }}>
+    <section className="relative overflow-hidden" style={{ backgroundColor: "#0B0F17" }}>
       {/* Ambient glow */}
       <div
         className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full pointer-events-none"
@@ -244,7 +244,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             <div
               className="relative rounded-3xl p-3"
               style={{
-                background: "linear-gradient(165deg, #1a1a1a 0%, #0a0a0a 100%)",
+                background: "linear-gradient(165deg, #0B0F17 0%, #0B0F17 100%)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 boxShadow: "0 50px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
@@ -875,7 +875,7 @@ export default function HomePage() {
   const openWizard = () => setWizardOpen(true);
 
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: "#000000" }}>
+    <div className="min-h-screen text-white" style={{ backgroundColor: "#0B0F17" }}>
       <MarketingNav />
 
       <HeroSection onCTAClick={openWizard} />

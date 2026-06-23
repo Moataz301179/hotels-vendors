@@ -78,7 +78,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08 }}
-        className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
+        className="rounded-2xl border border-white/[0.06] bg-[#0B0F17] overflow-hidden"
       >
         {registered ? (
           <div className="p-8 text-center space-y-6">
@@ -174,7 +174,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(255,107,0,0.15)]"
                 style={{ backgroundColor: "#FF6B00", color: "#000000" }}
               >
                 {loading ? (

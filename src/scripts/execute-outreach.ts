@@ -103,7 +103,7 @@ function buildHotelTemplate(lead: Lead): { subject: string; html: string } {
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 32px 24px;">
 
-  <div style="border-top: 3px solid #FFB000; margin-bottom: 24px;"></div>
+  <div style="border-top: 3px solid #FF6B00; margin-bottom: 24px;"></div>
 
   <p style="font-size: 15px; line-height: 1.6; color: #333;">
     Dear ${lead.name},
@@ -129,7 +129,7 @@ function buildHotelTemplate(lead: Lead): { subject: string; html: string } {
   </p>
 
   <div style="text-align: center; margin: 28px 0;">
-    <a href="https://hotelsvendors.com/register?sector=hotel&ref=outreach" style="background: #FFB000; color: #000; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block;">Schedule Institutional Onboarding</a>
+    <a href="https://hotelsvendors.com/register?sector=hotel&ref=outreach" style="background: #FF6B00; color: #000; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block;">Schedule Institutional Onboarding</a>
   </div>
 
   <p style="font-size: 13px; line-height: 1.6; color: #666;">

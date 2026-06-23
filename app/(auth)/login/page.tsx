@@ -79,7 +79,7 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.08 }}
-            className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
+            className="rounded-2xl border border-white/[0.06] bg-[#0B0F17] overflow-hidden"
           >
             {/* Header */}
             <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
@@ -207,7 +207,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(255,107,0,0.15)]"
                 style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}
               >
                 {loading ? (

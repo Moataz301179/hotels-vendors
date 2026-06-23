@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-const ACCENT = "#FFB000";
+const ACCENT = "#FF6B00";
 
 export default function PortalPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -155,7 +155,7 @@ export default function PortalPage() {
               <span className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">14 Invoices</span>
             </div>
             <div className="rounded-2xl p-6 shadow-sm"
-              style={{ backgroundColor: "rgba(255,176,0,0.08)", border: "1px solid rgba(255,176,0,0.2)" }}
+              style={{ backgroundColor: "rgba(255,107,0,0.08)", border: "1px solid rgba(255,107,0,0.2)" }}
             >
               <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: ACCENT }}>Critical System Alerts</span>
               <div className="flex items-center justify-between">

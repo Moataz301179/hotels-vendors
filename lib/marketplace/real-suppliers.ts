@@ -189,5 +189,5 @@ export function getSupplierCategoryColor(category: string): string {
     logistics: "#ffcc80",
     electronics: "#90caf9",
   };
-  return colors[category] || "#FFB000";
+  return colors[category] || "#FF6B00";
 }

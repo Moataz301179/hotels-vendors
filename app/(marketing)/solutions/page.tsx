@@ -54,7 +54,7 @@ const solutions = [
 
 export default function SolutionsPage() {
   return (
-    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -71,7 +71,7 @@ export default function SolutionsPage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0B0F17" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -126,7 +126,7 @@ export default function SolutionsPage() {
       </section>
 
       {/* Ecosystem Overview */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
+      <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
           <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: accent }} />
           <h2 className="text-[24px] font-semibold mb-4 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>The Full Picture</h2>
@@ -135,7 +135,7 @@ export default function SolutionsPage() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
-              { icon: Building2, label: "Hotels", color: "#FFB000" },
+              { icon: Building2, label: "Hotels", color: "#FF6B00" },
               { icon: Store, label: "Suppliers", color: "#22C55E" },
               { icon: Landmark, label: "Funders", color: "#D4A843" },
               { icon: Truck, label: "Carriers", color: "#3B82F6" },

@@ -62,7 +62,7 @@ export function Sidebar({ role }: SidebarProps) {
     <aside className="w-[280px] flex-col border-r border-slate-800 bg-slate-950 hidden md:flex">
       <div className="flex h-16 items-center border-b border-slate-800 px-6">
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#FFB000" }}>
+          <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#FF6B00" }}>
             <span className="text-white font-bold text-sm">HV</span>
           </div>
           <span className="text-lg font-semibold text-white">Hotels Vendors</span>
@@ -90,7 +90,7 @@ export function Sidebar({ role }: SidebarProps) {
       </nav>
       <div className="border-t border-slate-800 p-4">
         <div className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2.5 border border-white/10">
-          <div className="h-8 w-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FFB000" }}>
+          <div className="h-8 w-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FF6B00" }}>
             <span className="text-white text-xs font-bold">M</span>
           </div>
           <div className="flex flex-col">

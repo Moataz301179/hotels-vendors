@@ -23,7 +23,7 @@ export function ThemeToggle() {
         className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
         style={{
           background: !isOriginal && !isHercules ? "#84CC16" : "transparent",
-          boxShadow: !isOriginal && !isHercules ? "0 0 8px rgba(132,204,22,0.4)" : "none",
+          boxShadow: !isOriginal && !isHercules ? "0 0 8px rgba(255,107,0,0.4)" : "none",
         }}
         aria-label="Wimbledon theme"
       >

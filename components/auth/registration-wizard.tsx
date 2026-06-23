@@ -491,8 +491,8 @@ function StepRole({ data, update }: { data: WizardData; update: <K extends keyof
               onClick={() => { update("role", key as Role); update("subCategory", ""); update("supplyCategories", []); }}
               className="flex items-start gap-4 p-5 rounded-xl text-left transition-all"
               style={{
-                backgroundColor: isActive ? "rgba(255,176,0,0.06)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${isActive ? "rgba(255,176,0,0.25)" : "rgba(255,255,255,0.06)"}`,
+                backgroundColor: isActive ? "rgba(255,107,0,0.06)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${isActive ? "rgba(255,107,0,0.25)" : "rgba(255,255,255,0.06)"}`,
               }}
             >
               <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
@@ -544,8 +544,8 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               onClick={() => update("subCategory", cat)}
               className="flex items-center gap-2 px-4 py-3 rounded-lg text-left text-[13px] transition-all"
               style={{
-                backgroundColor: data.subCategory === cat ? "rgba(255,176,0,0.06)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${data.subCategory === cat ? "rgba(255,176,0,0.25)" : "rgba(255,255,255,0.06)"}`,
+                backgroundColor: data.subCategory === cat ? "rgba(255,107,0,0.06)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${data.subCategory === cat ? "rgba(255,107,0,0.25)" : "rgba(255,255,255,0.06)"}`,
                 color: data.subCategory === cat ? "#FF6B00" : "rgba(255,255,255,0.5)",
               }}
             >
@@ -569,8 +569,8 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
                   onClick={() => toggleSupplyCategory(cat)}
                   className="px-3 py-1.5 rounded-lg text-[12px] transition-all"
                   style={{
-                    backgroundColor: selected ? "rgba(255,176,0,0.08)" : "rgba(255,255,255,0.02)",
-                    border: `1px solid ${selected ? "rgba(255,176,0,0.2)" : "rgba(255,255,255,0.06)"}`,
+                    backgroundColor: selected ? "rgba(255,107,0,0.08)" : "rgba(255,255,255,0.02)",
+                    border: `1px solid ${selected ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.06)"}`,
                     color: selected ? "#FF6B00" : "rgba(255,255,255,0.4)",
                   }}
                 >
@@ -592,8 +592,8 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               onClick={() => update("capacity", opt)}
               className="px-3 py-1.5 rounded-lg text-[12px] transition-all"
               style={{
-                backgroundColor: data.capacity === opt ? "rgba(255,176,0,0.08)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${data.capacity === opt ? "rgba(255,176,0,0.2)" : "rgba(255,255,255,0.06)"}`,
+                backgroundColor: data.capacity === opt ? "rgba(255,107,0,0.08)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${data.capacity === opt ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.06)"}`,
                 color: data.capacity === opt ? "#FF6B00" : "rgba(255,255,255,0.4)",
               }}
             >
@@ -717,7 +717,7 @@ function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, 
       </div>
 
       {/* Legal verification note */}
-      <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "rgba(255,176,0,0.06)", border: "1px solid rgba(255,176,0,0.15)" }}>
+      <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.15)" }}>
         <p className="font-medium text-[#FF6B00] mb-1">Why we need this</p>
         <p className="text-white/40">
           {data.role === "funder" && "FRA license verification is mandatory for factoring companies operating in Egypt. Your account will be activated after document review (typically 24 hours)."}
@@ -819,7 +819,7 @@ function StepPreview({
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className="max-w-[85%] px-3 py-2 rounded-lg text-[12px] leading-relaxed" style={{
-                  backgroundColor: msg.role === "user" ? "rgba(255,176,0,0.1)" : "rgba(255,255,255,0.04)",
+                  backgroundColor: msg.role === "user" ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.04)",
                   color: msg.role === "user" ? "#FF6B00" : "rgba(255,255,255,0.6)",
                 }}>
                   {msg.content}
@@ -877,7 +877,7 @@ function FieldInput({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           required={required}
-          className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none transition-all focus:border-[rgba(255,176,0,0.3)] focus:shadow-[0_0_0_2px_rgba(255,176,0,0.08)]"
+          className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none transition-all focus:border-[rgba(255,107,0,0.3)] focus:shadow-[0_0_0_2px_rgba(255,107,0,0.08)]"
         />
       </div>
     </div>

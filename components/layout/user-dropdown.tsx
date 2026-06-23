@@ -65,7 +65,7 @@ export function UserDropdown({ user }: { user?: UserData | null }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-2xl overflow-hidden animate-fade-in-up z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-[#0B0F17] border border-white/[0.08] rounded-xl shadow-2xl overflow-hidden animate-fade-in-up z-50">
           <div className="p-3 border-b border-white/[0.06]">
             <p className="text-[13px] font-semibold text-white truncate">{displayName}</p>
             <p className="text-[11px] text-white/40 truncate">{user?.email || ""}</p>

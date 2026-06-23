@@ -56,7 +56,7 @@ const ETA_REGISTRATION_STEPS: AccordionItem[] = [
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors"
-          style={{ color: "#FFB000", backgroundColor: "rgba(132,204,22,0.08)", border: "1px solid rgba(132,204,22,0.15)" }}
+          style={{ color: "#FF6B00", backgroundColor: "rgba(255,107,0,0.08)", border: "1px solid rgba(255,107,0,0.15)" }}
         >
           <ExternalLink size={12} />
           https://invoicing.eta.gov.eg
@@ -83,8 +83,8 @@ const ETA_REGISTRATION_STEPS: AccordionItem[] = [
             "Technical Contact: Your IT team lead",
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(132,204,22,0.1)" }}>
-                <span className="text-[8px] font-bold" style={{ color: "#FFB000" }}>{i + 1}</span>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(255,107,0,0.1)" }}>
+                <span className="text-[8px] font-bold" style={{ color: "#FF6B00" }}>{i + 1}</span>
               </div>
               <span className="text-[12px] text-white/40">{item}</span>
             </li>
@@ -112,8 +112,8 @@ const ETA_REGISTRATION_STEPS: AccordionItem[] = [
             "Environment: Pre-production (for testing) or Production",
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(132,204,22,0.1)" }}>
-                <span className="text-[8px] font-bold" style={{ color: "#FFB000" }}>{i + 1}</span>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(255,107,0,0.1)" }}>
+                <span className="text-[8px] font-bold" style={{ color: "#FF6B00" }}>{i + 1}</span>
               </div>
               <span className="text-[12px] text-white/40">{item}</span>
             </li>
@@ -144,8 +144,8 @@ const ETA_REGISTRATION_STEPS: AccordionItem[] = [
             "Request production access from ETA after successful testing",
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(132,204,22,0.1)" }}>
-                <span className="text-[8px] font-bold" style={{ color: "#FFB000" }}>{i + 1}</span>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: "rgba(255,107,0,0.1)" }}>
+                <span className="text-[8px] font-bold" style={{ color: "#FF6B00" }}>{i + 1}</span>
               </div>
               <span className="text-[12px] text-white/40">{item}</span>
             </li>
@@ -267,7 +267,7 @@ export function EtaOnboardingModal({
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
-          style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.08)" }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* ── Header ── */}
@@ -292,9 +292,9 @@ export function EtaOnboardingModal({
               disabled={demoLoading}
               className="w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl text-[13px] font-medium transition-all disabled:opacity-40"
               style={{
-                backgroundColor: "rgba(132,204,22,0.06)",
-                border: "1px dashed rgba(132,204,22,0.2)",
-                color: "#FFB000",
+                backgroundColor: "rgba(255,107,0,0.06)",
+                border: "1px dashed rgba(255,107,0,0.2)",
+                color: "#FF6B00",
               }}
             >
               {demoLoading ? (
@@ -321,8 +321,8 @@ export function EtaOnboardingModal({
                 onClick={() => setActiveTab("credentials")}
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[12px] font-medium transition-all"
                 style={{
-                  backgroundColor: activeTab === "credentials" ? "rgba(132,204,22,0.08)" : "transparent",
-                  color: activeTab === "credentials" ? "#FFB000" : "rgba(255,255,255,0.4)",
+                  backgroundColor: activeTab === "credentials" ? "rgba(255,107,0,0.08)" : "transparent",
+                  color: activeTab === "credentials" ? "#FF6B00" : "rgba(255,255,255,0.4)",
                 }}
               >
                 <Key size={13} />
@@ -332,8 +332,8 @@ export function EtaOnboardingModal({
                 onClick={() => setActiveTab("delegate")}
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[12px] font-medium transition-all"
                 style={{
-                  backgroundColor: activeTab === "delegate" ? "rgba(132,204,22,0.08)" : "transparent",
-                  color: activeTab === "delegate" ? "#FFB000" : "rgba(255,255,255,0.4)",
+                  backgroundColor: activeTab === "delegate" ? "rgba(255,107,0,0.08)" : "transparent",
+                  color: activeTab === "delegate" ? "#FF6B00" : "rgba(255,255,255,0.4)",
                 }}
               >
                 <Users size={13} />
@@ -361,7 +361,7 @@ export function EtaOnboardingModal({
                       className="w-full flex items-center justify-between px-4 py-3 transition-colors hover:bg-white/[0.02]"
                     >
                       <div className="flex items-center gap-2.5">
-                        <FileText size={14} style={{ color: "#FFB000" }} />
+                        <FileText size={14} style={{ color: "#FF6B00" }} />
                         <span className="text-[12px] font-medium text-white/70">Where to Find Your ETA Keys — Step-by-Step Guide</span>
                       </div>
                       {expandedAccordion === "eta-guide" ? (
@@ -483,8 +483,8 @@ export function EtaOnboardingModal({
                             className="w-full px-4 py-3 rounded-xl text-[13px] text-white outline-none transition-all appearance-none"
                             style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                           >
-                            <option value="preprod" style={{ backgroundColor: "#0a0a0a" }}>Pre-Production</option>
-                            <option value="production" style={{ backgroundColor: "#0a0a0a" }}>Production</option>
+                            <option value="preprod" style={{ backgroundColor: "#0B0F17" }}>Pre-Production</option>
+                            <option value="production" style={{ backgroundColor: "#0B0F17" }}>Production</option>
                           </select>
                         </div>
                       </div>
@@ -493,7 +493,7 @@ export function EtaOnboardingModal({
                         onClick={handleSubmitCredentials}
                         disabled={isSubmitting || !clientId || !clientSecret || !taxId}
                         className="w-full flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#FFB000", color: "#000000" }}
+                        style={{ backgroundColor: "#FF6B00", color: "#000000" }}
                       >
                         {isSubmitting ? (
                           <span className="flex items-center gap-2">
@@ -521,9 +521,9 @@ export function EtaOnboardingModal({
                   transition={{ duration: 0.2 }}
                   className="space-y-5"
                 >
-                  <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(132,204,22,0.04)", border: "1px solid rgba(132,204,22,0.1)" }}>
+                  <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,107,0,0.04)", border: "1px solid rgba(255,107,0,0.1)" }}>
                     <div className="flex items-start gap-3">
-                      <Users size={18} style={{ color: "#FFB000" }} className="mt-0.5 flex-shrink-0" />
+                      <Users size={18} style={{ color: "#FF6B00" }} className="mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-[13px] font-medium text-white mb-1">Invite Your Financial Controller</p>
                         <p className="text-[12px] text-white/40 leading-relaxed">
@@ -584,7 +584,7 @@ export function EtaOnboardingModal({
                         onClick={handleDelegateInvite}
                         disabled={!delegateEmail && !delegateWhatsApp}
                         className="w-full flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#FFB000", color: "#000000" }}
+                        style={{ backgroundColor: "#FF6B00", color: "#000000" }}
                       >
                         Send Secure Invite <Send size={13} />
                       </button>

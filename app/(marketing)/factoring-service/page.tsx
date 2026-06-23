@@ -33,7 +33,7 @@ const funderFeatures = [
 
 export default function FactoringServicePage() {
   return (
-    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -47,7 +47,7 @@ export default function FactoringServicePage() {
             Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,107,0,0.2)]" style={{ backgroundColor: "#FF6B00", color: "#000000" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -58,7 +58,7 @@ export default function FactoringServicePage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0B0F17" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -80,7 +80,7 @@ export default function FactoringServicePage() {
       </section>
 
       {/* Flow */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
+      <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">The Factoring Flow</h2>
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
@@ -104,7 +104,7 @@ export default function FactoringServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {funderFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#D4A843]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#D4A843]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-3" style={{ color: "#D4A843" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -121,7 +121,7 @@ export default function FactoringServicePage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(255,107,0,0.2)]" style={{ backgroundColor: "#FF6B00", color: "#000000" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

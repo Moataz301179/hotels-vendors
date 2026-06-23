@@ -134,7 +134,7 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[#0B0F17] text-white">
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
@@ -372,7 +372,7 @@ export default function NewCampaignPage() {
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors appearance-none"
                 >
                   {FREQUENCIES.map((f) => (
-                    <option key={f.value} value={f.value} className="bg-[#1a1a1a]">
+                    <option key={f.value} value={f.value} className="bg-[#0B0F17]">
                       {f.label}
                     </option>
                   ))}

@@ -169,7 +169,7 @@ export default function AdminSettingsPage() {
                 <div className="w-8 h-8 rounded-lg border border-white/[0.08]" style={{ background: "var(--accent-base)" }} />
                 <input
                   type="text"
-                  defaultValue="#FFB000"
+                  defaultValue="#FF6B00"
                   className="flex-1 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white font-mono focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>

@@ -30,7 +30,7 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
 }
 
 const PHASES = [
-  { num: "01", title: "Demand Forecast", desc: "AI predicts what you need 14 days ahead based on occupancy, seasonality, and historical consumption.", icon: BarChart3, color: "#FFB000", actor: "Hotel", time: "Day -14" },
+  { num: "01", title: "Demand Forecast", desc: "AI predicts what you need 14 days ahead based on occupancy, seasonality, and historical consumption.", icon: BarChart3, color: "#FF6B00", actor: "Hotel", time: "Day -14" },
   { num: "02", title: "RFQ & Sourcing", desc: "Automated RFQ routed to best-matched suppliers. Quotes received in hours, not days.", icon: Building2, color: "#FF6B00", actor: "Platform", time: "Day -7" },
   { num: "03", title: "Order & Approval", desc: "PO auto-generated, budget-checked, and approved. Three-way match pre-validated.", icon: CheckCircle2, color: "#22C55E", actor: "Hotel", time: "Day -5" },
   { num: "04", title: "Fulfillment", desc: "Supplier prepares order. Shared-route logistics optimized across multiple orders.", icon: Store, color: "#3B82F6", actor: "Supplier", time: "Day -2" },

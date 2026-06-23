@@ -97,7 +97,7 @@ export default function CampaignDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+      <main className="min-h-screen bg-[#0B0F17] text-white flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-accent-base" />
       </main>
     );
@@ -105,7 +105,7 @@ export default function CampaignDetailPage() {
 
   if (!campaign) {
     return (
-      <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+      <main className="min-h-screen bg-[#0B0F17] text-white flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-3" />
           <p className="text-white/40">Campaign not found</p>
@@ -122,7 +122,7 @@ export default function CampaignDetailPage() {
   const strategy = c.contentStrategy ? JSON.parse(c.contentStrategy) : null;
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[#0B0F17] text-white">
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

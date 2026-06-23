@@ -3,7 +3,7 @@ const BORDER = "rgba(60,64,67,0.50)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#FFB000";
+const ACCENT_LIME = "#FF6B00";
 
 export function KPICard({
   title,
@@ -23,7 +23,7 @@ export function KPICard({
       className="rounded-xl p-5"
       style={{
         backgroundColor: BG_CARD,
-        border: `1px solid ${accent ? "rgba(132,204,22,0.20)" : BORDER}`,
+        border: `1px solid ${accent ? "rgba(255,107,0,0.20)" : BORDER}`,
       }}
     >
       <div className="flex items-center justify-between mb-3">

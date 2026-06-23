@@ -10,7 +10,7 @@ import {
 
 const kpiCards = [
   { label: "Active Loads", value: "12", change: "3 new today", up: true, color: "#D4A843" },
-  { label: "Truck Utilization", value: "87%", change: "+12% MoM", up: true, color: "#FFB000" },
+  { label: "Truck Utilization", value: "87%", change: "+12% MoM", up: true, color: "#FF6B00" },
   { label: "On-Time Rate", value: "94%", change: "+2.1%", up: true, color: "#22C55E" },
   { label: "Deliveries/Wk", value: "47", change: "Target: 45", up: true, color: "#3B82F6" },
 ];
@@ -34,7 +34,7 @@ export function LogisticsDashboardMockup() {
       className="relative"
     >
       <div className="absolute -inset-4 rounded-3xl blur-[60px] pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(212,168,67,0.06) 0%, transparent 70%)" }} />
-      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
+      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
         <div className="flex items-center justify-between px-4 py-2.5" style={{ backgroundColor: "#0f0f0f", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">

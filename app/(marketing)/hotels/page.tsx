@@ -34,7 +34,7 @@ export default function HotelsPage() {
   return (
     <>
       <MarketingNav />
-      <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+      <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh" }}>
         {/* Hero */}
         <section className="pt-28 pb-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,0,0.04) 0%, transparent 70%)" }} />
@@ -58,7 +58,7 @@ export default function HotelsPage() {
         </section>
 
         {/* Trust Badges */}
-        <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+        <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0B0F17" }}>
           <div className="mx-auto max-w-7xl px-6">
             <div className="flex flex-wrap justify-center gap-8">
               {trustBadges.map((b) => (
@@ -80,7 +80,7 @@ export default function HotelsPage() {
             <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {features.map((f) => (
-                <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <f.icon size={20} className="mb-4" style={{ color: "#FF6B00" }} />
                   <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                   <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -91,7 +91,7 @@ export default function HotelsPage() {
         </section>
 
         {/* Stats */}
-        <section className="py-16" style={{ backgroundColor: "#050505" }}>
+        <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto text-center">
               {[
@@ -118,7 +118,7 @@ export default function HotelsPage() {
                 { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
                 { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
               ].map((r) => (
-                <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#FF6B00]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <r.icon size={16} style={{ color: "#FF6B00" }} />
                   <div>
                     <p className="text-[13px] font-medium text-white">{r.region}</p>

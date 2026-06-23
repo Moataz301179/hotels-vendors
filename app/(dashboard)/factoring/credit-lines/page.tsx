@@ -191,7 +191,7 @@ export default function CreditLineApplicationPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#0B0F17] text-white flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
@@ -224,7 +224,7 @@ export default function CreditLineApplicationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#0B0F17] text-white">
       {/* Header */}
       <div className="border-b border-white/[0.06]">
         <div className="mx-auto max-w-5xl px-6 py-6">

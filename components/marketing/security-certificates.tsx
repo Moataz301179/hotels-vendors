@@ -29,7 +29,7 @@ const CERTIFICATES = [
     desc: "Our information security management system is aligned with ISO 27001. Regular third-party audits and penetration testing verify our controls.",
     descAr: "نظام إدارة أمن المعلومات لدينا متوافق مع معايير ISO 27001. تدقيقات دورية من جهات خارجية واختبارات اختراق تتحقق من ضوابطنا.",
     status: "Certified",
-    color: "#FFB000",
+    color: "#FF6B00",
   },
   {
     icon: Server,
@@ -71,7 +71,7 @@ export function SecurityCertificates() {
         <div className="text-center mb-12">
           <span
             className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block"
-            style={{ color: isLight ? "#581c87" : "#FFB000" }}
+            style={{ color: isLight ? "#581c87" : "#FF6B00" }}
           >
             Security & Compliance · الأمان والامتثال
           </span>
@@ -134,12 +134,12 @@ export function SecurityCertificates() {
         <div
           className="mt-10 rounded-xl p-5 text-center"
           style={{
-            backgroundColor: isLight ? "rgba(88,28,135,0.03)" : "rgba(255,176,0,0.03)",
-            border: `1px solid ${isLight ? "rgba(88,28,135,0.08)" : "rgba(255,176,0,0.08)"}`,
+            backgroundColor: isLight ? "rgba(88,28,135,0.03)" : "rgba(255,107,0,0.03)",
+            border: `1px solid ${isLight ? "rgba(88,28,135,0.08)" : "rgba(255,107,0,0.08)"}`,
           }}
         >
           <p className={`text-[12px] ${isLight ? "text-gray-600" : "text-white/50"}`}>
-            <strong style={{ color: isLight ? "#581c87" : "#FFB000" }}>Restaurants for E-Marketing</strong> operates as a{" "}
+            <strong style={{ color: isLight ? "#581c87" : "#FF6B00" }}>Restaurants for E-Marketing</strong> operates as a{" "}
             <strong className={isLight ? "text-gray-700" : "text-white/60"}>technical data orchestrator</strong> — not a bank, not a payment service provider, not a factoring company.
             All financial flows are processed through licensed institutions. Zero liability for counterparty collection defaults.
           </p>

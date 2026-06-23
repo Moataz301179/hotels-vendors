@@ -30,7 +30,7 @@ export function ChatShell({
 
   if (!open) return null;
 
-  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FFB000");
+  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FF6B00");
   const effectiveSubtitleColor = subtitleColor || (isLight ? "bg-purple-500" : "bg-emerald-400");
 
   return (

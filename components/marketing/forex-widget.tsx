@@ -75,7 +75,7 @@ export function ForexWidget({ apiKey }: ForexWidgetProps) {
         style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
       >
         <div className="flex items-center gap-2 mb-3">
-          <Globe size={12} style={{ color: "#FFB000" }} />
+          <Globe size={12} style={{ color: "#FF6B00" }} />
           <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Market Rates</span>
         </div>
         <div className="flex flex-col items-center justify-center py-6 text-center">
@@ -104,7 +104,7 @@ export function ForexWidget({ apiKey }: ForexWidgetProps) {
         style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
       >
         <div className="flex items-center gap-2 mb-3">
-          <Globe size={12} style={{ color: "#FFB000" }} />
+          <Globe size={12} style={{ color: "#FF6B00" }} />
           <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Market Rates</span>
           <RefreshCw size={10} className="ml-auto animate-spin text-white/20" />
         </div>
@@ -157,9 +157,9 @@ export function ForexWidget({ apiKey }: ForexWidgetProps) {
       style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="flex items-center gap-2 mb-3">
-        <Globe size={12} style={{ color: "#FFB000" }} />
+        <Globe size={12} style={{ color: "#FF6B00" }} />
         <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Market Rates</span>
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "#FFB000" }} />
+        <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "#FF6B00" }} />
         {lastUpdated && <span className="text-[8px] text-white/20 ml-1">Updated {lastUpdated}</span>}
         <button onClick={fetchRates} className="p-1 rounded hover:bg-white/[0.04] transition-colors">
           <RefreshCw size={9} className="text-white/20" />

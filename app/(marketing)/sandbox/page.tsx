@@ -52,8 +52,8 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#FFB000",
-    accentMuted: "rgba(132,204,22,0.1)",
+    color: "#FF6B00",
+    accentMuted: "rgba(255,107,0,0.1)",
     description: "Use the HotelsVendors orchestrator to manage compliance, payments, and factoring for your procurement needs.",
     steps: [
       {
@@ -307,7 +307,7 @@ export default function SandboxPage() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
+    <main className="min-h-screen" style={{ backgroundColor: "#0B0F17", color: "#ffffff" }}>
       <MarketingNav />
 
       <section className="pt-24 pb-16 relative overflow-hidden">
@@ -361,7 +361,7 @@ export default function SandboxPage() {
                         onClick={() => setSelectedRole(r.key)}
                         className="rounded-xl p-5 text-left transition-all"
                         style={{
-                          backgroundColor: "#0a0a0a",
+                          backgroundColor: "#0B0F17",
                           border: "1px solid rgba(255,255,255,0.06)",
                         }}
                       >

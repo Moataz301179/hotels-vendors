@@ -401,7 +401,7 @@ export default function ETACenterPage() {
       {submitModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeSubmitModal}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1a1a1a] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#0B0F17] shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
               <h3 className="text-lg font-semibold text-white">Submit to ETA</h3>
               <button onClick={closeSubmitModal} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors"><X size={18} /></button>

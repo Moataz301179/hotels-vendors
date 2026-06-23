@@ -21,7 +21,7 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
   const { mode } = useTheme();
   const isLight = false;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FFB000");
+  const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FF6B00");
 
   useEffect(() => {
     if (scrollRef.current) {

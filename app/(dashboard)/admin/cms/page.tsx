@@ -428,7 +428,7 @@ export default function CmsAdminPage() {
           className="w-[200px] h-9 px-3 rounded-md bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:ring-1 focus:ring-white/20"
         >
           {PAGE_KEYS.map((key) => (
-            <option key={key} value={key} className="bg-[#1a1a1a] text-white">
+            <option key={key} value={key} className="bg-[#0B0F17] text-white">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </option>
           ))}

@@ -37,7 +37,7 @@ export const PRESETS: ThemePreset[] = [
     description: "Vibrant gold on deep navy. Premium institutional fintech identity.",
     accent: {
       50: "#fff8e6", 100: "#ffedb3", 200: "#ffe080", 300: "#ffd44d",
-      400: "#ffc426", 500: "#FFB000", 600: "#cc8c00", 700: "#996900",
+      400: "#ffc426", 500: "#FF6B00", 600: "#cc8c00", 700: "#996900",
       800: "#664600", 900: "#332300",
     },
     bg: {
