@@ -87,4 +87,4 @@ No manual configuration. No data science degree required. Just keep ordering, an
 
 ---
 
-*Ready to let AI optimize your procurement? [Get Started Free](https://hotelsvendors.com/register)*
+*Ready to let AI optimize your procurement? [Get Started Free](/register)*

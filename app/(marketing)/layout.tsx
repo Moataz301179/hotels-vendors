@@ -102,7 +102,7 @@ export default function MarketingLayout({
       <div
         className="min-h-screen"
         style={{
-          fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+          fontFamily: "'Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
           background: "#000000",
           color: "#ffffff",
         }}

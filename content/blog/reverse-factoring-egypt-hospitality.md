@@ -74,4 +74,4 @@ Reverse factoring turns your procurement process into a working capital optimiza
 
 ---
 
-*Start optimizing your working capital: [Get Started Free](https://hotelsvendors.com/register)*
+*Start optimizing your working capital: [Get Started Free](/register)*

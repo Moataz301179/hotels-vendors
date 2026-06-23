@@ -234,7 +234,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             </div>
           </motion.div>
 
-          {/* Right: Dashboard mockup */}
+          {/* Right: Dashboard mockup + preview image */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -253,6 +253,15 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
               <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
                 <HotelDashboardMockup />
               </div>
+            </div>
+            {/* Dashboard preview image */}
+            <div className="mt-4 rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+              <img
+                src="/previews/hero-inventory.png"
+                alt="Hotel F&B and Asset Inventory Dashboard"
+                className="w-full h-auto"
+                loading="lazy"
+              />
             </div>
             <div
               className="absolute -bottom-8 left-1/4 right-1/4 h-16 rounded-full blur-3xl opacity-25"

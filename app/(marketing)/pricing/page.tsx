@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Check, ArrowRight, Building2, Landmark, Shield, Zap, Scale, Info } from "lucide-react";
+import { Check, ArrowRight, Building2, Landmark, Shield, Zap, Scale, Banknote, TrendingUp, Users } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const accent = "#FF6B00";
 const accentMuted = "rgba(255,107,0,0.08)";
 const accentBorder = "rgba(255,107,0,0.20)";
-const surface = "#0A0F1B";
+const surface = "#111520";
 const borderSubtle = "rgba(255,255,255,0.06)";
 
 const tiers = [
@@ -28,13 +28,18 @@ const tiers = [
     period: "EGP /property /month",
     desc: "For single-property hotels and small resorts (100-200 rooms).",
     features: [
-      "AI demand forecasting (14-day)",
-      "ETA e-invoicing compliance",
+      "AI demand forecasting (14-day window)",
+      "ETA e-invoicing compliance (unlimited)",
       "Automated PO generation & budget blockades",
       "Factoring eligibility assessment",
-      "Up to 200 orders/month",
-      "3 user seats",
-      "Email & chat support",
+      "Up to 200 orders/month (hard cap)",
+      "3 user seats (no expansion)",
+      "Email & chat support (48h SLA)",
+    ],
+    metrics: [
+      { label: "Monthly Orders", value: "200 max" },
+      { label: "Factoring Fee (HV)", value: "1.8%" },
+      { label: "Platform Volume Cap", value: "800K EGP" },
     ],
     cta: "Get Started",
     highlighted: false,
@@ -49,11 +54,16 @@ const tiers = [
       "Unlimited orders across all properties",
       "Multi-property authority matrix",
       "Shared-route logistics integration",
-      "Embedded factoring (Net-60)",
+      "Embedded factoring (Net-60 terms)",
       "Real-time cost control & anomaly detection",
       "Budget blockades at branch/department level",
-      "15 user seats",
-      "Priority support & account manager",
+      "15 user seats (expandable to 50)",
+      "Priority support & account manager (4h SLA)",
+    ],
+    metrics: [
+      { label: "Monthly Orders", value: "Unlimited" },
+      { label: "Factoring Fee (HV)", value: "1.2%" },
+      { label: "Platform Volume Cap", value: "5M EGP" },
     ],
     cta: "Contact Sales",
     highlighted: true,
@@ -67,11 +77,17 @@ const tiers = [
     features: [
       "Everything in Business, plus:",
       "Unlimited properties & user seats",
-      "Custom authority matrices",
+      "Custom authority matrices (branch/department/role)",
       "Dedicated account & success manager",
-      "API access & ERP integrations",
-      "Custom SLA with 99.99% uptime",
-      "Volume-based factoring fee discounts",
+      "API access & ERP integrations (SAP, Opera, Mews)",
+      "Custom SLA with 99.99% uptime guarantee",
+      "Volume-based factoring fee discounts (down to 0.8%)",
+      "White-label portal option",
+    ],
+    metrics: [
+      { label: "Monthly Orders", value: "Unlimited" },
+      { label: "Factoring Fee (HV)", value: "0.8–1.5%" },
+      { label: "Platform Volume Cap", value: "Unlimited" },
     ],
     cta: "Talk to Us",
     highlighted: false,
@@ -81,14 +97,14 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+    <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh", fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
       <MarketingNav />
 
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, ${accentMuted} 0%, transparent 70%)` }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Pricing</span>
+          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Layer 2 — Financing & Monetization</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
             No Per-Transaction Fees.<br />Subscription-Based.<br />Factoring-Funded.
           </h1>
@@ -99,7 +115,7 @@ export default function PricingPage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: borderSubtle, backgroundColor: "#030303" }}>
+      <section className="py-8 border-y" style={{ borderColor: borderSubtle, backgroundColor: "#0D1119" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -119,12 +135,12 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* How Pricing Works */}
+      {/* How Pricing Works — Revenue Model */}
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="rounded-2xl p-6 max-w-3xl mx-auto" style={{ backgroundColor: surface, border: `1px solid ${accentBorder}` }}>
             <h2 className="text-[14px] font-semibold text-white mb-4 flex items-center gap-2">
-              <Info size={16} style={{ color: accent }} />
+              <Banknote size={16} style={{ color: accent }} />
               How HotelsVendors Generates Revenue
             </h2>
             <div className="space-y-4 text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
@@ -132,7 +148,7 @@ export default function PricingPage() {
                 <strong className="text-white/70">1. Subscription Fees:</strong> Hotels pay a monthly subscription based on property size, room count, and number of properties in your chain. No per-transaction fees. No hidden charges.
               </p>
               <p>
-                <strong className="text-white/70">2. Factoring Funding Fees (HV):</strong> Revenue is generated through the factoring process. When a supplier opts for early payment via reverse factoring, a <strong className="text-white/70">Funding Fee (HV)</strong> is embedded in the factoring spread. This is fully compliant with FRA anti-fraud regulations and ETA e-invoicing disclosure requirements.
+                <strong className="text-white/70">2. Factoring Funding Fees (HV):</strong> Revenue is generated through the factoring process. When a supplier opts for early payment via reverse factoring, a <strong className="text-white/70">Funding Fee (HV)</strong> of 0.8%–1.8% is embedded in the factoring spread based on your tier. This is fully compliant with FRA anti-fraud regulations and ETA e-invoicing disclosure requirements.
               </p>
               <p>
                 <strong className="text-white/70">3. No Hidden Costs:</strong> Your subscription covers the full platform — from AI forecasting to ETA compliance to settlement. Revenue is generated when value is created through the factoring process, not on every purchase order.
@@ -157,7 +173,7 @@ export default function PricingPage() {
                 key={tier.name}
                 className="rounded-2xl p-7 flex flex-col transition-all"
                 style={{
-                  backgroundColor: tier.highlighted ? surface : "#080808",
+                  backgroundColor: tier.highlighted ? surface : "#0D1119",
                   border: tier.highlighted ? `1px solid ${accentBorder}` : `1px solid ${borderSubtle}`,
                 }}
               >
@@ -171,6 +187,17 @@ export default function PricingPage() {
                   {tier.period && <span className="text-[12px] text-white/30">{tier.period}</span>}
                 </div>
                 <p className="text-[12px] text-white/35 mb-4">{tier.desc}</p>
+
+                {/* Hardcoded Metrics */}
+                <div className="mb-4 p-3 rounded-lg space-y-2" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${borderSubtle}` }}>
+                  {tier.metrics.map((m) => (
+                    <div key={m.label} className="flex items-center justify-between">
+                      <span className="text-[10px] text-white/35">{m.label}</span>
+                      <span className="text-[11px] font-semibold text-white/70">{m.value}</span>
+                    </div>
+                  ))}
+                </div>
+
                 <ul className="space-y-2.5 mb-6 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
@@ -183,7 +210,7 @@ export default function PricingPage() {
                   href="/register"
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-medium transition-all"
                   style={tier.highlighted
-                    ? { backgroundColor: accent, color: "#000000" }
+                    ? { backgroundColor: accent, color: "#ffffff" }
                     : { border: `1px solid ${borderSubtle}`, color: "rgba(255,255,255,0.6)" }
                   }
                 >
@@ -196,13 +223,13 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
+      <section className="py-16" style={{ backgroundColor: "#0D1119" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Frequently Asked</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto text-left">
             {[
               { q: "How is my subscription calculated?", a: "Based on your number of properties, total room count, and monthly order volume. Essential fits single properties (100-200 rooms), Business fits groups (200-500 rooms), Enterprise is tailored for larger portfolios." },
-              { q: "Are there any per-transaction fees?", a: "No. HotelsVendors does not charge per-transaction fees. Your subscription covers the full platform. Revenue is generated through disclosed factoring funding fees (HV) — fully transparent and FRA/ETA compliant." },
+              { q: "What is the Factoring Funding Fee (HV)?", a: "When a supplier opts for early payment via reverse factoring, a Funding Fee (HV) is embedded in the factoring spread: Essential 1.8%, Business 1.2%, Enterprise 0.8–1.5% (volume-based). This is fully FRA/ETA compliant and disclosed in bid terms." },
               { q: "Can I switch plans later?", a: "Yes. Upgrade or downgrade at any time. When you add properties or your volume grows, we'll adjust your plan accordingly. No penalties for scaling up or down." },
             ].map((faq) => (
               <div key={faq.q} className="rounded-xl p-5" style={{ backgroundColor: surface, border: `1px solid ${borderSubtle}` }}>
@@ -219,7 +246,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-semibold mb-4 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>Ready to Get Started?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Tell us about your property portfolio. We'll build a subscription plan that fits your size, volume, and factoring needs.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "#000" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "#fff" }}>
             Get Your Quote <ArrowRight size={14} />
           </Link>
         </div>

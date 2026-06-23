@@ -8,7 +8,6 @@ import {
   Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote, Sparkles,
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 
 const SECTORS = [
@@ -86,19 +85,11 @@ function RegisterContent() {
   }, [sectorParam]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#000000" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0B0F17" }}>
       <MarketingNav />
 
       <div className="flex-1 px-6 py-24">
         <div className="mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center mb-8"
-          >
-            <BrandLogo variant="dark" size="lg" />
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,14 +125,15 @@ function RegisterContent() {
                     onClick={() => setWizardOpen(true)}
                     className="block w-full rounded-2xl p-6 h-full transition-all group hover:scale-[1.02] text-left cursor-pointer"
                     style={{
-                      backgroundColor: "#0B0F1A",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      backgroundColor: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      backdropFilter: "blur(12px)",
                     }}
                   >
                     <div className="flex items-start gap-4 mb-4">
                       <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all"
-                        style={{ backgroundColor: sector.color + "12" }}
+                        style={{ backgroundColor: sector.color + "15" }}
                       >
                         <Icon size={24} style={{ color: sector.color }} />
                       </div>
@@ -218,7 +210,7 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#000000" }} />}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0B0F17" }} />}>
       <RegisterContent />
     </Suspense>
   );

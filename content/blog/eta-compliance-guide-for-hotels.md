@@ -76,4 +76,4 @@ HotelsVendors makes compliance invisible — built into every transaction, autom
 
 ---
 
-*Ready to automate your hotel's tax compliance? [Get Started Free](https://hotelsvendors.com/register)*
+*Ready to automate your hotel's tax compliance? [Get Started Free](/register)*

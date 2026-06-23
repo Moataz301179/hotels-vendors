@@ -16,6 +16,17 @@ import {
   Menu,
   X,
   LogOut,
+  Receipt,
+  Zap,
+  ArrowUpRight,
+  ArrowDownRight,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Banknote,
+  TrendingUp,
+  Package,
+  CircleDollarSign,
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
@@ -35,17 +46,134 @@ const NAV_ITEMS = [
   { href: "/dashboard/shipping", label: "Logistics", icon: Truck },
 ];
 
-const BG_PAGE = "#000000";
-const BG_SURFACE = "#0a0a0a";
-const BG_SIDEBAR = "#0a0a0a";
+const BG_PAGE = "#0B0F17";
+const BG_SURFACE = "#111520";
+const BG_SIDEBAR = "#0D1119";
 const BORDER = "rgba(255,255,255,0.06)";
-const TEXT_PRIMARY = "#ffffff";
-const TEXT_SECONDARY = "rgba(255,255,255,0.50)";
-const TEXT_MUTED = "rgba(255,255,255,0.30)";
+const TEXT_PRIMARY = "#F0F2F5";
+const TEXT_SECONDARY = "rgba(161,168,184,0.85)";
+const TEXT_MUTED = "rgba(107,115,132,0.70)";
 const ACCENT = "#FF6B00";
 const ACCENT_LIGHT = "rgba(255,107,0,0.12)";
-const SIDEBAR_WIDTH = 256;
+const SIDEBAR_WIDTH = 260;
 const HEADER_HEIGHT = 56;
+
+/* ═══ LIVE CONTEXT WIDGETS ═══ */
+
+function ETAInvoiceTracker() {
+  const invoices = [
+    { id: "INV-2026-0041", amount: "124,500", status: "SUBMITTED", uuid: "ETA-8A3F-9B21", date: "Today" },
+    { id: "INV-2026-0040", amount: "87,200", status: "VALIDATED", uuid: "ETA-7C2E-8A10", date: "Today" },
+    { id: "INV-2026-0039", amount: "203,800", status: "SUBMITTED", uuid: "ETA-6D1D-7B09", date: "Yesterday" },
+  ];
+
+  return (
+    <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Receipt size={14} style={{ color: ACCENT }} />
+          <span className="text-[11px] font-semibold text-white/70">ETA E-Invoicing Pipeline</span>
+        </div>
+        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(34,197,94,0.1)", color: "#4ADE80" }}>Live</span>
+      </div>
+      <div className="space-y-2">
+        {invoices.map((inv) => (
+          <div key={inv.id} className="flex items-center justify-between py-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: inv.status === "VALIDATED" ? "#22C55E" : "#EAB308" }} />
+              <span className="text-[11px] font-mono text-white/60">{inv.id}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-medium text-white/50">{inv.amount} EGP</span>
+              <span className="text-[9px] font-mono text-white/30">{inv.uuid}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RFQMatchingPipeline() {
+  const rfqs = [
+    { id: "RFQ-0891", item: "Fresh Seafood (120kg)", matches: 4, status: "MATCHED", eta: "2h" },
+    { id: "RFQ-0890", item: "Pool Chemicals (200L)", matches: 7, status: "MATCHED", eta: "1h" },
+    { id: "RFQ-0889", item: "Guest Towels (500pcs)", matches: 2, status: "PENDING", eta: "4h" },
+  ];
+
+  return (
+    <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Zap size={14} style={{ color: ACCENT }} />
+          <span className="text-[11px] font-semibold text-white/70">RFQ Matching Pipeline</span>
+        </div>
+        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}>3 Active</span>
+      </div>
+      <div className="space-y-2">
+        {rfqs.map((rfq) => (
+          <div key={rfq.id} className="flex items-center justify-between py-1.5">
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] text-white/60 truncate">{rfq.item}</p>
+              <p className="text-[10px] text-white/30">{rfq.id} · {rfq.eta} remaining</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-medium text-white/40">{rfq.matches} matches</span>
+              <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{
+                backgroundColor: rfq.status === "MATCHED" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
+                color: rfq.status === "MATCHED" ? "#4ADE80" : "#FACC15",
+              }}>{rfq.status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReverseFactoringLimits() {
+  const suppliers = [
+    { name: "Al-Gomhouria Foods", limit: "500,000", used: "312,000", rate: "1.2%" },
+    { name: "Nile Linen Co.", limit: "250,000", used: "98,000", rate: "1.4%" },
+    { name: "Red Sea Chemicals", limit: "180,000", used: "178,500", rate: "1.1%" },
+  ];
+
+  return (
+    <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <CircleDollarSign size={14} style={{ color: ACCENT }} />
+          <span className="text-[11px] font-semibold text-white/70">Supplier Reverse Factoring</span>
+        </div>
+        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(239,68,68,0.1)", color: "#F87171" }}>1 Near Limit</span>
+      </div>
+      <div className="space-y-2.5">
+        {suppliers.map((s) => {
+          const usedNum = parseInt(s.used.replace(/,/g, ""));
+          const limitNum = parseInt(s.limit.replace(/,/g, ""));
+          const pct = Math.round((usedNum / limitNum) * 100);
+          return (
+            <div key={s.name}>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] text-white/60">{s.name}</span>
+                <span className="text-[10px] text-white/40">{s.rate} HV</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full" style={{
+                    width: `${pct}%`,
+                    backgroundColor: pct > 90 ? "#EF4444" : pct > 70 ? "#EAB308" : ACCENT,
+                  }} />
+                </div>
+                <span className="text-[10px] text-white/40 w-20 text-right">{s.used} / {s.limit}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export function DashboardShell({ children, role, userName, tenantName }: DashboardShellProps) {
   const pathname = usePathname();
@@ -54,7 +182,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
   const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: BG_PAGE, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: BG_PAGE, fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
@@ -147,7 +275,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
       </aside>
 
       {/* Main area */}
-      <div style={{ marginLeft: 0 }} className="md:ml-[256px]">
+      <div style={{ marginLeft: 0 }} className="md:ml-[260px]">
         {/* Header */}
         <header
           style={{
@@ -171,7 +299,6 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
             >
               <Menu size={20} color={TEXT_SECONDARY} />
             </button>
-            {/* Role badge */}
             <span
               style={{
                 fontSize: 10,
@@ -194,7 +321,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
             </button>
             <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6, display: "flex", position: "relative" }}>
               <Bell size={18} color={TEXT_MUTED} />
-              <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#df1b41", border: "1px solid #0a0a0a" }} />
+              <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#EF4444", border: "1px solid #0D1119" }} />
             </button>
             <div
               style={{
@@ -216,8 +343,14 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
           </div>
         </header>
 
-        {/* Content */}
+        {/* Content with live context widgets */}
         <main style={{ padding: "24px" }}>
+          {/* Live context strip */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            <ETAInvoiceTracker />
+            <RFQMatchingPipeline />
+            <ReverseFactoringLimits />
+          </div>
           {children}
         </main>
       </div>

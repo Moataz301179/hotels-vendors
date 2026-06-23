@@ -225,6 +225,18 @@ export function VendorNetwork() {
             </Reveal>
           </div>
         </div>
+
+        {/* Marketplace preview image */}
+        <Reveal delay={0.15}>
+          <div className="mt-8 rounded-2xl overflow-hidden" style={{ border: `1px solid ${B1}` }}>
+            <img
+              src="/previews/marketplace-preview.png"
+              alt="Verified B2B Supplier Marketplace"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

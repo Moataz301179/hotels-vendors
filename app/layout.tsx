@@ -1,18 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
 import { LanguageProvider } from "@/lib/i18n/language-context";
 import { PublicChatbot } from "@/components/ai-assistant/public-chatbot";
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-  preload: true,
-  weight: ["300", "400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_EG",
-    url: "https://hotels-vendors.com",
+    url: "https://hotelsvendors.com",
     siteName: "Hotels Vendors",
     title: "HotelsVendors | Digital Procurement Hub for B2B Hospitality",
     description:
@@ -64,10 +55,10 @@ export const metadata: Metadata = {
     creator: "@hotelsvendors",
   },
   alternates: {
-    canonical: "https://hotels-vendors.com",
+    canonical: "https://hotelsvendors.com",
     languages: {
-      "en-EG": "https://hotels-vendors.com",
-      "ar-EG": "https://hotels-vendors.com/ar",
+      "en-EG": "https://hotelsvendors.com",
+      "ar-EG": "https://hotelsvendors.com/ar",
     },
   },
   icons: {
@@ -75,48 +66,41 @@ export const metadata: Metadata = {
       { url: "/logo-icon.png", sizes: "32x32", type: "image/png" },
       { url: "/logo-icon-white.png", sizes: "192x192", type: "image/png" },
     ],
-    apple: [
-      { url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" }],
     shortcut: "/logo-icon.png",
   },
   manifest: "/manifest.json",
-  verification: {
-    google: "google-site-verification-code",
-  },
   other: {
-    "msapplication-TileColor": "#0B0F1A",
+    "msapplication-TileColor": "#0B0F17",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0C0814",
+    "theme-color": "#0B0F17",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0F17" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "light",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      dir="ltr"
-      className={`h-full ${plusJakarta.variable}`}
-    >
+    <html lang="en" dir="ltr" className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-        <link href="https://fonts.cdnfonts.com/css/hercules-2" rel="stylesheet" />
-        <link rel="dns-prefetch" href="https://hotels-vendors.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="dns-prefetch" href="https://hotelsvendors.com" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
         <meta name="ICBM" content="30.0444, 31.2357" />
@@ -125,23 +109,22 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
+        <meta name="theme-color" content="#0B0F17" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   var mode = localStorage.getItem('hv-theme-mode') || 'wimbledon';
-                  if (mode === 'wimbledon' || mode === 'original' || mode === 'hercules') {
-                    document.documentElement.setAttribute('data-theme', mode);
-                  } else {
-                    document.documentElement.setAttribute('data-theme', 'wimbledon');
-                  }
+                  var valid = ['wimbledon', 'original', 'hercules', 'light'];
+                  if (valid.indexOf(mode) === -1) mode = 'wimbledon';
+                  document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
-                    if (mode === 'hercules') meta.setAttribute('content', '#0a1628');
-                    else if (mode === 'original') meta.setAttribute('content', '#000000');
-                    else meta.setAttribute('content', '#000000');
+                    if (mode === 'hercules') meta.setAttribute('content', '#080E1A');
+                    else if (mode === 'light') meta.setAttribute('content', '#F6F7F9');
+                    else if (mode === 'original') meta.setAttribute('content', '#0B0F17');
+                    else meta.setAttribute('content', '#0B0F17');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -164,10 +147,9 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Hotels Vendors",
-              url: "https://hotels-vendors.com",
-              logo: "https://hotels-vendors.com/hotelsvendors-logo.png",
-              description:
-                "Egypt's leading B2B procurement platform for the hospitality sector.",
+              url: "https://hotelsvendors.com",
+              logo: "https://hotelsvendors.com/hotelsvendors-logo.png",
+              description: "Egypt's leading B2B procurement platform for the hospitality sector.",
               sameAs: [
                 "https://facebook.com/hotelsvendors",
                 "https://instagram.com/hotelsvendors",
@@ -189,10 +171,7 @@ export default function RootLayout({
       </head>
       <body
         className="min-h-full flex flex-col antialiased"
-        style={{
-          fontFamily: "var(--font-sans)",
-          background: "var(--bg-canvas)",
-        }}
+        style={{ fontFamily: "var(--font-sans)", background: "var(--bg-canvas)" }}
       >
         <LanguageProvider>
           <NotificationProvider>

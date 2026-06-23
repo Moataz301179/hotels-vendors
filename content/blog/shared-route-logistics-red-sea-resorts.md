@@ -88,4 +88,4 @@ No additional setup required. Just order as usual, and the logistics optimizatio
 
 ---
 
-*Reduce your delivery costs by 40%: [Get Started Free](https://hotelsvendors.com/register)*
+*Reduce your delivery costs by 40%: [Get Started Free](/register)*

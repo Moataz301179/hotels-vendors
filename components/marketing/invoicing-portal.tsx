@@ -185,6 +185,18 @@ export function InvoicingPortal() {
             </Reveal>
           </div>
         </div>
+
+        {/* Financing preview image */}
+        <Reveal delay={0.2}>
+          <div className="mt-8 rounded-2xl overflow-hidden" style={{ border: `1px solid ${B1}` }}>
+            <img
+              src="/previews/financing-preview.png"
+              alt="ETA Invoice Clearance Pipeline &amp; Factoring Overview"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

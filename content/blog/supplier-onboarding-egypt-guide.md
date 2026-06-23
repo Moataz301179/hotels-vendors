@@ -88,8 +88,8 @@ Once live on INVO, suppliers get:
 
 ## Start Onboarding Suppliers
 
-If you're an Egyptian supplier serving the hospitality sector, [join HotelsVendors](https://hotelsvendors.com/register) and complete onboarding in under 24 hours.
+If you're an Egyptian supplier serving the hospitality sector, [join HotelsVendors](/register) and complete onboarding in under 24 hours.
 
 ---
 
-*Are you a hotel looking for verified suppliers? [Explore our marketplace](https://hotelsvendors.com/marketplace)*
+*Are you a hotel looking for verified suppliers? [Explore our marketplace](/marketplace)*
