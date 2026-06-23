@@ -17,7 +17,12 @@ import {
 /* ─────────────────────────────────────────
    MOCK DATA — Replace with API calls
    ───────────────────────────────────────── */
-const CAMPAIGNS: { id: string; name: string; channel: string; status: string; budget: string; spent: string; leads: number; ctr: string }[] = [];
+const CAMPAIGNS: { id: string; name: string; channel: string; status: string; budget: string; spent: string; leads: number; ctr: string }[] = [
+  { id: "C-001", name: "Summer Coastal Push", channel: "Email + LinkedIn", status: "active", budget: "EGP 120,000", spent: "EGP 78,400", leads: 342, ctr: "3.8%" },
+  { id: "C-002", name: "Hurghada Resort Drive", channel: "Meta Ads", status: "active", budget: "EGP 85,000", spent: "EGP 52,100", leads: 196, ctr: "2.4%" },
+  { id: "C-003", name: "ETA Compliance Awareness", channel: "LinkedIn", status: "paused", budget: "EGP 40,000", spent: "EGP 31,200", leads: 84, ctr: "1.9%" },
+  { id: "C-004", name: "Supplier Onboarding Sprint", channel: "Email", status: "completed", budget: "EGP 60,000", spent: "EGP 58,900", leads: 127, ctr: "4.1%" },
+];
 
 const CONTENT_CALENDAR = [
   { date: "May 5", title: "Supplier Success: Nile Textiles", type: "Case Study", channel: "LinkedIn", status: "scheduled" },
@@ -27,9 +32,20 @@ const CONTENT_CALENDAR = [
   { date: "May 12", title: "ETA Compliance Webinar", type: "Webinar", channel: "Email + LinkedIn", status: "scheduled" },
 ];
 
-const SOCIAL_METRICS: { platform: string; followers: string; engagement: string; posts: number; leads: number }[] = [];
+const SOCIAL_METRICS: { platform: string; followers: string; engagement: string; posts: number; leads: number }[] = [
+  { platform: "LinkedIn", followers: "12.4K", engagement: "6.2%", posts: 24, leads: 89 },
+  { platform: "Instagram", followers: "8.7K", engagement: "4.8%", posts: 18, leads: 42 },
+  { platform: "Facebook", followers: "15.1K", engagement: "3.1%", posts: 12, leads: 31 },
+];
 
-const RECENT_LEADS: { name: string; source: string; status: string; date: string; value: string }[] = [];
+const RECENT_LEADS: { name: string; source: string; status: string; date: string; value: string }[] = [
+  { name: "Stella Di Mare Resort", source: "LinkedIn", status: "qualified", date: "Today", value: "High" },
+  { name: "Jaz Aquamarine", source: "Website", status: "contacted", date: "Today", value: "High" },
+  { name: "Sunrise Palace", source: "Referral", status: "new", date: "Yesterday", value: "Medium" },
+  { name: "Baron Resort Sharm", source: "Email", status: "qualified", date: "Yesterday", value: "High" },
+  { name: "Hurghada Grand", source: "Meta Ads", status: "new", date: "2 days ago", value: "Medium" },
+  { name: "Delta Hotels Hurghada", source: "Webinar", status: "contacted", date: "3 days ago", value: "Low" },
+];
 
 /* ───────────────────────────────────────── */
 

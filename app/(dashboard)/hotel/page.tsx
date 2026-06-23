@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckoutModal } from "@/components/dashboard/checkout-modal";
 import { FinancialDashboard } from "@/components/dashboard/financial-dashboard";
+import { ForecastWidget } from "@/components/dashboard/forecast-widget";
 
 export default function HotelDashboardPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -44,6 +45,9 @@ export default function HotelDashboardPage() {
       </div>
 
       <FinancialDashboard />
+
+      {/* AI Forecast */}
+      <ForecastWidget />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </motion.div>

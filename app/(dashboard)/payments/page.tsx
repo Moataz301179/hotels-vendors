@@ -24,7 +24,16 @@ const PAYMENT_STATS = [
   { label: "Failed", value: "EGP 0.04M", change: "0.8% error rate", up: true, icon: AlertTriangle },
 ];
 
-const TRANSACTIONS: { id: string; orderId: string; hotel: string; supplier: string; amount: string; method: string; status: string; date: string }[] = [];
+const TRANSACTIONS: { id: string; orderId: string; hotel: string; supplier: string; amount: string; method: string; status: string; date: string }[] = [
+  { id: "TXN-2026-00842", orderId: "ORD-2026-1241", hotel: "Stella Di Mare Resort", supplier: "Nile Fresh Foods", amount: "EGP 45,200", method: "Factoring", status: "COMPLETED", date: "Today, 14:32" },
+  { id: "TXN-2026-00841", orderId: "ORD-2026-1240", hotel: "Jaz Aquamarine", supplier: "Pyramid Linens", amount: "EGP 28,700", method: "Credit", status: "COMPLETED", date: "Today, 11:15" },
+  { id: "TXN-2026-00840", orderId: "ORD-2026-1239", hotel: "Sunrise Palace", supplier: "Red Sea Amenities", amount: "EGP 61,500", method: "Factoring", status: "PENDING", date: "Today, 09:48" },
+  { id: "TXN-2026-00839", orderId: "ORD-2026-1238", hotel: "Baron Resort Sharm", supplier: "Cairo Kitchen Pro", amount: "EGP 128,400", method: "Bank Transfer", status: "COMPLETED", date: "Yesterday" },
+  { id: "TXN-2026-00838", orderId: "ORD-2026-1237", hotel: "Hurghada Grand", supplier: "Delta Maintenance", amount: "EGP 18,900", method: "Credit", status: "FAILED", date: "Yesterday" },
+  { id: "TXN-2026-00837", orderId: "ORD-2026-1236", hotel: "Marriott Hurghada", supplier: "Oasis FF&E", amount: "EGP 92,300", method: "Factoring", status: "COMPLETED", date: "2 days ago" },
+  { id: "TXN-2026-00836", orderId: "ORD-2026-1235", hotel: "Four Seasons Sharm", supplier: "Pharaoh Chemicals", amount: "EGP 34,600", method: "Bank Transfer", status: "PENDING", date: "2 days ago" },
+  { id: "TXN-2026-00835", orderId: "ORD-2026-1234", hotel: "Renaissance Cairo", supplier: "Cleopatra Amenities", amount: "EGP 56,100", method: "Factoring", status: "COMPLETED", date: "3 days ago" },
+];
 
 const METHOD_COLORS: Record<string, string> = {
   Factoring: "bg-accent-base/10 text-accent-base",

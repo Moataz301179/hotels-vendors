@@ -25,6 +25,16 @@ interface LedgerRow {
   riskScore: number;
 }
 
+const accent = "#FF6B00";
+const surface = "#0A0F1B";
+const surfaceAlt = "#0E1421";
+const border = "rgba(255,255,255,0.06)";
+const borderAlt = "rgba(255,255,255,0.04)";
+const textPrimary = "#ffffff";
+const textSecondary = "rgba(255,255,255,0.50)";
+const textMuted = "rgba(255,255,255,0.25)";
+const textFaint = "rgba(255,255,255,0.35)";
+
 const kpis: KPIData[] = [
   { label: "Available Capital", value: "EGP 2,450,000", change: "+12.4%", trend: "up", icon: <DollarSign size={20} /> },
   { label: "Utilized Credit", value: "EGP 1,820,000", change: "+8.2%", trend: "up", icon: <Activity size={20} /> },
@@ -40,17 +50,18 @@ const ledgerData: LedgerRow[] = [
   { id: "5", invoiceId: "INV-2026-00138", hotel: "Hurghada Grand", supplier: "Delta Maintenance", amount: 18900, currency: "EGP", status: "overdue", date: "2026-05-28", taxStamp: "ETA-UUID: e7b2a6b5-0038", ledgerHash: "0xbd7e...i6f5", riskScore: 42 },
 ];
 
+const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
+  paid: { bg: "rgba(34,197,94,0.10)", text: "#22C55E" },
+  pending: { bg: "rgba(234,179,8,0.10)", text: "#EAB308" },
+  invoiced: { bg: "rgba(99,91,255,0.10)", text: "#635BFF" },
+  delivered: { bg: "rgba(56,189,248,0.10)", text: "#38BDF8" },
+  overdue: { bg: "rgba(239,68,68,0.10)", text: "#EF4444" },
+};
+
 function StatusTag({ status }: { status: LedgerRow["status"] }) {
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    paid: { bg: "#e6f9ed", text: "#0a7d2b" },
-    pending: { bg: "#fff7e0", text: "#a16200" },
-    invoiced: { bg: "#ededff", text: "#4338ca" },
-    delivered: { bg: "#e0f2fe", text: "#0369a1" },
-    overdue: { bg: "#fde8eb", text: "#b0102a" },
-  };
-  const c = colorMap[status] || colorMap.pending;
+  const c = STATUS_STYLES[status] || STATUS_STYLES.pending;
   return (
-    <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", padding: "3px 8px", borderRadius: 4, backgroundColor: c.bg, color: c.text }}>
+    <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", padding: "3px 8px", borderRadius: 4, backgroundColor: c.bg, color: c.text }}>
       {status}
     </span>
   );
@@ -76,27 +87,27 @@ export function FinancialDashboard() {
       {/* KPI Tiles */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         {kpis.map((kpi) => (
-          <div key={kpi.label} style={{ backgroundColor: "#fff", border: "1px solid #e3e8ee", borderRadius: 8, padding: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)" }}>
+          <div key={kpi.label} style={{ backgroundColor: surface, border: `1px solid ${border}`, borderRadius: 10, padding: 20 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#8898aa" }}>{kpi.label}</span>
-              <span style={{ color: "#635bff" }}>{kpi.icon}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: textMuted }}>{kpi.label}</span>
+              <span style={{ color: accent }}>{kpi.icon}</span>
             </div>
-            <div style={{ fontSize: 24, fontWeight: 600, color: "#1a1f36", marginBottom: 8 }}>{kpi.value}</div>
+            <div style={{ fontSize: 24, fontWeight: 600, color: textPrimary, marginBottom: 8 }}>{kpi.value}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              {kpi.trend === "up" ? <TrendingUp size={14} style={{ color: "#00d924" }} /> : <TrendingDown size={14} style={{ color: "#df1b41" }} />}
-              <span style={{ fontSize: 12, fontWeight: 500, color: kpi.trend === "up" ? "#00d924" : "#df1b41" }}>{kpi.change}</span>
-              <span style={{ fontSize: 12, color: "#8898aa" }}>vs last month</span>
+              {kpi.trend === "up" ? <TrendingUp size={14} style={{ color: "#22C55E" }} /> : <TrendingDown size={14} style={{ color: "#EF4444" }} />}
+              <span style={{ fontSize: 12, fontWeight: 500, color: kpi.trend === "up" ? "#22C55E" : "#EF4444" }}>{kpi.change}</span>
+              <span style={{ fontSize: 12, color: textMuted }}>vs last month</span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Ledger Table */}
-      <div style={{ backgroundColor: "#fff", border: "1px solid #e3e8ee", borderRadius: 8, boxShadow: "0 1px 3px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #e3e8ee" }}>
+      <div style={{ backgroundColor: surface, border: `1px solid ${border}`, borderRadius: 10, overflow: "hidden" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: `1px solid ${border}` }}>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: "#1a1f36", margin: 0 }}>Transactions Ledger</h2>
-            <p style={{ fontSize: 12, color: "#8898aa", margin: "4px 0 0 0" }}>{filtered.length} transactions</p>
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: textPrimary, margin: 0 }}>Transactions Ledger</h2>
+            <p style={{ fontSize: 12, color: textMuted, margin: "4px 0 0 0" }}>{filtered.length} transactions</p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <input
@@ -104,9 +115,9 @@ export function FinancialDashboard() {
               placeholder="Search invoices..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ fontSize: 13, padding: "8px 12px", border: "1px solid #e3e8ee", borderRadius: 6, outline: "none", width: 220, color: "#1a1f36", backgroundColor: "#f7f8fa" }}
+              style={{ fontSize: 13, padding: "8px 12px", border: `1px solid ${border}`, borderRadius: 6, outline: "none", width: 220, color: textPrimary, backgroundColor: surfaceAlt }}
             />
-            <button style={{ fontSize: 13, fontWeight: 500, padding: "8px 16px", backgroundColor: "#635bff", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+            <button style={{ fontSize: 13, fontWeight: 500, padding: "8px 16px", backgroundColor: accent, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
               New Invoice <ArrowRight size={14} />
             </button>
           </div>
@@ -114,9 +125,9 @@ export function FinancialDashboard() {
 
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
-            <tr style={{ backgroundColor: "#f7f8fa" }}>
+            <tr style={{ backgroundColor: surfaceAlt }}>
               {["Invoice", "Hotel", "Supplier", "Amount", "Status", "Date", "Risk"].map((h, i) => (
-                <th key={h} style={{ padding: "12px 20px", textAlign: i === 3 ? "right" : i === 4 || i === 6 ? "center" : "left", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#525f7f", borderBottom: "1px solid #e3e8ee" }}>
+                <th key={h} style={{ padding: "12px 20px", textAlign: i === 3 ? "right" : i === 4 || i === 6 ? "center" : "left", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: textFaint, borderBottom: `1px solid ${border}` }}>
                   {h}
                 </th>
               ))}
@@ -129,11 +140,11 @@ export function FinancialDashboard() {
           </tbody>
         </table>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #e3e8ee", backgroundColor: "#f7f8fa" }}>
-          <span style={{ fontSize: 12, color: "#8898aa" }}>Showing {start + 1}-{Math.min(start + pageSize, filtered.length)} of {filtered.length}</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: `1px solid ${border}`, backgroundColor: surfaceAlt }}>
+          <span style={{ fontSize: 12, color: textMuted }}>Showing {start + 1}-{Math.min(start + pageSize, filtered.length)} of {filtered.length}</span>
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} style={{ fontSize: 12, padding: "6px 12px", border: "1px solid #e3e8ee", borderRadius: 6, backgroundColor: page === 1 ? "#f7f8fa" : "#fff", color: page === 1 ? "#c1c9d2" : "#1a1f36", cursor: page === 1 ? "not-allowed" : "pointer" }}>Previous</button>
-            <button onClick={() => setPage((p) => p + 1)} disabled={start + pageSize >= filtered.length} style={{ fontSize: 12, padding: "6px 12px", border: "1px solid #e3e8ee", borderRadius: 6, backgroundColor: start + pageSize >= filtered.length ? "#f7f8fa" : "#fff", color: start + pageSize >= filtered.length ? "#c1c9d2" : "#1a1f36", cursor: start + pageSize >= filtered.length ? "not-allowed" : "pointer" }}>Next</button>
+            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} style={{ fontSize: 12, padding: "6px 12px", border: `1px solid ${border}`, borderRadius: 6, backgroundColor: page === 1 ? surfaceAlt : surface, color: page === 1 ? textMuted : textPrimary, cursor: page === 1 ? "not-allowed" : "pointer" }}>Previous</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={start + pageSize >= filtered.length} style={{ fontSize: 12, padding: "6px 12px", border: `1px solid ${border}`, borderRadius: 6, backgroundColor: start + pageSize >= filtered.length ? surfaceAlt : surface, color: start + pageSize >= filtered.length ? textMuted : textPrimary, cursor: start + pageSize >= filtered.length ? "not-allowed" : "pointer" }}>Next</button>
           </div>
         </div>
       </div>
@@ -145,20 +156,20 @@ function LedgerRow({ row }: { row: LedgerRow }) {
   const [expanded, setExpanded] = useState(false);
   return (
     <>
-      <tr onClick={() => setExpanded(!expanded)} style={{ cursor: "pointer", borderBottom: "1px solid #f0f2f5" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f8f9ff")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
-        <td style={{ padding: "14px 20px", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#635bff", fontWeight: 500 }}>{row.invoiceId}</td>
-        <td style={{ padding: "14px 20px", color: "#1a1f36" }}>{row.hotel}</td>
-        <td style={{ padding: "14px 20px", color: "#525f7f" }}>{row.supplier}</td>
-        <td style={{ padding: "14px 20px", textAlign: "right", fontWeight: 600, color: "#1a1f36" }}>{row.amount.toLocaleString("en-EG")} {row.currency}</td>
+      <tr onClick={() => setExpanded(!expanded)} style={{ cursor: "pointer", borderBottom: `1px solid ${borderAlt}` }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+        <td style={{ padding: "14px 20px", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: accent, fontWeight: 500 }}>{row.invoiceId}</td>
+        <td style={{ padding: "14px 20px", color: textPrimary }}>{row.hotel}</td>
+        <td style={{ padding: "14px 20px", color: textSecondary }}>{row.supplier}</td>
+        <td style={{ padding: "14px 20px", textAlign: "right", fontWeight: 600, color: textPrimary }}>{row.amount.toLocaleString("en-EG")} {row.currency}</td>
         <td style={{ padding: "14px 20px", textAlign: "center" }}><StatusTag status={row.status} /></td>
-        <td style={{ padding: "14px 20px", color: "#525f7f" }}>{row.date}</td>
+        <td style={{ padding: "14px 20px", color: textSecondary }}>{row.date}</td>
         <td style={{ padding: "14px 20px", textAlign: "center" }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: row.riskScore >= 80 ? "#00d924" : row.riskScore >= 60 ? "#ff9b00" : "#df1b41" }}>{row.riskScore}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: row.riskScore >= 80 ? "#22C55E" : row.riskScore >= 60 ? accent : "#EF4444" }}>{row.riskScore}</span>
         </td>
       </tr>
       {expanded && (
         <tr>
-          <td colSpan={7} style={{ padding: 20, backgroundColor: "#f8f9ff", borderBottom: "1px solid #e3e8ee" }}>
+          <td colSpan={7} style={{ padding: 20, backgroundColor: surfaceAlt, borderBottom: `1px solid ${border}` }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
               <MetadataCard label="Digital Tax Stamp" value={row.taxStamp} sublabel="ETA UUID validated" />
               <MetadataCard label="Ledger Hash" value={row.ledgerHash} sublabel="SHA-256 cryptographic proof" />
@@ -173,10 +184,10 @@ function LedgerRow({ row }: { row: LedgerRow }) {
 
 function MetadataCard({ label, value, sublabel }: { label: string; value: string; sublabel: string }) {
   return (
-    <div style={{ padding: "14px 16px", backgroundColor: "#fff", border: "1px solid #e3e8ee", borderRadius: 6 }}>
-      <div style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#8898aa", marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: "#1a1f36", fontFamily: "'JetBrains Mono', monospace", marginBottom: 4 }}>{value}</div>
-      <div style={{ fontSize: 11, color: "#8898aa" }}>{sublabel}</div>
+    <div style={{ padding: "14px 16px", backgroundColor: surface, border: `1px solid ${border}`, borderRadius: 6 }}>
+      <div style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: textMuted, marginBottom: 6 }}>{label}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: textPrimary, fontFamily: "'JetBrains Mono', monospace", marginBottom: 4 }}>{value}</div>
+      <div style={{ fontSize: 11, color: textMuted }}>{sublabel}</div>
     </div>
   );
 }
