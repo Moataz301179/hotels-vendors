@@ -3,6 +3,13 @@ import path from "path";
 import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+const BLOG_DIR_FALLBACK = path.join(process.cwd(), "..", "content", "blog");
+
+function getBlogDir() {
+  if (fs.existsSync(BLOG_DIR)) return BLOG_DIR;
+  if (fs.existsSync(BLOG_DIR_FALLBACK)) return BLOG_DIR_FALLBACK;
+  return BLOG_DIR;
+}
 
 export interface BlogPost {
   slug: string;
@@ -26,12 +33,13 @@ function getReadTime(content: string): number {
 }
 
 export function getAllPosts(): BlogPost[] {
-  if (!fs.existsSync(BLOG_DIR)) return [];
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
+  const dir = getBlogDir();
+  if (!fs.existsSync(dir)) return [];
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
   return files
     .map((file) => {
       const slug = file.replace(/\.md$/, "");
-      const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
+      const raw = fs.readFileSync(path.join(dir, file), "utf-8");
       const { data, content } = matter(raw);
       return {
         slug,
@@ -53,7 +61,8 @@ export function getAllPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(BLOG_DIR, `${slug}.md`);
+  const dir = getBlogDir();
+  const filePath = path.join(dir, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
@@ -75,8 +84,9 @@ export function getPostBySlug(slug: string): BlogPost | null {
 }
 
 export function getAllSlugs(): string[] {
-  if (!fs.existsSync(BLOG_DIR)) return [];
-  return fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));
+  const dir = getBlogDir();
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));
 }
 
 export function getPostsByCategory(category: string): BlogPost[] {

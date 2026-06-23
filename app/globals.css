@@ -346,6 +346,17 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MARKETING TAB NAV
+   ═══════════════════════════════════════════════════════════════ */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    GLASSMORPHIC SYSTEM — 1px border + 0.1 white + backdrop-blur
    ═══════════════════════════════════════════════════════════════ */
 .glass {

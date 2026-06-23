@@ -100,11 +100,9 @@ export default function MarketingLayout({
   return (
     <ThemeProvider>
       <div
-        className="min-h-screen"
+        className="marketing-main min-h-screen"
         style={{
           fontFamily: "'Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
-          background: "#0B0F17",
-          color: "#ffffff",
         }}
       >
         <script

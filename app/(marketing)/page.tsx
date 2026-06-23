@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, Suspense, lazy } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -55,8 +55,8 @@ const A = "#FF6B00";
 const AM = "rgba(255,107,0,0.08)";
 const AB = "rgba(255,107,0,0.25)";
 const AG = "rgba(255,107,0,0.15)";
-const S1 = "#080B12";
-const SC = "#0C1018";
+const S1 = "var(--bg-canvas)";
+const SC = "var(--bg-surface-raised)";
 const B1 = "rgba(255,255,255,0.06)";
 const BH = "rgba(255,255,255,0.12)";
 
@@ -132,11 +132,11 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="relative overflow-hidden" style={{ backgroundColor: "#0B0F17" }}>
+    <section className="marketing-section relative overflow-hidden">
       {/* Ambient glow */}
       <div
-        className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full pointer-events-none"
-        style={{ background: `radial-gradient(ellipse, ${AG} 0%, transparent 70%)`, opacity: 0.5 }}
+        className="marketing-ambient absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full pointer-events-none"
+        style={{ opacity: 0.5 }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[92px] md:pt-[110px] pb-20 md:pb-28">
@@ -869,52 +869,98 @@ function MidPageCTA({ onCTAClick }: { onCTAClick: () => void }) {
 /* ═══════════════════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ═══════════════════════════════════════════════════════════ */
+const TABS = [
+  { id: "overview", label: "Overview", icon: Building2 },
+  { id: "platform", label: "Platform", icon: BrainCircuit },
+  { id: "pricing", label: "Pricing", icon: Banknote },
+  { id: "faq", label: "FAQ", icon: Sparkles },
+] as const;
+
 export default function HomePage() {
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("overview");
 
   const openWizard = () => setWizardOpen(true);
 
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: "#0B0F17" }}>
+    <div className="marketing-main min-h-screen">
       <MarketingNav />
 
       <HeroSection onCTAClick={openWizard} />
       <MarketTicker />
       <EnterpriseTrustBanner />
-      <ValueSplitSection onCTAClick={openWizard} />
-      <ProblemSolutionSplit />
-      <FeatureBentoGrid />
 
-      {/* ═══ 3-LAYER ENTERPRISE ARCHITECTURE ═══ */}
-      <VendorNetwork />
-      <SmartSourcingGrid />
-      <RFQEngine />
-      <InvoicingPortal />
-      <PaymentGateway />
-      <AuthorityValidation />
-      <AnalyticsDashboard />
-      <LifecycleVisualizer />
-      <GovernanceAudit />
-
-      <ProcurementFlowVisualizer />
-      <PricingSection onCTAClick={openWizard} />
-      <SocialProof />
-      <MidPageCTA onCTAClick={openWizard} />
-      <DualOnboarding onCTAClick={openWizard} />
-      <GovernanceSecurity />
-
-      {/* FAQ */}
-      <section className="py-24 md:py-32" style={{ borderTop: `1px solid ${B1}`, backgroundColor: S1 }}>
-        <div className="max-w-3xl mx-auto px-6">
-          <Reveal>
-            <div className="text-center mb-12">
-              <SectionLabel>FAQ</SectionLabel>
-              <SectionHeading>Questions? Answered.</SectionHeading>
-            </div>
-          </Reveal>
-          <FAQAccordion />
+      {/* Tab Navigation */}
+      <div className="sticky top-[68px] z-40 border-b" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-canvas)" }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium whitespace-nowrap transition-all shrink-0"
+                style={{
+                  background: activeTab === tab.id ? "var(--accent-muted)" : "transparent",
+                  color: activeTab === tab.id ? "var(--accent-base)" : "var(--text-secondary)",
+                  border: `1px solid ${activeTab === tab.id ? "var(--border-accent)" : "transparent"}`,
+                }}
+              >
+                <tab.icon size={15} />
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* Tab Content */}
+      <AnimatePresence mode="wait">
+        {activeTab === "overview" && (
+          <motion.div key="overview" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+            <ValueSplitSection onCTAClick={openWizard} />
+            <ProblemSolutionSplit />
+            <FeatureBentoGrid />
+            <ProcurementFlowVisualizer />
+            <SocialProof />
+            <MidPageCTA onCTAClick={openWizard} />
+          </motion.div>
+        )}
+        {activeTab === "platform" && (
+          <motion.div key="platform" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+            <VendorNetwork />
+            <SmartSourcingGrid />
+            <RFQEngine />
+            <InvoicingPortal />
+            <PaymentGateway />
+            <AuthorityValidation />
+            <AnalyticsDashboard />
+            <LifecycleVisualizer />
+            <GovernanceAudit />
+            <DualOnboarding onCTAClick={openWizard} />
+            <GovernanceSecurity />
+          </motion.div>
+        )}
+        {activeTab === "pricing" && (
+          <motion.div key="pricing" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+            <PricingSection onCTAClick={openWizard} />
+          </motion.div>
+        )}
+        {activeTab === "faq" && (
+          <motion.div key="faq" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+            <section className="py-24 md:py-32" style={{ borderTop: `1px solid var(--border-subtle)` }}>
+              <div className="max-w-3xl mx-auto px-6">
+                <Reveal>
+                  <div className="text-center mb-12">
+                    <SectionLabel>FAQ</SectionLabel>
+                    <SectionHeading>Questions? Answered.</SectionHeading>
+                  </div>
+                </Reveal>
+                <FAQAccordion />
+              </div>
+            </section>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <MarketingFooter />
       <RegistrationWizard isOpen={wizardOpen} onClose={() => setWizardOpen(false)} />
