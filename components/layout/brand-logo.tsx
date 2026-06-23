@@ -86,14 +86,14 @@ function LogoIconOnly({ size, color }: { size: number; color: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="3 0 40 38"
+      viewBox="0 0 44 38"
       width={size}
       height={size}
       style={{ width: size, height: size, flexShrink: 0, display: "block" }}
       aria-label="HotelsVendors"
       role="img"
     >
-      <g>
+      <g transform="translate(-3, 0)">
         <polygon fill={color} points="40.5 11.73 35.94 7.1 33.33 7.1 40.5 14.2 42.26 12.55 42.26 1.98 40.5 1.98 40.5 11.73" />
         <polygon fill={color} points="28.96 17.67 32.39 21.15 35.01 21.15 28.96 15.13 28.96 17.67" />
         <path fill={color} d="M35.6,0s-3.13,.52-5.04,2.76-1.61,5.04-1.61,5.04l5.75,5.76-1.16,1.16-4.59-4.57v2.5l8.41,8.48h2.62l-5.15-5.13,1.16-1.16,6.27,6.29v-2.62L30.79,7.06s.07-1.91,1.46-3.44c1.38-1.53,3.7-1.64,3.7-1.64h4.56l1.76-1.98h-6.66Z" />

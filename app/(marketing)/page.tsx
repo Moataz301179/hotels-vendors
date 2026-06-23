@@ -32,6 +32,7 @@ import { MarketTicker } from "@/components/marketing/market-ticker";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
+import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { EnterpriseTrustBanner } from "@/components/marketing/enterprise-trust-banner";
@@ -121,6 +122,102 @@ function CTAButton({ onClick, primary = false, children }: { onClick: () => void
       {children}
       <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
     </button>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SANDBOX DASHBOARD PANEL (Hero Interactive Preview)
+   ═══════════════════════════════════════════════════════════ */
+function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
+  const [activeRole, setActiveRole] = useState<"hotel" | "supplier" | "funder" | "logistics">("hotel");
+
+  const roles = [
+    { key: "hotel" as const, label: "Hotel", icon: Building2 },
+    { key: "supplier" as const, label: "Supplier", icon: Store },
+    { key: "funder" as const, label: "Funder", icon: Landmark },
+    { key: "logistics" as const, label: "Logistics", icon: Truck },
+  ];
+
+  return (
+    <div
+      className="relative rounded-3xl p-3"
+      style={{
+        background: "linear-gradient(165deg, #0B0F17 0%, #0B0F17 100%)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 50px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.05)",
+      }}
+    >
+      <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Role switcher tabs */}
+      <div className="flex gap-1 p-2 mb-3 rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+        {roles.map((role) => {
+          const Icon = role.icon;
+          const isActive = activeRole === role.key;
+          return (
+            <button
+              key={role.key}
+              onClick={() => setActiveRole(role.key)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[11px] font-medium transition-all cursor-pointer"
+              style={{
+                backgroundColor: isActive ? "rgba(255,107,0,0.08)" : "transparent",
+                color: isActive ? "#FF6B00" : "rgba(255,255,255,0.35)",
+                border: isActive ? "1px solid rgba(255,107,0,0.2)" : "1px solid transparent",
+              }}
+            >
+              <Icon size={12} />
+              <span className="hidden sm:inline">{role.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Dashboard preview area */}
+      <div className="rounded-2xl overflow-hidden relative" style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300" style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+          <button
+            onClick={onCTAClick}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all hover:scale-105 cursor-pointer"
+            style={{ background: A, color: "#fff", boxShadow: `0 8px 32px ${AG}` }}
+          >
+            <Play size={14} />
+            Open Interactive Sandbox
+          </button>
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeRole}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+          >
+            {activeRole === "hotel" && <HotelDashboardMockup />}
+            {activeRole === "supplier" && <SupplierDashboardMockup />}
+            {activeRole === "funder" && <FunderDashboardMockup />}
+            {activeRole === "logistics" && <LogisticsDashboardMockup />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom CTA bar */}
+      <div className="mt-3 flex items-center justify-between px-3 py-2">
+        <span className="text-[10px] text-white/20">Live preview — click to explore</span>
+        <Link
+          href="/sandbox"
+          className="flex items-center gap-1.5 text-[11px] font-medium transition-colors"
+          style={{ color: A }}
+        >
+          Full Sandbox
+          <ArrowRight size={11} />
+        </Link>
+      </div>
+
+      <div
+        className="absolute -bottom-8 left-1/4 right-1/4 h-16 rounded-full blur-3xl opacity-25"
+        style={{ background: A }}
+      />
+    </div>
   );
 }
 
@@ -234,39 +331,14 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             </div>
           </motion.div>
 
-          {/* Right: Dashboard mockup + preview image */}
+          {/* Right: Interactive Sandbox Dashboard */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.2 }}
             className="lg:col-span-7"
           >
-            <div
-              className="relative rounded-3xl p-3"
-              style={{
-                background: "linear-gradient(165deg, #0B0F17 0%, #0B0F17 100%)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 50px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.05)",
-              }}
-            >
-              <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
-                <HotelDashboardMockup />
-              </div>
-            </div>
-            {/* Dashboard preview image */}
-            <div className="mt-4 rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-              <img
-                src="/previews/hero-inventory.png"
-                alt="Hotel F&B and Asset Inventory Dashboard"
-                className="w-full h-auto"
-                loading="lazy"
-              />
-            </div>
-            <div
-              className="absolute -bottom-8 left-1/4 right-1/4 h-16 rounded-full blur-3xl opacity-25"
-              style={{ background: A }}
-            />
+            <SandboxDashboardPanel onCTAClick={onCTAClick} />
           </motion.div>
         </div>
 

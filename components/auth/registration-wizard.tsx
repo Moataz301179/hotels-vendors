@@ -7,11 +7,6 @@ import {
   CheckCircle2, Loader2, Sparkles, Mail, Lock, MapPin, Users,
   Package, Banknote, Shield, ChevronRight, Receipt, CreditCard, Phone,
 } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
-import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
-import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
-import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
-import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 
 /* ─── Types ─── */
 
@@ -49,35 +44,30 @@ const ROLE_CONFIG: Record<string, {
   label: string;
   icon: React.ElementType;
   color: string;
-  dashboard: React.ComponentType;
   subCategories: string[];
 }> = {
   hotel: {
     label: "Hotel / Resort",
     icon: Building2,
     color: "#22C55E",
-    dashboard: HotelDashboardMockup,
     subCategories: ["Independent Hotel", "Hotel Chain", "Resort", "Serviced Apartments"],
   },
   supplier: {
     label: "Supplier / Vendor",
     icon: Store,
     color: "#F97316",
-    dashboard: SupplierDashboardMockup,
     subCategories: ["F&B Supplier", "Housekeeping & Chemicals", "Linens & Amenities", "FF&E / Capital Equipment", "Engineering & Maintenance", "Services (Pest, Laundry, Security)"],
   },
   funder: {
     label: "Factoring Company",
     icon: Landmark,
     color: "#A855F7",
-    dashboard: FunderDashboardMockup,
     subCategories: ["Bank", "Non-Bank Financial Institution", "Investment Fund", "Microfinance"],
   },
   logistics: {
     label: "Logistics Provider",
     icon: Truck,
     color: "#3B82F6",
-    dashboard: LogisticsDashboardMockup,
     subCategories: ["Full-Truckload (FTL)", "Less-Than-Truckload (LTL)", "Last-Mile Delivery", "Cold Chain", "Multi-Modal"],
   },
 };
@@ -378,7 +368,6 @@ export function RegistrationWizard({
 
   const roleKey = data.role || "";
   const config = roleKey ? ROLE_CONFIG[roleKey] : null;
-  const DashboardComponent = config?.dashboard;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ backgroundColor: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)" }}>
@@ -393,7 +382,6 @@ export function RegistrationWizard({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-3">
-            <BrandLogo size="sm" showText={false} />
             <div>
               <h2 className="text-[15px] font-semibold text-white">
                 {registered ? "Welcome to HotelsVendors!" : "Registration"}
@@ -438,7 +426,7 @@ export function RegistrationWizard({
                 {step === 3 && <StepCompany data={data} update={update} />}
                 {step === 4 && <StepVerification data={data} update={update} config={config!} otpSent={otpSent} otpCode={otpCode} setOtpCode={setOtpCode} otpVerified={otpVerified} otpLoading={otpLoading} otpError={otpError} otpCountdown={otpCountdown} onSendOtp={handleSendOtp} onVerifyOtp={handleVerifyOtp} />}
                 {step === 5 && <StepAccount data={data} update={update} error={error} />}
-                {step === 6 && config && <StepPreview data={data} config={config} DashboardComponent={DashboardComponent!} messages={messages} input={input} setInput={setInput} onSend={handleSend} loading={loading} messagesEndRef={messagesEndRef} />}
+                {step === 6 && config && <StepPreview data={data} config={config} messages={messages} input={input} setInput={setInput} onSend={handleSend} loading={loading} messagesEndRef={messagesEndRef} />}
               </motion.div>
             )}
           </AnimatePresence>
@@ -783,11 +771,10 @@ function StepAccount({ data, update, error }: { data: WizardData; update: <K ext
    ═══════════════════════════════════════════════════════════════ */
 
 function StepPreview({
-  data, config, DashboardComponent, messages, input, setInput, onSend, loading, messagesEndRef,
+  data, config, messages, input, setInput, onSend, loading, messagesEndRef,
 }: {
   data: WizardData;
   config: typeof ROLE_CONFIG[string];
-  DashboardComponent: React.ComponentType;
   messages: Message[];
   input: string;
   setInput: (v: string) => void;
@@ -795,58 +782,127 @@ function StepPreview({
   loading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
+  const QUICK_QUESTIONS: Record<string, string[]> = {
+    hotel: [
+      "How does AI demand forecasting work?",
+      "What's included in the free plan?",
+      "How does ETA e-invoicing compliance work?",
+      "Can I manage multiple properties?",
+    ],
+    supplier: [
+      "How fast do I get paid?",
+      "What documents do I need for ETA invoicing?",
+      "How do I receive POs from hotels?",
+      "What are the commission fees?",
+    ],
+    funder: [
+      "How does reverse factoring work?",
+      "What's the minimum invoice size?",
+      "How is risk assessed for invoices?",
+      "What settlement options are available?",
+    ],
+    logistics: [
+      "How does shared-route optimization work?",
+      "What areas do you cover for delivery?",
+      "How is delivery tracked?",
+      "When do I receive payment after delivery?",
+    ],
+  };
+
+  const questions = QUICK_QUESTIONS[data.role ?? "hotel"];
+
   return (
     <div>
-      <h3 className="text-[20px] font-semibold text-white mb-2">Your Dashboard Preview</h3>
-      <p className="text-[13px] text-white/40 mb-6">Here&apos;s what your {config.label} dashboard looks like. Ask me anything before completing registration.</p>
+      <h3 className="text-[20px] font-semibold text-white mb-2">Review & Confirm</h3>
+      <p className="text-[13px] text-white/40 mb-6">
+        You're almost set up as a {config.label}. Ask any final questions or confirm your registration.
+      </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Dashboard preview */}
-        <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider mb-2 text-center">Dashboard Preview</p>
-          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-            <DashboardComponent />
+      {/* Summary card */}
+      <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="grid grid-cols-2 gap-3 text-[12px]">
+          <div>
+            <span className="text-white/30">Company:</span>
+            <span className="text-white/70 ml-2">{data.companyName || "—"}</span>
           </div>
+          <div>
+            <span className="text-white/30">Contact:</span>
+            <span className="text-white/70 ml-2">{data.contactName || "—"}</span>
+          </div>
+          <div>
+            <span className="text-white/30">City:</span>
+            <span className="text-white/70 ml-2">{data.city || "—"}</span>
+          </div>
+          <div>
+            <span className="text-white/30">Team:</span>
+            <span className="text-white/70 ml-2">{data.capacity || "—"}</span>
+          </div>
+          {data.subCategory && (
+            <div className="col-span-2">
+              <span className="text-white/30">Type:</span>
+              <span className="text-white/70 ml-2">{data.subCategory}</span>
+            </div>
+          )}
+          {data.supplyCategories.length > 0 && (
+            <div className="col-span-2">
+              <span className="text-white/30">Categories:</span>
+              <span className="text-white/70 ml-2">{data.supplyCategories.join(", ")}</span>
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* AI Chat */}
-        <div className="flex flex-col rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.01)" }}>
-          <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-            <Sparkles size={14} style={{ color: "#FF6B00" }} />
-            <span className="text-[12px] font-medium text-white/60">Ask about your dashboard</span>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: 200, maxHeight: 300 }}>
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className="max-w-[85%] px-3 py-2 rounded-lg text-[12px] leading-relaxed" style={{
-                  backgroundColor: msg.role === "user" ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.04)",
-                  color: msg.role === "user" ? "#FF6B00" : "rgba(255,255,255,0.6)",
-                }}>
-                  {msg.content}
-                </div>
+      {/* AI Chat */}
+      <div className="flex flex-col rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.01)" }}>
+        <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+          <Sparkles size={14} style={{ color: "#FF6B00" }} />
+          <span className="text-[12px] font-medium text-white/60">Ask a question</span>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: 160, maxHeight: 260 }}>
+          {messages.map((msg, i) => (
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className="max-w-[85%] px-3 py-2 rounded-lg text-[12px] leading-relaxed" style={{
+                backgroundColor: msg.role === "user" ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.04)",
+                color: msg.role === "user" ? "#FF6B00" : "rgba(255,255,255,0.6)",
+              }}>
+                {msg.content}
               </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="px-3 py-2 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                  <Loader2 size={12} className="animate-spin text-white/30" />
-                </div>
+            </div>
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="px-3 py-2 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                <Loader2 size={12} className="animate-spin text-white/30" />
               </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="px-3 py-2 flex gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") onSend(); }}
-              placeholder="Ask a question..."
-              className="flex-1 bg-transparent text-[12px] text-white placeholder:text-white/20 outline-none"
-            />
-            <button onClick={() => onSend()} disabled={loading} className="p-1.5 rounded-md text-white/30 hover:text-white/60 transition-colors disabled:opacity-30">
-              <ArrowRight size={14} />
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        {/* Quick questions */}
+        <div className="px-4 py-2 flex flex-wrap gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+          {questions.map((q) => (
+            <button
+              key={q}
+              onClick={() => onSend(q)}
+              disabled={loading}
+              className="px-2.5 py-1 rounded-full text-[11px] transition-colors disabled:opacity-30"
+              style={{ backgroundColor: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.12)", color: "rgba(255,107,0,0.7)" }}
+            >
+              {q}
             </button>
-          </div>
+          ))}
+        </div>
+        <div className="px-3 py-2 flex gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") onSend(); }}
+            placeholder="Type your question..."
+            className="flex-1 bg-transparent text-[12px] text-white placeholder:text-white/20 outline-none"
+          />
+          <button onClick={() => onSend()} disabled={loading} className="p-1.5 rounded-md text-white/30 hover:text-white/60 transition-colors disabled:opacity-30">
+            <ArrowRight size={14} />
+          </button>
         </div>
       </div>
     </div>

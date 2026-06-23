@@ -2,13 +2,19 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
-const BLOG_DIR_FALLBACK = path.join(process.cwd(), "..", "content", "blog");
+const BLOG_DIR_CANDIDATES = [
+  path.join(process.cwd(), "content", "blog"),
+  path.join(process.cwd(), "..", "content", "blog"),
+  path.join(process.cwd(), "..", "..", "content", "blog"),
+  path.join(__dirname, "..", "..", "content", "blog"),
+  path.join(__dirname, "..", "..", "..", "content", "blog"),
+];
 
-function getBlogDir() {
-  if (fs.existsSync(BLOG_DIR)) return BLOG_DIR;
-  if (fs.existsSync(BLOG_DIR_FALLBACK)) return BLOG_DIR_FALLBACK;
-  return BLOG_DIR;
+function getBlogDir(): string {
+  for (const dir of BLOG_DIR_CANDIDATES) {
+    if (fs.existsSync(dir)) return dir;
+  }
+  return BLOG_DIR_CANDIDATES[0];
 }
 
 export interface BlogPost {
