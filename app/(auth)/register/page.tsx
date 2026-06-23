@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -74,7 +74,7 @@ const SECTORS = [
   },
 ];
 
-export default function RegisterPage() {
+function RegisterContent() {
   const searchParams = useSearchParams();
   const sectorParam = searchParams.get("sector");
   const [wizardOpen, setWizardOpen] = useState(!!sectorParam);
@@ -91,7 +91,6 @@ export default function RegisterPage() {
 
       <div className="flex-1 px-6 py-24">
         <div className="mx-auto max-w-5xl">
-          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -100,7 +99,6 @@ export default function RegisterPage() {
             <BrandLogo variant="dark" size="lg" />
           </motion.div>
 
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -122,7 +120,6 @@ export default function RegisterPage() {
             </p>
           </motion.div>
 
-          {/* Sector cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SECTORS.map((sector, i) => {
               const Icon = sector.icon;
@@ -183,7 +180,6 @@ export default function RegisterPage() {
             })}
           </div>
 
-          {/* Trust signals */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -217,5 +213,13 @@ export default function RegisterPage() {
         onClose={() => setWizardOpen(false)}
       />
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#000000" }} />}>
+      <RegisterContent />
+    </Suspense>
   );
 }
