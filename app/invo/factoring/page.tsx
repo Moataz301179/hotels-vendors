@@ -35,7 +35,7 @@ export default async function FactoringPage() {
       <div>
         <h1 className="text-xl font-bold tracking-tight">Factoring</h1>
         <p className="text-[13px] mt-1" style={{ color: TEXT_SECONDARY }}>
-          Reverse factoring — get paid early, let funders compete
+          Reverse factoring: get paid early, let funders compete
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default async function FactoringPage() {
                 <div className="text-[12px] mt-2 space-y-1" style={{ color: TEXT_SECONDARY }}>
                   <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{(funder.credit_limit || 0).toLocaleString("en-EG")} EGP</span></div>
                   <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{(funder.min_invoice || 0).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{(funder.rate_min || 0).toFixed(2)}% — {(funder.rate_max || 0).toFixed(2)}%</span></div>
+                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{(funder.rate_min || 0).toFixed(2)}% to {(funder.rate_max || 0).toFixed(2)}%</span></div>
                 </div>
               </div>
             ))}

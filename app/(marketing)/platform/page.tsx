@@ -63,7 +63,7 @@ export default function PlatformPage() {
             Four Engines.<br /><span className="text-gradient-lime">One Operating System.<br />Zero Manual Reconciliation.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
+            AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring, all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#FFB000", color: "#000000" }}>

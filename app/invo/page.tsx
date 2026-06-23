@@ -30,7 +30,7 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: "Zero Default Risk",
-    desc: "Non-recourse factoring. If the hotel doesn't pay, that's our problem — not yours. We take the credit risk so you don't have to.",
+    desc: "Non-recourse factoring. If the hotel doesn't pay, that is our problem, not yours. We take the credit risk so you do not have to.",
   },
   {
     icon: TrendingUp,

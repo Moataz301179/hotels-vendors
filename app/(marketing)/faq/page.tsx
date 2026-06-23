@@ -23,7 +23,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-[14px] text-white/40 max-w-xl mx-auto leading-relaxed" dir="rtl">
-            الأسئلة الشائعة — كل ما تحتاج معرفته عن منصة هوتيلز فيندورز
+            الأسئلة الشائعة، كل ما تحتاج معرفته عن منصة هوتيلز فيندورز
           </p>
         </div>
       </section>

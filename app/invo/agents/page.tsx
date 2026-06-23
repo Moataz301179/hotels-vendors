@@ -40,7 +40,7 @@ export default async function AgentsPage() {
       <div>
         <h1 className="text-xl font-bold tracking-tight">Agent System</h1>
         <p className="text-[13px] mt-1" style={{ color: TEXT_SECONDARY }}>
-          Automated procurement pipeline — 4-agent orchestration
+          Automated procurement pipeline: 4-agent orchestration
         </p>
       </div>
 

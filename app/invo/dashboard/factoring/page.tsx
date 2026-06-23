@@ -89,7 +89,7 @@ export default async function FactoringPage() {
           </div>
           <p className="text-[13px] font-medium text-white mb-1">Zero Risk</p>
           <p className="text-[12px] text-white/30 leading-relaxed">
-            Non-recourse — if the hotel defaults, that&apos;s our problem
+            Non-recourse. If the hotel defaults, that is our problem
           </p>
         </div>
       </div>

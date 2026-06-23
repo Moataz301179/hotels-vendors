@@ -303,7 +303,7 @@ export default function SocialMediaPage() {
               <span className="text-[#D4A843]">Procurement Revolution</span>
             </h2>
             <p className="mt-4 text-[16px] text-white/35 max-w-md mx-auto">
-              Whether you are a hotel, supplier, or logistics provider — there is
+              Whether you are a hotel, supplier, or logistics provider, there is
               a place for you on HotelsVendors.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

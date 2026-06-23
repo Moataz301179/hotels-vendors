@@ -139,17 +139,17 @@ export default function AboutPage() {
                 Egypt&apos;s hospitality sector is fragmented across thousands of manual procurement processes. Paper invoices. Extended payment cycles. Zero visibility into spend. Coastal resorts in Sharm El-Sheikh and Hurghada rely on suppliers primarily based in Cairo, with logistics costs significantly impacting every order.
               </p>
               <p className="text-[14px] text-white/40 leading-relaxed">
-                The ETA e-invoicing mandate created a digital layer — but no one built the orchestration platform on top of it. HotelsVendors fills that gap: the AI-powered procurement OS that uses Egypt&apos;s fintech infrastructure as its foundation.
+                The ETA e-invoicing mandate created a digital layer, but no one built the orchestration platform on top of it. HotelsVendors fills that gap: the AI-powered procurement OS that uses Egypt&apos;s fintech infrastructure as its foundation.
               </p>
             </div>
             <div>
               <Target size={24} className="mb-4" style={{ color: "#FF6B00" }} />
               <h2 className="text-[20px] font-medium text-white mb-4">Our Focus</h2>
               <p className="text-[14px] text-white/40 leading-relaxed mb-4">
-                We serve coastal hotels in Sharm El-Sheikh and Hurghada first, then Cairo, Alexandria, and the North Coast. These are 100–500 room resorts with multiple F&B outlets, pools, spas, and water sports — properties where procurement complexity is highest.
+                We serve coastal hotels in Sharm El-Sheikh and Hurghada first, then Cairo, Alexandria, and the North Coast. These are 100-500 room resorts with multiple F&B outlets, pools, spas, and water sports. Properties where procurement complexity is highest.
               </p>
               <p className="text-[14px] text-white/40 leading-relaxed">
-                Our target customers are local branded hotel chains — Stella Di Mare, Sunrise, Jaz, Baron — not just international 5-star brands. These groups operate 5–30 properties and need portfolio-level procurement control.
+                Our target customers are local branded hotel chains (Stella Di Mare, Sunrise, Jaz, Baron), not just international 5-star brands. These groups operate 5-30 properties and need portfolio-level procurement control.
               </p>
             </div>
           </div>

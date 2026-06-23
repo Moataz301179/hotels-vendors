@@ -283,7 +283,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   2. VALUE SPLIT — Hotels vs Suppliers vs Funders
+   2. VALUE SPLIT · Hotels vs Suppliers vs Funders
    ═══════════════════════════════════════════════════════════ */
 function ValueSplitSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -296,10 +296,10 @@ function ValueSplitSection({ onCTAClick }: { onCTAClick: () => void }) {
       headline: "Stop Guessing What to Order",
       desc: "AI predicts what you need before you run out. Automates purchase orders. Keeps every invoice ETA-compliant. Your team stops chasing paperwork and starts saving money.",
       features: [
-        "AI demand forecasting — 94% accuracy across 14-day windows",
+        "AI demand forecasting with 94% accuracy across 14-day windows",
         "Multi-gateway payments: cards, SWIFT, local bank transfers",
         "One-click reverse factoring with automated approval flows",
-        "ETA & FRA compliance engine — zero manual tax work",
+        "ETA and FRA compliance engine with zero manual tax work",
       ],
       cta: "Register as Hotel",
       dashboard: HotelDashboardMockup,
@@ -324,7 +324,7 @@ function ValueSplitSection({ onCTAClick }: { onCTAClick: () => void }) {
       icon: Landmark,
       title: "For Funders",
       headline: "Finance Hotel Receivables at Scale",
-      desc: "Suppliers get paid in 48 hours — not 60 days. Licensed funders compete to finance receivables at the best rate. The hotel keeps its original payment terms. Everyone wins.",
+      desc: "Suppliers get paid in 48 hours, not 60 days. Licensed funders compete to finance receivables at the best rate. The hotel keeps its original payment terms. Everyone wins.",
       features: [
         "Competitive multi-funder bidding drives down factoring fees",
         "Suppliers paid within 48 hours via direct bank settlement",
@@ -489,7 +489,7 @@ function ProcurementFlowVisualizer() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   6. DUAL ONBOARDING — Hotels + Suppliers
+   6. DUAL ONBOARDING · Hotels + Suppliers
    ═══════════════════════════════════════════════════════════ */
 function DualOnboarding({ onCTAClick }: { onCTAClick: () => void }) {
   return (
@@ -525,7 +525,7 @@ function DualOnboarding({ onCTAClick }: { onCTAClick: () => void }) {
                   I&apos;m a Hotel
                 </h3>
                 <p className="text-[13px] text-white/40 leading-relaxed mb-6">
-                  Get AI-powered procurement, 680+ verified suppliers, ETA-compliant invoicing, and 48-hour supplier settlement — all free to start.
+                  Get AI-powered procurement, 680+ verified suppliers, ETA-compliant invoicing, and 48-hour supplier settlement, all free to start.
                 </p>
                 <ul className="space-y-2.5 mb-8 flex-1">
                   {[
@@ -667,7 +667,7 @@ function GovernanceSecurity() {
               All financial flows are processed through licensed institutions. Zero liability for counterparty collection defaults.
             </p>
             <p className="text-[11px] mt-2 text-white/30" dir="rtl">
-              تعمل مطاعم للتسويق الإلكتروني كمنسق بيانات تقني — ليست بنكاً ولا مزود خدمات دفع. جميع التدفقات المالية تتم عبر مؤسسات مرخصة. مسؤولية صفرية عن تعثر تحصيل الطرف الآخر.
+              تعمل مطاعم للتسويق الإلكتروني كمنسق بيانات تقني، ليست بنكاً ولا مزود خدمات دفع. جميع التدفقات المالية تتم عبر مؤسسات مرخصة. مسؤولية صفرية عن تعثر تحصيل الطرف الآخر.
             </p>
           </div>
         </Reveal>
@@ -685,7 +685,7 @@ function PricingSection({ onCTAClick }: { onCTAClick: () => void }) {
       role: "Hotels",
       price: "Free",
       priceNote: "to join & use",
-      desc: "Full procurement dashboard, AI forecasting, 680+ suppliers, and ETA compliance — all free.",
+      desc: "Full procurement dashboard, AI forecasting, 680+ suppliers, and ETA compliance, all free.",
       items: ["0% subscription fee", "1% on bank transfer payments", "Free ETA e-invoicing", "Free AI demand forecasting"],
       accent: true,
     },
@@ -693,7 +693,7 @@ function PricingSection({ onCTAClick }: { onCTAClick: () => void }) {
       role: "Suppliers",
       price: "Free",
       priceNote: "to list",
-      desc: "List your catalog, receive purchase orders, and get paid — no listing fees.",
+      desc: "List your catalog, receive purchase orders, and get paid. No listing fees.",
       items: ["0% listing fee", "2-4% commission per order", "Free INVO marketplace listing", "48h settlement via factoring"],
       accent: false,
     },
@@ -845,7 +845,7 @@ function MidPageCTA({ onCTAClick }: { onCTAClick: () => void }) {
             Leaking Money
           </h2>
           <p className="text-[15px] text-white/40 mb-10 max-w-lg mx-auto leading-relaxed">
-            Every manual PO, every late invoice, every untracked delivery — it adds up. HotelsVendors gives your hotel 360-degree control.
+            Every manual PO, every late invoice, every untracked delivery adds up. HotelsVendors gives your hotel 360-degree control.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <CTAButton onClick={onCTAClick} primary>

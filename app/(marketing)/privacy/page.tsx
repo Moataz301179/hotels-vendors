@@ -58,7 +58,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-medium text-white">4. Data Sharing & Disclosure</h2>
           <p>We do not sell your personal data. We may share your information with:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Licensed payment partners:</strong> Paymob, Oliv Finance, and factoring companies — only as necessary to process transactions</li>
+            <li><strong>Licensed payment partners:</strong> Paymob, Oliv Finance, and factoring companies, only as necessary to process transactions</li>
             <li><strong>Egyptian Tax Authority (ETA):</strong> As required by Law 67/2018 for e-invoicing compliance</li>
             <li><strong>Service providers:</strong> Hosting, monitoring, and analytics providers who are contractually bound to protect your data</li>
             <li><strong>Legal authorities:</strong> When required by Egyptian law or regulatory request from FRA, CBE, or other competent authorities</li>

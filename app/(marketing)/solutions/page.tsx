@@ -65,7 +65,7 @@ export default function SolutionsPage() {
             One Platform.<br />Four Stakeholder Workflows.<br />Infinite Scale.
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
-            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier — HotelsVendors has a tailored workflow for you. Every role. One operating system.
+            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier, HotelsVendors has a tailored workflow for you. Every role. One operating system.
           </p>
         </div>
       </section>
@@ -131,7 +131,7 @@ export default function SolutionsPage() {
           <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: accent }} />
           <h2 className="text-[24px] font-semibold mb-4 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>The Full Picture</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-xl mx-auto">
-            All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver — with AI orchestrating every step.
+            All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver, with AI orchestrating every step.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
