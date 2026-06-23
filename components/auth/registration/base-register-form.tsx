@@ -129,7 +129,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                   onChange={(e) => updateForm("name", e.target.value)}
                   placeholder="Your full name"
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 focus:ring-1 focus:ring-[#FFB000]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
                 />
               </div>
 
@@ -143,7 +143,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                   onChange={(e) => updateForm("email", e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 focus:ring-1 focus:ring-[#FFB000]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
                 />
               </div>
 
@@ -159,7 +159,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                     placeholder="Min 6 characters"
                     required
                     minLength={6}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FFB000]/60 focus:ring-1 focus:ring-[#FFB000]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
                   />
                   <button
                     type="button"
@@ -175,7 +175,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                 type="submit"
                 disabled={loading}
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-                style={{ backgroundColor: "#FFB000", color: "#000000" }}
+                style={{ backgroundColor: "#FF6B00", color: "#000000" }}
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />

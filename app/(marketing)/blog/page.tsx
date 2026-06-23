@@ -67,7 +67,7 @@ export default function BlogPage() {
       {featured.length > 0 && (
         <section className="py-12 border-b border-white/10">
           <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-[11px] font-medium uppercase tracking-[0.15em] text-amber-400 mb-8">
+            <h2 className="text-[11px] font-medium uppercase tracking-[0.15em] text-[#FF6B00] mb-8">
               Featured · مميز
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -79,7 +79,7 @@ export default function BlogPage() {
                   style={{ backgroundColor: "rgba(255,255,255,0.02)" }}
                 >
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-amber-400/10 text-amber-400">
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-[#FF6B00]/10 text-[#FF6B00]">
                       {post.category}
                     </span>
                     <span className="text-[10px] text-white/30">{post.categoryAr}</span>
@@ -87,7 +87,7 @@ export default function BlogPage() {
                       {post.readTime} min read
                     </span>
                   </div>
-                  <h3 className="text-[18px] font-semibold mb-2 group-hover:text-amber-400 transition-colors">
+                  <h3 className="text-[18px] font-semibold mb-2 group-hover:text-[#FF6B00] transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-[12px] text-white/30 mb-3" dir="rtl">
@@ -100,7 +100,7 @@ export default function BlogPage() {
                     <span className="text-[11px] text-white/30">
                       {formatDate(post.date)} · {post.author}
                     </span>
-                    <span className="text-[11px] text-amber-400/70 group-hover:text-amber-400 transition-colors">
+                    <span className="text-[11px] text-[#FF6B00]/70 group-hover:text-[#FF6B00] transition-colors">
                       Read more →
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export default function BlogPage() {
                         {post.readTime} min
                       </span>
                     </div>
-                    <h3 className="text-[15px] font-medium group-hover:text-amber-400 transition-colors mb-1">
+                    <h3 className="text-[15px] font-medium group-hover:text-[#FF6B00] transition-colors mb-1">
                       {post.title}
                     </h3>
                     <p className="text-[11px] text-white/25 mb-2" dir="rtl">
@@ -172,7 +172,7 @@ export default function BlogPage() {
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 text-black text-[13px] font-medium hover:bg-amber-400 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FF6B00] text-black text-[13px] font-medium hover:bg-amber-400 transition-colors"
           >
             Get Started Free
           </Link>
