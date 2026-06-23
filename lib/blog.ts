@@ -6,14 +6,19 @@ const BLOG_DIR_CANDIDATES = [
   path.join(process.cwd(), "content", "blog"),
   path.join(process.cwd(), "..", "content", "blog"),
   path.join(process.cwd(), "..", "..", "content", "blog"),
+  path.join(process.cwd(), "..", "..", "..", "content", "blog"),
   path.join(__dirname, "..", "..", "content", "blog"),
   path.join(__dirname, "..", "..", "..", "content", "blog"),
+  path.join(__dirname, "..", "..", "..", "..", "content", "blog"),
+  path.join(__dirname, "..", "..", "..", "..", "..", "content", "blog"),
+  "/var/task/content/blog",
 ];
 
 function getBlogDir(): string {
   for (const dir of BLOG_DIR_CANDIDATES) {
     if (fs.existsSync(dir)) return dir;
   }
+  console.error("[blog] Could not find content/blog directory. cwd=", process.cwd(), "dirname=", __dirname);
   return BLOG_DIR_CANDIDATES[0];
 }
 
