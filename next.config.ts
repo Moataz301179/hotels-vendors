@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/favicon.ico",
+        destination: "/logo-icon.png",
+        permanent: false,
+      },
+    ];
+  },
+
   // Disable aggressive static page caching — we control cache at nginx level
   async headers() {
     return [

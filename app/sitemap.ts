@@ -9,7 +9,7 @@ const BLOG_SLUGS = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://hotels-vendors.com";
+  const baseUrl = "https://hotelsvendors.com";
 
   const routes = [
     "",
