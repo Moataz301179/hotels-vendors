@@ -201,13 +201,13 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             className="text-[36px] md:text-[52px] lg:text-[60px] font-normal text-white mb-5 leading-[1.08] tracking-tight"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            WhatsApp Is Not a
+            The Game Changer in
             <br />
-            <span style={{ color: A }}>Procurement System</span>
+            <span style={{ color: A }}>Hospitality Fintech</span>
           </h1>
           <p className="text-[15px] md:text-[17px] text-white/45 max-w-xl mx-auto leading-[1.7]">
-            Yet 90% of Egyptian hotels still run their supply chain on WhatsApp and Excel.
-            HotelsVendors replaces the chaos with AI-driven procurement, ETA compliance, and 48-hour supplier settlement.
+            Egypt&apos;s first platform to natively embed ETA-compliant e-invoicing and reverse factoring
+            inside a B2B procurement marketplace. Every invoice bankable. Every supplier paid in 48 hours.
           </p>
         </motion.div>
 
