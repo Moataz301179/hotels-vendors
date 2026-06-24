@@ -34,15 +34,15 @@ export function HeroVisual({ children }: { children: React.ReactNode }) {
         {children}
         
         {/* The "Marketing Hook" Image: An architectural high-end backdrop */}
-        <div className="absolute -z-10 -top-20 -left-20 w-[140%] h-[140%] pointer-events-none opacity-40 blur-sm overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+        <div className="absolute -z-10 -top-20 -left-20 w-[140%] h-[140%] pointer-events-none opacity-30 blur-sm overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
           <Image
-            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
             alt="Luxury Hotel Infrastructure"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-black via-transparent to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/60 to-black/40" />
         </div>
       </motion.div>
     </div>

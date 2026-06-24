@@ -31,7 +31,7 @@ const sidebarItems = [
 ];
 
 const kpiCards = [
-  { label: "Open POs", value: "24", change: "+3", up: true, color: "#FF6B00" },
+  { label: "Open POs", value: "24", change: "+3", up: true, color: "#a3e635" },
   { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "#3B82F6" },
   { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "#D4A843" },
   { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "#22C55E" },
@@ -69,7 +69,7 @@ export function DashboardMockup() {
       {/* Glow behind the mockup */}
       <div
         className="absolute -inset-4 rounded-3xl blur-[60px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at center, rgba(255,107,0,0.06) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(ellipse at center, rgba(163,230,53,0.06) 0%, transparent 70%)" }}
       />
 
       {/* ── Dashboard Window ── */}
@@ -115,13 +115,13 @@ export function DashboardMockup() {
                 key={item.label}
                 className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
                 style={{
-                  backgroundColor: item.active ? "rgba(255,107,0,0.08)" : "transparent",
+                  backgroundColor: item.active ? "rgba(163,230,53,0.08)" : "transparent",
                 }}
                 title={item.label}
               >
                 <item.icon
                   size={15}
-                  style={{ color: item.active ? "#FF6B00" : "rgba(255,255,255,0.2)" }}
+                  style={{ color: item.active ? "#a3e635" : "rgba(255,255,255,0.2)" }}
                 />
               </div>
             ))}
@@ -151,9 +151,9 @@ export function DashboardMockup() {
                 </div>
                 <div
                   className="w-6 h-6 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "rgba(255,107,0,0.15)" }}
+                  style={{ backgroundColor: "rgba(163,230,53,0.15)" }}
                 >
-                  <span className="text-[7px] font-bold" style={{ color: "#FF6B00" }}>AM</span>
+                  <span className="text-[7px] font-bold" style={{ color: "#a3e635" }}>AM</span>
                 </div>
               </div>
             </div>
@@ -204,7 +204,7 @@ export function DashboardMockup() {
                       className="flex-1 rounded-t-sm"
                       style={{
                         height: `${h}%`,
-                        backgroundColor: i === chartBars.length - 1 ? "#FF6B00" : "rgba(255,107,0,0.12)",
+                        backgroundColor: i === chartBars.length - 1 ? "#a3e635" : "rgba(163,230,53,0.12)",
                         transition: "height 0.3s ease",
                       }}
                     />
@@ -243,7 +243,7 @@ export function DashboardMockup() {
             {/* Bottom pipeline status bar */}
             <div
               className="mt-3 rounded-lg p-2.5 flex items-center justify-between"
-              style={{ backgroundColor: "rgba(255,107,0,0.03)", border: "1px solid rgba(255,107,0,0.06)" }}
+              style={{ backgroundColor: "rgba(163,230,53,0.03)", border: "1px solid rgba(163,230,53,0.06)" }}
             >
               <div className="flex items-center gap-3">
                 {[
@@ -259,7 +259,7 @@ export function DashboardMockup() {
                       style={{
                         backgroundColor:
                           step.status === "done" ? "#22C55E" :
-                          step.status === "active" ? "#FF6B00" :
+                          step.status === "active" ? "#a3e635" :
                           "rgba(255,255,255,0.1)",
                       }}
                     />
@@ -268,7 +268,7 @@ export function DashboardMockup() {
                       style={{
                         color:
                           step.status === "done" ? "rgba(255,255,255,0.4)" :
-                          step.status === "active" ? "#FF6B00" :
+                          step.status === "active" ? "#a3e635" :
                           "rgba(255,255,255,0.15)",
                       }}
                     >
@@ -280,7 +280,7 @@ export function DashboardMockup() {
                   </div>
                 ))}
               </div>
-              <span className="text-[7px] font-medium" style={{ color: "#FF6B00" }}>PO-2024-0892</span>
+              <span className="text-[7px] font-medium" style={{ color: "#a3e635" }}>PO-2024-0892</span>
             </div>
           </div>
         </div>
@@ -294,12 +294,12 @@ export function DashboardMockup() {
         className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5"
         style={{
           backgroundColor: "#0f0f0f",
-          border: "1px solid rgba(255,107,0,0.15)",
+          border: "1px solid rgba(163,230,53,0.15)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
         }}
       >
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#FF6B00" }} />
-        <span className="text-[8px] font-medium" style={{ color: "#FF6B00" }}>Live · ETA Connected</span>
+        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#a3e635" }} />
+        <span className="text-[8px] font-medium" style={{ color: "#a3e635" }}>Live · ETA Connected</span>
       </motion.div>
     </motion.div>
   );

@@ -17,12 +17,13 @@ import {
   Landmark,
   ArrowDown,
   Mail,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { MarketTicker } from "@/components/marketing/market-ticker";
+import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
+import { HeroVisual } from "@/components/marketing/hero-visual";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
@@ -34,18 +35,15 @@ import { ThemeToggle } from "@/components/theme/theme-toggle";
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS (Theme A — Dark Fintech)
    Uses CSS variables from [data-theme="fintech"] block.
-   Fallbacks are the fintech palette for the rare edge case.
    ═══════════════════════════════════════════════════════════════ */
 const ACCENT = "var(--accent-base, #a3e635)";
 const ACCENT_LIGHT = "var(--accent-light, #bef264)";
 const ACCENT_MUTED = "var(--accent-muted, rgba(163,230,53,0.08))";
 const ACCENT_BORDER = "var(--border-accent, rgba(163,230,53,0.30))";
-const ACCENT_GLOW = "var(--accent-glow, rgba(163,230,53,0.15))";
 const BG = "var(--bg-canvas, #000000)";
 const TEXT = "var(--text-primary, #ffffff)";
 const TEXT_SECONDARY = "var(--text-secondary, #a3e635)";
 const TEXT_MUTED = "var(--text-muted, rgba(255,255,255,0.5))";
-const BORDER = "var(--border-subtle, rgba(255,255,255,0.08))";
 const SURFACE = "var(--surface, #ffffff)";
 const TEXT_INVERSE = "var(--text-inverse, #000000)";
 
@@ -84,6 +82,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 /* ═══════════════════════════════════════════════════════════
    SANDBOX DASHBOARD PANEL (Interactive Demo)
    Theme A: White outer frame, black cards inside.
+   Uses Framer Motion AnimatePresence for role switching.
    ═══════════════════════════════════════════════════════════ */
 function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
   const [activeRole, setActiveRole] = useState<"hotel" | "supplier" | "funder" | "logistics">("hotel");
@@ -131,11 +130,12 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
         })}
       </div>
 
-      {/* Dashboard preview area */}
+      {/* Dashboard preview area — black screen */}
       <div
         className="rounded-2xl overflow-hidden relative"
         style={{ border: "1px solid rgba(0,0,0,0.06)", backgroundColor: "#000" }}
       >
+        {/* Hover overlay with CTA */}
         <div
           className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
           style={{ backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
@@ -155,13 +155,14 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
             Open Interactive Sandbox
           </button>
         </div>
+        {/* Animated role switch */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeRole}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -8 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
             {activeRole === "hotel" && <HotelDashboardMockup />}
             {activeRole === "supplier" && <SupplierDashboardMockup />}
@@ -191,7 +192,8 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 
 /* ═══════════════════════════════════════════════════════════
    1. HERO — The Story Opening
-   Theme A: OLED black bg, white title (single color), lime subtitle.
+   Theme A: OLED black bg, white title, lime subtitle.
+   Full-screen DashboardMockup with Framer Motion parallax via HeroVisual.
    ═══════════════════════════════════════════════════════════ */
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [email, setEmail] = useState("");
@@ -215,7 +217,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-center mb-10"
+          className="flex justify-center mb-8"
         >
           <BrandLogo variant="dark" size="lg" />
         </motion.div>
@@ -225,7 +227,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          className="text-center max-w-3xl mx-auto mb-10"
         >
           <h1
             className="text-[36px] md:text-[52px] lg:text-[60px] mb-5 leading-[1.08] tracking-tight"
@@ -242,139 +244,121 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           </p>
         </motion.div>
 
-        {/* Two-column: CTA left, Interactive Demo right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-start">
-          {/* Left: Email + social proof */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="lg:col-span-5 lg:sticky lg:top-28"
-          >
-            {/* Email capture */}
-            {!submitted ? (
-              <div className="flex flex-col sm:flex-row gap-2 mb-8 max-w-md">
-                <div className="relative flex-1">
-                  <Mail
-                    size={16}
-                    className="absolute left-4 top-1/2 -translate-y-1/2"
-                    style={{ color: "rgba(255,255,255,0.3)" }}
-                  />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your work email"
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: TEXT,
-                      fontFamily: SANS,
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = ACCENT;
-                      e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT_MUTED}`;
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    if (email.includes("@")) {
-                      setSubmitted(true);
-                      onCTAClick();
-                    }
-                  }}
-                  className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
+        {/* ═══════════════════════════════════════════════════════
+            MAGIC MCP DASHBOARD — Full-screen with Framer Motion parallax
+            This is the core visual you chose from Magic MCP.
+            HeroVisual provides 3D rotateX/rotateY + scroll-linked transform.
+            DashboardMockup provides the actual dashboard UI with sidebar,
+            KPI cards, bar chart, activity feed, pipeline bar, floating badge.
+            ═══════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          className="relative max-w-5xl mx-auto"
+        >
+          <HeroVisual>
+            <DashboardMockup />
+          </HeroVisual>
+        </motion.div>
+
+        {/* Email capture below dashboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="mt-10 max-w-md mx-auto"
+        >
+          {!submitted ? (
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <Mail
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2"
+                  style={{ color: "rgba(255,255,255,0.3)" }}
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your work email"
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
                   style={{
-                    background: ACCENT,
-                    color: "#000",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: TEXT,
                     fontFamily: SANS,
-                    fontWeight: 600,
-                    boxShadow: "0 0 16px rgba(163,230,53,0.15)",
                   }}
-                >
-                  Get Started
-                </button>
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = ACCENT;
+                    e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT_MUTED}`;
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
               </div>
-            ) : (
-              <div
-                className="flex items-center gap-2 mb-8 px-4 py-3 rounded-xl max-w-md"
-                style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
+              <button
+                onClick={() => {
+                  if (email.includes("@")) {
+                    setSubmitted(true);
+                    onCTAClick();
+                  }
+                }}
+                className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
+                style={{
+                  background: ACCENT,
+                  color: "#000",
+                  fontFamily: SANS,
+                  fontWeight: 600,
+                  boxShadow: "0 0 16px rgba(163,230,53,0.15)",
+                }}
               >
-                <CheckCircle2 size={16} style={{ color: "#22C55E" }} />
-                <span className="text-[13px]" style={{ color: "rgba(255,255,255,0.6)", fontFamily: SANS }}>
-                  You&apos;re on the list. We&apos;ll be in touch shortly.
-                </span>
-              </div>
-            )}
-
-            {/* Quick stats */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              {[
-                { num: "680+", label: "Suppliers" },
-                { num: "48h", label: "Settlement" },
-                { num: "25%", label: "Cost Saved" },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="text-center p-3 rounded-xl"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <div
-                    className="text-[20px]"
-                    style={{ fontFamily: SANS, fontWeight: 600, color: TEXT }}
-                  >
-                    {stat.num}
-                  </div>
-                  <div className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)", fontFamily: SANS }}>
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+                Get Started
+              </button>
             </div>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap items-center gap-4 text-[11px]" style={{ color: "rgba(255,255,255,0.35)", fontFamily: SANS }}>
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={12} style={{ color: ACCENT }} />
-                ETA Compliant
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Banknote size={12} style={{ color: ACCENT }} />
-                FRA Licensed
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Receipt size={12} style={{ color: ACCENT }} />
-                6 Governorates
+          ) : (
+            <div
+              className="flex items-center gap-2 px-4 py-3 rounded-xl"
+              style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
+            >
+              <CheckCircle2 size={16} style={{ color: "#22C55E" }} />
+              <span className="text-[13px]" style={{ color: "rgba(255,255,255,0.6)", fontFamily: SANS }}>
+                You&apos;re on the list. We&apos;ll be in touch shortly.
               </span>
             </div>
-          </motion.div>
+          )}
+        </motion.div>
 
-          {/* Right: Interactive Sandbox Dashboard */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-            className="lg:col-span-7"
-          >
-            <SandboxDashboardPanel onCTAClick={onCTAClick} />
-          </motion.div>
-        </div>
+        {/* Trust badges */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="flex flex-wrap justify-center items-center gap-5 mt-6 text-[11px]"
+          style={{ color: "rgba(255,255,255,0.3)", fontFamily: SANS }}
+        >
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck size={12} style={{ color: ACCENT }} />
+            ETA Compliant
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Banknote size={12} style={{ color: ACCENT }} />
+            FRA Licensed
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Receipt size={12} style={{ color: ACCENT }} />
+            6 Governorates
+          </span>
+        </motion.div>
 
         {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="mt-16 flex justify-center"
+          className="mt-14 flex justify-center"
         >
           <a
             href="#problem"
@@ -458,7 +442,10 @@ function ProblemSection() {
                 >
                   {p.title}
                 </h3>
-                <p className="text-[13px] leading-relaxed" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>
+                <p
+                  className="text-[13px] leading-relaxed"
+                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}
+                >
                   {p.desc}
                 </p>
               </div>
@@ -553,7 +540,10 @@ function HowItWorks() {
                   <h3 className="text-[15px] mb-2" style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}>
                     {item.title}
                   </h3>
-                  <p className="text-[12px] leading-relaxed" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.4)", fontWeight: 400 }}>
+                  <p
+                    className="text-[12px] leading-relaxed"
+                    style={{ fontFamily: SANS, color: "rgba(255,255,255,0.4)", fontWeight: 400 }}
+                  >
                     {item.desc}
                   </p>
                 </div>
@@ -720,10 +710,16 @@ function SocialProof() {
                 >
                   {stat.num}
                 </div>
-                <div className="text-[13px]" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}>
+                <div
+                  className="text-[13px]"
+                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}
+                >
                   {stat.label}
                 </div>
-                <div className="text-[11px] mt-0.5" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>
+                <div
+                  className="text-[11px] mt-0.5"
+                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.3)", fontWeight: 400 }}
+                >
                   {stat.sub}
                 </div>
               </div>
@@ -792,7 +788,10 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
               Explore Sandbox
             </Link>
           </div>
-          <p className="text-[11px] mt-8" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>
+          <p
+            className="text-[11px] mt-8"
+            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.25)", fontWeight: 400 }}
+          >
             No credit card required · Free forever for hotels · Dedicated onboarding
           </p>
         </Reveal>
