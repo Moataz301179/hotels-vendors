@@ -201,13 +201,13 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             className="text-[36px] md:text-[52px] lg:text-[60px] font-normal text-white mb-5 leading-[1.08] tracking-tight"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Stop Losing 25% of Your
+            WhatsApp Is Not a
             <br />
-            <span style={{ color: A }}>Procurement Budget</span>
+            <span style={{ color: A }}>Procurement System</span>
           </h1>
           <p className="text-[15px] md:text-[17px] text-white/45 max-w-xl mx-auto leading-[1.7]">
-            Egypt&apos;s hotels waste millions on manual POs, 180-day payment cycles, and ETA compliance failures.
-            HotelsVendors fixes all three — with AI.
+            Yet 90% of Egyptian hotels still run their supply chain on WhatsApp and Excel.
+            HotelsVendors replaces the chaos with AI-driven procurement, ETA compliance, and 48-hour supplier settlement.
           </p>
         </motion.div>
 
