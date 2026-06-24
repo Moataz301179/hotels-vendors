@@ -1,5 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getAllSlugs } from "@/lib/blog";
+
+const BLOG_SLUGS = [
+  "ai-procurement-forecasting-hotels",
+  "eta-compliance-guide-for-hotels",
+  "reverse-factoring-egypt-hospitality",
+  "shared-route-logistics-red-sea-resorts",
+  "supplier-onboarding-egypt-guide",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://hotels-vendors.com";
@@ -19,8 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
   ];
 
-  const blogSlugs = getAllSlugs();
-  const blogRoutes = blogSlugs.map((slug) => `/blog/${slug}`);
+  const blogRoutes = BLOG_SLUGS.map((slug) => `/blog/${slug}`);
 
   return [...routes, ...blogRoutes].map((route) => ({
     url: `${baseUrl}${route}`,

@@ -1,6 +1,101 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts, getFeaturedPosts } from "@/lib/blog";
+
+interface BlogPost {
+  slug: string;
+  title: string;
+  titleAr: string;
+  description: string;
+  descriptionAr: string;
+  date: string;
+  author: string;
+  category: string;
+  categoryAr: string;
+  tags: string[];
+  readTime: number;
+  featured: boolean;
+}
+
+const POSTS: BlogPost[] = [
+  {
+    slug: "ai-procurement-forecasting-hotels",
+    title: "AI-Powered Procurement Forecasting: How Hotels Cut Costs by 25%",
+    titleAr: "التنبؤ بالمشتريات المدعوم بالذكاء الاصطناعي: كيف تخفض الفنادق التكاليف بنسبة 25%",
+    description: "How AI agents analyze seasonal demand, supplier lead times, and historical ordering patterns to forecast hotel procurement needs with 94% accuracy.",
+    descriptionAr: "كيف يحلل العملاء الذكيون الطلب الموسمي وأوقات التوريد وأنماط الطلب التاريخية للتنبؤ باحتياجات المشتريات الفندقية بدقة 94%.",
+    date: "2026-06-05",
+    author: "HotelsVendors Team",
+    category: "Platform",
+    categoryAr: "المنصة",
+    tags: ["AI", "forecasting", "procurement", "cost reduction", "hospitality"],
+    readTime: 3,
+    featured: true,
+  },
+  {
+    slug: "eta-compliance-guide-for-hotels",
+    title: "The Complete Guide to ETA E-Invoicing for Hotels in Egypt",
+    titleAr: "الدليل الشامل للفوترة الإلكترونية لهيئة الضرائب للفنادق في مصر",
+    description: "Everything hotel managers need to know about Egyptian Tax Authority (ETA) e-invoicing compliance — deadlines, technical requirements, penalties, and how to automate it.",
+    descriptionAr: "كل ما يحتاجه مديرو الفنادق لمعرفة الامتثال للفوترة الإلكترونية لهيئة الضرائب المصرية — المواعيد النهائية، المتطلبات التقنية، العقوبات، وكيفية أتمتة ذلك.",
+    date: "2026-06-15",
+    author: "HotelsVendors Team",
+    category: "Compliance",
+    categoryAr: "الامتثال",
+    tags: ["ETA", "e-invoicing", "tax compliance", "Egypt", "B2B"],
+    readTime: 3,
+    featured: true,
+  },
+  {
+    slug: "reverse-factoring-egypt-hospitality",
+    title: "How Reverse Factoring Works for Egyptian Hotels",
+    titleAr: "كيف يعمل التمويل العكسي للفنادق المصرية",
+    description: "A practical guide to reverse factoring in Egypt's hospitality sector — how suppliers get paid in 48 hours while hotels keep their Net-30/Net-60 terms.",
+    descriptionAr: "دليل عملي للتمويل العكسي في قطاع الضيافة المصري — كيف يحصل الموردون على الدفع خلال 48 ساعة بينما تحتفظ الفنادق بشروط الدفع الأصلية.",
+    date: "2026-06-10",
+    author: "HotelsVendors Team",
+    category: "Factoring",
+    categoryAr: "التمويل",
+    tags: ["reverse factoring", "supply chain finance", "working capital", "Egypt", "B2B"],
+    readTime: 3,
+    featured: true,
+  },
+  {
+    slug: "shared-route-logistics-red-sea-resorts",
+    title: "Shared-Route Logistics: Solving Delivery Challenges for Red Sea Resorts",
+    titleAr: "اللوجستيات عبر المسارات المشتركة: حل تحديات التوصيل لمنتجعات البحر الأحمر",
+    description: "How HotelsVendors' Shark-Breaker shared logistics model reduces delivery costs by 40% for hotels in Hurghada, Sharm El-Sheikh, and the North Coast.",
+    descriptionAr: "كيف يقلل نموذج اللوجستيات المشتركة Shark-Breaker من تكاليف التوصيل بنسبة 40% للفنادق في الغردقة وشرم الشيخ والساحل الشمالي.",
+    date: "2026-05-20",
+    author: "HotelsVendors Team",
+    category: "Logistics",
+    categoryAr: "اللوجستيات",
+    tags: ["logistics", "Red Sea", "shared routes", "delivery", "cost reduction"],
+    readTime: 3,
+    featured: false,
+  },
+  {
+    slug: "supplier-onboarding-egypt-guide",
+    title: "How to Onboard Hotel Suppliers in Egypt: A Step-by-Step Guide",
+    titleAr: "كيفية تسجيل الموردين للفنادق في مصر: دليل خطوة بخطوة",
+    description: "The complete process for onboarding Egyptian hotel suppliers — from commercial registry verification to ETA-compliant invoicing setup in under 24 hours.",
+    descriptionAr: "العملية الكاملة لتسجيل الموردين المصريين للفنادق — من التحقق من السجل التجاري إلى إعداد الفوترة الإلكترونية المتوافقة في أقل من 24 ساعة.",
+    date: "2026-05-28",
+    author: "HotelsVendors Team",
+    category: "Suppliers",
+    categoryAr: "الموردون",
+    tags: ["supplier onboarding", "verification", "ETA", "B2B marketplace", "Egypt"],
+    readTime: 3,
+    featured: false,
+  },
+];
+
+function getAllPosts(): BlogPost[] {
+  return [...POSTS].sort((a, b) => (a.date > b.date ? -1 : 1));
+}
+
+function getFeaturedPosts(): BlogPost[] {
+  return POSTS.filter((p) => p.featured);
+}
 
 export const metadata: Metadata = {
   title: "Blog — HotelsVendors | Egypt's B2B Hotel Procurement Platform",
