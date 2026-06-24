@@ -92,6 +92,63 @@ export function ThemeToggle() {
           }}
         />
       </button>
+
+      {/* Fintech (lime green) */}
+      <button
+        onClick={() => setMode("fintech")}
+        className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
+        style={{
+          background: mode === "fintech" ? "#a3e635" : "transparent",
+          boxShadow: mode === "fintech" ? "0 0 8px rgba(163,230,53,0.4)" : "none",
+        }}
+        aria-label="Fintech theme"
+      >
+        <span
+          className="block w-3 h-3 rounded-full"
+          style={{
+            background: mode === "fintech" ? "#000" : "#a3e635",
+            opacity: mode === "fintech" ? 1 : 0.5,
+          }}
+        />
+      </button>
+
+      {/* Coastal (teal) */}
+      <button
+        onClick={() => setMode("coastal")}
+        className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
+        style={{
+          background: mode === "coastal" ? "#0F766E" : "transparent",
+          boxShadow: mode === "coastal" ? "0 0 8px rgba(15,118,110,0.4)" : "none",
+        }}
+        aria-label="Coastal theme"
+      >
+        <span
+          className="block w-3 h-3 rounded-full"
+          style={{
+            background: mode === "coastal" ? "#F5E6D3" : "#0F766E",
+            opacity: mode === "coastal" ? 1 : 0.5,
+          }}
+        />
+      </button>
+
+      {/* Luxury (gold) */}
+      <button
+        onClick={() => setMode("luxury")}
+        className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
+        style={{
+          background: mode === "luxury" ? "#D4AF37" : "transparent",
+          boxShadow: mode === "luxury" ? "0 0 8px rgba(212,175,55,0.4)" : "none",
+        }}
+        aria-label="Luxury theme"
+      >
+        <span
+          className="block w-3 h-3 rounded-full"
+          style={{
+            background: mode === "luxury" ? "#FAFAF9" : "#D4AF37",
+            opacity: mode === "luxury" ? 1 : 0.5,
+          }}
+        />
+      </button>
     </div>
   );
 }

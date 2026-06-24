@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "wimbledon" | "original" | "hercules" | "light";
+export type ThemeMode = "wimbledon" | "original" | "hercules" | "light" | "fintech" | "coastal" | "luxury";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -20,22 +20,22 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-const MODES: ThemeMode[] = ["wimbledon", "original", "hercules", "light"];
+const MODES: ThemeMode[] = ["wimbledon", "original", "hercules", "light", "fintech", "coastal", "luxury"];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("wimbledon");
+  const [mode, setModeState] = useState<ThemeMode>("fintech");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const savedMode = localStorage.getItem("hv-theme-mode") as ThemeMode | null;
-    if (savedMode === "wimbledon" || savedMode === "original" || savedMode === "hercules" || savedMode === "light") {
-      setModeState(savedMode);
-      document.documentElement.setAttribute("data-theme", savedMode);
+    if (MODES.includes(savedMode as ThemeMode)) {
+      setModeState(savedMode as ThemeMode);
+      document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
     } else {
-      setModeState("wimbledon");
-      document.documentElement.setAttribute("data-theme", "wimbledon");
-      localStorage.setItem("hv-theme-mode", "wimbledon");
+      setModeState("fintech");
+      document.documentElement.setAttribute("data-theme", "fintech");
+      localStorage.setItem("hv-theme-mode", "fintech");
     }
   }, []);
 

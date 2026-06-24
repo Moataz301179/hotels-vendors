@@ -12,13 +12,12 @@ import {
   Building2,
   Truck,
   BarChart3,
-  Zap,
   CheckCircle2,
   Play,
   Landmark,
-  Sparkles,
   ArrowDown,
   Mail,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
@@ -30,16 +29,27 @@ import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-m
 import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN TOKENS
+   DESIGN TOKENS (Theme A — Dark Fintech)
+   Uses CSS variables from [data-theme="fintech"] block.
+   Fallbacks are the fintech palette for the rare edge case.
    ═══════════════════════════════════════════════════════════════ */
-const A = "#FF6B00";
-const AM = "rgba(255,107,0,0.08)";
-const AB = "rgba(255,107,0,0.25)";
-const AG = "rgba(255,107,0,0.15)";
-const B1 = "rgba(255,255,255,0.06)";
-const BH = "rgba(255,255,255,0.12)";
+const ACCENT = "var(--accent-base, #a3e635)";
+const ACCENT_LIGHT = "var(--accent-light, #bef264)";
+const ACCENT_MUTED = "var(--accent-muted, rgba(163,230,53,0.08))";
+const ACCENT_BORDER = "var(--border-accent, rgba(163,230,53,0.30))";
+const ACCENT_GLOW = "var(--accent-glow, rgba(163,230,53,0.15))";
+const BG = "var(--bg-canvas, #000000)";
+const TEXT = "var(--text-primary, #ffffff)";
+const TEXT_SECONDARY = "var(--text-secondary, #a3e635)";
+const TEXT_MUTED = "var(--text-muted, rgba(255,255,255,0.5))";
+const BORDER = "var(--border-subtle, rgba(255,255,255,0.08))";
+const SURFACE = "var(--surface, #ffffff)";
+const TEXT_INVERSE = "var(--text-inverse, #000000)";
+
+const SANS = "'Jakarta Sans', 'Inter', system-ui, sans-serif";
 
 /* ═══════════════════════════════════════════════════════════════
    SHARED HELPERS
@@ -50,9 +60,9 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      initial={{ opacity: 0, y: 32 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -62,7 +72,10 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block" style={{ color: A }}>
+    <span
+      className="text-[10px] uppercase tracking-[0.3em] mb-4 block"
+      style={{ color: ACCENT, fontFamily: SANS, letterSpacing: "0.3em" }}
+    >
       {children}
     </span>
   );
@@ -70,6 +83,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 /* ═══════════════════════════════════════════════════════════
    SANDBOX DASHBOARD PANEL (Interactive Demo)
+   Theme A: White outer frame, black cards inside.
    ═══════════════════════════════════════════════════════════ */
 function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
   const [activeRole, setActiveRole] = useState<"hotel" | "supplier" | "funder" | "logistics">("hotel");
@@ -83,17 +97,18 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 
   return (
     <div
-      className="relative rounded-3xl p-3 spotlight"
+      className="relative rounded-3xl p-4"
       style={{
-        background: "linear-gradient(165deg, #0B0F17 0%, #0B0F17 100%)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 50px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.05)",
+        background: SURFACE,
+        border: "1px solid rgba(0,0,0,0.08)",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)",
       }}
     >
-      <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
       {/* Role switcher tabs */}
-      <div className="flex gap-1 p-2 mb-3 rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+      <div
+        className="flex gap-1 p-1.5 mb-4 rounded-xl"
+        style={{ backgroundColor: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}
+      >
         {roles.map((role) => {
           const Icon = role.icon;
           const isActive = activeRole === role.key;
@@ -101,11 +116,12 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
             <button
               key={role.key}
               onClick={() => setActiveRole(role.key)}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[11px] font-medium transition-all cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-[11px] transition-all cursor-pointer"
               style={{
-                backgroundColor: isActive ? "rgba(255,107,0,0.08)" : "transparent",
-                color: isActive ? "#FF6B00" : "rgba(255,255,255,0.35)",
-                border: isActive ? "1px solid rgba(255,107,0,0.2)" : "1px solid transparent",
+                backgroundColor: isActive ? ACCENT : "transparent",
+                color: isActive ? "#000" : "rgba(0,0,0,0.45)",
+                fontFamily: SANS,
+                fontWeight: isActive ? 600 : 500,
               }}
             >
               <Icon size={12} />
@@ -116,12 +132,24 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
       </div>
 
       {/* Dashboard preview area */}
-      <div className="rounded-2xl overflow-hidden relative" style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
-        <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300" style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+      <div
+        className="rounded-2xl overflow-hidden relative"
+        style={{ border: "1px solid rgba(0,0,0,0.06)", backgroundColor: "#000" }}
+      >
+        <div
+          className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+        >
           <button
             onClick={onCTAClick}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold transition-all hover:scale-105 cursor-pointer cta-glow"
-            style={{ background: A, color: "#fff" }}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] transition-all hover:scale-105 cursor-pointer"
+            style={{
+              background: ACCENT,
+              color: "#000",
+              fontFamily: SANS,
+              fontWeight: 600,
+              boxShadow: "0 0 20px rgba(163,230,53,0.2)",
+            }}
           >
             <Play size={14} />
             Open Interactive Sandbox
@@ -144,43 +172,45 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
       </div>
 
       {/* Bottom CTA bar */}
-      <div className="mt-3 flex items-center justify-between px-3 py-2">
-        <span className="text-[10px] text-white/20">Live preview — click to explore</span>
+      <div className="mt-4 flex items-center justify-between px-2 py-2">
+        <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.35)", fontFamily: SANS }}>
+          Live preview — click to explore
+        </span>
         <Link
           href="/sandbox"
-          className="flex items-center gap-1.5 text-[11px] font-medium transition-colors"
-          style={{ color: A }}
+          className="flex items-center gap-1.5 text-[11px] transition-colors"
+          style={{ color: ACCENT, fontFamily: SANS, fontWeight: 500 }}
         >
           Full Sandbox
           <ArrowRight size={11} />
         </Link>
       </div>
-
-      <div
-        className="absolute -bottom-8 left-1/4 right-1/4 h-16 rounded-full blur-3xl opacity-25"
-        style={{ background: A }}
-      />
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
    1. HERO — The Story Opening
+   Theme A: OLED black bg, white title (single color), lime subtitle.
    ═══════════════════════════════════════════════════════════ */
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="relative overflow-hidden grid-pattern">
-      {/* Ambient glow */}
+    <section className="relative overflow-hidden" style={{ background: BG }}>
+      {/* Subtle grid pattern */}
       <div
-        className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full pointer-events-none"
-        style={{ background: `radial-gradient(ellipse, ${AM} 0%, transparent 70%)`, opacity: 0.6 }}
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[92px] md:pt-[110px] pb-20 md:pb-28">
-        {/* Brand logo */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[80px] md:pt-[100px] pb-20 md:pb-28">
+        {/* Brand logo — prominent */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -198,14 +228,15 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           className="text-center max-w-3xl mx-auto mb-12"
         >
           <h1
-            className="text-[36px] md:text-[52px] lg:text-[60px] font-normal text-white mb-5 leading-[1.08] tracking-tight"
-            style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+            className="text-[36px] md:text-[52px] lg:text-[60px] mb-5 leading-[1.08] tracking-tight"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
           >
-            The Game Changer in
-            <br />
-            <span style={{ color: A }}>Hospitality Fintech</span>
+            The Game Changer in Hospitality Fintech
           </h1>
-          <p className="text-[15px] md:text-[17px] text-white/45 max-w-xl mx-auto leading-[1.7]">
+          <p
+            className="text-[15px] md:text-[17px] max-w-xl mx-auto leading-[1.7]"
+            style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+          >
             Egypt&apos;s first platform to natively embed ETA-compliant e-invoicing and reverse factoring
             inside a B2B procurement marketplace. Every invoice bankable. Every supplier paid in 48 hours.
           </p>
@@ -224,22 +255,48 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             {!submitted ? (
               <div className="flex flex-col sm:flex-row gap-2 mb-8 max-w-md">
                 <div className="relative flex-1">
-                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
+                  <Mail
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
+                  />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your work email"
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] text-white placeholder:text-white/20 outline-none transition-all"
-                    style={{ backgroundColor: "rgba(255,255,255,0.04)", border: `1px solid ${B1}` }}
-                    onFocus={(e) => { e.currentTarget.style.borderColor = AB; e.currentTarget.style.boxShadow = `0 0 0 3px ${AM}`; }}
-                    onBlur={(e) => { e.currentTarget.style.borderColor = B1; e.currentTarget.style.boxShadow = "none"; }}
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: TEXT,
+                      fontFamily: SANS,
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = ACCENT;
+                      e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT_MUTED}`;
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
                   />
                 </div>
                 <button
-                  onClick={() => { if (email.includes("@")) { setSubmitted(true); onCTAClick(); } }}
-                  className="px-6 py-3.5 text-[13px] font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer cta-glow shrink-0"
-                  style={{ background: A, color: "#ffffff" }}
+                  onClick={() => {
+                    if (email.includes("@")) {
+                      setSubmitted(true);
+                      onCTAClick();
+                    }
+                  }}
+                  className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
+                  style={{
+                    background: ACCENT,
+                    color: "#000",
+                    fontFamily: SANS,
+                    fontWeight: 600,
+                    boxShadow: "0 0 16px rgba(163,230,53,0.15)",
+                  }}
                 >
                   Get Started
                 </button>
@@ -250,36 +307,52 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
               >
                 <CheckCircle2 size={16} style={{ color: "#22C55E" }} />
-                <span className="text-[13px] text-white/60">You&apos;re on the list. We&apos;ll be in touch shortly.</span>
+                <span className="text-[13px]" style={{ color: "rgba(255,255,255,0.6)", fontFamily: SANS }}>
+                  You&apos;re on the list. We&apos;ll be in touch shortly.
+                </span>
               </div>
             )}
 
             {/* Quick stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-3 mb-8">
               {[
                 { num: "680+", label: "Suppliers" },
                 { num: "48h", label: "Settlement" },
                 { num: "25%", label: "Cost Saved" },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-3 rounded-xl card-lift" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${B1}` }}>
-                  <div className="text-[20px] font-bold text-white" style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}>{stat.num}</div>
-                  <div className="text-[10px] text-white/30 mt-0.5">{stat.label}</div>
+                <div
+                  key={stat.label}
+                  className="text-center p-3 rounded-xl"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
+                >
+                  <div
+                    className="text-[20px]"
+                    style={{ fontFamily: SANS, fontWeight: 600, color: TEXT }}
+                  >
+                    {stat.num}
+                  </div>
+                  <div className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)", fontFamily: SANS }}>
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap items-center gap-4 text-[11px] text-white/25">
+            <div className="flex flex-wrap items-center gap-4 text-[11px]" style={{ color: "rgba(255,255,255,0.35)", fontFamily: SANS }}>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={12} style={{ color: A }} />
+                <ShieldCheck size={12} style={{ color: ACCENT }} />
                 ETA Compliant
               </span>
               <span className="flex items-center gap-1.5">
-                <Banknote size={12} style={{ color: A }} />
+                <Banknote size={12} style={{ color: ACCENT }} />
                 FRA Licensed
               </span>
               <span className="flex items-center gap-1.5">
-                <Receipt size={12} style={{ color: A }} />
+                <Receipt size={12} style={{ color: ACCENT }} />
                 6 Governorates
               </span>
             </div>
@@ -297,9 +370,20 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
         </div>
 
         {/* Scroll indicator */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="mt-16 flex justify-center">
-          <a href="#problem" className="flex flex-col items-center gap-1.5 text-white/15 hover:text-white/30 transition-colors">
-            <span className="text-[9px] tracking-[0.2em] uppercase font-medium">Scroll to discover</span>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="mt-16 flex justify-center"
+        >
+          <a
+            href="#problem"
+            className="flex flex-col items-center gap-1.5 transition-colors"
+            style={{ color: "rgba(255,255,255,0.2)" }}
+          >
+            <span className="text-[9px] tracking-[0.2em] uppercase" style={{ fontFamily: SANS, fontWeight: 500 }}>
+              Scroll to discover
+            </span>
             <ArrowDown size={14} className="animate-bounce" />
           </a>
         </motion.div>
@@ -313,27 +397,45 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
    ═══════════════════════════════════════════════════════════ */
 function ProblemSection() {
   const problems = [
-    { title: "Manual POs", desc: "Your team sends purchase orders via WhatsApp and email. No audit trail. No budget control.", icon: "📋" },
-    { title: "60-180 Day Payments", desc: "Suppliers wait months for payment. They prioritize other buyers. Your supply chain suffers.", icon: "⏳" },
-    { title: "ETA Compliance Burden", desc: "Every invoice must be digitally signed, UUID-validated, and submitted to the Tax Authority. Manual work is error-prone.", icon: "📑" },
-    { title: "Zero Spend Visibility", desc: "You don't know which properties are overpaying, which suppliers are unreliable, or where money leaks.", icon: "👁️" },
+    {
+      title: "Manual POs",
+      desc: "Your team sends purchase orders via WhatsApp and email. No audit trail. No budget control.",
+      icon: "📋",
+    },
+    {
+      title: "60–180 Day Payments",
+      desc: "Suppliers wait months for payment. They prioritize other buyers. Your supply chain suffers.",
+      icon: "⏳",
+    },
+    {
+      title: "ETA Compliance Burden",
+      desc: "Every invoice must be digitally signed, UUID-validated, and submitted to the Tax Authority. Manual work is error-prone.",
+      icon: "📑",
+    },
+    {
+      title: "Zero Spend Visibility",
+      desc: "You don't know which properties are overpaying, which suppliers are unreliable, or where money leaks.",
+      icon: "👁️",
+    },
   ];
 
   return (
-    <section id="problem" className="py-24 md:py-32 relative">
-      <div className="section-fade absolute top-0 left-0 right-0" />
+    <section id="problem" className="py-24 md:py-32 relative" style={{ background: BG }}>
       <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="text-center mb-14">
             <SectionLabel>The Problem</SectionLabel>
             <h2
-              className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+              className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
+              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
             >
               Hotel Procurement Is Broken
             </h2>
-            <div className="glow-line mx-auto mb-5" />
-            <p className="text-[14px] text-white/40 max-w-lg mx-auto">
+            <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
+            <p
+              className="text-[14px] max-w-lg mx-auto"
+              style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+            >
               Egypt&apos;s coastal resorts lose 15–25% of procurement value to inefficiency. Here&apos;s what that looks like.
             </p>
           </div>
@@ -343,12 +445,22 @@ function ProblemSection() {
           {problems.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
               <div
-                className="rounded-2xl p-6 h-full card-lift"
-                style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid rgba(239,68,68,0.1)` }}
+                className="rounded-2xl p-6 h-full"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(239,68,68,0.12)",
+                }}
               >
                 <div className="text-[24px] mb-3">{p.icon}</div>
-                <h3 className="text-[15px] font-semibold text-white/90 mb-2">{p.title}</h3>
-                <p className="text-[13px] text-white/40 leading-relaxed">{p.desc}</p>
+                <h3
+                  className="text-[15px] mb-2"
+                  style={{ fontFamily: SANS, fontWeight: 500, color: "rgba(255,255,255,0.9)" }}
+                >
+                  {p.title}
+                </h3>
+                <p className="text-[13px] leading-relaxed" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>
+                  {p.desc}
+                </p>
               </div>
             </Reveal>
           ))}
@@ -363,28 +475,51 @@ function ProblemSection() {
    ═══════════════════════════════════════════════════════════ */
 function HowItWorks() {
   const steps = [
-    { num: "01", title: "Connect", desc: "Register your hotel in 5 minutes. AI guides you through supplier discovery and catalog browsing.", icon: Building2 },
-    { num: "02", title: "Order", desc: "AI predicts what you need. One-click PO generation. Automatic budget enforcement via Authority Matrix.", icon: BrainCircuit },
-    { num: "03", title: "Settle", desc: "Every invoice ETA-compliant, digitally signed, UUID-validated. Suppliers paid in 48 hours via reverse factoring.", icon: Banknote },
-    { num: "04", title: "Optimize", desc: "AI learns your patterns. Forecasts demand 14 days ahead. Flags anomalies before you overpay.", icon: BarChart3 },
+    {
+      num: "01",
+      title: "Connect",
+      desc: "Register your hotel in 5 minutes. AI guides you through supplier discovery and catalog browsing.",
+      icon: Building2,
+    },
+    {
+      num: "02",
+      title: "Order",
+      desc: "AI predicts what you need. One-click PO generation. Automatic budget enforcement via Authority Matrix.",
+      icon: BrainCircuit,
+    },
+    {
+      num: "03",
+      title: "Settle",
+      desc: "Every invoice ETA-compliant, digitally signed, UUID-validated. Suppliers paid in 48 hours via reverse factoring.",
+      icon: Banknote,
+    },
+    {
+      num: "04",
+      title: "Optimize",
+      desc: "AI learns your patterns. Forecasts demand 14 days ahead. Flags anomalies before you overpay.",
+      icon: BarChart3,
+    },
   ];
 
   return (
-    <section className="py-24 md:py-32 relative">
-      <div className="section-fade absolute top-0 left-0 right-0" />
+    <section className="py-24 md:py-32 relative" style={{ background: BG }}>
       <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="text-center mb-16">
             <SectionLabel>How It Works</SectionLabel>
             <h2
-              className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+              className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
+              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
             >
               From Chaos to Control
-              <br />
-              <span style={{ color: A }}>In Four Steps</span>
             </h2>
-            <div className="glow-line mx-auto" />
+            <p
+              className="text-[14px] max-w-md mx-auto"
+              style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+            >
+              Four steps. Zero paperwork. Every invoice bankable.
+            </p>
+            <div className="w-12 h-px mx-auto mt-5" style={{ background: ACCENT }} />
           </div>
         </Reveal>
 
@@ -394,20 +529,33 @@ function HowItWorks() {
             return (
               <Reveal key={item.num} delay={i * 0.1}>
                 <div
-                  className="rounded-2xl p-6 h-full card-lift step-connector group"
-                  style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${B1}` }}
+                  className="rounded-2xl p-6 h-full group"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
                 >
-                  <div className="text-[10px] font-bold mb-4 uppercase tracking-wider" style={{ color: A }}>
+                  <div
+                    className="text-[10px] mb-4 uppercase tracking-wider"
+                    style={{ color: ACCENT, fontFamily: SANS, fontWeight: 500, letterSpacing: "0.15em" }}
+                  >
                     Step {item.num}
                   </div>
                   <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:border-[rgba(255,107,0,0.2)]"
-                    style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${B1}` }}
+                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all duration-300"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}
                   >
-                    <StepIcon size={18} className="text-white/40 group-hover:text-[#FF6B00] transition-colors duration-300" />
+                    <StepIcon size={18} style={{ color: "rgba(255,255,255,0.4)" }} />
                   </div>
-                  <h3 className="text-[15px] font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-[12px] text-white/35 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-[15px] mb-2" style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}>
+                    {item.title}
+                  </h3>
+                  <p className="text-[12px] leading-relaxed" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.4)", fontWeight: 400 }}>
+                    {item.desc}
+                  </p>
                 </div>
               </Reveal>
             );
@@ -462,19 +610,18 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
   ];
 
   return (
-    <section className="py-24 md:py-32 relative">
-      <div className="section-fade absolute top-0 left-0 right-0" />
+    <section className="py-24 md:py-32 relative" style={{ background: BG }}>
       <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="text-center mb-14">
             <SectionLabel>One Platform, Three Stakeholders</SectionLabel>
             <h2
-              className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+              className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
+              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
             >
               Built for Your Role
             </h2>
-            <div className="glow-line mx-auto" />
+            <div className="w-12 h-px mx-auto" style={{ background: ACCENT }} />
           </div>
         </Reveal>
 
@@ -484,40 +631,61 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
             return (
               <Reveal key={role.title} delay={i * 0.1}>
                 <div
-                  className="rounded-2xl p-8 md:p-10 card-lift"
-                  style={{ backgroundColor: "rgba(255,255,255,0.015)", border: `1px solid ${B1}` }}
+                  className="rounded-2xl p-8 md:p-10"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.015)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
                 >
                   <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-4">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center"
-                          style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
+                          style={{ backgroundColor: ACCENT_MUTED, border: `1px solid ${ACCENT_BORDER}` }}
                         >
-                          <Icon size={18} style={{ color: A }} />
+                          <Icon size={18} style={{ color: ACCENT }} />
                         </div>
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-[0.15em] block" style={{ color: A }}>{role.title}</span>
-                          <h3 className="text-[18px] md:text-[22px] font-semibold text-white" style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}>
+                          <span
+                            className="text-[10px] uppercase tracking-[0.15em] block"
+                            style={{ color: ACCENT, fontFamily: SANS, fontWeight: 500 }}
+                          >
+                            {role.title}
+                          </span>
+                          <h3
+                            className="text-[18px] md:text-[22px]"
+                            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+                          >
                             {role.headline}
                           </h3>
                         </div>
                       </div>
                       <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-6">
                         {role.points.map((p) => (
-                          <li key={p} className="flex items-start gap-2.5 text-[13px] text-white/55">
-                            <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: A }} />
+                          <li
+                            key={p}
+                            className="flex items-start gap-2.5 text-[13px]"
+                            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}
+                          >
+                            <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: ACCENT }} />
                             {p}
                           </li>
                         ))}
                       </ul>
                       <button
                         onClick={onCTAClick}
-                        className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer cta-glow"
-                        style={{ background: A, color: "#ffffff" }}
+                        className="inline-flex items-center gap-2 px-6 py-3 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
+                        style={{
+                          background: ACCENT,
+                          color: "#000",
+                          fontFamily: SANS,
+                          fontWeight: 600,
+                          boxShadow: "0 0 16px rgba(163,230,53,0.12)",
+                        }}
                       >
                         {role.cta}
-                        <ArrowRight size={14} className="cta-arrow" />
+                        <ArrowRight size={14} />
                       </button>
                     </div>
                   </div>
@@ -536,9 +704,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
    ═══════════════════════════════════════════════════════════ */
 function SocialProof() {
   return (
-    <section className="py-20 relative">
-      <div className="section-fade absolute top-0 left-0 right-0" />
-      <div className="section-fade absolute bottom-0 left-0 right-0" />
+    <section className="py-20 relative" style={{ background: BG }}>
       <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -549,13 +715,17 @@ function SocialProof() {
             ].map((stat) => (
               <div key={stat.label}>
                 <div
-                  className="text-[32px] md:text-[40px] font-bold text-white mb-1"
-                  style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+                  className="text-[32px] md:text-[40px] mb-1"
+                  style={{ fontFamily: SANS, fontWeight: 600, color: TEXT }}
                 >
                   {stat.num}
                 </div>
-                <div className="text-[13px] text-white/50">{stat.label}</div>
-                <div className="text-[11px] text-white/25 mt-0.5">{stat.sub}</div>
+                <div className="text-[13px]" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}>
+                  {stat.label}
+                </div>
+                <div className="text-[11px] mt-0.5" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>
+                  {stat.sub}
+                </div>
               </div>
             ))}
           </div>
@@ -570,44 +740,59 @@ function SocialProof() {
    ═══════════════════════════════════════════════════════════ */
 function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
+    <section className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG }}>
+      {/* Subtle accent glow at bottom */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: `radial-gradient(ellipse at center bottom, ${AG} 0%, transparent 60%)` }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse, rgba(163,230,53,0.06) 0%, transparent 70%)",
+        }}
       />
       <div className="max-w-3xl mx-auto px-6 text-center relative">
         <Reveal>
           <h2
-            className="text-[28px] md:text-[44px] font-medium tracking-tight text-white mb-5 leading-tight"
-            style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
+            className="text-[28px] md:text-[44px] tracking-tight mb-5 leading-tight"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
           >
-            Ready to Stop
-            <br />
-            <span style={{ color: A }}>Leaking Money?</span>
+            Ready to Stop Leaking Money?
           </h2>
-          <div className="glow-line mx-auto mb-5" />
-          <p className="text-[15px] text-white/40 mb-10 max-w-lg mx-auto leading-relaxed">
+          <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
+          <p
+            className="text-[15px] mb-10 max-w-lg mx-auto leading-relaxed"
+            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+          >
             Join Egypt&apos;s hospitality procurement revolution. Free to start. Live in 24 hours. No credit card.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={onCTAClick}
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-[14px] font-bold rounded-2xl transition-all duration-200 hover:scale-[1.03] cursor-pointer cta-glow"
-              style={{ background: A, color: "#ffffff" }}
+              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
+              style={{
+                background: ACCENT,
+                color: "#000",
+                fontFamily: SANS,
+                fontWeight: 600,
+                boxShadow: "0 0 24px rgba(163,230,53,0.15)",
+              }}
             >
               Get Started Free
-              <ArrowRight size={16} className="cta-arrow" />
+              <ArrowRight size={16} />
             </button>
             <Link
               href="/sandbox"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] font-medium rounded-2xl border transition-all duration-200 hover:bg-white/[0.04]"
-              style={{ borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.6)" }}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200"
+              style={{
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.6)",
+                fontFamily: SANS,
+                fontWeight: 500,
+              }}
             >
               <Play size={15} />
               Explore Sandbox
             </Link>
           </div>
-          <p className="text-[11px] text-white/20 mt-8">
+          <p className="text-[11px] mt-8" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>
             No credit card required · Free forever for hotels · Dedicated onboarding
           </p>
         </Reveal>
@@ -624,7 +809,7 @@ export default function HomePage() {
   const openWizard = () => setWizardOpen(true);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen" style={{ background: BG, color: TEXT, fontFamily: SANS }}>
       <MarketingNav />
 
       <HeroSection onCTAClick={openWizard} />
@@ -637,6 +822,11 @@ export default function HomePage() {
 
       <MarketingFooter />
       <RegistrationWizard isOpen={wizardOpen} onClose={() => setWizardOpen(false)} />
+
+      {/* Theme toggle — fixed bottom-right */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
     </div>
   );
 }
