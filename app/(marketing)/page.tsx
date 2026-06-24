@@ -201,13 +201,13 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             className="text-[36px] md:text-[52px] lg:text-[60px] font-normal text-white mb-5 leading-[1.08] tracking-tight"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Your Hotel Procurement
+            Stop Losing 25% of Your
             <br />
-            <span style={{ color: A }}>Finally Works</span>
+            <span style={{ color: A }}>Procurement Budget</span>
           </h1>
           <p className="text-[15px] md:text-[17px] text-white/45 max-w-xl mx-auto leading-[1.7]">
-            Stop chasing suppliers, manual POs, and ETA compliance paperwork.
-            HotelsVendors automates your entire supply chain — from AI demand forecasting to 48-hour supplier settlement.
+            Egypt&apos;s hotels waste millions on manual POs, 180-day payment cycles, and ETA compliance failures.
+            HotelsVendors fixes all three — with AI.
           </p>
         </motion.div>
 
