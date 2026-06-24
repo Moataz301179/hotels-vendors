@@ -199,7 +199,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
         >
           <h1
             className="text-[36px] md:text-[52px] lg:text-[60px] font-normal text-white mb-5 leading-[1.08] tracking-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
           >
             The Game Changer in
             <br />
@@ -262,7 +262,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 { num: "25%", label: "Cost Saved" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center p-3 rounded-xl card-lift" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${B1}` }}>
-                  <div className="text-[20px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{stat.num}</div>
+                  <div className="text-[20px] font-bold text-white" style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}>{stat.num}</div>
                   <div className="text-[10px] text-white/30 mt-0.5">{stat.label}</div>
                 </div>
               ))}
@@ -328,7 +328,7 @@ function ProblemSection() {
             <SectionLabel>The Problem</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
             >
               Hotel Procurement Is Broken
             </h2>
@@ -378,7 +378,7 @@ function HowItWorks() {
             <SectionLabel>How It Works</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
             >
               From Chaos to Control
               <br />
@@ -470,7 +470,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
             <SectionLabel>One Platform, Three Stakeholders</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
             >
               Built for Your Role
             </h2>
@@ -498,7 +498,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                         </div>
                         <div>
                           <span className="text-[10px] font-bold uppercase tracking-[0.15em] block" style={{ color: A }}>{role.title}</span>
-                          <h3 className="text-[18px] md:text-[22px] font-semibold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                          <h3 className="text-[18px] md:text-[22px] font-semibold text-white" style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}>
                             {role.headline}
                           </h3>
                         </div>
@@ -550,7 +550,7 @@ function SocialProof() {
               <div key={stat.label}>
                 <div
                   className="text-[32px] md:text-[40px] font-bold text-white mb-1"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
                 >
                   {stat.num}
                 </div>
@@ -579,7 +579,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
         <Reveal>
           <h2
             className="text-[28px] md:text-[44px] font-medium tracking-tight text-white mb-5 leading-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            style={{ fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 700 }}
           >
             Ready to Stop
             <br />
