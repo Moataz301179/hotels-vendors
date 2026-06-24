@@ -90,10 +90,10 @@ export function MarketingFooter() {
             </h4>
             <ul className="space-y-2.5">
               {[
-                { label: "Hotels", href: "/register/hotel" },
-                { label: "Suppliers", href: "/register/supplier" },
-                { label: "Funders", href: "/register/funder" },
-                { label: "Logistics", href: "/register/logistics" },
+                { label: "Hotels", href: "/register?sector=hotel" },
+                { label: "Suppliers", href: "/register?sector=supplier" },
+                { label: "Funders", href: "/register?sector=funder" },
+                { label: "Logistics", href: "/register?sector=logistics" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link href={item.href} className="text-[13px] transition-colors text-white/50 hover:text-white">

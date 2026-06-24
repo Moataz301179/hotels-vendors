@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
-const accent = "#FF6B00";
+const accent = "var(--accent-base)";
 
 const solutions = [
   {
@@ -58,7 +58,7 @@ export default function SolutionsPage() {
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, rgba(255,107,0,0.04) 0%, transparent 70%)` }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, rgba(163,230,53,0.04) 0%, transparent 70%)` }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -100,7 +100,7 @@ export default function SolutionsPage() {
               <div className="grid lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,107,0,0.1)" }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(163,230,53,0.1)" }}>
                       <s.icon size={20} style={{ color: accent }} />
                     </div>
                     <h2 className="text-[20px] font-medium text-white">{s.title}</h2>
@@ -108,7 +108,7 @@ export default function SolutionsPage() {
                   <p className="text-[14px] text-white/40 leading-relaxed mb-5 max-w-xl">{s.desc}</p>
                   <div className="flex flex-wrap gap-2">
                     {s.features.map((f) => (
-                      <span key={f} className="px-3 py-1.5 rounded-lg text-[11px] font-medium" style={{ backgroundColor: "rgba(255,107,0,0.08)", color: accent }}>
+                      <span key={f} className="px-3 py-1.5 rounded-lg text-[11px] font-medium" style={{ backgroundColor: "rgba(163,230,53,0.08)", color: accent }}>
                         {f}
                       </span>
                     ))}
@@ -135,7 +135,7 @@ export default function SolutionsPage() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
-              { icon: Building2, label: "Hotels", color: "#FF6B00" },
+              { icon: Building2, label: "Hotels", color: "var(--accent-base)" },
               { icon: Store, label: "Suppliers", color: "#22C55E" },
               { icon: Landmark, label: "Funders", color: "#D4A843" },
               { icon: Truck, label: "Carriers", color: "#3B82F6" },

@@ -187,7 +187,7 @@ export default function SupplierOnboardingPage() {
 
             <div className="flex gap-4 justify-center">
               <Link href="/" className="px-6 py-3 rounded-xl bg-[#0B0F17] border border-white/[0.06] text-white/60 text-sm font-medium hover:bg-white/[0.04] transition-colors">Back to Home</Link>
-              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#FF6B00] text-black text-sm font-medium hover:bg-[#FF8A33] transition-colors">Apply Another Business</button>
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[var(--accent-base)] text-black text-sm font-medium hover:bg-[#FF8A33] transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
         </div>
@@ -211,7 +211,7 @@ export default function SupplierOnboardingPage() {
             <h1 className="text-[32px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
               Join Egypt&apos;s Leading
               <br />
-              <span className="text-[#FF6B00]">Hospitality Supply Network</span>
+              <span className="text-[var(--accent-base)]">Hospitality Supply Network</span>
             </h1>
             <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
               Get direct access to verified hotel properties, guaranteed payments through embedded factoring, and shared-route logistics that cut your delivery costs. No bidding wars. No hidden fees.
@@ -236,7 +236,7 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-[#FF6B00] text-black" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
+                          isActive ? "bg-[var(--accent-base)] text-black" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
@@ -377,7 +377,7 @@ export default function SupplierOnboardingPage() {
                           {CATEGORIES.map((cat) => {
                             const selected = form.categories.includes(cat);
                             return (
-                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#FF6B00]/10 text-[#FF6B00] border border-[#FF6B00]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[var(--accent-base)]/10 text-[var(--accent-base)] border border-[var(--accent-base)]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
                                 {cat}
                               </button>
                             );
@@ -479,11 +479,11 @@ export default function SupplierOnboardingPage() {
                   <ArrowLeft size={16} />Back
                 </button>
                 {step < 5 ? (
-                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#FF6B00] text-black text-[13px] font-medium hover:bg-[#FF8A33] transition-colors">
+                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[#FF8A33] transition-colors">
                     Continue<ArrowRight size={16} />
                   </button>
                 ) : (
-                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#FF6B00] text-black text-[13px] font-medium hover:bg-[#FF8A33] disabled:opacity-50 transition-colors">
+                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[#FF8A33] disabled:opacity-50 transition-colors">
                     {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                     {submitting ? "Submitting..." : "Submit Application"}
                   </button>

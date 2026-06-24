@@ -16,7 +16,7 @@ export default function FAQPage() {
 
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(255,107,0,0.04) 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, rgba(163,230,53,0.04) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">FAQ</span>
           <h1 className="text-[clamp(28px,4vw,44px)] font-medium leading-[1.05] tracking-tight mb-4 text-white">

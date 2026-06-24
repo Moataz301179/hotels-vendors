@@ -164,7 +164,7 @@ function renderMarkdown(content: string): string {
   html = html.replace(/<p class="[^"]*"><\/p>/g, "");
   html = html.replace(/<p class="[^"]*">(\s*<(h[1-6]|ul|ol|table|li))/g, "$1");
   html = html.replace(/(<\/(h[1-6]|ul|ol|table)>)<\/p>/g, "$1");
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#FF6B00] hover:text-[#FF6B00]/80 underline underline-offset-2">$1</a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[var(--accent-base)] hover:text-[var(--accent-base)]/80 underline underline-offset-2">$1</a>');
   html = html.replace(/^---$/gm, '<hr class="border-white/10 my-8" />');
   return html;
 }
@@ -192,7 +192,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <article className="py-12">
         <div className="mx-auto max-w-4xl px-6">
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#FF6B00]/10 text-[#FF6B00]">
+            <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[var(--accent-base)]/10 text-[var(--accent-base)]">
               {post.category}
             </span>
             <span className="text-[10px] text-white/30" dir="rtl">
@@ -211,8 +211,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </p>
 
           <div className="flex items-center gap-4 mb-10 pb-10 border-b border-white/10">
-            <div className="w-8 h-8 rounded-full bg-[#FF6B00]/10 flex items-center justify-center">
-              <span className="text-[11px] font-medium text-[#FF6B00]">
+            <div className="w-8 h-8 rounded-full bg-[var(--accent-base)]/10 flex items-center justify-center">
+              <span className="text-[11px] font-medium text-[var(--accent-base)]">
                 {post.author.charAt(0)}
               </span>
             </div>
@@ -245,7 +245,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           )}
 
           {/* CTA */}
-          <div className="mt-12 p-8 rounded-2xl border border-[#FF6B00]/20 bg-[#FF6B00]/3 text-center">
+          <div className="mt-12 p-8 rounded-2xl border border-[var(--accent-base)]/20 bg-[var(--accent-base)]/3 text-center">
             <h3 className="text-[18px] font-semibold mb-2">
               Ready to transform your hotel procurement?
             </h3>
@@ -254,7 +254,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </p>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FF6B00] text-black text-[13px] font-medium hover:bg-orange-400 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-orange-400 transition-colors"
             >
               Get Started Free
             </Link>

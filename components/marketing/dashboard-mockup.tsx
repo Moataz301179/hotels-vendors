@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -51,19 +51,13 @@ const chartLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Se
 export function DashboardMockup() {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-80px" });
-  const { scrollYProgress } = useScroll();
-  const dashboardScale = useTransform(scrollYProgress, [0, 0.2], [0.92, 1]);
-  const dashboardOpacity = useTransform(scrollYProgress, [0, 0.15], [0.6, 1]);
-  const smoothScale = useSpring(dashboardScale, { stiffness: 120, damping: 25 });
-  const smoothOpacity = useSpring(dashboardOpacity, { stiffness: 120, damping: 25 });
 
   return (
     <motion.div
       ref={containerRef}
-      initial={{ opacity: 0, x: 40, scale: 0.92 }}
-      animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
-      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-      style={{ opacity: smoothOpacity, scale: smoothScale }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
       className="relative"
     >
       {/* Glow behind the mockup */}

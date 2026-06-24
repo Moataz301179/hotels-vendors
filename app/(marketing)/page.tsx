@@ -252,9 +252,9 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             KPI cards, bar chart, activity feed, pipeline bar, floating badge.
             ═══════════════════════════════════════════════════════ */}
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.92 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           className="relative max-w-5xl mx-auto"
         >
           <HeroVisual>

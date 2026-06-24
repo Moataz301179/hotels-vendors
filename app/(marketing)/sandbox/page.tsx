@@ -52,8 +52,8 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#FF6B00",
-    accentMuted: "rgba(255,107,0,0.1)",
+    color: "var(--accent-base)",
+    accentMuted: "rgba(163,230,53,0.1)",
     description: "Use the HotelsVendors orchestrator to manage compliance, payments, and factoring for your procurement needs.",
     steps: [
       {
@@ -311,7 +311,7 @@ export default function SandboxPage() {
       <MarketingNav />
 
       <section className="pt-24 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,0,0.04) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.04) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           {/* Header */}
@@ -321,12 +321,12 @@ export default function SandboxPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid rgba(255,107,0,0.12)", backgroundColor: "rgba(255,107,0,0.04)" }}>
-              <Zap size={11} style={{ color: "#FF6B00" }} />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid rgba(163,230,53,0.12)", backgroundColor: "rgba(163,230,53,0.04)" }}>
+              <Zap size={11} style={{ color: "var(--accent-base)" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
-              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, #FF6B00, #00E5CC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
+              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, var(--accent-base), #00E5CC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
             </h1>
             <p className="text-[13px] text-white/50 max-w-2xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting,<br className="hidden md:block" />
@@ -595,8 +595,8 @@ export default function SandboxPage() {
                           <div className="flex flex-wrap justify-center gap-3">
                             <Link
                               href="/register"
-                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_rgba(255,107,0,0.2)]"
-                              style={{ backgroundColor: "#FF6B00", color: "#000000" }}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]"
+                              style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}
                             >
                               Get Full Access <ArrowRight size={13} />
                             </Link>

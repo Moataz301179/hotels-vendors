@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   },
 };
 
-const accent = "#FF6B00";
-const accentMuted = "rgba(255,107,0,0.08)";
-const accentBorder = "rgba(255,107,0,0.20)";
+const accent = "var(--accent-base)";
+const accentMuted = "rgba(163,230,53,0.08)";
+const accentBorder = "rgba(163,230,53,0.20)";
 const surface = "#111520";
 const borderSubtle = "rgba(255,255,255,0.06)";
 

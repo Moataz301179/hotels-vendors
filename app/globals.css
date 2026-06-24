@@ -782,6 +782,11 @@ body {
    THEME A — DARK FINTECH (OLED Black + Lime Green)
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="fintech"] {
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+
   --bg-canvas: #000000;
   --bg-surface-1: #0a0a0a;
   --bg-surface-2: #111111;

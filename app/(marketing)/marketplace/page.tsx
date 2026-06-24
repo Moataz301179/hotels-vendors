@@ -30,9 +30,9 @@ import {
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
-const accent = "#FF6B00";
-const accentMuted = "rgba(255,107,0,0.08)";
-const accentBorder = "rgba(255,107,0,0.20)";
+const accent = "var(--accent-base)";
+const accentMuted = "rgba(163,230,53,0.08)";
+const accentBorder = "rgba(163,230,53,0.20)";
 const surface = "#111520";
 const borderSubtle = "rgba(255,255,255,0.06)";
 
@@ -82,7 +82,7 @@ export default function MarketplacePage() {
 
       {/* ═══ Hero ═══ */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,0,0.05) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.05) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}>
             <Sparkles size={12} style={{ color: accent }} />

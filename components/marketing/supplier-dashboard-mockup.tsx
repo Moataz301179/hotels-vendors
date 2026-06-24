@@ -10,7 +10,7 @@ import {
 
 const kpiCards = [
   { label: "Active POs", value: "8", change: "EGP 1.2M", up: true, color: "#22C55E" },
-  { label: "Invoices Issued", value: "12", change: "EGP 847.5K", up: true, color: "#FF6B00" },
+  { label: "Invoices Issued", value: "12", change: "EGP 847.5K", up: true, color: "var(--accent-base)" },
   { label: "Paid (24h)", value: "EGP 243K", change: "14 hrs avg", up: true, color: "#3B82F6" },
   { label: "Avg Settlement", value: "14 hrs", change: "-22% MoM", up: true, color: "#D4A843" },
 ];
