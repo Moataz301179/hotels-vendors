@@ -137,7 +137,7 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
 
 export function ProblemSolutionSplit() {
   return (
-    <section className="relative overflow-hidden" style={{ backgroundColor: "#000000" }}>
+    <section className="relative overflow-hidden" style={{ backgroundColor: "var(--background)" }}>
       {/* Section header */}
       <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16">
         <Reveal>

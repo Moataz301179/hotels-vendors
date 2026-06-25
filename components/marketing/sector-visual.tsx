@@ -32,7 +32,7 @@ export function SectorVisual({ sector, accentColor }: SectorVisualProps) {
       {/* Gradient Overlay for "Marketing Hook" feel */}
       <div 
         className="absolute inset-0 opacity-60" 
-        style={{ background: `linear-gradient(135deg, ${accentColor}33 0%, transparent 50%, #000000aa 100%)` }} 
+        style={{ background: `linear-gradient(135deg, ${accentColor}33 0%, transparent 50%, var(--background) 100%)` }} 
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
       

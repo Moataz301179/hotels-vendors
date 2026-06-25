@@ -196,7 +196,7 @@ export function OurClientsSection() {
   const totalGmv = LOCAL_HOTELS.reduce((s, h) => s + h.monthly_gmv_egp, 0);
 
   return (
-    <section className="py-16 bg-[#0B0F17] border-y border-white/[0.06]">
+    <section className="py-16 bg-[var(--background)] border-y border-white/[0.06]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10">
           <p className="text-[11px] font-semibold text-accent-base tracking-[0.18em] uppercase mb-3">

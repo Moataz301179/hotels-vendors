@@ -33,38 +33,38 @@ const socialLinks = [
 
 export default function AboutPage() {
   return (
-    <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh" }}>
+    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.04) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">About</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
+          <span className="text-[11px] font-medium text-muted uppercase tracking-[0.15em] mb-3 block">About</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-primary">
             Born in 2023.<br />Built for Egypt&apos;s<br />Hospitality Infrastructure.
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed">
-            HotelsVendors was founded by <strong className="text-white/70">Moataz</strong> in 2023 with a clear mission: bridge the procurement gap in Egypt&apos;s hospitality sector by leveraging the country&apos;s growing fintech infrastructure — ETA e-invoicing, embedded factoring, and digital payment rails — into one unified B2B platform.
+          <p className="text-[15px] text-muted max-w-2xl leading-relaxed">
+            HotelsVendors was founded by <strong className="text-secondary">Moataz</strong> in 2023 with a clear mission: bridge the procurement gap in Egypt&apos;s hospitality sector by leveraging the country&apos;s growing fintech infrastructure — ETA e-invoicing, embedded factoring, and digital payment rails — into one unified B2B platform.
           </p>
         </div>
       </section>
 
       {/* Founder */}
-      <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
+      <section className="py-16 marketing-section">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-[10px] font-medium text-white/25 uppercase tracking-[0.15em] mb-4 block">Founder</span>
-              <h2 className="text-[28px] font-medium text-white mb-4">Moataz</h2>
-              <p className="text-[14px] text-white/40 leading-relaxed mb-4">
+              <span className="label-upper mb-4 block">Founder</span>
+              <h2 className="text-[28px] font-medium text-primary mb-4">Moataz</h2>
+              <p className="text-[14px] text-muted leading-relaxed mb-4">
                 A former auditor at EY, Deloitte, and KPMG, Moataz spent years inside the financial infrastructure of Egyptian enterprises. He saw firsthand how hospitality procurement — especially in coastal resorts — was fragmented, manual, and disconnected from the fintech tools that Egypt was rapidly building.
               </p>
-              <p className="text-[14px] text-white/40 leading-relaxed mb-4">
-                In 2023, he founded HotelsVendors under <strong className="text-white/60">Restaurants for E-Marketing</strong> (Tax ID: 704226146) to build the technical orchestration layer that connects hotels, suppliers, funders, and logistics providers — using Egypt&apos;s existing fintech rails rather than reinventing them.
+              <p className="text-[14px] text-muted leading-relaxed mb-4">
+                In 2023, he founded HotelsVendors under <strong className="text-secondary">Restaurants for E-Marketing</strong> (Tax ID: 704226146) to build the technical orchestration layer that connects hotels, suppliers, funders, and logistics providers — using Egypt&apos;s existing fintech rails rather than reinventing them.
               </p>
-              <p className="text-[14px] text-white/40 leading-relaxed">
-                The company operates as a <strong className="text-white/60">technical data orchestrator</strong> — licensed for digital marketing, not cash custody or factoring. HotelsVendors plugs into licensed financial institutions for factoring and payment processing, providing the AI-powered procurement and compliance layer on top.
+              <p className="text-[14px] text-muted leading-relaxed">
+                The company operates as a <strong className="text-secondary">technical data orchestrator</strong> — licensed for digital marketing, not cash custody or factoring. HotelsVendors plugs into licensed financial institutions for factoring and payment processing, providing the AI-powered procurement and compliance layer on top.
               </p>
               {/* Social Links */}
               <div className="flex items-center gap-4 mt-6">
@@ -83,7 +83,7 @@ export default function AboutPage() {
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl p-8" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="surface-card p-8">
               <div className="space-y-5">
                 {[
                   { label: "Founded", value: "2023" },
@@ -95,9 +95,9 @@ export default function AboutPage() {
                   { label: "Headquarters", value: "Egypt" },
                   { label: "Sector", value: "Hospitality B2B Procurement" },
                 ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
-                    <span className="text-[12px] text-white/30">{item.label}</span>
-                    <span className="text-[13px] text-white/70 font-medium">{item.value}</span>
+                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-subtle last:border-0">
+                    <span className="text-[12px] text-muted">{item.label}</span>
+                    <span className="text-[13px] text-secondary font-medium">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -107,7 +107,7 @@ export default function AboutPage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0B0F17" }}>
+      <section className="py-8 border-y marketing-section-alt" style={{ borderColor: "var(--border-subtle)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -119,8 +119,8 @@ export default function AboutPage() {
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                 <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                  <p className="text-[11px] font-medium text-secondary">{b.label}</p>
+                  <p className="text-[9px] text-muted">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -129,26 +129,26 @@ export default function AboutPage() {
       </section>
 
       {/* Vision & Focus */}
-      <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
+      <section className="py-16 marketing-section">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               <Eye size={24} className="mb-4" style={{ color: "var(--accent-base)" }} />
-              <h2 className="text-[20px] font-medium text-white mb-4">The Market Gap</h2>
-              <p className="text-[14px] text-white/40 leading-relaxed mb-4">
+              <h2 className="text-[20px] font-medium text-primary mb-4">The Market Gap</h2>
+              <p className="text-[14px] text-muted leading-relaxed mb-4">
                 Egypt&apos;s hospitality sector is fragmented across thousands of manual procurement processes. Paper invoices. Extended payment cycles. Zero visibility into spend. Coastal resorts in Sharm El-Sheikh and Hurghada rely on suppliers primarily based in Cairo, with logistics costs significantly impacting every order.
               </p>
-              <p className="text-[14px] text-white/40 leading-relaxed">
+              <p className="text-[14px] text-muted leading-relaxed">
                 The ETA e-invoicing mandate created a digital layer, but no one built the orchestration platform on top of it. HotelsVendors fills that gap: the AI-powered procurement OS that uses Egypt&apos;s fintech infrastructure as its foundation.
               </p>
             </div>
             <div>
               <Target size={24} className="mb-4" style={{ color: "var(--accent-base)" }} />
-              <h2 className="text-[20px] font-medium text-white mb-4">Our Focus</h2>
-              <p className="text-[14px] text-white/40 leading-relaxed mb-4">
+              <h2 className="text-[20px] font-medium text-primary mb-4">Our Focus</h2>
+              <p className="text-[14px] text-muted leading-relaxed mb-4">
                 We serve coastal hotels in Sharm El-Sheikh and Hurghada first, then Cairo, Alexandria, and the North Coast. These are 100-500 room resorts with multiple F&B outlets, pools, spas, and water sports. Properties where procurement complexity is highest.
               </p>
-              <p className="text-[14px] text-white/40 leading-relaxed">
+              <p className="text-[14px] text-muted leading-relaxed">
                 Our target customers are local branded hotel chains (Stella Di Mare, Sunrise, Jaz, Baron), not just international 5-star brands. These groups operate 5-30 properties and need portfolio-level procurement control.
               </p>
             </div>
@@ -157,21 +157,21 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-16">
+      <section className="py-16 marketing-section-alt">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">What Drives Us</h2>
+          <h2 className="label-upper mb-8 text-center">What Drives Us</h2>
           <div className="grid md:grid-cols-4 gap-4">
             {[
               { icon: Shield, title: "Compliance First", titleAr: "الامتثال أولاً", desc: "ETA e-invoicing, FRA anti-fraud, and cryptographic audit trails are built in — not bolted on.", color: "var(--accent-base)" },
-              { icon: Globe, title: "Egypt-Focused", titleAr: "تركيز مصري", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements.", color: "#22C55E" },
-              { icon: Zap, title: "AI-Native", titleAr: "ذكاء اصطناعي أصلي", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture.", color: "#3B82F6" },
+              { icon: Globe, title: "Egypt-Focused", titleAr: "تركيز مصري", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements.", color: "#16A34A" },
+              { icon: Zap, title: "AI-Native", titleAr: "ذكاء اصطناعي أصلي", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture.", color: "#2563EB" },
               { icon: Target, title: "Hospitality-Only", titleAr: "ضيافة فقط", desc: "We do not serve every industry. We serve hospitality better than anyone else.", color: "#D4A843" },
             ].map((v) => (
-              <div key={v.title} className="rounded-xl p-6 text-center transition-all hover:border-[var(--accent-base)]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={v.title} className="surface-card p-6 text-center transition-all">
                 <v.icon size={24} className="mx-auto mb-3" style={{ color: v.color }} />
-                <h3 className="text-[14px] font-medium text-white mb-1">{v.title}</h3>
-                <p className="text-[10px] text-white/20 mb-2" dir="rtl">{v.titleAr}</p>
-                <p className="text-[12px] text-white/35 leading-relaxed">{v.desc}</p>
+                <h3 className="text-[14px] font-medium text-primary mb-1">{v.title}</h3>
+                <p className="text-[10px] text-muted mb-2" dir="rtl">{v.titleAr}</p>
+                <p className="text-[12px] text-muted leading-relaxed">{v.desc}</p>
               </div>
             ))}
           </div>
@@ -179,16 +179,16 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16">
+      <section className="py-16 marketing-section">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <Users size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Want to Learn More?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
+          <h2 className="text-[24px] font-medium mb-4 text-primary">Want to Learn More?</h2>
+          <p className="text-[13px] text-muted mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "#0B0F1A" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}>
               Get Started <ArrowRight size={14} />
             </Link>
-            <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
               Explore Solutions
             </Link>
           </div>

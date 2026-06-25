@@ -94,7 +94,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-0 mt-1 w-64 rounded-xl border border-white/[0.08] bg-[#0B0F17]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
+                    className="absolute top-full left-0 mt-1 w-64 rounded-xl border border-white/[0.08] bg-[var(--background)]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
                   >
                     <div className="p-3 border-b border-white/[0.06]">
                       <div className="flex items-center gap-2">

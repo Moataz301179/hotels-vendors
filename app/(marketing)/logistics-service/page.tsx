@@ -35,7 +35,7 @@ const features = [
 
 export default function LogisticsServicePage() {
   return (
-    <main style={{ backgroundColor: "#0B0F17", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "var(--background)", color: "#ffffff", minHeight: "100vh" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -49,7 +49,7 @@ export default function LogisticsServicePage() {
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS. Built for carriers who want guaranteed volume and fast settlement.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register as Carrier <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -60,7 +60,7 @@ export default function LogisticsServicePage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#0B0F17" }}>
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -82,12 +82,12 @@ export default function LogisticsServicePage() {
       </section>
 
       {/* Coverage Map */}
-      <section className="py-16" style={{ backgroundColor: "#0B0F17" }}>
+      <section className="py-16" style={{ backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Coverage Map</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {governorates.map((g) => (
-              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <MapPin size={16} className="mx-auto mb-2" style={{ color: g.color }} />
                 <p className="text-[12px] font-medium text-white">{g.name}</p>
                 <p className="text-[10px] text-white/25">{g.type}</p>
@@ -103,7 +103,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Carriers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-3" style={{ color: f.color }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -120,7 +120,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Need Reliable Hotel Delivery?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Whether you&apos;re a hotel needing deliveries or a carrier looking for volume, we&apos;ve got you covered.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register Hotel <ArrowRight size={14} />
             </Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

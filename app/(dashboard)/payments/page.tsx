@@ -153,10 +153,10 @@ export default function PaymentsPage() {
             onChange={(e) => setFilterStatus(e.target.value)}
             className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
           >
-            <option value="all" className="bg-[#0B0F17]">All Status</option>
-            <option value="COMPLETED" className="bg-[#0B0F17]">Completed</option>
-            <option value="PENDING" className="bg-[#0B0F17]">Pending</option>
-            <option value="FAILED" className="bg-[#0B0F17]">Failed</option>
+            <option value="all" className="bg-[var(--background)]">All Status</option>
+            <option value="COMPLETED" className="bg-[var(--background)]">Completed</option>
+            <option value="PENDING" className="bg-[var(--background)]">Pending</option>
+            <option value="FAILED" className="bg-[var(--background)]">Failed</option>
           </select>
         </div>
 

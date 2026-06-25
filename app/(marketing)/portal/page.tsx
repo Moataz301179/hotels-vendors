@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 const ACCENT = "var(--accent-base)";
 
@@ -67,12 +66,7 @@ export default function PortalPage() {
       {/* ── Sidebar ── */}
       <aside className="w-full md:w-72 bg-black text-white flex flex-col justify-between shrink-0 border-r border-white/10">
         <div className="p-6">
-          {/* Brand Banner */}
-          <div className="flex items-center gap-3 mb-10">
-            <BrandLogo variant="dark" size="xs" />
-          </div>
-
-          <nav className="space-y-1.5">
+          <nav className="space-y-1.5 mt-6">
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block mb-3 pl-3">Main Portal</span>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-white"
               style={{ borderLeft: `2px solid ${ACCENT}` }}

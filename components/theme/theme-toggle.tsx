@@ -98,15 +98,15 @@ export function ThemeToggle() {
         onClick={() => setMode("fintech")}
         className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
         style={{
-          background: mode === "fintech" ? "#a3e635" : "transparent",
-          boxShadow: mode === "fintech" ? "0 0 8px rgba(163,230,53,0.4)" : "none",
+          background: mode === "fintech" ? "var(--accent-base)" : "transparent",
+          boxShadow: mode === "fintech" ? "0 0 8px rgba(255,107,0,0.4)" : "none",
         }}
         aria-label="Fintech theme"
       >
         <span
           className="block w-3 h-3 rounded-full"
           style={{
-            background: mode === "fintech" ? "#000" : "#a3e635",
+            background: mode === "fintech" ? "var(--foreground)" : "var(--accent-base)",
             opacity: mode === "fintech" ? 1 : 0.5,
           }}
         />

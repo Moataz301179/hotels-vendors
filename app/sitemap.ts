@@ -1,14 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getAllSlugs } from "@/lib/blog/posts";
 
-const BLOG_SLUGS = [
-  "ai-procurement-forecasting-hotels",
-  "eta-compliance-guide-for-hotels",
-  "reverse-factoring-egypt-hospitality",
-  "shared-route-logistics-red-sea-resorts",
-  "supplier-onboarding-egypt-guide",
-];
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://hotelsvendors.com";
 
   const routes = [
@@ -26,12 +19,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
   ];
 
-  const blogRoutes = BLOG_SLUGS.map((slug) => `/blog/${slug}`);
+  const slugs = await getAllSlugs();
+  const blogRoutes = slugs.map((slug) => `/blog/${slug}`);
 
   return [...routes, ...blogRoutes].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" || route === "/marketplace" ? "daily" : route.startsWith("/blog") ? "weekly" : "weekly",
-    priority: route === "" ? 1.0 : route === "/marketplace" ? 0.9 : route.startsWith("/blog") ? 0.6 : 0.7,
+    changeFrequency:
+      route === "" || route === "/marketplace"
+        ? "daily"
+        : route.startsWith("/blog")
+          ? "weekly"
+          : "weekly",
+    priority:
+      route === ""
+        ? 1.0
+        : route === "/marketplace"
+          ? 0.9
+          : route.startsWith("/blog")
+            ? 0.6
+            : 0.7,
   }));
 }

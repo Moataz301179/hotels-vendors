@@ -49,7 +49,7 @@ export function ChatInput({ input, onChange, onSend, disabled, placeholder, acce
           className="w-10 h-10 rounded-lg flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           style={{
             backgroundColor: effectiveAccent,
-            color: isLight ? "#ffffff" : "#0B0F1A",
+            color: isLight ? "#ffffff" : "var(--foreground)",
           }}
         >
           <Send size={16} />

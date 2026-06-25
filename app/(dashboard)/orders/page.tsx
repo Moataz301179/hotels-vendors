@@ -151,13 +151,13 @@ export default function OrdersPage() {
           onChange={(e) => setFilterStatus(e.target.value)}
           className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
         >
-          <option value="all" className="bg-[#0B0F17]">All Status</option>
-          <option value="PENDING_APPROVAL" className="bg-[#0B0F17]">Pending</option>
-          <option value="APPROVED" className="bg-[#0B0F17]">Approved</option>
-          <option value="CONFIRMED" className="bg-[#0B0F17]">Confirmed</option>
-          <option value="IN_TRANSIT" className="bg-[#0B0F17]">In Transit</option>
-          <option value="DELIVERED" className="bg-[#0B0F17]">Delivered</option>
-          <option value="CANCELLED" className="bg-[#0B0F17]">Cancelled</option>
+          <option value="all" className="bg-[var(--background)]">All Status</option>
+          <option value="PENDING_APPROVAL" className="bg-[var(--background)]">Pending</option>
+          <option value="APPROVED" className="bg-[var(--background)]">Approved</option>
+          <option value="CONFIRMED" className="bg-[var(--background)]">Confirmed</option>
+          <option value="IN_TRANSIT" className="bg-[var(--background)]">In Transit</option>
+          <option value="DELIVERED" className="bg-[var(--background)]">Delivered</option>
+          <option value="CANCELLED" className="bg-[var(--background)]">Cancelled</option>
         </select>
       </motion.div>
 

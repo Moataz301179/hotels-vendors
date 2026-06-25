@@ -1009,6 +1009,32 @@ model SpendRecord {
 }
 
 // ─────────────────────────────────────────
+// BLOG — Marketing content management
+// ─────────────────────────────────────────
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  titleAr     String?
+  excerpt     String
+  content     String   @db.Text
+  coverImage  String?
+  category    String   @default("insights")
+  tags        String[] @default([])
+  authorName  String   @default("HotelsVendors Team")
+  authorTitle String?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([published, publishedAt(sort: Desc)])
+}
+
+// ─────────────────────────────────────────
 // 9. AUDIT LOG (Immutable)
 // ─────────────────────────────────────────
 

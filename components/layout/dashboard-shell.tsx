@@ -29,7 +29,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
   }, []);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0B0F1A]">
+    <div className="flex h-screen w-full overflow-hidden bg-[var(--background)]">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${

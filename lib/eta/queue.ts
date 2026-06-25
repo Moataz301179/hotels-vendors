@@ -13,6 +13,7 @@ import { etaClient } from "./client";
 import { validateForSubmission } from "./validator";
 import { recordSwarmEvent } from "@/lib/swarm/monitoring";
 import { moveToDeadLetter } from "@/lib/queues/dead-letter";
+import { MANDATORY_DISCLAIMER } from "@/lib/compliance/fee-structure";
 
 // ── Queue ──
 export const etaQueue = new Queue("eta-submission", {
@@ -199,6 +200,8 @@ export function createEtaDeadLetterWorker(): Worker {
         data: { etaStatus: "MANUAL_RESOLUTION" },
       });
 
+      const finalReason = `${job.failedReason ?? "Unknown ETA failure"} | ${MANDATORY_DISCLAIMER}`;
+
       await prisma.auditLog.create({
         data: {
           tenantId,
@@ -206,7 +209,7 @@ export function createEtaDeadLetterWorker(): Worker {
           entityId: invoiceId,
           action: "ETA_SUBMIT_DLQ",
           actorId: "system",
-          afterState: JSON.stringify({ error: job.failedReason, attempts: job.attemptsMade }),
+          afterState: JSON.stringify({ error: finalReason, attempts: job.attemptsMade }),
         },
       });
 
@@ -214,7 +217,7 @@ export function createEtaDeadLetterWorker(): Worker {
         jobId: job.id,
         invoiceId,
         tenantId,
-        reason: job.failedReason,
+        reason: finalReason,
       });
 
       return { deadLettered: true };

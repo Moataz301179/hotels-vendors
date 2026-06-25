@@ -307,11 +307,11 @@ export default function SandboxPage() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#0B0F17", color: "#ffffff" }}>
+    <main className="min-h-screen" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)" }}>
       <MarketingNav />
 
       <section className="pt-24 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.04) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           {/* Header */}
@@ -321,14 +321,14 @@ export default function SandboxPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid rgba(163,230,53,0.12)", backgroundColor: "rgba(163,230,53,0.04)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3" style={{ border: "1px solid var(--accent-glow)", backgroundColor: "var(--accent-muted)" }}>
               <Zap size={11} style={{ color: "var(--accent-base)" }} />
-              <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
+              <span className="text-[10px] text-primary/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
-            <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-white mb-3">
+            <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-primary mb-3">
               Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, var(--accent-base), #00E5CC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
             </h1>
-            <p className="text-[13px] text-white/50 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[13px] text-primary/50 max-w-2xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting,<br className="hidden md:block" />
               ETA compliance, and embedded factoring work together in one unified platform.
             </p>
@@ -344,7 +344,7 @@ export default function SandboxPage() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                <p className="text-[10px] font-medium text-white/25 uppercase tracking-[0.15em] mb-5 text-center">
+                <p className="text-[10px] font-medium text-primary/25 uppercase tracking-[0.15em] mb-5 text-center">
                   Choose Your Stakeholder Role
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
@@ -361,8 +361,8 @@ export default function SandboxPage() {
                         onClick={() => setSelectedRole(r.key)}
                         className="rounded-xl p-5 text-left transition-all"
                         style={{
-                          backgroundColor: "#0B0F17",
-                          border: "1px solid rgba(255,255,255,0.06)",
+                          backgroundColor: "var(--background)",
+                          border: "1px solid var(--border-subtle)",
                         }}
                       >
                         <div
@@ -371,8 +371,8 @@ export default function SandboxPage() {
                         >
                           <Icon size={22} style={{ color: r.color }} />
                         </div>
-                        <h3 className="text-[14px] font-semibold text-white mb-1.5">{r.label}</h3>
-                        <p className="text-[11px] leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+                        <h3 className="text-[14px] font-semibold text-primary mb-1.5">{r.label}</h3>
+                        <p className="text-[11px] leading-relaxed mb-3" style={{ color: "var(--text-muted)" }}>
                           {r.description}
                         </p>
                         <div className="flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: r.color }}>
@@ -393,11 +393,11 @@ export default function SandboxPage() {
                 transition={{ duration: 0.4 }}
               >
                 {/* Toolbar */}
-                <div className="flex items-center justify-between mb-6 pb-4 border-b" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+                <div className="flex items-center justify-between mb-6 pb-4 border-b" style={{ borderColor: "var(--border-subtle)" }}>
                   <button
                     onClick={() => { setSelectedRole(null); handleReset(); }}
-                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-white/60 transition-colors"
-                    style={{ color: "rgba(255,255,255,0.3)" }}
+                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-primary/60 transition-colors"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     <ArrowLeft size={13} /> All Roles
                   </button>
@@ -411,8 +411,8 @@ export default function SandboxPage() {
 
                   <button
                     onClick={handleReset}
-                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-white/60 transition-colors"
-                    style={{ color: "rgba(255,255,255,0.3)" }}
+                    className="inline-flex items-center gap-1.5 text-[12px] hover:text-primary/60 transition-colors"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     <RotateCcw size={12} /> Reset
                   </button>
@@ -425,14 +425,14 @@ export default function SandboxPage() {
                     {/* Progress */}
                     <div className="mb-5">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
                           Step {Math.min(currentStep + 1, totalSteps)} of {totalSteps}
                         </span>
-                        <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
                           {completedSteps.size}/{totalSteps} completed
                         </span>
                       </div>
-                      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "var(--bg-surface-2)" }}>
                         <motion.div
                           className="h-full rounded-full"
                           style={{ backgroundColor: role!.color }}
@@ -501,8 +501,8 @@ export default function SandboxPage() {
                                     )}
                                   </div>
 
-                                  <h3 className="text-[14px] font-semibold text-white mb-1">{step.title}</h3>
-                                  <p className="text-[11px] leading-relaxed mb-2.5" style={{ color: "rgba(255,255,255,0.3)" }}>
+                                  <h3 className="text-[14px] font-semibold text-primary mb-1">{step.title}</h3>
+                                  <p className="text-[11px] leading-relaxed mb-2.5" style={{ color: "var(--text-muted)" }}>
                                     {step.description}
                                   </p>
 
@@ -540,7 +540,7 @@ export default function SandboxPage() {
                                       onClick={() => handleStartStep(i)}
                                       disabled={isRunning}
                                       className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold rounded-lg transition-all disabled:opacity-50"
-                                      style={{ backgroundColor: role!.color, color: "#000000" }}
+                                      style={{ backgroundColor: role!.color, color: "#fff" }}
                                     >
                                       {isRunning ? (
                                         <>
@@ -588,15 +588,15 @@ export default function SandboxPage() {
                           style={{ backgroundColor: role!.color + "06", border: `1px solid ${role!.color}20` }}
                         >
                           <Sparkles size={24} className="mx-auto mb-3" style={{ color: role!.color }} />
-                          <h3 className="text-[16px] font-bold text-white mb-1">Workflow Complete</h3>
-                          <p className="text-[11px] mb-4 max-w-sm mx-auto" style={{ color: "rgba(255,255,255,0.4)" }}>
+                          <h3 className="text-[16px] font-bold text-primary mb-1">Workflow Complete</h3>
+                          <p className="text-[11px] mb-4 max-w-sm mx-auto" style={{ color: "var(--text-muted)" }}>
                             You&apos;ve walked through the full {role!.label.toLowerCase()} workflow — exactly how HotelsVendors operates in production with real ETA compliance, cryptographic audit trails, and automated settlement.
                           </p>
                           <div className="flex flex-wrap justify-center gap-3">
                             <Link
                               href="/register"
-                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]"
-                              style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_var(--accent-glow)]"
+                              style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}
                             >
                               Get Full Access <ArrowRight size={13} />
                             </Link>

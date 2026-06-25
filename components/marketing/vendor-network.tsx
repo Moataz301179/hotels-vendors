@@ -48,7 +48,7 @@ const GOVERNORATES = [
 
 export function VendorNetwork() {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden" style={{ backgroundColor: "#000000" }}>
+    <section className="py-24 md:py-32 relative overflow-hidden" style={{ backgroundColor: "var(--background)" }}>
       <div
         className="absolute top-0 right-0 w-[500px] h-[400px] rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${AG} 0%, transparent 70%)`, opacity: 0.3 }}

@@ -46,7 +46,7 @@ const NAV_ITEMS = [
   { href: "/dashboard/shipping", label: "Logistics", icon: Truck },
 ];
 
-const BG_PAGE = "#0B0F17";
+const BG_PAGE = "var(--background)";
 const BG_SURFACE = "#111520";
 const BG_SIDEBAR = "#0D1119";
 const BORDER = "rgba(255,255,255,0.06)";

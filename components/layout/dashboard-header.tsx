@@ -39,7 +39,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
   const { mode, cycleMode } = useTheme();
 
   return (
-    <header className={`h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] ${mode === "original" ? "bg-[#000000]/90" : "bg-[#111827]/90"}`}>
+    <header className={`h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] ${mode === "original" ? "bg-[var(--background)]/90" : "bg-[#111827]/90"}`}>
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button

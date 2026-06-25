@@ -243,7 +243,7 @@ export default function HotelCatalogPage() {
         </div>
 
         {/* Category Nav */}
-        <div className="border-b border-white/[0.06] bg-[#0B0F17]/50 backdrop-blur-sm">
+        <div className="border-b border-white/[0.06] bg-[var(--background)]/50 backdrop-blur-sm">
           <div className="max-w-[1600px] mx-auto px-6">
             <CategoryNav
               activeCategory={activeCategory}
@@ -270,11 +270,11 @@ export default function HotelCatalogPage() {
               <div className="flex items-center gap-2">
                 <ArrowUpDown className="w-3.5 h-3.5 text-white/30" />
                 <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-sm text-white/60 outline-none cursor-pointer">
-                  <option value="relevance" className="bg-[#0B0F17]">Relevance</option>
-                  <option value="price_low" className="bg-[#0B0F17]">Price: Low to High</option>
-                  <option value="price_high" className="bg-[#0B0F17]">Price: High to Low</option>
-                  <option value="rating" className="bg-[#0B0F17]">Top Rated</option>
-                  <option value="lead_time" className="bg-[#0B0F17]">Fastest Delivery</option>
+                  <option value="relevance" className="bg-[var(--background)]">Relevance</option>
+                  <option value="price_low" className="bg-[var(--background)]">Price: Low to High</option>
+                  <option value="price_high" className="bg-[var(--background)]">Price: High to Low</option>
+                  <option value="rating" className="bg-[var(--background)]">Top Rated</option>
+                  <option value="lead_time" className="bg-[var(--background)]">Fastest Delivery</option>
                 </select>
               </div>
               <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">

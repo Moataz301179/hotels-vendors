@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff, ArrowRight, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -69,7 +68,6 @@ function ResetPasswordForm() {
         transition={{ duration: 0.5 }}
         className="lg:hidden flex items-center gap-3 mb-8 justify-center"
       >
-        <BrandLogo variant="dark" size="md" />
         <div>
           <h1 className="text-lg font-bold tracking-tight text-white">HotelsVendors</h1>
           <p className="text-[10px] text-gray-500 uppercase tracking-wider">
@@ -139,7 +137,7 @@ function ResetPasswordForm() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min 6 characters"
                     required
-                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
+                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-[var(--background)] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                   <button
                     type="button"
@@ -163,7 +161,7 @@ function ResetPasswordForm() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repeat your password"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[var(--background)] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                 </div>
               </div>
@@ -206,9 +204,9 @@ export default function ResetPasswordPage() {
     <Suspense fallback={
       <div className="animate-pulse">
         <div className="rounded-2xl border border-white/[0.06] bg-[#111827] p-8">
-          <div className="h-6 bg-[#0B0F1A] rounded w-1/3 mb-4" />
-          <div className="h-12 bg-[#0B0F1A] rounded mb-4" />
-          <div className="h-12 bg-[#0B0F1A] rounded" />
+          <div className="h-6 bg-[var(--background)] rounded w-1/3 mb-4" />
+          <div className="h-12 bg-[var(--background)] rounded mb-4" />
+          <div className="h-12 bg-[var(--background)] rounded" />
         </div>
       </div>
     }>

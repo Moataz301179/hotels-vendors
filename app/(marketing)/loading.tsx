@@ -1,10 +1,10 @@
 export default function MarketingLoading() {
   return (
-    <div className="min-h-screen bg-[#0B0F17]">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Nav skeleton */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <div className="bg-[var(--accent-base)] h-8" />
-        <div className="bg-[#0B0F17] border-b border-white/[0.06] h-[68px] flex items-center justify-between px-6 max-w-7xl mx-auto">
+        <div className="bg-[var(--background)] border-b border-white/[0.06] h-[68px] flex items-center justify-between px-6 max-w-7xl mx-auto">
           <div className="w-40 h-8 bg-white/10 rounded-lg animate-pulse" />
           <div className="hidden lg:flex items-center gap-4">
             {Array.from({ length: 5 }).map((_, i) => (

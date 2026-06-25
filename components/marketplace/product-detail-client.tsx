@@ -90,7 +90,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
   const lowStock = product.stockQuantity > 0 && product.stockQuantity < 20;
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] text-white">
+    <div className="min-h-screen bg-[var(--background)] text-white">
       <MarketingNav />
 
       {/* Breadcrumb + Actions */}
@@ -130,7 +130,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image */}
-          <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0B0F17]">
+          <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/[0.06] bg-[var(--background)]">
             <ProductImage product={product} />
           </div>
 

@@ -6,8 +6,7 @@ import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-
-const ACCENT = "#FF6B00";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,15 +32,15 @@ export function MarketingNav() {
       <header
         className="marketing-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? "rgba(11,15,23,0.92)" : "transparent",
-          borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.06)" : "transparent"}`,
+          backgroundColor: scrolled ? "rgba(246,247,249,0.92)" : "transparent",
+          borderBottom: `1px solid ${scrolled ? "var(--border-subtle)" : "transparent"}`,
           backdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none",
         }}
       >
-        <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between">
+        <div className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between font-sans">
           {/* Brand */}
           <Link href="/" className="relative z-10">
-            <BrandLogo variant="dark" size="md" />
+            <BrandLogo variant="light" size="md" />
           </Link>
 
           {/* Desktop nav — centered */}
@@ -50,7 +49,7 @@ export function MarketingNav() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-xl transition-colors text-white/50 hover:text-white hover:bg-white/[0.06]"
+                className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-xl transition-colors text-muted hover:text-primary hover:bg-surface-hover"
               >
                 {item.label}
               </Link>
@@ -62,14 +61,14 @@ export function MarketingNav() {
             <ThemeToggle />
             <Link
               href="/login"
-              className="text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-xl transition-colors text-white/60 hover:text-white"
+              className="text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-xl transition-colors text-secondary hover:text-primary"
             >
               Sign In
             </Link>
             <button
               onClick={() => setWizardOpen(true)}
               className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:shadow-lg cursor-pointer"
-              style={{ background: ACCENT, color: "#ffffff" }}
+              style={{ background: "var(--accent-base)", color: "var(--accent-text)" }}
             >
               Get Started
             </button>
@@ -77,7 +76,7 @@ export function MarketingNav() {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden p-2 rounded-xl transition-colors text-white/60 hover:text-white"
+            className="lg:hidden p-2 rounded-xl transition-colors text-secondary hover:text-primary"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -90,8 +89,8 @@ export function MarketingNav() {
           <div
             className="lg:hidden backdrop-blur-md"
             style={{
-              backgroundColor: "rgba(0,0,0,0.98)",
-              borderTop: "1px solid rgba(255,255,255,0.06)",
+              backgroundColor: "rgba(246,247,249,0.98)",
+              borderTop: "1px solid var(--border-subtle)",
             }}
           >
             <div className="px-6 py-5 space-y-1">
@@ -99,7 +98,7 @@ export function MarketingNav() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors text-white/50 hover:text-white"
+                  className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors text-muted hover:text-primary"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.label}
@@ -107,11 +106,11 @@ export function MarketingNav() {
               ))}
               <div
                 className="pt-4 mt-2 flex flex-col gap-2 border-t"
-                style={{ borderColor: "rgba(255,255,255,0.06)" }}
+                style={{ borderColor: "var(--border-subtle)" }}
               >
                 <Link
                   href="/login"
-                  className="w-full text-center py-2.5 text-[12px] font-medium border rounded-xl transition-colors border-white/10 text-white/40 hover:text-white hover:bg-white/5"
+                  className="w-full text-center py-2.5 text-[12px] font-medium border rounded-xl transition-colors border-white/40 text-muted hover:text-primary hover:bg-surface-hover"
                   onClick={() => setMobileOpen(false)}
                 >
                   Sign In
@@ -122,7 +121,7 @@ export function MarketingNav() {
                     setWizardOpen(true);
                   }}
                   className="w-full text-center py-2.5 text-[12px] font-semibold rounded-xl transition-all text-white cursor-pointer"
-                  style={{ background: ACCENT }}
+                  style={{ background: "var(--accent-base)" }}
                 >
                   Get Started
                 </button>

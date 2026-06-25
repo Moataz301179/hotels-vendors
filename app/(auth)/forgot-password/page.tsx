@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, ArrowLeft, ArrowRight, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -46,7 +45,6 @@ export default function ForgotPasswordPage() {
         transition={{ duration: 0.5 }}
         className="lg:hidden flex items-center gap-3 mb-8 justify-center"
       >
-        <BrandLogo variant="dark" size="md" />
         <div>
           <h1 className="text-lg font-bold tracking-tight text-white">HotelsVendors</h1>
           <p className="text-[10px] text-gray-500 uppercase tracking-wider">
@@ -117,7 +115,7 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@hotel.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#0B0F1A] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[var(--background)] border border-white/[0.06] text-sm text-white placeholder:text-gray-600 outline-none focus:border-accent-base/60 focus:ring-1 focus:ring-accent-base/20 transition-all"
                   />
                 </div>
               </div>

@@ -30,8 +30,8 @@ export function GlobalHeader() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? isOriginal
-            ? "bg-[#000000]/95 backdrop-blur-sm border-b border-white/5"
-            : "bg-[#0B0F1A]/95 backdrop-blur-sm border-b border-white/5"
+            ? "bg-[var(--background)]/95 backdrop-blur-sm border-b border-white/5"
+            : "bg-[var(--background)]/95 backdrop-blur-sm border-b border-white/5"
           : "bg-transparent"
       }`}
     >
@@ -84,7 +84,7 @@ export function GlobalHeader() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="lg:hidden bg-[#0B0F1A]/98 border-t border-white/5 backdrop-blur-md">
+        <div className="lg:hidden bg-[var(--background)]/98 border-t border-white/5 backdrop-blur-md">
           <nav className="px-6 py-5 space-y-1">
             {navItems.map((item) => (
               <Link

@@ -29,25 +29,24 @@ import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboa
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
 import { LogisticsDashboardMockup } from "@/components/marketing/logistics-dashboard-mockup";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN TOKENS (Theme A — Dark Fintech)
-   Uses CSS variables from [data-theme="fintech"] block.
+   DESIGN TOKENS — Orange mobile services light theme
+   Uses CSS variables from :root (orange light default).
    ═══════════════════════════════════════════════════════════════ */
-const ACCENT = "var(--accent-base, #a3e635)";
-const ACCENT_LIGHT = "var(--accent-light, #bef264)";
-const ACCENT_MUTED = "var(--accent-muted, rgba(163,230,53,0.08))";
-const ACCENT_BORDER = "var(--border-accent, rgba(163,230,53,0.30))";
-const BG = "var(--bg-canvas, #000000)";
-const TEXT = "var(--text-primary, #ffffff)";
-const TEXT_SECONDARY = "var(--text-secondary, #a3e635)";
-const TEXT_MUTED = "var(--text-muted, rgba(255,255,255,0.5))";
-const SURFACE = "var(--surface, #ffffff)";
-const TEXT_INVERSE = "var(--text-inverse, #000000)";
+const ACCENT = "var(--accent-base, #FF6B00)";
+const ACCENT_LIGHT = "var(--accent-light, #FF8A33)";
+const ACCENT_MUTED = "var(--accent-muted, rgba(255,107,0,0.08))";
+const ACCENT_BORDER = "var(--border-accent, rgba(255,107,0,0.30))";
+const BG = "var(--bg-canvas, #F6F7F9)";
+const TEXT = "var(--text-primary, #0F172A)";
+const TEXT_SECONDARY = "var(--text-secondary, #475569)";
+const TEXT_MUTED = "var(--text-muted, #94A3B8)";
+const SURFACE = "var(--surface, #FFFFFF)";
+const TEXT_INVERSE = "var(--text-inverse, #FFFFFF)";
 
-const SANS = "'Jakarta Sans', 'Inter', system-ui, sans-serif";
+const SANS = "var(--font-sans, 'Jakarta Sans, Inter, system-ui, sans-serif')";
 
 /* ═══════════════════════════════════════════════════════════════
    SHARED HELPERS
@@ -99,14 +98,14 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
       className="relative rounded-3xl p-4"
       style={{
         background: SURFACE,
-        border: "1px solid rgba(0,0,0,0.08)",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)",
+        border: "1px solid var(--border-subtle)",
+        boxShadow: "0 20px 60px rgba(15,23,42,0.10), 0 0 0 1px var(--border-subtle)",
       }}
     >
       {/* Role switcher tabs */}
       <div
         className="flex gap-1 p-1.5 mb-4 rounded-xl"
-        style={{ backgroundColor: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}
+        style={{ backgroundColor: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
       >
         {roles.map((role) => {
           const Icon = role.icon;
@@ -118,7 +117,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-[11px] transition-all cursor-pointer"
               style={{
                 backgroundColor: isActive ? ACCENT : "transparent",
-                color: isActive ? "#000" : "rgba(0,0,0,0.45)",
+                color: isActive ? "#fff" : "var(--text-muted)",
                 fontFamily: SANS,
                 fontWeight: isActive ? 600 : 500,
               }}
@@ -130,25 +129,25 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
         })}
       </div>
 
-      {/* Dashboard preview area — black screen */}
+      {/* Dashboard preview area */}
       <div
         className="rounded-2xl overflow-hidden relative"
-        style={{ border: "1px solid rgba(0,0,0,0.06)", backgroundColor: "#000" }}
+        style={{ border: "1px solid var(--border-subtle)", backgroundColor: "var(--bg-surface-3)" }}
       >
         {/* Hover overlay with CTA */}
         <div
           className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+          style={{ backgroundColor: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)" }}
         >
           <button
             onClick={onCTAClick}
             className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] transition-all hover:scale-105 cursor-pointer"
             style={{
               background: ACCENT,
-              color: "#000",
+              color: "#fff",
               fontFamily: SANS,
               fontWeight: 600,
-              boxShadow: "0 0 20px rgba(163,230,53,0.2)",
+              boxShadow: "0 0 20px var(--accent-glow)",
             }}
           >
             <Play size={14} />
@@ -174,7 +173,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 
       {/* Bottom CTA bar */}
       <div className="mt-4 flex items-center justify-between px-2 py-2">
-        <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.35)", fontFamily: SANS }}>
+        <span className="text-[10px]" style={{ color: "var(--text-muted)", fontFamily: SANS }}>
           Live preview — click to explore
         </span>
         <Link
@@ -203,25 +202,15 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
     <section className="relative overflow-hidden" style={{ background: BG }}>
       {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none opacity-[0.06]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+            "linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
         }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[80px] md:pt-[100px] pb-20 md:pb-28">
-        {/* Brand logo — prominent */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-8"
-        >
-          <BrandLogo variant="dark" size="lg" />
-        </motion.div>
-
         {/* Headline + sub */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -275,7 +264,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 <Mail
                   size={16}
                   className="absolute left-4 top-1/2 -translate-y-1/2"
-                  style={{ color: "rgba(255,255,255,0.3)" }}
+                  style={{ color: "var(--text-muted, #94A3B8)" }}
                 />
                 <input
                   type="email"
@@ -284,8 +273,8 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                   placeholder="Enter your work email"
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
                   style={{
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    backgroundColor: "var(--bg-surface-2, #F8F9FC)",
+                    border: "1px solid var(--border-subtle)",
                     color: TEXT,
                     fontFamily: SANS,
                   }}
@@ -294,7 +283,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                     e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT_MUTED}`;
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                    e.currentTarget.style.borderColor = "var(--border-subtle)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
@@ -309,10 +298,10 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
                 style={{
                   background: ACCENT,
-                  color: "#000",
+                  color: "#fff",
                   fontFamily: SANS,
                   fontWeight: 600,
-                  boxShadow: "0 0 16px rgba(163,230,53,0.15)",
+                  boxShadow: "0 0 16px var(--accent-glow)",
                 }}
               >
                 Get Started
@@ -321,10 +310,10 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           ) : (
             <div
               className="flex items-center gap-2 px-4 py-3 rounded-xl"
-              style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
+              style={{ backgroundColor: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)" }}
             >
-              <CheckCircle2 size={16} style={{ color: "#22C55E" }} />
-              <span className="text-[13px]" style={{ color: "rgba(255,255,255,0.6)", fontFamily: SANS }}>
+              <CheckCircle2 size={16} style={{ color: "#16A34A" }} />
+              <span className="text-[13px]" style={{ color: "var(--text-secondary)", fontFamily: SANS }}>
                 You&apos;re on the list. We&apos;ll be in touch shortly.
               </span>
             </div>
@@ -337,7 +326,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
           className="flex flex-wrap justify-center items-center gap-5 mt-6 text-[11px]"
-          style={{ color: "rgba(255,255,255,0.3)", fontFamily: SANS }}
+          style={{ color: TEXT_MUTED, fontFamily: SANS }}
         >
           <span className="flex items-center gap-1.5">
             <ShieldCheck size={12} style={{ color: ACCENT }} />
@@ -363,7 +352,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           <a
             href="#problem"
             className="flex flex-col items-center gap-1.5 transition-colors"
-            style={{ color: "rgba(255,255,255,0.2)" }}
+            style={{ color: TEXT_MUTED }}
           >
             <span className="text-[9px] tracking-[0.2em] uppercase" style={{ fontFamily: SANS, fontWeight: 500 }}>
               Scroll to discover
@@ -418,7 +407,7 @@ function ProblemSection() {
             <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
             <p
               className="text-[14px] max-w-lg mx-auto"
-              style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+              style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
             >
               Egypt&apos;s coastal resorts lose 15–25% of procurement value to inefficiency. Here&apos;s what that looks like.
             </p>
@@ -429,22 +418,18 @@ function ProblemSection() {
           {problems.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
               <div
-                className="rounded-2xl p-6 h-full"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(239,68,68,0.12)",
-                }}
+                className="surface-card p-6 h-full"
               >
                 <div className="text-[24px] mb-3">{p.icon}</div>
                 <h3
                   className="text-[15px] mb-2"
-                  style={{ fontFamily: SANS, fontWeight: 500, color: "rgba(255,255,255,0.9)" }}
+                  style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
                 >
                   {p.title}
                 </h3>
                 <p
                   className="text-[13px] leading-relaxed"
-                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}
+                  style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
                 >
                   {p.desc}
                 </p>
@@ -516,11 +501,7 @@ function HowItWorks() {
             return (
               <Reveal key={item.num} delay={i * 0.1}>
                 <div
-                  className="rounded-2xl p-6 h-full group"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
+                  className="surface-card p-6 h-full group"
                 >
                   <div
                     className="text-[10px] mb-4 uppercase tracking-wider"
@@ -531,18 +512,18 @@ function HowItWorks() {
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all duration-300"
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      backgroundColor: ACCENT_MUTED,
+                      border: `1px solid ${ACCENT_BORDER}`,
                     }}
                   >
-                    <StepIcon size={18} style={{ color: "rgba(255,255,255,0.4)" }} />
+                    <StepIcon size={18} style={{ color: ACCENT }} />
                   </div>
                   <h3 className="text-[15px] mb-2" style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}>
                     {item.title}
                   </h3>
                   <p
                     className="text-[12px] leading-relaxed"
-                    style={{ fontFamily: SANS, color: "rgba(255,255,255,0.4)", fontWeight: 400 }}
+                    style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
                   >
                     {item.desc}
                   </p>
@@ -621,11 +602,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
             return (
               <Reveal key={role.title} delay={i * 0.1}>
                 <div
-                  className="rounded-2xl p-8 md:p-10"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.015)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
+                  className="surface-card p-8 md:p-10"
                 >
                   <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
                     <div className="flex-1">
@@ -656,7 +633,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                           <li
                             key={p}
                             className="flex items-start gap-2.5 text-[13px]"
-                            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}
+                            style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
                           >
                             <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: ACCENT }} />
                             {p}
@@ -668,10 +645,10 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                         className="inline-flex items-center gap-2 px-6 py-3 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
                         style={{
                           background: ACCENT,
-                          color: "#000",
+                          color: "#fff",
                           fontFamily: SANS,
                           fontWeight: 600,
-                          boxShadow: "0 0 16px rgba(163,230,53,0.12)",
+                          boxShadow: "0 0 16px var(--accent-glow)",
                         }}
                       >
                         {role.cta}
@@ -712,13 +689,13 @@ function SocialProof() {
                 </div>
                 <div
                   className="text-[13px]"
-                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.55)", fontWeight: 400 }}
+                  style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
                 >
                   {stat.label}
                 </div>
                 <div
                   className="text-[11px] mt-0.5"
-                  style={{ fontFamily: SANS, color: "rgba(255,255,255,0.3)", fontWeight: 400 }}
+                  style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
                 >
                   {stat.sub}
                 </div>
@@ -741,7 +718,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse, rgba(163,230,53,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%)",
         }}
       />
       <div className="max-w-3xl mx-auto px-6 text-center relative">
@@ -765,10 +742,10 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
               style={{
                 background: ACCENT,
-                color: "#000",
+                color: "#fff",
                 fontFamily: SANS,
                 fontWeight: 600,
-                boxShadow: "0 0 24px rgba(163,230,53,0.15)",
+                boxShadow: "0 0 24px var(--accent-glow)",
               }}
             >
               Get Started Free
@@ -778,8 +755,8 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
               href="/sandbox"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200"
               style={{
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(255,255,255,0.6)",
+                border: "1px solid var(--border-visible)",
+                color: TEXT_SECONDARY,
                 fontFamily: SANS,
                 fontWeight: 500,
               }}
@@ -790,7 +767,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
           </div>
           <p
             className="text-[11px] mt-8"
-            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.25)", fontWeight: 400 }}
+            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
           >
             No credit card required · Free forever for hotels · Dedicated onboarding
           </p>

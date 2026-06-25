@@ -126,21 +126,21 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow label="Default Currency" description="Primary currency for all transactions">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">EGP - Egyptian Pound</option>
-                  <option className="bg-[#0B0F17]">USD - US Dollar</option>
-                  <option className="bg-[#0B0F17]">EUR - Euro</option>
+                  <option className="bg-[var(--background)]">EGP - Egyptian Pound</option>
+                  <option className="bg-[var(--background)]">USD - US Dollar</option>
+                  <option className="bg-[var(--background)]">EUR - Euro</option>
                 </select>
               </SettingRow>
               <SettingRow label="Default Language" description="Interface language for new users">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">English</option>
-                  <option className="bg-[#0B0F17]">العربية</option>
+                  <option className="bg-[var(--background)]">English</option>
+                  <option className="bg-[var(--background)]">العربية</option>
                 </select>
               </SettingRow>
               <SettingRow label="Time Zone" description="Default timezone for scheduling and reports">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">Africa/Cairo (GMT+2)</option>
-                  <option className="bg-[#0B0F17]">UTC</option>
+                  <option className="bg-[var(--background)]">Africa/Cairo (GMT+2)</option>
+                  <option className="bg-[var(--background)]">UTC</option>
                 </select>
               </SettingRow>
             </div>
@@ -175,17 +175,17 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow label="Session Timeout" description="Auto-logout after inactivity">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">15 minutes</option>
-                  <option className="bg-[#0B0F17]">30 minutes</option>
-                  <option className="bg-[#0B0F17]">1 hour</option>
-                  <option className="bg-[#0B0F17]">Never</option>
+                  <option className="bg-[var(--background)]">15 minutes</option>
+                  <option className="bg-[var(--background)]">30 minutes</option>
+                  <option className="bg-[var(--background)]">1 hour</option>
+                  <option className="bg-[var(--background)]">Never</option>
                 </select>
               </SettingRow>
               <SettingRow label="Password Policy" description="Minimum requirements for user passwords">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">Strong (12+ chars)</option>
-                  <option className="bg-[#0B0F17]">Medium (8+ chars)</option>
-                  <option className="bg-[#0B0F17]">Basic (6+ chars)</option>
+                  <option className="bg-[var(--background)]">Strong (12+ chars)</option>
+                  <option className="bg-[var(--background)]">Medium (8+ chars)</option>
+                  <option className="bg-[var(--background)]">Basic (6+ chars)</option>
                 </select>
               </SettingRow>
               <SettingRow label="API Key" description="Your platform API key for integrations">
@@ -321,9 +321,9 @@ export default function SettingsPage() {
               <h3 className="text-sm font-semibold text-white mb-4">Appearance</h3>
               <SettingRow label="Theme" description="Interface color scheme">
                 <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
-                  <option className="bg-[#0B0F17]">Dark</option>
-                  <option className="bg-[#0B0F17]">Light</option>
-                  <option className="bg-[#0B0F17]">System</option>
+                  <option className="bg-[var(--background)]">Dark</option>
+                  <option className="bg-[var(--background)]">Light</option>
+                  <option className="bg-[var(--background)]">System</option>
                 </select>
               </SettingRow>
               <SettingRow label="Accent Color" description="Primary brand color">

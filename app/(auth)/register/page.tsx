@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import {
   Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote, Sparkles,
 } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 
 const SECTORS = [
@@ -85,9 +84,7 @@ function RegisterContent() {
   }, [sectorParam]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0B0F17" }}>
-      <MarketingNav />
-
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
       <div className="flex-1 px-6 py-24">
         <div className="mx-auto max-w-5xl">
           <motion.div
@@ -100,13 +97,13 @@ function RegisterContent() {
               <Sparkles size={12} />
               AI-Powered Registration — 2 minutes
             </div>
-            <h1 className="text-[20px] md:text-[24px] font-medium text-white mb-3">
+            <h1 className="text-[20px] md:text-[24px] font-medium text-primary mb-3">
               Choose Your Role
             </h1>
-            <p className="text-[14px] text-white/40 max-w-lg mx-auto">
+            <p className="text-[14px] text-muted max-w-lg mx-auto">
               Select your stakeholder type and our AI wizard will guide you through registration.
             </p>
-            <p className="text-[12px] text-white/25 mt-1" dir="rtl">
+            <p className="text-[12px] text-muted mt-1" dir="rtl">
               اختر نوع الحساب وسيقوم المساعد الذكي بتوجيهك خلال التسجيل
             </p>
           </motion.div>
@@ -125,8 +122,8 @@ function RegisterContent() {
                     onClick={() => setWizardOpen(true)}
                     className="block w-full rounded-2xl p-6 h-full transition-all group hover:scale-[1.02] text-left cursor-pointer"
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      backgroundColor: "var(--bg-surface-2)",
+                      border: "1px solid var(--border-visible)",
                       backdropFilter: "blur(12px)",
                     }}
                   >
@@ -138,8 +135,8 @@ function RegisterContent() {
                         <Icon size={24} style={{ color: sector.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-semibold text-white mb-0.5">{sector.label}</h3>
-                        <p className="text-[11px] text-white/25 font-medium" dir="rtl">{sector.labelAr}</p>
+                        <h3 className="text-[15px] font-semibold text-primary mb-0.5">{sector.label}</h3>
+                        <p className="text-[11px] text-muted font-medium" dir="rtl">{sector.labelAr}</p>
                       </div>
                       <ArrowRight
                         size={16}
@@ -148,12 +145,12 @@ function RegisterContent() {
                       />
                     </div>
 
-                    <p className="text-[12px] text-white/40 leading-relaxed mb-3">{sector.description}</p>
-                    <p className="text-[11px] text-white/25 leading-relaxed mb-4" dir="rtl">{sector.descriptionAr}</p>
+                    <p className="text-[12px] text-muted leading-relaxed mb-3">{sector.description}</p>
+                    <p className="text-[11px] text-muted leading-relaxed mb-4" dir="rtl">{sector.descriptionAr}</p>
 
                     <ul className="space-y-1.5">
                       {sector.benefits.map((b) => (
-                        <li key={b} className="flex items-center gap-2 text-[11px] text-white/45">
+                        <li key={b} className="flex items-center gap-2 text-[11px] text-muted">
                           <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: sector.color }} />
                           {b}
                         </li>
@@ -184,14 +181,14 @@ function RegisterContent() {
               { icon: Clock, label: "2 min registration", color: "#3B82F6" },
               { icon: Banknote, label: "No credit card required", color: "#A855F7" },
             ].map((t) => (
-              <span key={t.label} className="flex items-center gap-1.5 text-[10px] text-white/30">
+              <span key={t.label} className="flex items-center gap-1.5 text-[10px] text-muted">
                 <t.icon size={12} style={{ color: t.color }} />
                 {t.label}
               </span>
             ))}
           </motion.div>
 
-          <p className="text-center text-[12px] text-white/20 mt-6">
+          <p className="text-center text-[12px] text-muted mt-6">
             Already have an account?{" "}
             <Link href="/login" className="text-[#FF6B00] hover:underline font-medium">
               Sign in
@@ -210,7 +207,7 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0B0F17" }} />}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }} />}>
       <RegisterContent />
     </Suspense>
   );

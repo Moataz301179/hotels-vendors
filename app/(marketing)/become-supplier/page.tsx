@@ -164,29 +164,29 @@ export default function SupplierOnboardingPage() {
             <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-8">
               <CheckCircle2 size={40} className="text-emerald-400" />
             </div>
-            <h1 className="text-3xl font-medium text-white mb-4">Application Submitted</h1>
-            <p className="text-white/40 text-lg mb-10 max-w-md mx-auto">
+            <h1 className="text-3xl font-medium text-primary mb-4">Application Submitted</h1>
+            <p className="text-primary/40 text-lg mb-10 max-w-md mx-auto">
               Thank you for applying to join Hotels Vendors. Our compliance team will review your application within 2–3 business days.
             </p>
 
-            <div className="p-6 rounded-2xl bg-[#0B0F17] border border-white/[0.06] text-left space-y-4 mb-10">
-              <p className="text-[11px] font-medium text-white/30 uppercase tracking-wider">What happens next?</p>
+            <div className="p-6 rounded-2xl bg-[var(--background)] border border-subtle text-left space-y-4 mb-10">
+              <p className="text-[11px] font-medium text-primary/30 uppercase tracking-wider">What happens next?</p>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-white/50" /></div>
-                <div><p className="text-sm font-medium text-white">Document Verification</p><p className="text-sm text-white/35">Our compliance team reviews your commercial registration and tax documents.</p></div>
+                <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-primary/50" /></div>
+                <div><p className="text-sm font-medium text-primary">Document Verification</p><p className="text-sm text-primary/35">Our compliance team reviews your commercial registration and tax documents.</p></div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0"><Factory size={16} className="text-white/50" /></div>
-                <div><p className="text-sm font-medium text-white">Factory or Site Visit</p><p className="text-sm text-white/35">For PREMIER tier applicants, we conduct an on-site quality assessment.</p></div>
+                <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center shrink-0"><Factory size={16} className="text-primary/50" /></div>
+                <div><p className="text-sm font-medium text-primary">Factory or Site Visit</p><p className="text-sm text-primary/35">For PREMIER tier applicants, we conduct an on-site quality assessment.</p></div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0"><Truck size={16} className="text-white/50" /></div>
-                <div><p className="text-sm font-medium text-white">Onboarding Call</p><p className="text-sm text-white/35">We help you set up your product catalog, pricing, and delivery zones.</p></div>
+                <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center shrink-0"><Truck size={16} className="text-primary/50" /></div>
+                <div><p className="text-sm font-medium text-primary">Onboarding Call</p><p className="text-sm text-primary/35">We help you set up your product catalog, pricing, and delivery zones.</p></div>
               </div>
             </div>
 
             <div className="flex gap-4 justify-center">
-              <Link href="/" className="px-6 py-3 rounded-xl bg-[#0B0F17] border border-white/[0.06] text-white/60 text-sm font-medium hover:bg-white/[0.04] transition-colors">Back to Home</Link>
+              <Link href="/" className="px-6 py-3 rounded-xl bg-[var(--background)] border border-subtle text-primary/60 text-sm font-medium hover:bg-surface-hover transition-colors">Back to Home</Link>
               <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[var(--accent-base)] text-black text-sm font-medium hover:bg-[#FF8A33] transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
@@ -201,19 +201,19 @@ export default function SupplierOnboardingPage() {
       <MarketingNav />
 
       {/* Hero */}
-      <section className="relative pt-36 pb-16 border-b border-white/[0.04]">
+      <section className="relative pt-36 pb-16 border-b border-subtle">
         <div className="max-w-6xl mx-auto px-6">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/60 text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-hover border border-subtle text-primary/60 text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
               <Store className="w-3 h-3" />
               Supplier Onboarding
             </div>
-            <h1 className="text-[32px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+            <h1 className="text-[32px] md:text-[44px] font-medium text-primary leading-[1.1] tracking-[-0.02em]">
               Join Egypt&apos;s Leading
               <br />
               <span className="text-[var(--accent-base)]">Hospitality Supply Network</span>
             </h1>
-            <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
+            <p className="mt-5 text-[15px] text-primary/40 leading-relaxed max-w-lg">
               Get direct access to verified hotel properties, guaranteed payments through embedded factoring, and shared-route logistics that cut your delivery costs. No bidding wars. No hidden fees.
             </p>
           </div>
@@ -236,14 +236,14 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-[var(--accent-base)] text-black" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
+                          isActive ? "bg-[var(--accent-base)] text-black" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-surface-hover text-primary/20 border border-subtle"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
-                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-white" : isCompleted ? "text-emerald-400/60" : "text-white/20"}`}>{s.label}</span>
+                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-primary" : isCompleted ? "text-emerald-400/60" : "text-primary/20"}`}>{s.label}</span>
                       </div>
                       {i < STEPS.length - 1 && (
-                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-emerald-500/20" : "bg-white/[0.04]"}`} />
+                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-emerald-500/20" : "bg-surface-hover"}`} />
                       )}
                     </div>
                   );
@@ -252,7 +252,7 @@ export default function SupplierOnboardingPage() {
             </div>
 
             {/* Form Card */}
-            <div className="rounded-2xl border border-white/[0.06] bg-[#0B0F17] overflow-hidden">
+            <div className="rounded-2xl border border-subtle bg-[var(--background)] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={step}
@@ -264,30 +264,30 @@ export default function SupplierOnboardingPage() {
                 >
                   {step === 1 && (
                     <div className="space-y-6">
-                      <h3 className="text-[15px] font-medium text-white mb-6 flex items-center gap-2.5">
-                        <Building2 size={18} className="text-white/40" />
+                      <h3 className="text-[15px] font-medium text-primary mb-6 flex items-center gap-2.5">
+                        <Building2 size={18} className="text-primary/40" />
                         Company Information
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Company Name <span className="text-red-400">*</span></label>
-                          <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Nile Fresh Foods" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Company Name <span className="text-red-400">*</span></label>
+                          <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Nile Fresh Foods" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Legal Name</label>
-                          <input type="text" value={form.legalName} onChange={(e) => updateField("legalName", e.target.value)} placeholder="Registered legal entity name" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Legal Name</label>
+                          <input type="text" value={form.legalName} onChange={(e) => updateField("legalName", e.target.value)} placeholder="Registered legal entity name" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Tax ID <span className="text-red-400">*</span></label>
-                          <input type="text" value={form.taxId} onChange={(e) => updateField("taxId", e.target.value.replace(/\D/g, ""))} placeholder="9-digit Egyptian tax ID" maxLength={9} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Tax ID <span className="text-red-400">*</span></label>
+                          <input type="text" value={form.taxId} onChange={(e) => updateField("taxId", e.target.value.replace(/\D/g, ""))} placeholder="9-digit Egyptian tax ID" maxLength={9} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Commercial Reg. No.</label>
-                          <input type="text" value={form.commercialReg} onChange={(e) => updateField("commercialReg", e.target.value)} placeholder="Commercial registration number" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Commercial Reg. No.</label>
+                          <input type="text" value={form.commercialReg} onChange={(e) => updateField("commercialReg", e.target.value)} placeholder="Commercial registration number" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Company Description</label>
-                          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Briefly describe your company, products, and target market..." rows={3} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors resize-none" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Company Description</label>
+                          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Briefly describe your company, products, and target market..." rows={3} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors resize-none" />
                         </div>
                       </div>
                     </div>
@@ -295,45 +295,45 @@ export default function SupplierOnboardingPage() {
 
                   {step === 2 && (
                     <div className="space-y-6">
-                      <h3 className="text-[15px] font-medium text-white mb-6 flex items-center gap-2.5">
-                        <MapPin size={18} className="text-white/40" />
+                      <h3 className="text-[15px] font-medium text-primary mb-6 flex items-center gap-2.5">
+                        <MapPin size={18} className="text-primary/40" />
                         Location & Contact
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Street Address</label>
-                          <input type="text" value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="Full street address" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Street Address</label>
+                          <input type="text" value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="Full street address" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">City <span className="text-red-400">*</span></label>
-                          <input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} placeholder="e.g. 6th of October" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">City <span className="text-red-400">*</span></label>
+                          <input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} placeholder="e.g. 6th of October" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Governorate <span className="text-red-400">*</span></label>
-                          <select value={form.governorate} onChange={(e) => updateField("governorate", e.target.value)} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] focus:border-white/[0.15] focus:outline-none transition-colors appearance-none">
-                            <option value="" className="bg-[#0B0F17]">Select governorate</option>
-                            {GOVERNORATES.map((g) => (<option key={g} value={g} className="bg-[#0B0F17]">{g}</option>))}
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Governorate <span className="text-red-400">*</span></label>
+                          <select value={form.governorate} onChange={(e) => updateField("governorate", e.target.value)} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] focus:border-visible focus:outline-none transition-colors appearance-none">
+                            <option value="" className="bg-[var(--background)]">Select governorate</option>
+                            {GOVERNORATES.map((g) => (<option key={g} value={g} className="bg-[var(--background)]">{g}</option>))}
                           </select>
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Phone <span className="text-red-400">*</span></label>
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Phone <span className="text-red-400">*</span></label>
                           <div className="relative">
-                            <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
-                            <input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="+20 1XX XXX XXXX" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                            <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/15" />
+                            <input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="+20 1XX XXX XXXX" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                           </div>
                         </div>
                         <div>
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Email <span className="text-red-400">*</span></label>
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Email <span className="text-red-400">*</span></label>
                           <div className="relative">
-                            <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
-                            <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} placeholder="contact@company.com" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                            <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/15" />
+                            <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} placeholder="contact@company.com" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                           </div>
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Website</label>
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Website</label>
                           <div className="relative">
-                            <Globe size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
-                            <input type="url" value={form.website} onChange={(e) => updateField("website", e.target.value)} placeholder="https://www.company.com" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                            <Globe size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/15" />
+                            <input type="url" value={form.website} onChange={(e) => updateField("website", e.target.value)} placeholder="https://www.company.com" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                           </div>
                         </div>
                       </div>
@@ -342,8 +342,8 @@ export default function SupplierOnboardingPage() {
 
                   {step === 3 && (
                     <div className="space-y-6">
-                      <h3 className="text-[15px] font-medium text-white mb-6 flex items-center gap-2.5">
-                        <Landmark size={18} className="text-white/40" />
+                      <h3 className="text-[15px] font-medium text-primary mb-6 flex items-center gap-2.5">
+                        <Landmark size={18} className="text-primary/40" />
                         Banking Details
                       </h3>
                       <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 mb-4">
@@ -354,12 +354,12 @@ export default function SupplierOnboardingPage() {
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">Bank Name <span className="text-red-400">*</span></label>
-                          <input type="text" value={form.bankName} onChange={(e) => updateField("bankName", e.target.value)} placeholder="e.g. National Bank of Egypt" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">Bank Name <span className="text-red-400">*</span></label>
+                          <input type="text" value={form.bankName} onChange={(e) => updateField("bankName", e.target.value)} placeholder="e.g. National Bank of Egypt" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[13px] font-medium text-white/50 mb-2">IBAN / Account Number <span className="text-red-400">*</span></label>
-                          <input type="text" value={form.bankAccount} onChange={(e) => updateField("bankAccount", e.target.value)} placeholder="EGXXXXXXXXXXXXXXXXXXXXXXXX" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                          <label className="block text-[13px] font-medium text-primary/50 mb-2">IBAN / Account Number <span className="text-red-400">*</span></label>
+                          <input type="text" value={form.bankAccount} onChange={(e) => updateField("bankAccount", e.target.value)} placeholder="EGXXXXXXXXXXXXXXXXXXXXXXXX" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                         </div>
                       </div>
                     </div>
@@ -367,17 +367,17 @@ export default function SupplierOnboardingPage() {
 
                   {step === 4 && (
                     <div className="space-y-8">
-                      <h3 className="text-[15px] font-medium text-white mb-6 flex items-center gap-2.5">
-                        <Package size={18} className="text-white/40" />
+                      <h3 className="text-[15px] font-medium text-primary mb-6 flex items-center gap-2.5">
+                        <Package size={18} className="text-primary/40" />
                         Product Capabilities
                       </h3>
                       <div>
-                        <label className="block text-[13px] font-medium text-white/50 mb-3">Product Categories <span className="text-red-400">*</span></label>
+                        <label className="block text-[13px] font-medium text-primary/50 mb-3">Product Categories <span className="text-red-400">*</span></label>
                         <div className="flex flex-wrap gap-2">
                           {CATEGORIES.map((cat) => {
                             const selected = form.categories.includes(cat);
                             return (
-                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[var(--accent-base)]/10 text-[var(--accent-base)] border border-[var(--accent-base)]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[var(--accent-base)]/10 text-[var(--accent-base)] border border-[var(--accent-base)]/20" : "bg-white/[0.03] text-primary/30 border border-subtle hover:border-visible hover:text-primary/50"}`}>
                                 {cat}
                               </button>
                             );
@@ -385,12 +385,12 @@ export default function SupplierOnboardingPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-white/50 mb-3">Delivery Areas</label>
+                        <label className="block text-[13px] font-medium text-primary/50 mb-3">Delivery Areas</label>
                         <div className="flex flex-wrap gap-2">
                           {DELIVERY_AREAS.map((area) => {
                             const selected = form.deliveryAreas.includes(area);
                             return (
-                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.03] text-primary/30 border border-subtle hover:border-visible hover:text-primary/50"}`}>
                                 {area}
                               </button>
                             );
@@ -398,12 +398,12 @@ export default function SupplierOnboardingPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-white/50 mb-3">Certifications</label>
+                        <label className="block text-[13px] font-medium text-primary/50 mb-3">Certifications</label>
                         <div className="flex flex-wrap gap-2">
                           {CERTIFICATIONS.map((cert) => {
                             const selected = form.certifications.includes(cert);
                             return (
-                              <button key={cert} onClick={() => toggleArray("certifications", cert)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={cert} onClick={() => toggleArray("certifications", cert)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-white/[0.03] text-primary/30 border border-subtle hover:border-visible hover:text-primary/50"}`}>
                                 {cert}
                               </button>
                             );
@@ -411,16 +411,16 @@ export default function SupplierOnboardingPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-white/50 mb-2">Minimum Order Value (EGP)</label>
-                        <input type="number" value={form.minOrderValue} onChange={(e) => updateField("minOrderValue", e.target.value)} placeholder="e.g. 5000" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors" />
+                        <label className="block text-[13px] font-medium text-primary/50 mb-2">Minimum Order Value (EGP)</label>
+                        <input type="number" value={form.minOrderValue} onChange={(e) => updateField("minOrderValue", e.target.value)} placeholder="e.g. 5000" className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-subtle text-primary text-[14px] placeholder:text-primary/15 focus:border-visible focus:outline-none transition-colors" />
                       </div>
                     </div>
                   )}
 
                   {step === 5 && (
                     <div className="space-y-8">
-                      <h3 className="text-[15px] font-medium text-white mb-6 flex items-center gap-2.5">
-                        <FileText size={18} className="text-white/40" />
+                      <h3 className="text-[15px] font-medium text-primary mb-6 flex items-center gap-2.5">
+                        <FileText size={18} className="text-primary/40" />
                         Review Your Application
                       </h3>
                       <div className="space-y-4">
@@ -450,14 +450,14 @@ export default function SupplierOnboardingPage() {
                           <ReviewRow label="Min. Order" value={form.minOrderValue ? `${form.minOrderValue} EGP` : "—"} />
                         </ReviewSection>
                       </div>
-                      <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                      <div className="p-4 rounded-xl bg-surface-hover border border-subtle">
                         <label className="flex items-start gap-3 cursor-pointer">
-                          <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-white focus:ring-white/20" />
-                          <span className="text-[13px] text-white/40">
+                          <input type="checkbox" className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-primary focus:ring-white/20" />
+                          <span className="text-[13px] text-primary/40">
                             I confirm that all information provided is accurate and I agree to the{" "}
-                            <span className="text-white/60 underline cursor-pointer">Terms of Service</span>{" "}
+                            <span className="text-primary/60 underline cursor-pointer">Terms of Service</span>{" "}
                             and{" "}
-                            <span className="text-white/60 underline cursor-pointer">Supplier Agreement</span>.
+                            <span className="text-primary/60 underline cursor-pointer">Supplier Agreement</span>.
                           </span>
                         </label>
                       </div>
@@ -474,8 +474,8 @@ export default function SupplierOnboardingPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between px-8 py-5 border-t border-white/[0.04]">
-                <button onClick={prevStep} disabled={step === 1} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/30 hover:text-white hover:bg-white/[0.04] disabled:opacity-20 disabled:cursor-not-allowed transition-colors text-[13px]">
+              <div className="flex items-center justify-between px-8 py-5 border-t border-subtle">
+                <button onClick={prevStep} disabled={step === 1} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.03] border border-subtle text-primary/30 hover:text-primary hover:bg-surface-hover disabled:opacity-20 disabled:cursor-not-allowed transition-colors text-[13px]">
                   <ArrowLeft size={16} />Back
                 </button>
                 {step < 5 ? (
@@ -515,7 +515,7 @@ function MobileBenefits() {
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#0B0F17] border border-white/[0.06] text-white text-[13px] font-medium">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[var(--background)] border border-subtle text-primary text-[13px] font-medium">
         <span>Why join as a Supplier?</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -534,9 +534,9 @@ function MobileBenefits() {
 
 function ReviewSection({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-      <h4 className="text-[12px] font-medium text-white/30 uppercase tracking-wider mb-4 flex items-center gap-2">
-        <Icon size={14} className="text-white/30" />{title}
+    <div className="p-5 rounded-xl bg-surface-hover border border-subtle">
+      <h4 className="text-[12px] font-medium text-primary/30 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <Icon size={14} className="text-primary/30" />{title}
       </h4>
       <div className="space-y-2.5">{children}</div>
     </div>
@@ -546,8 +546,8 @@ function ReviewSection({ title, icon: Icon, children }: { title: string; icon: R
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between text-[13px]">
-      <span className="text-white/25">{label}</span>
-      <span className="text-white/50 text-right max-w-[60%]">{value}</span>
+      <span className="text-primary/25">{label}</span>
+      <span className="text-primary/50 text-right max-w-[60%]">{value}</span>
     </div>
   );
 }

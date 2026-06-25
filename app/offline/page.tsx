@@ -1,25 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function OfflinePage() {
-  const [bg, setBg] = useState("#0B0F1A");
+  const [bg, setBg] = useState("var(--background)");
 
   useEffect(() => {
     try {
       const mode = localStorage.getItem("hv-theme-mode");
       if (mode === "hercules") setBg("#0a1628");
-      else setBg("#000000");
+      else setBg("var(--background)");
     } catch {
-      setBg("#000000");
+      setBg("var(--background)");
     }
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: bg }}>
       <div className="text-center space-y-4 max-w-sm">
-        <BrandLogo variant="dark" size="lg" />
         <div className="space-y-2">
           <h1 className="text-lg font-semibold text-white">You are offline</h1>
           <p className="text-sm text-white/40">

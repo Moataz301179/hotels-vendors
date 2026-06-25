@@ -41,7 +41,7 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
             }}
           >
             {m.role === "user" ? (
-              <User size={12} color={isLight ? "#ffffff" : "#0B0F1A"} />
+              <User size={12} color={isLight ? "#ffffff" : "var(--foreground)"} />
             ) : (
               <Bot size={12} style={{ color: effectiveAccent }} />
             )}
@@ -51,7 +51,7 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
             style={{
               backgroundColor: m.role === "user" ? effectiveAccent : (isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"),
               color: m.role === "user"
-                ? (isLight ? "#ffffff" : "#0B0F1A")
+                ? (isLight ? "#ffffff" : "var(--foreground)")
                 : (isLight ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)"),
               border: m.role === "user" ? "none" : `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.08)"}`,
               borderTopRightRadius: m.role === "user" ? "4px" : "16px",

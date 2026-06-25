@@ -59,7 +59,7 @@ export default async function FactoringPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
             {funders.map((funder) => (
-              <div key={funder.id} className="rounded-lg p-4" style={{ backgroundColor: "#0B0F17", border: `1px solid ${BORDER}` }}>
+              <div key={funder.id} className="rounded-lg p-4" style={{ backgroundColor: "var(--background)", border: `1px solid ${BORDER}` }}>
                 <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{funder.name || "Unnamed"}</div>
                 <div className="text-[12px] mt-2 space-y-1" style={{ color: TEXT_SECONDARY }}>
                   <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{(funder.credit_limit || 0).toLocaleString("en-EG")} EGP</span></div>

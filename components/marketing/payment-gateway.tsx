@@ -44,7 +44,7 @@ const SETTLEMENT_FLOW = [
 
 export function PaymentGateway() {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden" style={{ backgroundColor: "#000000" }}>
+    <section className="py-24 md:py-32 relative overflow-hidden" style={{ backgroundColor: "var(--background)" }}>
       <div
         className="absolute top-1/2 left-0 w-[400px] h-[400px] rounded-full pointer-events-none -translate-y-1/2"
         style={{ background: `radial-gradient(circle, ${AG} 0%, transparent 70%)`, opacity: 0.25 }}

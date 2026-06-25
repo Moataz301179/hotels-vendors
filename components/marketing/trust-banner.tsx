@@ -19,7 +19,7 @@ export function TrustBanner() {
   const duplicated = [...HOTEL_GROUPS, ...HOTEL_GROUPS];
 
   return (
-    <section className="py-6 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "rgba(0,0,0,0.3)" }}>
+    <section className="py-6 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "rgba(var(--background-rgb), 0.3)" }}>
       <div className="max-w-7xl mx-auto px-6 mb-4">
         <p className="text-[10px] font-medium text-white/20 uppercase tracking-[0.2em] text-center">
           Trusted by Egypt&apos;s Leading Hotel Groups · موثوق من أكبر المجموعات الفندقية
@@ -29,11 +29,11 @@ export function TrustBanner() {
       <div className="relative overflow-hidden">
         <div
           className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to right, #000000 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to right, var(--background) 0%, transparent 100%)" }}
         />
         <div
           className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to left, #000000 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to left, var(--background) 0%, transparent 100%)" }}
         />
 
         <motion.div

@@ -195,6 +195,7 @@ export interface EtaQueueItem {
 
 export interface EtaConfig {
   baseUrl: string;
+  authUrl: string;
   apiVersion: string;
   clientId: string;
   clientSecret: string;

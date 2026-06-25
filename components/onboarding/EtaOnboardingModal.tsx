@@ -258,7 +258,7 @@ export function EtaOnboardingModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ backgroundColor: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)" }}
+        style={{ backgroundColor: "rgba(var(--background-rgb), 0.8)", backdropFilter: "blur(8px)" }}
         onClick={onClose}
       >
         <motion.div
@@ -267,7 +267,7 @@ export function EtaOnboardingModal({
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
-          style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.08)" }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* ── Header ── */}
@@ -483,8 +483,8 @@ export function EtaOnboardingModal({
                             className="w-full px-4 py-3 rounded-xl text-[13px] text-white outline-none transition-all appearance-none"
                             style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                           >
-                            <option value="preprod" style={{ backgroundColor: "#0B0F17" }}>Pre-Production</option>
-                            <option value="production" style={{ backgroundColor: "#0B0F17" }}>Production</option>
+                            <option value="preprod" style={{ backgroundColor: "var(--background)" }}>Pre-Production</option>
+                            <option value="production" style={{ backgroundColor: "var(--background)" }}>Production</option>
                           </select>
                         </div>
                       </div>
@@ -493,7 +493,7 @@ export function EtaOnboardingModal({
                         onClick={handleSubmitCredentials}
                         disabled={isSubmitting || !clientId || !clientSecret || !taxId}
                         className="w-full flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#FF6B00", color: "#000000" }}
+                        style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}
                       >
                         {isSubmitting ? (
                           <span className="flex items-center gap-2">
@@ -584,7 +584,7 @@ export function EtaOnboardingModal({
                         onClick={handleDelegateInvite}
                         disabled={!delegateEmail && !delegateWhatsApp}
                         className="w-full flex items-center justify-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#FF6B00", color: "#000000" }}
+                        style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}
                       >
                         Send Secure Invite <Send size={13} />
                       </button>

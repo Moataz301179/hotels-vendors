@@ -123,7 +123,7 @@ export function SearchBar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-white/[0.08] bg-[#0B0F17]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
+              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-white/[0.08] bg-[var(--background)]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
             >
               {recentSearches.length > 0 && (
                 <div className="p-3">
@@ -251,7 +251,7 @@ function FilterSelect({
         }}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-[#0B0F17]">{o.label}</option>
+          <option key={o.value} value={o.value} className="bg-[var(--background)]">{o.label}</option>
         ))}
       </select>
     </div>

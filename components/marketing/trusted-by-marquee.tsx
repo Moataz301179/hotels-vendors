@@ -139,7 +139,7 @@ export function TrustedByMarquee() {
   const duplicated = [...LOCAL_CHAINS, ...LOCAL_CHAINS];
 
   return (
-    <section className="py-5 bg-[#0B0F17] border-y border-white/[0.04]">
+    <section className="py-5 bg-[var(--background)] border-y border-white/[0.04]">
       <div className="max-w-7xl mx-auto px-6 mb-3">
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-medium text-white/25 uppercase tracking-[0.15em]">

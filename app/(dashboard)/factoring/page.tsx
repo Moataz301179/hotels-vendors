@@ -504,7 +504,7 @@ function NewFactoringModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#0B0F17] shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[var(--background)] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

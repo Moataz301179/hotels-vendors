@@ -64,7 +64,7 @@ export default async function AgentsPage() {
             <div
               key={agent.id}
               className="rounded-xl p-5 text-center"
-              style={{ backgroundColor: "#0B0F17", border: `1px solid ${BORDER}` }}
+              style={{ backgroundColor: "var(--background)", border: `1px solid ${BORDER}` }}
             >
               <div className="text-3xl mb-3">{agent.icon}</div>
               <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{agent.name}</div>

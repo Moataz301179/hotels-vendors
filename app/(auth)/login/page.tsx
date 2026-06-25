@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MarketingNav } from "@/components/layout/marketing-nav";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,32 +58,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#000000" }}>
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       <div className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="w-full max-w-md">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center justify-center mb-8"
-          >
-            <BrandLogo variant="dark" size="lg" />
-          </motion.div>
-
           {/* Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.08 }}
-            className="rounded-2xl border border-white/[0.06] bg-[#0B0F17] overflow-hidden"
+            className="surface-card overflow-hidden"
           >
             {/* Header */}
-            <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-              <h2 className="text-lg font-medium text-white">Welcome back</h2>
-              <p className="text-sm text-white/40 mt-1">
+            <div className="px-8 pt-8 pb-6 border-b border-subtle">
+              <h2 className="text-lg font-medium text-primary">Welcome back</h2>
+              <p className="text-sm text-muted mt-1">
                 Sign in to your procurement portal
               </p>
             </div>
@@ -117,41 +106,41 @@ export default function LoginPage() {
 
               {/* Email / Username */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
+                <label className="text-xs font-medium text-muted uppercase tracking-wider">
                   Email or Username
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                   <input
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@hotel.com or admin"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
+                <label className="text-xs font-medium text-muted uppercase tracking-wider">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-muted transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -160,10 +149,10 @@ export default function LoginPage() {
 
               {/* Remember + Forgot */}
               <div className="flex items-center justify-between text-xs">
-                <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
+                <label className="flex items-center gap-2 text-muted cursor-pointer hover:text-primary/60 transition-colors">
                   <input
                     type="checkbox"
-                    className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#FF6B00]"
+                    className="w-3.5 h-3.5 rounded border-white/10 bg-surface-2 accent-[#FF6B00]"
                   />
                   <span>Remember me</span>
                 </label>
@@ -190,7 +179,7 @@ export default function LoginPage() {
                       }
                     }}
                     disabled={resending}
-                    className="text-white/30 hover:text-white/50 transition-colors font-medium disabled:opacity-50"
+                    className="text-muted hover:text-primary/50 transition-colors font-medium disabled:opacity-50"
                   >
                     {resending ? "Sending..." : "Resend verification"}
                   </button>
@@ -222,14 +211,14 @@ export default function LoginPage() {
 
               {/* Divider */}
               <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-white/[0.06]" />
-                <span className="text-[10px] text-white/20 uppercase tracking-wider">
+                <div className="flex-1 h-px bg-surface-hover" />
+                <span className="text-[10px] text-muted uppercase tracking-wider">
                   or continue with
                 </span>
-                <div className="flex-1 h-px bg-white/[0.06]" />
+                <div className="flex-1 h-px bg-surface-hover" />
               </div>
 
-              <p className="text-[11px] text-center text-white/20">
+              <p className="text-[11px] text-center text-muted">
                 Need an account?{" "}
                 <Link href="/register" className="text-[#FF6B00] hover:underline">
                   Register here
@@ -243,7 +232,7 @@ export default function LoginPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-center text-sm text-white/30 mt-6"
+            className="text-center text-sm text-muted mt-6"
           >
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-[#FF6B00] hover:opacity-80 font-medium transition-opacity">
@@ -255,7 +244,7 @@ export default function LoginPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="flex items-center justify-center gap-2 mt-4 text-[10px] text-white/20"
+            className="flex items-center justify-center gap-2 mt-4 text-[10px] text-muted"
           >
             <Shield className="w-3 h-3" />
             <span>Secured with JWT + RBAC + Email Verification</span>

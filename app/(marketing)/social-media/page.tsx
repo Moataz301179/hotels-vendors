@@ -127,7 +127,7 @@ export default function SocialMediaPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-2xl bg-[#0B0F17] border border-white/[0.06] text-center hover:border-white/[0.12] transition-colors"
+                className="p-8 rounded-2xl bg-[var(--background)] border border-white/[0.06] text-center hover:border-white/[0.12] transition-colors"
               >
                 <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
                   <p.icon className="w-6 h-6 text-white/50" />
@@ -188,7 +188,7 @@ export default function SocialMediaPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="flex gap-4 p-6 rounded-2xl bg-[#0B0F17] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
+                className="flex gap-4 p-6 rounded-2xl bg-[var(--background)] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
               >
                 <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
                   <item.icon className="w-5 h-5 text-white/40" />
@@ -263,7 +263,7 @@ export default function SocialMediaPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-6 rounded-2xl bg-[#0B0F17] border border-white/[0.06] hover:border-white/[0.12] hover:-translate-y-1 transition-all duration-300 block"
+                className="group p-6 rounded-2xl bg-[var(--background)] border border-white/[0.06] hover:border-white/[0.12] hover:-translate-y-1 transition-all duration-300 block"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div

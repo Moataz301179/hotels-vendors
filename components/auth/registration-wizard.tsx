@@ -377,7 +377,7 @@ export function RegistrationWizard({
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.3 }}
         className="w-full max-w-5xl max-h-[90vh] rounded-2xl overflow-hidden flex flex-col"
-        style={{ backgroundColor: "#0B0F1A", border: "1px solid rgba(255,255,255,0.08)" }}
+        style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.08)" }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
@@ -438,7 +438,7 @@ export function RegistrationWizard({
             <button onClick={step === 1 ? onClose : prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> {step === 1 ? "Cancel" : "Back"}
             </button>
-            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "#FF6B00", color: "#0B0F1A" }}>
+            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "#FF6B00", color: "var(--foreground)" }}>
               Continue <ArrowRight size={14} />
             </button>
           </div>
@@ -449,7 +449,7 @@ export function RegistrationWizard({
             <button onClick={prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> Back
             </button>
-            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#FF6B00", color: "#0B0F1A" }}>
+            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#FF6B00", color: "var(--foreground)" }}>
               {registering ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
               {registering ? "Creating Account..." : "Complete Registration"}
             </button>

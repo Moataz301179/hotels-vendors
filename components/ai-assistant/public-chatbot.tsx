@@ -129,7 +129,7 @@ export function PublicChatbot() {
           onClick={() => setOpen(true)}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all flex items-center justify-center hover:scale-110 border"
           style={{
-            backgroundColor: isLight ? "#ffffff" : "#0B0F1A",
+            backgroundColor: isLight ? "#ffffff" : "var(--background)",
             borderColor: isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)",
             color: accentColor,
             boxShadow: isLight

@@ -34,8 +34,8 @@ export function LogisticsDashboardMockup() {
       className="relative"
     >
       <div className="absolute -inset-4 rounded-3xl blur-[60px] pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(212,168,67,0.06) 0%, transparent 70%)" }} />
-      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "#0B0F17", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
-        <div className="flex items-center justify-between px-4 py-2.5" style={{ backgroundColor: "#0f0f0f", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
+        <div className="flex items-center justify-between px-4 py-2.5" style={{ backgroundColor: "var(--foreground)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#EF4444" }} />
@@ -49,7 +49,7 @@ export function LogisticsDashboardMockup() {
           {/* Header — with HV logo */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#000000", border: "1px solid rgba(255,255,255,0.15)" }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.15)" }}>
                 <BrandLogo size="xs" showText={false} />
               </div>
               <div>
@@ -115,7 +115,7 @@ export function LogisticsDashboardMockup() {
           </div>
         </div>
       </div>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "#0f0f0f", border: "1px solid rgba(212,168,67,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "var(--foreground)", border: "1px solid rgba(212,168,67,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
         <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Illustrative Preview</span>
       </motion.div>
     </motion.div>

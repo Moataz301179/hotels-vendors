@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { AlertTriangle, CheckCircle2, Loader2, MailCheck, ArrowRight } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 function VerifyEmailForm() {
   const searchParams = useSearchParams();
@@ -71,7 +70,6 @@ function VerifyEmailForm() {
         transition={{ duration: 0.5 }}
         className="lg:hidden flex items-center gap-3 mb-8 justify-center"
       >
-        <BrandLogo variant="dark" size="md" />
         <div>
           <h1 className="text-lg font-bold tracking-tight text-white">HotelsVendors</h1>
           <p className="text-[10px] text-white/40 uppercase tracking-wider">

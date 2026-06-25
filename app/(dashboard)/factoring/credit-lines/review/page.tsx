@@ -87,7 +87,7 @@ export default function CreditLineReviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] text-white">
+    <div className="min-h-screen bg-[var(--background)] text-white">
       <div className="border-b border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -198,7 +198,7 @@ export default function CreditLineReviewPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#0B0F17] border border-white/[0.08] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto"
+            className="bg-[var(--background)] border border-white/[0.08] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto"
           >
             <div className="p-6 border-b border-white/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-3">

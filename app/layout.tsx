@@ -71,16 +71,16 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   other: {
-    "msapplication-TileColor": "#0B0F17",
+    "msapplication-TileColor": "#FF6B00",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0B0F17",
+    "theme-color": "#FF6B00",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0B0F17" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#FF6B00" },
+    { media: "(prefers-color-scheme: light)", color: "#F6F7F9" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -109,22 +109,23 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0B0F17" id="theme-color-meta" />
+        <meta name="theme-color" content="#FF6B00" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'wimbledon';
+                  var mode = localStorage.getItem('hv-theme-mode') || 'light';
                   var valid = ['wimbledon', 'original', 'hercules', 'light'];
-                  if (valid.indexOf(mode) === -1) mode = 'wimbledon';
+                  if (valid.indexOf(mode) === -1) mode = 'light';
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
                     if (mode === 'hercules') meta.setAttribute('content', '#080E1A');
                     else if (mode === 'light') meta.setAttribute('content', '#F6F7F9');
                     else if (mode === 'original') meta.setAttribute('content', '#0B0F17');
-                    else meta.setAttribute('content', '#0B0F17');
+                    else if (mode === 'wimbledon') meta.setAttribute('content', '#0B0F17');
+                    else meta.setAttribute('content', '#FF6B00');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -170,8 +171,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-full flex flex-col antialiased"
-        style={{ fontFamily: "var(--font-sans)", background: "var(--bg-canvas)" }}
+        className="font-sans min-h-full flex flex-col bg-background text-foreground antialiased"
+        style={{ fontFamily: "var(--font-sans)", background: "var(--bg-canvas)", color: "var(--text-primary)" }}
       >
         <LanguageProvider>
           <NotificationProvider>

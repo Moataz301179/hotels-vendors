@@ -45,6 +45,9 @@
     "docker": {
       "command": "uvx",
       "args": ["docker-mcp"]
+    },
+    "imagine": {
+      "url": "https://mcp.imagine.art"
     }
   }
 }

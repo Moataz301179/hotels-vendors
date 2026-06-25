@@ -116,7 +116,7 @@ export function BrandLogo({
 
   let iconColor: string;
   if (forceColor === "bw" || (!isOriginal && forceColor !== "original")) {
-    iconColor = variant === "light" ? "#0B0F1A" : "#ffffff";
+    iconColor = variant === "light" ? "var(--foreground)" : "#ffffff";
   } else {
     iconColor = variant === "light" ? "#333132" : "#ffffff";
   }
