@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "notion" | "coinbase";
+export type ThemeMode = "notion" | "coinbase" | "noir" | "ember";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -20,7 +20,7 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-const MODES: ThemeMode[] = ["notion", "coinbase"];
+const MODES: ThemeMode[] = ["coinbase", "notion", "noir", "ember"];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("coinbase");
@@ -37,7 +37,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         typeof window !== "undefined" &&
         window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial: ThemeMode = prefersDark ? "notion" : "coinbase";
+      const initial: ThemeMode = prefersDark ? "noir" : "coinbase";
       setModeState(initial);
       document.documentElement.setAttribute("data-theme", initial);
       localStorage.setItem("hv-theme-mode", initial);

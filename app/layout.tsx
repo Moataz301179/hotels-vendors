@@ -115,18 +115,18 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var valid = ['notion', 'coinbase'];
+                  var valid = ['coinbase', 'notion', 'noir', 'ember'];
                   var saved = localStorage.getItem('hv-theme-mode');
                   var mode = valid.indexOf(saved) !== -1 ? saved : null;
                   if (!mode) {
                     var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    mode = dark ? 'notion' : 'coinbase';
+                    mode = dark ? 'noir' : 'coinbase';
                   }
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
-                    if (mode === 'notion') meta.setAttribute('content', '#191919');
-                    else meta.setAttribute('content', '#0052FF');
+                    var colors = { coinbase: '#0052FF', notion: '#191919', noir: '#14110E', ember: '#0A1612' };
+                    meta.setAttribute('content', colors[mode] || '#0052FF');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

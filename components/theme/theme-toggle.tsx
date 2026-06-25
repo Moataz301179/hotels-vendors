@@ -1,15 +1,27 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Flame, TreePine } from "lucide-react";
 import { useTheme } from "./theme-provider";
+import type { ThemeMode } from "./theme-provider";
+
+const THEME_OPTIONS: {
+  mode: ThemeMode;
+  label: string;
+  icon: typeof Sun;
+  sample: string;
+}[] = [
+  { mode: "coinbase", label: "Light", icon: Sun, sample: "#0052FF" },
+  { mode: "notion", label: "Dark", icon: Moon, sample: "#5645d4" },
+  { mode: "noir", label: "Noir", icon: Flame, sample: "#B8962E" },
+  { mode: "ember", label: "Ember", icon: TreePine, sample: "#FF8A33" },
+];
 
 export function ThemeToggle() {
   const { mode, setMode } = useTheme();
-  const isNotion = mode === "notion";
 
   return (
     <div
-      className="flex items-center p-0.5 rounded-full border"
+      className="grid grid-cols-2 gap-0.5 p-0.5 rounded-xl border"
       style={{
         borderColor: "var(--border-subtle)",
         background: "var(--bg-surface-2)",
@@ -17,37 +29,33 @@ export function ThemeToggle() {
       role="radiogroup"
       aria-label="Theme"
     >
-      {/* Coinbase (light) */}
-      <button
-        onClick={() => setMode("coinbase")}
-        role="radio"
-        aria-checked={!isNotion}
-        aria-label="Light theme"
-        className="relative flex items-center gap-1.5 h-7 px-2.5 rounded-full text-xs font-medium transition-all duration-200"
-        style={{
-          background: !isNotion ? "var(--accent-base)" : "transparent",
-          color: !isNotion ? "var(--accent-text)" : "var(--text-secondary)",
-        }}
-      >
-        <Sun className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Light</span>
-      </button>
-
-      {/* Notion (dark) */}
-      <button
-        onClick={() => setMode("notion")}
-        role="radio"
-        aria-checked={isNotion}
-        aria-label="Dark theme"
-        className="relative flex items-center gap-1.5 h-7 px-2.5 rounded-full text-xs font-medium transition-all duration-200"
-        style={{
-          background: isNotion ? "var(--accent-base)" : "transparent",
-          color: isNotion ? "var(--accent-text)" : "var(--text-secondary)",
-        }}
-      >
-        <Moon className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Dark</span>
-      </button>
+      {THEME_OPTIONS.map((opt) => {
+        const active = mode === opt.mode;
+        const Icon = opt.icon;
+        return (
+          <button
+            key={opt.mode}
+            onClick={() => setMode(opt.mode)}
+            role="radio"
+            aria-checked={active}
+            aria-label={`${opt.label} theme`}
+            className="relative flex items-center gap-1.5 h-7 px-2 rounded-lg text-[11px] font-medium transition-all duration-200"
+            style={{
+              background: active ? "var(--accent-base)" : "transparent",
+              color: active ? "var(--accent-text)" : "var(--text-secondary)",
+            }}
+          >
+            {active && (
+              <span
+                className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+                style={{ background: opt.sample }}
+              />
+            )}
+            <Icon className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">{opt.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
