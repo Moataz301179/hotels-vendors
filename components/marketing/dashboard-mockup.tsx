@@ -32,16 +32,16 @@ const sidebarItems = [
 
 const kpiCards = [
   { label: "Open POs", value: "24", change: "+3", up: true, color: "var(--accent-base)" },
-  { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "#3B82F6" },
-  { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "#D4A843" },
-  { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "#22C55E" },
+  { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "var(--info)" },
+  { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "var(--warning)" },
+  { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "var(--success)" },
 ];
 
 const recentActivity = [
-  { icon: CheckCircle2, text: "PO-2024-0892 approved", time: "2m ago", color: "#22C55E" },
-  { icon: Clock, text: "Invoice #INV-4451 pending ETA", time: "8m ago", color: "#D4A843" },
-  { icon: Truck, text: "Shipment SH-009 in transit", time: "15m ago", color: "#3B82F6" },
-  { icon: AlertCircle, text: "Budget alert: F&B > 85%", time: "32m ago", color: "#EF4444" },
+  { icon: CheckCircle2, text: "PO-2024-0892 approved", time: "2m ago", color: "var(--success)" },
+  { icon: Clock, text: "Invoice #INV-4451 pending ETA", time: "8m ago", color: "var(--warning)" },
+  { icon: Truck, text: "Shipment SH-009 in transit", time: "15m ago", color: "var(--info)" },
+  { icon: AlertCircle, text: "Budget alert: F&B > 85%", time: "32m ago", color: "var(--error)" },
 ];
 
 // Mini chart bars (heights in %)
@@ -70,15 +70,15 @@ export function DashboardMockup() {
       <div
         className="rounded-2xl overflow-hidden relative"
         style={{
-          backgroundColor: "var(--background)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)",
+          backgroundColor: "var(--bg-surface-1)",
+          border: "1px solid var(--border-subtle)",
+          boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--border-invisible)",
         }}
       >
         {/* Title bar */}
         <div
           className="flex items-center justify-between px-4 py-2.5"
-          style={{ backgroundColor: "var(--foreground)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+          style={{ backgroundColor: "var(--bg-surface-2)", borderBottom: "1px solid var(--border-subtle)" }}
         >
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
@@ -86,10 +86,10 @@ export function DashboardMockup() {
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#D4A843" }} />
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#22C55E" }} />
             </div>
-            <span className="text-[9px] text-white/20 ml-2 font-mono">app.hotelsvendors.com/dashboard</span>
+            <span className="text-[9px] ml-2 font-mono" style={{ color: "var(--text-muted)" }}>app.hotelsvendors.com/dashboard</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }} />
+            <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-muted)" }} />
           </div>
         </div>
 
@@ -97,7 +97,7 @@ export function DashboardMockup() {
           {/* ── Sidebar ── */}
           <div
             className="w-[52px] flex-shrink-0 py-3 flex flex-col items-center gap-1"
-            style={{ backgroundColor: "var(--foreground)", borderRight: "1px solid rgba(255,255,255,0.04)" }}
+            style={{ backgroundColor: "var(--bg-surface-2)", borderRight: "1px solid var(--border-subtle)" }}
           >
             {/* Logo */}
             <div className="mb-3">
@@ -115,7 +115,7 @@ export function DashboardMockup() {
               >
                 <item.icon
                   size={15}
-                  style={{ color: item.active ? "var(--accent-base)" : "rgba(255,255,255,0.2)" }}
+                  style={{ color: item.active ? "var(--accent-base)" : "var(--text-muted)" }}
                 />
               </div>
             ))}
@@ -126,22 +126,22 @@ export function DashboardMockup() {
             {/* Top bar */}
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-[13px] font-semibold text-white">Dashboard</h3>
-                <p className="text-[9px] text-white/25">Stella Di Mare Resort · Sharm El-Sheikh</p>
+                <h3 className="text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Dashboard</h3>
+                <p className="text-[9px]" style={{ color: "var(--text-muted)" }}>Stella Di Mare Resort · Sharm El-Sheikh</p>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-20 h-6 rounded-md flex items-center gap-1 px-2"
-                  style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-subtle)" }}
                 >
-                  <Search size={9} style={{ color: "rgba(255,255,255,0.2)" }} />
-                  <span className="text-[8px] text-white/15">Search...</span>
+                  <Search size={9} style={{ color: "var(--text-muted)" }} />
+                  <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>Search...</span>
                 </div>
                 <div
                   className="w-6 h-6 rounded-md flex items-center justify-center"
-                  style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-subtle)" }}
                 >
-                  <Bell size={10} style={{ color: "rgba(255,255,255,0.25)" }} />
+                  <Bell size={10} style={{ color: "var(--text-muted)" }} />
                 </div>
                 <div
                   className="w-6 h-6 rounded-full flex items-center justify-center"
@@ -158,18 +158,18 @@ export function DashboardMockup() {
                 <div
                   key={kpi.label}
                   className="rounded-lg p-2.5"
-                  style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                  style={{ backgroundColor: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[8px] text-white/30">{kpi.label}</span>
+                    <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>{kpi.label}</span>
                     {kpi.up ? (
-                      <TrendingUp size={8} style={{ color: "#22C55E" }} />
+                      <TrendingUp size={8} style={{ color: "var(--success)" }} />
                     ) : (
                       <TrendingDown size={8} style={{ color: "#EF4444" }} />
                     )}
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-[14px] font-bold text-white">{kpi.value}</span>
+                    <span className="text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>{kpi.value}</span>
                     <span className="text-[8px]" style={{ color: kpi.up ? "#22C55E" : "#EF4444" }}>{kpi.change}</span>
                   </div>
                 </div>
@@ -181,13 +181,13 @@ export function DashboardMockup() {
               {/* Mini Chart */}
               <div
                 className="col-span-3 rounded-lg p-3"
-                style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                style={{ backgroundColor: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[9px] font-medium text-white/40">Procurement Spend</span>
+                  <span className="text-[9px] font-medium" style={{ color: "var(--text-secondary)" }}>Procurement Spend</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-[8px]" style={{ color: "#22C55E" }}>+18.2%</span>
-                    <ArrowUpRight size={8} style={{ color: "#22C55E" }} />
+                    <span className="text-[8px]" style={{ color: "var(--success)" }}>+18.2%</span>
+                    <ArrowUpRight size={8} style={{ color: "var(--success)" }} />
                   </div>
                 </div>
                 {/* Bar chart */}
@@ -206,7 +206,7 @@ export function DashboardMockup() {
                 </div>
                 <div className="flex justify-between mt-1.5">
                   {chartLabels.filter((_, i) => i % 3 === 0).map((label) => (
-                    <span key={label} className="text-[6px] text-white/15">{label}</span>
+                    <span key={label} className="text-[6px]" style={{ color: "var(--text-muted)" }}>{label}</span>
                   ))}
                 </div>
               </div>
@@ -214,19 +214,19 @@ export function DashboardMockup() {
               {/* Recent Activity */}
               <div
                 className="col-span-2 rounded-lg p-3"
-                style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                style={{ backgroundColor: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
               >
                 <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-[9px] font-medium text-white/40">Activity</span>
-                  <MoreHorizontal size={9} style={{ color: "rgba(255,255,255,0.15)" }} />
+                  <span className="text-[9px] font-medium" style={{ color: "var(--text-secondary)" }}>Activity</span>
+                  <MoreHorizontal size={9} style={{ color: "var(--text-muted)" }} />
                 </div>
                 <div className="space-y-2">
                   {recentActivity.map((item, i) => (
                     <div key={i} className="flex items-start gap-1.5">
                       <item.icon size={8} className="mt-0.5 flex-shrink-0" style={{ color: item.color }} />
                       <div className="min-w-0">
-                        <p className="text-[7px] text-white/40 leading-tight truncate">{item.text}</p>
-                        <p className="text-[6px] text-white/15">{item.time}</p>
+                        <p className="text-[7px] leading-tight truncate" style={{ color: "var(--text-secondary)" }}>{item.text}</p>
+                        <p className="text-[6px]" style={{ color: "var(--text-muted)" }}>{item.time}</p>
                       </div>
                     </div>
                   ))}
@@ -254,22 +254,22 @@ export function DashboardMockup() {
                         backgroundColor:
                           step.status === "done" ? "#22C55E" :
                           step.status === "active" ? "var(--accent-base)" :
-                          "rgba(255,255,255,0.1)",
+                          "var(--text-muted)",
                       }}
                     />
                     <span
                       className="text-[7px]"
                       style={{
                         color:
-                          step.status === "done" ? "rgba(255,255,255,0.4)" :
+                          step.status === "done" ? "var(--text-secondary)" :
                           step.status === "active" ? "var(--accent-base)" :
-                          "rgba(255,255,255,0.15)",
+                          "var(--text-muted)",
                       }}
                     >
                       {step.label}
                     </span>
                     {i < 4 && (
-                      <div className="w-3 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+                      <div className="w-3 h-px" style={{ backgroundColor: "var(--border-subtle)" }} />
                     )}
                   </div>
                 ))}

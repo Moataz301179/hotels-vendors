@@ -5,6 +5,7 @@ import { ChatShell } from "./chat-shell";
 import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
 import { useTheme } from "@/components/theme/theme-provider";
+import { Sparkles } from "lucide-react";
 
 const PUBLIC_PRESETS = [
   "What is HotelsVendors?",
@@ -18,39 +19,18 @@ interface Message {
   content: string;
 }
 
-function RobotFaceIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
+function AIIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Head */}
-      <rect x="10" y="16" width="44" height="36" rx="8" fill={color} opacity="0.15" stroke={color} strokeWidth="2.5"/>
-      {/* Antenna base */}
-      <rect x="29" y="8" width="6" height="10" rx="2" fill={color}/>
-      {/* Antenna ball */}
-      <circle cx="32" cy="6" r="4" fill={color}/>
-      {/* Left eye */}
-      <circle cx="22" cy="32" r="5" fill={color} opacity="0.2"/>
-      <circle cx="22" cy="32" r="2.5" fill={color}/>
-      {/* Right eye */}
-      <circle cx="42" cy="32" r="5" fill={color} opacity="0.2"/>
-      <circle cx="42" cy="32" r="2.5" fill={color}/>
-      {/* Mouth */}
-      <rect x="20" y="42" width="24" height="4" rx="2" fill={color} opacity="0.3"/>
-      {/* Mouth teeth/grid lines */}
-      <line x1="24" y1="42" x2="24" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
-      <line x1="28" y1="42" x2="28" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
-      <line x1="32" y1="42" x2="32" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
-      <line x1="36" y1="42" x2="36" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
-      <line x1="40" y1="42" x2="40" y2="46" stroke={color} strokeWidth="1" opacity="0.5"/>
-      {/* Side bolts */}
-      <circle cx="12" cy="28" r="2" fill={color} opacity="0.4"/>
-      <circle cx="52" cy="28" r="2" fill={color} opacity="0.4"/>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l2.4 5.6L20 9l-4.5 4 1.3 6L12 16l-4.8 3 1.3-6L4 9l5.6-1.4L12 2z" fill={color} fillOpacity="0.15" />
+      <circle cx="12" cy="9" r="1.5" fill={color} />
     </svg>
   );
 }
 
 export function PublicChatbot() {
   const { mode } = useTheme();
-  const isLight = false;
+  const isLight = mode === "coinbase";
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -119,7 +99,7 @@ export function PublicChatbot() {
     [input, loading]
   );
 
-  const accentColor = isLight ? "#581c87" : "#FF6B00";
+  const accentColor = isLight ? "var(--accent-base)" : "var(--accent-base)";
 
   return (
     <>
@@ -129,16 +109,15 @@ export function PublicChatbot() {
           onClick={() => setOpen(true)}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all flex items-center justify-center hover:scale-110 border"
           style={{
-            backgroundColor: isLight ? "#ffffff" : "var(--background)",
-            borderColor: isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)",
+            backgroundColor: isLight ? "var(--bg-surface-1)" : "var(--bg-surface-1)",
+            borderColor: isLight ? "var(--border-subtle)" : "var(--border-subtle)",
             color: accentColor,
-            boxShadow: isLight
-              ? "0 4px 20px rgba(0,0,0,0.12)"
-              : "0 4px 20px rgba(0,0,0,0.4)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.15), 0 0 12px var(--accent-glow)",
+            fontFamily: "var(--font-sans)",
           }}
           title="HotelsVendors AI Guide"
         >
-          <RobotFaceIcon size={26} color={accentColor} />
+          <AIIcon size={26} color={accentColor} />
         </button>
       )}
 
@@ -153,17 +132,31 @@ export function PublicChatbot() {
         footer={
           <>
             {/* Presets */}
-            <div className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5 border-t shrink-0"
-              style={{ borderColor: isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.04)" }}>
+            <div
+              className="px-3 pt-2 pb-1 flex flex-wrap gap-1.5 border-t shrink-0"
+              style={{
+                borderColor: "var(--border-subtle)",
+                fontFamily: "var(--font-sans)",
+              }}
+            >
               {PUBLIC_PRESETS.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => handleSend(prompt)}
                   className="px-2 py-1 rounded-md text-[11px] transition-colors"
                   style={{
-                    backgroundColor: isLight ? "rgba(0,0,0,0.03)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)"}`,
-                    color: isLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.4)",
+                    backgroundColor: "var(--accent-muted)",
+                    border: "1px solid var(--border-subtle)",
+                    color: "var(--text-secondary)",
+                    fontFamily: "var(--font-sans)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "var(--accent-base)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--accent-text)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "var(--accent-muted)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
                   }}
                 >
                   {prompt}
@@ -180,15 +173,19 @@ export function PublicChatbot() {
               accentColor={accentColor}
             />
             {remaining !== null && remaining <= 2 && (
-              <p className="text-[9px] text-center pb-1"
-                style={{ color: isLight ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.2)" }}>
+              <p
+                className="text-[9px] text-center pb-1"
+                style={{ color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}
+              >
                 {remaining === 0
                   ? "Free limit reached. Sign up for unlimited access."
                   : `${remaining} free question${remaining === 1 ? "" : "s"} remaining`}
               </p>
             )}
-            <p className="text-[9px] text-center pb-1.5"
-              style={{ color: isLight ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.15)" }}>
+            <p
+              className="text-[9px] text-center pb-1.5"
+              style={{ color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}
+            >
               Powered by HotelsVendors Intelligence Engine
             </p>
           </>

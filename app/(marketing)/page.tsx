@@ -210,22 +210,22 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[96px] md:pt-[120px] pb-20 md:pb-28">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[120px] md:pt-[160px] pb-24 md:pb-32">
         {/* Headline + sub */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-center max-w-3xl mx-auto mb-10"
+          className="text-center max-w-3xl mx-auto mb-14"
         >
           <h1
-            className="text-[36px] md:text-[52px] lg:text-[60px] mb-5 leading-[1.08]"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.01em" }}
+            className="text-[36px] md:text-[52px] lg:text-[60px] mb-7 leading-[1.12]"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.005em" }}
           >
             The Game Changer in Hospitality Fintech
           </h1>
           <p
-            className="text-[15px] md:text-[17px] max-w-xl mx-auto mt-2 leading-[1.7]"
+            className="text-[15px] md:text-[17px] max-w-xl mx-auto mt-4 leading-[1.8]"
             style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
           >
             Egypt&apos;s first platform to natively embed ETA-compliant e-invoicing and reverse factoring
