@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 const accent = "var(--accent-base)";
 const accentMuted = "var(--accent-muted)";
 const accentBorder = "rgba(163,230,53,0.20)";
-const surface = "#111520";
-const borderSubtle = "rgba(255,255,255,0.06)";
+const surface = "var(--bg-surface-1)";
+const borderSubtle = "var(--border-subtle)";
 
 const tiers = [
   {
@@ -97,7 +97,7 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       {/* Hero */}
@@ -173,7 +173,7 @@ export default function PricingPage() {
                 key={tier.name}
                 className="rounded-2xl p-7 flex flex-col transition-all"
                 style={{
-                  backgroundColor: tier.highlighted ? surface : "#0D1119",
+                  backgroundColor: tier.highlighted ? surface : "var(--bg-surface-1)",
                   border: tier.highlighted ? `1px solid ${accentBorder}` : `1px solid ${borderSubtle}`,
                 }}
               >
@@ -246,7 +246,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-semibold mb-4 text-primary" style={{ fontFamily: "'Playfair Display', serif" }}>Ready to Get Started?</h2>
           <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Tell us about your property portfolio. We'll build a subscription plan that fits your size, volume, and factoring needs.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "#fff" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--text-primary)" }}>
             Get Your Quote <ArrowRight size={14} />
           </Link>
         </div>

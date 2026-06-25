@@ -17,25 +17,25 @@ export const metadata: Metadata = {
 
 const governorates = [
   { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "var(--accent-base)" },
-  { name: "Hurghada", type: "Red Sea", color: "#22C55E" },
-  { name: "Cairo", type: "Central Hub", color: "#3B82F6" },
-  { name: "Alexandria", type: "Mediterranean", color: "#D4A843" },
-  { name: "Marsa Alam", type: "Red Sea South", color: "#00E5CC" },
-  { name: "North Coast", type: "Seasonal", color: "#FF8C00" },
+  { name: "Hurghada", type: "Red Sea", color: "var(--success)" },
+  { name: "Cairo", type: "Central Hub", color: "var(--info)" },
+  { name: "Alexandria", type: "Mediterranean", color: "var(--warning)" },
+  { name: "Marsa Alam", type: "Red Sea South", color: "var(--accent-base)" },
+  { name: "North Coast", type: "Seasonal", color: "var(--accent-base)" },
 ];
 
 const features = [
   { icon: TrendingDown, title: "Route Consolidation", desc: "Shared-route model means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "var(--accent-base)" },
-  { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#3B82F6" },
-  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#22C55E" },
-  { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "#D4A843" },
-  { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "#00E5CC" },
-  { icon: Banknote, title: "Fast Carrier Payout", desc: "Digital POD triggers automated payment to carriers after confirmed delivery. No 90-day waits.", color: "#FF8C00" },
+  { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "var(--info)" },
+  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "var(--success)" },
+  { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "var(--warning)" },
+  { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "var(--accent-base)" },
+  { icon: Banknote, title: "Fast Carrier Payout", desc: "Digital POD triggers automated payment to carriers after confirmed delivery. No 90-day waits.", color: "var(--accent-base)" },
 ];
 
 export default function LogisticsServicePage() {
   return (
-    <main style={{ backgroundColor: "var(--background)", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -52,7 +52,7 @@ export default function LogisticsServicePage() {
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register as Carrier <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
               How It Works
             </Link>
           </div>
@@ -60,7 +60,7 @@ export default function LogisticsServicePage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "var(--background)" }}>
+      <section className="py-8 border-y" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -70,7 +70,7 @@ export default function LogisticsServicePage() {
               { icon: Banknote, label: "Fast Carrier Payout", desc: "Digital POD trigger" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#3B82F6" }} />
+                <b.icon size={16} style={{ color: "var(--info)" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -87,7 +87,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Coverage Map</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {governorates.map((g) => (
-              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[var(--info)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
                 <MapPin size={16} className="mx-auto mb-2" style={{ color: g.color }} />
                 <p className="text-[12px] font-medium text-white">{g.name}</p>
                 <p className="text-[10px] text-white/25">{g.type}</p>
@@ -103,7 +103,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Carriers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[var(--info)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
                 <f.icon size={20} className="mb-3" style={{ color: f.color }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -116,14 +116,14 @@ export default function LogisticsServicePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <PackageCheck size={28} className="mx-auto mb-6" style={{ color: "#3B82F6" }} />
+          <PackageCheck size={28} className="mx-auto mb-6" style={{ color: "var(--info)" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Need Reliable Hotel Delivery?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Whether you&apos;re a hotel needing deliveries or a carrier looking for volume, we&apos;ve got you covered.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register Hotel <ArrowRight size={14} />
             </Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
               Register Carrier
             </Link>
           </div>

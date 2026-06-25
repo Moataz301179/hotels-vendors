@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function FAQPage() {
   return (
-    <main style={{ backgroundColor: "var(--background)", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       <section className="pt-28 pb-16 relative overflow-hidden">

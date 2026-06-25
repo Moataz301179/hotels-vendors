@@ -47,7 +47,7 @@ export default function HotelsPage() {
               From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#ffffff" }}>
+              <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
                 Register Your Property <ArrowRight size={14} />
               </Link>
               <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
@@ -136,7 +136,7 @@ export default function HotelsPage() {
             <Users size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
             <h2 className="text-[24px] font-medium mb-4 text-primary">Ready to Transform Your Procurement?</h2>
             <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#ffffff" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
               Get Started Free <ArrowRight size={14} />
             </Link>
           </div>

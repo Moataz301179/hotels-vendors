@@ -117,7 +117,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-[11px] transition-all cursor-pointer"
               style={{
                 backgroundColor: isActive ? ACCENT : "transparent",
-                color: isActive ? "#fff" : "var(--text-muted)",
+                color: isActive ? "var(--text-inverse)" : "var(--text-muted)",
                 fontFamily: SANS,
                 fontWeight: isActive ? 600 : 500,
               }}
@@ -144,7 +144,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
             className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] transition-all hover:scale-105 cursor-pointer"
             style={{
               background: ACCENT,
-              color: "#fff",
+              color: "var(--text-inverse)",
               fontFamily: SANS,
               fontWeight: 600,
               boxShadow: "0 0 20px var(--accent-glow)",
@@ -210,7 +210,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[80px] md:pt-[100px] pb-20 md:pb-28">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[96px] md:pt-[120px] pb-20 md:pb-28">
         {/* Headline + sub */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -219,13 +219,13 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           className="text-center max-w-3xl mx-auto mb-10"
         >
           <h1
-            className="text-[36px] md:text-[52px] lg:text-[60px] mb-5 leading-[1.08] tracking-tight"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+            className="text-[36px] md:text-[52px] lg:text-[60px] mb-5 leading-[1.08]"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.01em" }}
           >
             The Game Changer in Hospitality Fintech
           </h1>
           <p
-            className="text-[15px] md:text-[17px] max-w-xl mx-auto leading-[1.7]"
+            className="text-[15px] md:text-[17px] max-w-xl mx-auto mt-2 leading-[1.7]"
             style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
           >
             Egypt&apos;s first platform to natively embed ETA-compliant e-invoicing and reverse factoring
@@ -264,7 +264,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 <Mail
                   size={16}
                   className="absolute left-4 top-1/2 -translate-y-1/2"
-                  style={{ color: "var(--text-muted, #94A3B8)" }}
+                  style={{ color: "var(--text-muted)" }}
                 />
                 <input
                   type="email"
@@ -273,7 +273,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                   placeholder="Enter your work email"
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
                   style={{
-                    backgroundColor: "var(--bg-surface-2, #F8F9FC)",
+                    backgroundColor: "var(--bg-surface-2)",
                     border: "1px solid var(--border-subtle)",
                     color: TEXT,
                     fontFamily: SANS,
@@ -298,7 +298,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
                 style={{
                   background: ACCENT,
-                  color: "#fff",
+                  color: "var(--text-inverse)",
                   fontFamily: SANS,
                   fontWeight: 600,
                   boxShadow: "0 0 16px var(--accent-glow)",
@@ -312,7 +312,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
               className="flex items-center gap-2 px-4 py-3 rounded-xl"
               style={{ backgroundColor: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)" }}
             >
-              <CheckCircle2 size={16} style={{ color: "#16A34A" }} />
+              <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
               <span className="text-[13px]" style={{ color: "var(--text-secondary)", fontFamily: SANS }}>
                 You&apos;re on the list. We&apos;ll be in touch shortly.
               </span>
@@ -645,7 +645,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                         className="inline-flex items-center gap-2 px-6 py-3 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
                         style={{
                           background: ACCENT,
-                          color: "#fff",
+                          color: "var(--text-inverse)",
                           fontFamily: SANS,
                           fontWeight: 600,
                           boxShadow: "0 0 16px var(--accent-glow)",
@@ -742,7 +742,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200 hover:scale-[1.03] cursor-pointer"
               style={{
                 background: ACCENT,
-                color: "#fff",
+                color: "var(--text-inverse)",
                 fontFamily: SANS,
                 fontWeight: 600,
                 boxShadow: "0 0 24px var(--accent-glow)",

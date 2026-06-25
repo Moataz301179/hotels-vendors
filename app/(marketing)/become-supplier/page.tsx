@@ -157,7 +157,7 @@ export default function SupplierOnboardingPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
         <MarketingNav />
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -187,7 +187,7 @@ export default function SupplierOnboardingPage() {
 
             <div className="flex gap-4 justify-center">
               <Link href="/" className="px-6 py-3 rounded-xl bg-[var(--background)] border border-subtle text-primary/60 text-sm font-medium hover:bg-surface-hover transition-colors">Back to Home</Link>
-              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[var(--accent-base)] text-black text-sm font-medium hover:bg-[#FF8A33] transition-colors">Apply Another Business</button>
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[var(--accent-base)] text-black text-sm font-medium hover:bg-[var(--accent-light)] transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
         </div>
@@ -479,11 +479,11 @@ export default function SupplierOnboardingPage() {
                   <ArrowLeft size={16} />Back
                 </button>
                 {step < 5 ? (
-                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[#FF8A33] transition-colors">
+                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[var(--accent-light)] transition-colors">
                     Continue<ArrowRight size={16} />
                   </button>
                 ) : (
-                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[#FF8A33] disabled:opacity-50 transition-colors">
+                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-base)] text-black text-[13px] font-medium hover:bg-[var(--accent-light)] disabled:opacity-50 transition-colors">
                     {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                     {submitting ? "Submitting..." : "Submit Application"}
                   </button>

@@ -33,7 +33,7 @@ export default async function BlogPage() {
   const featured = await getFeaturedPosts();
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-primary" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       {/* Header */}
       <div className="border-b border-white/10">
         <div className="mx-auto max-w-7xl px-6 py-6">

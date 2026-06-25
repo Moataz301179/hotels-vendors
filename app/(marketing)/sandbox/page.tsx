@@ -90,7 +90,7 @@ const ROLES: RoleConfig[] = [
     key: "supplier",
     label: "Supplier / Vendor",
     icon: Store,
-    color: "#22C55E",
+    color: "var(--success)",
     accentMuted: "rgba(34,197,94,0.1)",
     description: "Use the INVO marketplace aggregator to receive orders and the HotelsVendors fintech layer to get paid fast.",
     steps: [
@@ -128,7 +128,7 @@ const ROLES: RoleConfig[] = [
     key: "factoring",
     label: "Factoring Company",
     icon: Landmark,
-    color: "#D4A843",
+    color: "var(--warning)",
     accentMuted: "rgba(212,168,67,0.1)",
     description: "Use the HotelsVendors fintech orchestrator to access pre-verified invoices and settle via bank-direct payments.",
     steps: [
@@ -166,7 +166,7 @@ const ROLES: RoleConfig[] = [
     key: "shipping",
     label: "Logistics Provider",
     icon: Truck,
-    color: "#3B82F6",
+    color: "var(--info)",
     accentMuted: "rgba(59,130,246,0.1)",
     description: "Use the INVO marketplace aggregator to find loads and the HotelsVendors compliance layer to ensure digital proof of delivery.",
     steps: [
@@ -204,7 +204,7 @@ const ROLES: RoleConfig[] = [
     key: "admin",
     label: "Admin / Operator",
     icon: Monitor,
-    color: "#A855F7",
+    color: "var(--accent-light)",
     accentMuted: "rgba(168,85,247,0.1)",
     description: "Monitor platform health, manage tenants, audit transactions, and track revenue via the HotelsVendors orchestrator.",
     steps: [
@@ -242,7 +242,7 @@ const ROLES: RoleConfig[] = [
     key: "eta-officer",
     label: "ETA Compliance Officer",
     icon: ShieldCheck,
-    color: "#F97316",
+    color: "var(--accent-base)",
     accentMuted: "rgba(249,115,22,0.1)",
     description: "Use the HotelsVendors compliance SaaS to monitor ETA submission pipelines and validate cryptographic signatures.",
     steps: [
@@ -307,7 +307,7 @@ export default function SandboxPage() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)" }}>
+    <main className="min-h-screen" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       <section className="pt-24 pb-16 relative overflow-hidden">
@@ -326,7 +326,7 @@ export default function SandboxPage() {
               <span className="text-[10px] text-primary/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(24px,3.5vw,40px)] font-bold tracking-tight text-primary mb-3">
-              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, var(--accent-base), #00E5CC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
+              Try HotelsVendors.<br /><span style={{ background: "linear-gradient(135deg, var(--accent-base), var(--accent-light))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>No Sign-Up Required.</span>
             </h1>
             <p className="text-[13px] text-primary/50 max-w-2xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting,<br className="hidden md:block" />
@@ -458,11 +458,11 @@ export default function SandboxPage() {
                             transition={{ delay: i * 0.06 }}
                             className="rounded-xl overflow-hidden transition-all"
                             style={{
-                              backgroundColor: isCurrent ? "rgba(255,255,255,0.02)" : "#0a0a0a",
+                              backgroundColor: isCurrent ? "rgba(255,255,255,0.02)" : "var(--bg-surface-1)",
                               border: `1px solid ${
                                 isCompleted ? role!.color + "30"
                                 : isCurrent ? "rgba(255,255,255,0.1)"
-                                : "rgba(255,255,255,0.04)"
+                                : "var(--border-subtle)"
                               }`,
                               opacity: isLocked ? 0.45 : 1,
                             }}
@@ -475,7 +475,7 @@ export default function SandboxPage() {
                                   style={{
                                     backgroundColor: isCompleted
                                       ? role!.color + "18"
-                                      : "rgba(255,255,255,0.04)",
+                                      : "var(--border-subtle)",
                                   }}
                                 >
                                   {isCompleted ? (
@@ -540,7 +540,7 @@ export default function SandboxPage() {
                                       onClick={() => handleStartStep(i)}
                                       disabled={isRunning}
                                       className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold rounded-lg transition-all disabled:opacity-50"
-                                      style={{ backgroundColor: role!.color, color: "#fff" }}
+                                      style={{ backgroundColor: role!.color, color: "var(--text-primary)" }}
                                     >
                                       {isRunning ? (
                                         <>
@@ -596,7 +596,7 @@ export default function SandboxPage() {
                             <Link
                               href="/register"
                               className="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_var(--accent-glow)]"
-                              style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}
+                              style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}
                             >
                               Get Full Access <ArrowRight size={13} />
                             </Link>

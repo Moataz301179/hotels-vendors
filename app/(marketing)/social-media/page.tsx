@@ -32,12 +32,12 @@ const stagger = {
 
 export default function SocialMediaPage() {
   return (
-    <main className="bg-black min-h-screen">
+    <main className="min-h-screen" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       {/* Hero */}
       <section className="relative pt-36 pb-20">
-        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[#D4A843]/[0.03] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[var(--warning)]/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             variants={stagger}
@@ -57,7 +57,7 @@ export default function SocialMediaPage() {
             >
               The Story of
               <br />
-              <span className="text-[#D4A843]">Smarter Procurement</span>
+              <span className="text-[var(--warning)]">Smarter Procurement</span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
@@ -70,7 +70,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="#channels"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#D4A843] text-black text-[14px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[var(--warning)] text-black text-[14px] font-medium rounded-xl hover:bg-[var(--accent-light)] transition-colors"
               >
                 Follow Our Channels
                 <ArrowRight className="w-4 h-4" />
@@ -300,7 +300,7 @@ export default function SocialMediaPage() {
             <h2 className="text-[28px] sm:text-[40px] font-medium text-white tracking-[-0.02em] leading-tight">
               Be Part of the
               <br />
-              <span className="text-[#D4A843]">Procurement Revolution</span>
+              <span className="text-[var(--warning)]">Procurement Revolution</span>
             </h2>
             <p className="mt-4 text-[16px] text-white/35 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider, there is
@@ -309,7 +309,7 @@ export default function SocialMediaPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A843] text-black text-[14px] font-medium rounded-xl hover:bg-[#e0b856] transition-colors"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--warning)] text-black text-[14px] font-medium rounded-xl hover:bg-[var(--accent-light)] transition-colors"
               >
                 Create Account
                 <ArrowRight className="w-4 h-4" />

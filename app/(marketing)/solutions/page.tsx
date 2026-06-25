@@ -115,7 +115,7 @@ export default function SolutionsPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-center lg:justify-end">
-                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "#fff" }}>
+                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--text-primary)" }}>
                     {s.cta} <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -136,9 +136,9 @@ export default function SolutionsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
               { icon: Building2, label: "Hotels", color: "var(--accent-base)" },
-              { icon: Store, label: "Suppliers", color: "#22C55E" },
-              { icon: Landmark, label: "Funders", color: "#D4A843" },
-              { icon: Truck, label: "Carriers", color: "#3B82F6" },
+              { icon: Store, label: "Suppliers", color: "var(--success)" },
+              { icon: Landmark, label: "Funders", color: "var(--warning)" },
+              { icon: Truck, label: "Carriers", color: "var(--info)" },
             ].map((item) => (
               <div key={item.label} className="rounded-xl p-4 transition-all" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
                 <item.icon size={20} className="mx-auto mb-2" style={{ color: accent }} />
@@ -156,7 +156,7 @@ export default function SolutionsPage() {
           <h2 className="text-[24px] font-semibold mb-4 text-primary" style={{ fontFamily: "'Playfair Display', serif" }}>ETA Compliant. FRA Secure.</h2>
           <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "#fff" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--text-primary)" }}>
               Get Started <ArrowRight size={14} />
             </Link>
           </div>

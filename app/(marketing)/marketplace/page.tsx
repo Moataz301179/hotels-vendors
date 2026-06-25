@@ -31,10 +31,10 @@ import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 const accent = "var(--accent-base)";
-const accentMuted = "rgba(52,211,153,0.08)";
-const accentBorder = "rgba(52,211,153,0.20)";
-const surface = "#111520";
-const borderSubtle = "rgba(255,255,255,0.06)";
+const accentMuted = "var(--accent-muted)";
+const accentBorder = "var(--accent-glow)";
+const surface = "var(--bg-surface-1)";
+const borderSubtle = "var(--border-subtle)";
 
 const CATEGORIES = [
   { name: "F&B", desc: "Food, beverages & kitchen equipment", icon: "🍽️" },
@@ -148,7 +148,7 @@ export default function MarketplacePage() {
   };
 
   return (
-    <main className="min-h-screen text-white" style={{ backgroundColor: "var(--background)", fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+    <main className="min-h-screen text-primary" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
       {/* ═══ Hero ═══ */}
@@ -179,10 +179,10 @@ export default function MarketplacePage() {
                   placeholder="your@hotel.com"
                   required
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] text-white placeholder:text-white/20 outline-none"
-                  style={{ backgroundColor: "rgba(255,255,255,0.04)", border: `1px solid ${borderSubtle}` }}
+                  style={{ backgroundColor: "var(--border-subtle)", border: `1px solid ${borderSubtle}` }}
                 />
               </div>
-              <button type="submit" className="px-6 py-3.5 rounded-xl text-[13px] font-medium transition-all hover:opacity-90 flex items-center gap-2" style={{ backgroundColor: accent, color: "#fff" }}>
+              <button type="submit" className="px-6 py-3.5 rounded-xl text-[13px] font-medium transition-all hover:opacity-90 flex items-center gap-2" style={{ backgroundColor: accent, color: "var(--text-primary)" }}>
                 Join Waitlist <ArrowRight size={14} />
               </button>
             </form>
@@ -238,7 +238,7 @@ export default function MarketplacePage() {
               const avatarBg = v.featured
                 ? accent
                 : `hsl(${hue % 360}, 45%, 28%)`;
-              const avatarColor = v.featured ? "#fff" : "rgba(255,255,255,0.85)";
+              const avatarColor = v.featured ? "var(--text-primary)" : "rgba(255,255,255,0.85)";
               return (
                 <div
                   key={v.name}
@@ -309,13 +309,13 @@ export default function MarketplacePage() {
                 <div key={hook.path} className="px-4 py-3 flex items-center gap-3 hover:bg-white/[0.02] transition-colors" style={{ borderBottom: `1px solid ${borderSubtle}` }}>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded" style={{
                     backgroundColor: hook.method === "GET" ? "rgba(59,130,246,0.15)" : "rgba(34,197,94,0.15)",
-                    color: hook.method === "GET" ? "#60A5FA" : "#4ADE80",
+                    color: hook.method === "GET" ? "var(--info)" : "var(--success)",
                   }}>{hook.method}</span>
                   <code className="text-[12px] font-mono text-white/60 flex-1">{hook.path}</code>
                   <span className="text-[10px] text-white/30 hidden sm:block">{hook.desc}</span>
                   <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{
                     backgroundColor: hook.status === "active" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
-                    color: hook.status === "active" ? "#4ADE80" : "#FACC15",
+                    color: hook.status === "active" ? "var(--success)" : "var(--warning)",
                   }}>{hook.status}</span>
                 </div>
               ))}
@@ -420,7 +420,7 @@ export default function MarketplacePage() {
             Join the waitlist for early access. Priority onboarding for coastal hotel procurement teams.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:opacity-90" style={{ backgroundColor: accent, color: "#fff" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:opacity-90" style={{ backgroundColor: accent, color: "var(--text-primary)" }}>
               Get Started Free <ArrowRight size={14} />
             </Link>
             <Link href="/become-supplier" className="inline-flex items-center gap-2 px-6 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: `1px solid ${accentBorder}`, color: accent }}>

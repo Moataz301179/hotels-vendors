@@ -28,7 +28,7 @@ const pillars = [
     icon: Receipt,
     num: "02",
     title: "ETA E-Invoicing Compliance",
-    color: "#22C55E",
+    color: "var(--success)",
     desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA-2048 encryption, UUID-tracked, and submitted in real-time. Zero penalty risk.",
     features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Phase 1 & 2 compliant"],
   },
@@ -36,7 +36,7 @@ const pillars = [
     icon: Truck,
     num: "03",
     title: "Shared-Route Logistics",
-    color: "#3B82F6",
+    color: "var(--info)",
     desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs. Cold-chain capable with real-time GPS.",
     features: ["Route consolidation", "6 governorate coverage", "Real-time GPS tracking", "Cold-chain capable"],
   },
@@ -44,7 +44,7 @@ const pillars = [
     icon: Banknote,
     num: "04",
     title: "Embedded Factoring",
-    color: "#D4A843",
+    color: "var(--warning)",
     desc: "Hotel-initiated reverse factoring with licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
     features: ["Licensed grantor network", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
   },
@@ -66,7 +66,7 @@ export default function PlatformPage() {
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring, all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
@@ -164,7 +164,7 @@ export default function PlatformPage() {
           <h2 className="text-[24px] font-medium mb-4 text-primary">Ready to Automate Your Procurement?</h2>
           <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Purpose-built for Egyptian hospitality groups managing coastal and inland properties.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>

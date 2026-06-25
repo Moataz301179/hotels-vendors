@@ -163,9 +163,9 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-4 gap-4">
             {[
               { icon: Shield, title: "Compliance First", titleAr: "الامتثال أولاً", desc: "ETA e-invoicing, FRA anti-fraud, and cryptographic audit trails are built in — not bolted on.", color: "var(--accent-base)" },
-              { icon: Globe, title: "Egypt-Focused", titleAr: "تركيز مصري", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements.", color: "#16A34A" },
-              { icon: Zap, title: "AI-Native", titleAr: "ذكاء اصطناعي أصلي", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture.", color: "#2563EB" },
-              { icon: Target, title: "Hospitality-Only", titleAr: "ضيافة فقط", desc: "We do not serve every industry. We serve hospitality better than anyone else.", color: "#D4A843" },
+              { icon: Globe, title: "Egypt-Focused", titleAr: "تركيز مصري", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements.", color: "var(--success)" },
+              { icon: Zap, title: "AI-Native", titleAr: "ذكاء اصطناعي أصلي", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture.", color: "var(--info)" },
+              { icon: Target, title: "Hospitality-Only", titleAr: "ضيافة فقط", desc: "We do not serve every industry. We serve hospitality better than anyone else.", color: "var(--warning)" },
             ].map((v) => (
               <div key={v.title} className="surface-card p-6 text-center transition-all">
                 <v.icon size={24} className="mx-auto mb-3" style={{ color: v.color }} />
@@ -185,7 +185,7 @@ export default function AboutPage() {
           <h2 className="text-[24px] font-medium mb-4 text-primary">Want to Learn More?</h2>
           <p className="text-[13px] text-muted mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
               Get Started <ArrowRight size={14} />
             </Link>
             <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>

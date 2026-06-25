@@ -62,32 +62,32 @@ export default function PortalPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-zinc-100 text-zinc-900">
+    <div className="flex flex-col md:flex-row min-h-screen bg-zinc-100 text-zinc-900" style={{ fontFamily: "var(--font-sans)" }}>
       {/* ── Sidebar ── */}
       <aside className="w-full md:w-72 bg-black text-white flex flex-col justify-between shrink-0 border-r border-white/10">
         <div className="p-6">
           <nav className="space-y-1.5 mt-6">
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block mb-3 pl-3">Main Portal</span>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-white"
+            <button type="button" aria-label="Invoice Ledger" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-white"
               style={{ borderLeft: `2px solid ${ACCENT}` }}
             >
               <svg className="w-4 h-4" style={{ color: ACCENT }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
               </svg>
               Invoice Ledger
-            </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-950 hover:text-white transition-colors">
+            </button>
+            <button type="button" aria-label="Verified Suppliers" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-950 hover:text-white transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Verified Suppliers
-            </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-950 hover:text-white transition-colors">
+            </button>
+            <button type="button" aria-label="Volume Forecasting" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-950 hover:text-white transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 01-2 2h-2a2 2 0 01-2-2zm9 0v-10a2 2 0 00-2-2h-2a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
               </svg>
               Volume Forecasting
-            </a>
+            </button>
 
             <div className="pt-6">
               <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block mb-3 pl-3">Integrations</span>
@@ -124,7 +124,7 @@ export default function PortalPage() {
           <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-800">Operational Invoicing Ledger</h2>
           <div className="flex items-center gap-4">
             <span className="text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1.5"
-              style={{ backgroundColor: "#10B98115", border: "1px solid #10B98125", color: "#059669" }}
+              style={{ backgroundColor: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.15)", color: "var(--success)" }}
             >
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
               {etaStatus}
@@ -154,7 +154,7 @@ export default function PortalPage() {
               <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: ACCENT }}>Critical System Alerts</span>
               <div className="flex items-center justify-between">
                 <span className="text-2xl lg:text-3xl font-bold tracking-tight" style={{ color: ACCENT }}>3 Errors</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded uppercase" style={{ backgroundColor: ACCENT, color: "#ffffff" }}>Requires Action</span>
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded uppercase" style={{ backgroundColor: ACCENT, color: "var(--text-primary)" }}>Requires Action</span>
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function PortalPage() {
               <button
                 onClick={triggerInvoiceGeneration}
                 className="text-xs px-3.5 py-2 rounded-xl transition-all font-semibold w-full sm:w-auto"
-                style={{ backgroundColor: ACCENT, color: "#ffffff" }}
+                style={{ backgroundColor: ACCENT, color: "var(--text-primary)" }}
               >
                 Simulate Automated Invoice Generation
               </button>
@@ -194,15 +194,15 @@ export default function PortalPage() {
                         <span
                           className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"
                           style={{
-                            backgroundColor: row.statusColor === "emerald" ? "#10B98115" : row.statusColor === "amber" ? "#F59E0B15" : `${ACCENT}15`,
-                            border: row.statusColor === "emerald" ? "1px solid #10B98125" : row.statusColor === "amber" ? "1px solid #F59E0B25" : `1px solid ${ACCENT}25`,
-                            color: row.statusColor === "emerald" ? "#059669" : row.statusColor === "amber" ? "#D97706" : ACCENT,
+                            backgroundColor: row.statusColor === "emerald" ? "rgba(16,185,129,0.08)" : row.statusColor === "amber" ? "rgba(245,158,11,0.08)" : `${ACCENT}15`,
+                            border: row.statusColor === "emerald" ? "1px solid rgba(16,185,129,0.15)" : row.statusColor === "amber" ? "1px solid rgba(245,158,11,0.15)" : `1px solid ${ACCENT}25`,
+                            color: row.statusColor === "emerald" ? "var(--success)" : row.statusColor === "amber" ? "var(--warning)" : ACCENT,
                           }}
                         >
                           <span
                             className="w-1.5 h-1.5 rounded-full"
                             style={{
-                              backgroundColor: row.statusColor === "emerald" ? "#10B981" : row.statusColor === "amber" ? "#F59E0B" : ACCENT,
+                              backgroundColor: row.statusColor === "emerald" ? "var(--success)" : row.statusColor === "amber" ? "var(--warning)" : ACCENT,
                             }}
                           />
                           {row.status}
@@ -292,7 +292,7 @@ export default function PortalPage() {
                 <button
                   type="submit"
                   className="flex-1 font-bold py-3.5 rounded-xl transition-all text-xs uppercase tracking-wider"
-                  style={{ backgroundColor: ACCENT, color: "#ffffff" }}
+                  style={{ backgroundColor: ACCENT, color: "var(--text-primary)" }}
                 >
                   Apply Changes
                 </button>

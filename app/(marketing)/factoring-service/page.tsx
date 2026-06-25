@@ -33,7 +33,7 @@ const funderFeatures = [
 
 export default function FactoringServicePage() {
   return (
-    <main style={{ backgroundColor: "var(--background)", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -50,7 +50,7 @@ export default function FactoringServicePage() {
             <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
               How It Works
             </Link>
           </div>
@@ -58,7 +58,7 @@ export default function FactoringServicePage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "var(--background)" }}>
+      <section className="py-8 border-y" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -68,7 +68,7 @@ export default function FactoringServicePage() {
               { icon: Clock, label: "24-Hour Payment", desc: "Programmatic settlement" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#D4A843" }} />
+                <b.icon size={16} style={{ color: "var(--warning)" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -87,7 +87,7 @@ export default function FactoringServicePage() {
             {flow.map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(212,168,67,0.1)" }}>
-                  <item.icon size={20} style={{ color: "#D4A843" }} />
+                  <item.icon size={20} style={{ color: "var(--warning)" }} />
                 </div>
                 <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Step {item.step}</span>
                 <h3 className="text-[13px] font-medium text-white mt-1 mb-1.5">{item.title}</h3>
@@ -104,8 +104,8 @@ export default function FactoringServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {funderFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#D4A843]/20" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-3" style={{ color: "#D4A843" }} />
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[var(--warning)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+                <f.icon size={20} className="mb-3" style={{ color: "var(--warning)" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
               </div>
@@ -117,14 +117,14 @@ export default function FactoringServicePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#D4A843" }} />
+          <Users size={28} className="mx-auto mb-6" style={{ color: "var(--warning)" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
               Register Your Hotel
             </Link>
           </div>

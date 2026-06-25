@@ -35,7 +35,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Anti-Fraud & Financial",
     icon: Shield,
-    color: "#22C55E",
+    color: "var(--success)",
     standards: [
       { name: "FRA Anti-Fraud Compliance", status: "Enforced", desc: "Mandatory three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note. Every transaction cryptographically validated before processing.", ref: "FRA Regulation" },
       { name: "Non-Recourse Factoring Framework", status: "Implemented", desc: "All platform factoring is non-recourse. Supplier default risk transfers at bid acceptance. Licensed grantors underwrite each invoice.", ref: "Law 194/2020" },
@@ -46,7 +46,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Data Protection & Privacy",
     icon: Lock,
-    color: "#3B82F6",
+    color: "var(--info)",
     standards: [
       { name: "AES-256-GCM Encryption at Rest", status: "Active", desc: "All enterprise financial data, invoice payloads, and ETA submission records encrypted with AES-256-GCM at rest.", ref: "ISO 27001" },
       { name: "TLS 1.3 Encryption in Transit", status: "Active", desc: "All data in transit protected with TLS 1.3. No unencrypted communication between platform components.", ref: "Platform Architecture" },
@@ -57,7 +57,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Security & Infrastructure",
     icon: Server,
-    color: "#D4A843",
+    color: "var(--warning)",
     standards: [
       { name: "ISO/IEC 27001 Ready Architecture", status: "Audit-Ready", desc: "Information security management system designed for ISO 27001 certification. Policies, procedures, and controls documented.", ref: "ISO 27001:2022" },
       { name: "SOC 2 Type II Ready", status: "Audit-Ready", desc: "Controls for security, availability, processing integrity, confidentiality, and privacy designed for SOC 2 Type II audit.", ref: "SOC 2" },
@@ -68,7 +68,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Governance & Access Control",
     icon: Eye,
-    color: "#6366f1",
+    color: "var(--accent-light)",
     standards: [
       { name: "Authority Matrix Enforcement", status: "Active", desc: "Multi-level approval chains based on order value, hotel tier, supplier tier, and user role. No bypass possible.", ref: "Corporate Governance" },
       { name: "RBAC — Server-Side Only", status: "Enforced", desc: "Permissions assigned to tenant-scoped roles. Every API route calls requirePermission() before execution. Client never decides access.", ref: "Platform Architecture" },
@@ -79,7 +79,7 @@ const REGULATORY_STANDARDS = [
   {
     category: "Credit & Risk Management",
     icon: Scale,
-    color: "#22C55E",
+    color: "var(--success)",
     standards: [
       { name: "I-Score Assessment Readiness", status: "Ready", desc: "Clean real-time risk parameters for hotel creditworthiness. Payment history, credit utilization, dispute rate, ETA compliance scoring.", ref: "I-Score" },
       { name: "AI Credit Risk Scoring", status: "Active", desc: "Hospitality-specific risk model: seasonal cash flows, occupancy rates, payment histories. Weighted composite score (0-100).", ref: "Platform AI" },
@@ -99,11 +99,11 @@ const LEGAL_FRAMEWORKS = [
 
 const AUDIT_CERTIFICATIONS = [
   { icon: FileCheck, label: "ETA Phase 1 & 2 Compliant", desc: "Egyptian Tax Authority e-invoicing", color: "var(--accent-base)" },
-  { icon: Shield, label: "FRA Anti-Fraud — 3-Way Match", desc: "PO + ETA UUID + Signed GRN", color: "#22C55E" },
-  { icon: Lock, label: "AES-256-GCM at Rest", desc: "Enterprise data encryption", color: "#3B82F6" },
-  { icon: Server, label: "99.99% Uptime SLA", desc: "Multi-zone redundant infrastructure", color: "#D4A843" },
-  { icon: Eye, label: "ISO 27001 Ready", desc: "Information security management", color: "#6366f1" },
-  { icon: Scale, label: "SOC 2 Type II Ready", desc: "Audit-ready controls", color: "#22C55E" },
+  { icon: Shield, label: "FRA Anti-Fraud — 3-Way Match", desc: "PO + ETA UUID + Signed GRN", color: "var(--success)" },
+  { icon: Lock, label: "AES-256-GCM at Rest", desc: "Enterprise data encryption", color: "var(--info)" },
+  { icon: Server, label: "99.99% Uptime SLA", desc: "Multi-zone redundant infrastructure", color: "var(--warning)" },
+  { icon: Eye, label: "ISO 27001 Ready", desc: "Information security management", color: "var(--accent-light)" },
+  { icon: Scale, label: "SOC 2 Type II Ready", desc: "Audit-ready controls", color: "var(--success)" },
 ];
 
 export default function CompliancePage() {
@@ -199,7 +199,7 @@ export default function CompliancePage() {
           <Building2 size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
           <h2 className="text-[24px] font-medium mb-4 text-primary">Need a Compliance Walkthrough?</h2>
           <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Schedule a dedicated session with our compliance team to review how HotelsVendors meets your regulatory requirements.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "#fff" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
             Request Compliance Review <ArrowRight size={14} />
           </Link>
         </div>
