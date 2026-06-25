@@ -33,9 +33,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setModeState(savedMode as ThemeMode);
       document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
     } else {
-      setModeState("coinbase");
-      document.documentElement.setAttribute("data-theme", "coinbase");
-      localStorage.setItem("hv-theme-mode", "coinbase");
+      const prefersDark =
+        typeof window !== "undefined" &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initial: ThemeMode = prefersDark ? "notion" : "coinbase";
+      setModeState(initial);
+      document.documentElement.setAttribute("data-theme", initial);
+      localStorage.setItem("hv-theme-mode", initial);
     }
   }, []);
 

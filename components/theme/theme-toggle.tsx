@@ -1,57 +1,52 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./theme-provider";
 
 export function ThemeToggle() {
   const { mode, setMode } = useTheme();
-
   const isNotion = mode === "notion";
 
   return (
     <div
-      className="flex items-center gap-1.5 p-1 rounded-full border"
+      className="flex items-center p-0.5 rounded-full border"
       style={{
         borderColor: "var(--border-subtle)",
         background: "var(--bg-surface-2)",
       }}
-      title={`Theme: ${mode}`}
+      role="radiogroup"
+      aria-label="Theme"
     >
-      {/* Notion (dark) */}
-      <button
-        onClick={() => setMode("notion")}
-        className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
-        style={{
-          background: isNotion ? "var(--accent-base)" : "transparent",
-          boxShadow: isNotion ? "0 0 8px var(--accent-glow)" : "none",
-        }}
-        aria-label="Notion dark theme"
-      >
-        <span
-          className="block w-3 h-3 rounded-full"
-          style={{
-            background: isNotion ? "var(--accent-text)" : "var(--accent-base)",
-            opacity: isNotion ? 1 : 0.5,
-          }}
-        />
-      </button>
-
       {/* Coinbase (light) */}
       <button
         onClick={() => setMode("coinbase")}
-        className="relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
+        role="radio"
+        aria-checked={!isNotion}
+        aria-label="Light theme"
+        className="relative flex items-center gap-1.5 h-7 px-2.5 rounded-full text-xs font-medium transition-all duration-200"
         style={{
           background: !isNotion ? "var(--accent-base)" : "transparent",
-          boxShadow: !isNotion ? "0 0 8px var(--accent-glow)" : "none",
+          color: !isNotion ? "var(--accent-text)" : "var(--text-secondary)",
         }}
-        aria-label="Coinbase light theme"
       >
-        <span
-          className="block w-3 h-3 rounded-full"
-          style={{
-            background: !isNotion ? "var(--accent-text)" : "var(--accent-base)",
-            opacity: !isNotion ? 1 : 0.5,
-          }}
-        />
+        <Sun className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Light</span>
+      </button>
+
+      {/* Notion (dark) */}
+      <button
+        onClick={() => setMode("notion")}
+        role="radio"
+        aria-checked={isNotion}
+        aria-label="Dark theme"
+        className="relative flex items-center gap-1.5 h-7 px-2.5 rounded-full text-xs font-medium transition-all duration-200"
+        style={{
+          background: isNotion ? "var(--accent-base)" : "transparent",
+          color: isNotion ? "var(--accent-text)" : "var(--text-secondary)",
+        }}
+      >
+        <Moon className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Dark</span>
       </button>
     </div>
   );

@@ -108,6 +108,12 @@ export function MarketingNav() {
                 className="pt-4 mt-2 flex flex-col gap-2 border-t"
                 style={{ borderColor: "var(--border-subtle)" }}
               >
+                <div className="flex items-center justify-between">
+                  <span className="text-[12px] font-medium tracking-wide uppercase text-muted">
+                    Theme
+                  </span>
+                  <ThemeToggle />
+                </div>
                 <Link
                   href="/login"
                   className="w-full text-center py-2.5 text-[12px] font-medium border rounded-xl transition-colors border-white/40 text-muted hover:text-primary hover:bg-surface-hover"

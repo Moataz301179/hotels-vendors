@@ -115,9 +115,13 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'coinbase';
                   var valid = ['notion', 'coinbase'];
-                  if (valid.indexOf(mode) === -1) mode = 'coinbase';
+                  var saved = localStorage.getItem('hv-theme-mode');
+                  var mode = valid.indexOf(saved) !== -1 ? saved : null;
+                  if (!mode) {
+                    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    mode = dark ? 'notion' : 'coinbase';
+                  }
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
