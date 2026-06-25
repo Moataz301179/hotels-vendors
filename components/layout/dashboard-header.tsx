@@ -39,7 +39,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
   const { mode, cycleMode } = useTheme();
 
   return (
-    <header className={`h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] ${mode === "original" ? "bg-[var(--background)]/90" : "bg-[#111827]/90"}`}>
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] bg-[#111827]/90">
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
@@ -104,7 +104,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
           aria-label="Cycle theme"
           title={`Theme: ${mode}`}
         >
-          {mode === "hercules" ? <Palette size={18} className="text-amber-400" /> : mode === "original" ? <Palette size={18} className="text-red-400" /> : <Sun size={18} />}
+          <Sun size={18} />
         </button>
 
         <button

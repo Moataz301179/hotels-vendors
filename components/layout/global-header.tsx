@@ -10,7 +10,7 @@ export function GlobalHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { mode } = useTheme();
-  const isOriginal = mode === "original";
+  const isOriginal = false;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);

@@ -59,9 +59,9 @@ export function MarketTicker() {
   const doubled = [...items, ...items];
 
   // Theme-aware colors
-  const isHercules = mode === "hercules";
-  const isOriginal = mode === "original";
-  const accentColor = isHercules ? "#D4AF37" : isOriginal ? "#ED1C24" : "#FF6B00";
+  const isHercules = false;
+  const isOriginal = false;
+  const accentColor = "#FF6B00";
   const bgColor = isHercules ? "#0a1628" : "#050505";
   const borderColor = isHercules ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)";
   const textColor = isHercules ? "#f0f4f8" : "#ffffff";

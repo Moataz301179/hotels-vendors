@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "wimbledon" | "original" | "hercules" | "light" | "fintech" | "coastal" | "luxury";
+export type ThemeMode = "notion" | "coinbase";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -11,7 +11,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  mode: "wimbledon",
+  mode: "coinbase",
   setMode: () => {},
   cycleMode: () => {},
 });
@@ -20,10 +20,10 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-const MODES: ThemeMode[] = ["wimbledon", "original", "hercules", "light", "fintech", "coastal", "luxury"];
+const MODES: ThemeMode[] = ["notion", "coinbase"];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("fintech");
+  const [mode, setModeState] = useState<ThemeMode>("coinbase");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,9 +33,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setModeState(savedMode as ThemeMode);
       document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
     } else {
-      setModeState("fintech");
-      document.documentElement.setAttribute("data-theme", "fintech");
-      localStorage.setItem("hv-theme-mode", "fintech");
+      setModeState("coinbase");
+      document.documentElement.setAttribute("data-theme", "coinbase");
+      localStorage.setItem("hv-theme-mode", "coinbase");
     }
   }, []);
 

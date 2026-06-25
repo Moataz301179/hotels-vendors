@@ -112,7 +112,7 @@ export function BrandLogo({
   const { mode } = useTheme();
   const iconSize = ICON_SIZE_MAP[size];
 
-  const isOriginal = forceColor === "original" || (forceColor !== "bw" && mode === "original");
+  const isOriginal = forceColor === "original";
 
   let iconColor: string;
   if (forceColor === "bw" || (!isOriginal && forceColor !== "original")) {

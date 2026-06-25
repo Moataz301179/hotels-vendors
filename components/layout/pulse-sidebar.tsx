@@ -216,7 +216,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
   const { mode } = useTheme();
-  const isOriginal = mode === "original";
+  const isOriginal = false;
 
   if (collapsed) {
     return (
