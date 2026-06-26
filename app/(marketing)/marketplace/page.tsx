@@ -106,7 +106,7 @@ export default function MarketplacePage() {
     const product = products.find((p) => p.id === id);
     if (!product) return;
     const resolved = getProductImage(product);
-    // Cart is optional on marketing — silently no-op if no cart context
+    // Cart is optional on marketing - silently no-op if no cart context
     try {
       // eslint-disable-next-line no-console
       console.log("Add to cart (marketing):", product.name);
@@ -128,13 +128,13 @@ export default function MarketplacePage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.05) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}>
-            <Sparkles size={12} style={{ color: accent }} />
-            <span className="text-[11px] font-medium" style={{ color: accent }}>Real Catalog — {total} Verified Products Online</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: accentMuted, border: "1px solid var(--accent-glow)" }}>
+            <Sparkles size={12} style={{ color: "var(--accent-base)" }} />
+            <span className="text-[11px] font-medium" style={{ color: "var(--accent-base)" }}>Real Catalog - {total} Verified Products Online</span>
           </div>
 
           <h1 className="text-[32px] sm:text-[44px] font-semibold tracking-tight mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Egypt&apos;s B2B Hospitality<br />Procurement Marketplace
+            Egypt's B2B Hospitality<br />Procurement Marketplace
           </h1>
           <p className="text-[15px] text-white/50 mb-8 max-w-2xl mx-auto leading-relaxed">
             Fixed-price catalogs from verified Egyptian suppliers. ETA-compliant invoicing.
@@ -162,7 +162,7 @@ export default function MarketplacePage() {
           ) : (
             <div className="inline-flex items-center gap-3 px-6 py-4 rounded-xl" style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
               <CheckCircle2 size={18} className="text-green-400" />
-              <span className="text-[14px] text-green-400">You&apos;re on the list. We&apos;ll reach out when we launch.</span>
+              <span className="text-[14px] text-green-400">You're on the list. We'll reach out when we launch.</span>
             </div>
           )}
           <p className="text-[11px] text-white/20 mt-3">No spam. Early access + priority onboarding for waitlist members.</p>
@@ -186,15 +186,15 @@ export default function MarketplacePage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentMuted }}>
-              <Package size={16} style={{ color: accent }} />
+              <Package size={16} style={{ color: "var(--accent-base)" }} />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: accent }}">Live Catalog — Verified Suppliers</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--accent-base)" }}>Live Catalog - Verified Suppliers</span>
           </div>
           <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Real Products — Ready to Order
+            Real Products - Ready to Order
           </h2>
           <p className="text-[14px] text-white/40 max-w-2xl mb-8">
-            Browse fixed-price listings from verified Egyptian suppliers across F&B, consumables, guest supplies, FF&E, and services — actively serving Sharm El-Sheikh, Hurghada, Dahab, El Gouna, Marsa Alam, and the wider Red Sea corridor.
+            Browse fixed-price listings from verified Egyptian suppliers across F&B, consumables, guest supplies, FF&E, and services - actively serving Sharm El-Sheikh, Hurghada, Dahab, El Gouna, Marsa Alam, and the wider Red Sea corridor.
           </p>
 
           {/* Search Bar */}
@@ -265,7 +265,7 @@ export default function MarketplacePage() {
                       description={product.description || undefined}
                       sku={product.sku}
                       category={product.category}
-                      subcategory={product.subcategory}
+                      subcategory={product.subcategory || undefined}
                       unitPrice={product.unitPrice}
                       currency={product.currency}
                       stockQuantity={product.stockQuantity}
@@ -327,8 +327,8 @@ export default function MarketplacePage() {
               </div>
             ))}
             <div className="rounded-xl p-5 flex flex-col items-center justify-center text-center" style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}>
-              <Sparkles size={20} style={{ color: accent }} className="mb-2" />
-              <h3 className="text-[14px] font-medium mb-1" style={{ color: accent }}>AI Sourcing Agent</h3>
+              <Sparkles size={20} style={{ color: "var(--accent-base)" }} className="mb-2" />
+              <h3 className="text-[14px] font-medium mb-1" style={{ color: "var(--accent-base)" }}>AI Sourcing Agent</h3>
               <p className="text-[12px] text-white/40 leading-relaxed">Describe what you need. Our agent finds it from verified suppliers.</p>
             </div>
           </div>
@@ -346,7 +346,7 @@ export default function MarketplacePage() {
               { icon: Clock, label: "ETA Invoicing", desc: "Auto-generated compliant invoices" },
             ].map((signal) => (
               <div key={signal.label} className="rounded-xl p-4 text-center" style={{ backgroundColor: surface, border: `1px solid ${borderSubtle}` }}>
-                <signal.icon size={20} style={{ color: accent }} className="mx-auto mb-2" />
+                <signal.icon size={20} style={{ color: "var(--accent-base)" }} className="mx-auto mb-2" />
                 <p className="text-[12px] font-medium text-white/70 mb-0.5">{signal.label}</p>
                 <p className="text-[10px] text-white/30">{signal.desc}</p>
               </div>
