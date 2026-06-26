@@ -40,13 +40,22 @@ export const POST = apiRoute(async (request: NextRequest) => {
       invoiceId: invoice.id,
       hotelId: invoice.hotelId,
       amount: total,
-      settlementType: "DIRECT",
       status: "PENDING",
       tenantId: auth.tenantId,
     },
   });
 
-  await audit(auth, "payment:create", "Payment", payment.id, { amount: total.toString(), settlementType: "DIRECT" });
+  await audit({
+    entityType: "Payment",
+    entityId: payment.id,
+    action: "payment:create",
+    tenantId: auth.tenantId,
+    actorId: auth.userId,
+    actorRole: auth.platformRole,
+    afterState: { amount: total.toString(), settlementType: "DIRECT" },
+    ipAddress: request.headers.get("x-forwarded-for") || null,
+    userAgent: request.headers.get("user-agent"),
+  });
 
   return success({ payment });
 });

@@ -200,7 +200,7 @@ export async function GET() {
       riskAlerts,
       settlements: upcomingSettlements.map((s) => ({
         id: s.id,
-        date: s.disbursedAt.toISOString(),
+        date: s.disbursedAt?.toISOString() ?? null,
         amount: s.disbursedAmount?.toString() || "0",
         hotelName: s.invoice?.hotel?.name || "Unknown",
       })),

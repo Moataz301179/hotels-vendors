@@ -46,7 +46,7 @@ export async function GET() {
     });
 
     const pendingHotels = await prisma.hotel.findMany({
-      where: { status: "PENDING" },
+      where: { status: "PENDING_VERIFICATION" },
       orderBy: { createdAt: "asc" },
       take: 10,
       select: {

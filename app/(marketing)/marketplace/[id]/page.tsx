@@ -149,9 +149,7 @@ export default function ProductDetailPage() {
   const inCompare = isInCompare(product.id);
 
   const handleAddToCart = () => {
-    // Marketing context — cart is optional; log for now.
-    // eslint-disable-next-line no-console
-    console.log("Add to cart (marketing):", product.name, qty);
+    // Marketing context — cart is optional; visual feedback only
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };

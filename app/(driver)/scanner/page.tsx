@@ -22,11 +22,6 @@ interface BarcodeDetectorResult {
 interface BarcodeDetectorInstance {
   detect(image: ImageBitmapSource): Promise<BarcodeDetectorResult[]>;
 }
-declare global {
-  interface Window {
-    BarcodeDetector: new (options?: { formats: string[] }) => BarcodeDetectorInstance;
-  }
-}
 
 export default function DriverScannerPage() {
   const router = useRouter();
@@ -37,7 +32,7 @@ export default function DriverScannerPage() {
   const [lookupType, setLookupType] = useState<"delivery" | "order" | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const detectorRef = useRef<BarcodeDetectorInstance | null>(null);
+  const detectorRef = useRef<unknown>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Try DeliveryJob lookup first, then Order
@@ -45,10 +40,9 @@ export default function DriverScannerPage() {
   const { data: deliveryData } = useApi<{ deliveries: { id: string; jobNumber: string }[] }>(deliveryUrl || "");
 
   useEffect(() => {
-    if ("BarcodeDetector" in window) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Ctor = (window as any).BarcodeDetector;
-      detectorRef.current = new Ctor({
+    const w = window as unknown as { BarcodeDetector?: new (options?: { formats: string[] }) => BarcodeDetectorInstance };
+    if (w.BarcodeDetector) {
+      detectorRef.current = new w.BarcodeDetector({
         formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39", "qr_code"],
       });
     }
@@ -86,13 +80,14 @@ export default function DriverScannerPage() {
     if (!scanning || !videoRef.current) return;
 
     // If BarcodeDetector available, use it
-    if (detectorRef.current) {
+    if (detectorRef.current && videoRef.current) {
+      const detector = detectorRef.current as BarcodeDetectorInstance;
       if (videoRef.current.readyState !== 4) {
         requestAnimationFrame(detectBarcode);
         return;
       }
       try {
-        const barcodes = await detectorRef.current.detect(videoRef.current);
+        const barcodes = await detector.detect(videoRef.current);
         if (barcodes.length > 0 && barcodes[0].rawValue !== lastScanned) {
           setLastScanned(barcodes[0].rawValue);
           setScanning(false);

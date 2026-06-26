@@ -106,13 +106,7 @@ export default function MarketplacePage() {
     const product = products.find((p) => p.id === id);
     if (!product) return;
     const resolved = getProductImage(product);
-    // Cart is optional on marketing - silently no-op if no cart context
-    try {
-      // eslint-disable-next-line no-console
-      console.log("Add to cart (marketing):", product.name);
-    } catch {
-      // ignore
-    }
+    // Cart is optional on marketing — silently no-op if no cart context
   };
 
   const handleSubmit = (e: React.FormEvent) => {

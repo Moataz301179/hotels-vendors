@@ -20,11 +20,10 @@ async function tick(): Promise<void> {
     const dueOrders = await prisma.order.findMany({
       where: {
         status: "DELIVERED",
-        settledAt: null,
       },
       take: BATCH_SIZE,
       include: {
-        invoice: true,
+        invoices: true,
         supplier: true,
       },
     });
@@ -33,11 +32,11 @@ async function tick(): Promise<void> {
 
     const orders: SettlementOrder[] = dueOrders.map((o) => ({
       orderId: o.id,
-      invoiceId: o.invoiceId ?? "",
+      invoiceId: o.invoices?.[0]?.id ?? "",
       supplierId: o.supplierId,
       supplierName: o.supplier?.name ?? "Unknown",
-      amountCents: Math.round((o.totalAmount?.toNumber() ?? 0) * 100),
-      deliveredAt: o.deliveredAt?.toISOString() ?? new Date().toISOString(),
+      amountCents: Math.round((o.total?.toNumber() ?? 0) * 100),
+      deliveredAt: o.deliveryDate?.toISOString() ?? new Date().toISOString(),
       termsDays: 60,
       factoringEligible: false,
     }));
@@ -47,7 +46,7 @@ async function tick(): Promise<void> {
     for (const r of results) {
       if (r.status === "settled") {
         await prisma.order
-          .update({ where: { id: r.orderId }, data: { settledAt: new Date() } })
+          .update({ where: { id: r.orderId }, data: { paymentGuaranteeSetAt: new Date() } })
           .catch(() => undefined);
       }
     }

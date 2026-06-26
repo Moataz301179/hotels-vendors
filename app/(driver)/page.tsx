@@ -60,7 +60,7 @@ export default async function DriverHomePage() {
     where: {
       driverName: user.name,
       scheduledDate: { gte: today, lt: new Date(today.getTime() + 86400000) },
-      status: { in: ["IN_PROGRESS", "DISPATCHED"] },
+      status: { in: ["IN_TRANSIT", "LOADING"] },
     },
     include: {
       stops: {

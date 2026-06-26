@@ -47,6 +47,15 @@ interface Invoice {
   supplier: { name: string };
 }
 
+interface CreditFacility {
+  id: string;
+  limit: number;
+  utilized: number;
+  currency: string;
+  status: string;
+  hotel?: { name: string };
+}
+
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     ACTIVE: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Active" },
@@ -88,8 +97,13 @@ export default function FinanceDashboardPage() {
     "/api/invoices?page=1&limit=10"
   );
 
+  const { data: facilitiesData, loading: facilitiesLoading } = useApi<{ data: CreditFacility[] }>(
+    "/api/factoring/facilities"
+  );
+
   const requests = requestsData?.requests ?? [];
   const invoices = invoicesData?.data ?? [];
+  const facilities = facilitiesData?.data ?? [];
 
   const stats = useMemo(() => {
     const totalInvoiced = invoices.reduce((sum, inv) => sum + inv.total, 0);

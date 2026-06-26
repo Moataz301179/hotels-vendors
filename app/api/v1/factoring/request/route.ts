@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const FactoringRequestSchema = z.object({

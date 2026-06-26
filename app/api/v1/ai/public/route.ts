@@ -12,8 +12,12 @@ import { z } from "zod";
 
 async function checkRateLimit(ip: string, seconds: number, max: number) {
   // Simple in-memory rate limit (resets on deploy). For multi-instance, use Redis.
-  const { checkRateLimit: redisLimit } = await import("@/lib/redis").catch(() => null);
-  if (redisLimit) return redisLimit(ip, seconds, max);
+  try {
+    const redisMod = await import("@/lib/redis");
+    if (redisMod?.checkRateLimit) return redisMod.checkRateLimit(ip, seconds, max);
+  } catch {
+    // redis unavailable — fall through to allow
+  }
   return { allowed: true, remaining: max, resetAt: Date.now() + seconds * 1000 };
 }
 

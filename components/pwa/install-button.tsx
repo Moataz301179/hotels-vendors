@@ -1,6 +1,6 @@
 "use client";
 
-import { useInstallPrompt } from "@/lib/pwa/use-installPrompt";
+import { useInstallPrompt } from "@/lib/pwa/use-install-prompt";
 import { Download, Smartphone, X } from "lucide-react";
 import { useState } from "react";
 

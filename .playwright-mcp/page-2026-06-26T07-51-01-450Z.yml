@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "HotelsVendors" [ref=e7]
+        - generic [ref=e43]: HotelsVendors
+      - generic [ref=e44]:
+        - heading "Smarter Together." [level=2] [ref=e45]
+        - paragraph [ref=e46]: Egypt's B2B procurement platform connecting hotels with verified suppliers, embedded factoring, and automatic ETA compliance.
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: 2,400+
+          - paragraph [ref=e51]: Hotels Onboarded
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: 680+
+          - paragraph [ref=e55]: Verified Suppliers
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: EGP 4.2B
+          - paragraph [ref=e59]: Annual GMV
+    - generic [ref=e62]:
+      - banner [ref=e63]:
+        - generic [ref=e64]:
+          - link "HotelsVendors" [ref=e65] [cursor=pointer]:
+            - /url: /
+            - img "HotelsVendors" [ref=e67]
+          - navigation [ref=e103]:
+            - link "Platform" [ref=e105] [cursor=pointer]:
+              - /url: /platform
+              - text: Platform
+              - img [ref=e106]
+            - link "Marketplace" [ref=e109] [cursor=pointer]:
+              - /url: /marketplace
+            - link "Pricing" [ref=e111] [cursor=pointer]:
+              - /url: /pricing
+            - link "Solutions" [ref=e113] [cursor=pointer]:
+              - /url: /solutions
+              - text: Solutions
+              - img [ref=e114]
+            - link "Blog" [ref=e117] [cursor=pointer]:
+              - /url: /blog
+          - generic [ref=e118]:
+            - radiogroup "Theme" [ref=e119]:
+              - radio "Light theme" [checked] [ref=e120]:
+                - img [ref=e122]
+                - generic [ref=e128]: Light
+              - radio "Dark theme" [ref=e129]:
+                - img [ref=e130]
+                - generic [ref=e132]: Dark
+              - radio "Noir theme" [ref=e133]:
+                - img [ref=e134]
+                - generic [ref=e136]: Noir
+              - radio "Ember theme" [ref=e137]:
+                - img [ref=e138]
+                - generic [ref=e140]: Ember
+            - link "Sign In" [ref=e141] [cursor=pointer]:
+              - /url: /login
+            - link "Contact Sales" [ref=e142] [cursor=pointer]:
+              - /url: /about
+            - button "Get Started" [ref=e143] [cursor=pointer]
+      - generic [ref=e145]:
+        - generic [ref=e146]:
+          - generic [ref=e147]:
+            - heading "Welcome back" [level=2] [ref=e148]
+            - paragraph [ref=e149]: Sign in to your procurement portal
+          - generic [ref=e150]:
+            - generic [ref=e151]:
+              - text: Email or Username
+              - generic [ref=e152]:
+                - img [ref=e153]
+                - textbox "you@hotel.com or admin" [ref=e156]
+            - generic [ref=e157]:
+              - text: Password
+              - generic [ref=e158]:
+                - img [ref=e159]
+                - textbox "••••••••" [ref=e162]
+                - button [ref=e163]:
+                  - img [ref=e164]
+            - generic [ref=e167]:
+              - generic [ref=e168] [cursor=pointer]:
+                - checkbox "Remember me" [ref=e169]
+                - generic [ref=e170]: Remember me
+              - generic [ref=e171]:
+                - button "Resend verification" [ref=e172]
+                - link "Forgot password?" [ref=e173] [cursor=pointer]:
+                  - /url: /forgot-password
+            - button "Sign In" [ref=e174]:
+              - generic [ref=e175]: Sign In
+              - img [ref=e176]
+            - generic [ref=e180]: or continue with
+            - paragraph [ref=e182]:
+              - text: Need an account?
+              - link "Register here" [ref=e183] [cursor=pointer]:
+                - /url: /register
+        - paragraph [ref=e184]:
+          - text: Don't have an account?
+          - link "Create account" [ref=e185] [cursor=pointer]:
+            - /url: /register
+        - generic [ref=e186]:
+          - img [ref=e187]
+          - generic [ref=e189]: Secured with JWT + RBAC + Email Verification
+  - button "HotelsVendors AI Guide" [ref=e190]:
+    - img [ref=e191]

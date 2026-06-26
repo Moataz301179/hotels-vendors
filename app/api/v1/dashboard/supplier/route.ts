@@ -30,7 +30,7 @@ export async function GET() {
         where: {
           tenantId,
           ...(supplierId ? { supplierId } : {}),
-          isActive: true,
+          status: "ACTIVE",
         },
       }),
       // Open orders (not yet delivered/cancelled)
@@ -75,12 +75,12 @@ export async function GET() {
       where: {
         tenantId,
         ...(supplierId ? { supplierId } : {}),
-        status: { in: ["PAID", "VALIDATED"] },
+        status: { in: ["VALIDATED"] },
         paidDate: { gte: startOfMonth },
       },
       _sum: { total: true },
     });
-    const revenueThisMonth = revenueAgg._sum.total?.toString() || "0";
+    const revenueThisMonth = revenueAgg._sum?.total?.toString() || "0";
 
     // Revenue trend (last 6 months)
     const revenueData = [];
@@ -94,13 +94,13 @@ export async function GET() {
           tenantId,
           ...(supplierId ? { supplierId } : {}),
           paidDate: { gte: monthStart, lte: monthEnd },
-          status: { in: ["PAID", "VALIDATED"] },
+          status: { in: ["VALIDATED"] },
         },
         _sum: { total: true },
       });
       revenueData.push({
         month: d.toLocaleString("en", { month: "short" }),
-        revenue: Number(agg._sum.total || 0),
+        revenue: Number(agg._sum?.total || 0),
       });
     }
 
