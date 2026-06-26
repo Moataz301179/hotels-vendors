@@ -30,7 +30,7 @@ export const GET = apiRoute(async (request: NextRequest, ctx: { params: Promise<
           supplier: { select: { name: true } },
         },
       },
-      grnItems: {
+      items: {
         include: {
           product: { select: { id: true, name: true, sku: true } },
         },
@@ -109,7 +109,7 @@ export const PATCH = apiRoute(async (request: NextRequest, ctx: { params: Promis
     where: { id, tenantId: auth.tenantId },
     include: {
       order: { select: { id: true, orderNumber: true } },
-      grnItems: { include: { product: { select: { id: true, name: true } } } },
+      items: { include: { product: { select: { id: true, name: true } } } },
     },
   });
 

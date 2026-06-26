@@ -72,5 +72,6 @@ export function aesGcmDecrypt(ciphertext: string, key?: string): string {
 }
 
 export function deriveKey(passphrase: string, salt: Buffer): Buffer {
-  return crypto.hkdfSync("sha256", passphrase, salt, "", KEY_LENGTH);
+  const derived = crypto.hkdfSync("sha256", passphrase, salt, "", KEY_LENGTH);
+  return Buffer.from(derived);
 }

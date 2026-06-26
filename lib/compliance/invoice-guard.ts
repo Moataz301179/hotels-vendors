@@ -132,7 +132,7 @@ export async function assertCanSubmitInvoice(
   }
 
   // Full ETA validation
-  const fullInvoice = invoice as InvoiceWithItems;
+  const fullInvoice = invoice as unknown as InvoiceWithItems;
   const validation = validateInvoiceForEta(fullInvoice);
   if (!validation.valid) {
     throw new InvoiceAccessError(
@@ -183,10 +183,12 @@ export async function assertCanRequestFactoring(
     throw new InvoiceAccessError("Invoice not found", "INVOICE_NOT_FOUND", 404);
   }
 
-  // ETA status check: must be VALIDATED
-  if (invoice.etaStatus !== "VALIDATED" && invoice.etaStatus !== "ACCEPTED") {
+  // ETA status check: invoice must be validated (InvoiceStatus.VALVED) or ETA-accepted
+  const isEligible =
+    invoice.status === "VALIDATED" || invoice.etaStatus === "ACCEPTED";
+  if (!isEligible) {
     throw new InvoiceAccessError(
-      `Invoice ETA status must be VALIDATED or ACCEPTED to request factoring. Current: ${invoice.etaStatus}`,
+      `Invoice must be VALIDATED to request factoring. Current status: ${invoice.status}, ETA: ${invoice.etaStatus}`,
       "ETA_NOT_VALIDATED",
       409
     );

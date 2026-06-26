@@ -34,7 +34,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
             supplier: { select: { name: true } },
           },
         },
-        grnItems: { select: { id: true } },
+        items: { select: { id: true } },
       },
     }),
     prisma.grn.count({ where }),
@@ -51,7 +51,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const order = await prisma.order.findFirst({
     where: { id: data.orderId, tenantId: auth.tenantId },
-    include: { orderItems: { include: { product: { select: { id: true } } } } },
+    include: { items: { select: { id: true, unitPrice: true }, include: { product: { select: { id: true } } } } },
   });
 
   if (!order) return error("Order not found", 404);
@@ -68,19 +68,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
       tripStopId: data.tripStopId || null,
       notes: data.notes || null,
       tenantId: auth.tenantId,
-      grnItems: {
-        create: order.orderItems.map((item) => ({
+      items: {
+        create: order.items.map((item) => ({
           orderItemId: item.id,
           productId: item.productId,
           expectedQuantity: item.quantity,
           receivedQuantity: 0,
           rejectedQuantity: 0,
+          unitPrice: item.unitPrice,
         })),
       },
     },
     include: {
       order: true,
-      grnItems: { include: { product: true } },
+      items: { include: { product: true } },
     },
   });
 

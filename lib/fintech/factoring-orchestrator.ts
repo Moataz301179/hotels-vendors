@@ -169,7 +169,7 @@ export async function orchestrateFactoring(
     data: {
       invoiceId,
       requestedAmount: grossAmount,
-      factoringCompanyId: preferredPartnerId ?? null,
+      ...(preferredPartnerId ? { factoringCompanyId: preferredPartnerId } : {}),
       status: "UNDER_REVIEW",
       riskScore: riskAssessment.compositeScore,
       riskTier: riskAssessment.riskTier,
@@ -183,7 +183,7 @@ export async function orchestrateFactoring(
     hotelName: hotel.name,
     hotelRiskScore: riskAssessment.compositeScore,
     hotelRiskTier: riskAssessment.riskTier,
-    invoiceAmount: grossAmount,
+    invoiceAmount: grossAmount.toNumber(),
     invoiceCurrency: invoice.currency,
     invoiceDueDate: invoice.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     etaUuid: invoice.etaUuid!,
@@ -350,7 +350,7 @@ export async function checkSettlement(
 
   if (!fr) return { status: null, factoringRequestId };
 
-  const settlement = await trackSettlement(fr.factoringCompanyId, factoringRequestId);
+  const settlement = await trackSettlement(fr.factoringCompanyId!, factoringRequestId);
 
   if (settlement) {
     // Update persisted state
@@ -650,7 +650,7 @@ export async function orchestrateConsolidatedFactoring(
   };
 
   const hotel = ci.hotel;
-  const grossAmount = Number(ci.total);
+  const grossAmount = new Prisma.Decimal(Number(ci.total));
 
   // ── Stage 1: Risk Assessment ───────────────────────────────
   let riskAssessment;
@@ -716,7 +716,7 @@ export async function orchestrateConsolidatedFactoring(
     hotelName: hotel.name,
     hotelRiskScore: riskAssessment.compositeScore,
     hotelRiskTier: riskAssessment.riskTier,
-    invoiceAmount: grossAmount,
+    invoiceAmount: grossAmount.toNumber(),
     invoiceCurrency: ci.currency,
     invoiceDueDate: ci.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     etaUuid: ci.invoices[0]?.etaUuid || "CONSOLIDATED_ETA_CLUSTER",
@@ -753,11 +753,11 @@ export async function orchestrateConsolidatedFactoring(
   // ── Stage 5: Tri-Tier Margins & Programmatic Split Calculation ───────────────────────
   const advanceRate = bestOffer.maxAdvanceRate;
   const factorDiscountRate = bestOffer.discountRate;
-  const factoringFee = grossAmount.mul(factorDiscountRate);
+  const factoringFee = grossAmount.mul(new Prisma.Decimal(factorDiscountRate));
 
   // Stream 1: Fintech Commission from Factor
   const factoringCommissionRate = new Prisma.Decimal(0.015);
-  const factoringCommissionAmount = grossAmount.mul(advanceRate).mul(factoringCommissionRate);
+  const factoringCommissionAmount = grossAmount.mul(new Prisma.Decimal(advanceRate)).mul(factoringCommissionRate);
 
   // Stream 3: Hotel Admin Fee
   const hotelAdminFeeRate = new Prisma.Decimal(Number(ci.hotelAdminFeeRate ?? 0.01));
@@ -826,7 +826,7 @@ export async function orchestrateConsolidatedFactoring(
   }
 
   // Pocketed Cash-Discount Delta
-  const cashDiscountDelta = Math.max(0, totalSupplierDiscountAmount - factoringFee);
+  const cashDiscountDelta = new Prisma.Decimal(Math.max(0, totalSupplierDiscountAmount - factoringFee.toNumber()));
 
   // Update Consolidated Invoice totals
   await prisma.consolidatedInvoice.update({
@@ -838,13 +838,14 @@ export async function orchestrateConsolidatedFactoring(
   });
 
   // Persist calculated factoring fees
+  const platformFee = factoringCommissionAmount.add(cashDiscountDelta).add(hotelAdminFeeAmount);
   await prisma.factoringRequest.update({
     where: { id: factoringRequest.id },
     data: {
       grossAmount,
-      platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+      platformFee,
       factoringFee,
-      disbursedAmount: totalSupplierDisbursement,
+      disbursedAmount: new Prisma.Decimal(totalSupplierDisbursement),
     },
   });
 
@@ -853,8 +854,8 @@ export async function orchestrateConsolidatedFactoring(
     eligibilityResponseId: bestOffer.responseId,
     invoiceId: consolidatedInvoiceId,
     etaUuid: ci.invoices[0]?.etaUuid || "CONSOLIDATED_ETA_CLUSTER",
-    grossAmount,
-    platformFee: factoringCommissionAmount + cashDiscountDelta + hotelAdminFeeAmount,
+    grossAmount: grossAmount.toNumber(),
+    platformFee: platformFee.toNumber(),
     netDisbursement: totalSupplierDisbursement,
     supplierBankAccount: ci.invoices[0]?.supplier?.bankAccount || "ESCROW_CUSTODY",
     supplierBankName: ci.invoices[0]?.supplier?.bankName || "ESCROW_BANK",
@@ -886,15 +887,15 @@ export async function orchestrateConsolidatedFactoring(
     await recordDisbursementJournal(tx, {
       consolidatedInvoiceId,
       tenantId,
-      grossAmount,
+      grossAmount: grossAmount.toNumber(),
       advanceRate,
-      factoringCommissionRate,
-      factoringCommissionAmount,
-      factoringFee,
-      supplierDiscountRate: 0.03, // aggregate representation
+      factoringCommissionRate: factoringCommissionRate.toNumber(),
+      factoringCommissionAmount: factoringCommissionAmount.toNumber(),
+      factoringFee: factoringFee.toNumber(),
+      supplierDiscountRate: 0.03,
       supplierDiscountAmount: totalSupplierDiscountAmount,
-      hotelAdminFeeRate,
-      hotelAdminFeeAmount,
+      hotelAdminFeeRate: hotelAdminFeeRate.toNumber(),
+      hotelAdminFeeAmount: hotelAdminFeeAmount.toNumber(),
       supplierDisbursement: totalSupplierDisbursement,
     });
 

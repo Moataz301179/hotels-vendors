@@ -89,17 +89,10 @@ export async function GET() {
       where: {
         tenantId,
         status: { in: ["ASSIGNED", "FAILED"] },
-        carrierId: null,
       },
       orderBy: { deliveryDate: "asc" },
       take: 10,
-      select: {
-        id: true,
-        jobNumber: true,
-        pickupAddress: true,
-        deliveryAddress: true,
-        status: true,
-        deliveryDate: true,
+      include: {
         order: { select: { orderNumber: true } },
       },
     });
@@ -178,7 +171,7 @@ export async function GET() {
         id: t.id,
         tripNumber: t.tripNumber,
         driverName: t.driverName || "Unassigned",
-        vehiclePlate: vehiclePlate || "N/A",
+        vehiclePlate: t.vehiclePlate || "N/A",
         nextStop: t.stops[0]?.hotel?.name || "Unknown",
         eta: t.stops[0]?.estimatedArrival?.toISOString() || "",
         status: t.status,
@@ -188,7 +181,7 @@ export async function GET() {
       jobs: attentionJobs.map((j) => ({
         id: j.id,
         jobNumber: j.jobNumber,
-        orderNumber: j.order?.orderNumber || "N/A",
+        orderNumber: j.order?.orderNumber ?? "N/A",
         pickup: j.pickupAddress,
         delivery: j.deliveryAddress,
         status: j.status,

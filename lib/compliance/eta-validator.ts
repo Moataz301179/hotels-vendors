@@ -150,9 +150,10 @@ export function validateInvoiceForEta(invoice: InvoiceWithItems): EtaValidationR
     errors.push("Invoice must have at least one line item for ETA submission");
   } else {
     invoice.order.items.forEach((item, idx) => {
-      if (!item.product.hsCode || !HS_CODE_PATTERN.test(item.product.hsCode)) {
+      const product = item.product as unknown as { hsCode?: string; name: string };
+      if (!product.hsCode || !HS_CODE_PATTERN.test(product.hsCode)) {
         errors.push(
-          `Line item ${idx + 1} ($item.product.name}): invalid or missing HS code. ` +
+          `Line item ${idx + 1} (${product.name}): invalid or missing HS code. ` +
             "Must be 4-10 digits (Harmonized System code)."
         );
       }
@@ -182,20 +183,22 @@ export function validateInvoiceForEta(invoice: InvoiceWithItems): EtaValidationR
   }
 
   // Rule 5: Supplier must have a tax registration number
+  const supplier = invoice.supplier as unknown as { taxRegistrationNumber?: string; taxId: string; name: string };
   const supplierTaxReg =
-    invoice.supplier.taxRegistrationNumber || invoice.supplier.taxId;
+    supplier.taxRegistrationNumber || supplier.taxId;
   if (!supplierTaxReg || supplierTaxReg.trim().length === 0) {
     errors.push(
-      `Supplier '${invoice.supplier.name}' is missing a tax registration number. Required for ETA issuer.`
+      `Supplier '${supplier.name}' is missing a tax registration number. Required for ETA issuer.`
     );
   }
 
   // Rule 6: Hotel must have a tax registration number
+  const hotel = invoice.hotel as unknown as { taxRegistrationNumber?: string; taxId: string; name: string };
   const hotelTaxReg =
-    invoice.hotel.taxRegistrationNumber || invoice.hotel.taxId;
+    hotel.taxRegistrationNumber || hotel.taxId;
   if (!hotelTaxReg || hotelTaxReg.trim().length === 0) {
     errors.push(
-      `Hotel '${invoice.hotel.name}' is missing a tax registration number. Required for ETA receiver.`
+      `Hotel '${hotel.name}' is missing a tax registration number. Required for ETA receiver.`
     );
   }
 
@@ -254,28 +257,30 @@ export function generateEtaPayload(invoice: InvoiceWithItems): EtaPayload {
     };
   });
 
+  const supplier = invoice.supplier as unknown as { taxRegistrationNumber?: string; taxId: string; legalName?: string; name: string; governorate: string; city: string; address?: string };
+  const hotel = invoice.hotel as unknown as { taxRegistrationNumber?: string; taxId: string; legalName?: string; name: string; governorate: string; city: string; address?: string };
   return {
     issuer: {
       type: "B",
-      id: invoice.supplier.taxRegistrationNumber || invoice.supplier.taxId,
-      name: invoice.supplier.legalName || invoice.supplier.name,
+      id: supplier.taxRegistrationNumber || supplier.taxId,
+      name: supplier.legalName || supplier.name,
       address: {
         country: "EG",
-        governate: invoice.supplier.governorate,
-        regionCity: invoice.supplier.city,
-        street: invoice.supplier.address || "Unknown",
+        governate: supplier.governorate,
+        regionCity: supplier.city,
+        street: supplier.address || "Unknown",
         buildingNumber: "1",
       },
     },
     receiver: {
       type: "B",
-      id: invoice.hotel.taxRegistrationNumber || invoice.hotel.taxId,
-      name: invoice.hotel.legalName || invoice.hotel.name,
+      id: hotel.taxRegistrationNumber || hotel.taxId,
+      name: hotel.legalName || hotel.name,
       address: {
         country: "EG",
-        governate: invoice.hotel.governorate,
-        regionCity: invoice.hotel.city,
-        street: invoice.hotel.address || "Unknown",
+        governate: hotel.governorate,
+        regionCity: hotel.city,
+        street: hotel.address || "Unknown",
         buildingNumber: "1",
       },
     },

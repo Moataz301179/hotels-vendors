@@ -60,16 +60,15 @@ async function signEtaPayload(
 ): Promise<string> {
   const canonicalString = canonicalizeEtaPayload(payload);
 
-  // Use ETA software signing if available, else HMAC-SHA256 with API key
+  const { canonicalString: payloadString } = canonicalString;
+  const crypto = await import("crypto");
   const apiKey = process.env.ETA_API_KEY;
   if (apiKey) {
-    const crypto = await import("crypto");
-    return crypto.createHmac("sha256", apiKey).update(canonicalString).digest("base64");
+    return crypto.createHmac("sha256", apiKey).update(payloadString).digest("base64");
   }
 
   // Fallback: HMAC with tenant ID (development only)
-  const crypto = await import("crypto");
-  return crypto.createHmac("sha256", tenantId).update(canonicalString).digest("base64");
+  return crypto.createHmac("sha256", tenantId).update(payloadString).digest("base64");
 }
 
 // ─────────────────────────────────────────

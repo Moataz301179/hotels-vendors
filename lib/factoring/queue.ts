@@ -125,12 +125,16 @@ export function createFactoringWorker(): Worker {
           const partnerFee = Number(request.factoringFee) || 0;
           const netDisbursement = totalNum - platformFee - partnerFee;
 
-          const partner = getPartner(request.factoringCompanyId || "");
+          const partnerId = request.factoringCompanyId;
+          if (!partnerId) {
+            throw new Error("Factoring partner not assigned to this request");
+          }
+          const partner = getPartner(partnerId);
           if (!partner) {
             throw new Error("Factoring partner not found");
           }
 
-          const funding = await fundThroughPartner(request.factoringCompanyId, {
+          const funding = await fundThroughPartner(partnerId, {
             eligibilityResponseId: request.id,
             invoiceId: invoice.id,
             etaUuid: invoice.etaUuid || "",

@@ -118,6 +118,9 @@ model Tenant {
 
   // Phase E1: AI Usage
   aiUsages            AiUsage[]
+
+  // GRN relation
+  grns Grn[]
 }
 
 enum TenantType {
@@ -384,6 +387,11 @@ model User {
   // Phase A3: Phone verification
   phoneVerifiedAt DateTime?
   phoneVerificationTokens PhoneVerificationToken[]
+
+  // GRN relations
+  receivedGrns Grn[] @relation("GrnReceivedBy")
+  signedGrns   Grn[] @relation("GrnSignedBy")
+
   @@index([sector])
   @@unique([tenantId, email])
 }
@@ -605,6 +613,9 @@ model Product {
   cartItems CartItem[]
   reviews   ProductReview[]
 
+  // GRN relation
+  grnItems GrnItem[]
+
   // V2.0 REFACTOR: Barcode support
   barcode         String?
   barcodeType     String?
@@ -733,6 +744,10 @@ model Order {
   confirmedById String?
   confirmedAt DateTime?
   confirmedBy User? @relation("OrderConfirmer", fields: [confirmedById], references: [id])
+
+  // GRN relation
+  grns Grn[]
+
   @@unique([tenantId, orderNumber])
 }
 
@@ -756,6 +771,9 @@ model OrderItem {
 
   // V2.0 REFACTOR: Return items
   returnItems ReturnItem[]
+
+  // GRN relation
+  grnItems GrnItem[]
 }
 
 model OrderApproval {
@@ -1184,8 +1202,8 @@ model FactoringRequest {
   requestedAmount Decimal
   requestedAt     DateTime @default(now())
 
-  factoringCompanyId String
-  factoringCompany   FactoringCompany @relation(fields: [factoringCompanyId], references: [id], onDelete: Restrict)
+  factoringCompanyId String?
+  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id], onDelete: SetNull)
 
   status    FactoringRequestStatus @default(PENDING)
   riskScore Int?                   @default(50)
@@ -1411,6 +1429,9 @@ model TripStop {
 
   // V2.0 REFACTOR: Delivery jobs for this stop
   deliveryJobs DeliveryJob[]
+
+  // GRN relation
+  grns Grn[]
 
   createdAt DateTime @default(now())
 }
@@ -3926,10 +3947,10 @@ model Grn {
   tripStop   TripStop? @relation(fields: [tripStopId], references: [id], onDelete: SetNull)
 
   receivedById String?
-  receivedBy   User?   @relation(fields: [receivedById], references: [id], onDelete: SetNull)
+  receivedBy   User?   @relation("GrnReceivedBy", fields: [receivedById], references: [id], onDelete: SetNull)
 
   signedById String?
-  signedBy   User?  @relation(fields: [signedById], references: [id], onDelete: SetNull)
+  signedBy   User?  @relation("GrnSignedBy", fields: [signedById], references: [id], onDelete: SetNull)
 
   signedAt   DateTime?
   photoUrl   String?
