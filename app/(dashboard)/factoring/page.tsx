@@ -23,16 +23,6 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-interface Facility {
-  id: string;
-  status: string;
-  limit: number;
-  utilized: number;
-  currency: string;
-  hotel: { name: string };
-  factoringCompany: { name: string };
-}
-
 interface FactoringRequest {
   id: string;
   status: string;
@@ -90,10 +80,6 @@ export default function FinanceDashboardPage() {
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState("");
 
-  const { data: facilitiesData, loading: facilitiesLoading, error: facilitiesError } = useApi<Facility[]>(
-    "/api/factoring/facilities"
-  );
-
   const { data: requestsData, loading: requestsLoading } = useApi<{ requests: FactoringRequest[]; pagination: { total: number } }>(
     "/api/v1/factoring/requests?page=1&limit=10"
   );
@@ -102,23 +88,26 @@ export default function FinanceDashboardPage() {
     "/api/invoices?page=1&limit=10"
   );
 
-  const facilities = facilitiesData ?? [];
   const requests = requestsData?.requests ?? [];
   const invoices = invoicesData?.data ?? [];
 
   const stats = useMemo(() => {
-    const totalLimit = facilities.reduce((sum, f) => sum + f.limit, 0);
-    const totalUtilized = facilities.reduce((sum, f) => sum + f.utilized, 0);
-    const available = totalLimit - totalUtilized;
+    const totalInvoiced = invoices.reduce((sum, inv) => sum + inv.total, 0);
+    const totalFactored = requests
+      .filter((r) => r.status === "FUNDED" || r.status === "COMPLETED")
+      .reduce((sum, r) => sum + r.amount, 0);
+    const factoredThisMonth = requests
+      .filter((r) => r.status === "FUNDED" && new Date(r.createdAt).getMonth() === new Date().getMonth())
+      .reduce((sum, r) => sum + r.amount, 0);
     const pendingRequests = requests.filter((r) => r.status === "PENDING").length;
 
     return [
-      { label: "Available Credit", value: formatCurrency(available), change: `${formatCurrency(totalLimit)} total limit`, up: true, icon: Wallet },
-      { label: "Outstanding", value: formatCurrency(totalUtilized), change: "Utilized", up: false, icon: Receipt },
-      { label: "Factored Amount", value: formatCurrency(requests.filter((r) => r.status === "FUNDED").reduce((s, r) => s + r.amount, 0)), change: "This month", up: true, icon: Landmark },
+      { label: "Total Invoiced", value: formatCurrency(totalInvoiced), change: "Last 10 invoices", up: true, icon: Wallet },
+      { label: "Factored Volume", value: formatCurrency(totalFactored), change: "All time", up: true, icon: Receipt },
+      { label: "Factored This Month", value: formatCurrency(factoredThisMonth), change: "Current month", up: true, icon: Landmark },
       { label: "Pending Requests", value: pendingRequests.toString(), change: "Awaiting approval", up: pendingRequests === 0, icon: AlertTriangle },
     ];
-  }, [facilities, requests]);
+  }, [requests, invoices]);
 
   const filteredRequests = requests.filter(
     (r) =>

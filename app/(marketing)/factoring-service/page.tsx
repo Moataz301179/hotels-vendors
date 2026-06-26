@@ -6,11 +6,11 @@ import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
   title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-  description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
+  description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, supplier settlement typically within 1–2 business days, non-recourse by design.",
   keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
   openGraph: {
     title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-    description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
+    description: "Hotel-initiated reverse factoring with competitive bidding among licensed grantors. Bank-direct IBAN settlement, supplier settlement typically within 1–2 business days, non-recourse by design.",
     type: "website",
   },
 };
@@ -19,14 +19,14 @@ const flow = [
   { step: "01", title: "Invoice Cleared", desc: "Three-way match: PO + ETA UUID + Signed Digital Delivery Note verified automatically. No manual reconciliation.", icon: Check },
   { step: "02", title: "Enter Factoring Pool", desc: "Pre-cleared invoice enters competitive bidding pool visible to all licensed grantors. Full transparency.", icon: TrendingUp },
   { step: "03", title: "Grantors Bid", desc: "Licensed grantors compete on rate. Best offer selected automatically. Market-driven pricing every time.", icon: Banknote },
-  { step: "04", title: "Settlement", desc: "Supplier paid in 24 hours via bank-direct transfer. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
+  { step: "04", title: "Settlement", desc: "Supplier settlement typically within 1–2 business days via bank-direct transfer. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
 ];
 
 const funderFeatures = [
   { icon: FileCheck, title: "Pre-Verified Invoice Pool", desc: "Every invoice has passed three-way matching: PO + ETA UUID + Signed Digital Delivery Note. You buy cleared assets, not paper promises." },
   { icon: BarChart3, title: "Risk Scoring Engine", desc: "AI-driven risk scoring on every invoice. Hotel creditworthiness, repayment velocity, and sector concentration metrics in real-time." },
   { icon: TrendingUp, title: "Competitive Bidding", desc: "Bid on invoice pools with full visibility into competing rates. Transparent, fair, and optimized for your return targets." },
-  { icon: Banknote, title: "24-Hour Settlement", desc: "Bank-direct settlement to supplier IBANs. Automated interest accrual and late repayment protocols. No intermediary accounts." },
+  { icon: Banknote, title: "Rapid Settlement", desc: "Bank-direct settlement to supplier IBANs, typically within 1–2 business days. Automated interest accrual and late repayment protocols. No intermediary accounts." },
   { icon: Shield, title: "Non-Recourse by Design", desc: "Once settled, the invoice is your risk — not the hotel&apos;s. Clean balance-sheet treatment for all parties." },
   { icon: Landmark, title: "Hospitality Sector Focus", desc: "Egypt&apos;s hospitality sector with hundreds of properties across coastal and urban markets." },
 ];
@@ -44,7 +44,7 @@ export default function FactoringServicePage() {
             Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-gradient-lime">Non-Recourse<br />by Design.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
+            Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. Settlement typically within 1–2 business days. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
@@ -65,7 +65,7 @@ export default function FactoringServicePage() {
               { icon: Shield, label: "Non-Recourse", desc: "Clean risk transfer" },
               { icon: Banknote, label: "Bank-Direct Settlement", desc: "No intermediary accounts" },
               { icon: FileCheck, label: "Three-Way Matched", desc: "Pre-cleared invoices" },
-              { icon: Clock, label: "24-Hour Payment", desc: "Programmatic settlement" },
+              { icon: Clock, label: "Rapid Settlement", desc: "Typically 1–2 business days" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "var(--warning)" }} />

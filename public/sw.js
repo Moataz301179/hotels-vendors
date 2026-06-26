@@ -21,6 +21,17 @@ const PRECACHE_URLS = [
   "/deliveries",
   "/grns",
   "/profile",
+  "/driver",
+  "/driver/deliveries",
+  "/driver/grns",
+  "/dashboard",
+  "/dashboard/invoices",
+  "/dashboard/factoring",
+  "/dashboard/eta",
+  "/dashboard/shipping",
+  "/supplier",
+  "/factoring",
+  "/offline",
   OFFLINE_PAGE,
 ];
 

@@ -69,7 +69,6 @@ export const metadata: Metadata = {
     apple: [{ url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" }],
     shortcut: "/logo-icon.png",
   },
-  manifest: "/manifest.json",
   other: {
     "msapplication-TileColor": "#14110E",
     "msapplication-TileImage": "/logo-icon-white.png",
@@ -108,7 +107,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#14110E" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{

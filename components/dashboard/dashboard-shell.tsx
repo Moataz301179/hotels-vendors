@@ -29,6 +29,7 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { InstallButton } from "@/components/pwa/install-button";
 
 interface DashboardShellProps {
   children: ReactNode;
@@ -319,10 +320,13 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
             <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6, display: "flex" }}>
               <Search size={18} color={TEXT_MUTED} />
             </button>
-            <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6, display: "flex", position: "relative" }}>
-              <Bell size={18} color={TEXT_MUTED} />
-              <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#EF4444", border: "1px solid #0D1119" }} />
-            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <InstallButton />
+              <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6, display: "flex", position: "relative" }}>
+                <Bell size={18} color={TEXT_MUTED} />
+                <span style={{ position: "absolute", top: 4, right: 4, width: 7, height: 7, borderRadius: "50%", backgroundColor: "#EF4444", border: "1px solid #0D1119" }} />
+              </button>
+            </div>
             <div
               style={{
                 width: 30,

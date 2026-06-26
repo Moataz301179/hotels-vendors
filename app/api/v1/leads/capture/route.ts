@@ -57,10 +57,46 @@ function validateLeadPayload(body: Record<string, unknown>): LeadPayload {
 
 // ─── Route Handler ─────────────────────────────────────────────────
 
+// ─── Rate Limiting (in-memory, per-IP fixed window) ────────────────
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 5;
+const rateHits = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateHits.get(ip);
+  if (!entry || now >= entry.resetAt) {
+    rateHits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_MAX) return false;
+  entry.count += 1;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests — please wait a moment." },
+        { status: 429, headers: { "Retry-After": "60" } }
+      );
+    }
+
     const body = await request.json();
-    const payload = validateLeadPayload(body);
+    let payload: LeadPayload;
+    try {
+      payload = validateLeadPayload(body);
+    } catch (validationErr) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: validationErr instanceof Error ? validationErr.message : "Invalid payload",
+        },
+        { status: 400 }
+      );
+    }
 
     // Idempotency: check if lead already exists
     const existingUser = await prisma.user.findFirst({

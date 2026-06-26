@@ -149,7 +149,9 @@ export async function createDepositPayment(request: DepositRequest): Promise<{
 export function verifyPaymobCallback(
   payload: Record<string, unknown>
 ): boolean {
-  if (!PAYMOB_HMAC_SECRET) return true; // In sandbox, skip verification
+  if (!PAYMOB_HMAC_SECRET) {
+    throw new Error("PAYMOB_HMAC_SECRET not configured — cannot verify callbacks");
+  }
 
   // Paymob HMAC verification
   const receivedHmac = payload.hmac as string;

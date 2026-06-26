@@ -6,9 +6,13 @@ import { apiRoute, success, error } from "@/lib/api-utils";
 export const POST = apiRoute(async (request: NextRequest) => {
   const payload = await request.json();
 
-  // Verify callback authenticity
-  if (!verifyPaymobCallback(payload)) {
-    return error("Invalid callback signature", 400);
+  // Verify callback authenticity — throws if PAYMOB_HMAC_SECRET is unset (fail-closed)
+  try {
+    if (!verifyPaymobCallback(payload)) {
+      return error("Invalid callback signature", 400);
+    }
+  } catch {
+    return error("Callback verification misconfigured", 500);
   }
 
   const isSuccess = payload.success === true || payload.success === "true";
