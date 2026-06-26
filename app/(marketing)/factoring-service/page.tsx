@@ -33,27 +33,30 @@ const funderFeatures = [
 
 export default function FactoringServicePage() {
   return (
-    <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(212,168,67,0.04) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Factoring</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-gradient-lime">Non-Recourse<br />by Design.</span>
+          <span className="label-upper mb-3 block">Factoring</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5">
+            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-gradient-accent">Non-Recourse<br />by Design.</span>
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
+          <p className="text-[15px] text-secondary max-w-2xl leading-relaxed mb-8">
             Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. Settlement typically within 1–2 business days. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
+            <Link href="/register?sector=cashflow" className="btn-accent">
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/platform" className="btn-ghost">
               How It Works
             </Link>
           </div>
+          <p className="text-[10px] mt-5 max-w-xl" style={{ color: "var(--text-muted)", opacity: 0.8 }}>
+            Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.
+          </p>
         </div>
       </section>
 
@@ -70,8 +73,8 @@ export default function FactoringServicePage() {
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "var(--warning)" }} />
                 <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                  <p className="text-[11px] font-medium text-secondary">{b.label}</p>
+                  <p className="text-[9px] text-muted">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -82,16 +85,16 @@ export default function FactoringServicePage() {
       {/* Flow */}
       <section className="py-16" style={{ backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">The Factoring Flow</h2>
+          <h2 className="label-upper mb-8 text-center">The Factoring Flow</h2>
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {flow.map((item) => (
               <div key={item.step} className="text-center">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(212,168,67,0.1)" }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "var(--accent-muted)" }}>
                   <item.icon size={20} style={{ color: "var(--warning)" }} />
                 </div>
-                <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Step {item.step}</span>
-                <h3 className="text-[13px] font-medium text-white mt-1 mb-1.5">{item.title}</h3>
-                <p className="text-[11px] text-white/30 leading-relaxed">{item.desc}</p>
+                <span className="label-upper">Step {item.step}</span>
+                <h3 className="text-[13px] font-medium mt-1 mb-1.5">{item.title}</h3>
+                <p className="text-[11px] text-muted leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -101,13 +104,13 @@ export default function FactoringServicePage() {
       {/* Funder Features */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
+          <h2 className="label-upper mb-8">Why Funders Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {funderFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[var(--warning)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+              <div key={f.title} className="surface-card p-6 transition-all">
                 <f.icon size={20} className="mb-3" style={{ color: "var(--warning)" }} />
-                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
+                <h3 className="text-[14px] font-medium mb-2">{f.title}</h3>
+                <p className="text-[12px] text-muted leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -118,19 +121,22 @@ export default function FactoringServicePage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <Users size={28} className="mx-auto mb-6" style={{ color: "var(--warning)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
+          <h2 className="text-[24px] font-medium mb-4">Access Egypt&apos;s Hospitality Invoice Market</h2>
+          <p className="text-[13px] text-secondary mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(163,230,53,0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--foreground)" }}>
+            <Link href="/register?sector=cashflow" className="btn-accent">
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid var(--border-visible)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/register?sector=procurement" className="btn-ghost">
               Register Your Hotel
             </Link>
           </div>
+          <p className="text-[10px] mt-6 max-w-md mx-auto" style={{ color: "var(--text-muted)", opacity: 0.8 }}>
+            Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.
+          </p>
         </div>
       </section>
-          <MarketingFooter />
+      <MarketingFooter />
     </main>
   );
 }

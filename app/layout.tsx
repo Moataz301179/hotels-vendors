@@ -169,9 +169,18 @@ export default function RootLayout({
         className="font-sans min-h-full flex flex-col bg-background text-foreground antialiased"
         style={{ fontFamily: "var(--font-sans)", background: "var(--bg-canvas)", color: "var(--text-primary)" }}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-black focus:text-white"
+          style={{ position: "absolute", left: -9999, top: "auto", width: 1, height: 1, overflow: "hidden" }}
+        >
+          Skip to main content
+        </a>
         <LanguageProvider>
           <NotificationProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <main id="main-content">{children}</main>
+            </ThemeProvider>
           </NotificationProvider>
         </LanguageProvider>
         <PublicChatbot />

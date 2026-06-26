@@ -22,8 +22,7 @@ import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { MarketTicker } from "@/components/marketing/market-ticker";
-import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
-import { HeroVisual } from "@/components/marketing/hero-visual";
+import { HeroCarouselCss } from "@/components/marketing/hero-carousel-css";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
@@ -200,58 +199,60 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
 
   return (
     <section className="relative overflow-hidden" style={{ background: BG }}>
-      {/* Subtle grid pattern */}
+      {/* Subtle dot pattern */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.06]"
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
+          backgroundImage: "radial-gradient(circle, var(--text-primary) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[120px] md:pt-[160px] pb-24 md:pb-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[100px] md:pt-[140px] pb-20 md:pb-28">
         {/* Headline + sub */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-center max-w-3xl mx-auto mb-14"
+          className="text-center max-w-3xl mx-auto mb-10"
         >
-          <h1
-            className="text-[36px] md:text-[52px] lg:text-[60px] mb-7 leading-[1.12] tracking-wide"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "0.02em" }}
+          <span
+            className="inline-block text-[10px] uppercase tracking-[0.25em] px-3 py-1 rounded-full mb-5"
+            style={{ background: ACCENT_MUTED, color: ACCENT, fontFamily: SANS, fontWeight: 500, border: `1px solid var(--border-accent)` }}
           >
-            The Game Changer in Hospitality Fintech
+            Egypt&apos;s B2B Hospitality Infrastructure
+          </span>
+          <h1
+            className="text-[34px] md:text-[50px] lg:text-[58px] mb-6 leading-[1.08] tracking-tight"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.01em" }}
+          >
+            Procurement, Compliance, and Capital —<br className="hidden md:block" />
+            <span className="text-gradient-accent">Built Into One Platform</span>
           </h1>
           <p
-            className="text-[15px] md:text-[17px] max-w-xl mx-auto mt-4 leading-[1.8]"
+            className="text-[15px] md:text-[17px] max-w-2xl mx-auto mt-4 leading-[1.7]"
             style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
           >
-            Egypt&apos;s first platform to natively embed ETA-compliant e-invoicing and reverse factoring
-            inside a B2B procurement marketplace. Every invoice bankable. Every supplier paid in 48 hours.
+            From Sharm El-Sheikh to Alexandria: AI-driven procurement, ETA-compliant e-invoicing,
+            and embedded reverse factoring — purpose-built for Egypt&apos;s coastal hotel chains.
           </p>
         </motion.div>
 
         {/* ═══════════════════════════════════════════════════════
-            MAGIC MCP DASHBOARD — Full-screen with Framer Motion parallax
-            This is the core visual you chose from Magic MCP.
-            HeroVisual provides 3D rotateX/rotateY + scroll-linked transform.
-            DashboardMockup provides the actual dashboard UI with sidebar,
-            KPI cards, bar chart, activity feed, pipeline bar, floating badge.
+            CONTEXTUAL CAROUSEL — 5 slides, CSS-only transitions
+            Each slide is an inline SVG mockup of a real product surface.
+            No external images. No heavy JS. Mobile-first.
             ═══════════════════════════════════════════════════════ */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           className="relative max-w-5xl mx-auto"
         >
-          <HeroVisual>
-            <DashboardMockup />
-          </HeroVisual>
+          <HeroCarouselCss />
         </motion.div>
 
-        {/* Email capture below dashboard */}
+        {/* Email capture below carousel */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -270,10 +271,10 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your work email"
+                  placeholder="you@yourhotel.com"
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
                   style={{
-                    backgroundColor: "var(--bg-surface-2)",
+                    backgroundColor: "var(--bg-surface-1)",
                     border: "1px solid var(--border-subtle)",
                     color: TEXT,
                     fontFamily: SANS,
@@ -310,7 +311,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           ) : (
             <div
               className="flex items-center gap-2 px-4 py-3 rounded-xl"
-              style={{ backgroundColor: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)" }}
+              style={{ backgroundColor: "rgba(46,125,79,0.08)", border: "1px solid rgba(46,125,79,0.2)" }}
             >
               <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
               <span className="text-[13px]" style={{ color: "var(--text-secondary)", fontFamily: SANS }}>
@@ -340,14 +341,18 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             <Receipt size={12} style={{ color: ACCENT }} />
             6 Governorates
           </span>
+          <span className="flex items-center gap-1.5">
+            <Landmark size={12} style={{ color: ACCENT }} />
+            Bank-Direct Settlement
+          </span>
         </motion.div>
 
         {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="mt-14 flex justify-center"
+          transition={{ delay: 1.2 }}
+          className="mt-12 flex justify-center"
         >
           <a
             href="#problem"
@@ -727,14 +732,20 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
             className="text-[28px] md:text-[44px] tracking-tight mb-5 leading-tight"
             style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
           >
-            Ready to Stop Leaking Money?
+            Ready to Modernize Your Procurement?
           </h2>
           <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
           <p
             className="text-[15px] mb-10 max-w-lg mx-auto leading-relaxed"
             style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
           >
-            Join Egypt&apos;s hospitality procurement revolution. Free to start. Live in 24 hours. No credit card.
+            Join 500+ Egyptian hotels already on HotelsVendors. Free to start. Live in 24 hours. No credit card.
+          </p>
+          <p
+            className="text-[10px] mt-2 max-w-xl mx-auto"
+            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400, opacity: 0.7 }}
+          >
+            Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button

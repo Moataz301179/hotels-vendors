@@ -194,6 +194,8 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
 
       {/* Sidebar */}
       <aside
+        id="dashboard-sidebar"
+        aria-label="Dashboard sidebar"
         style={{
           position: "fixed",
           top: 0,
@@ -225,7 +227,11 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: "12px 12px", display: "flex", flexDirection: "column", gap: 2, overflowY: "auto" }}>
+        <nav
+          aria-label="Dashboard navigation"
+          role="navigation"
+          style={{ flex: 1, padding: "12px 12px", display: "flex", flexDirection: "column", gap: 2, overflowY: "auto" }}
+        >
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
             const Icon = item.icon;
@@ -279,6 +285,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
       <div style={{ marginLeft: 0 }} className="md:ml-[260px]">
         {/* Header */}
         <header
+          aria-label="Dashboard header"
           style={{
             position: "sticky",
             top: 0,
@@ -295,6 +302,9 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <button
               onClick={() => setMobileOpen(true)}
+              aria-expanded={mobileOpen}
+              aria-controls="dashboard-sidebar"
+              aria-label="Open navigation menu"
               style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
               className="md:hidden"
             >
@@ -348,7 +358,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
         </header>
 
         {/* Content with live context widgets */}
-        <main style={{ padding: "24px" }}>
+        <main aria-label="Dashboard content" style={{ padding: "24px" }}>
           {/* Live context strip */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
             <ETAInvoiceTracker />

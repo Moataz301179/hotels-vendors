@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "noir" | "ember";
+export type ThemeMode = "light" | "noir" | "ember";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -20,10 +20,10 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-const MODES: ThemeMode[] = ["noir", "ember"];
+const MODES: ThemeMode[] = ["light", "noir", "ember"];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("noir");
+  const [mode, setModeState] = useState<ThemeMode>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setModeState(savedMode as ThemeMode);
       document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
     } else {
-      const initial: ThemeMode = "noir";
+      const initial: ThemeMode = "light";
       setModeState(initial);
       document.documentElement.setAttribute("data-theme", initial);
       localStorage.setItem("hv-theme-mode", initial);

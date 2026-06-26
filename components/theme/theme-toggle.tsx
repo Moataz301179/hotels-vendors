@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, TreePine } from "lucide-react";
+import { Sun, Flame, TreePine } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import type { ThemeMode } from "./theme-provider";
 
@@ -10,6 +10,7 @@ const THEME_OPTIONS: {
   icon: typeof Flame;
   sample: string;
 }[] = [
+  { mode: "light", label: "Light", icon: Sun, sample: "#C4881F" },
   { mode: "noir", label: "Noir", icon: Flame, sample: "#B8962E" },
   { mode: "ember", label: "Ember", icon: TreePine, sample: "#FF8A33" },
 ];
@@ -19,7 +20,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="grid grid-cols-2 gap-0.5 p-0.5 rounded-xl border"
+      className="grid grid-cols-3 gap-0.5 p-0.5 rounded-xl border"
       style={{
         borderColor: "var(--border-subtle)",
         background: "var(--bg-surface-2)",
