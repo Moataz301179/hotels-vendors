@@ -90,12 +90,36 @@ export default function ApiKeysPage() {
 
   const handleCopy = async () => {
     if (!createdKey) return;
+    const text = createdKey.key;
+
+    // Try modern Clipboard API first
     try {
-      await navigator.clipboard.writeText(createdKey.key);
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        return;
+      }
+    } catch {
+      // fall through to legacy method
+    }
+
+    // Legacy fallback: hidden textarea + execCommand
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // silent
+      // Final fallback: prompt user to copy manually
+      window.prompt("Copy this key (it will not be shown again):", text);
     }
   };
 
