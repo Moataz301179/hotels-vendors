@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
 
   // Enable React DevTools and source-map-backed editing in Chrome DevTools
   // Allows "Save for Overrides" to persist changes from browser to local filesystem
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false,
   compiler: {
     // Preserve component names in production for easier debugging
     reactRemoveProperties: false,
