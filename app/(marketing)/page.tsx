@@ -219,8 +219,8 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           className="text-center max-w-3xl mx-auto mb-14"
         >
           <h1
-            className="text-[36px] md:text-[52px] lg:text-[60px] mb-7 leading-[1.12]"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.005em" }}
+            className="text-[36px] md:text-[52px] lg:text-[60px] mb-7 leading-[1.12] tracking-wide"
+            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "0.02em" }}
           >
             The Game Changer in Hospitality Fintech
           </h1>

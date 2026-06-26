@@ -185,7 +185,7 @@ export default function AboutPage() {
           <h2 className="text-[24px] font-medium mb-4 text-primary">Want to Learn More?</h2>
           <p className="text-[13px] text-muted mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
+            <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text)" }}>
               Get Started <ArrowRight size={14} />
             </Link>
             <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>

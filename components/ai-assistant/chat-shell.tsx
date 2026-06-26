@@ -13,6 +13,7 @@ interface ChatShellProps {
   accentColor?: string;
   children: ReactNode;
   footer?: ReactNode;
+  headerRight?: ReactNode;
 }
 
 export function ChatShell({
@@ -24,6 +25,7 @@ export function ChatShell({
   accentColor,
   children,
   footer,
+  headerRight,
 }: ChatShellProps) {
   const { mode } = useTheme();
   const isLight = false;
@@ -64,12 +66,15 @@ export function ChatShell({
             </p>
           </div>
         </div>
-        <button
-          onClick={onClose}
-          className={`p-1.5 rounded-lg transition-colors ${isLight ? "hover:bg-gray-100 text-gray-400 hover:text-gray-700" : "hover:bg-white/5 text-white/30 hover:text-white"}`}
-        >
-          <X size={16} />
-        </button>
+        <div className="flex items-center gap-1">
+          {headerRight}
+          <button
+            onClick={onClose}
+            className={`p-1.5 rounded-lg transition-colors ${isLight ? "hover:bg-gray-100 text-gray-400 hover:text-gray-700" : "hover:bg-white/5 text-white/30 hover:text-white"}`}
+          >
+            <X size={16} />
+          </button>
+        </div>
       </div>
 
       {/* Content */}

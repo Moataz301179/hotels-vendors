@@ -19,6 +19,8 @@ const PRECACHE_URLS = [
   "/scanner",
   "/returns",
   "/deliveries",
+  "/grns",
+  "/profile",
   OFFLINE_PAGE,
 ];
 
@@ -152,5 +154,40 @@ async function networkFirstWithFallback(request) {
         headers: { "Content-Type": "text/html; charset=utf-8" },
       }
     );
-  }
 }
+
+// ─── Push Notification Handler ───
+self.addEventListener("push", (event) => {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || "HotelsVendors";
+  const options = {
+    body: data.body || "You have a new notification",
+    icon: "/icon-192x192.png",
+    badge: "/icon-72x72.png",
+    vibrate: [100, 50, 100],
+    data: { url: data.url || "/" },
+    actions: data.actions || [],
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// ─── Notification Click Handler (opens /driver route) ───
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const targetUrl = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        for (const client of clients) {
+          if (client.url.includes(targetUrl) && "focus" in client) {
+            return client.focus();
+          }
+        }
+        return self.clients.openWindow(targetUrl);
+      })
+  );
+});

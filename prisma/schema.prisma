@@ -3878,3 +3878,70 @@ enum BannerAudience {
   HOTEL
   SUPPLIER
 }
+
+// ─────────────────────────────────────────
+// 48. GRN (Goods Receipt Note) — mobile sign-off
+// ─────────────────────────────────────────
+
+model Grn {
+  id          String   @id @default(cuid())
+  grnNumber   String   @unique
+  status      GrnStatus @default(DRAFT)
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  tripStopId String?
+  tripStop   TripStop? @relation(fields: [tripStopId], references: [id], onDelete: SetNull)
+
+  receivedById String?
+  receivedBy   User?   @relation(fields: [receivedById], references: [id], onDelete: SetNull)
+
+  signedById String?
+  signedBy   User?  @relation(fields: [signedById], references: [id], onDelete: SetNull)
+
+  signedAt   DateTime?
+  photoUrl   String?
+  signatureUrl String?
+  notes      String?
+
+  items GrnItem[]
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([status, tenantId])
+}
+
+model GrnItem {
+  id     String @id @default(cuid())
+  grnId  String
+  grn    Grn    @relation(fields: [grnId], references: [id], onDelete: Cascade)
+
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  expectedQuantity Int
+  receivedQuantity Int
+  rejectedQuantity Int @default(0)
+  rejectionReason  String?
+  unitPrice        Decimal
+
+  @@index([grnId])
+}
+
+enum GrnStatus {
+  DRAFT
+  PENDING_VERIFICATION
+  VERIFIED
+  DISPUTED
+  SUPPLIER_CONFIRMED
+  CANCELLED
+}

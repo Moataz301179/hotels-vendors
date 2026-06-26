@@ -61,7 +61,7 @@ export async function executeLLM(
   const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
 
   const ollamaUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
-  const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
+  let ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
   const openRouterKey = process.env.OPENROUTER_API_KEY;
   const openRouterModel = process.env.OPENROUTER_MODEL || "openrouter/owl-alpha";
 
@@ -70,6 +70,22 @@ export async function executeLLM(
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 90000);
+
+      // First, verify Ollama is reachable and the model is loaded
+      try {
+        const tagsRes = await fetch(`${ollamaUrl.replace(/\/$/, "")}/api/tags`, {
+          signal: AbortSignal.timeout(3000),
+        });
+        if (tagsRes.ok) {
+          const tagsData = await tagsRes.json();
+          const models: string[] = (tagsData.models || []).map((m: { name: string }) => m.name);
+          if (models.length > 0 && !models.some(m => m.startsWith(ollamaModel.split(":")[0]))) {
+            console.warn(`[LLM Router] Model ${ollamaModel} not found in Ollama. Available: ${models.join(", ")}`);
+            // Use first available model as fallback
+            ollamaModel = models[0];
+          }
+        }
+      } catch { /* non-blocking: keep going */ }
 
       const res = await fetch(`${ollamaUrl.replace(/\/$/, "")}/api/chat`, {
         method: "POST",

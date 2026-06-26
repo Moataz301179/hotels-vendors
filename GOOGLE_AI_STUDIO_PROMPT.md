@@ -98,7 +98,7 @@ This is a **B2B fintech dashboard**, not a consumer app. The visual language mus
 
 ```css
 /* Font stack */
---font-display: 'Plus Jakarta Sans', sans-serif;  /* Headings */
+--font-display: 'Jakarta Sans', sans-serif;  /* Headings */
 --font-body: 'Inter', sans-serif;                  /* Body text */
 --font-mono: 'JetBrains Mono', monospace;          /* Data, codes, timestamps */
 

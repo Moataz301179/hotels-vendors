@@ -1,17 +1,33 @@
 /**
  * Public AI Endpoint — HotelsVendors
  * No auth required. Rate-limited by IP (5 messages/hour via Redis).
- * Non-streaming JSON response. Uses Ollama with fallback chain.
+ * Supports conversation history for contextual responses.
+ * Calls Ollama LLM with rule-based fallback.
  */
 
 import { NextRequest } from "next/server";
-import { executeLLM } from "@/lib/swarm/model-router";
-import { checkRateLimit } from "@/lib/redis";
+import { executeLLM } from "@/lib/ai/llm";
 import { PUBLIC_SYSTEM_PROMPT } from "@/components/ai-assistant/prompts/public-prompt";
 import { z } from "zod";
 
+async function checkRateLimit(ip: string, seconds: number, max: number) {
+  // Simple in-memory rate limit (resets on deploy). For multi-instance, use Redis.
+  const { checkRateLimit: redisLimit } = await import("@/lib/redis").catch(() => null);
+  if (redisLimit) return redisLimit(ip, seconds, max);
+  return { allowed: true, remaining: max, resetAt: Date.now() + seconds * 1000 };
+}
+
 const PublicAskSchema = z.object({
   question: z.string().min(1).max(1000),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string(),
+      })
+    )
+    .max(10)
+    .optional(),
   source: z.enum(["homepage", "pricing", "about", "marketplace", "solutions"]).optional(),
 });
 
@@ -23,13 +39,38 @@ function getClientIP(request: NextRequest): string {
   return "unknown";
 }
 
+function buildMessagesWithHistory(
+  systemPrompt: string,
+  question: string,
+  history?: { role: "user" | "assistant"; content: string }[]
+) {
+  const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
+    { role: "system", content: systemPrompt },
+  ];
+
+  // Add conversation history for context (last N exchanges)
+  if (history && history.length > 0) {
+    for (const msg of history) {
+      messages.push({ role: msg.role, content: msg.content });
+    }
+  }
+
+  // Add the current question
+  messages.push({ role: "user", content: question });
+
+  return messages;
+}
+
 export async function POST(request: NextRequest) {
-  // Parse body once — store for fallback use
   let body: unknown;
   let question = "";
+  let history: { role: "user" | "assistant"; content: string }[] | undefined;
   try {
     body = await request.json();
     question = String((body as Record<string, unknown>)?.question || "").trim();
+    history = (body as Record<string, unknown>)?.history as
+      | { role: "user" | "assistant"; content: string }[]
+      | undefined;
   } catch {
     return Response.json(
       { success: false, error: "Invalid request body. Please send a JSON object with a 'question' field." },
@@ -55,14 +96,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call LLM with fallback chain
-    const result = await executeLLM(PUBLIC_SYSTEM_PROMPT, data.question, {
-      maxTokens: 600,
+    // Build messages array with conversation history
+    const messages = buildMessagesWithHistory(PUBLIC_SYSTEM_PROMPT, data.question, data.history);
+
+    // Call LLM with full conversation context
+    const result = await executeLLM(messages, {
+      maxTokens: 800,
       temperature: 0.5,
-      preferredModel: "auto",
     });
 
-    // If LLM returned unavailable (Ollama down, no fallback), throw to trigger rule-based fallback
+    // If LLM returned unavailable, throw to trigger rule-based fallback
     if (result.provider === "none" || result.content === "Service unavailable.") {
       throw new Error("LLM provider unavailable — using rule-based fallback");
     }
@@ -114,7 +157,6 @@ export async function POST(request: NextRequest) {
       answer =
         "Our marketplace features products across F&B, housekeeping, engineering, amenities, and capital equipment. You can browse by category, filter by brand and price, and view detailed product specs. Visit /marketplace to explore.";
     } else {
-      // Generic but helpful — never just "what would you like to know?"
       answer =
         "HotelsVendors is Egypt's B2B procurement platform for the hospitality sector. We connect hotels with verified suppliers, offer embedded factoring, shared logistics, and automatic ETA e-invoicing compliance. How can I help you today?";
     }

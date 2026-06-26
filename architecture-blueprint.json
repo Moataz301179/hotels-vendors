@@ -20,7 +20,7 @@
     "designSystem": {
       "framework": "TailwindCSS",
       "theme": "Sleek Dark/Light Hybrid (Blink Aesthetic)",
-      "typography": "Plus Jakarta Sans",
+      "typography": "Jakarta Sans",
       "borderRadius": "rounded-xl",
       "themes": ["wimbledon (default)", "original", "hercules"],
       "darkTheme": {
@@ -39,9 +39,9 @@
       },
       "fonts": {
         "headings": "Playfair Display (serif)",
-        "body": "Plus Jakarta Sans / Inter (sans-serif)",
-        "display": "Plus Jakarta Sans",
-        "primary": "Plus Jakarta Sans"
+        "body": "Jakarta Sans / Inter (sans-serif)",
+        "display": "Jakarta Sans",
+        "primary": "Jakarta Sans"
       },
       "radius": {
         "standard": "rounded-xl (12px)",

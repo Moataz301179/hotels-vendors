@@ -1,53 +1,49 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote, Sparkles,
+  Building2, Store, Landmark, Truck, ArrowRight, Shield, Zap, Clock, Banknote, Sparkles, Loader2,
 } from "lucide-react";
-import { RegistrationWizard } from "@/components/auth/registration-wizard";
 
 const SECTORS = [
   {
-    key: "hotel",
+    key: "HOTEL" as const,
     icon: Building2,
     label: "Hotel / Resort",
     labelAr: "فندق / منتجع",
     color: "#22C55E",
     description: "AI procurement, budget control, ETA compliance, embedded factoring",
-    descriptionAr: "مشتريات ذكية، تحكم في الميزانية، امتثال ضريبي، تمويل مدمج",
     benefits: [
-      "AI demand forecasting — 94% accuracy",
+      "AI demand forecasting",
       "ETA e-invoicing built-in",
       "Reverse factoring for suppliers",
       "Multi-property budget control",
     ],
   },
   {
-    key: "supplier",
+    key: "SUPPLIER" as const,
     icon: Store,
     label: "Supplier / Vendor",
     labelAr: "مورد / بائع",
     color: "#F97316",
-    description: "Receive POs, issue ETA invoices, get paid in 24–48 hours",
-    descriptionAr: "استلام أوامر شراء، إصدار فواتير إلكترونية، تحصيل خلال 24-48 ساعة",
+    description: "Receive POs, issue ETA invoices, get paid in 24-48 hours",
     benefits: [
       "Access to 680+ hotel buyers",
-      "ETA-compliant invoicing pipeline",
-      "48-hour reverse factoring payout",
+      "ETA-compliant invoicing",
+      "48-hour factoring payout",
       "Real-time order notifications",
     ],
   },
   {
-    key: "funder",
+    key: "FACTORING" as const,
     icon: Landmark,
     label: "Factoring Company",
     labelAr: "شركة تمويل",
     color: "#A855F7",
     description: "Access pre-verified invoices, competitive bidding, bank-direct settlement",
-    descriptionAr: "الوصول لفواتير موثقة، مناقصة تنافسية، تسوية بنكية مباشرة",
     benefits: [
       "Pre-verified ETA invoices",
       "Competitive bidding dashboard",
@@ -56,158 +52,383 @@ const SECTORS = [
     ],
   },
   {
-    key: "logistics",
+    key: "SHIPPING" as const,
     icon: Truck,
     label: "Logistics Provider",
     labelAr: "شركة لوجستيات",
     color: "#3B82F6",
     description: "Shared-route optimization, GPS tracking, auto-settlement on delivery",
-    descriptionAr: "تحسين المسارات المشتركة، تتبع GPS، تسوية تلقائية عند التسليم",
     benefits: [
-      "Shared-route cost reduction (up to 40%)",
-      "GPS tracking for all deliveries",
-      "Auto-settlement on POD confirmation",
-      "Coastal hub model for Red Sea resorts",
+      "Shared-route cost reduction",
+      "GPS tracking for deliveries",
+      "Auto-settlement on POD",
+      "Coastal hub model",
     ],
   },
 ];
 
-function RegisterContent() {
-  const searchParams = useSearchParams();
-  const sectorParam = searchParams.get("sector");
-  const [wizardOpen, setWizardOpen] = useState(!!sectorParam);
+type PlatformRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING";
 
-  useEffect(() => {
-    if (sectorParam && SECTORS.find((s) => s.key === sectorParam)) {
-      setWizardOpen(true);
+function RegisterContent() {
+  const router = useRouter();
+  const [selectedRole, setSelectedRole] = useState<PlatformRole | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!selectedRole) {
+      setError("Please select your role");
+      return;
     }
-  }, [sectorParam]);
+    if (!name || name.length < 2) {
+      setError("Name must be at least 2 characters");
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email");
+      return;
+    }
+    const fullPhone = `+20${phone}`;
+    if (fullPhone.length < 10) {
+      setError("Please enter a valid phone number");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/v1/auth/staged-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: fullPhone,
+          platformRole: selectedRole,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.error || "Registration failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Redirect to OTP verification
+      router.push(
+        `/verify-otp?userId=${encodeURIComponent(data.data.userId)}&phone=${encodeURIComponent(data.data.phone)}${data.data.devCode ? `&devCode=${data.data.devCode}` : ""}`
+      );
+    } catch {
+      setError("Network error. Please try again.");
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
-      <div className="flex-1 px-6 py-24">
-        <div className="mx-auto max-w-5xl">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        backgroundColor: "var(--bg-canvas)",
+        color: "var(--text-primary)",
+        fontFamily: "var(--font-sans)",
+      }}
+    >
+      <div className="flex-1 px-6 py-12">
+        <div className="mx-auto max-w-lg">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium mb-4" style={{ backgroundColor: "rgba(255,107,0,0.08)", border: "1px solid rgba(255,107,0,0.15)", color: "#FF6B00" }}>
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium mb-4"
+              style={{
+                backgroundColor: "rgba(255,107,0,0.08)",
+                border: "1px solid rgba(255,107,0,0.15)",
+                color: "#FF6B00",
+              }}
+            >
               <Sparkles size={12} />
-              AI-Powered Registration — 2 minutes
+              Create your account in 2 minutes
             </div>
-            <h1 className="text-[20px] md:text-[24px] font-medium text-primary mb-3">
-              Choose Your Role
+            <h1
+              className="text-[20px] md:text-[24px] font-medium mb-2"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Join Hotels Vendors
             </h1>
-            <p className="text-[14px] text-muted max-w-lg mx-auto">
-              Select your stakeholder type and our AI wizard will guide you through registration.
-            </p>
-            <p className="text-[12px] text-muted mt-1" dir="rtl">
-              اختر نوع الحساب وسيقوم المساعد الذكي بتوجيهك خلال التسجيل
+            <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+              Select your role and enter your details to get started.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {SECTORS.map((sector, i) => {
-              const Icon = sector.icon;
-              return (
-                <motion.div
-                  key={sector.key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + i * 0.08 }}
-                >
+          {/* Role Selector */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <label
+              className="block text-[12px] font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              I am a...
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {SECTORS.map((sector) => {
+                const Icon = sector.icon;
+                const isSelected = selectedRole === sector.key;
+                return (
                   <button
-                    onClick={() => setWizardOpen(true)}
-                    className="block w-full rounded-2xl p-6 h-full transition-all group hover:scale-[1.02] text-left cursor-pointer"
+                    key={sector.key}
+                    type="button"
+                    onClick={() => setSelectedRole(sector.key)}
+                    className="rounded-xl p-3 text-left transition-all cursor-pointer"
                     style={{
-                      backgroundColor: "var(--bg-surface-2)",
-                      border: "1px solid var(--border-visible)",
-                      backdropFilter: "blur(12px)",
+                      backgroundColor: isSelected
+                        ? sector.color + "15"
+                        : "var(--bg-surface-2)",
+                      border: isSelected
+                        ? `1.5px solid ${sector.color}`
+                        : "1px solid var(--border-visible)",
                     }}
                   >
-                    <div className="flex items-start gap-4 mb-4">
-                      <div
-                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all"
-                        style={{ backgroundColor: sector.color + "15" }}
+                    <div className="flex items-center gap-2 mb-1">
+                      <Icon size={18} style={{ color: sector.color }} />
+                      <span
+                        className="text-[13px] font-semibold"
+                        style={{ color: "var(--text-primary)" }}
                       >
-                        <Icon size={24} style={{ color: sector.color }} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-semibold text-primary mb-0.5">{sector.label}</h3>
-                        <p className="text-[11px] text-muted font-medium" dir="rtl">{sector.labelAr}</p>
-                      </div>
-                      <ArrowRight
-                        size={16}
-                        className="shrink-0 mt-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
-                        style={{ color: sector.color }}
-                      />
+                        {sector.label}
+                      </span>
                     </div>
-
-                    <p className="text-[12px] text-muted leading-relaxed mb-3">{sector.description}</p>
-                    <p className="text-[11px] text-muted leading-relaxed mb-4" dir="rtl">{sector.descriptionAr}</p>
-
-                    <ul className="space-y-1.5">
-                      {sector.benefits.map((b) => (
-                        <li key={b} className="flex items-center gap-2 text-[11px] text-muted">
-                          <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: sector.color }} />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div
-                      className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold transition-colors"
-                      style={{ color: sector.color }}
-                    >
-                      Start Registration <ArrowRight size={12} />
-                    </div>
+                    {isSelected && (
+                      <ul className="space-y-0.5 mt-1">
+                        {sector.benefits.slice(0, 2).map((b) => (
+                          <li
+                            key={b}
+                            className="flex items-center gap-1.5 text-[10px]"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            <span
+                              className="w-1 h-1 rounded-full shrink-0"
+                              style={{ backgroundColor: sector.color }}
+                            />
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </button>
-                </motion.div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </motion.div>
 
+          {/* Form */}
+          <motion.form
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
+            {/* Name */}
+            <div>
+              <label
+                className="block text-[12px] font-medium mb-1.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ahmed Ibrahim"
+                className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
+                style={{
+                  backgroundColor: "var(--bg-surface-2)",
+                  border: "1px solid var(--border-visible)",
+                  color: "var(--text-primary)",
+                  fontFamily: "var(--font-sans)",
+                }}
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label
+                className="block text-[12px] font-medium mb-1.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ahmed@hotel.com"
+                className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
+                style={{
+                  backgroundColor: "var(--bg-surface-2)",
+                  border: "1px solid var(--border-visible)",
+                  color: "var(--text-primary)",
+                  fontFamily: "var(--font-sans)",
+                }}
+              />
+            </div>
+
+            {/* Phone with +20 prefix */}
+            <div>
+              <label
+                className="block text-[12px] font-medium mb-1.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Phone Number
+              </label>
+              <div className="flex">
+                <div
+                  className="flex items-center px-3.5 py-2.5 rounded-l-xl text-[14px] font-medium"
+                  style={{
+                    backgroundColor: "var(--bg-surface-2)",
+                    border: "1px solid var(--border-visible)",
+                    borderRight: "none",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  +20
+                </div>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) =>
+                    setPhone(e.target.value.replace(/[^0-9]/g, ""))
+                  }
+                  placeholder="1001234567"
+                  className="flex-1 px-3.5 py-2.5 rounded-r-xl text-[14px] outline-none transition-colors"
+                  style={{
+                    backgroundColor: "var(--bg-surface-2)",
+                    border: "1px solid var(--border-visible)",
+                    color: "var(--text-primary)",
+                    fontFamily: "var(--font-sans)",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[12px] font-medium px-1"
+                style={{ color: "#EF4444" }}
+              >
+                {error}
+              </motion.p>
+            )}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading || !selectedRole}
+              className="w-full py-3 rounded-xl text-[14px] font-semibold transition-all cursor-pointer flex items-center justify-center gap-2"
+              style={{
+                backgroundColor:
+                  loading || !selectedRole
+                    ? "var(--bg-surface-2)"
+                    : "var(--accent-base)",
+                color:
+                  loading || !selectedRole
+                    ? "var(--text-secondary)"
+                    : "#FFFFFF",
+                border: "none",
+                opacity: loading ? 0.7 : 1,
+              }}
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Create Account
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </motion.form>
+
+          {/* Trust signals */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-10 flex flex-wrap justify-center gap-6"
+            transition={{ delay: 0.5 }}
+            className="mt-8 flex flex-wrap justify-center gap-5"
           >
             {[
               { icon: Shield, label: "Bank-grade security", color: "#22C55E" },
               { icon: Zap, label: "Free to start", color: "#FF6B00" },
               { icon: Clock, label: "2 min registration", color: "#3B82F6" },
-              { icon: Banknote, label: "No credit card required", color: "#A855F7" },
+              { icon: Banknote, label: "No credit card", color: "#A855F7" },
             ].map((t) => (
-              <span key={t.label} className="flex items-center gap-1.5 text-[10px] text-muted">
+              <span
+                key={t.label}
+                className="flex items-center gap-1.5 text-[10px]"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 <t.icon size={12} style={{ color: t.color }} />
                 {t.label}
               </span>
             ))}
           </motion.div>
 
-          <p className="text-center text-[12px] text-muted mt-6">
+          {/* Sign in link */}
+          <p
+            className="text-center text-[12px] mt-5"
+            style={{ color: "var(--text-secondary)" }}
+          >
             Already have an account?{" "}
-            <Link href="/login" className="text-[#FF6B00] hover:underline font-medium">
+            <Link
+              href="/login"
+              className="hover:underline font-medium"
+              style={{ color: "var(--accent-base)" }}
+            >
               Sign in
             </Link>
           </p>
         </div>
       </div>
-
-      <RegistrationWizard
-        isOpen={wizardOpen}
-        onClose={() => setWizardOpen(false)}
-      />
     </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }} />}>
+    <Suspense
+      fallback={
+        <div
+          className="min-h-screen flex items-center justify-center"
+          style={{
+            backgroundColor: "var(--bg-canvas)",
+            color: "var(--text-primary)",
+            fontFamily: "var(--font-sans)",
+          }}
+        />
+      }
+    >
       <RegisterContent />
     </Suspense>
   );

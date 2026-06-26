@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Building2, MapPin, CheckCircle2, TrendingUp, ShieldCheck, Clock, Banknote, BrainCircuit, FileCheck, Users } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { ProblemSolutionSplit } from "@/components/marketing/problem-solution-split";
 
 export const metadata: Metadata = {
   title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
@@ -39,16 +40,16 @@ export default function HotelsPage() {
         <section className="pt-28 pb-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
           <div className="relative z-10 mx-auto max-w-7xl px-6">
-            <span className="text-[11px] font-medium text-primary/30 uppercase tracking-[0.15em] mb-3 block">For Hotels</span>
-            <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-primary">
+            <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">For Hotels</span>
+            <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-foreground">
               Stop Chasing Suppliers.<br /><span className="text-gradient-accent">Start Commanding<br />Your Supply Chain.</span>
             </h1>
-            <p className="text-[15px] text-primary/40 max-w-2xl leading-relaxed mb-8">
+            <p className="text-[15px] text-foreground-secondary max-w-2xl leading-relaxed mb-8">
               From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
-                Register Your Property <ArrowRight size={14} />
+              <Link href="/register?sector=procurement" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text)" }}>
+                Register Your Property <ArrowRight size={14} className="cta-arrow" />
               </Link>
               <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
                 Explore Platform
@@ -65,8 +66,8 @@ export default function HotelsPage() {
                 <div key={b.label} className="flex items-center gap-3">
                   <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                   <div>
-                    <p className="text-[11px] font-medium text-primary/60">{b.label}</p>
-                    <p className="text-[9px] text-primary/25">{b.desc}</p>
+                    <p className="text-[11px] font-medium text-foreground-secondary">{b.label}</p>
+                    <p className="text-[9px] text-foreground-muted">{b.desc}</p>
                   </div>
                 </div>
               ))}
@@ -74,16 +75,19 @@ export default function HotelsPage() {
           </div>
         </section>
 
+        {/* Problem / Solution */}
+        <ProblemSolutionSplit />
+
         {/* Features Grid */}
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-[11px] font-medium text-primary/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
+            <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-8">What You Get</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {features.map((f) => (
-                <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[var(--accent-base)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+                <div key={f.title} className="surface-card rounded-xl p-6 transition-all">
                   <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
-                  <h3 className="text-[14px] font-medium text-primary mb-2">{f.title}</h3>
-                  <p className="text-[12px] text-primary/35 leading-relaxed">{f.desc}</p>
+                  <h3 className="text-[14px] font-medium text-foreground mb-2">{f.title}</h3>
+                  <p className="text-[12px] text-foreground-secondary leading-relaxed">{f.desc}</p>
                 </div>
               ))}
             </div>
@@ -91,7 +95,7 @@ export default function HotelsPage() {
         </section>
 
         {/* Stats */}
-        <section className="py-16" style={{ backgroundColor: "var(--background)" }}>
+        <section className="py-16" style={{ backgroundColor: "var(--bg-surface-1)" }}>
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto text-center">
               {[
@@ -100,7 +104,7 @@ export default function HotelsPage() {
               ].map((s) => (
                 <div key={s.label}>
                   <p className="text-[32px] font-medium mb-1" style={{ color: "var(--accent-base)" }}>{s.value}</p>
-                  <p className="text-[11px] text-primary/30">{s.label}</p>
+                  <p className="text-[11px] text-foreground-muted">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -110,7 +114,7 @@ export default function HotelsPage() {
         {/* Coverage */}
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-[11px] font-medium text-primary/30 uppercase tracking-[0.15em] mb-6">Where We Operate</h2>
+            <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Where We Operate</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 { region: "Sharm El-Sheikh", props: "120+ properties", icon: MapPin },
@@ -118,11 +122,11 @@ export default function HotelsPage() {
                 { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
                 { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
               ].map((r) => (
-                <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[var(--accent-base)]/20" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+                <div key={r.region} className="surface-card rounded-xl p-5 flex items-center gap-3 transition-all">
                   <r.icon size={16} style={{ color: "var(--accent-base)" }} />
                   <div>
-                    <p className="text-[13px] font-medium text-primary">{r.region}</p>
-                    <p className="text-[11px] text-primary/30">{r.props}</p>
+                    <p className="text-[13px] font-medium text-foreground">{r.region}</p>
+                    <p className="text-[11px] text-foreground-muted">{r.props}</p>
                   </div>
                 </div>
               ))}
@@ -134,10 +138,10 @@ export default function HotelsPage() {
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-6 text-center">
             <Users size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
-            <h2 className="text-[24px] font-medium mb-4 text-primary">Ready to Transform Your Procurement?</h2>
-            <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
-              Get Started Free <ArrowRight size={14} />
+            <h2 className="text-[24px] font-medium mb-4 text-foreground">Ready to Transform Your Procurement?</h2>
+            <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
+            <Link href="/register?sector=procurement" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text)" }}>
+              Get Started Free <ArrowRight size={14} className="cta-arrow" />
             </Link>
           </div>
         </section>

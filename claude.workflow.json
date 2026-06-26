@@ -1,6 +1,6 @@
 {
   "workflow": "Hotels Vendors Enterprise Build",
-  "typography": "Plus Jakarta Sans",
+  "typography": "Jakarta Sans",
   "layers": {
     "1_marketplace": {
       "focus": "B2B Hospitality Sourcing & Vendor Directory",

@@ -1,22 +1,24 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { ChatShell } from "./chat-shell";
-import { MessageList } from "./message-list";
+import { MessageList, type ChatMessageItem } from "./message-list";
 import { ChatInput } from "./chat-input";
 import { useTheme } from "@/components/theme/theme-provider";
-import { Sparkles } from "lucide-react";
+import { Sparkles, RotateCcw } from "lucide-react";
 
 const PUBLIC_PRESETS = [
   "What is HotelsVendors?",
-  "How does the free trial work?",
+  "How does factoring work?",
   "What suppliers are available?",
   "How much can my hotel save?",
+  "ETA e-invoicing compliance?",
+  "How to join as a supplier?",
 ];
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+interface PublicChatbotProps {
+  /** If user is logged in, pass their role for context-aware responses */
+  userRole?: string;
 }
 
 function AIIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
@@ -28,40 +30,89 @@ function AIIcon({ size = 24, color = "currentColor" }: { size?: number; color?: 
   );
 }
 
-export function PublicChatbot() {
+export function PublicChatbot({ userRole }: PublicChatbotProps) {
   const { mode } = useTheme();
-  const isLight = mode === "coinbase";
+  const isNoir = mode === "noir";
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<ChatMessageItem[]>([
     {
       role: "assistant",
       content:
-        "Welcome to HotelsVendors! I'm your AI guide. Ask me anything about our platform, suppliers, pricing, or how to get started.",
+        "Welcome to HotelsVendors! I'm your AI procurement guide. Ask me anything about our platform, suppliers, pricing, ETA compliance, or how to get started.",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Cleanup abort controller on unmount
+  useEffect(() => {
+    return () => {
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+    };
+  }, []);
+
+  const handleReset = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    setMessages([
+      {
+        role: "assistant",
+        content:
+          "Conversation reset. How can I help you with HotelsVendors today?",
+      },
+    ]);
+    setLoading(false);
+    setRetrying(false);
+  }, []);
 
   const handleSend = useCallback(
     async (text?: string) => {
       const msg = text || input;
       if (!msg.trim() || loading) return;
 
-      const userMsg: Message = { role: "user", content: msg.trim() };
+      const userMsg: ChatMessageItem = { role: "user", content: msg.trim() };
       setMessages((prev) => [...prev, userMsg]);
       setInput("");
       setLoading(true);
+      setRetrying(false);
+
+      // Abort any previous request
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+      const controller = new AbortController();
+      abortRef.current = controller;
 
       try {
         const apiUrl = process.env.NEXT_PUBLIC_VPS_API_URL
           ? `${process.env.NEXT_PUBLIC_VPS_API_URL}/ai/public`
           : "/api/v1/ai/public";
 
+        // Build conversation history from existing messages (last 10 for context)
+        const history = messages
+          .slice(-10)
+          .filter((m) => m.role === "user" || m.role === "assistant")
+          .map((m) => ({
+            role: m.role as "user" | "assistant",
+            content: m.content,
+          }));
+
         const res = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: msg.trim() }),
+          body: JSON.stringify({
+            question: msg.trim(),
+            history,
+            source: userRole ? undefined : "homepage",
+          }),
+          signal: controller.signal,
         });
 
         const json = await res.json();
@@ -84,22 +135,28 @@ export function PublicChatbot() {
         if (json.data.remainingQuestions !== undefined) {
           setRemaining(json.data.remainingQuestions);
         }
-      } catch {
+      } catch (err) {
+        // Don't show error if request was aborted (user sent new message)
+        if ((err as Error).name === "AbortError") return;
+
+        console.error("[Public Chat] Error:", err);
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: "Connection issue detected. Please retry in a moment.",
+            content: "I'm having trouble connecting right now. This might be a temporary issue — please try again in a moment.",
+            isError: true,
           },
         ]);
       } finally {
         setLoading(false);
+        abortRef.current = null;
       }
     },
-    [input, loading]
+    [input, loading, messages, userRole]
   );
 
-  const accentColor = isLight ? "var(--accent-base)" : "var(--accent-base)";
+  const accentColor = "var(--accent-base)";
 
   return (
     <>
@@ -109,8 +166,8 @@ export function PublicChatbot() {
           onClick={() => setOpen(true)}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all flex items-center justify-center hover:scale-110 border"
           style={{
-            backgroundColor: isLight ? "var(--bg-surface-1)" : "var(--bg-surface-1)",
-            borderColor: isLight ? "var(--border-subtle)" : "var(--border-subtle)",
+            backgroundColor: "var(--bg-surface-1)",
+            borderColor: "var(--border-subtle)",
             color: accentColor,
             boxShadow: "0 4px 20px rgba(0,0,0,0.15), 0 0 12px var(--accent-glow)",
             fontFamily: "var(--font-sans)",
@@ -125,10 +182,22 @@ export function PublicChatbot() {
       <ChatShell
         open={open}
         onClose={() => setOpen(false)}
-        title="AI Guide"
+        title="AI Procurement Guide"
         subtitle="Powered by HotelsVendors Intelligence"
-        subtitleColor={isLight ? "bg-purple-500" : "bg-pink-400"}
+        subtitleColor={isNoir ? "bg-amber-400" : "bg-emerald-400"}
         accentColor={accentColor}
+        headerRight={
+          messages.length > 1 ? (
+            <button
+              onClick={handleReset}
+              className="p-1.5 rounded-lg hover:bg-white/5 text-white/30 hover:text-white transition-colors"
+              style={{ fontFamily: "var(--font-sans)" }}
+              title="Reset conversation"
+            >
+              <RotateCcw size={14} />
+            </button>
+          ) : undefined
+        }
         footer={
           <>
             {/* Presets */}
@@ -143,7 +212,8 @@ export function PublicChatbot() {
                 <button
                   key={prompt}
                   onClick={() => handleSend(prompt)}
-                  className="px-2 py-1 rounded-md text-[11px] transition-colors"
+                  disabled={loading}
+                  className="px-2 py-1 rounded-md text-[11px] transition-colors disabled:opacity-40"
                   style={{
                     backgroundColor: "var(--accent-muted)",
                     border: "1px solid var(--border-subtle)",

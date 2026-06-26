@@ -71,16 +71,16 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   other: {
-    "msapplication-TileColor": "#0052FF",
+    "msapplication-TileColor": "#14110E",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0052FF",
+    "theme-color": "#14110E",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#191919" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#14110E" },
+    { media: "(prefers-color-scheme: light)", color: "#14110E" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -97,7 +97,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
           rel="stylesheet"
         />
         <link rel="dns-prefetch" href="https://hotelsvendors.com" />
@@ -109,24 +109,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0052FF" id="theme-color-meta" />
+        <meta name="theme-color" content="#14110E" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var valid = ['coinbase', 'notion', 'noir', 'ember'];
+                  var valid = ['noir', 'ember'];
                   var saved = localStorage.getItem('hv-theme-mode');
-                  var mode = valid.indexOf(saved) !== -1 ? saved : null;
-                  if (!mode) {
-                    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    mode = dark ? 'noir' : 'coinbase';
-                  }
+                  var mode = valid.indexOf(saved) !== -1 ? saved : 'noir';
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
-                    var colors = { coinbase: '#0052FF', notion: '#191919', noir: '#14110E', ember: '#0A1612' };
-                    meta.setAttribute('content', colors[mode] || '#0052FF');
+                    var colors = { noir: '#14110E', ember: '#0A1612' };
+                    meta.setAttribute('content', colors[mode] || '#14110E');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

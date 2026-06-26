@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Bot, Loader2 } from "lucide-react";
+import { User, Bot, Loader2, AlertTriangle } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { useTheme } from "@/components/theme/theme-provider";
 
@@ -9,12 +9,32 @@ export interface ChatMessageItem {
   role: "user" | "assistant";
   content: string;
   isStreaming?: boolean;
+  isError?: boolean;
 }
 
 interface MessageListProps {
   messages: ChatMessageItem[];
   isLoading?: boolean;
   accentColor?: string;
+}
+
+/** Typing indicator with three bouncing dots */
+function TypingDots({ color }: { color: string }) {
+  return (
+    <span className="inline-flex items-center gap-1">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="inline-block w-1.5 h-1.5 rounded-full animate-bounce"
+          style={{
+            backgroundColor: color,
+            animationDelay: `${i * 0.15}s`,
+            animationDuration: "0.6s",
+          }}
+        />
+      ))}
+    </span>
+  );
 }
 
 export function MessageList({ messages, isLoading, accentColor }: MessageListProps) {
@@ -42,6 +62,8 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
           >
             {m.role === "user" ? (
               <User size={12} color={isLight ? "#ffffff" : "var(--foreground)"} />
+            ) : m.isError ? (
+              <AlertTriangle size={12} style={{ color: "#f59e0b" }} />
             ) : (
               <Bot size={12} style={{ color: effectiveAccent }} />
             )}
@@ -49,17 +71,31 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
           <div
             className="max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap"
             style={{
-              backgroundColor: m.role === "user" ? effectiveAccent : (isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"),
+              backgroundColor: m.role === "user"
+                ? effectiveAccent
+                : m.isError
+                  ? "rgba(245, 158, 11, 0.08)"
+                  : (isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"),
               color: m.role === "user"
                 ? (isLight ? "#ffffff" : "var(--foreground)")
-                : (isLight ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)"),
-              border: m.role === "user" ? "none" : `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.08)"}`,
+                : m.isError
+                  ? "#f59e0b"
+                  : (isLight ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)"),
+              border: m.role === "user"
+                ? "none"
+                : m.isError
+                  ? "1px solid rgba(245, 158, 11, 0.2)"
+                  : `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.08)"}`,
               borderTopRightRadius: m.role === "user" ? "4px" : "16px",
               borderTopLeftRadius: m.role === "user" ? "16px" : "4px",
             }}
           >
             {m.content}
-            {m.isStreaming && <span className="inline-block w-1.5 h-3.5 ml-0.5 bg-white/30 animate-pulse" />}
+            {m.isStreaming && (
+              <span className="inline-block ml-1">
+                <TypingDots color={isLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.4)"} />
+              </span>
+            )}
           </div>
         </div>
       ))}
@@ -75,13 +111,13 @@ export function MessageList({ messages, isLoading, accentColor }: MessageListPro
             <Bot size={12} style={{ color: effectiveAccent }} />
           </div>
           <div
-            className="px-3 py-2 rounded-xl"
+            className="px-3 py-2.5 rounded-xl"
             style={{
               backgroundColor: isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)",
               border: `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.08)"}`,
             }}
           >
-            <Loader2 size={16} className="animate-spin" style={{ color: isLight ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.3)" }} />
+            <TypingDots color={isLight ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.3)"} />
           </div>
         </div>
       )}

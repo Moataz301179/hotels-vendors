@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "notion" | "coinbase" | "noir" | "ember";
+export type ThemeMode = "noir" | "ember";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -11,7 +11,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  mode: "coinbase",
+  mode: "noir",
   setMode: () => {},
   cycleMode: () => {},
 });
@@ -20,10 +20,10 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-const MODES: ThemeMode[] = ["coinbase", "notion", "noir", "ember"];
+const MODES: ThemeMode[] = ["noir", "ember"];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("coinbase");
+  const [mode, setModeState] = useState<ThemeMode>("noir");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,11 +33,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setModeState(savedMode as ThemeMode);
       document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
     } else {
-      const prefersDark =
-        typeof window !== "undefined" &&
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial: ThemeMode = prefersDark ? "noir" : "coinbase";
+      const initial: ThemeMode = "noir";
       setModeState(initial);
       document.documentElement.setAttribute("data-theme", initial);
       localStorage.setItem("hv-theme-mode", initial);

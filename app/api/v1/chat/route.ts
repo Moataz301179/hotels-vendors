@@ -1,97 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { executeLLM } from "@/lib/ai/llm";
+import { buildSystemPrompt, type AssistantRole } from "@/components/ai-assistant/prompts";
 import { z } from "zod";
 
 const ChatSchema = z.object({
   message: z.string().min(1).max(2000),
   conversationId: z.string().optional(),
 });
-
-const SYSTEM_PROMPT = `You are HotelsVendors AI Guide — an expert assistant for Egypt's B2B hospitality procurement platform.
-
-Key facts about HotelsVendors:
-- Founded in 2023 by Moataz (former EY/Deloitte/KPMG auditor)
-- Owned by Restaurants for E-Marketing (Tax ID: 704226146, Commercial Registry: 105300900196948)
-- Egypt's first AI-native B2B procurement platform for hospitality
-- Operates as a technical data orchestrator (not a bank, not a payment provider)
-- ETA e-invoicing compliant (Egyptian Tax Authority)
-- 680+ verified suppliers across 6 governorates
-- AI demand forecasting with 94% accuracy
-- Reverse factoring: suppliers paid in 48 hours
-- Free to join, earn 1% on bank transfers, 1.5-3% on factoring
-- INVO is the vendor marketplace sub-layer
-- Serves coastal hotels in Sharm El-Sheikh, Hurghada, Cairo, Alexandria, North Coast
-- Target customers: local branded hotel chains (Stella Di Mare, Sunrise, Jaz, Baron)
-- ISO 27001 aligned, AES-256-GCM encryption, data hosted in Egypt
-
-Answer questions concisely and accurately. If you don't know something, say so honestly. Always be helpful and professional.`;
-
-async function callOllama(message: string, conversationId?: string): Promise<string> {
-  const vpsUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_VPS_API_URL || process.env.VPS_API_URL;
-  const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:latest";
-
-  if (!vpsUrl) {
-    throw new Error("Ollama URL not configured. Set OLLAMA_URL, NEXT_PUBLIC_VPS_API_URL, or VPS_API_URL");
-  }
-
-  // Build conversation context if we have history
-  let prompt = message;
-  if (conversationId) {
-    try {
-      const history = await prisma.chatMessage.findMany({
-        where: { conversationId },
-        orderBy: { createdAt: "asc" },
-        take: 10, // last 10 messages for context
-      });
-      if (history.length > 1) {
-        const context = history
-          .slice(0, -1) // exclude the latest (current) message
-          .map((m) => `${m.role === "USER" ? "User" : "Assistant"}: ${m.content}`)
-          .join("\n");
-        prompt = `${SYSTEM_PROMPT}\n\nConversation history:\n${context}\n\nUser: ${message}\nAssistant:`;
-      } else {
-        prompt = `${SYSTEM_PROMPT}\n\nUser: ${message}\nAssistant:`;
-      }
-    } catch {
-      prompt = `${SYSTEM_PROMPT}\n\nUser: ${message}\nAssistant:`;
-    }
-  } else {
-    prompt = `${SYSTEM_PROMPT}\n\nUser: ${message}\nAssistant:`;
-  }
-
-  const ollamaUrl = `${vpsUrl.replace(/\/$/, "")}/api/generate`;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60000);
-
-  try {
-    const res = await fetch(ollamaUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: ollamaModel,
-        prompt,
-        stream: false,
-        options: {
-          temperature: 0.7,
-          top_p: 0.9,
-          num_predict: 512,
-        },
-      }),
-      signal: controller.signal,
-    });
-
-    if (!res.ok) {
-      throw new Error(`Ollama returned ${res.status}: ${await res.text()}`);
-    }
-
-    const data = await res.json();
-    return data.response?.trim() || "I apologize, I couldn't generate a response. Please try again.";
-  } finally {
-    clearTimeout(timeout);
-  }
-}
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -137,10 +54,48 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   let aiResponse: string;
   try {
-    aiResponse = await callOllama(message, conversation.id);
+    // Determine role from user's platform role
+    const role: AssistantRole = (() => {
+      const r = auth.platformRole?.toLowerCase() as AssistantRole | undefined;
+      if (r && ["hotel", "supplier", "factoring", "shipping", "admin", "public"].includes(r)) return r;
+      return "public";
+    })();
+
+    // Build system prompt using the shared prompt registry
+    const systemPrompt = buildSystemPrompt(role);
+
+    // Load conversation history from DB for context
+    const dbHistory = await prisma.chatMessage.findMany({
+      where: { conversationId: conversation.id },
+      orderBy: { createdAt: "asc" },
+      take: 20, // last 20 messages for context window
+    });
+
+    // Build messages array for the chat API
+    const messages = [
+      { role: "system" as const, content: systemPrompt },
+      ...dbHistory
+        .filter((m) => m.role === "USER" || m.role === "ASSISTANT")
+        .map((m) => ({
+          role: (m.role === "USER" ? "user" : "assistant") as "user" | "assistant",
+          content: m.content,
+        })),
+    ];
+
+    const result = await executeLLM(messages, {
+      maxTokens: 800,
+      temperature: 0.5,
+    });
+
+    if (result.provider === "none" || result.content === "Service unavailable.") {
+      throw new Error("LLM provider unavailable");
+    }
+
+    aiResponse = result.content;
   } catch (ollamaError) {
     console.error("Ollama call failed:", ollamaError);
-    aiResponse = "I'm having trouble connecting to my AI engine right now. Please try again in a moment. If the issue persists, contact support.";
+    aiResponse =
+      "I'm having trouble connecting to my AI engine right now. Please try again in a moment. If the issue persists, contact our support team at support@hotelsvendors.com.";
   }
 
   await prisma.chatMessage.create({

@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -146,6 +147,7 @@ export function MarketingNav() {
 
           {/* Right actions */}
           <div className="hidden lg:flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             <Link
               href="/login"

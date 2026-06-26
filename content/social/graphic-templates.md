@@ -4,7 +4,7 @@
 - **Background:** #000000 (OLED black) or #0A0F1A (dark navy)
 - **Accent:** #a3e635 (lime green)
 - **Text:** #FFFFFF (white), rgba(255,255,255,0.6) for secondary
-- **Font:** Plus Jakarta Sans (or Inter as fallback)
+- **Font:** Jakarta Sans (or Inter as fallback)
 - **Border:** 1px solid rgba(255,255,255,0.08) on cards
 - **No gradients, no bolds** (brand consistency with website)
 

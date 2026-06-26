@@ -1,108 +1,55 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════
+   DEFAULT FALLBACK (emits neutral vars even if data-theme unset)
+   Mirrors the noir palette so pre-hydration state is consistent.
+   ═══════════════════════════════════════════════════════════════ */
 :root {
-  --bg-canvas: #ffffff;
-  --bg-surface-1: #ffffff;
-  --bg-surface-2: #f7f7f7;
-  --bg-surface-3: #eef0f3;
-  --background: #ffffff;
-  --surface: #ffffff;
-  --surface-raised: #f7f7f7;
-  --surface-hover: #eef0f3;
+  --bg-canvas: #14110E;
+  --bg-surface-1: #1C1814;
+  --bg-surface-2: #262019;
+  --bg-surface-3: #302A22;
+  --background: #14110E;
+  --surface: #1C1814;
+  --surface-raised: #262019;
+  --surface-hover: #302A22;
 
-  --text-primary: #0a0b0d;
-  --text-secondary: #5b616e;
-  --text-tertiary: #7c828a;
-  --text-muted: #a8acb3;
-  --text-inverse: #ffffff;
-  --foreground: #0a0b0d;
-  --foreground-secondary: #5b616e;
-  --foreground-tertiary: #7c828a;
-  --foreground-muted: #a8acb3;
+  --text-primary: #F5F1EB;
+  --text-secondary: #C4B8A4;
+  --text-tertiary: #9A8E7C;
+  --text-muted: #7A6F62;
+  --text-inverse: #14110E;
+  --foreground: #F5F1EB;
+  --foreground-secondary: #C4B8A4;
+  --foreground-tertiary: #9A8E7C;
+  --foreground-muted: #7A6F62;
 
-  --border-invisible: rgba(0, 0, 0, 0.02);
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-visible: rgba(0, 0, 0, 0.10);
-  --border-accent: rgba(0, 82, 255, 0.25);
+  --border-invisible: rgba(232, 168, 56, 0.02);
+  --border-subtle: rgba(232, 168, 56, 0.06);
+  --border-visible: rgba(232, 168, 56, 0.12);
+  --border-accent: rgba(232, 168, 56, 0.30);
 
-  --accent-base: #0052ff;
-  --accent-light: #3375ff;
-  --accent-dark: #003ecc;
-  --accent-muted: rgba(0, 82, 255, 0.06);
-  --accent-glow: rgba(0, 82, 255, 0.10);
-  --accent-text: #ffffff;
+  --accent-base: #E8A838;
+  --accent-light: #F5C45A;
+  --accent-dark: #C4881F;
+  --accent-muted: rgba(232, 168, 56, 0.08);
+  --accent-glow: rgba(232, 168, 56, 0.14);
+  --accent-text: #14110E;
 
-  --error: #cf202f;
-  --success: #05b169;
-  --warning: #f4b000;
-  --info: #3b82f6;
+  --error: #E0503A;
+  --success: #3AA657;
+  --warning: #D4A030;
+  --info: #4A8AD4;
 
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-glow-accent: 0 0 30px rgba(0, 82, 255, 0.04);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-elevated: 0 4px 18px rgba(0,0,0,0.35);
+  --shadow-glow-accent: 0 0 40px rgba(232, 168, 56, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(245, 241, 235, 0.04);
 
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
-
-  --header-height: 64px;
-  --sidebar-width: 260px;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-theme="notion"] {
-  --bg-canvas: #191919;
-  --bg-surface-1: #202020;
-  --bg-surface-2: #2a2a2a;
-  --bg-surface-3: #333333;
-  --background: #191919;
-  --surface: #202020;
-  --surface-raised: #2a2a2a;
-  --surface-hover: #333333;
-
-  --text-primary: #ffffff;
-  --text-secondary: #d0d0d0;
-  --text-tertiary: #a0a0a0;
-  --text-muted: #707070;
-  --text-inverse: #191919;
-  --foreground: #ffffff;
-  --foreground-secondary: #d0d0d0;
-  --foreground-tertiary: #a0a0a0;
-  --foreground-muted: #707070;
-
-  --border-invisible: rgba(255, 255, 255, 0.02);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(86, 69, 212, 0.30);
-
-  --accent-base: #5645d4;
-  --accent-light: #7b5ff2;
-  --accent-dark: #4534b3;
-  --accent-muted: rgba(86, 69, 212, 0.10);
-  --accent-glow: rgba(86, 69, 212, 0.14);
-  --accent-text: #ffffff;
-
-  --error: #e03131;
-  --success: #1aae39;
-  --warning: #f5d75e;
-  --info: #3b82f6;
-
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
-  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-glow-accent: 0 0 40px rgba(86, 69, 212, 0.08);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -134,16 +81,16 @@
   --foreground-tertiary: #9A8E7C;
   --foreground-muted: #7A6F62;
 
-  --border-invisible: rgba(184, 150, 46, 0.02);
-  --border-subtle: rgba(184, 150, 46, 0.06);
-  --border-visible: rgba(184, 150, 46, 0.12);
-  --border-accent: rgba(184, 150, 46, 0.30);
+  --border-invisible: rgba(232, 168, 56, 0.02);
+  --border-subtle: rgba(232, 168, 56, 0.06);
+  --border-visible: rgba(232, 168, 56, 0.12);
+  --border-accent: rgba(232, 168, 56, 0.30);
 
-  --accent-base: #B8962E;
-  --accent-light: #D4B24A;
-  --accent-dark: #8E731F;
-  --accent-muted: rgba(184, 150, 46, 0.08);
-  --accent-glow: rgba(184, 150, 46, 0.14);
+  --accent-base: #E8A838;
+  --accent-light: #F5C45A;
+  --accent-dark: #C4881F;
+  --accent-muted: rgba(232, 168, 56, 0.08);
+  --accent-glow: rgba(232, 168, 56, 0.14);
   --accent-text: #14110E;
 
   --error: #E0503A;
@@ -153,13 +100,13 @@
 
   --shadow-card: 0 1px 3px rgba(0,0,0,0.25);
   --shadow-elevated: 0 4px 18px rgba(0,0,0,0.35);
-  --shadow-glow-accent: 0 0 40px rgba(184, 150, 46, 0.08);
+  --shadow-glow-accent: 0 0 40px rgba(232, 168, 56, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(245, 241, 235, 0.04);
 
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -213,10 +160,10 @@
   --shadow-glow-accent: 0 0 40px rgba(255, 138, 51, 0.10);
   --shadow-inner-light: inset 0 1px 0 rgba(240, 242, 245, 0.04);
 
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -246,10 +193,10 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 html { scroll-behavior: smooth; }
@@ -314,7 +261,7 @@ body {
   background: rgba(0, 0, 0, 0.04);
 }
 .marketing-ambient {
-  background: radial-gradient(circle, rgba(0, 82, 255, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-muted) 0%, transparent 70%);
 }
 .marketing-search-bg {
   background: var(--bg-surface-1);
@@ -457,16 +404,28 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   CTA GLOW — uses accent color
+   ═══════════════════════════════════════════════════════════════ */
+.cta-glow {
+  box-shadow: 0 0 15px var(--accent-glow), 0 0 30px rgba(232, 168, 56, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cta-glow:hover {
+  box-shadow: 0 0 25px rgba(232, 168, 56, 0.25), 0 0 50px rgba(232, 168, 56, 0.08);
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    GLOW EFFECTS
    ═══════════════════════════════════════════════════════════════ */
 .glow-accent {
-  box-shadow: 0 0 30px rgba(0, 82, 255, 0.04), 0 0 60px rgba(0, 82, 255, 0.02);
+  box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(232, 168, 56, 0.02);
 }
 .glow-accent-sm {
-  box-shadow: 0 0 15px rgba(0, 82, 255, 0.06), 0 0 30px rgba(0, 82, 255, 0.03);
+  box-shadow: 0 0 15px var(--accent-glow), 0 0 30px rgba(232, 168, 56, 0.03);
 }
 .glow-accent-lg {
-  box-shadow: 0 0 40px rgba(0, 82, 255, 0.05), 0 0 80px rgba(0, 82, 255, 0.03), 0 0 120px rgba(0, 82, 255, 0.015);
+  box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(232, 168, 56, 0.03), 0 0 120px rgba(232, 168, 56, 0.015);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -485,8 +444,8 @@ body {
   100% { transform: translateX(-50%); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px rgba(0, 82, 255, 0.04); }
-  50% { box-shadow: 0 0 30px rgba(0, 82, 255, 0.08); }
+  0%, 100% { box-shadow: 0 0 15px var(--accent-glow); }
+  50% { box-shadow: 0 0 30px rgba(232, 168, 56, 0.08); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }

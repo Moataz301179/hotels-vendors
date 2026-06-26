@@ -112,15 +112,15 @@ export default function CompliancePage() {
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(163,230,53,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-primary/30 uppercase tracking-[0.15em] mb-3 block">Compliance & Regulatory</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-primary">
+          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Compliance & Regulatory</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-foreground">
             Regulatory Compliance
             <br />
-            <span className="text-gradient-lime">Built Into Every Transaction.<br />Not Bolted On After.</span>
+            <span className="text-gradient-accent">Built Into Every Transaction.<br />Not Bolted On After.</span>
           </h1>
-          <p className="text-[15px] text-primary/40 max-w-2xl leading-relaxed">
+          <p className="text-[15px] text-foreground-secondary max-w-2xl leading-relaxed">
             HotelsVendors is architected from the ground up for Egyptian regulatory compliance. From ETA e-invoicing to FRA anti-fraud standards, every layer of the platform enforces compliance automatically — no manual intervention required.
           </p>
         </div>
@@ -134,8 +134,8 @@ export default function CompliancePage() {
               <div key={cert.label} className="flex items-center gap-3">
                 <cert.icon size={16} style={{ color: cert.color }} />
                 <div>
-                  <p className="text-[11px] font-medium text-primary/60">{cert.label}</p>
-                  <p className="text-[9px] text-primary/25">{cert.desc}</p>
+                  <p className="text-[11px] font-medium text-foreground-secondary">{cert.label}</p>
+                  <p className="text-[9px] text-foreground-muted">{cert.desc}</p>
                 </div>
               </div>
             ))}
@@ -152,19 +152,19 @@ export default function CompliancePage() {
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: group.color + "15" }}>
                   <group.icon size={18} style={{ color: group.color }} />
                 </div>
-                <h2 className="text-[18px] font-medium text-primary">{group.category}</h2>
+                <h2 className="text-[18px] font-medium text-foreground">{group.category}</h2>
               </div>
               <div className="grid md:grid-cols-2 gap-3">
                 {group.standards.map((s) => (
-                  <div key={s.name} className="rounded-xl p-5 transition-all hover:border-white/15" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+                  <div key={s.name} className="surface-card rounded-xl p-5 transition-all">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-[13px] font-medium text-primary leading-snug">{s.name}</h3>
+                      <h3 className="text-[13px] font-medium text-foreground leading-snug">{s.name}</h3>
                       <span className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0 ml-3" style={{ backgroundColor: group.color + "15", color: group.color }}>
                         {s.status}
                       </span>
                     </div>
-                    <p className="text-[12px] text-primary/40 leading-relaxed mb-2">{s.desc}</p>
-                    <span className="text-[10px] text-primary/20 font-mono">{s.ref}</span>
+                    <p className="text-[12px] text-foreground-secondary leading-relaxed mb-2">{s.desc}</p>
+                    <span className="text-[10px] text-foreground-muted font-mono">{s.ref}</span>
                   </div>
                 ))}
               </div>
@@ -174,19 +174,19 @@ export default function CompliancePage() {
       </section>
 
       {/* Legal Frameworks */}
-      <section className="py-16" style={{ backgroundColor: "var(--background)" }}>
+      <section className="py-16" style={{ backgroundColor: "var(--bg-surface-1)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
             <Gavel size={24} className="mx-auto mb-3" style={{ color: "var(--accent-base)" }} />
-            <h2 className="text-[11px] font-medium text-primary/30 uppercase tracking-[0.15em] mb-2">Applicable Egyptian Laws & Regulations</h2>
-            <p className="text-[14px] text-primary/40 max-w-xl mx-auto">The platform is designed to comply with the following Egyptian legal frameworks:</p>
+            <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-2">Applicable Egyptian Laws & Regulations</h2>
+            <p className="text-[14px] text-foreground-secondary max-w-xl mx-auto">The platform is designed to comply with the following Egyptian legal frameworks:</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {LEGAL_FRAMEWORKS.map((law) => (
-              <div key={law.code} className="rounded-xl p-5 transition-all hover:border-white/15" style={{ backgroundColor: "var(--background)", border: "1px solid var(--border-subtle)" }}>
+              <div key={law.code} className="surface-card rounded-xl p-5 transition-all">
                 <span className="text-[10px] font-mono font-medium" style={{ color: "var(--accent-base)" }}>{law.code}</span>
-                <h3 className="text-[13px] font-medium text-primary mt-1 mb-2">{law.name}</h3>
-                <p className="text-[11px] text-primary/40 leading-relaxed">{law.desc}</p>
+                <h3 className="text-[13px] font-medium text-foreground mt-1 mb-2">{law.name}</h3>
+                <p className="text-[11px] text-foreground-secondary leading-relaxed">{law.desc}</p>
               </div>
             ))}
           </div>
@@ -197,10 +197,10 @@ export default function CompliancePage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <Building2 size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-primary">Need a Compliance Walkthrough?</h2>
-          <p className="text-[13px] text-primary/40 mb-8 max-w-lg mx-auto">Schedule a dedicated session with our compliance team to review how HotelsVendors meets your regulatory requirements.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_var(--accent-glow)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--text-primary)" }}>
-            Request Compliance Review <ArrowRight size={14} />
+          <h2 className="text-[24px] font-medium mb-4 text-foreground">Need a Compliance Walkthrough?</h2>
+          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Schedule a dedicated session with our compliance team to review how HotelsVendors meets your regulatory requirements.</p>
+          <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text)" }}>
+            Request Compliance Review <ArrowRight size={14} className="cta-arrow" />
           </Link>
         </div>
       </section>
@@ -209,4 +209,3 @@ export default function CompliancePage() {
     </main>
   );
 }
-

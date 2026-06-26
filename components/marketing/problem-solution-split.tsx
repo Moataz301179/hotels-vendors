@@ -20,15 +20,6 @@ import {
   Building2,
 } from "lucide-react";
 
-const A = "#FF6B00";
-const AM = "rgba(255,107,0,0.08)";
-const AB = "rgba(255,107,0,0.25)";
-const AG = "rgba(255,107,0,0.15)";
-const S1 = "#080B12";
-const SC = "#0C1018";
-const B1 = "rgba(255,255,255,0.06)";
-const BH = "rgba(255,255,255,0.12)";
-
 const PAIN_POINTS = [
   {
     icon: Mail,
@@ -142,18 +133,18 @@ export function ProblemSolutionSplit() {
       <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16">
         <Reveal>
           <div className="text-center mb-6">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] mb-4 block" style={{ color: A }}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] mb-4 block" style={{ color: "var(--accent-base)" }}>
               The Problem & The Solution
             </span>
             <h2
-              className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
+              className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight mb-4 leading-[1.1] text-foreground"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Stop Managing Procurement
               <br />
-              <span style={{ color: A }}>With Spreadsheets</span>
+              <span style={{ color: "var(--accent-base)" }}>With Spreadsheets</span>
             </h2>
-            <p className="text-[14px] md:text-[15px] text-white/40 max-w-lg mx-auto leading-relaxed">
+            <p className="text-[14px] md:text-[15px] text-muted max-w-lg mx-auto leading-relaxed">
               Every day without automation is a day your hotel overpays, under-orders, or misses compliance deadlines.
             </p>
           </div>
@@ -166,12 +157,12 @@ export function ProblemSolutionSplit() {
           {/* Divider line on desktop */}
           <div
             className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px"
-            style={{ background: `linear-gradient(to bottom, transparent, ${B1}, transparent)` }}
+            style={{ background: "linear-gradient(to bottom, transparent, var(--border-subtle), transparent)" }}
           />
           {/* Mobile divider */}
           <div
             className="lg:hidden h-px w-full mb-10"
-            style={{ background: `linear-gradient(to right, transparent, ${B1}, transparent)` }}
+            style={{ background: "linear-gradient(to right, transparent, var(--border-subtle), transparent)" }}
           />
 
           {/* ═══════ LEFT: THE PROBLEM ═══════ */}
@@ -180,18 +171,18 @@ export function ProblemSolutionSplit() {
               <div className="flex items-center gap-3 mb-8">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
+                  style={{ backgroundColor: "var(--error)" + "12", border: "1px solid var(--error)" + "30" }}
                 >
-                  <AlertTriangle size={18} style={{ color: "#EF4444" }} />
+                  <AlertTriangle size={18} style={{ color: "var(--error)" }} />
                 </div>
                 <div>
                   <h3
-                    className="text-[18px] md:text-[22px] font-semibold text-white/90"
+                    className="text-[18px] md:text-[22px] font-semibold text-foreground"
                     style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                   >
                     Traditional Procurement
                   </h3>
-                  <p className="text-[11px] text-white/25 uppercase tracking-[0.12em]">Manual · Error-Prone · Slow</p>
+                  <p className="text-[11px] text-muted uppercase tracking-[0.12em]">Manual · Error-Prone · Slow</p>
                 </div>
               </div>
             </Reveal>
@@ -203,34 +194,34 @@ export function ProblemSolutionSplit() {
                   <Reveal key={point.title} delay={i * 0.06}>
                     <div
                       className="rounded-xl p-4 transition-all duration-300 group"
-                      style={{ backgroundColor: "rgba(239,68,68,0.02)", border: "1px solid rgba(239,68,68,0.06)" }}
+                      style={{ backgroundColor: "var(--error)" + "06", border: "1px solid var(--error)" + "10" }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "rgba(239,68,68,0.15)";
-                        e.currentTarget.style.backgroundColor = "rgba(239,68,68,0.04)";
+                        e.currentTarget.style.borderColor = "var(--error)" + "30";
+                        e.currentTarget.style.backgroundColor = "var(--error)" + "10";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "rgba(239,68,68,0.06)";
-                        e.currentTarget.style.backgroundColor = "rgba(239,68,68,0.02)";
+                        e.currentTarget.style.borderColor = "var(--error)" + "10";
+                        e.currentTarget.style.backgroundColor = "var(--error)" + "06";
                       }}
                     >
                       <div className="flex items-start gap-3.5">
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                          style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.1)" }}
+                          style={{ backgroundColor: "var(--error)" + "10", border: "1px solid var(--error)" + "20" }}
                         >
-                          <Icon size={15} style={{ color: "#EF4444" }} className="opacity-70" />
+                          <Icon size={15} style={{ color: "var(--error)" }} className="opacity-70" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-3 mb-1">
-                            <h4 className="text-[13px] font-semibold text-white/70">{point.title}</h4>
+                            <h4 className="text-[13px] font-semibold text-foreground">{point.title}</h4>
                             <div className="text-right shrink-0">
-                              <span className="text-[15px] font-bold" style={{ color: "#EF4444", fontFamily: "'Playfair Display', Georgia, serif" }}>
+                              <span className="text-[15px] font-bold" style={{ color: "var(--error)", fontFamily: "'Playfair Display', Georgia, serif" }}>
                                 {point.stat}
                               </span>
-                              <span className="text-[9px] text-white/20 block">{point.statLabel}</span>
+                              <span className="text-[9px] text-muted block">{point.statLabel}</span>
                             </div>
                           </div>
-                          <p className="text-[11px] text-white/30 leading-relaxed">{point.desc}</p>
+                          <p className="text-[11px] text-secondary leading-relaxed">{point.desc}</p>
                         </div>
                       </div>
                     </div>
@@ -243,10 +234,10 @@ export function ProblemSolutionSplit() {
             <Reveal delay={0.4}>
               <div
                 className="mt-6 rounded-xl p-4"
-                style={{ backgroundColor: "rgba(239,68,68,0.03)", border: "1px solid rgba(239,68,68,0.08)" }}
+                style={{ backgroundColor: "var(--error)" + "08", border: "1px solid var(--error)" + "18" }}
               >
-                <p className="text-[12px] text-white/35 leading-relaxed">
-                  <strong className="text-white/50">The cost:</strong> Hotels using manual procurement spend 15–25% more than necessary, experience 34% PO error rates, and have zero real-time visibility into spend.
+                <p className="text-[12px] text-secondary leading-relaxed">
+                  <strong className="text-foreground">The cost:</strong> Hotels using manual procurement spend 15–25% more than necessary, experience 34% PO error rates, and have zero real-time visibility into spend.
                 </p>
               </div>
             </Reveal>
@@ -258,18 +249,18 @@ export function ProblemSolutionSplit() {
               <div className="flex items-center gap-3 mb-8">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
+                  style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-accent)" }}
                 >
-                  <Zap size={18} style={{ color: A }} />
+                  <Zap size={18} style={{ color: "var(--accent-base)" }} />
                 </div>
                 <div>
                   <h3
-                    className="text-[18px] md:text-[22px] font-semibold text-white/90"
+                    className="text-[18px] md:text-[22px] font-semibold text-foreground"
                     style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                   >
                     HotelsVendors AI Platform
                   </h3>
-                  <p className="text-[11px] text-white/25 uppercase tracking-[0.12em]">Automated · Compliant · Real-Time</p>
+                  <p className="text-[11px] text-muted uppercase tracking-[0.12em]">Automated · Compliant · Real-Time</p>
                 </div>
               </div>
             </Reveal>
@@ -280,35 +271,35 @@ export function ProblemSolutionSplit() {
                 return (
                   <Reveal key={point.title} delay={i * 0.06}>
                     <div
-                      className="rounded-xl p-4 transition-all duration-300 group"
-                      style={{ backgroundColor: "rgba(255,255,255,0.015)", border: `1px solid ${B1}` }}
+                      className="rounded-xl p-4 transition-all duration-300 group surface-card"
+                      style={{ backgroundColor: "var(--bg-surface-1)", border: "1px solid var(--border-subtle)" }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = BH;
-                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.025)";
+                        e.currentTarget.style.borderColor = "var(--border-visible)";
+                        e.currentTarget.style.backgroundColor = "var(--surface-hover)";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = B1;
-                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.015)";
+                        e.currentTarget.style.borderColor = "var(--border-subtle)";
+                        e.currentTarget.style.backgroundColor = "var(--bg-surface-1)";
                       }}
                     >
                       <div className="flex items-start gap-3.5">
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                          style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
+                          style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-accent)" }}
                         >
-                          <Icon size={15} style={{ color: A }} />
+                          <Icon size={15} style={{ color: "var(--accent-base)" }} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-3 mb-1">
-                            <h4 className="text-[13px] font-semibold text-white/80">{point.title}</h4>
+                            <h4 className="text-[13px] font-semibold text-foreground">{point.title}</h4>
                             <div className="text-right shrink-0">
-                              <span className="text-[15px] font-bold" style={{ color: A, fontFamily: "'Playfair Display', Georgia, serif" }}>
+                              <span className="text-[15px] font-bold" style={{ color: "var(--accent-base)", fontFamily: "'Playfair Display', Georgia, serif" }}>
                                 {point.metric}
                               </span>
-                              <span className="text-[9px] text-white/20 block">{point.metricLabel}</span>
+                              <span className="text-[9px] text-muted block">{point.metricLabel}</span>
                             </div>
                           </div>
-                          <p className="text-[11px] text-white/35 leading-relaxed">{point.desc}</p>
+                          <p className="text-[11px] text-secondary leading-relaxed">{point.desc}</p>
                         </div>
                       </div>
                     </div>
@@ -321,13 +312,13 @@ export function ProblemSolutionSplit() {
             <Reveal delay={0.4}>
               <div
                 className="mt-6 rounded-xl p-4"
-                style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
+                style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-accent)" }}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 size={14} style={{ color: A }} />
-                  <span className="text-[12px] font-semibold text-white/60">The result</span>
+                  <CheckCircle2 size={14} style={{ color: "var(--accent-base)" }} />
+                  <span className="text-[12px] font-semibold text-foreground">The result</span>
                 </div>
-                <p className="text-[12px] text-white/40 leading-relaxed">
+                <p className="text-[12px] text-secondary leading-relaxed">
                   Hotels on HotelsVendors cut procurement costs by 15–25%, reduce PO errors to near zero, and get real-time visibility across every property — from day one.
                 </p>
               </div>
@@ -339,7 +330,7 @@ export function ProblemSolutionSplit() {
         <Reveal delay={0.5}>
           <div
             className="mt-14 rounded-2xl p-6 md:p-8"
-            style={{ backgroundColor: SC, border: `1px solid ${B1}` }}
+            style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border-subtle)" }}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
               {[
@@ -349,11 +340,11 @@ export function ProblemSolutionSplit() {
                 { label: "Supplier Payment", before: "60 days", after: "48 hours" },
               ].map((item) => (
                 <div key={item.label} className="text-center">
-                  <div className="text-[9px] text-white/20 uppercase tracking-[0.15em] mb-3">{item.label}</div>
+                  <div className="text-[9px] text-muted uppercase tracking-[0.15em] mb-3">{item.label}</div>
                   <div className="flex items-center justify-center gap-2">
-                    <span className="text-[13px] font-medium text-red-400/60 line-through">{item.before}</span>
-                    <ArrowRight size={12} className="text-white/15 shrink-0" />
-                    <span className="text-[13px] font-bold" style={{ color: A }}>{item.after}</span>
+                    <span className="text-[13px] font-medium line-through" style={{ color: "var(--error)" }}>{item.before}</span>
+                    <ArrowRight size={12} className="text-muted shrink-0" />
+                    <span className="text-[13px] font-bold" style={{ color: "var(--accent-base)" }}>{item.after}</span>
                   </div>
                 </div>
               ))}

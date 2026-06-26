@@ -1,17 +1,15 @@
 "use client";
 
-import { Moon, Sun, Flame, TreePine } from "lucide-react";
+import { Flame, TreePine } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import type { ThemeMode } from "./theme-provider";
 
 const THEME_OPTIONS: {
   mode: ThemeMode;
   label: string;
-  icon: typeof Sun;
+  icon: typeof Flame;
   sample: string;
 }[] = [
-  { mode: "coinbase", label: "Light", icon: Sun, sample: "#0052FF" },
-  { mode: "notion", label: "Dark", icon: Moon, sample: "#5645d4" },
   { mode: "noir", label: "Noir", icon: Flame, sample: "#B8962E" },
   { mode: "ember", label: "Ember", icon: TreePine, sample: "#FF8A33" },
 ];

@@ -138,7 +138,7 @@ npm run test             # vitest
 
 - [ ] Database: Supabase vs Neon vs Hostinger VPS
 - [ ] Auth: Supabase Auth vs custom JWT (jose)
-- [ ] Font: Plus Jakarta Sans vs Jakarta Sans
+- [ ] Font: Jakarta Sans vs Jakarta Sans
 - [ ] Theme: OLED #000000 vs obsidian #0B0F17
 - [ ] Search: MeiliSearch vs Prisma full-text
 
