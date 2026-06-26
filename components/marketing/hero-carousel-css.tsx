@@ -5,8 +5,10 @@ import { useState } from "react";
 /* ═══════════════════════════════════════════════════════════════
    CSS-ONLY HERO CAROUSEL
    5 contextual slides: procurement, ETA, marketplace, logistics, factoring.
-   Auto-advances every 5s via CSS animation. Manual radio-button dots.
-   No external images. Inline SVG + CSS gradients only.
+   Manual dot navigation. No external images. Inline SVG + CSS gradients.
+   Designed for light theme (warm whites, gold accent). For dark themes,
+   the caption scrim handles contrast; SVG mockups are intentionally
+   light-only since they represent paper documents / screens.
    ═══════════════════════════════════════════════════════════════ */
 
 const SLIDES = [
@@ -98,30 +100,30 @@ export function HeroCarouselCss() {
         </div>
       </div>
 
-      {/* Caption overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 z-10" style={{ background: "linear-gradient(to top, rgba(26,24,22,0.75) 0%, transparent 100%)" }}>
-        <p className="text-white/70 text-[10px] uppercase tracking-[0.2em] mb-1.5 font-medium">
+      {/* Caption overlay — dark scrim ensures contrast on light slide backgrounds */}
+      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 z-10" style={{ background: "linear-gradient(to top, rgba(26,24,22,0.88) 0%, rgba(26,24,22,0.45) 60%, transparent 100%)" }}>
+        <p className="text-white/60 text-[10px] uppercase tracking-[0.2em] mb-1.5 font-medium">
           {String(active + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
         </p>
-        <h3 className="text-white text-[17px] md:text-[21px] font-medium mb-1.5 leading-tight">
+        <h3 className="text-white text-[17px] md:text-[21px] font-medium mb-1.5 leading-tight drop-shadow-sm">
           {SLIDES[active].title}
         </h3>
-        <p className="text-white/70 text-[12px] md:text-[13px] leading-relaxed max-w-md">
+        <p className="text-white/75 text-[12px] md:text-[13px] leading-relaxed max-w-md drop-shadow-sm">
           {SLIDES[active].caption}
         </p>
       </div>
 
-      {/* Dot navigation */}
+      {/* Dot navigation — outline dots with accent fill for visibility on any background */}
       <div className="absolute bottom-3 right-5 md:bottom-5 md:right-7 flex items-center gap-1.5 z-10">
         {SLIDES.map((slide, i) => (
           <button
             key={slide.id}
             onClick={() => setActive(i)}
             aria-label={`Go to slide ${i + 1}: ${slide.title}`}
-            className="h-1.5 rounded-full transition-all duration-300"
+            className="h-1.5 rounded-full transition-all duration-300 ring-1 ring-black/20"
             style={{
               width: active === i ? 28 : 8,
-              background: active === i ? "var(--accent-base)" : "rgba(26,24,22,0.18)",
+              background: active === i ? "var(--accent-base)" : "rgba(255,255,255,0.7)",
             }}
           />
         ))}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
@@ -54,7 +55,7 @@ const solutions = [
 
 export default function SolutionsPage() {
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -163,6 +164,6 @@ export default function SolutionsPage() {
         </div>
       </section>
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }

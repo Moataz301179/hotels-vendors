@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Building2, MapPin, CheckCircle2, TrendingUp, ShieldCheck, Clock, Banknote, BrainCircuit, FileCheck, Users } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 import { ProblemSolutionSplit } from "@/components/marketing/problem-solution-split";
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function HotelsPage() {
   return (
     <>
       <MarketingNav />
-      <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+      <MarketingPage>
         {/* Hero */}
         <section className="pt-28 pb-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
@@ -145,7 +146,7 @@ export default function HotelsPage() {
             </Link>
           </div>
         </section>
-      </main>
+      </MarketingPage>
       <MarketingFooter />
     </>
   );

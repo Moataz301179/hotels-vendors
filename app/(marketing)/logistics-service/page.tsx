@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Truck, MapPin, Clock, Thermometer, Route, Banknote, PackageCheck, BarChart3, Headphones, TrendingDown } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "Coastal Hotel Logistics Egypt | Shared-Route Delivery | HotelsVendors",
@@ -66,7 +67,7 @@ const stats = [
 
 export default function LogisticsServicePage() {
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
 
       {/* ═══════════════════════════════════════════
@@ -293,7 +294,7 @@ export default function LogisticsServicePage() {
       </section>
 
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }
 

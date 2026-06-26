@@ -14,6 +14,7 @@ function InstagramIcon({ size = 14 }: { size?: number }) {
 }
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "About HotelsVendors — Founded by Moataz, 2023 | Egypt's Hospitality Fintech Infrastructure",
@@ -33,7 +34,7 @@ const socialLinks = [
 
 export default function AboutPage() {
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
 
       {/* Hero */}
@@ -196,6 +197,6 @@ export default function AboutPage() {
       </section>
 
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }

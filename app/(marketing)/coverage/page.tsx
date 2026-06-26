@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, MapPin, Building2, Store, Truck, CheckCircle2 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "Hotel Coverage — Where HotelsVendors Operates | Egypt, Red Sea to North Coast",
@@ -51,7 +52,7 @@ export default function CoveragePage() {
   const totalHotels = CITIES.reduce((sum, c) => sum + c.hotels, 0);
 
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
 
       {/* Hero */}
@@ -272,6 +273,6 @@ export default function CoveragePage() {
       </section>
 
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }

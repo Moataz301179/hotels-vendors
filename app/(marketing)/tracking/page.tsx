@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Package, FileCheck, Truck, CheckCircle2, Clock, MapPin, Bell, Search } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "Order Tracking — Real-Time Procurement Visibility | HotelsVendors",
@@ -48,7 +49,7 @@ const stages = [
 
 export default function TrackingPage() {
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
 
       {/* Hero */}
@@ -225,6 +226,6 @@ export default function TrackingPage() {
       </section>
 
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }

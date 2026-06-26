@@ -98,7 +98,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
       style={{
         background: SURFACE,
         border: "1px solid var(--border-subtle)",
-        boxShadow: "0 20px 60px rgba(15,23,42,0.10), 0 0 0 1px var(--border-subtle)",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.06), 0 0 0 1px var(--border-subtle)",
       }}
     >
       {/* Role switcher tabs */}
@@ -136,7 +136,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
         {/* Hover overlay with CTA */}
         <div
           className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
-          style={{ backgroundColor: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)" }}
+          style={{ backgroundColor: "rgba(0,0,0,0.35)", backdropFilter: "blur(4px)" }}
         >
           <button
             onClick={onCTAClick}

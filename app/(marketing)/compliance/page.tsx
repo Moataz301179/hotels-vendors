@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
+import { MarketingPage } from "@/components/layout/marketing-page";
 
 export const metadata: Metadata = {
   title: "Compliance & Regulatory Standards | HotelsVendors Egypt",
@@ -108,7 +109,7 @@ const AUDIT_CERTIFICATIONS = [
 
 export default function CompliancePage() {
   return (
-    <main className="marketing-main" style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
+    <MarketingPage>
       <MarketingNav />
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -206,6 +207,6 @@ export default function CompliancePage() {
       </section>
 
       <MarketingFooter />
-    </main>
+    </MarketingPage>
   );
 }
