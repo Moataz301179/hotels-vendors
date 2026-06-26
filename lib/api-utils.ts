@@ -15,17 +15,10 @@ import { logAuthFailure, logRateLimit } from "@/lib/security/security-logger";
 // 1. TENANT ISOLATION
 // ─────────────────────────────────────────
 
-export function getTenantId(request: NextRequest): string | null {
-  // DEPRECATED: Do not use. Tenant ID must come from the JWT session.
-  return request.headers.get("x-tenant-id");
-}
-
 export function requireTenantId(request: NextRequest): string {
-  const tenantId = getTenantId(request);
-  if (!tenantId) {
-    throw new ApiError("Missing x-tenant-id header", 400);
-  }
-  return tenantId;
+  // Tenant id is read from the JWT session by authenticate(); this helper is retained only for routes that
+  // need an explicit check beyond authentication. Do NOT read x-tenant-id from headers.
+  throw new ApiError("Missing tenant context", 400);
 }
 
 // ─────────────────────────────────────────

@@ -203,6 +203,10 @@ model Hotel {
   riskScore Int?      @default(50) // 0-100, higher = riskier
   riskTier  RiskTier? @default(MEDIUM)
 
+  // ── ETA Tax Registration ──
+  taxRegistrationNumber String? // ETA-issued tax registration number (distinct from internal taxId)
+  taxRegistrationNumberVerified Boolean @default(false)
+
   // Relations
   properties     Property[]
   users          User[]
@@ -315,6 +319,9 @@ model User {
 
   // Auth
   passwordHash String?
+
+  // PII: Encrypted at rest via application-level AES-256-GCM
+  nationalId String? // Egyptian national ID / passport number — encrypt before write
 
   // Platform role
   platformRole PlatformRole @default(HOTEL)
@@ -458,6 +465,10 @@ model Supplier {
 
   // ── Paymob Integration ──
   paymobMerchantId String?
+
+  // ── ETA Tax Registration ──
+  taxRegistrationNumber String? // ETA-issued tax registration number (distinct from internal taxId)
+  taxRegistrationNumberVerified Boolean @default(false)
 
   // ── INVO SaaS Subscription (replaces old saasSubscriptionPlan) ──
   invoSubscription InvoSubscription?
@@ -603,6 +614,9 @@ model Product {
   aiConfidence    Float?
   aiClassifiedAt  DateTime?
   manuallyVerified Boolean @default(false)
+
+  // ETA Compliance: Harmonized System code for customs/VAT classification (4-10 digits)
+  hsCode String?
 
   // V2.0 REFACTOR: RFQ items
   rfqItems        RfqItem[]
@@ -803,6 +817,9 @@ model Invoice {
   etaStatus        EtaStatus @default(PENDING)
   digitalSignature String?
   submissionLog    String?
+  etaSubmittedAt   DateTime? // Timestamp when submitted to ETA
+  etaValidatedAt   DateTime? // Timestamp when ETA validated/rejected
+  etaResponse      Json?     // Raw ETA response for audit trail
 
   // ETA Dual-Language Fields (bilingual invoice line items per ETA V2 spec)
   codeName    String? // Product/service code name (English)
@@ -1086,7 +1103,13 @@ model FactoringCompany {
   feeRate      Decimal?
 
   // ── Legal Verification ──
-  licenseNumber String?
+  licenseNumber         String?
+  licenseVerified       Boolean   @default(false)
+  licenseVerifiedAt     DateTime?
+  licenseVerifiedBy     String?
+  cbeRegistrationNumber String?
+  fraLicenseId          String?
+  riskRating            String?
 
   // ── Banking & Payout ──
   bankName    String?
@@ -1558,6 +1581,14 @@ model Payment {
 
   // V2.0 REFACTOR: Virtual account
   virtualAccountId String?
+
+  settlementType SettlementType @default(DIRECT)
+}
+
+enum SettlementType {
+  DIRECT
+  FACTORING
+  SPLIT
 }
 
 model PaymentTransaction {

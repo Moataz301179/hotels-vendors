@@ -33,6 +33,10 @@ const STUB_MODE =
   process.env.ETA_STUB_MODE === "true" ||
   (!process.env.ETA_CLIENT_ID && !process.env.ETA_CLIENT_SECRET);
 
+if (STUB_MODE && process.env.NODE_ENV === "production") {
+  throw new Error("[ETA] STUB_MODE enabled in production — refusing to start. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false.");
+}
+
 if (STUB_MODE && process.env.NODE_ENV === "development") {
   console.log(
     "[ETA] Running in STUB MODE — no real ETA API calls. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false to use the real sandbox."

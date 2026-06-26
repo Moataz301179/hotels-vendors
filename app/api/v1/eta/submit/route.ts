@@ -122,7 +122,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
     return success({ message: "Invoice submitted to ETA", etaUuid: result.uuid, submissionId: result.submissionId });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown ETA error";
-    return error(`ETA submission failed: ${message}`, 502);
+    // Sanitize: never leak upstream stack traces or internal host details to the client.
+    // eslint-disable-next-line no-console
+    console.error("[ETA_SUBMIT]", err);
+    return error("ETA submission failed — please try again or contact support.", 502);
   }
 }, { rateLimit: "api" });

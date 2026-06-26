@@ -122,7 +122,7 @@ export async function recordDisbursementJournal(
 
   // Assert mathematical balance to prevent decimal rounding anomalies
   const imbalance = Math.abs(totalDebit - totalCredit);
-  if (imbalance > 0 && imbalance <= 0.05) {
+  if (imbalance > 0 && imbalance <= 0.01) {
     // Gracefully balance fractional rounding discrepancies against the Platform Bank account
     const platformLine = lines.find((l) => l.accountCode === "1010");
     if (platformLine) {
@@ -219,7 +219,7 @@ export async function recordSettlementDisbursalJournal(
   const totalCredit = parseFloat(lines.reduce((sum, l) => sum + l.credit, 0).toFixed(2));
 
   const imbalance = Math.abs(totalDebit - totalCredit);
-  if (imbalance > 0 && imbalance <= 0.05) {
+  if (imbalance > 0 && imbalance <= 0.01) {
     const cashLine = lines.find((l) => l.accountCode === "1020");
     if (cashLine) {
       if (totalDebit < totalCredit) {

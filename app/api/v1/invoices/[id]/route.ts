@@ -15,8 +15,8 @@ export const GET = apiRoute(async (request: NextRequest, { params }: { params?: 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
     include: {
-      hotel: { select: { id: true, name: true, taxId: true } },
-      supplier: { select: { id: true, name: true, taxId: true } },
+      hotel: { select: { id: true, name: true } },
+      supplier: { select: { id: true, name: true } },
       order: { include: { items: { include: { product: { select: { id: true, name: true, sku: true } } } } } },
       factoringCompany: true,
       payments: true,

@@ -14,6 +14,7 @@ const FactoringRequestSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:request");
   const body = await request.json();
   const data = FactoringRequestSchema.parse(body);
 

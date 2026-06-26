@@ -115,7 +115,7 @@ export async function orchestrateFactoring(
 
   const hotel = invoice.hotel;
   const supplier = invoice.supplier;
-  const grossAmount = Number(invoice.total);
+  const grossAmount = new Prisma.Decimal(Number(invoice.total));
 
   // ── Stage 1: Risk Assessment ───────────────────────────────
   let riskAssessment: RiskAssessment;
@@ -159,12 +159,17 @@ export async function orchestrateFactoring(
     };
   }
 
+  const factor = await prisma.factoringCompany.findUnique({ where: { id: preferredPartnerId ?? "" } });
+  if (factor && !factor.licenseVerified) {
+    return { success: false, stage: "FAILED", error: "Factoring company license not verified", errorCode: "FACTOR_UNLICENSED", details: {} };
+  }
+
   // ── Stage 3: Create FactoringRequest (persistent record) ───
   const factoringRequest = await prisma.factoringRequest.create({
     data: {
       invoiceId,
       requestedAmount: grossAmount,
-      factoringCompanyId: preferredPartnerId || "efg_hermes", // Will be updated after inquiry
+      factoringCompanyId: preferredPartnerId ?? null,
       status: "UNDER_REVIEW",
       riskScore: riskAssessment.compositeScore,
       riskTier: riskAssessment.riskTier,
@@ -563,9 +568,9 @@ export async function orchestrateConsolidatedFactoring(
   const distinctApprovers = new Set(approvals.map((a) => a.actorId).filter(Boolean));
 
   if (distinctApprovers.size < 2) {
-    if (process.env.BYPASS_FOUR_EYES === "true") {
-      console.error(
-        `[SECURITY] Four-eyes bypass activated for package ${consolidatedInvoiceId} by actor ${triggeredBy}. Dual authorization was skipped.`
+    if (process.env.BYPASS_FOUR_EYES === "true" && process.env.NODE_ENV !== "production") {
+      console.warn(
+        `[AUDIT] Four-eyes bypass activated — development only. Package ${consolidatedInvoiceId} by actor ${triggeredBy}.`
       );
     } else {
       return {
@@ -748,15 +753,15 @@ export async function orchestrateConsolidatedFactoring(
   // ── Stage 5: Tri-Tier Margins & Programmatic Split Calculation ───────────────────────
   const advanceRate = bestOffer.maxAdvanceRate;
   const factorDiscountRate = bestOffer.discountRate;
-  const factoringFee = grossAmount * factorDiscountRate;
+  const factoringFee = grossAmount.mul(factorDiscountRate);
 
   // Stream 1: Fintech Commission from Factor
-  const factoringCommissionRate = 0.015;
-  const factoringCommissionAmount = (grossAmount * advanceRate) * factoringCommissionRate;
+  const factoringCommissionRate = new Prisma.Decimal(0.015);
+  const factoringCommissionAmount = grossAmount.mul(advanceRate).mul(factoringCommissionRate);
 
   // Stream 3: Hotel Admin Fee
-  const hotelAdminFeeRate = Number(ci.hotelAdminFeeRate ?? 0.01);
-  const hotelAdminFeeAmount = grossAmount * hotelAdminFeeRate;
+  const hotelAdminFeeRate = new Prisma.Decimal(Number(ci.hotelAdminFeeRate ?? 0.01));
+  const hotelAdminFeeAmount = grossAmount.mul(hotelAdminFeeRate);
 
   // ── Yield Spread Guard Verification ──
   const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true";
