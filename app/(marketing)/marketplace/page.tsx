@@ -21,7 +21,7 @@ import { SearchBar, type SearchFilters } from "@/components/marketplace/search-b
 import { CategoryNav } from "@/components/marketplace/category-nav";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { CompareDrawer } from "@/components/marketplace/compare-drawer";
-import { useCompare } from "@/components/marketplace/compare-context";
+import { useCompare, CompareProvider } from "@/components/marketplace/compare-context";
 import { getProductImage } from "@/lib/marketplace/product-images";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
 
@@ -115,6 +115,7 @@ export default function MarketplacePage() {
   };
 
   return (
+    <CompareProvider>
     <main className="min-h-screen text-primary" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
@@ -372,5 +373,6 @@ export default function MarketplacePage() {
       <CompareDrawer />
       <MarketingFooter />
     </main>
+    </CompareProvider>
   );
 }

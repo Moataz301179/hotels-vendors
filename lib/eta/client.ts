@@ -33,14 +33,15 @@ const STUB_MODE =
   process.env.ETA_STUB_MODE === "true" ||
   (!process.env.ETA_CLIENT_ID && !process.env.ETA_CLIENT_SECRET);
 
-if (STUB_MODE && process.env.NODE_ENV === "production") {
-  throw new Error("[ETA] STUB_MODE enabled in production — refusing to start. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false.");
-}
-
-if (STUB_MODE && process.env.NODE_ENV === "development") {
-  console.log(
-    "[ETA] Running in STUB MODE — no real ETA API calls. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false to use the real sandbox."
-  );
+function assertLiveInProduction(): void {
+  if (STUB_MODE && process.env.NODE_ENV === "production") {
+    throw new Error("[ETA] STUB_MODE enabled in production — refusing to start. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false.");
+  }
+  if (STUB_MODE && process.env.NODE_ENV === "development") {
+    console.log(
+      "[ETA] Running in STUB MODE — no real ETA API calls. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false to use the real sandbox."
+    );
+  }
 }
 
 function generateStubUuid(): string {
@@ -152,6 +153,7 @@ async function etaFetch(path: string, options: RequestInit = {}): Promise<Respon
 export async function submitInvoice(
   payload: EtaInvoicePayload
 ): Promise<EtaSubmissionResponse> {
+  assertLiveInProduction();
   if (STUB_MODE) {
     const now = new Date().toISOString();
     const uuid = generateStubUuid();
@@ -227,6 +229,7 @@ export async function submitInvoice(
 export async function getInvoice(
   uuid: string
 ): Promise<EtaSubmissionResponse | null> {
+  assertLiveInProduction();
   if (STUB_MODE) {
     return {
       submissionId: `stub-${uuid}`,
@@ -293,6 +296,7 @@ export async function getInvoice(
 export async function getInvoiceStatus(
   uuid: string
 ): Promise<EtaDocumentStatus | null> {
+  assertLiveInProduction();
   if (STUB_MODE) {
     return "Valid";
   }
@@ -315,6 +319,7 @@ export async function getInvoiceStatus(
  * Cancel a submitted invoice (before validation).
  */
 export async function cancelInvoice(uuid: string, reason: string): Promise<void> {
+  assertLiveInProduction();
   if (STUB_MODE) {
     return;
   }
@@ -335,6 +340,7 @@ export async function cancelInvoice(uuid: string, reason: string): Promise<void>
  * Reject a received invoice.
  */
 export async function rejectInvoice(uuid: string, reason: string): Promise<void> {
+  assertLiveInProduction();
   if (STUB_MODE) {
     return;
   }
@@ -372,6 +378,7 @@ export interface EtaCallbackPayload {
  * integrity for any internal callers.
  */
 export async function processCallback(payload: EtaCallbackPayload): Promise<void> {
+  assertLiveInProduction();
   const { prisma } = await import("@/lib/prisma");
 
   const invoice = await prisma.invoice.findUnique({

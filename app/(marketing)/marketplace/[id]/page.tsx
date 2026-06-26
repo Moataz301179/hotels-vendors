@@ -20,7 +20,7 @@ import { motion } from "framer-motion";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { CompareDrawer } from "@/components/marketplace/compare-drawer";
-import { useCompare } from "@/components/marketplace/compare-context";
+import { useCompare, CompareProvider } from "@/components/marketplace/compare-context";
 import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
@@ -158,6 +158,7 @@ export default function ProductDetailPage() {
     new Intl.NumberFormat("en-EG", { style: "currency", currency: product.currency, minimumFractionDigits: 0 }).format(p);
 
   return (
+    <CompareProvider>
     <main className="min-h-screen text-primary" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
@@ -388,5 +389,6 @@ export default function ProductDetailPage() {
       <CompareDrawer />
       <MarketingFooter />
     </main>
+    </CompareProvider>
   );
 }

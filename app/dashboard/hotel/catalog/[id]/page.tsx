@@ -11,7 +11,7 @@ import {
   Clock, Thermometer, Calendar, ArrowLeft,
 } from "lucide-react";
 import { getCategoryById } from "@/lib/marketplace/categories";
-import { useCompare } from "@/components/marketplace/compare-context";
+import { useCompare, CompareProvider } from "@/components/marketplace/compare-context";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingPage } from "@/components/dashboards/shared/loading-card";
@@ -194,6 +194,7 @@ export default function ProductDetailPage() {
     new Intl.NumberFormat("en-EG", { style: "currency", currency: product.currency, minimumFractionDigits: 0 }).format(price);
 
   return (
+    <CompareProvider>
     <div className="min-h-screen bg-black text-white">
       {/* Breadcrumb */}
       <div className="border-b border-white/[0.06]">
@@ -447,5 +448,6 @@ export default function ProductDetailPage() {
         )}
       </div>
     </div>
+    </CompareProvider>
   );
 }
