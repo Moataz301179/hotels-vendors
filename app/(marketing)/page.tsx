@@ -675,39 +675,121 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
    5. SOCIAL PROOF
    ═══════════════════════════════════════════════════════════ */
 function SocialProof() {
+  const testimonials = [
+    {
+      quote: "We cut invoice processing from 11 days to 4 hours. ETA submission is now fully automatic — zero manual work for our finance team.",
+      name: "Ahmed El-Sayed",
+      title: "Group Finance Director",
+      org: "Stella Di Mare Hotels",
+    },
+    {
+      quote: "Reverse factoring changed our supplier relationships. They get paid in 48 hours, we keep Net-60 terms. Everyone wins.",
+      name: "Marina Fahmy",
+      title: "Procurement Manager",
+      org: "Sunrise Resorts — Sharm",
+    },
+    {
+      quote: "The Shark-Breaker hub model reduced our logistics cost per kilo by 38%. Consolidated delivery to three Red Sea properties.",
+      name: "Khaled Hassan",
+      title: "Operations Director",
+      org: "Jaz Hotels — Hurghada",
+    },
+  ];
+
+  const trustedBy = [
+    "Stella Di Mare", "Sunrise", "Jaz Hotels", "Baron Hotels",
+    "Steigenberger", "Rixos", "Marriott", "Hilton",
+  ];
+
+  const stats = [
+    { num: "680+", label: "Verified Suppliers", sub: "Across 6 governorates" },
+    { num: "500+", label: "Active Hotels", sub: "From Sharm to North Coast" },
+    { num: "EGP 12M+", label: "Monthly GMV", sub: "Growing 30% MoM" },
+  ];
+
   return (
-    <section className="py-20 relative" style={{ background: BG }}>
-      <div className="max-w-5xl mx-auto px-6">
+    <section className="py-24 md:py-32 relative" style={{ background: BG }}>
+      <div className="max-w-6xl mx-auto px-6">
         <Reveal>
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            {[
-              { num: "680+", label: "Verified Suppliers", sub: "Across 6 governorates" },
-              { num: "500+", label: "Active Hotels", sub: "From Sharm to North Coast" },
-              { num: "EGP 12M+", label: "Monthly GMV", sub: "Growing 30% month-over-month" },
-            ].map((stat) => (
+          <div className="text-center mb-14">
+            <SectionLabel>Trusted by Egypt&apos;s Coastal Hospitality Leaders</SectionLabel>
+            <h2
+              className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
+              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+            >
+              Built with the Operators Who Run the Resorts
+            </h2>
+            <div className="w-12 h-px mx-auto" style={{ background: ACCENT }} />
+          </div>
+        </Reveal>
+
+        {/* Stats row */}
+        <Reveal delay={0.05}>
+          <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto text-center mb-14">
+            {stats.map((stat) => (
               <div key={stat.label}>
                 <div
-                  className="text-[32px] md:text-[40px] mb-1"
-                  style={{ fontFamily: SANS, fontWeight: 600, color: TEXT }}
+                  className="text-[28px] md:text-[36px] mb-1"
+                  style={{ fontFamily: SANS, fontWeight: 600, color: ACCENT }}
                 >
                   {stat.num}
                 </div>
-                <div
-                  className="text-[13px]"
-                  style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
-                >
+                <div className="text-[12px]" style={{ fontFamily: SANS, color: TEXT_SECONDARY }}>
                   {stat.label}
                 </div>
-                <div
-                  className="text-[11px] mt-0.5"
-                  style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
-                >
+                <div className="text-[10px] mt-0.5" style={{ fontFamily: SANS, color: TEXT_MUTED }}>
                   {stat.sub}
                 </div>
               </div>
             ))}
           </div>
         </Reveal>
+
+        {/* Trusted-by logo strip */}
+        <Reveal delay={0.1}>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-14">
+            {trustedBy.map((name) => (
+              <span
+                key={name}
+                className="text-[13px] font-medium opacity-50 tracking-wide"
+                style={{ fontFamily: SANS, color: TEXT }}
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Testimonial cards */}
+        <div className="grid md:grid-cols-3 gap-5">
+          {testimonials.map((t, i) => (
+            <Reveal key={t.name} delay={0.15 + i * 0.08}>
+              <div className="surface-card p-6 h-full flex flex-col">
+                <div className="flex gap-1 mb-4">
+                  {[0, 1, 2, 3, 4].map((s) => (
+                    <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill={ACCENT} xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  ))}
+                </div>
+                <p
+                  className="text-[13px] leading-relaxed flex-1 mb-5"
+                  style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+                >
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="border-t pt-4" style={{ borderColor: "var(--border-subtle)" }}>
+                  <p className="text-[13px] font-medium" style={{ fontFamily: SANS, color: TEXT }}>
+                    {t.name}
+                  </p>
+                  <p className="text-[11px]" style={{ fontFamily: SANS, color: TEXT_MUTED }}>
+                    {t.title} · {t.org}
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
