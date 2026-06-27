@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Sun, Moon, ChevronUp } from "lucide-react";
+import { Sun, Moon, Waves, ChevronDown } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import type { ThemeMode } from "./theme-provider";
 
 const OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
   { mode: "light", label: "Light", icon: Sun },
   { mode: "dark", label: "Dark", icon: Moon },
+  { mode: "coastal", label: "Coastal", icon: Waves },
 ];
 
 export function ThemeToggle() {
@@ -25,7 +26,7 @@ export function ThemeToggle() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  const current = OPTIONS.find((o) => o.mode === mode)!;
+  const current = OPTIONS.find((o) => o.mode === mode) ?? OPTIONS[0];
 
   return (
     <div ref={ref} className="relative">
@@ -42,15 +43,15 @@ export function ThemeToggle() {
       >
         <current.icon className="w-3.5 h-3.5" />
         <span className="hidden sm:inline">{current.label}</span>
-        <ChevronUp
+        <ChevronDown
           className="w-3 h-3 transition-transform"
-          style={{ transform: open ? "rotate(0deg)" : "rotate(180deg)" }}
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
         />
       </button>
 
       {open && (
         <div
-          className="absolute bottom-full right-0 mb-1.5 rounded-lg border overflow-hidden min-w-[120px] z-50"
+          className="absolute top-full right-0 mt-1.5 rounded-lg border overflow-hidden min-w-[120px] z-50"
           style={{
             borderColor: "var(--border-subtle)",
             background: "var(--bg-surface-1)",

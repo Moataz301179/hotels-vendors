@@ -244,6 +244,78 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="coastal"] {
+  /* Teal accent scale — evokes the Red Sea */
+  --accent-50: #EFFAFD;
+  --accent-100: #D8F3FA;
+  --accent-200: #A9E6F3;
+  --accent-300: #6DD2E8;
+  --accent-400: #22D3EE;
+  --accent-500: #0E7490;
+  --accent-600: #155E75;
+  --accent-700: #164E63;
+  --accent-800: #0C3A4A;
+  --accent-900: #061F27;
+
+  /* Deep navy surfaces */
+  --bg-canvas: #0A1929;
+  --bg-surface-1: #0F2137;
+  --bg-surface-2: #142E4A;
+  --bg-surface-3: #1A3A5C;
+  --background: #0A1929;
+  --surface: #0F2137;
+  --surface-raised: #142E4A;
+  --surface-hover: #1A3A5C;
+  --surface-overlay: rgba(10, 25, 41, 0.7);
+
+  --text-primary: #F0F9FF;
+  --text-secondary: #93C5FD;
+  --text-tertiary: #60A5FA;
+  --text-muted: #3B82F6;
+  --text-inverse: #0A1929;
+  --foreground: #F0F9FF;
+  --foreground-secondary: #93C5FD;
+  --foreground-tertiary: #60A5FA;
+  --foreground-muted: #3B82F6;
+
+  --border-invisible: rgba(34, 211, 238, 0.02);
+  --border-subtle: rgba(34, 211, 238, 0.08);
+  --border-visible: rgba(34, 211, 238, 0.16);
+  --border-accent: rgba(34, 211, 238, 0.35);
+  --glass-bg: rgba(15, 33, 55, 0.7);
+  --glass-border: rgba(34, 211, 238, 0.12);
+
+  --accent-base: #0E7490;
+  --accent-light: #22D3EE;
+  --accent-dark: #155E75;
+  --accent-muted: rgba(34, 211, 238, 0.10);
+  --accent-glow: rgba(34, 211, 238, 0.18);
+  --accent-text: #F0F9FF;
+
+  --error: #F87171;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --info: #60A5FA;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.35);
+  --shadow-elevated: 0 4px 18px rgba(0,0,0,0.45);
+  --shadow-glow-accent: 0 0 40px rgba(34, 211, 238, 0.10);
+  --shadow-inner-light: inset 0 1px 0 rgba(240, 249, 255, 0.05);
+
+  --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --header-height: 64px;
+  --sidebar-width: 260px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
