@@ -727,6 +727,20 @@ body {
   animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Mobile nav slide-down animation */
+@keyframes mv-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 600px;
+  }
+}
+
 /* Subtle noise texture overlay */
 .noise-overlay {
   position: relative;

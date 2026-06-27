@@ -2,22 +2,31 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ShoppingCart } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { useCart } from "@/components/cart/cart-context";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileAnimating, setMobileAnimating] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const { totalItems, openCart } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      setMobileAnimating(true);
+    }
+  }, [mobileOpen]);
 
   useEffect(() => {
     const onClick = () => setOpenDropdown(null);
@@ -58,6 +67,14 @@ export function MarketingNav() {
           boxShadow: scrolled ? "0 1px 0 var(--border-invisible)" : "none",
         }}
       >
+        {/* Mobile solid background layer — always visible on mobile, hidden on desktop */}
+        <div
+          className="absolute inset-0 lg:hidden"
+          style={{
+            backgroundColor: "var(--bg-surface-1)",
+            borderBottom: "1px solid var(--border-subtle)",
+          }}
+        />
         <div
           className="mx-auto max-w-7xl px-6 h-[68px] flex items-center justify-between"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -145,7 +162,23 @@ export function MarketingNav() {
           </nav>
 
           {/* Right actions */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2 relative z-10">
+            <button
+              className="p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 relative"
+              style={{ color: "var(--text-primary)" }}
+              onClick={openCart}
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-[18px] h-[18px]" />
+              {totalItems > 0 && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
+                  style={{ background: "var(--accent-base)", color: "var(--accent-text)" }}
+                >
+                  {totalItems > 9 ? "9+" : totalItems}
+                </span>
+              )}
+            </button>
             <ThemeToggle />
             <Link
               href="/login"
@@ -186,24 +219,43 @@ export function MarketingNav() {
             </button>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="lg:hidden p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
-            style={{ color: "var(--text-primary)" }}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile actions — cart + toggle */}
+          <div className="lg:hidden flex items-center gap-1 relative z-10">
+            <button
+              className="p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 relative"
+              style={{ color: "var(--text-primary)" }}
+              onClick={openCart}
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
+                  style={{ background: "var(--accent-base)", color: "var(--accent-text)" }}
+                >
+                  {totalItems > 9 ? "9+" : totalItems}
+                </span>
+              )}
+            </button>
+            <button
+              className="p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
+              style={{ color: "var(--text-primary)" }}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu — darker surface, slide-down animation */}
         {mobileOpen && (
           <div
-            className="lg:hidden backdrop-blur-md"
+            className="lg:hidden overflow-hidden"
             style={{
-              backgroundColor: "var(--bg-surface-1)",
+              backgroundColor: "var(--bg-surface-2)",
               borderTop: "1px solid var(--border-subtle)",
+              animation: mobileAnimating ? "mv-slide-down 240ms ease-out both" : undefined,
             }}
           >
             <div className="px-6 py-5 space-y-1">
