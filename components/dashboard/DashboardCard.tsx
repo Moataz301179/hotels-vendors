@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode, useState, useEffect, useCallback } from "react";
-import { Download, GripVertical } from "lucide-react";
+import { ReactNode } from "react";
+import { Download } from "lucide-react";
 
 interface DashboardCardProps {
   title: string;
@@ -11,10 +11,6 @@ interface DashboardCardProps {
   className?: string;
 }
 
-/**
- * Brutalist card wrapper used across all role dashboards.
- * Supports CSV export and drag-to-rearrange (layout stored in localStorage).
- */
 export function DashboardCard({
   title,
   children,
@@ -47,47 +43,4 @@ export function DashboardCard({
       {children}
     </div>
   );
-}
-
-/**
- * Hook for persisting card order in localStorage.
- * Returns [orderedKeys, moveCard].
- */
-export function useCustomizableLayout(storageKey: string, defaultKeys: string[]) {
-  const [keys, setKeys] = useState<string[]>(defaultKeys);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as string[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setKeys(parsed);
-        }
-      }
-    } catch {
-      // ignore
-    }
-    setLoaded(true);
-  }, [storageKey]);
-
-  const moveCard = useCallback(
-    (fromIndex: number, toIndex: number) => {
-      setKeys((prev) => {
-        const next = [...prev];
-        const [moved] = next.splice(fromIndex, 1);
-        next.splice(toIndex, 0, moved);
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(next));
-        } catch {
-          // ignore
-        }
-        return next;
-      });
-    },
-    [storageKey]
-  );
-
-  return { keys, moveCard, loaded };
 }

@@ -384,7 +384,7 @@ export function RegistrationWizard({
                 {registered ? "Welcome to HotelsVendors!" : "Registration"}
               </h2>
               {!registered && (
-                <p className="text-[11px] text-white/30">Step {step} of 5 — {STEPS[step - 1].label}</p>
+                <p className="text-[11px] text-white/30">Step {step} of {STEPS.length} — {STEPS[step - 1].label}</p>
               )}
             </div>
           </div>

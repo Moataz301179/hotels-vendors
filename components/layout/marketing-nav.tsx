@@ -64,7 +64,7 @@ export function MarketingNav() {
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {/* Brand */}
-          <Link href="/" className="relative z-10">
+          <Link href="/" className="relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 rounded-lg">
             <BrandLogo variant="light" size="md" />
           </Link>
 
@@ -79,7 +79,7 @@ export function MarketingNav() {
               >
                 <Link
                   href={item.href}
-                  className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-xl transition-colors flex items-center gap-1"
+                  className="px-4 py-2 text-[13px] font-medium tracking-wide uppercase rounded-xl transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
                   style={{
                     color: "var(--text-primary)",
                   }}
@@ -125,7 +125,7 @@ export function MarketingNav() {
                       <Link
                         key={sub.label}
                         href={sub.href}
-                        className="block px-4 py-2.5 text-[12px] tracking-wide transition-colors"
+                        className="block px-4 py-2.5 text-[12px] tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
                         style={{ color: "var(--text-secondary)" }}
                         onMouseEnter={(e) => {
                           (e.currentTarget as HTMLElement).style.color = "var(--accent-base)";
@@ -151,7 +151,7 @@ export function MarketingNav() {
             <ThemeToggle />
             <Link
               href="/login"
-              className="text-[13px] font-medium tracking-wide uppercase px-3 py-2 rounded-xl transition-colors"
+              className="text-[13px] font-medium tracking-wide uppercase px-3 py-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
               style={{ color: "var(--text-secondary)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
@@ -164,7 +164,7 @@ export function MarketingNav() {
             </Link>
             <Link
               href="/about"
-              className="text-[13px] font-medium tracking-wide uppercase px-3 py-2 rounded-xl transition-colors"
+              className="text-[13px] font-medium tracking-wide uppercase px-3 py-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
               style={{ color: "var(--text-secondary)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
@@ -177,7 +177,7 @@ export function MarketingNav() {
             </Link>
             <button
               onClick={() => setWizardOpen(true)}
-              className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] cursor-pointer"
+              className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
               style={{
                 background: "var(--accent-base)",
                 color: "var(--accent-text)",
@@ -190,7 +190,7 @@ export function MarketingNav() {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden p-2 rounded-xl transition-colors"
+            className="lg:hidden p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
             style={{ color: "var(--text-primary)" }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
@@ -213,7 +213,7 @@ export function MarketingNav() {
                 <div key={item.label}>
                   <Link
                     href={item.href}
-                    className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors"
+                    className="block py-2.5 text-[13px] font-medium tracking-wide uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 rounded-lg"
                     style={{ color: "var(--text-primary)" }}
                     onClick={() => setMobileOpen(false)}
                   >

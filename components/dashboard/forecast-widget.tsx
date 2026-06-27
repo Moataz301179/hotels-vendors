@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, TrendingDown, Minus, AlertTriangle, RefreshCw, Sparkles } from "lucide-react";
 
-const accent = "#FF6B00";
-const surface = "#0A0F1B";
-const borderSubtle = "rgba(255,255,255,0.06)";
+const accent = "var(--accent-base, #FF6B00)";
+const surface = "var(--surface, #0A0F1B)";
+const borderSubtle = "var(--border-subtle, rgba(255,255,255,0.06))";
 
 interface ForecastDay {
   day: string;

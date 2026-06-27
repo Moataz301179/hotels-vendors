@@ -25,14 +25,14 @@ interface LedgerRow {
   riskScore: number;
 }
 
-const accent = "#FF6B00";
-const surface = "#0A0F1B";
-const surfaceAlt = "#0E1421";
-const border = "rgba(255,255,255,0.06)";
-const borderAlt = "rgba(255,255,255,0.04)";
-const textPrimary = "#ffffff";
-const textSecondary = "rgba(255,255,255,0.50)";
-const textMuted = "rgba(255,255,255,0.25)";
+const accent = "var(--accent-base, #FF6B00)";
+const surface = "var(--surface, #0A0F1B)";
+const surfaceAlt = "var(--surface-raised, #0E1421)";
+const border = "var(--border-subtle, rgba(255,255,255,0.06))";
+const borderAlt = "var(--border-invisible, rgba(255,255,255,0.04))";
+const textPrimary = "var(--foreground, #ffffff)";
+const textSecondary = "var(--foreground-secondary, rgba(255,255,255,0.50))";
+const textMuted = "var(--foreground-muted, rgba(255,255,255,0.25))";
 const textFaint = "rgba(255,255,255,0.35)";
 
 const kpis: KPIData[] = [

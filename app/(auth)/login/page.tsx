@@ -26,6 +26,10 @@ export default function LoginPage() {
   const [resendMsg, setResendMsg] = useState("");
   const [resending, setResending] = useState(false);
 
+  const pwStrength = password.length === 0 ? 0 : password.length < 6 ? 1 : password.length < 10 ? 2 : 3;
+  const pwLabels = ["", "Weak", "Fair", "Strong"];
+  const pwColors = ["", "var(--color-error, #F87171)", "var(--color-warning, #FBBF24)", "var(--color-success, #34D399)"];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -144,6 +148,24 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {password.length > 0 && (
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <div className="flex-1 flex gap-1">
+                      {[1, 2, 3].map((level) => (
+                        <div
+                          key={level}
+                          className="h-1 flex-1 rounded-full transition-colors"
+                          style={{
+                            backgroundColor: level <= pwStrength ? pwColors[pwStrength] : "var(--border-subtle, rgba(255,255,255,0.06))",
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-[10px] font-medium" style={{ color: pwColors[pwStrength] }}>
+                      {pwLabels[pwStrength]}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Remember + Forgot */}
@@ -194,7 +216,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(255,107,0,0.15)]"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_var(--accent-muted,rgba(255,107,0,0.15))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
                 style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, #ffffff)" }}
               >
                 {loading ? (

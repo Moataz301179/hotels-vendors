@@ -107,7 +107,7 @@ export function OrderStatusPill({ status }: { status: string }) {
       : s === "IN_TRANSIT"
       ? "text-blue-400 bg-blue-400/10 border-blue-400/20"
       : s === "CONFIRMED" || s === "APPROVED"
-      ? "text-[#FF6B00] bg-[rgba(10,22,40,0.1)] border-[rgba(10,22,40,0.2)]"
+      ? "text-[var(--accent-base, #FF6B00)] bg-[var(--accent-muted, rgba(255,107,0,0.1))] border-[var(--accent-muted, rgba(255,107,0,0.2))]"
       : s === "DISPUTED"
       ? "text-amber-400 bg-amber-400/10 border-amber-400/20"
       : s === "REJECTED" || s === "CANCELLED"

@@ -241,10 +241,10 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-[#0f0f0f]">
           <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#ff6b6b]" />
+              <Activity className="w-4 h-4" style={{ color: "var(--color-error, #ff6b6b)" }} />
               <h2 className="text-sm font-semibold text-white/80">Activity Feed</h2>
             </div>
-            <Link href="/admin/explorer" className="text-[11px] text-white/30 hover:text-white/60 transition-colors">
+            <Link href="/admin/reports" className="text-[11px] text-white/30 hover:text-white/60 transition-colors">
               View All →
             </Link>
           </div>
@@ -312,10 +312,10 @@ export default function AdminDashboardPage() {
             <h3 className="text-sm font-semibold text-white/60 mb-3">Quick Actions</h3>
             <div className="space-y-2">
               {[
-                { label: "Data Explorer", to: "/admin/explorer", icon: Search },
-                { label: "AI Insights", to: "/admin/ai-insights", icon: Brain },
+                { label: "Reports & Analytics", to: "/admin/reports", icon: Search },
+                { label: "Platform Health", to: "/admin/settings", icon: Brain },
                 { label: "User Management", to: "/admin/users", icon: Users },
-                { label: "Grok Brain", to: "/admin/grok-brain", icon: Activity },
+                { label: "OpenClaw Agents", to: "/admin/openclaw", icon: Activity },
               ].map((link) => {
                 const Icon = link.icon;
                 return (
