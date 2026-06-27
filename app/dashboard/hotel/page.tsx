@@ -1,36 +1,123 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { CheckoutModal } from "@/components/dashboard/checkout-modal";
-import { FinancialDashboard, type KPIData, type LedgerRow } from "@/components/dashboard/financial-dashboard";
-import { ForecastWidget } from "@/components/dashboard/forecast-widget";
 import {
   DollarSign,
   Activity,
   ShieldCheck,
   TrendingUp,
+  ShoppingBag,
+  ArrowUpRight,
+  ArrowDownRight,
+  Clock,
+  CheckCircle2,
+  Truck,
+  Search,
+  Eye,
+  ThumbsUp,
+  XCircle,
+  Loader2,
 } from "lucide-react";
+import { FinancialDashboard, type KPIData, type LedgerRow } from "@/components/dashboard/financial-dashboard";
+import { ForecastWidget } from "@/components/dashboard/forecast-widget";
+import { useApi } from "@/lib/hooks/use-api";
+import { useSessionInfo } from "@/lib/hooks/use-session-info";
+import { Modal } from "@/components/ui/modal";
+import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import Link from "next/link";
 
-const kpis: KPIData[] = [
-  { label: "Available Capital", value: "EGP 2,450,000", change: "+12.4%", trend: "up", icon: <DollarSign size={16} /> },
-  { label: "Utilized Credit", value: "EGP 1,820,000", change: "+8.2%", trend: "up", icon: <Activity size={16} /> },
-  { label: "Real-time Risk Score", value: "82/100", change: "-3 pts", trend: "down", icon: <ShieldCheck size={16} /> },
-  { label: "Settlement Rate", value: "94.2%", change: "+1.1%", trend: "up", icon: <TrendingUp size={16} /> },
-];
+const fadeInUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
 
-const ledgerData: LedgerRow[] = [
-  { id: "1", invoiceId: "INV-2026-00142", hotel: "Stella Di Mare Resort", supplier: "Nile Fresh Foods", amount: 45200, currency: "EGP", status: "paid", date: "2026-06-08", taxStamp: "ETA-UUID: a3f8c2d1-0042", ledgerHash: "0x7f3a...e2b1", riskScore: 92 },
-  { id: "2", invoiceId: "INV-2026-00141", hotel: "Jaz Aquamarine", supplier: "Pyramid Linens", amount: 28700, currency: "EGP", status: "pending", date: "2026-06-07", taxStamp: "ETA-UUID: b4e9d3e2-0041", ledgerHash: "0x8a4b...f3c2", riskScore: 78 },
-  { id: "3", invoiceId: "INV-2026-00140", hotel: "Sunrise Palace", supplier: "Red Sea Amenities", amount: 61500, currency: "EGP", status: "invoiced", date: "2026-06-06", taxStamp: "ETA-UUID: c5f0e4f3-0040", ledgerHash: "0x9b5c...g4d3", riskScore: 85 },
-  { id: "4", invoiceId: "INV-2026-00139", hotel: "Baron Resort Sharm", supplier: "Cairo Kitchen Pro", amount: 128400, currency: "EGP", status: "delivered", date: "2026-06-05", taxStamp: "ETA-UUID: d6a1f5a4-0039", ledgerHash: "0xac6d...h5e4", riskScore: 91 },
-  { id: "5", invoiceId: "INV-2026-00138", hotel: "Hurghada Grand", supplier: "Delta Maintenance", amount: 18900, currency: "EGP", status: "overdue", date: "2026-05-28", taxStamp: "ETA-UUID: e7b2a6b5-0038", ledgerHash: "0xbd7e...i6f5", riskScore: 42 },
-  { id: "6", invoiceId: "INV-2026-00137", hotel: "Stella Di Mare Resort", supplier: "Nile Fresh Foods", amount: 38100, currency: "EGP", status: "paid", date: "2026-05-25", taxStamp: "ETA-UUID: f8c3b7c6-0037", ledgerHash: "0xce8f...j7g6", riskScore: 88 },
-  { id: "7", invoiceId: "INV-2026-00136", hotel: "Jaz Aquamarine", supplier: "Pyramid Linens", amount: 22400, currency: "EGP", status: "pending", date: "2026-05-24", taxStamp: "ETA-UUID: a9d4c8d7-0036", ledgerHash: "0xdf9g...k8h7", riskScore: 74 },
-];
+interface Order {
+  id: string;
+  orderNumber: string;
+  status: string;
+  total: number;
+  currency: string;
+  createdAt: string;
+  deliveryDate: string | null;
+  hotel: { name: string };
+  supplier: { name: string };
+  items: { quantity: number; total: number; product: { name: string } }[];
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
+    PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
+    APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
+    CONFIRMED: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "Confirmed" },
+    IN_TRANSIT: { bg: "bg-cyan-500/10", text: "text-cyan-400", dot: "bg-cyan-400", label: "In Transit" },
+    DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
+    CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
+    DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+  };
+  const c = config[status] || config.DRAFT;
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+      {c.label}
+    </span>
+  );
+}
 
 export default function HotelDashboardPage() {
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const session = useSessionInfo();
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const { data: ordersData, loading, refetch } = useApi<{ orders: Order[]; pagination: { total: number } }>(
+    "/api/v1/orders?page=1&limit=20&sortOrder=desc"
+  );
+  const orders = ordersData?.orders ?? [];
+
+  const kpis: KPIData[] = useMemo(() => {
+    const total = orders.reduce((s, o) => s + (o.total || 0), 0);
+    const processing = orders.filter(o => ["APPROVED", "CONFIRMED", "IN_TRANSIT"].includes(o.status)).length;
+    const delivered = orders.filter(o => o.status === "DELIVERED").length;
+    const deliveryRate = orders.length > 0 ? Math.round((delivered / orders.length) * 100) : 0;
+
+    return [
+      { label: "Total Order Value", value: `EGP ${total.toLocaleString()}`, change: `${orders.length} orders`, trend: "up" as const, icon: <DollarSign size={16} /> },
+      { label: "Processing", value: processing.toString(), change: "Active", trend: "up" as const, icon: <Activity size={16} /> },
+      { label: "Delivery Rate", value: `${deliveryRate}%`, change: `${delivered} delivered`, trend: deliveryRate >= 80 ? "up" as const : "down" as const, icon: <ShieldCheck size={16} /> },
+      { label: "Settlement Rate", value: "—", change: "Requires payment data", trend: "up" as const, icon: <TrendingUp size={16} /> },
+    ];
+  }, [orders]);
+
+  const ledgerData: LedgerRow[] = useMemo(() =>
+    orders.slice(0, 10).map((o, i) => ({
+      id: o.id,
+      invoiceId: o.orderNumber,
+      hotel: o.hotel?.name || "—",
+      supplier: o.supplier?.name || "—",
+      amount: o.total,
+      currency: o.currency || "EGP",
+      status: o.status === "DELIVERED" ? "delivered" : o.status === "INVOICED" ? "invoiced" : "pending",
+      date: o.createdAt?.slice(0, 10) || "—",
+      taxStamp: o.id,
+      ledgerHash: `0x${i.toString(16).padStart(4, "0")}`,
+      riskScore: 0,
+    })),
+  [orders]);
+
+  const handleApprove = async (orderId: string) => {
+    setActionLoading(orderId);
+    try {
+      const res = await fetch(`/api/v1/orders/${orderId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "APPROVED" }),
+      });
+      const json = await res.json();
+      if (json.success) refetch();
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   return (
     <motion.div
@@ -46,19 +133,148 @@ export default function HotelDashboardPage() {
             Track spend, manage orders, and monitor inventory across all properties
           </p>
         </div>
-        <button
-          onClick={() => setCheckoutOpen(true)}
+        <Link
+          href="/dashboard/hotel/order"
           className="cta-glow px-5 py-2.5 bg-accent-base text-accent-text text-sm font-medium rounded-sm hover:bg-accent-light transition-colors"
         >
-          Immediate Checkout
-        </button>
+          New Purchase Order
+        </Link>
       </div>
 
       <FinancialDashboard kpis={kpis} ledgerData={ledgerData} />
 
       <ForecastWidget />
 
-      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      {/* Recent Orders Quick View */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Recent Orders</h2>
+          <Link href="/dashboard/orders" className="text-sm text-accent-base hover:underline">View all</Link>
+        </div>
+        {loading ? (
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+            <Loader2 className="w-6 h-6 text-white/20 animate-spin mx-auto" />
+          </div>
+        ) : orders.length === 0 ? (
+          <EmptyState
+            title="No orders yet"
+            description="Create your first purchase order to see activity here."
+            action={
+              <Link
+                href="/dashboard/hotel/catalog"
+                className="px-4 py-2 rounded-lg bg-accent-base text-white text-xs font-medium hover:bg-accent-light transition-colors"
+              >
+                Browse Catalog
+              </Link>
+            }
+          />
+        ) : (
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+            <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
+                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.slice(0, 5).map((order) => (
+                  <tr key={order.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-mono text-white/60">{order.orderNumber}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs text-white">{order.supplier?.name || "—"}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-semibold text-white">{order.currency || "EGP"} {(order.total || 0).toLocaleString()}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={order.status} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-[11px] text-white/30">{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "—"}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5 justify-end">
+                        {order.status === "PENDING_APPROVAL" && (
+                          <button
+                            onClick={() => handleApprove(order.id)}
+                            disabled={actionLoading === order.id}
+                            className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-white/20 hover:text-emerald-400 transition-colors disabled:opacity-50"
+                            title="Quick Approve"
+                          >
+                            {actionLoading === order.id ? <Loader2 size={14} className="animate-spin" /> : <ThumbsUp size={14} />}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                        >
+                          <Eye size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Order Detail Modal */}
+      <Modal
+        isOpen={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+        title={`Order ${selectedOrder?.orderNumber}`}
+        description={`${selectedOrder?.hotel?.name || ""} → ${selectedOrder?.supplier?.name || ""}`}
+        size="md"
+      >
+        {selectedOrder && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Total</p>
+                <p className="text-sm text-white mt-0.5">{selectedOrder.currency || "EGP"} {(selectedOrder.total || 0).toLocaleString()}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-white/20 uppercase">Status</p>
+                <div className="mt-0.5"><StatusBadge status={selectedOrder.status} /></div>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] text-white/20 uppercase mb-2">Items</p>
+              <div className="space-y-1.5">
+                {selectedOrder.items?.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                    <span className="text-xs text-white/60">{item.product?.name}</span>
+                    <div className="text-right">
+                      <span className="text-xs text-white/40">× {item.quantity}</span>
+                      <span className="text-xs text-white ml-2">{selectedOrder.currency || "EGP"} {(item.total || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {selectedOrder.status === "PENDING_APPROVAL" && (
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => { handleApprove(selectedOrder.id); setSelectedOrder(null); }}
+                  disabled={actionLoading === selectedOrder.id}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+                >
+                  <ThumbsUp size={14} /> Approve
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </motion.div>
   );
 }

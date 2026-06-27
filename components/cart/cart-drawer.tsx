@@ -218,11 +218,11 @@ export function CartDrawer() {
                 <button
                   onClick={() => {
                     closeCart();
-                    router.push("/login?redirect=/hotel/order");
+                    router.push("/dashboard/hotel/order");
                   }}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent-base hover:bg-accent-base/80 text-white text-sm font-medium transition-colors"
                 >
-                  <span>Sign In to Checkout</span>
+                  <span>Proceed to Checkout</span>
                   <ArrowRight size={16} />
                 </button>
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   ShoppingBag, CheckCircle2, Clock, Truck,
   ArrowUpRight, ArrowDownRight, Search, Eye,
+  ThumbsUp, XCircle, Loader2,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
@@ -75,9 +76,60 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [rejectModalOrder, setRejectModalOrder] = useState<Order | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [actionError, setActionError] = useState("");
 
-  const { data: ordersData, loading, error } = useApi<Order[]>("/api/orders?page=1&limit=50&sortOrder=desc");
-  const orders = ordersData ?? [];
+  const { data: ordersData, loading, error, refetch } = useApi<{ orders: Order[]; pagination: { total: number } }>("/api/v1/orders?page=1&limit=50&sortOrder=desc");
+  const orders = ordersData?.orders ?? [];
+
+  const handleApprove = useCallback(async (orderId: string) => {
+    setActionLoading(orderId);
+    setActionError("");
+    try {
+      const res = await fetch(`/api/v1/orders/${orderId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "APPROVED" }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        refetch();
+      } else {
+        setActionError(json.error || "Failed to approve order");
+      }
+    } catch {
+      setActionError("Network error");
+    } finally {
+      setActionLoading(null);
+    }
+  }, [refetch]);
+
+  const handleReject = useCallback(async () => {
+    if (!rejectModalOrder) return;
+    setActionLoading(rejectModalOrder.id);
+    setActionError("");
+    try {
+      const res = await fetch(`/api/v1/orders/${rejectModalOrder.id}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "REJECTED", reason: rejectReason || undefined }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setRejectModalOrder(null);
+        setRejectReason("");
+        refetch();
+      } else {
+        setActionError(json.error || "Failed to reject order");
+      }
+    } catch {
+      setActionError("Network error");
+    } finally {
+      setActionLoading(null);
+    }
+  }, [rejectModalOrder, rejectReason, refetch]);
 
   const stats = [
     { label: "Total Orders", value: orders.length.toString(), change: "All time", up: true, icon: ShoppingBag },
@@ -222,12 +274,33 @@ export default function OrdersPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() => setSelectedOrder(order)}
-                        className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                      >
-                        <Eye size={14} />
-                      </button>
+                      <div className="flex items-center gap-1.5 justify-end">
+                        {order.status === "PENDING_APPROVAL" && (
+                          <>
+                            <button
+                              onClick={() => handleApprove(order.id)}
+                              disabled={actionLoading === order.id}
+                              className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-white/20 hover:text-emerald-400 transition-colors disabled:opacity-50"
+                              title="Approve"
+                            >
+                              {actionLoading === order.id ? <Loader2 size={14} className="animate-spin" /> : <ThumbsUp size={14} />}
+                            </button>
+                            <button
+                              onClick={() => { setRejectModalOrder(order); setRejectReason(""); }}
+                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-colors"
+                              title="Reject"
+                            >
+                              <XCircle size={14} />
+                            </button>
+                          </>
+                        )}
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                        >
+                          <Eye size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -271,9 +344,74 @@ export default function OrdersPage() {
                 ))}
               </div>
             </div>
+            {selectedOrder.status === "PENDING_APPROVAL" && (
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => { handleApprove(selectedOrder.id); setSelectedOrder(null); }}
+                  disabled={actionLoading === selectedOrder.id}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+                >
+                  <ThumbsUp size={14} /> Approve
+                </button>
+                <button
+                  onClick={() => { setRejectModalOrder(selectedOrder); setSelectedOrder(null); setRejectReason(""); }}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/20 transition-colors"
+                >
+                  <XCircle size={14} /> Reject
+                </button>
+              </div>
+            )}
           </div>
         )}
       </Modal>
+
+      {/* Reject Confirmation Modal */}
+      <Modal
+        isOpen={!!rejectModalOrder}
+        onClose={() => setRejectModalOrder(null)}
+        title="Reject Order"
+        description={`Reject ${rejectModalOrder?.orderNumber}?`}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs text-white/40 uppercase tracking-wider mb-1.5 block">Reason (optional)</label>
+            <textarea
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="Why is this order being rejected?"
+              rows={3}
+              className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-red-500/40 resize-none"
+            />
+          </div>
+          {actionError && (
+            <p className="text-xs text-red-400">{actionError}</p>
+          )}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setRejectModalOrder(null)}
+              className="flex-1 px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleReject}
+              disabled={actionLoading === rejectModalOrder?.id}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50"
+            >
+              {actionLoading === rejectModalOrder?.id ? <Loader2 size={14} className="animate-spin" /> : <XCircle size={14} />}
+              Reject Order
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Action Error Banner */}
+      {actionError && !rejectModalOrder && (
+        <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+          {actionError}
+        </div>
+      )}
     </motion.div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, createContext, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -30,12 +30,34 @@ import {
 } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { InstallButton } from "@/components/pwa/install-button";
+import { DashboardCartWrapper } from "@/components/cart/dashboard-cart-wrapper";
+import { useApi } from "@/lib/hooks/use-api";
+
+export interface DashboardContextValue {
+  userId: string;
+  platformRole: string;
+  tenantId: string;
+  hotelId?: string;
+  supplierId?: string;
+}
+
+const DashboardContext = createContext<DashboardContextValue | null>(null);
+
+export function useDashboardContext() {
+  const ctx = useContext(DashboardContext);
+  if (!ctx) throw new Error("useDashboardContext must be used within DashboardShell");
+  return ctx;
+}
 
 interface DashboardShellProps {
   children: ReactNode;
   role: string;
   userName?: string;
   tenantName?: string;
+  userId?: string;
+  tenantId?: string;
+  hotelId?: string;
+  supplierId?: string;
 }
 
 const NAV_ITEMS = [
@@ -61,12 +83,18 @@ const HEADER_HEIGHT = 56;
 
 /* ═══ LIVE CONTEXT WIDGETS ═══ */
 
+interface EtaInvoice {
+  id: string;
+  invoiceNumber: string;
+  total: number;
+  etaStatus: string;
+  etaUuid: string | null;
+  createdAt: string;
+}
+
 function ETAInvoiceTracker() {
-  const invoices = [
-    { id: "INV-2026-0041", amount: "124,500", status: "SUBMITTED", uuid: "ETA-8A3F-9B21", date: "Today" },
-    { id: "INV-2026-0040", amount: "87,200", status: "VALIDATED", uuid: "ETA-7C2E-8A10", date: "Today" },
-    { id: "INV-2026-0039", amount: "203,800", status: "SUBMITTED", uuid: "ETA-6D1D-7B09", date: "Yesterday" },
-  ];
+  const { data, loading } = useApi<{ invoices: EtaInvoice[]; pagination: { total: number } }>("/api/v1/invoices?page=1&limit=5&sortOrder=desc");
+  const invoices = data?.invoices ?? [];
 
   return (
     <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
@@ -75,32 +103,51 @@ function ETAInvoiceTracker() {
           <Receipt size={14} style={{ color: ACCENT }} />
           <span className="text-[11px] font-semibold text-white/70">ETA E-Invoicing Pipeline</span>
         </div>
-        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(34,197,94,0.1)", color: "#4ADE80" }}>Live</span>
+        {invoices.length > 0 && (
+          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(34,197,94,0.1)", color: "#4ADE80" }}>
+            {data?.pagination?.total ?? 0}
+          </span>
+        )}
       </div>
-      <div className="space-y-2">
-        {invoices.map((inv) => (
-          <div key={inv.id} className="flex items-center justify-between py-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: inv.status === "VALIDATED" ? "#22C55E" : "#EAB308" }} />
-              <span className="text-[11px] font-mono text-white/60">{inv.id}</span>
+      {loading ? (
+        <div className="space-y-2">
+          {[1,2,3].map(i => <div key={i} className="h-4 rounded bg-white/[0.03] animate-pulse" />)
+          }</div>
+      ) : invoices.length === 0 ? (
+        <p className="text-[11px] text-white/25 text-center py-3">No invoices yet</p>
+      ) : (
+        <div className="space-y-2">
+          {invoices.slice(0, 5).map((inv) => (
+            <div key={inv.id} className="flex items-center justify-between py-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: inv.etaStatus === "VALIDATED" || inv.etaStatus === "ACCEPTED" ? "#22C55E" : "#EAB308" }} />
+                <span className="text-[11px] font-mono text-white/60">{inv.invoiceNumber}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] font-medium text-white/50">{inv.total.toLocaleString()} EGP</span>
+                <span className="text-[9px] font-mono text-white/30">{inv.etaUuid ? inv.etaUuid.slice(0, 8) : "—"}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] font-medium text-white/50">{inv.amount} EGP</span>
-              <span className="text-[9px] font-mono text-white/30">{inv.uuid}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
+interface RfqItem {
+  id: string;
+  rfqNumber: string;
+  title: string;
+  status: string;
+  responseCount: number;
+  createdAt: string;
+}
+
 function RFQMatchingPipeline() {
-  const rfqs = [
-    { id: "RFQ-0891", item: "Fresh Seafood (120kg)", matches: 4, status: "MATCHED", eta: "2h" },
-    { id: "RFQ-0890", item: "Pool Chemicals (200L)", matches: 7, status: "MATCHED", eta: "1h" },
-    { id: "RFQ-0889", item: "Guest Towels (500pcs)", matches: 2, status: "PENDING", eta: "4h" },
-  ];
+  const { data, loading } = useApi<{ rfqs: RfqItem[]; pagination: { total: number } }>("/api/v1/rfq?page=1&limit=5&sortOrder=desc");
+  const rfqs = data?.rfqs ?? [];
+  const activeCount = rfqs.filter(r => r.status !== "CLOSED" && r.status !== "CANCELLED").length;
 
   return (
     <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
@@ -109,35 +156,51 @@ function RFQMatchingPipeline() {
           <Zap size={14} style={{ color: ACCENT }} />
           <span className="text-[11px] font-semibold text-white/70">RFQ Matching Pipeline</span>
         </div>
-        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}>3 Active</span>
+        {rfqs.length > 0 && (
+          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}>{activeCount} Active</span>
+        )}
       </div>
-      <div className="space-y-2">
-        {rfqs.map((rfq) => (
-          <div key={rfq.id} className="flex items-center justify-between py-1.5">
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] text-white/60 truncate">{rfq.item}</p>
-              <p className="text-[10px] text-white/30">{rfq.id} · {rfq.eta} remaining</p>
+      {loading ? (
+        <div className="space-y-2">
+          {[1,2,3].map(i => <div key={i} className="h-4 rounded bg-white/[0.03] animate-pulse" />)
+          }</div>
+      ) : rfqs.length === 0 ? (
+        <p className="text-[11px] text-white/25 text-center py-3">No RFQs yet</p>
+      ) : (
+        <div className="space-y-2">
+          {rfqs.slice(0, 5).map((rfq) => (
+            <div key={rfq.id} className="flex items-center justify-between py-1.5">
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-white/60 truncate">{rfq.title}</p>
+                <p className="text-[10px] text-white/30">{rfq.rfqNumber}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-medium text-white/40">{rfq.responseCount} resp.</span>
+                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{
+                  backgroundColor: rfq.status === "OPEN" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
+                  color: rfq.status === "OPEN" ? "#4ADE80" : "#FACC15",
+                }}>{rfq.status}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-medium text-white/40">{rfq.matches} matches</span>
-              <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{
-                backgroundColor: rfq.status === "MATCHED" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
-                color: rfq.status === "MATCHED" ? "#4ADE80" : "#FACC15",
-              }}>{rfq.status}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
+interface FactoringLine {
+  id: string;
+  supplierName: string;
+  creditLimit: number;
+  utilized: number;
+  rate: number;
+}
+
 function ReverseFactoringLimits() {
-  const suppliers = [
-    { name: "Al-Gomhouria Foods", limit: "500,000", used: "312,000", rate: "1.2%" },
-    { name: "Nile Linen Co.", limit: "250,000", used: "98,000", rate: "1.4%" },
-    { name: "Red Sea Chemicals", limit: "180,000", used: "178,500", rate: "1.1%" },
-  ];
+  const { data, loading } = useApi<{ facilities: FactoringLine[] }>("/api/v1/factoring/facilities?page=1&limit=5");
+  const facilities = data?.facilities ?? [];
+  const nearLimit = facilities.filter(f => f.creditLimit > 0 && (f.utilized / f.creditLimit) > 0.85).length;
 
   return (
     <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${BORDER}` }}>
@@ -146,43 +209,53 @@ function ReverseFactoringLimits() {
           <CircleDollarSign size={14} style={{ color: ACCENT }} />
           <span className="text-[11px] font-semibold text-white/70">Supplier Reverse Factoring</span>
         </div>
-        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(239,68,68,0.1)", color: "#F87171" }}>1 Near Limit</span>
+        {nearLimit > 0 && (
+          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(239,68,68,0.1)", color: "#F87171" }}>{nearLimit} Near Limit</span>
+        )}
       </div>
-      <div className="space-y-2.5">
-        {suppliers.map((s) => {
-          const usedNum = parseInt(s.used.replace(/,/g, ""));
-          const limitNum = parseInt(s.limit.replace(/,/g, ""));
-          const pct = Math.round((usedNum / limitNum) * 100);
-          return (
-            <div key={s.name}>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-white/60">{s.name}</span>
-                <span className="text-[10px] text-white/40">{s.rate} HV</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
-                  <div className="h-full rounded-full" style={{
-                    width: `${pct}%`,
-                    backgroundColor: pct > 90 ? "#EF4444" : pct > 70 ? "#EAB308" : ACCENT,
-                  }} />
+      {loading ? (
+        <div className="space-y-2">
+          {[1,2,3].map(i => <div key={i} className="h-4 rounded bg-white/[0.03] animate-pulse" />)
+          }</div>
+      ) : facilities.length === 0 ? (
+        <p className="text-[11px] text-white/25 text-center py-3">No factoring lines yet</p>
+      ) : (
+        <div className="space-y-2.5">
+          {facilities.slice(0, 5).map((f) => {
+            const pct = f.creditLimit > 0 ? Math.round((f.utilized / f.creditLimit) * 100) : 0;
+            return (
+              <div key={f.id}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] text-white/60">{f.supplierName}</span>
+                  <span className="text-[10px] text-white/40">{(f.rate * 100).toFixed(1)}% HV</span>
                 </div>
-                <span className="text-[10px] text-white/40 w-20 text-right">{s.used} / {s.limit}</span>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
+                    <div className="h-full rounded-full" style={{
+                      width: `${pct}%`,
+                      backgroundColor: pct > 90 ? "#EF4444" : pct > 70 ? "#EAB308" : ACCENT,
+                    }} />
+                  </div>
+                  <span className="text-[10px] text-white/40 w-24 text-right">{f.utilized.toLocaleString()} / {f.creditLimit.toLocaleString()}</span>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
-export function DashboardShell({ children, role, userName, tenantName }: DashboardShellProps) {
+export function DashboardShell({ children, role, userName, tenantName, userId, tenantId, hotelId, supplierId }: DashboardShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
 
   return (
+    <DashboardContext.Provider value={{ userId: userId || "", platformRole: role, tenantId: tenantId || "", hotelId, supplierId }}>
+    <DashboardCartWrapper>
     <div style={{ minHeight: "100vh", backgroundColor: BG_PAGE, fontFamily: "'Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
       {/* Mobile overlay */}
       {mobileOpen && (
@@ -369,5 +442,7 @@ export function DashboardShell({ children, role, userName, tenantName }: Dashboa
         </main>
       </div>
     </div>
+    </DashboardCartWrapper>
+    </DashboardContext.Provider>
   );
 }

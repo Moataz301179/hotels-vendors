@@ -44,12 +44,26 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  let userData = null;
+  let userData: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    platformRole: string;
+    tenantId: string;
+    tenantName?: string;
+    hotelId?: string;
+    supplierId?: string;
+  } | null = null;
   if (userId) {
     try {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { tenant: { select: { name: true } } },
+        include: {
+          tenant: { select: { name: true, id: true } },
+          hotel: { select: { id: true } },
+          supplier: { select: { id: true } },
+        },
       });
       if (user) {
         userData = {
@@ -58,7 +72,10 @@ export default async function DashboardLayout({
           email: user.email,
           role: user.role,
           platformRole: user.platformRole,
+          tenantId: user.tenant?.id || "",
           tenantName: user.tenant?.name,
+          hotelId: user.hotel?.id,
+          supplierId: user.supplier?.id,
         };
       }
     } catch {
@@ -74,6 +91,10 @@ export default async function DashboardLayout({
         role={validRole}
         userName={userData?.name || undefined}
         tenantName={userData?.tenantName || undefined}
+        userId={userData?.id}
+        tenantId={userData?.tenantId}
+        hotelId={userData?.hotelId}
+        supplierId={userData?.supplierId}
       >
         {children}
       </DashboardShell>
