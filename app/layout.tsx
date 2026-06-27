@@ -113,14 +113,14 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var valid = ['noir', 'ember'];
-                  var saved = localStorage.getItem('hv-theme-mode');
-                  var mode = valid.indexOf(saved) !== -1 ? saved : 'noir';
+                  var valid = ['light', 'dark'];
+                  var saved = localStorage.getItem('hv-theme');
+                  var mode = valid.indexOf(saved) !== -1  ? saved : 'light';
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
-                    var colors = { noir: '#14110E', ember: '#0A1612' };
-                    meta.setAttribute('content', colors[mode] || '#14110E');
+                    var colors = { light: '#FAFAF8', dark: '#0A0806' };
+                    meta.setAttribute('content', colors[mode] || '#FAFAF8');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -180,10 +180,10 @@ export default function RootLayout({
           <NotificationProvider>
             <ThemeProvider>
               <main id="main-content">{children}</main>
+              <PublicChatbot />
             </ThemeProvider>
           </NotificationProvider>
         </LanguageProvider>
-        <PublicChatbot />
       </body>
     </html>
   );
