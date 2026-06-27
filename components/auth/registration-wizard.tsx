@@ -309,9 +309,6 @@ export function RegistrationWizard({
             return prev - 1;
           });
         }, 1000);
-        if (json.data?.code) {
-          setOtpCode(json.data.code);
-        }
       } else {
         setOtpError(json.error || "Failed to send OTP");
       }
@@ -400,7 +397,7 @@ export function RegistrationWizard({
         {!registered && (
           <div className="flex gap-1 px-6 pt-3">
             {STEPS.map((s) => (
-              <div key={s.num} className="flex-1 h-1 rounded-full transition-colors" style={{ backgroundColor: step >= s.num ? "#FF6B00" : "rgba(255,255,255,0.06)" }} />
+              <div key={s.num} className="flex-1 h-1 rounded-full transition-colors" style={{ backgroundColor: step >= s.num ? "var(--accent-base)" : "rgba(255,255,255,0.06)" }} />
             ))}
           </div>
         )}
@@ -415,7 +412,7 @@ export function RegistrationWizard({
                 </div>
                 <h3 className="text-xl font-medium text-white mb-2">Account Created!</h3>
                 <p className="text-sm text-white/40 mb-6">Check your email to verify your account.</p>
-                <button onClick={onClose} className="px-6 py-2.5 text-sm font-medium rounded-lg text-black" style={{ backgroundColor: "#FF6B00" }}>
+                <button onClick={onClose} className="px-6 py-2.5 text-sm font-medium rounded-lg text-black" style={{ backgroundColor: "var(--accent-base)" }}>
                   Continue to Dashboard
                 </button>
               </motion.div>
@@ -438,7 +435,7 @@ export function RegistrationWizard({
             <button onClick={step === 1 ? onClose : prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> {step === 1 ? "Cancel" : "Back"}
             </button>
-            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "#FF6B00", color: "var(--foreground)" }}>
+            <button onClick={nextStep} disabled={!canProceed()} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-30" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, var(--foreground))" }}>
               Continue <ArrowRight size={14} />
             </button>
           </div>
@@ -449,7 +446,7 @@ export function RegistrationWizard({
             <button onClick={prevStep} className="flex items-center gap-1.5 px-4 py-2 text-sm text-white/40 hover:text-white/60 transition-colors">
               <ArrowLeft size={14} /> Back
             </button>
-            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#FF6B00", color: "var(--foreground)" }}>
+            <button onClick={handleRegister} disabled={registering} className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, var(--foreground))" }}>
               {registering ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
               {registering ? "Creating Account..." : "Complete Registration"}
             </button>
@@ -532,9 +529,9 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               onClick={() => update("subCategory", cat)}
               className="flex items-center gap-2 px-4 py-3 rounded-lg text-left text-[13px] transition-all"
               style={{
-                backgroundColor: data.subCategory === cat ? "rgba(255,107,0,0.06)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${data.subCategory === cat ? "rgba(255,107,0,0.25)" : "rgba(255,255,255,0.06)"}`,
-                color: data.subCategory === cat ? "#FF6B00" : "rgba(255,255,255,0.5)",
+                backgroundColor: data.subCategory === cat ? "var(--accent-muted)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${data.subCategory === cat ? "rgba(232,168,56,0.25)" : "rgba(255,255,255,0.06)"}`,
+                color: data.subCategory === cat ? "var(--accent-base)" : "rgba(255,255,255,0.5)",
               }}
             >
               <ChevronRight size={14} className={data.subCategory === cat ? "opacity-100" : "opacity-0"} />
@@ -557,9 +554,9 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
                   onClick={() => toggleSupplyCategory(cat)}
                   className="px-3 py-1.5 rounded-lg text-[12px] transition-all"
                   style={{
-                    backgroundColor: selected ? "rgba(255,107,0,0.08)" : "rgba(255,255,255,0.02)",
-                    border: `1px solid ${selected ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.06)"}`,
-                    color: selected ? "#FF6B00" : "rgba(255,255,255,0.4)",
+                    backgroundColor: selected ? "var(--accent-muted)" : "rgba(255,255,255,0.02)",
+                    border: `1px solid ${selected ? "rgba(232,168,56,0.2)" : "rgba(255,255,255,0.06)"}`,
+                    color: selected ? "var(--accent-base)" : "rgba(255,255,255,0.4)",
                   }}
                 >
                   {cat}
@@ -580,9 +577,9 @@ function StepDetails({ data, update, config }: { data: WizardData; update: <K ex
               onClick={() => update("capacity", opt)}
               className="px-3 py-1.5 rounded-lg text-[12px] transition-all"
               style={{
-                backgroundColor: data.capacity === opt ? "rgba(255,107,0,0.08)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${data.capacity === opt ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.06)"}`,
-                color: data.capacity === opt ? "#FF6B00" : "rgba(255,255,255,0.4)",
+                backgroundColor: data.capacity === opt ? "var(--accent-muted)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${data.capacity === opt ? "rgba(232,168,56,0.2)" : "rgba(255,255,255,0.06)"}`,
+                color: data.capacity === opt ? "var(--accent-base)" : "rgba(255,255,255,0.4)",
               }}
             >
               {opt}
@@ -645,7 +642,7 @@ function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, 
       {/* Phone OTP Verification */}
       <div className="mb-6 px-4 py-4 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: `1px solid ${otpVerified ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}` }}>
         <div className="flex items-center gap-2 mb-3">
-          <Phone size={14} style={{ color: otpVerified ? "#22C55E" : "#FF6B00" }} />
+          <Phone size={14} style={{ color: otpVerified ? "#22C55E" : "var(--accent-base)" }} />
           <span className="text-[12px] font-medium text-white/70">Phone Verification</span>
           {otpVerified && (
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
@@ -661,7 +658,7 @@ function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, 
                 onClick={onSendOtp}
                 disabled={otpLoading}
                 className="px-4 py-2 text-[12px] font-medium rounded-lg transition-all disabled:opacity-50"
-                style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}
+                style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, #ffffff)" }}
               >
                 {otpLoading ? "Sending..." : "Send OTP"}
               </button>
@@ -690,7 +687,8 @@ function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, 
                   <button
                     onClick={onSendOtp}
                     disabled={otpLoading}
-                    className="text-[11px] text-[#FF6B00] hover:underline self-center"
+                    className="text-[11px] hover:underline self-center"
+                    style={{ color: "var(--accent-base)" }}
                   >
                     Resend
                   </button>
@@ -705,8 +703,8 @@ function StepVerification({ data, update, config, otpSent, otpCode, setOtpCode, 
       </div>
 
       {/* Legal verification note */}
-      <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.15)" }}>
-        <p className="font-medium text-[#FF6B00] mb-1">Why we need this</p>
+      <div className="mb-6 px-4 py-3 rounded-lg text-[12px]" style={{ backgroundColor: "var(--accent-muted)", border: "1px solid rgba(232,168,56,0.15)" }}>
+        <p className="font-medium mb-1" style={{ color: "var(--accent-base)" }}>Why we need this</p>
         <p className="text-white/40">
           {data.role === "funder" && "FRA license verification is mandatory for factoring companies operating in Egypt. Your account will be activated after document review (typically 24 hours)."}
           {data.role === "supplier" && "Tax ID and Commercial Registration are required for ETA e-invoicing. Bank account is needed for reverse factoring payouts."}
@@ -855,15 +853,15 @@ function StepPreview({
       {/* AI Chat */}
       <div className="flex flex-col rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.01)" }}>
         <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-          <Sparkles size={14} style={{ color: "#FF6B00" }} />
+          <Sparkles size={14} style={{ color: "var(--accent-base)" }} />
           <span className="text-[12px] font-medium text-white/60">Ask a question</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: 160, maxHeight: 260 }}>
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className="max-w-[85%] px-3 py-2 rounded-lg text-[12px] leading-relaxed" style={{
-                backgroundColor: msg.role === "user" ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.04)",
-                color: msg.role === "user" ? "#FF6B00" : "rgba(255,255,255,0.6)",
+                backgroundColor: msg.role === "user" ? "var(--accent-muted)" : "rgba(255,255,255,0.04)",
+                color: msg.role === "user" ? "var(--accent-base)" : "rgba(255,255,255,0.6)",
               }}>
                 {msg.content}
               </div>

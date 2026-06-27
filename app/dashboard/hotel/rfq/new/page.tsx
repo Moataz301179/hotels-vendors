@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Trash2, Loader2 } from "lucide-react";
 import { ProductCategory } from "@prisma/client";
 
-const BG_SURFACE = "#111520";
-const BORDER = "rgba(255,255,255,0.06)";
-const TEXT_PRIMARY = "#F0F2F5";
-const TEXT_SECONDARY = "rgba(161,168,184,0.85)";
-const ACCENT = "#FF6B00";
+const BG_SURFACE = "var(--surface-raised)";
+const BORDER = "var(--border-subtle)";
+const TEXT_PRIMARY = "var(--foreground)";
+const TEXT_SECONDARY = "var(--foreground-secondary)";
+const ACCENT = "var(--accent-base)";
 
 const CATEGORIES = [
   { value: "F_AND_B", label: "F&B — Food & Beverage" },

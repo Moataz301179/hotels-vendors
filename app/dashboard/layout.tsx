@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { prisma } from "@/lib/prisma";
 
 const SESSION_COOKIE = "hv_session";
@@ -68,12 +69,14 @@ export default async function DashboardLayout({
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <DashboardShell
-      role={validRole}
-      userName={userData?.name || undefined}
-      tenantName={userData?.tenantName || undefined}
-    >
-      {children}
-    </DashboardShell>
+    <ThemeProvider defaultMode="noir">
+      <DashboardShell
+        role={validRole}
+        userName={userData?.name || undefined}
+        tenantName={userData?.tenantName || undefined}
+      >
+        {children}
+      </DashboardShell>
+    </ThemeProvider>
   );
 }

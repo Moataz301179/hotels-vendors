@@ -48,14 +48,14 @@ const NAV_ITEMS = [
 ];
 
 const BG_PAGE = "var(--background)";
-const BG_SURFACE = "#111520";
-const BG_SIDEBAR = "#0D1119";
-const BORDER = "rgba(255,255,255,0.06)";
-const TEXT_PRIMARY = "#F0F2F5";
-const TEXT_SECONDARY = "rgba(161,168,184,0.85)";
-const TEXT_MUTED = "rgba(107,115,132,0.70)";
-const ACCENT = "#FF6B00";
-const ACCENT_LIGHT = "rgba(255,107,0,0.12)";
+const BG_SURFACE = "var(--surface-raised)";
+const BG_SIDEBAR = "var(--surface)";
+const BORDER = "var(--border-subtle)";
+const TEXT_PRIMARY = "var(--foreground)";
+const TEXT_SECONDARY = "var(--foreground-secondary)";
+const TEXT_MUTED = "var(--foreground-muted)";
+const ACCENT = "var(--accent-base)";
+const ACCENT_LIGHT = "var(--accent-muted)";
 const SIDEBAR_WIDTH = 260;
 const HEADER_HEIGHT = 56;
 

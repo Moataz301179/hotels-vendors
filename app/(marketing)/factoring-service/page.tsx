@@ -48,10 +48,10 @@ export default function FactoringServicePage() {
             Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. Settlement typically within 1–2 business days. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=cashflow" className="btn-accent">
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-base)] text-[var(--accent-text)] text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5">
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="btn-ghost">
+            <Link href="/platform" className="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--border-visible)] text-[var(--foreground-secondary)] text-sm font-medium rounded-xl transition-all duration-200 hover:border-[var(--accent-base)] hover:text-[var(--foreground)]">
               How It Works
             </Link>
           </div>
@@ -125,10 +125,10 @@ export default function FactoringServicePage() {
           <h2 className="text-[24px] font-medium mb-4">Access Egypt&apos;s Hospitality Invoice Market</h2>
           <p className="text-[13px] text-secondary mb-8 max-w-lg mx-auto">Licensed grantors bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=cashflow" className="btn-accent">
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-base)] text-[var(--accent-text)] text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5">
               Register as Grantor <ArrowRight size={14} />
             </Link>
-            <Link href="/register?sector=procurement" className="btn-ghost">
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--border-visible)] text-[var(--foreground-secondary)] text-sm font-medium rounded-xl transition-all duration-200 hover:border-[var(--accent-base)] hover:text-[var(--foreground)]">
               Register Your Hotel
             </Link>
           </div>

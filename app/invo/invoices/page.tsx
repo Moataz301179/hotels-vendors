@@ -3,12 +3,12 @@ import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { FileText, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
-const BG_CARD = "#1a1e23";
-const BORDER = "rgba(60,64,67,0.50)";
-const TEXT_PRIMARY = "#E9ECEF";
-const TEXT_SECONDARY = "#9AA0A6";
-const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#FF6B00";
+const BG_CARD = "var(--surface-raised, #1a1e23)";
+const BORDER = "var(--border-subtle, rgba(60,64,67,0.50))";
+const TEXT_PRIMARY = "var(--foreground, #E9ECEF)";
+const TEXT_SECONDARY = "var(--foreground-secondary, #9AA0A6)";
+const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
+const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function InvoicesPage() {
   const supabase = await createClient();

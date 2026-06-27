@@ -129,7 +129,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                   onChange={(e) => updateForm("name", e.target.value)}
                   placeholder="Your full name"
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[var(--accent-base)]/60 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-all"
                 />
               </div>
 
@@ -143,7 +143,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                   onChange={(e) => updateForm("email", e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[var(--accent-base)]/60 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-all"
                 />
               </div>
 
@@ -159,7 +159,7 @@ export function BaseRegisterForm({ role, onSuccess }: BaseRegisterFormProps) {
                     placeholder="Min 6 characters"
                     required
                     minLength={6}
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[var(--accent-base)]/60 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-all"
                   />
                   <button
                     type="button"

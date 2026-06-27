@@ -260,10 +260,10 @@ export default function CoveragePage() {
                 Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/register" className="btn-accent">
+                <Link href="/register" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-base)] text-[var(--accent-text)] text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5">
                   Register Interest <ArrowRight size={14} />
                 </Link>
-                <Link href="/contact" className="btn-ghost">
+                <Link href="/contact" className="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--border-visible)] text-[var(--foreground-secondary)] text-sm font-medium rounded-xl transition-all duration-200 hover:border-[var(--accent-base)] hover:text-[var(--foreground)]">
                   Contact Sales
                 </Link>
               </div>

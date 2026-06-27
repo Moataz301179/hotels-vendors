@@ -26,7 +26,7 @@ const buttonVariants = cva(
         ghost:
           "text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
         glass:
-          "bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] text-[var(--foreground)] hover:bg-white/[0.07] hover:border-white/10",
+          "bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] hover:border-[var(--border-accent)]",
         link:
           "text-[var(--accent-500)] underline-offset-4 hover:underline",
       },

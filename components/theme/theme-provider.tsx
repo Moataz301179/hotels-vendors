@@ -22,8 +22,8 @@ export function useTheme() {
 
 const MODES: ThemeMode[] = ["light", "noir", "ember"];
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("light");
+export function ThemeProvider({ children, defaultMode }: { children: React.ReactNode; defaultMode?: ThemeMode }) {
+  const [mode, setModeState] = useState<ThemeMode>(defaultMode || "light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -32,13 +32,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (MODES.includes(savedMode as ThemeMode)) {
       setModeState(savedMode as ThemeMode);
       document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
+    } else if (defaultMode) {
+      setModeState(defaultMode);
+      document.documentElement.setAttribute("data-theme", defaultMode);
+      localStorage.setItem("hv-theme-mode", defaultMode);
     } else {
       const initial: ThemeMode = "light";
       setModeState(initial);
       document.documentElement.setAttribute("data-theme", initial);
       localStorage.setItem("hv-theme-mode", initial);
     }
-  }, []);
+  }, [defaultMode]);
 
   const setMode = (newMode: ThemeMode) => {
     setModeState(newMode);

@@ -207,7 +207,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/register"
+                  href={tier.name === "Business" ? "/contact" : tier.name === "Enterprise" ? "/register?sector=enterprise" : "/register"}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-medium transition-all"
                   style={tier.highlighted
                     ? { backgroundColor: accent, color: "var(--accent-text)" }

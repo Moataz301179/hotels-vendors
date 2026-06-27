@@ -113,7 +113,7 @@ function VerifyEmailForm() {
                 </div>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FF6B00] hover:bg-[#CC5500] text-white text-sm font-medium transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--accent-base)] hover:opacity-90 text-[var(--accent-text)] text-sm font-medium transition-all"
                 >
                   Sign In
                   <ArrowRight className="w-4 h-4" />

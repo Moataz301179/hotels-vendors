@@ -66,10 +66,10 @@ export default function TrackingPage() {
             No more WhatsApp chains. No more &quot;where is my order?&quot; emails.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/login" className="btn-accent">
+            <Link href="/login" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-base)] text-[var(--accent-text)] text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5">
               Track Live Orders <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="btn-ghost">
+            <Link href="/platform" className="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--border-visible)] text-[var(--foreground-secondary)] text-sm font-medium rounded-xl transition-all duration-200 hover:border-[var(--accent-base)] hover:text-[var(--foreground)]">
               How It Works
             </Link>
           </div>
@@ -219,7 +219,7 @@ export default function TrackingPage() {
           <p className="text-[13px] text-secondary mb-8 max-w-lg mx-auto">
             Log in to your hotel dashboard to see live tracking for every active PO.
           </p>
-          <Link href="/login" className="btn-accent">
+          <Link href="/login" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-base)] text-[var(--accent-text)] text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5">
             Log In to Track <ArrowRight size={14} />
           </Link>
         </div>

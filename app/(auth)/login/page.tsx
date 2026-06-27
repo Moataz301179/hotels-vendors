@@ -32,11 +32,10 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const resolvedEmail = email.toLowerCase() === "admin" ? "admin@hotelsvendors.com" : email;
       const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: resolvedEmail, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
 
@@ -115,9 +114,9 @@ export default function LoginPage() {
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@hotel.com or admin"
+                    placeholder="you@hotel.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[var(--accent-base)]/60 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-all"
                   />
                 </div>
               </div>
@@ -135,7 +134,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[#FF6B00]/60 focus:ring-1 focus:ring-[#FF6B00]/20 transition-all"
+                    className="w-full pl-10 pr-12 py-3 rounded-lg bg-surface-2 border border-subtle text-sm text-primary placeholder:text-muted outline-none focus:border-[var(--accent-base)]/60 focus:ring-1 focus:ring-[var(--accent-base)]/20 transition-all"
                   />
                   <button
                     type="button"
@@ -152,7 +151,7 @@ export default function LoginPage() {
                 <label className="flex items-center gap-2 text-muted cursor-pointer hover:text-primary/60 transition-colors">
                   <input
                     type="checkbox"
-                    className="w-3.5 h-3.5 rounded border-white/10 bg-surface-2 accent-[#FF6B00]"
+                    className="w-3.5 h-3.5 rounded border-white/10 bg-surface-2 accent-[var(--accent-base)]"
                   />
                   <span>Remember me</span>
                 </label>
@@ -160,15 +159,14 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={async () => {
-                      const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
-                      if (!resolvedEmail) { setError("Please enter your email first"); return; }
+                      if (!email) { setError("Please enter your email first"); return; }
                       setResending(true);
                       setResendMsg("");
                       try {
                         const res = await fetch("/api/v1/auth/resend-verification", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ email: resolvedEmail }),
+                          body: JSON.stringify({ email }),
                         });
                         const data = await res.json();
                         setResendMsg(data.data?.message || "Verification email sent if account exists.");
@@ -185,7 +183,7 @@ export default function LoginPage() {
                   </button>
                   <Link
                     href="/forgot-password"
-                    className="text-[#FF6B00] hover:opacity-80 transition-opacity font-medium"
+                    className="text-[var(--accent-base)] hover:opacity-80 transition-opacity font-medium"
                   >
                     Forgot password?
                   </Link>
@@ -197,7 +195,7 @@ export default function LoginPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(255,107,0,0.15)]"
-                style={{ backgroundColor: "#FF6B00", color: "#ffffff" }}
+                style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, #ffffff)" }}
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -220,7 +218,7 @@ export default function LoginPage() {
 
               <p className="text-[11px] text-center text-muted">
                 Need an account?{" "}
-                <Link href="/register" className="text-[#FF6B00] hover:underline">
+                <Link href="/register" style={{ color: "var(--accent-base)" }} className="hover:underline">
                   Register here
                 </Link>
               </p>
@@ -235,7 +233,7 @@ export default function LoginPage() {
             className="text-center text-sm text-muted mt-6"
           >
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-[#FF6B00] hover:opacity-80 font-medium transition-opacity">
+            <Link href="/register" className="hover:opacity-80 font-medium transition-opacity" style={{ color: "var(--accent-base)" }}>
               Create account
             </Link>
           </motion.p>

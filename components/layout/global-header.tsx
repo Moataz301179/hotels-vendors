@@ -67,7 +67,7 @@ export function GlobalHeader() {
           </Link>
           <Link
             href="/register"
-            className="btn-accent text-[13px] py-2 px-5"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-[var(--accent-base)] text-[var(--accent-text)] text-[13px] font-semibold rounded-lg transition-all duration-200 hover:opacity-90"
           >
             Get Started
           </Link>

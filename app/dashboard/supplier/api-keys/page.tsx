@@ -19,13 +19,13 @@ interface CreatedKey extends ApiKey {
   key: string;
 }
 
-const BG = "#0D1119";
-const SURFACE = "#111520";
-const BORDER = "rgba(255,255,255,0.06)";
-const ACCENT = "#FF6B00";
-const TEXT_PRIMARY = "#F0F2F5";
-const TEXT_SECONDARY = "rgba(161,168,184,0.85)";
-const TEXT_MUTED = "rgba(107,115,132,0.70)";
+const BG = "var(--surface)";
+const SURFACE = "var(--surface-raised)";
+const BORDER = "var(--border-subtle)";
+const ACCENT = "var(--accent-base)";
+const TEXT_PRIMARY = "var(--foreground)";
+const TEXT_SECONDARY = "var(--foreground-secondary)";
+const TEXT_MUTED = "var(--foreground-muted)";
 
 export default function ApiKeysPage() {
   const [keys, setKeys] = useState<ApiKey[]>([]);

@@ -23,8 +23,8 @@ const socialLinks = [
 
 export function MarketingFooter() {
   const { mode } = useTheme();
-  const isLight = false;
-  const accent = isLight ? "var(--accent-base)" : "#FF6B00";
+  const isLight = mode === "light";
+  const accent = "var(--accent-base)";
 
   return (
     <footer

@@ -152,9 +152,9 @@ function RegisterContent() {
             <div
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium mb-4"
               style={{
-                backgroundColor: "rgba(255,107,0,0.08)",
-                border: "1px solid rgba(255,107,0,0.15)",
-                color: "#FF6B00",
+                backgroundColor: "var(--accent-muted)",
+                border: "1px solid rgba(232,168,56,0.15)",
+                color: "var(--accent-base)",
               }}
             >
               <Sparkles size={12} />
@@ -380,7 +380,7 @@ function RegisterContent() {
           >
             {[
               { icon: Shield, label: "Bank-grade security", color: "#22C55E" },
-              { icon: Zap, label: "Free to start", color: "#FF6B00" },
+              { icon: Zap, label: "Free to start", color: "var(--accent-base)" },
               { icon: Clock, label: "2 min registration", color: "#3B82F6" },
               { icon: Banknote, label: "No credit card", color: "#A855F7" },
             ].map((t) => (
