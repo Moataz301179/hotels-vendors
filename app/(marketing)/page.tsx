@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -22,7 +22,6 @@ import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { MarketTicker } from "@/components/marketing/market-ticker";
-import { HeroCarouselCss } from "@/components/marketing/hero-carousel-css";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
@@ -34,16 +33,16 @@ import { ThemeToggle } from "@/components/theme/theme-toggle";
    DESIGN TOKENS — Orange mobile services light theme
    Uses CSS variables from :root (orange light default).
    ═══════════════════════════════════════════════════════════════ */
-const ACCENT = "var(--accent-base, #FF6B00)";
-const ACCENT_LIGHT = "var(--accent-light, #FF8A33)";
-const ACCENT_MUTED = "var(--accent-muted, rgba(255,107,0,0.08))";
-const ACCENT_BORDER = "var(--border-accent, rgba(255,107,0,0.30))";
-const BG = "var(--bg-canvas, #F6F7F9)";
-const TEXT = "var(--text-primary, #0F172A)";
-const TEXT_SECONDARY = "var(--text-secondary, #475569)";
-const TEXT_MUTED = "var(--text-muted, #94A3B8)";
+const ACCENT = "var(--accent-base, #C4881F)";
+const ACCENT_LIGHT = "var(--accent-light, #E8A838)";
+const ACCENT_MUTED = "var(--accent-muted, rgba(196,136,31,0.08))";
+const ACCENT_BORDER = "var(--border-accent, rgba(196,136,31,0.30))";
+const BG = "var(--bg-canvas, #FAFAF8)";
+const TEXT = "var(--text-primary, #1A1816)";
+const TEXT_SECONDARY = "var(--text-secondary, #4A4640)";
+const TEXT_MUTED = "var(--text-muted, #9D978E)";
 const SURFACE = "var(--surface, #FFFFFF)";
-const TEXT_INVERSE = "var(--text-inverse, #FFFFFF)";
+const TEXT_INVERSE = "var(--text-inverse, #FAFAF8)";
 
 const SANS = "var(--font-sans, 'Jakarta Sans, Inter, system-ui, sans-serif')";
 
@@ -193,171 +192,288 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
    Theme A: OLED black bg, white title, lime subtitle.
    Full-screen DashboardMockup with Framer Motion parallax via HeroVisual.
    ═══════════════════════════════════════════════════════════ */
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={visible ? "/hero-video.mp4" : undefined}
+      poster="/hero-poster.jpg"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="none"
+      className="w-full h-full object-cover"
+    />
+  );
+}
+
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   return (
-    <section className="relative overflow-hidden" style={{ background: BG }}>
-      {/* Subtle dot pattern */}
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+      {/* Background — CSS gradient (no external image needed) */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        className="absolute inset-0"
         style={{
-          backgroundImage: "radial-gradient(circle, var(--text-primary) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          background: "linear-gradient(135deg, #0A0806 0%, #14110E 30%, #1A1408 60%, #0E1A14 100%)",
+        }}
+      />
+      {/* Subtle warm glow top-right */}
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-20 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, var(--accent-dark) 0%, transparent 70%)" }}
+      />
+      {/* Subtle cool glow bottom-left */}
+      <div
+        className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, var(--success) 0%, transparent 70%)" }}
+      />
+
+      {/* Decorative grid overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-[100px] md:pt-[140px] pb-20 md:pb-28">
-        {/* Headline + sub */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-center max-w-3xl mx-auto mb-10"
-        >
-          <span
-            className="inline-block text-[10px] uppercase tracking-[0.25em] px-3 py-1 rounded-full mb-5"
-            style={{ background: ACCENT_MUTED, color: ACCENT, fontFamily: SANS, fontWeight: 500, border: `1px solid var(--border-accent)` }}
-          >
-            Egypt&apos;s B2B Hospitality Infrastructure
-          </span>
-          <h1
-            className="text-[34px] md:text-[50px] lg:text-[58px] mb-6 leading-[1.08] tracking-tight"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT, letterSpacing: "-0.01em" }}
-          >
-            Procurement, Compliance, and Capital —<br className="hidden md:block" />
-            <span className="text-gradient-accent">Built Into One Platform</span>
-          </h1>
-          <p
-            className="text-[15px] md:text-[17px] max-w-2xl mx-auto mt-4 leading-[1.7]"
-            style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
-          >
-            From Sharm El-Sheikh to Alexandria: AI-driven procurement, ETA-compliant e-invoicing,
-            and embedded reverse factoring — purpose-built for Egypt&apos;s coastal hotel chains.
-          </p>
-        </motion.div>
-
-        {/* ═══════════════════════════════════════════════════════
-            CONTEXTUAL CAROUSEL — 5 slides, CSS-only transitions
-            Each slide is an inline SVG mockup of a real product surface.
-            No external images. No heavy JS. Mobile-first.
-            ═══════════════════════════════════════════════════════ */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="relative max-w-5xl mx-auto"
-        >
-          <HeroCarouselCss />
-        </motion.div>
-
-        {/* Email capture below carousel */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          className="mt-10 max-w-md mx-auto"
-        >
-          {!submitted ? (
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="relative flex-1">
-                <Mail
-                  size={16}
-                  className="absolute left-4 top-1/2 -translate-y-1/2"
-                  style={{ color: "var(--text-muted)" }}
-                />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@yourhotel.com"
-                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
-                  style={{
-                    backgroundColor: "var(--bg-surface-1)",
-                    border: "1px solid var(--border-subtle)",
-                    color: TEXT,
-                    fontFamily: SANS,
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = ACCENT;
-                    e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT_MUTED}`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "var(--border-subtle)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                />
-              </div>
-              <button
-                onClick={() => {
-                  if (email.includes("@")) {
-                    setSubmitted(true);
-                    onCTAClick();
-                  }
-                }}
-                className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 hover:scale-[1.03] cursor-pointer shrink-0"
-                style={{
-                  background: ACCENT,
-                  color: "var(--text-inverse)",
-                  fontFamily: SANS,
-                  fontWeight: 600,
-                  boxShadow: "0 0 16px var(--accent-glow)",
-                }}
-              >
-                Get Started
-              </button>
-            </div>
-          ) : (
-            <div
-              className="flex items-center gap-2 px-4 py-3 rounded-xl"
-              style={{ backgroundColor: "rgba(46,125,79,0.08)", border: "1px solid rgba(46,125,79,0.2)" }}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
+        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
+          {/* Left column — text + CTA */}
+          <div className="max-w-3xl flex-1">
+            {/* Badge */}
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full mb-8"
+              style={{
+                background: "var(--accent-muted)",
+                color: "var(--accent-light)",
+                border: "1px solid var(--border-accent)",
+                fontFamily: SANS,
+                fontWeight: 500,
+              }}
             >
-              <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
-              <span className="text-[13px]" style={{ color: "var(--text-secondary)", fontFamily: SANS }}>
-                You&apos;re on the list. We&apos;ll be in touch shortly.
-              </span>
-            </div>
-          )}
-        </motion.div>
+              Egypt&apos;s B2B Hospitality Infrastructure
+            </motion.span>
 
-        {/* Trust badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="flex flex-wrap justify-center items-center gap-5 mt-6 text-[11px]"
-          style={{ color: TEXT_MUTED, fontFamily: SANS }}
-        >
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck size={12} style={{ color: ACCENT }} />
-            ETA Compliant
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Banknote size={12} style={{ color: ACCENT }} />
-            FRA Licensed
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Receipt size={12} style={{ color: ACCENT }} />
-            6 Governorates
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Landmark size={12} style={{ color: ACCENT }} />
-            Bank-Direct Settlement
-          </span>
-        </motion.div>
+            {/* Headline — stagger animation */}
+            <h1
+              className="text-[36px] md:text-[56px] lg:text-[64px] mb-6 leading-[1.05] tracking-tight"
+              style={{ fontFamily: SANS, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
+            >
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="block"
+              >
+                Procurement, Compliance, and Capital —
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.18 }}
+                className="block"
+                style={{ color: "var(--accent-light)" }}
+              >
+                Built Into One Platform
+              </motion.span>
+            </h1>
+
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-[15px] md:text-[17px] max-w-xl mb-10 leading-[1.7]"
+              style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
+            >
+              From Sharm El-Sheikh to Alexandria: AI-driven procurement, ETA-compliant e-invoicing,
+              and embedded reverse factoring — purpose-built for Egypt&apos;s coastal hotel chains.
+            </motion.p>
+
+            {/* Email capture with validation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="max-w-md"
+            >
+              {!submitted ? (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="relative flex-1">
+                    <Mail
+                      size={16}
+                      className="absolute left-4 top-1/2 -translate-y-1/2"
+                      style={{ color: "rgba(255,255,255,0.4)" }}
+                    />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailError("");
+                      }}
+                      onBlur={() => {
+                        if (email && !isValidEmail(email)) {
+                          setEmailError("Enter a valid email address");
+                        }
+                      }}
+                      placeholder="you@yourhotel.com"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.08)",
+                        border: emailError
+                          ? "1px solid #EF4444"
+                          : "1px solid rgba(255,255,255,0.15)",
+                        color: "#FFFFFF",
+                        fontFamily: SANS,
+                        boxShadow: emailError ? "0 0 0 3px rgba(239,68,68,0.15)" : "none",
+                      }}
+                      onFocus={(e) => {
+                        setEmailError("");
+                        e.currentTarget.style.borderColor = "var(--accent-base)";
+                        e.currentTarget.style.boxShadow = "0 0 0 3px var(--accent-muted)";
+                      }}
+                    />
+                    {emailError && (
+                      <span
+                        className="absolute -bottom-5 left-0 text-[10px]"
+                        style={{ color: "#EF4444", fontFamily: SANS, fontWeight: 500 }}
+                      >
+                        {emailError}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (!email) {
+                        setEmailError("Enter your email address");
+                        return;
+                      }
+                      if (!isValidEmail(email)) {
+                        setEmailError("Enter a valid email address");
+                        return;
+                      }
+                      setSubmitted(true);
+                      onCTAClick();
+                    }}
+                    className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 shrink-0"
+                    style={{
+                      background: email && isValidEmail(email)
+                        ? "linear-gradient(135deg, var(--accent-dark), var(--accent-light))"
+                        : "rgba(255,255,255,0.12)",
+                      color: email && isValidEmail(email)
+                        ? "var(--accent-text)"
+                        : "rgba(255,255,255,0.4)",
+                      fontFamily: SANS,
+                      fontWeight: 600,
+                      cursor: email && isValidEmail(email) ? "pointer" : "default",
+                    }}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl"
+                  style={{ backgroundColor: "rgba(46,125,79,0.15)", border: "1px solid rgba(46,125,79,0.3)" }}
+                >
+                  <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
+                  <span className="text-[13px]" style={{ color: "#FFFFFF", fontFamily: SANS }}>
+                    You&apos;re on the list. We&apos;ll be in touch shortly.
+                  </span>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Trust badges */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-wrap items-center gap-6 mt-10 text-[11px]"
+              style={{ color: "rgba(255,255,255,0.5)", fontFamily: SANS }}
+            >
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck size={12} style={{ color: "var(--accent-light)" }} />
+                ETA Compliant
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Banknote size={12} style={{ color: "var(--accent-light)" }} />
+                FRA Licensed
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Receipt size={12} style={{ color: "var(--accent-light)" }} />
+                6 Governorates
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Landmark size={12} style={{ color: "var(--accent-light)" }} />
+                Bank-Direct Settlement
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Right column — hero video (lg+) with lazy-load */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:block w-[340px] xl:w-[400px] shrink-0"
+            aria-hidden="true"
+          >
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 24px 48px rgba(0,0,0,0.4)",
+                aspectRatio: "832 / 464",
+              }}
+            >
+              <HeroVideo />
+            </div>
+          </motion.div>
+        </div>
 
         {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12 flex justify-center"
+          transition={{ delay: 1 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <a
             href="#problem"
             className="flex flex-col items-center gap-1.5 transition-colors"
-            style={{ color: TEXT_MUTED }}
+            style={{ color: "rgba(255,255,255,0.4)" }}
           >
             <span className="text-[9px] tracking-[0.2em] uppercase" style={{ fontFamily: SANS, fontWeight: 500 }}>
               Scroll to discover

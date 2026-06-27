@@ -1,68 +1,53 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
-export type ThemeMode = "light" | "noir" | "ember";
+export type ThemeMode = "light" | "dark";
 
-interface ThemeContextType {
+interface ThemeContextValue {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
   cycleMode: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType>({
-  mode: "noir",
-  setMode: () => {},
-  cycleMode: () => {},
-});
+const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-export function useTheme() {
-  return useContext(ThemeContext);
-}
+const STORAGE_KEY = "hv-theme";
 
-const MODES: ThemeMode[] = ["light", "noir", "ember"];
-
-export function ThemeProvider({ children, defaultMode }: { children: React.ReactNode; defaultMode?: ThemeMode }) {
-  const [mode, setModeState] = useState<ThemeMode>(defaultMode || "light");
-  const [mounted, setMounted] = useState(false);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mode, setModeState] = useState<ThemeMode>("light");
 
   useEffect(() => {
-    setMounted(true);
-    const savedMode = localStorage.getItem("hv-theme-mode") as ThemeMode | null;
-    if (MODES.includes(savedMode as ThemeMode)) {
-      setModeState(savedMode as ThemeMode);
-      document.documentElement.setAttribute("data-theme", savedMode as ThemeMode);
-    } else if (defaultMode) {
-      setModeState(defaultMode);
-      document.documentElement.setAttribute("data-theme", defaultMode);
-      localStorage.setItem("hv-theme-mode", defaultMode);
-    } else {
-      const initial: ThemeMode = "light";
-      setModeState(initial);
-      document.documentElement.setAttribute("data-theme", initial);
-      localStorage.setItem("hv-theme-mode", initial);
-    }
-  }, [defaultMode]);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
+      if (saved === "light" || saved === "dark") {
+        setModeState(saved);
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch {}
+  }, []);
 
-  const setMode = (newMode: ThemeMode) => {
-    setModeState(newMode);
-    localStorage.setItem("hv-theme-mode", newMode);
-    document.documentElement.setAttribute("data-theme", newMode);
-  };
+  const setMode = useCallback((next: ThemeMode) => {
+    setModeState(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {}
+    document.documentElement.setAttribute("data-theme", next);
+  }, []);
 
-  const cycleMode = () => {
-    const idx = MODES.indexOf(mode);
-    const next = MODES[(idx + 1) % MODES.length];
-    setMode(next);
-  };
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
+  const cycleMode = useCallback(() => {
+    setMode(mode === "light" ? "dark" : "light");
+  }, [mode, setMode]);
 
   return (
     <ThemeContext.Provider value={{ mode, setMode, cycleMode }}>
       {children}
     </ThemeContext.Provider>
   );
+}
+
+export function useTheme(): ThemeContextValue {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
+  return ctx;
 }

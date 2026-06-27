@@ -3,15 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { DeliveryConfirmSchema } from "@/lib/zod";
 import { apiRoute, authenticate, validateBody, success, error, audit, requirePermission } from "@/lib/api-utils";
 
-export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise<{ jobId: string }> }) => {
+export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "delivery:confirm");
-  const { jobId } = await ctx.params;
+  const { id } = await ctx.params;
   const body = await request.json();
   const data = validateBody(DeliveryConfirmSchema, body);
 
   const job = await prisma.deliveryJob.findFirst({
-    where: { id: jobId, tenantId: auth.tenantId },
+    where: { id, tenantId: auth.tenantId },
     include: {
       tripStop: true,
       otpDelivery: true,
@@ -47,7 +47,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
     });
 
     const updatedJob = await tx.deliveryJob.update({
-      where: { id: jobId },
+      where: { id },
       data: {
         status: "DELIVERED",
         deliveredAt: new Date(),
@@ -78,7 +78,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
 
   await audit({
     entityType: "DELIVERY_JOB",
-    entityId: jobId,
+    entityId: id,
     action: "CONFIRM_DELIVERY",
     tenantId: auth.tenantId,
     actorId: auth.userId,

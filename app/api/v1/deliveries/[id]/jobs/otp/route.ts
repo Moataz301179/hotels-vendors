@@ -2,10 +2,10 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 
-export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise<{ jobId: string }> }) => {
+export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "delivery:manage");
-  const { jobId } = await ctx.params;
+  const { id } = await ctx.params;
 
   const body = await request.json();
   const receiverPhone = body.receiverPhone as string;
@@ -17,7 +17,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
   }
 
   const job = await prisma.deliveryJob.findFirst({
-    where: { id: jobId, tenantId: auth.tenantId },
+    where: { id, tenantId: auth.tenantId },
     include: { order: { select: { id: true, orderNumber: true } } },
   });
   if (!job) return error("Delivery job not found", 404);
@@ -46,7 +46,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
-    afterState: { jobId, receiverPhone, deliveryChannel },
+    afterState: { jobId: id, receiverPhone, deliveryChannel },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });

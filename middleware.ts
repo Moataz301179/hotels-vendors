@@ -160,9 +160,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host") || "";
 
-  // HTTP → HTTPS redirect (defense-in-depth, Vercel also handles at platform level)
+  // HTTP → HTTPS redirect (defense-in-depth, Vercel also handles at platform level).
+  // Skip for localhost / local dev so self-signed-cert browsers and Playwright
+  // aren't forced onto https://localhost (which has no trusted cert in dev).
   const proto = request.headers.get("x-forwarded-proto");
-  if (proto === "http") {
+  const isLocalHost = host === "localhost:3000" || host === "localhost" || host.startsWith("127.0.0.1");
+  if (proto === "http" && !isLocalHost) {
     const url = request.nextUrl.clone();
     url.protocol = "https";
     return addSecurityHeaders(NextResponse.redirect(url, 308));
