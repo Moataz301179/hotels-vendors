@@ -69,7 +69,7 @@ export default async function DashboardLayout({
   const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
 
   return (
-    <ThemeProvider defaultMode="noir">
+    <ThemeProvider>
       <DashboardShell
         role={validRole}
         userName={userData?.name || undefined}

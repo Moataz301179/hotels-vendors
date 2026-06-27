@@ -32,7 +32,7 @@ function AIIcon({ size = 24, color = "currentColor" }: { size?: number; color?: 
 
 export function PublicChatbot({ userRole }: PublicChatbotProps) {
   const { mode } = useTheme();
-  const isNoir = mode === "noir";
+  const isNoir = mode === "dark";
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessageItem[]>([
     {
