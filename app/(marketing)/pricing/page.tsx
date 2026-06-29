@@ -105,7 +105,7 @@ export default function PricingPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, ${accentMuted} 0%, transparent 70%)` }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Layer 2 — Financing & Monetization</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>
             No Per-Transaction Fees.<br />Subscription-Based.<br />Factoring-Funded.
           </h1>
           <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
@@ -244,7 +244,7 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>Ready to Get Started?</h2>
+          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>Ready to Get Started?</h2>
           <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Tell us about your property portfolio. We'll build a subscription plan that fits your size, volume, and factoring needs.</p>
           <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>
             Get Your Quote <ArrowRight size={14} className="cta-arrow" />

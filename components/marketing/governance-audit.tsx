@@ -61,7 +61,7 @@ export function GovernanceAudit() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "var(--font-serif)" }}
             >
               Enterprise-Grade Security.
               <br />

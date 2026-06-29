@@ -138,7 +138,7 @@ export function ProblemSolutionSplit() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight mb-4 leading-[1.1] text-foreground"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "var(--font-serif)" }}
             >
               Stop Managing Procurement
               <br />
@@ -178,7 +178,7 @@ export function ProblemSolutionSplit() {
                 <div>
                   <h3
                     className="text-[18px] md:text-[22px] font-semibold text-foreground"
-                    style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                    style={{ fontFamily: "var(--font-serif)" }}
                   >
                     Traditional Procurement
                   </h3>
@@ -215,7 +215,7 @@ export function ProblemSolutionSplit() {
                           <div className="flex items-center justify-between gap-3 mb-1">
                             <h4 className="text-[13px] font-semibold text-foreground">{point.title}</h4>
                             <div className="text-right shrink-0">
-                              <span className="text-[15px] font-bold" style={{ color: "var(--error)", fontFamily: "'Playfair Display', Georgia, serif" }}>
+                              <span className="text-[15px] font-bold" style={{ color: "var(--error)", fontFamily: "var(--font-serif)" }}>
                                 {point.stat}
                               </span>
                               <span className="text-[9px] text-muted block">{point.statLabel}</span>
@@ -256,7 +256,7 @@ export function ProblemSolutionSplit() {
                 <div>
                   <h3
                     className="text-[18px] md:text-[22px] font-semibold text-foreground"
-                    style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                    style={{ fontFamily: "var(--font-serif)" }}
                   >
                     HotelsVendors AI Platform
                   </h3>
@@ -293,7 +293,7 @@ export function ProblemSolutionSplit() {
                           <div className="flex items-center justify-between gap-3 mb-1">
                             <h4 className="text-[13px] font-semibold text-foreground">{point.title}</h4>
                             <div className="text-right shrink-0">
-                              <span className="text-[15px] font-bold" style={{ color: "var(--accent-base)", fontFamily: "'Playfair Display', Georgia, serif" }}>
+                              <span className="text-[15px] font-bold" style={{ color: "var(--accent-base)", fontFamily: "var(--font-serif)" }}>
                                 {point.metric}
                               </span>
                               <span className="text-[9px] text-muted block">{point.metricLabel}</span>

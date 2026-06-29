@@ -19,7 +19,7 @@ export default function ContactPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Enterprise Sales</span>
-          <h1 className="text-[clamp(28px,5vw,44px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h1 className="text-[clamp(28px,5vw,44px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>
             Let&apos;s Talk About<br />Your Portfolio.
           </h1>
           <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">

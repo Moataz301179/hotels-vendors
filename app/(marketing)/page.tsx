@@ -825,7 +825,7 @@ function SocialProof() {
 
   return (
     <section className="py-24 md:py-32 relative" style={{ background: BG }}>
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="text-center mb-14">
             <SectionLabel>Trusted by Egypt&apos;s Coastal Hospitality Leaders</SectionLabel>

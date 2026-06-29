@@ -50,7 +50,7 @@ export function MarketTicker() {
           price: Math.max(1, +(item.price * (1 + (Math.random() * 0.02 - 0.01))).toFixed(0)),
         }))
       );
-    }, 4000);
+    }, 15000);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };

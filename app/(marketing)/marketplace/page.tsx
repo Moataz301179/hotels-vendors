@@ -44,7 +44,7 @@ const CATEGORIES = [
   { name: "Services", desc: "Maintenance, pest control & laundry", icon: "🔧" },
 ];
 
-export default function MarketplacePage() {
+function MarketplaceContent() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
   const [products, setProducts] = useState<MarketplaceProduct[]>([]);
@@ -106,7 +106,6 @@ export default function MarketplacePage() {
     const product = products.find((p) => p.id === id);
     if (!product) return;
     const resolved = getProductImage(product);
-    // Cart is optional on marketing — silently no-op if no cart context
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -115,7 +114,6 @@ export default function MarketplacePage() {
   };
 
   return (
-    <CompareProvider>
     <main className="min-h-screen text-primary" style={{ backgroundColor: "var(--background)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
@@ -128,7 +126,7 @@ export default function MarketplacePage() {
             <span className="text-[11px] font-medium" style={{ color: "var(--accent-base)" }}>Real Catalog - {total} Verified Products Online</span>
           </div>
 
-          <h1 className="text-[32px] sm:text-[44px] font-semibold tracking-tight mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h1 className="text-[32px] sm:text-[44px] font-semibold tracking-tight mb-4 leading-tight" style={{ fontFamily: "var(--font-serif)" }}>
             Egypt's B2B Hospitality<br />Procurement Marketplace
           </h1>
           <p className="text-[15px] text-white/50 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -185,7 +183,7 @@ export default function MarketplacePage() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--accent-base)" }}>Live Catalog - Verified Suppliers</span>
           </div>
-          <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "var(--font-serif)" }}>
             Real Products - Ready to Order
           </h2>
           <p className="text-[14px] text-white/40 max-w-2xl mb-8">
@@ -304,7 +302,7 @@ export default function MarketplacePage() {
       <section className="py-20" style={{ borderTop: `1px solid ${borderSubtle}` }}>
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-12">
-            <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "var(--font-serif)" }}>
               Product Categories
             </h2>
             <p className="text-[14px] text-white/40 max-w-lg mx-auto">
@@ -353,7 +351,7 @@ export default function MarketplacePage() {
       {/* ═══ CTA ═══ */}
       <section className="py-20 border-t" style={{ borderColor: borderSubtle }}>
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-[24px] sm:text-[32px] font-semibold tracking-tight mb-3" style={{ fontFamily: "var(--font-serif)" }}>
             Ready to Transform Your Procurement?
           </h2>
           <p className="text-[14px] text-white/40 mb-8 max-w-lg mx-auto">
@@ -373,6 +371,13 @@ export default function MarketplacePage() {
       <CompareDrawer />
       <MarketingFooter />
     </main>
+  );
+}
+
+export default function MarketplacePage() {
+  return (
+    <CompareProvider>
+      <MarketplaceContent />
     </CompareProvider>
   );
 }

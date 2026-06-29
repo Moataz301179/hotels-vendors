@@ -39,7 +39,7 @@ function TypingDots({ color }: { color: string }) {
 
 export function MessageList({ messages, isLoading, accentColor }: MessageListProps) {
   const { mode } = useTheme();
-  const isLight = false;
+  const isLight = mode === "light";
   const scrollRef = useRef<HTMLDivElement>(null);
   const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FF6B00");
 

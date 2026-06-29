@@ -59,7 +59,7 @@ export function RFQEngine() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "var(--font-serif)" }}
             >
               From &quot;I Need&quot; to &quot;I Got Quotes&quot;
               <br />
@@ -173,7 +173,7 @@ export function RFQEngine() {
                 ].map((m) => (
                   <div key={m.label} className="rounded-xl p-4 text-center" style={{ backgroundColor: SC, border: `1px solid ${B1}` }}>
                     <m.icon size={14} className="mx-auto mb-2" style={{ color: A }} />
-                    <div className="text-[18px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{m.value}</div>
+                    <div className="text-[18px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>{m.value}</div>
                     <div className="text-[10px] text-white/25">{m.label}</div>
                   </div>
                 ))}

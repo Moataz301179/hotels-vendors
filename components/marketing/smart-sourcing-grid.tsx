@@ -60,7 +60,7 @@ export function SmartSourcingGrid() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+style={{ fontFamily: "var(--font-serif)" }}
             >
               Fixed-Price Catalog.
               <br />
@@ -156,7 +156,7 @@ export function SmartSourcingGrid() {
 
                 <div className="mt-auto pt-3 flex items-center justify-between" style={{ borderTop: `1px solid ${B1}` }}>
                   <div>
-                    <span className="text-[16px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.price}</span>
+                    <span className="text-[16px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>{item.price}</span>
                     <span className="text-[10px] text-white/25 ml-1">min {item.min}</span>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: A }}>

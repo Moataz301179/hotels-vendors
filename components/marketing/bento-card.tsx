@@ -50,7 +50,7 @@ export function BentoCard({
         <div className="mb-3">
           <span
             className="text-[28px] md:text-[32px] font-bold tracking-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif", color: "#ffffff" }}
+            style={{ fontFamily: "var(--font-serif)", color: "#ffffff" }}
           >
             {metric.value}
           </span>

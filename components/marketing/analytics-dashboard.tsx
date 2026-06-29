@@ -65,7 +65,7 @@ export function AnalyticsDashboard() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "var(--font-serif)" }}
             >
               Real-Time Spend Visibility.
               <br />
@@ -99,7 +99,7 @@ export function AnalyticsDashboard() {
                     <span className="text-[11px] font-bold" style={{ color: kpi.good ? "#22C55E" : "#EF4444" }}>{kpi.change}</span>
                   </div>
                 </div>
-                <div className="text-[20px] font-bold text-white mb-0.5" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{kpi.value}</div>
+                <div className="text-[20px] font-bold text-white mb-0.5" style={{ fontFamily: "var(--font-serif)" }}>{kpi.value}</div>
                 <div className="text-[10px] text-white/25">{kpi.label}</div>
               </motion.div>
             </Reveal>
@@ -120,7 +120,7 @@ export function AnalyticsDashboard() {
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="text-[12px] text-white/50">{cat.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[12px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                        <span className="text-[12px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>
                           EGP {(cat.amount / 1000).toFixed(0)}K
                         </span>
                         <span className="text-[10px] text-white/20">{cat.pct}%</span>
@@ -141,7 +141,7 @@ export function AnalyticsDashboard() {
               </div>
               <div className="mt-5 pt-4 flex items-center justify-between" style={{ borderTop: `1px solid ${B1}` }}>
                 <span className="text-[11px] text-white/25">Total MTD spend</span>
-                <span className="text-[16px] font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>EGP 2.38M</span>
+                <span className="text-[16px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>EGP 2.38M</span>
               </div>
             </div>
           </Reveal>
@@ -175,14 +175,14 @@ export function AnalyticsDashboard() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] text-white/20">{s.supplier}</span>
-                      <span className="text-[12px] font-bold" style={{ color: "#22C55E", fontFamily: "'Playfair Display', Georgia, serif" }}>{s.saved}</span>
+                      <span className="text-[12px] font-bold" style={{ color: "#22C55E", fontFamily: "var(--font-serif)" }}>{s.saved}</span>
                     </div>
                   </motion.div>
                 ))}
               </div>
               <div className="mt-4 pt-3 flex items-center justify-between" style={{ borderTop: `1px solid ${B1}` }}>
                 <span className="text-[10px] text-white/25">Total AI savings</span>
-                <span className="text-[14px] font-bold" style={{ color: "#22C55E", fontFamily: "'Playfair Display', Georgia, serif" }}>EGP 62,200</span>
+                <span className="text-[14px] font-bold" style={{ color: "#22C55E", fontFamily: "var(--font-serif)" }}>EGP 62,200</span>
               </div>
             </div>
           </Reveal>
