@@ -59,6 +59,8 @@ export default function SupplierReviewPage() {
   const [actionError, setActionError] = useState("");
   const [actionSuccess, setActionSuccess] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [rejectDialogSupplier, setRejectDialogSupplier] = useState<Supplier | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
 
   const { data, loading, error } = useApi<{ data: Supplier[]; meta: { total: number } }>(
     `/api/suppliers?limit=100&sortBy=createdAt&sortOrder=asc${refreshKey > 0 ? `&_=${refreshKey}` : ""}`
@@ -272,7 +274,7 @@ export default function SupplierReviewPage() {
                         {actionLoading === supplier.id ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
                       </button>
                       <button
-                        onClick={() => handleReject(supplier.id)}
+                        onClick={() => { setRejectDialogSupplier(supplier); setRejectReason(""); }}
                         disabled={actionLoading === supplier.id}
                         className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/30 hover:text-red-400 transition-colors"
                         title="Reject"
@@ -355,7 +357,7 @@ export default function SupplierReviewPage() {
             {/* Actions */}
             <div className="flex gap-3 pt-2">
               <button
-                onClick={() => handleReject(selectedSupplier.id)}
+                onClick={() => { setRejectDialogSupplier(selectedSupplier); setRejectReason(""); }}
                 disabled={actionLoading === selectedSupplier.id}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white/60 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-colors text-sm font-medium"
               >
@@ -380,6 +382,45 @@ export default function SupplierReviewPage() {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Reject Reason Dialog */}
+      <Modal
+        isOpen={!!rejectDialogSupplier}
+        onClose={() => setRejectDialogSupplier(null)}
+        title={`Reject ${rejectDialogSupplier?.name || "Supplier"}`}
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-white/60">Provide a reason for rejection. The supplier will see this.</p>
+          <textarea
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Enter rejection reason..."
+            rows={3}
+            className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 resize-none"
+          />
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setRejectDialogSupplier(null)}
+              className="px-4 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white/60 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                if (rejectDialogSupplier) {
+                  handleReject(rejectDialogSupplier.id, rejectReason);
+                  setRejectDialogSupplier(null);
+                }
+              }}
+              disabled={actionLoading === rejectDialogSupplier?.id}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/15 transition-colors"
+            >
+              {actionLoading === rejectDialogSupplier?.id ? <Loader2 size={14} className="animate-spin" /> : <XCircle size={14} />}
+              Confirm Rejection
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
