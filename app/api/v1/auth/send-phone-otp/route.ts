@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
 import { z } from "zod";
+import { sendOtpSms } from "@/lib/sms";
 import { randomInt } from "crypto";
 
 const SendOtpSchema = z.object({
@@ -61,8 +62,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     userAgent: request.headers.get("user-agent"),
   });
 
-  // TODO: Send OTP via SMS provider (e.g., Twilio, Vonage)
-  // For development, return the code in the response
+  // Send OTP via SMS (non-blocking)
+  sendOtpSms(phone, code).catch((err) =>
+    console.error("[SendPhoneOtp] SMS failed:", err)
+  );
+
   const isDev = process.env.NODE_ENV === "development";
 
   return success({

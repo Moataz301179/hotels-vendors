@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, validateBody, success, error } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
+import { sendOtpSms } from "@/lib/sms";
 import { randomInt } from "crypto";
 import { z } from "zod";
 
@@ -63,7 +64,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // TODO: Send OTP via SMS provider (e.g., Twilio, Vonage)
+  // Send OTP via SMS (non-blocking)
+  sendOtpSms(user.phone, code).catch((err) =>
+    console.error("[ResendOtp] SMS failed:", err)
+  );
 
   const isDev = process.env.NODE_ENV === "development";
 

@@ -4,6 +4,7 @@ import { hashPassword } from "@/lib/auth";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, welcomeTemplate, emailVerificationTemplate } from "@/lib/notifications/email";
+import { sendOtpSms } from "@/lib/sms";
 import { randomInt, randomBytes } from "crypto";
 import { z } from "zod";
 
@@ -226,7 +227,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
     console.error("[StagedRegister] Failed to send verification email to", data.email);
   }
 
-  // TODO: Send OTP via SMS provider (e.g., Twilio, Vonage)
+  // Send OTP via SMS (non-blocking)
+  sendOtpSms(data.phone, otpCode).catch((err) =>
+    console.error("[StagedRegister] SMS failed:", err)
+  );
 
   // 7. Audit log
   await audit({

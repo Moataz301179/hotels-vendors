@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/redis";
+import { sendOtpSms } from "@/lib/sms";
 import { randomInt } from "crypto";
 import { z } from "zod";
 
@@ -92,7 +93,11 @@ export async function POST(request: NextRequest) {
 
   const isDev = process.env.NODE_ENV === "development";
 
-  // TODO: Send OTP via SMS provider in production
+  // Send OTP via SMS (non-blocking)
+  sendOtpSms(phone, code).catch((err) =>
+    console.error("[SendOtp] SMS failed:", err)
+  );
+
   return NextResponse.json({
     success: true,
     data: {
