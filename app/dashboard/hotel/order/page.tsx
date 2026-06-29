@@ -19,8 +19,7 @@ import {
   Building2,
   AlertTriangle,
 } from "lucide-react";
-
-const VAT_RATE = 0.14;
+import { VAT_RATE } from "@/lib/constants";
 
 const SHIPPING_METHODS = [
   { id: "standard", label: "Standard Delivery", description: "3–5 business days", price: 75 },

@@ -13,6 +13,7 @@ import {
   Package,
 } from "lucide-react";
 import { useCart } from "./cart-context";
+import { VAT_RATE, VAT_PERCENT } from "@/lib/constants";
 
 export function CartDrawer() {
   const router = useRouter();
@@ -26,8 +27,7 @@ export function CartDrawer() {
     totalItems,
   } = useCart();
 
-  const vatRate = 0.14;
-  const vatAmount = subtotal * vatRate;
+  const vatAmount = subtotal * VAT_RATE;
   const total = subtotal + vatAmount;
 
   // Close on Escape
@@ -200,7 +200,7 @@ export function CartDrawer() {
                     </span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-white/40">VAT (14%)</span>
+                    <span className="text-white/40">VAT ({VAT_PERCENT}%)</span>
                     <span className="text-white/70">
                       {Math.round(vatAmount).toLocaleString()} EGP
                     </span>

@@ -8,7 +8,19 @@ import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
 import { useCompare } from "./compare-context";
 
-function ProductImageDisplay({ name, category }: { name: string; category: string }) {
+function ProductImageDisplay({ name, category, image }: { name: string; category: string; image?: string | null }) {
+  if (image) {
+    return (
+      <Image
+        src={image}
+        alt={name}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        unoptimized
+      />
+    );
+  }
+
   const resolved = getProductImage({ name, category });
 
   if (resolved.type === "url") {
@@ -148,7 +160,7 @@ export function ProductCard({
     >
       {/* Image Area */}
       <div className="relative aspect-[4/3] bg-black overflow-hidden">
-        <ProductImageDisplay name={name} category={category} />
+        <ProductImageDisplay name={name} category={category} image={images?.[0] ?? null} />
 
         {/* Overlays */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">

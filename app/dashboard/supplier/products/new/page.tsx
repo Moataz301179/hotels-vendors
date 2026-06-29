@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,6 +11,9 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  Image as ImageIcon,
+  X,
+  Upload,
 } from "lucide-react";
 import { HOTEL_CATEGORIES } from "@/lib/marketplace/categories";
 
@@ -24,6 +27,33 @@ export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFiles = useCallback(async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const newUrls: string[] = [];
+      for (const file of Array.from(files)) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/v1/products/images", { method: "POST", body: fd });
+        const json = await res.json();
+        if (json.success) newUrls.push(json.data.url);
+      }
+      setImages((prev) => [...prev, ...newUrls]);
+    } catch {
+      // silently skip failed uploads
+    } finally {
+      setUploading(false);
+    }
+  }, []);
+
+  const removeImage = useCallback((idx: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+  }, []);
 
   const [form, setForm] = useState({
     sku: "",
@@ -63,6 +93,7 @@ export default function NewProductPage() {
           minOrderQty: parseInt(form.minOrderQty, 10),
           leadTimeDays: parseInt(form.leadTimeDays, 10),
           shelfLifeDays: form.shelfLifeDays ? parseInt(form.shelfLifeDays, 10) : undefined,
+          images: images.length > 0 ? images : undefined,
         }),
       });
 
@@ -298,6 +329,58 @@ export default function NewProductPage() {
               <option value="Dry Storage" className="bg-[#121212]">Dry Storage</option>
             </select>
           </div>
+        </div>
+
+        {/* Images */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-white/70 flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-white/30" />
+            Product Images
+          </h2>
+
+          <div
+            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            onDrop={(e) => { e.preventDefault(); e.stopPropagation(); handleFiles(e.dataTransfer.files); }}
+            onClick={() => fileInputRef.current?.click()}
+            className="border-2 border-dashed border-white/[0.08] hover:border-white/20 rounded-xl p-6 text-center cursor-pointer transition-colors"
+          >
+            {uploading ? (
+              <Loader2 className="w-6 h-6 text-white/30 animate-spin mx-auto" />
+            ) : (
+              <>
+                <Upload className="w-6 h-6 text-white/20 mx-auto mb-2" />
+                <p className="text-xs text-white/40">
+                  Drag & drop images here, or <span className="text-accent-base">browse</span>
+                </p>
+                <p className="text-[10px] text-white/20 mt-1">JPEG, PNG, WebP — up to 5 MB each</p>
+              </>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              className="hidden"
+              onChange={(e) => handleFiles(e.target.files)}
+            />
+          </div>
+
+          {images.length > 0 && (
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+              {images.map((url, idx) => (
+                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-white/[0.06] group">
+                  <img src={url} alt={`Product image ${idx + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeImage(idx); }}
+                    className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white/60 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Actions */}
