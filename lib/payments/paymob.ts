@@ -10,6 +10,8 @@
  * 5. Mark order paymentGuaranteed = true
  */
 
+import { createHmac } from "crypto";
+
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
 const PAYMOB_PUBLIC_KEY = process.env.PAYMOB_PUBLIC_KEY;
 const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY;
@@ -182,9 +184,7 @@ export function verifyPaymobCallback(
   ];
 
   const hmacString = fields.join("");
-  const crypto = require("crypto");
-  const calculated = crypto
-    .createHmac("sha512", PAYMOB_HMAC_SECRET)
+  const calculated = createHmac("sha512", PAYMOB_HMAC_SECRET)
     .update(hmacString)
     .digest("hex");
 

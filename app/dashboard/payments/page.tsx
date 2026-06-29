@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   CreditCard, CheckCircle2, Clock, AlertTriangle, Wallet,
   ArrowUpRight, ArrowDownRight, Search, Download, TrendingUp,
 } from "lucide-react";
+import { useApi } from "@/lib/hooks/use-api";
+import { LoadingPage } from "@/components/dashboards/shared/loading-card";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -17,29 +19,38 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const PAYMENT_STATS = [
-  { label: "Total Processed", value: "EGP 24.8M", change: "+18% this month", up: true, icon: Wallet },
-  { label: "Pending", value: "EGP 1.2M", change: "47 invoices", up: true, icon: Clock },
-  { label: "Completed", value: "EGP 23.6M", change: "95.2% success", up: true, icon: CheckCircle2 },
-  { label: "Failed", value: "EGP 0.04M", change: "0.8% error rate", up: true, icon: AlertTriangle },
-];
+interface Transaction {
+  id: string;
+  gatewayRef: string;
+  transactionType: string | null;
+  amount: number;
+  currency: string;
+  status: string;
+  observedMethod: string | null;
+  createdAt: string;
+}
 
-const TRANSACTIONS: { id: string; orderId: string; hotel: string; supplier: string; amount: string; method: string; status: string; date: string }[] = [
-  { id: "TXN-2026-00842", orderId: "ORD-2026-1241", hotel: "Stella Di Mare Resort", supplier: "Nile Fresh Foods", amount: "EGP 45,200", method: "Factoring", status: "COMPLETED", date: "Today, 14:32" },
-  { id: "TXN-2026-00841", orderId: "ORD-2026-1240", hotel: "Jaz Aquamarine", supplier: "Pyramid Linens", amount: "EGP 28,700", method: "Credit", status: "COMPLETED", date: "Today, 11:15" },
-  { id: "TXN-2026-00840", orderId: "ORD-2026-1239", hotel: "Sunrise Palace", supplier: "Red Sea Amenities", amount: "EGP 61,500", method: "Factoring", status: "PENDING", date: "Today, 09:48" },
-  { id: "TXN-2026-00839", orderId: "ORD-2026-1238", hotel: "Baron Resort Sharm", supplier: "Cairo Kitchen Pro", amount: "EGP 128,400", method: "Bank Transfer", status: "COMPLETED", date: "Yesterday" },
-  { id: "TXN-2026-00838", orderId: "ORD-2026-1237", hotel: "Hurghada Grand", supplier: "Delta Maintenance", amount: "EGP 18,900", method: "Credit", status: "FAILED", date: "Yesterday" },
-  { id: "TXN-2026-00837", orderId: "ORD-2026-1236", hotel: "Marriott Hurghada", supplier: "Oasis FF&E", amount: "EGP 92,300", method: "Factoring", status: "COMPLETED", date: "2 days ago" },
-  { id: "TXN-2026-00836", orderId: "ORD-2026-1235", hotel: "Four Seasons Sharm", supplier: "Pharaoh Chemicals", amount: "EGP 34,600", method: "Bank Transfer", status: "PENDING", date: "2 days ago" },
-  { id: "TXN-2026-00835", orderId: "ORD-2026-1234", hotel: "Renaissance Cairo", supplier: "Cleopatra Amenities", amount: "EGP 56,100", method: "Factoring", status: "COMPLETED", date: "3 days ago" },
-];
+interface Stats {
+  totalProcessed: number;
+  totalCount: number;
+  pendingCount: number;
+  completedAmount: number;
+  completedCount: number;
+  failedCount: number;
+}
 
 const METHOD_COLORS: Record<string, string> = {
-  Factoring: "bg-accent-base/10 text-accent-base",
-  Credit: "bg-amber-500/10 text-amber-400",
-  "Bank Transfer": "bg-blue-500/10 text-blue-400",
+  PAYMOB: "bg-accent-base/10 text-accent-base",
+  PAYMOB_B2B: "bg-accent-base/10 text-accent-base",
+  CREDIT: "bg-amber-500/10 text-amber-400",
+  BANK_TRANSFER: "bg-blue-500/10 text-blue-400",
+  INSTAPAY: "bg-violet-500/10 text-violet-400",
+  FAWRY: "bg-cyan-500/10 text-cyan-400",
 };
+
+function formatAmount(amount: number, currency = "EGP") {
+  return new Intl.NumberFormat("en-EG", { style: "currency", currency, minimumFractionDigits: 0 }).format(amount);
+}
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
@@ -56,16 +67,48 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function formatDate(iso: string) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now.getTime() - d.getTime();
+  const hours = Math.floor(diff / 3600000);
+  if (hours < 1) return "Just now";
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 export default function PaymentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const filteredTxns = TRANSACTIONS.filter(
+  const { data, loading } = useApi<{ transactions: Transaction[]; stats: Stats; pagination: { total: number } }>(
+    "/api/v1/payments/list?limit=50"
+  );
+
+  const statsCards = useMemo(() => {
+    if (!data?.stats) return null;
+    const s = data.stats;
+    return [
+      { label: "Total Processed", value: formatAmount(s.totalProcessed), change: `${s.totalCount} transactions`, up: true, icon: Wallet },
+      { label: "Pending", value: formatAmount(s.totalProcessed - s.completedAmount), change: `${s.pendingCount} pending`, up: false, icon: Clock },
+      { label: "Completed", value: formatAmount(s.completedAmount), change: `${s.completedCount} transactions`, up: true, icon: CheckCircle2 },
+      { label: "Failed", value: formatAmount(s.totalProcessed - s.completedAmount), change: `${s.failedCount} failed`, up: false, icon: AlertTriangle },
+    ];
+  }, [data]);
+
+  const transactions = data?.transactions ?? [];
+
+  const filteredTxns = transactions.filter(
     (t) =>
       (filterStatus === "all" || t.status === filterStatus) &&
-      (t.hotel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (t.gatewayRef.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.id.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  if (loading) return <LoadingPage />;
 
   return (
     <motion.div
@@ -87,27 +130,29 @@ export default function PaymentsPage() {
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {PAYMENT_STATS.map((s) => (
-          <motion.div
-            key={s.label}
-            variants={fadeInUp}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <s.icon size={15} className="text-white/40" />
+      {statsCards && (
+        <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {statsCards.map((s) => (
+            <motion.div
+              key={s.label}
+              variants={fadeInUp}
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
+                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                  <s.icon size={15} className="text-white/40" />
+                </div>
               </div>
-            </div>
-            <p className="text-xl font-bold text-white">{s.value}</p>
-            <div className="flex items-center gap-1 mt-1">
-              {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
-              <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+              <p className="text-xl font-bold text-white">{s.value}</p>
+              <div className="flex items-center gap-1 mt-1">
+                {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
+                <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
 
       {/* Volume Chart Placeholder */}
       <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
@@ -164,9 +209,8 @@ export default function PaymentsPage() {
           <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Transaction ID</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Ref</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Type</th>
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Method</th>
                 <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
@@ -177,27 +221,24 @@ export default function PaymentsPage() {
               {filteredTxns.map((t) => (
                 <tr key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
                   <td className="px-4 py-3">
-                    <span className="text-xs font-mono text-white/60">{t.id}</span>
+                    <span className="text-xs font-mono text-white/60">{t.gatewayRef}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white">{t.hotel}</span>
+                    <span className="text-xs text-white/80">{t.transactionType || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{t.supplier}</span>
+                    <span className="text-xs font-semibold text-white">{formatAmount(t.amount, t.currency)}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-semibold text-white">{t.amount}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.method] || "bg-white/10 text-white/40"}`}>
-                      {t.method}
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.observedMethod || ""] || "bg-white/10 text-white/40"}`}>
+                      {t.observedMethod || "—"}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={t.status} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{t.date}</span>
+                    <span className="text-[11px] text-white/30">{formatDate(t.createdAt)}</span>
                   </td>
                 </tr>
               ))}
