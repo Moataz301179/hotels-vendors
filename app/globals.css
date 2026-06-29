@@ -48,7 +48,7 @@
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-serif: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
@@ -152,7 +152,7 @@
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-serif: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
@@ -230,7 +230,7 @@
   --shadow-inner-light: inset 0 1px 0 rgba(245, 241, 235, 0.04);
 
   --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-serif: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
@@ -303,7 +303,7 @@
   --shadow-inner-light: inset 0 1px 0 rgba(240, 249, 255, 0.05);
 
   --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-serif: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
@@ -335,7 +335,7 @@
   --color-error: var(--error);
   --color-info: var(--info);
   --font-sans: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-serif: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
