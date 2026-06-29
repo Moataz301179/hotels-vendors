@@ -45,6 +45,7 @@ const SURFACE = "var(--surface, #FFFFFF)";
 const TEXT_INVERSE = "var(--text-inverse, #FAFAF8)";
 
 const SANS = "var(--font-sans, 'Jakarta Sans, Inter, system-ui, sans-serif')";
+const HEADING = "var(--font-serif)";
 
 /* ═══════════════════════════════════════════════════════════════
    SHARED HELPERS
@@ -287,7 +288,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
             {/* Headline — stagger animation */}
             <h1
               className="text-[36px] md:text-[56px] lg:text-[64px] mb-6 leading-[1.05] tracking-tight"
-              style={{ fontFamily: SANS, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: HEADING, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
             >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -521,7 +522,7 @@ function ProblemSection() {
             <SectionLabel>The Problem</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
             >
               Hotel Procurement Is Broken
             </h2>
@@ -544,7 +545,7 @@ function ProblemSection() {
                 <div className="text-[24px] mb-3">{p.icon}</div>
                 <h3
                   className="text-[15px] mb-2"
-                  style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+                  style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
                 >
                   {p.title}
                 </h3>
@@ -602,7 +603,7 @@ function HowItWorks() {
             <SectionLabel>How It Works</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
             >
               From Chaos to Control
             </h2>
@@ -639,7 +640,7 @@ function HowItWorks() {
                   >
                     <StepIcon size={18} style={{ color: ACCENT }} />
                   </div>
-                  <h3 className="text-[15px] mb-2" style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}>
+                  <h3 className="text-[15px] mb-2" style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}>
                     {item.title}
                   </h3>
                   <p
@@ -709,7 +710,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
             <SectionLabel>One Platform, Three Stakeholders</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
             >
               Built for Your Role
             </h2>
@@ -743,7 +744,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                           </span>
                           <h3
                             className="text-[18px] md:text-[22px]"
-                            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+                            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
                           >
                             {role.headline}
                           </h3>
@@ -831,7 +832,7 @@ function SocialProof() {
             <SectionLabel>Trusted by Egypt&apos;s Coastal Hospitality Leaders</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
             >
               Built with the Operators Who Run the Resorts
             </h2>
@@ -928,7 +929,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
         <Reveal>
           <h2
             className="text-[28px] md:text-[44px] tracking-tight mb-5 leading-tight"
-            style={{ fontFamily: SANS, fontWeight: 500, color: TEXT }}
+            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
           >
             Ready to Modernize Your Procurement?
           </h2>
