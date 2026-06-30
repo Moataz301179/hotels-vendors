@@ -1,9 +1,7 @@
 version: "3.8"
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/${GITHUB_REPOSITORY:-hotels-vendors}:latest
     ports:
       - "3000:3000"
     env_file: .env.production
