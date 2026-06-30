@@ -1,7 +1,6 @@
 "use client";
 
 import { Shield, Lock, FileCheck, Server, Eye, Fingerprint } from "lucide-react";
-import { useTheme } from "@/components/theme/theme-provider";
 
 const CERTIFICATES = [
   {
@@ -61,8 +60,7 @@ const CERTIFICATES = [
 ];
 
 export function SecurityCertificates() {
-  const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
 
   return (
     <section className="py-16">

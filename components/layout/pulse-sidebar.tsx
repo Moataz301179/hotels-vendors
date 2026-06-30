@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { BrandLogo } from "./brand-logo";
-import { useTheme } from "@/components/theme/theme-provider";
 import {
   LayoutDashboard,
   Building2,
@@ -215,7 +214,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
 export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSidebarProps) {
   const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
-  const { mode } = useTheme();
   const isOriginal = false;
 
   if (collapsed) {

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { useTheme } from "@/components/theme/theme-provider";
 
 interface FAQItem {
   question: string;
@@ -135,8 +134,7 @@ const FAQS: FAQItem[] = [
 const CATEGORIES = ["All", "General", "Platform", "Suppliers", "Pricing", "Compliance", "Factoring", "Security", "Legal"];
 
 export function FAQSection() {
-  const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const [activeCategory, setActiveCategory] = useState("All");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 

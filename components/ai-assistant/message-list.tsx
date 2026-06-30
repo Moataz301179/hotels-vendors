@@ -2,7 +2,6 @@
 
 import { User, Bot, Loader2, AlertTriangle } from "lucide-react";
 import { useRef, useEffect } from "react";
-import { useTheme } from "@/components/theme/theme-provider";
 
 export interface ChatMessageItem {
   id?: string;
@@ -38,8 +37,7 @@ function TypingDots({ color }: { color: string }) {
 }
 
 export function MessageList({ messages, isLoading, accentColor }: MessageListProps) {
-  const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const scrollRef = useRef<HTMLDivElement>(null);
   const effectiveAccent = accentColor || (isLight ? "#581c87" : "#FF6B00");
 

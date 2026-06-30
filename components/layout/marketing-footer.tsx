@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Shield, FileCheck, Lock } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { useTheme } from "@/components/theme/theme-provider";
 
 function FacebookIcon({ size = 15 }: { size?: number }) {
   return (
@@ -22,8 +21,7 @@ const socialLinks = [
 ];
 
 export function MarketingFooter() {
-  const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
   const accent = "var(--accent-base)";
 
   return (

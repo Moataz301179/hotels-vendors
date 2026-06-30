@@ -2,7 +2,6 @@
 
 import { X, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
-import { useTheme } from "@/components/theme/theme-provider";
 
 interface ChatShellProps {
   open: boolean;
@@ -27,8 +26,7 @@ export function ChatShell({
   footer,
   headerRight,
 }: ChatShellProps) {
-  const { mode } = useTheme();
-  const isLight = mode === "light";
+  const isLight = false;
 
   if (!open) return null;
 

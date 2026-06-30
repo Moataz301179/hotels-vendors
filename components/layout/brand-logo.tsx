@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme/theme-provider";
 
 interface BrandLogoProps {
   className?: string;
@@ -109,7 +108,6 @@ export function BrandLogo({
   showText = true,
   forceColor,
 }: BrandLogoProps) {
-  const { mode } = useTheme();
   const iconSize = ICON_SIZE_MAP[size];
 
   const isOriginal = forceColor === "original";
