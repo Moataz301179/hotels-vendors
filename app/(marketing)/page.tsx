@@ -18,6 +18,14 @@ import {
   Landmark,
   ArrowDown,
   Mail,
+  ClipboardList,
+  Timer,
+  Eye,
+  AlertTriangle,
+  TrendingUp,
+  Zap,
+  DollarSign,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
@@ -537,28 +545,32 @@ function ProblemSection() {
     {
       title: "Manual POs",
       desc: "Your team sends purchase orders via WhatsApp and email. No audit trail. No budget control.",
-      icon: "📋",
+      icon: ClipboardList,
     },
     {
       title: "60–180 Day Payments",
       desc: "Suppliers wait months for payment. They prioritize other buyers. Your supply chain suffers.",
-      icon: "⏳",
+      icon: Timer,
     },
     {
       title: "ETA Compliance Burden",
       desc: "Every invoice must be digitally signed, UUID-validated, and submitted to the Tax Authority. Manual work is error-prone.",
-      icon: "📑",
+      icon: FileText,
     },
     {
       title: "Zero Spend Visibility",
       desc: "You don't know which properties are overpaying, which suppliers are unreliable, or where money leaks.",
-      icon: "👁️",
+      icon: Eye,
     },
   ];
 
   return (
-    <section id="problem" className="py-24 md:py-32 relative" style={{ background: BG }}>
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="problem" className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG }}>
+      {/* Subtle warning glow */}
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.04] blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, var(--warning) 0%, transparent 70%)" }}
+      />
+      <div className="max-w-5xl mx-auto px-6 relative">
         <Reveal>
           <div className="text-center mb-14">
             <SectionLabel>The Problem</SectionLabel>
@@ -568,7 +580,7 @@ function ProblemSection() {
             >
               Hotel Procurement Is Broken
             </h2>
-            <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
+            <div className="w-12 h-px mx-auto mb-5" style={{ background: "var(--warning)" }} />
             <p
               className="text-[14px] max-w-lg mx-auto"
               style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
@@ -579,12 +591,26 @@ function ProblemSection() {
         </Reveal>
 
         <div className="grid md:grid-cols-2 gap-4">
-          {problems.map((p, i) => (
+          {problems.map((p, i) => {
+            const Icon = p.icon;
+            return (
             <Reveal key={p.title} delay={i * 0.08}>
               <div
-                className="surface-card p-6 h-full"
+                className="p-6 h-full rounded-2xl transition-all duration-300"
+                style={{
+                  background: "linear-gradient(135deg, rgba(202,138,4,0.04), rgba(202,138,4,0.01))",
+                  border: "1px solid rgba(202,138,4,0.12)",
+                }}
               >
-                <div className="text-[24px] mb-3">{p.icon}</div>
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                  style={{
+                    background: "rgba(202,138,4,0.08)",
+                    border: "1px solid rgba(202,138,4,0.15)",
+                  }}
+                >
+                  <Icon size={18} style={{ color: "var(--warning)" }} />
+                </div>
                 <h3
                   className="text-[15px] mb-2"
                   style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
@@ -599,7 +625,8 @@ function ProblemSection() {
                 </p>
               </div>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -833,25 +860,69 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
 /* ═══════════════════════════════════════════════════════════
    5. SOCIAL PROOF
    ═══════════════════════════════════════════════════════════ */
+function AnimatedStat({ value, label, sub }: { value: string; label: string; sub: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const [displayed, setDisplayed] = useState("0");
+  const numOnly = value.replace(/[^0-9.]/g, "");
+  const prefix = value.replace(numOnly, "");
+  const target = parseFloat(numOnly);
+
+  useEffect(() => {
+    if (!isInView || !target) return;
+    const duration = 1200;
+    const steps = 30;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setDisplayed(prefix + Math.round(target));
+        clearInterval(timer);
+      } else {
+        setDisplayed(prefix + Math.round(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [isInView, target, prefix]);
+
+  return (
+    <div ref={ref} className="text-center">
+      <div
+        className="text-[28px] md:text-[36px] mb-1 metric-value"
+        style={{ fontFamily: SANS, fontWeight: 600, color: ACCENT }}
+      >
+        {isInView ? displayed : "0"}
+      </div>
+      <div className="text-[12px]" style={{ fontFamily: SANS, color: TEXT_SECONDARY }}>
+        {label}
+      </div>
+      <div className="text-[10px] mt-0.5" style={{ fontFamily: SANS, color: TEXT_MUTED }}>
+        {sub}
+      </div>
+    </div>
+  );
+}
+
 function SocialProof() {
-  const testimonials = [
+  const results = [
     {
-      quote: "We cut invoice processing from 11 days to 4 hours. ETA submission is now fully automatic — zero manual work for our finance team.",
-      name: "Ahmed El-Sayed",
-      title: "Group Finance Director",
-      org: "Stella Di Mare Hotels",
+      metric: "11 days → 4 hours",
+      label: "Invoice processing time",
+      icon: Zap,
+      desc: "ETA-compliant invoicing eliminated manual data entry and tax authority submissions for pilot hotels.",
     },
     {
-      quote: "Reverse factoring changed our supplier relationships. They get paid in 48 hours, we keep Net-60 terms. Everyone wins.",
-      name: "Marina Fahmy",
-      title: "Procurement Manager",
-      org: "Sunrise Resorts — Sharm",
+      metric: "90 days → 48 hours",
+      label: "Supplier payment time",
+      icon: DollarSign,
+      desc: "Reverse factoring lets suppliers choose early payment while hotels keep Net-60 terms.",
     },
     {
-      quote: "The Shark-Breaker hub model reduced our logistics cost per kilo by 38%. Consolidated delivery to three Red Sea properties.",
-      name: "Khaled Hassan",
-      title: "Operations Director",
-      org: "Jaz Hotels — Hurghada",
+      metric: "38% reduction",
+      label: "Logistics cost per kilo",
+      icon: TrendingUp,
+      desc: "Hub-and-spoke delivery model consolidates Red Sea corridor shipments into fewer, fuller trucks.",
     },
   ];
 
@@ -861,45 +932,36 @@ function SocialProof() {
   ];
 
   const stats = [
-    { num: "680+", label: "Verified Suppliers", sub: "Across 6 governorates" },
-    { num: "500+", label: "Active Hotels", sub: "From Sharm to North Coast" },
-    { num: "EGP 12M+", label: "Monthly GMV", sub: "Growing 30% MoM" },
+    { value: "680+", label: "Verified Suppliers", sub: "Across 6 governorates" },
+    { value: "500+", label: "Active Hotels", sub: "From Sharm to North Coast" },
+    { value: "12M+", label: "Monthly GMV (EGP)", sub: "Growing 30% MoM" },
   ];
 
   return (
-    <section className="py-24 md:py-32 relative" style={{ background: BG }}>
-      <div className="max-w-5xl mx-auto px-6">
+    <section className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG }}>
+      {/* Subtle radial */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-[0.03] blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, var(--accent-base) 0%, transparent 70%)" }}
+      />
+      <div className="max-w-5xl mx-auto px-6 relative">
         <Reveal>
           <div className="text-center mb-14">
-            <SectionLabel>Trusted by Egypt&apos;s Coastal Hospitality Leaders</SectionLabel>
+            <SectionLabel>Real Results, Real Hotels</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
               style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
             >
-              Built with the Operators Who Run the Resorts
+              Measurable Impact Across the Red Sea
             </h2>
             <div className="w-12 h-px mx-auto" style={{ background: ACCENT }} />
           </div>
         </Reveal>
 
-        {/* Stats row */}
+        {/* Stats row with count-up */}
         <Reveal delay={0.05}>
           <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto text-center mb-14">
             {stats.map((stat) => (
-              <div key={stat.label}>
-                <div
-                  className="text-[28px] md:text-[36px] mb-1"
-                  style={{ fontFamily: SANS, fontWeight: 600, color: ACCENT }}
-                >
-                  {stat.num}
-                </div>
-                <div className="text-[12px]" style={{ fontFamily: SANS, color: TEXT_SECONDARY }}>
-                  {stat.label}
-                </div>
-                <div className="text-[10px] mt-0.5" style={{ fontFamily: SANS, color: TEXT_MUTED }}>
-                  {stat.sub}
-                </div>
-              </div>
+              <AnimatedStat key={stat.label} {...stat} />
             ))}
           </div>
         </Reveal>
@@ -919,35 +981,41 @@ function SocialProof() {
           </div>
         </Reveal>
 
-        {/* Testimonial cards */}
+        {/* Metric result cards */}
         <div className="grid md:grid-cols-3 gap-5">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={0.15 + i * 0.08}>
+          {results.map((r, i) => {
+            const Icon = r.icon;
+            return (
+            <Reveal key={r.label} delay={0.15 + i * 0.08}>
               <div className="surface-card p-6 h-full flex flex-col">
-                <div className="flex gap-1 mb-4">
-                  {[0, 1, 2, 3, 4].map((s) => (
-                    <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill={ACCENT} xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                  ))}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: ACCENT_MUTED, border: `1px solid ${ACCENT_BORDER}` }}
+                >
+                  <Icon size={18} style={{ color: ACCENT }} />
+                </div>
+                <div
+                  className="text-[22px] font-semibold mb-1 metric-value"
+                  style={{ fontFamily: SANS, color: TEXT }}
+                >
+                  {r.metric}
+                </div>
+                <div
+                  className="text-[11px] font-medium uppercase tracking-wider mb-3"
+                  style={{ fontFamily: SANS, color: ACCENT, letterSpacing: "0.08em" }}
+                >
+                  {r.label}
                 </div>
                 <p
-                  className="text-[13px] leading-relaxed flex-1 mb-5"
-                  style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+                  className="text-[13px] leading-relaxed flex-1"
+                  style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
                 >
-                  &ldquo;{t.quote}&rdquo;
+                  {r.desc}
                 </p>
-                <div className="border-t pt-4" style={{ borderColor: "var(--border-subtle)" }}>
-                  <p className="text-[13px] font-medium" style={{ fontFamily: SANS, color: TEXT }}>
-                    {t.name}
-                  </p>
-                  <p className="text-[11px]" style={{ fontFamily: SANS, color: TEXT_MUTED }}>
-                    {t.title} · {t.org}
-                  </p>
-                </div>
               </div>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

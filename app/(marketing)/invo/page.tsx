@@ -1,4 +1,7 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,15 +19,14 @@ import {
   Layers,
   BarChart3,
   Sparkles,
+  UtensilsCrossed,
+  Droplets,
+  Gift,
+  Sofa,
+  Wrench,
 } from "lucide-react";
 import { InvoNav } from "@/components/invo/invo-nav";
 import { InvoFooter } from "@/components/invo/invo-footer";
-
-export const metadata: Metadata = {
-  title: "INVO — Supplier Marketplace & Growth Platform",
-  description:
-    "List your products on Egypt's largest hospitality procurement network. Monthly subscription plans for verified suppliers. Featured listings, analytics, and ETA-compliant invoicing.",
-};
 
 const FEATURES = [
   {
@@ -127,14 +129,29 @@ const PLANS = [
 ];
 
 const CATEGORIES = [
-  { name: "F&B", desc: "Food, beverages & kitchen supplies", count: "2,400+" },
-  { name: "Consumables", desc: "Cleaning chemicals & disposables", count: "1,800+" },
-  { name: "Guest Supplies", desc: "Amenities & room accessories", count: "1,200+" },
-  { name: "FF&E", desc: "Furniture, fixtures & equipment", count: "900+" },
-  { name: "Services", desc: "Maintenance, laundry & more", count: "400+" },
+  { name: "F&B", desc: "Food, beverages & kitchen supplies", count: "2,400+", icon: UtensilsCrossed },
+  { name: "Consumables", desc: "Cleaning chemicals & disposables", count: "1,800+", icon: Droplets },
+  { name: "Guest Supplies", desc: "Amenities & room accessories", count: "1,200+", icon: Gift },
+  { name: "FF&E", desc: "Furniture, fixtures & equipment", count: "900+", icon: Sofa },
+  { name: "Services", desc: "Maintenance, laundry & more", count: "400+", icon: Wrench },
 ];
 
 export default function InvoMarketplacePage() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    document.title = "INVO — Supplier Marketplace & Growth Platform";
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) router.push(`/marketplace?search=${encodeURIComponent(q)}`);
+  };
+
+  const popularTags = ["Bed Linen", "Olive Oil", "Cleaning Supplies", "Towels"];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <InvoNav />
@@ -179,24 +196,38 @@ export default function InvoMarketplacePage() {
             </div>
 
             {/* Quick search */}
-            <div className="mt-10 max-w-xl">
+            <form onSubmit={handleSearch} className="mt-10 max-w-xl">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products, categories, suppliers..."
-                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[14px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#D4A843]/30 transition-colors"
+                  className="w-full pl-11 pr-12 py-3.5 rounded-xl text-[14px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#D4A843]/30 transition-colors"
                 />
+                {searchQuery.trim() && (
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[#D4A843]/20 text-[#D4A843] text-[12px] font-medium hover:bg-[#D4A843]/30 transition-colors"
+                  >
+                    Go
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-3 mt-3 text-[12px] text-white/25">
                 <span>Popular:</span>
-                {["Bed Linen", "Olive Oil", "Cleaning Supplies", "Towels"].map((tag) => (
-                  <span key={tag} className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] cursor-pointer hover:text-white/40 transition-colors">
+                {popularTags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/marketplace?search=${encodeURIComponent(tag)}`}
+                    className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] hover:text-white/40 hover:border-white/[0.12] transition-colors"
+                  >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </section>
@@ -214,20 +245,23 @@ export default function InvoMarketplacePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.map((cat) => {
+              const CatIcon = cat.icon;
+              return (
               <Link
                 key={cat.name}
                 href={`/marketplace?category=${cat.name.toLowerCase()}`}
                 className="surface-card p-6 hover-lift text-center group"
               >
                 <div className="w-12 h-12 rounded-xl bg-[rgba(212,168,67,0.08)] border border-[rgba(212,168,67,0.12)] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Layers className="w-5 h-5 text-[#D4A843]" />
+                  <CatIcon className="w-5 h-5 text-[#D4A843]" />
                 </div>
                 <h3 className="text-[15px] text-white mb-1 font-medium">{cat.name}</h3>
                 <p className="text-[12px] text-white/30 mb-2">{cat.desc}</p>
                 <span className="text-[11px] text-[#D4A843]/60">{cat.count} products</span>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
