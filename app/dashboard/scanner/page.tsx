@@ -138,14 +138,14 @@ export default function ScannerPage() {
     <div className="max-w-lg mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Zap size={20} className="text-amber-400" />
             Barcode Scanner
           </h1>
-          <p className="text-xs text-white/40 mt-0.5">Scan products at receiving dock</p>
+          <p className="text-xs text-foreground-tertiary mt-0.5">Scan products at receiving dock</p>
         </div>
         {lastScanned && (
-          <button onClick={handleReset} className="text-xs text-white/50 hover:text-white flex items-center gap-1">
+          <button onClick={handleReset} className="text-xs text-foreground-muted hover:text-foreground flex items-center gap-1">
             <ArrowLeft size={14} /> New Scan
           </button>
         )}
@@ -171,14 +171,14 @@ export default function ScannerPage() {
                   </div>
                 </div>
                 <button onClick={stopCamera} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center">
-                  <XCircle size={18} className="text-white" />
+                  <XCircle size={18} className="text-foreground" />
                 </button>
               </div>
             ) : manualEntry ? (
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 space-y-4">
+              <div className="rounded-2xl border border-subtle bg-surface-raised p-6 space-y-4">
                 <div className="text-center">
-                  <Keyboard size={32} className="text-white/20 mx-auto mb-2" />
-                  <p className="text-sm text-white/50">Enter barcode manually</p>
+                  <Keyboard size={32} className="text-foreground-muted mx-auto mb-2" />
+                  <p className="text-sm text-foreground-muted">Enter barcode manually</p>
                 </div>
                 <input
                   type="text"
@@ -186,28 +186,28 @@ export default function ScannerPage() {
                   onChange={(e) => setBarcodeInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleManualSubmit()}
                   placeholder="Type barcode number..."
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white text-center text-lg tracking-widest placeholder:text-white/20 focus:outline-none focus:border-amber-400/50"
+                  className="w-full px-4 py-3 rounded-xl bg-accent-muted border border-subtle[0.1] text-foreground text-center text-lg tracking-widest placeholder:text-foreground-muted focus:outline-none focus:border-amber-400/50"
                   autoFocus
                 />
                 <button
                   onClick={handleManualSubmit}
                   disabled={barcodeInput.length < 3}
-                  className="w-full py-3 rounded-xl bg-accent-base text-white font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-full py-3 rounded-xl bg-accent-base text-foreground font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Look Up Product
                 </button>
-                <button onClick={() => { setManualEntry(false); startCamera(); }} className="w-full text-xs text-white/30 hover:text-white/50">
+                <button onClick={() => { setManualEntry(false); startCamera(); }} className="w-full text-xs text-foreground-muted hover:text-foreground-muted">
                   Try camera instead
                 </button>
               </div>
             ) : (
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center space-y-4">
-                <Camera size={48} className="text-white/15 mx-auto" />
-                <p className="text-sm text-white/40">Point camera at product barcode</p>
-                <button onClick={startCamera} className="px-6 py-3 rounded-xl bg-accent-base text-white font-semibold">
+              <div className="rounded-2xl border border-subtle bg-surface-raised p-8 text-center space-y-4">
+                <Camera size={48} className="text-foreground/15 mx-auto" />
+                <p className="text-sm text-foreground-tertiary">Point camera at product barcode</p>
+                <button onClick={startCamera} className="px-6 py-3 rounded-xl bg-accent-base text-foreground font-semibold">
                   Open Camera
                 </button>
-                <button onClick={() => setManualEntry(true)} className="block mx-auto text-xs text-white/30 hover:text-white/50">
+                <button onClick={() => setManualEntry(true)} className="block mx-auto text-xs text-foreground-muted hover:text-foreground-muted">
                   Enter manually instead
                 </button>
               </div>
@@ -216,24 +216,24 @@ export default function ScannerPage() {
         ) : (
           <motion.div key="result" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
             {scanLoading ? (
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 animate-pulse">
-                <div className="h-4 w-32 bg-white/10 rounded mb-3" />
-                <div className="h-6 w-48 bg-white/10 rounded mb-2" />
-                <div className="h-3 w-24 bg-white/10 rounded" />
+              <div className="rounded-2xl border border-subtle bg-surface-raised p-8 animate-pulse">
+                <div className="h-4 w-32 bg-surface-raised rounded mb-3" />
+                <div className="h-6 w-48 bg-surface-raised rounded mb-2" />
+                <div className="h-3 w-24 bg-surface-raised rounded" />
               </div>
             ) : product ? (
               <>
-                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+                <div className="rounded-2xl border border-subtle bg-surface-raised p-5">
                   <div className="flex items-start gap-4">
                     <div className="w-14 h-14 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0">
                       <Package size={24} className="text-amber-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-mono text-white/30 mb-0.5">{product.sku}</p>
-                      <h3 className="text-base font-semibold text-white truncate">{product.name}</h3>
-                      <p className="text-xs text-white/40 mt-0.5">{product.supplier.name}</p>
+                      <p className="text-[10px] font-mono text-foreground-muted mb-0.5">{product.sku}</p>
+                      <h3 className="text-base font-semibold text-foreground truncate">{product.name}</h3>
+                      <p className="text-xs text-foreground-tertiary mt-0.5">{product.supplier.name}</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs text-white/30">{product.category}</span>
+                        <span className="text-xs text-foreground-muted">{product.category}</span>
                         <span className="text-xs font-semibold text-amber-400">{product.unitPrice} EGP/{product.unitOfMeasure}</span>
                       </div>
                     </div>
@@ -242,48 +242,48 @@ export default function ScannerPage() {
 
                 {!scanAction ? (
                   <div className="space-y-2">
-                    <p className="text-xs text-white/40 text-center mb-3">Select action:</p>
+                    <p className="text-xs text-foreground-tertiary text-center mb-3">Select action:</p>
                     <button onClick={() => setScanAction("received")} className="w-full flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors">
                       <CheckCircle size={20} className="text-emerald-400" />
                       <div className="text-left">
                         <p className="text-sm font-semibold text-emerald-400">Log as Received</p>
-                        <p className="text-[11px] text-white/30">Item received in good condition</p>
+                        <p className="text-[11px] text-foreground-muted">Item received in good condition</p>
                       </div>
                     </button>
                     <button onClick={() => setScanAction("damaged")} className="w-full flex items-center gap-3 p-4 rounded-xl border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors">
                       <AlertTriangle size={20} className="text-red-400" />
                       <div className="text-left">
                         <p className="text-sm font-semibold text-red-400">Report Damaged</p>
-                        <p className="text-[11px] text-white/30">Item is damaged or defective</p>
+                        <p className="text-[11px] text-foreground-muted">Item is damaged or defective</p>
                       </div>
                     </button>
                     <button onClick={() => setScanAction("missing")} className="w-full flex items-center gap-3 p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
                       <XCircle size={20} className="text-amber-400" />
                       <div className="text-left">
                         <p className="text-sm font-semibold text-amber-400">Report Missing</p>
-                        <p className="text-[11px] text-white/30">Item not in delivery</p>
+                        <p className="text-[11px] text-foreground-muted">Item not in delivery</p>
                       </div>
                     </button>
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 text-center space-y-3">
-                    <p className="text-sm text-white/60">
+                  <div className="rounded-2xl border border-subtle bg-surface-raised p-5 text-center space-y-3">
+                    <p className="text-sm text-foreground-tertiary">
                       {scanAction === "received" && `Confirm "${product.name}" received?`}
                       {scanAction === "damaged" && `Report "${product.name}" as damaged?`}
                       {scanAction === "missing" && `Report "${product.name}" as missing?`}
                     </p>
                     <div className="flex gap-2">
-                      <button onClick={() => setScanAction(null)} className="flex-1 py-2.5 rounded-xl border border-white/[0.1] text-white/60 text-sm">
+                      <button onClick={() => setScanAction(null)} className="flex-1 py-2.5 rounded-xl border border-subtle[0.1] text-foreground-tertiary text-sm">
                         Cancel
                       </button>
-                      <button onClick={handleReset} className="flex-1 py-2.5 rounded-xl bg-accent-base text-white font-semibold text-sm">
+                      <button onClick={handleReset} className="flex-1 py-2.5 rounded-xl bg-accent-base text-foreground font-semibold text-sm">
                         Confirm
                       </button>
                     </div>
                   </div>
                 )}
 
-                <button onClick={handleReset} className="w-full py-3 rounded-xl border border-white/[0.08] text-white/40 text-sm hover:text-white/60 transition-colors">
+                <button onClick={handleReset} className="w-full py-3 rounded-xl border border-subtle text-foreground-tertiary text-sm hover:text-foreground-tertiary transition-colors">
                   Scan Next Item
                 </button>
               </>
@@ -291,7 +291,7 @@ export default function ScannerPage() {
               <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6 text-center space-y-3">
                 <XCircle size={32} className="text-red-400 mx-auto" />
                 <p className="text-sm text-red-400">Product not found for barcode: {lastScanned}</p>
-                <button onClick={handleReset} className="px-4 py-2 rounded-lg bg-white/[0.05] text-white/60 text-sm">
+                <button onClick={handleReset} className="px-4 py-2 rounded-lg bg-accent-muted text-foreground-tertiary text-sm">
                   Try Again
                 </button>
               </div>

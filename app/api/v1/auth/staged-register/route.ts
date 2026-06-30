@@ -256,6 +256,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     {
       userId: user.id,
       phone: data.phone,
+      password,
       ...(isDev ? { devCode: otpCode } : {}),
     },
     201

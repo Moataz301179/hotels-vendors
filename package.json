@@ -11,7 +11,11 @@
     "swarm": "tsx scripts/swarm-dev.ts",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "build:prod": "npx prisma generate && next build",
+    "start:prod": "node .next/standalone/server.js",
+    "docker:build": "docker compose -f docker-compose.prod.yml build",
+    "docker:up": "docker compose -f docker-compose.prod.yml up -d"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -28,6 +32,8 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@react-google-maps/api": "^2.20.8",
     "@sentry/nextjs": "^10.51.0",
+    "@serwist/next": "^9.5.11",
+    "@serwist/sw": "^9.5.11",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "@tailwindcss/postcss": "^4",

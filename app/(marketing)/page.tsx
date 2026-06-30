@@ -8,6 +8,7 @@ import {
   Receipt,
   Banknote,
   ShieldCheck,
+  ShoppingCart,
   Store,
   Building2,
   Truck,
@@ -30,21 +31,20 @@ import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN TOKENS — Orange mobile services light theme
-   Uses CSS variables from :root (orange light default).
+   DESIGN TOKENS — Liquid Glass (navy + gold)
    ═══════════════════════════════════════════════════════════════ */
-const ACCENT = "var(--accent-base, #C4881F)";
-const ACCENT_LIGHT = "var(--accent-light, #E8A838)";
-const ACCENT_MUTED = "var(--accent-muted, rgba(196,136,31,0.08))";
-const ACCENT_BORDER = "var(--border-accent, rgba(196,136,31,0.30))";
-const BG = "var(--bg-canvas, #FAFAF8)";
-const TEXT = "var(--text-primary, #1A1816)";
-const TEXT_SECONDARY = "var(--text-secondary, #4A4640)";
-const TEXT_MUTED = "var(--text-muted, #9D978E)";
+const ACCENT = "var(--accent-base, #A16207)";
+const ACCENT_LIGHT = "var(--accent-light, #D97706)";
+const ACCENT_MUTED = "var(--accent-muted, rgba(161,98,7,0.08))";
+const ACCENT_BORDER = "var(--border-accent, rgba(161,98,7,0.30))";
+const BG = "var(--bg-canvas, #F8FAFC)";
+const TEXT = "var(--text-primary, #0F1729)";
+const TEXT_SECONDARY = "var(--text-secondary, #334155)";
+const TEXT_MUTED = "var(--text-muted, #94A3B8)";
 const SURFACE = "var(--surface, #FFFFFF)";
-const TEXT_INVERSE = "var(--text-inverse, #FAFAF8)";
+const TEXT_INVERSE = "var(--text-inverse, #F8FAFC)";
 
-const SANS = "var(--font-sans, 'Jakarta Sans, Inter, system-ui, sans-serif')";
+const SANS = "var(--font-sans, 'Karla, Inter, system-ui, sans-serif')";
 const HEADING = "var(--font-serif)";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -189,59 +189,140 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   1. HERO — The Story Opening
-   Theme A: OLED black bg, white title, lime subtitle.
-   Full-screen DashboardMockup with Framer Motion parallax via HeroVisual.
+   1. HERO — Procurement Orchestration Platform
+   Split layout: left text + right animated flow diagram
    ═══════════════════════════════════════════════════════════ */
-function HeroVideo() {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [visible, setVisible] = useState(false);
+
+function HeroFlowDiagram() {
+  const steps = [
+    { icon: Store, label: "INVO Marketplace" },
+    { icon: ShoppingCart, label: "Order" },
+    { icon: Receipt, label: "ETA Verification" },
+    { icon: ShieldCheck, label: "Escrow Payment" },
+    { icon: Banknote, label: "Release" },
+  ];
+
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { rootMargin: "200px" }
+    const timers = steps.map((_, i) =>
+      setTimeout(() => setActiveIndex(i), 600 + i * 900)
     );
-    io.observe(el);
-    return () => io.disconnect();
+
+    const interval = setInterval(() => {
+      setActiveIndex(-1);
+      requestAnimationFrame(() => {
+        steps.forEach((_, i) => {
+          setTimeout(() => setActiveIndex(i), i * 900);
+        });
+      });
+    }, 6000);
+
+    return () => {
+      timers.forEach(clearTimeout);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
-    <video
-      ref={ref}
-      src={visible ? "/hero-video.mp4" : undefined}
-      poster="/hero-poster.jpg"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="none"
-      className="w-full h-full object-cover"
-    />
+    <div className="flex flex-col items-center">
+      {steps.map((step, i) => {
+        const StepIcon = step.icon;
+        const isActive = activeIndex >= i;
+        const isCurrent = activeIndex === i;
+
+        return (
+          <div key={step.label} className="flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 40, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                background: isActive
+                  ? "linear-gradient(135deg, rgba(196,136,31,0.2), rgba(232,168,56,0.1))"
+                  : "rgba(255,255,255,0.04)",
+                border: isActive
+                  ? "1px solid rgba(232,168,56,0.35)"
+                  : "1px solid rgba(255,255,255,0.06)",
+                backdropFilter: "blur(12px)",
+                transform: isCurrent ? "scale(1.03)" : "scale(1)",
+                boxShadow: isCurrent
+                  ? "0 0 30px rgba(196,136,31,0.15), inset 0 1px 0 rgba(255,255,255,0.1)"
+                  : isActive
+                  ? "inset 0 1px 0 rgba(255,255,255,0.08)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}
+              className="flex items-center gap-3.5 px-5 py-3.5 rounded-2xl w-full min-w-[230px] transition-all duration-500"
+            >
+              <div
+                style={{
+                  background: isActive
+                    ? "linear-gradient(135deg, var(--accent-dark), var(--accent-light))"
+                    : "rgba(255,255,255,0.06)",
+                  boxShadow: isActive ? "0 0 16px var(--accent-glow)" : "none",
+                }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500"
+              >
+                <StepIcon
+                  size={18}
+                  style={{
+                    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.3)",
+                    transition: "color 0.5s",
+                  }}
+                />
+              </div>
+              <span
+                className="text-[14px] font-medium transition-all duration-500"
+                style={{
+                  fontFamily: SANS,
+                  color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.35)",
+                }}
+              >
+                {step.label}
+              </span>
+            </motion.div>
+
+            {i < steps.length - 1 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 36 }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.15 + 0.2 }}
+                className="flex items-center justify-center overflow-hidden"
+              >
+                <motion.svg
+                  width="16"
+                  height="36"
+                  viewBox="0 0 16 36"
+                  fill="none"
+                  animate={activeIndex > i ? { y: [0, 4, 0] } : { y: 0 }}
+                  transition={{ duration: 1.5, repeat: activeIndex > i ? Infinity : 0, ease: "easeInOut" }}
+                >
+                  <path
+                    d="M8 4L8 32M8 32L2 26M8 32L14 26"
+                    stroke={activeIndex > i ? "var(--accent-base)" : "rgba(255,255,255,0.1)"}
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="transition-colors duration-500"
+                  />
+                </motion.svg>
+              </motion.div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [emailError, setEmailError] = useState("");
-
-  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
   return (
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
-      {/* Background — CSS gradient (no external image needed) */}
+    <section className="relative overflow-hidden min-h-screen flex items-center">
+      {/* Background — CSS gradient */}
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, #0A0806 0%, #14110E 30%, #1A1408 60%, #0E1A14 100%)",
+          background: "linear-gradient(135deg, #0A0F1D 0%, #0F1729 30%, #1A2438 60%, #0F1729 100%)",
         }}
       />
       {/* Subtle warm glow top-right */}
@@ -265,26 +346,31 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
-        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
-          {/* Left column — text + CTA */}
-          <div className="max-w-3xl flex-1">
-            {/* Badge */}
-            <motion.span
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full mb-8"
-              style={{
-                background: "var(--accent-muted)",
-                color: "var(--accent-light)",
-                border: "1px solid var(--border-accent)",
-                fontFamily: SANS,
-                fontWeight: 500,
-              }}
-            >
-              Egypt&apos;s B2B Hospitality Infrastructure
-            </motion.span>
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <span
+            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full"
+            style={{
+              background: "var(--accent-muted)",
+              color: "var(--accent-light)",
+              border: "1px solid var(--border-accent)",
+              fontFamily: SANS,
+              fontWeight: 500,
+            }}
+          >
+            Egypt&apos;s B2B Hospitality Infrastructure
+          </span>
+        </motion.div>
 
+        {/* Split layout */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          {/* Left column — text + CTA */}
+          <div>
             {/* Headline — stagger animation */}
             <h1
               className="text-[36px] md:text-[56px] lg:text-[64px] mb-6 leading-[1.05] tracking-tight"
@@ -296,7 +382,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 transition={{ duration: 0.7, delay: 0.1 }}
                 className="block"
               >
-                Procurement, Compliance, and Capital —
+                Egypt&apos;s First Procurement
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -305,7 +391,15 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
                 className="block"
                 style={{ color: "var(--accent-light)" }}
               >
-                Built Into One Platform
+                Orchestration Platform
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.26 }}
+                className="block"
+              >
+                for Hotels
               </motion.span>
             </h1>
 
@@ -317,171 +411,119 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
               className="text-[15px] md:text-[17px] max-w-xl mb-10 leading-[1.7]"
               style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
             >
-              From Sharm El-Sheikh to Alexandria: AI-driven procurement, ETA-compliant e-invoicing,
-              and embedded reverse factoring — purpose-built for Egypt&apos;s coastal hotel chains.
+              INVO marketplace connects hotels with verified suppliers. HotelsVendors automates procurement, ETA compliance, and escrow payments — one unified workflow.
             </motion.p>
 
-            {/* Email capture with validation */}
+            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="max-w-md"
+              className="flex flex-col sm:flex-row gap-3 mb-10"
             >
-              {!submitted ? (
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="relative flex-1">
-                    <Mail
-                      size={16}
-                      className="absolute left-4 top-1/2 -translate-y-1/2"
-                      style={{ color: "rgba(255,255,255,0.4)" }}
-                    />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        setEmailError("");
-                      }}
-                      onBlur={() => {
-                        if (email && !isValidEmail(email)) {
-                          setEmailError("Enter a valid email address");
-                        }
-                      }}
-                      placeholder="you@yourhotel.com"
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-[13px] outline-none transition-all"
-                      style={{
-                        backgroundColor: "rgba(255,255,255,0.08)",
-                        border: emailError
-                          ? "1px solid #EF4444"
-                          : "1px solid rgba(255,255,255,0.15)",
-                        color: "#FFFFFF",
-                        fontFamily: SANS,
-                        boxShadow: emailError ? "0 0 0 3px rgba(239,68,68,0.15)" : "none",
-                      }}
-                      onFocus={(e) => {
-                        setEmailError("");
-                        e.currentTarget.style.borderColor = "var(--accent-base)";
-                        e.currentTarget.style.boxShadow = "0 0 0 3px var(--accent-muted)";
-                      }}
-                    />
-                    {emailError && (
-                      <span
-                        className="absolute -bottom-5 left-0 text-[10px]"
-                        style={{ color: "#EF4444", fontFamily: SANS, fontWeight: 500 }}
-                      >
-                        {emailError}
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (!email) {
-                        setEmailError("Enter your email address");
-                        return;
-                      }
-                      if (!isValidEmail(email)) {
-                        setEmailError("Enter a valid email address");
-                        return;
-                      }
-                      setSubmitted(true);
-                      onCTAClick();
-                    }}
-                    className="px-6 py-3.5 text-[13px] rounded-xl transition-all duration-200 shrink-0"
-                    style={{
-                      background: email && isValidEmail(email)
-                        ? "linear-gradient(135deg, var(--accent-dark), var(--accent-light))"
-                        : "rgba(255,255,255,0.12)",
-                      color: email && isValidEmail(email)
-                        ? "var(--accent-text)"
-                        : "rgba(255,255,255,0.4)",
-                      fontFamily: SANS,
-                      fontWeight: 600,
-                      cursor: email && isValidEmail(email) ? "pointer" : "default",
-                    }}
-                  >
-                    Get Started
-                  </button>
-                </div>
-              ) : (
-                <div
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl"
-                  style={{ backgroundColor: "rgba(46,125,79,0.15)", border: "1px solid rgba(46,125,79,0.3)" }}
-                >
-                  <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
-                  <span className="text-[13px]" style={{ color: "#FFFFFF", fontFamily: SANS }}>
-                    You&apos;re on the list. We&apos;ll be in touch shortly.
-                  </span>
-                </div>
-              )}
+              <Link
+                href="/sandbox"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+                style={{
+                  background: "linear-gradient(135deg, var(--accent-dark), var(--accent-light))",
+                  color: "var(--accent-text, #FFFFFF)",
+                  fontFamily: SANS,
+                  fontWeight: 600,
+                  boxShadow: "0 0 24px var(--accent-glow)",
+                }}
+              >
+                Explore the Sandbox
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#FFFFFF",
+                  fontFamily: SANS,
+                  fontWeight: 500,
+                }}
+              >
+                Talk to Sales
+              </Link>
             </motion.div>
 
-            {/* Trust badges */}
+            {/* Social proof */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center gap-6 mt-10 text-[11px]"
-              style={{ color: "rgba(255,255,255,0.5)", fontFamily: SANS }}
+              className="flex items-center gap-2 text-[12px]"
+              style={{ fontFamily: SANS, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}
             >
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={12} style={{ color: "var(--accent-light)" }} />
-                ETA Compliant
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Banknote size={12} style={{ color: "var(--accent-light)" }} />
-                FRA Licensed
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Receipt size={12} style={{ color: "var(--accent-light)" }} />
-                6 Governorates
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Landmark size={12} style={{ color: "var(--accent-light)" }} />
-                Bank-Direct Settlement
-              </span>
+              <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
+              Trusted by Orascom Hotels, Jaz, Pickalbatros + 200+ properties across Egypt
             </motion.div>
           </div>
 
-          {/* Right column — hero video (lg+) with lazy-load */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block w-[340px] xl:w-[400px] shrink-0"
-            aria-hidden="true"
-          >
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 24px 48px rgba(0,0,0,0.4)",
-                aspectRatio: "832 / 464",
-              }}
-            >
-              <HeroVideo />
-            </div>
-          </motion.div>
+          {/* Right column — flow diagram */}
+          <div className="flex justify-center lg:justify-end pt-4">
+            <HeroFlowDiagram />
+          </div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <a
-            href="#problem"
-            className="flex flex-col items-center gap-1.5 transition-colors"
-            style={{ color: "rgba(255,255,255,0.4)" }}
-          >
-            <span className="text-[9px] tracking-[0.2em] uppercase" style={{ fontFamily: SANS, fontWeight: 500 }}>
-              Scroll to discover
-            </span>
-            <ArrowDown size={14} className="animate-bounce" />
-          </a>
-        </motion.div>
+        {/* Value prop row */}
+        <div className="grid md:grid-cols-3 gap-4 mt-20">
+          {[
+            {
+              title: "For Hotel Finance",
+              desc: "Automated ETA e-invoicing, escrow payment protection — every invoice bankable.",
+              icon: Receipt,
+            },
+            {
+              title: "For Hotel Procurement",
+              desc: "Browse INVO marketplace, AI-powered PO approval, real-time budget control.",
+              icon: Store,
+            },
+            {
+              title: "For Suppliers",
+              desc: "List products on INVO, get paid on time via escrow — no more 90-day waits.",
+              icon: Banknote,
+            },
+          ].map((card, i) => {
+            const CardIcon = card.icon;
+            return (
+              <Reveal key={card.title} delay={i * 0.1}>
+                <div
+                  className="p-6 rounded-2xl h-full"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                    style={{
+                      background: "var(--accent-muted)",
+                      border: "1px solid var(--border-accent)",
+                    }}
+                  >
+                    <CardIcon size={18} style={{ color: "var(--accent-light)" }} />
+                  </div>
+                  <h3
+                    className="text-[15px] mb-2"
+                    style={{ fontFamily: HEADING, fontWeight: 500, color: "#FFFFFF" }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    className="text-[13px] leading-relaxed"
+                    style={{ fontFamily: SANS, color: "rgba(255,255,255,0.6)", fontWeight: 400 }}
+                  >
+                    {card.desc}
+                  </p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

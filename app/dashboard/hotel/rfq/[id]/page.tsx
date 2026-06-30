@@ -283,7 +283,8 @@ export default function RfqDetailPage() {
           <Package size={16} style={{ color: ACCENT }} />
           Requested Items ({rfq.items.length})
         </div>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+        <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
               <th style={thStyle}>Product</th>
@@ -309,6 +310,7 @@ export default function RfqDetailPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Responses */}

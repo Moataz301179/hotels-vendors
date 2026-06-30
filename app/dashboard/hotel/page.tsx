@@ -53,7 +53,7 @@ function StatusBadge({ status }: { status: string }) {
     IN_TRANSIT: { bg: "bg-cyan-500/10", text: "text-cyan-400", dot: "bg-cyan-400", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-    DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+    DRAFT: { bg: "bg-surface-raised", text: "text-foreground-tertiary", dot: "bg-foreground-muted", label: "Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -152,8 +152,8 @@ export default function HotelDashboardPage() {
           <Link href="/dashboard/orders" className="text-sm text-accent-base hover:underline">View all</Link>
         </div>
         {loading ? (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
-            <Loader2 className="w-6 h-6 text-white/20 animate-spin mx-auto" />
+          <div className="rounded-xl border border-subtle bg-surface-raised p-8 text-center">
+            <Loader2 className="w-6 h-6 text-foreground-muted animate-spin mx-auto" />
           </div>
         ) : orders.length === 0 ? (
           <EmptyState
@@ -162,42 +162,42 @@ export default function HotelDashboardPage() {
             action={
               <Link
                 href="/dashboard/hotel/catalog"
-                className="px-4 py-2 rounded-lg bg-accent-base text-white text-xs font-medium hover:bg-accent-light transition-colors"
+                className="px-4 py-2 rounded-lg bg-accent-base text-foreground text-xs font-medium hover:bg-accent-light transition-colors"
               >
                 Browse Catalog
               </Link>
             }
           />
         ) : (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+          <div className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
             <table className="w-full min-w-[640px]">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-subtle">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Order</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Supplier</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
+                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.slice(0, 5).map((order) => (
-                  <tr key={order.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <tr key={order.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-white/60">{order.orderNumber}</span>
+                      <span className="text-xs font-mono text-foreground-tertiary">{order.orderNumber}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-white">{order.supplier?.name || "—"}</span>
+                      <span className="text-xs text-foreground">{order.supplier?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-semibold text-white">{order.currency || "EGP"} {(order.total || 0).toLocaleString()}</span>
+                      <span className="text-xs font-semibold text-foreground">{order.currency || "EGP"} {(order.total || 0).toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={order.status} />
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/30">{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "—"}</span>
+                      <span className="text-[11px] text-foreground-muted">{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "—"}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5 justify-end">
@@ -205,7 +205,7 @@ export default function HotelDashboardPage() {
                           <button
                             onClick={() => handleApprove(order.id)}
                             disabled={actionLoading === order.id}
-                            className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-white/20 hover:text-emerald-400 transition-colors disabled:opacity-50"
+                            className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-foreground-muted hover:text-emerald-400 transition-colors disabled:opacity-50"
                             title="Quick Approve"
                           >
                             {actionLoading === order.id ? <Loader2 size={14} className="animate-spin" /> : <ThumbsUp size={14} />}
@@ -213,7 +213,7 @@ export default function HotelDashboardPage() {
                         )}
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors"
                         >
                           <Eye size={14} />
                         </button>
@@ -238,24 +238,24 @@ export default function HotelDashboardPage() {
         {selectedOrder && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Total</p>
-                <p className="text-sm text-white mt-0.5">{selectedOrder.currency || "EGP"} {(selectedOrder.total || 0).toLocaleString()}</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Total</p>
+                <p className="text-sm text-foreground mt-0.5">{selectedOrder.currency || "EGP"} {(selectedOrder.total || 0).toLocaleString()}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5"><StatusBadge status={selectedOrder.status} /></div>
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-white/20 uppercase mb-2">Items</p>
+              <p className="text-[10px] text-foreground-muted uppercase mb-2">Items</p>
               <div className="space-y-1.5">
                 {selectedOrder.items?.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <span className="text-xs text-white/60">{item.product?.name}</span>
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-surface-raised border border-subtle">
+                    <span className="text-xs text-foreground-tertiary">{item.product?.name}</span>
                     <div className="text-right">
-                      <span className="text-xs text-white/40">× {item.quantity}</span>
-                      <span className="text-xs text-white ml-2">{selectedOrder.currency || "EGP"} {(item.total || 0).toLocaleString()}</span>
+                      <span className="text-xs text-foreground-tertiary">× {item.quantity}</span>
+                      <span className="text-xs text-foreground ml-2">{selectedOrder.currency || "EGP"} {(item.total || 0).toLocaleString()}</span>
                     </div>
                   </div>
                 ))}

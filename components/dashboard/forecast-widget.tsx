@@ -46,7 +46,7 @@ export function ForecastWidget({ hotelId, sku }: ForecastWidgetProps) {
       const res = await fetch(`/api/v1/ai/forecast${qs ? `?${qs}` : ""}`);
       if (!res.ok) throw new Error("Forecast unavailable");
       const json = await res.json();
-      setData(json);
+      setData(json.data);
     } catch {
       setError("AI forecast temporarily unavailable");
     } finally {

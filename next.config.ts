@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
+import withSerwistInit from "@serwist/next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
+  experimental: {
+    turbopack: {
+      root: __dirname,
+    },
+  },
 
   // Enable React DevTools and source-map-backed editing in Chrome DevTools
   // Allows "Save for Overrides" to persist changes from browser to local filesystem
@@ -81,4 +88,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+})(nextConfig);

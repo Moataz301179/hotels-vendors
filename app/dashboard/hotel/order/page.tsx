@@ -176,7 +176,7 @@ export default function OrderBuilderPage() {
           </button>
           <button
             onClick={() => { setSubmitted(false); router.push("/dashboard/hotel/catalog"); }}
-            className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium transition-colors"
+            className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-foreground font-medium transition-colors"
           >
             Continue Shopping
           </button>
@@ -191,7 +191,7 @@ export default function OrderBuilderPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => router.push("/dashboard/hotel/catalog")}
-          className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-raised transition-colors"
         >
           <ArrowLeft size={20} className="text-foreground-muted" />
         </button>
@@ -208,7 +208,7 @@ export default function OrderBuilderPage() {
           <p className="text-foreground-muted">Browse the catalog to add products to your order.</p>
           <button
             onClick={() => router.push("/dashboard/hotel/catalog")}
-            className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium transition-colors"
+            className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-foreground font-medium transition-colors"
           >
             Browse Catalog
           </button>
@@ -404,7 +404,7 @@ export default function OrderBuilderPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white font-medium transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-foreground font-medium transition-colors"
             >
               {submitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
               {submitting ? "Submitting..." : `Submit ${supplierGroups.length} Order${supplierGroups.length > 1 ? "s" : ""} for Approval`}

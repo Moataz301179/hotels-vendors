@@ -6,15 +6,17 @@ import {
   TrendingUp,
   BarChart3,
   Package,
-  Hotel,
+  Clock,
   ArrowUpRight,
   ArrowDownRight,
   Calendar,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingPage } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
-import { Sparkline } from "@/components/dashboards/shared/sparkline";
+import { StatusPill } from "@/components/dashboards/shared/status-pill";
 import { MetricTile } from "@/components/dashboards/shared/metric-tile";
 
 const fadeInUp = {
@@ -27,58 +29,51 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-interface TopProduct {
-  name: string;
-  sku?: string;
-  sold: number;
-  revenue: number;
-}
-
-interface OrdersByStatus {
+interface RecentOrder {
+  id: string;
+  orderNumber: string;
+  total: number;
   status: string;
-  count: number;
-  color?: string;
+  createdAt: string;
 }
 
-interface CustomerHotel {
-  name: string;
-  orders: number;
+interface MonthlyDatum {
+  month: string;
   revenue: number;
+  orders: number;
 }
 
 interface AnalyticsData {
-  salesTrend: number[];
-  topProducts: TopProduct[];
-  ordersByStatus: OrdersByStatus[];
-  revenue: {
-    current: number;
-    previous: number;
-    currency?: string;
-  };
-  customerHotels: CustomerHotel[];
+  totalOrders: number;
+  totalRevenue: number;
+  activeListings: number;
+  pendingOrders: number;
+  etaComplianceRate: number;
+  recentActivity: RecentOrder[];
+  monthlyData: MonthlyDatum[];
 }
 
 function formatCurrency(amount: number, currency = "EGP") {
   return `${currency} ${amount.toLocaleString("en-EG")}`;
 }
 
-function SimpleBarChart({ data }: { data: OrdersByStatus[] }) {
-  const max = Math.max(...data.map((d) => d.count), 1);
+function SimpleBarChart({ data }: { data: { label: string; value: number }[] }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
   return (
     <div className="space-y-3">
       {data.map((item) => (
-        <div key={item.status} className="flex items-center gap-3">
-          <span className="text-[11px] text-white/40 w-20 truncate">{item.status}</span>
-          <div className="flex-1 h-5 bg-white/[0.02] rounded-md overflow-hidden">
+        <div key={item.label} className="flex items-center gap-3">
+          <span className="text-[11px] text-foreground-tertiary w-20 truncate">{item.label}</span>
+          <div className="flex-1 h-5 bg-surface-raised rounded-md overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${(item.count / max) * 100}%` }}
+              animate={{ width: `${(item.value / max) * 100}%` }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="h-full rounded-md"
-              style={{ backgroundColor: item.color || "rgba(255,255,255,0.15)" }}
+              style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
             />
           </div>
-          <span className="text-[11px] font-medium text-white w-6 text-right">{item.count}</span>
+          <span className="text-[11px] font-medium text-foreground w-6 text-right">{item.value}</span>
         </div>
       ))}
     </div>
@@ -94,8 +89,8 @@ function RevenueComparison({ current, previous, currency }: { current: number; p
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider">This Month</p>
-          <p className="text-2xl font-bold text-white mt-1">{formatCurrency(current, currency)}</p>
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider">This Month</p>
+          <p className="text-2xl font-bold text-foreground mt-1">{formatCurrency(current, currency)}</p>
         </div>
         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium ${isUp ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
           {isUp ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
@@ -104,11 +99,11 @@ function RevenueComparison({ current, previous, currency }: { current: number; p
       </div>
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider">Last Month</p>
-          <p className="text-lg font-semibold text-white/60 mt-1">{formatCurrency(previous, currency)}</p>
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Last Month</p>
+          <p className="text-lg font-semibold text-foreground-tertiary mt-1">{formatCurrency(previous, currency)}</p>
         </div>
       </div>
-      <div className="h-2 bg-white/[0.02] rounded-full overflow-hidden">
+      <div className="h-2 bg-surface-raised rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${Math.min((current / Math.max(previous, 1)) * 50, 100)}%` }}
@@ -120,25 +115,34 @@ function RevenueComparison({ current, previous, currency }: { current: number; p
   );
 }
 
+function OrderNumber({ orderNumber }: { orderNumber: string }) {
+  return <span className="text-xs font-mono text-foreground-tertiary">{orderNumber}</span>;
+}
+
 export default function SupplierAnalyticsPage() {
-  const { data, loading, error } = useApi<AnalyticsData>("/api/analytics");
+  const { data, loading, error } = useApi<AnalyticsData>("/api/v1/supplier/analytics");
 
   const analytics = data;
 
+  const months = analytics?.monthlyData ?? [];
+  const currentMonthRevenue = months[months.length - 1]?.revenue ?? 0;
+  const prevMonthRevenue = months[months.length - 2]?.revenue ?? 0;
+
+  const revenueCurrency = "EGP";
+
   const stats = useMemo(() => {
     if (!analytics) return [];
-    const totalSales = analytics.salesTrend.reduce((a, b) => a + b, 0);
-    const totalOrders = analytics.ordersByStatus.reduce((a, b) => a + b.count, 0);
-    const topProduct = analytics.topProducts[0];
-    const activeHotels = analytics.customerHotels.length;
-
     return [
-      { label: "Total Sales", value: formatCurrency(totalSales, analytics.revenue?.currency), icon: TrendingUp },
-      { label: "Total Orders", value: totalOrders.toString(), icon: BarChart3 },
-      { label: "Top Product", value: topProduct?.name ?? "—", icon: Package },
-      { label: "Active Hotels", value: activeHotels.toString(), icon: Hotel },
+      { label: "Total Revenue", value: formatCurrency(analytics.totalRevenue, revenueCurrency), icon: TrendingUp },
+      { label: "Total Orders", value: analytics.totalOrders.toString(), icon: BarChart3 },
+      { label: "Active Listings", value: analytics.activeListings.toString(), icon: Package },
+      { label: "Pending Orders", value: analytics.pendingOrders.toString(), icon: Clock },
     ];
-  }, [analytics]);
+  }, [analytics, revenueCurrency]);
+
+  const monthlyOrderCounts = useMemo(() => {
+    return months.map((m) => ({ label: m.month.slice(5), value: m.orders }));
+  }, [months]);
 
   if (loading) {
     return (
@@ -173,8 +177,8 @@ export default function SupplierAnalyticsPage() {
     >
       {/* Header */}
       <motion.div variants={fadeInUp}>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Analytics</h1>
-        <p className="text-sm text-white/40 mt-0.5">Performance insights and sales trends</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Analytics</h1>
+        <p className="text-sm text-foreground-tertiary mt-0.5">Performance insights and sales trends</p>
       </motion.div>
 
       {/* Stats */}
@@ -193,34 +197,35 @@ export default function SupplierAnalyticsPage() {
       {/* Top Row */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Sales Trend */}
-        <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="lg:col-span-2 rounded-xl border border-subtle bg-surface-raised p-5">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <TrendingUp size={14} className="text-white/40" />
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <TrendingUp size={14} className="text-foreground-tertiary" />
               Sales Trend
             </h3>
-            <span className="text-[10px] text-white/20 flex items-center gap-1">
+            <span className="text-[10px] text-foreground-muted flex items-center gap-1">
               <Calendar size={10} />
-              Last 30 days
+              Last 6 months
             </span>
           </div>
-          {analytics.salesTrend.length > 0 ? (
+          {months.length > 0 ? (
             <div className="flex items-end gap-1 h-40">
-              {analytics.salesTrend.map((value, i) => {
-                const max = Math.max(...analytics.salesTrend, 1);
-                const height = (value / max) * 100;
+              {months.map((m, i) => {
+                const max = Math.max(...months.map((x) => x.revenue), 1);
+                const height = (m.revenue / max) * 100;
                 return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div key={m.month} className="flex-1 flex flex-col items-center gap-1">
                     <motion.div
                       initial={{ height: 0 }}
                       animate={{ height: `${height}%` }}
                       transition={{ duration: 0.5, delay: i * 0.02 }}
-                      className="w-full bg-white/[0.06] hover:bg-white/[0.12] rounded-t-sm transition-colors relative group"
+                      className="w-full bg-surface-raised hover:bg-white/[0.12] rounded-t-sm transition-colors relative group"
                     >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/[0.08] border border-white/[0.08] px-1.5 py-0.5 rounded text-[9px] text-white whitespace-nowrap">
-                        {formatCurrency(value, analytics.revenue?.currency)}
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-raised border border-subtle px-1.5 py-0.5 rounded text-[9px] text-foreground whitespace-nowrap">
+                        {formatCurrency(m.revenue, revenueCurrency)}
                       </div>
                     </motion.div>
+                    <span className="text-[9px] text-foreground-muted">{m.month.slice(5)}</span>
                   </div>
                 );
               })}
@@ -230,97 +235,90 @@ export default function SupplierAnalyticsPage() {
           )}
         </div>
 
-        {/* Revenue Comparison */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 size={14} className="text-white/40" />
+        {/* Revenue */}
+        <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <BarChart3 size={14} className="text-foreground-tertiary" />
             Revenue
           </h3>
           <RevenueComparison
-            current={analytics.revenue.current}
-            previous={analytics.revenue.previous}
-            currency={analytics.revenue.currency}
+            current={currentMonthRevenue}
+            previous={prevMonthRevenue}
+            currency={revenueCurrency}
           />
         </div>
       </motion.div>
 
       {/* Bottom Row */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Orders by Status */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 size={14} className="text-white/40" />
-            Orders by Status
+        {/* Recent Activity */}
+        <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Clock size={14} className="text-foreground-tertiary" />
+            Recent Activity
           </h3>
-          {analytics.ordersByStatus.length > 0 ? (
-            <SimpleBarChart data={analytics.ordersByStatus} />
-          ) : (
-            <EmptyState title="No order data" description="Order status data will appear here." />
-          )}
-        </div>
-
-        {/* Top Products */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Package size={14} className="text-white/40" />
-            Top Selling Products
-          </h3>
-          {analytics.topProducts.length > 0 ? (
-            <div className="space-y-3">
-              {analytics.topProducts.map((product, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+          {analytics.recentActivity.length > 0 ? (
+            <div className="space-y-2">
+              {analytics.recentActivity.map((order) => (
+                <div key={order.id} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-raised border border-subtle">
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono text-white/20 w-4">{i + 1}</span>
-                    <div>
-                      <p className="text-xs text-white">{product.name}</p>
-                      {product.sku && <p className="text-[10px] text-white/25">{product.sku}</p>}
-                    </div>
+                    <OrderNumber orderNumber={order.orderNumber} />
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-semibold text-white">{formatCurrency(product.revenue, analytics.revenue?.currency)}</p>
-                    <p className="text-[10px] text-white/25">{product.sold} sold</p>
+                  <div className="flex items-center gap-3">
+                    <StatusPill status={order.status} />
+                    <span className="text-xs font-semibold text-foreground">{formatCurrency(Number(order.total), revenueCurrency)}</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <EmptyState title="No product data" description="Top products will appear here once sales begin." icon="package" />
+            <EmptyState title="No activity yet" description="Recent orders will appear here." />
           )}
         </div>
 
-        {/* Customer Hotels */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Hotel size={14} className="text-white/40" />
-            Top Customer Hotels
+        {/* Orders per Month */}
+        <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <BarChart3 size={14} className="text-foreground-tertiary" />
+            Orders per Month
           </h3>
-          {analytics.customerHotels.length > 0 ? (
-            <div className="space-y-3">
-              {analytics.customerHotels.map((hotel, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono text-white/20 w-4">{i + 1}</span>
-                    <div>
-                      <p className="text-xs text-white">{hotel.name}</p>
-                      <p className="text-[10px] text-white/25">{hotel.orders} orders</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <Sparkline
-                      data={[hotel.revenue * 0.3, hotel.revenue * 0.5, hotel.revenue * 0.4, hotel.revenue * 0.7, hotel.revenue]}
-                      width={60}
-                      height={24}
-                      color="rgba(255,255,255,0.3)"
-                      fillColor="rgba(255,255,255,0.04)"
-                    />
-                    <p className="text-[10px] text-white/30 mt-1">{formatCurrency(hotel.revenue, analytics.revenue?.currency)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {monthlyOrderCounts.length > 0 && monthlyOrderCounts.some((d) => d.value > 0) ? (
+            <SimpleBarChart data={monthlyOrderCounts} />
           ) : (
-            <EmptyState title="No customers yet" description="Hotel customers will appear here." />
+            <EmptyState title="No order data" description="Monthly order data will appear here." />
           )}
+        </div>
+
+        {/* ETA Compliance */}
+        <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <CheckCircle2 size={14} className="text-foreground-tertiary" />
+            ETA Compliance
+          </h3>
+          <div className="flex flex-col items-center justify-center py-6">
+            <div className="relative w-24 h-24 mb-4">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+                <circle
+                  cx="18" cy="18" r="16" fill="none"
+                  stroke={analytics.etaComplianceRate >= 80 ? "#22c55e" : analytics.etaComplianceRate >= 50 ? "#eab308" : "#ef4444"}
+                  strokeWidth="3"
+                  strokeDasharray={`${(analytics.etaComplianceRate / 100) * 100.53} 100.53`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-foreground">{analytics.etaComplianceRate}%</span>
+              </div>
+            </div>
+            <p className="text-xs text-foreground-tertiary text-center">
+              {analytics.etaComplianceRate >= 80
+                ? "Excellent compliance rate"
+                : analytics.etaComplianceRate >= 50
+                  ? "Moderate compliance — improvement needed"
+                  : "Low compliance — review ETA submissions"}
+            </p>
+          </div>
         </div>
       </motion.div>
     </motion.div>

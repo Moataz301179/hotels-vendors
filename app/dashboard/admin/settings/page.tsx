@@ -23,11 +23,11 @@ export default function AdminSettingsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors">
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-subtle10 text-foreground/70 hover:bg-surface-raised hover:text-foreground transition-colors">
             <RotateCcw size={12} />
             Reset
           </button>
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/5 text-white/80 hover:bg-white/10 transition-colors">
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-foreground/80 hover:bg-surface-raised transition-colors">
             <Save size={12} />
             Save Changes
           </button>
@@ -39,41 +39,41 @@ export default function AdminSettingsPage() {
         {/* General */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-              <Globe size={16} className="text-white/40" />
+            <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+              <Globe size={16} className="text-foreground-tertiary" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">General</h2>
-              <p className="text-[10px] text-white/25">Platform name, timezone, and defaults</p>
+              <h2 className="text-sm font-semibold text-foreground">General</h2>
+              <p className="text-[10px] text-foreground-muted">Platform name, timezone, and defaults</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Platform Name</label>
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Platform Name</label>
               <input
                 type="text"
                 defaultValue="Hotels Vendors"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Default Currency</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Default Currency</label>
+              <select className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none focus:border-accent-base/50 transition-colors">
                 <option value="EGP">EGP — Egyptian Pound</option>
                 <option value="USD">USD — US Dollar</option>
                 <option value="EUR">EUR — Euro</option>
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Timezone</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Timezone</label>
+              <select className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none focus:border-accent-base/50 transition-colors">
                 <option value="Africa/Cairo">Africa/Cairo (UTC+2)</option>
                 <option value="UTC">UTC</option>
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Default Language</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Default Language</label>
+              <select className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none focus:border-accent-base/50 transition-colors">
                 <option value="en">English</option>
                 <option value="ar">العربية (Arabic)</option>
               </select>
@@ -84,12 +84,12 @@ export default function AdminSettingsPage() {
         {/* Notifications */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-              <Bell size={16} className="text-white/40" />
+            <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+              <Bell size={16} className="text-foreground-tertiary" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Notifications</h2>
-              <p className="text-[10px] text-white/25">Alert channels and thresholds</p>
+              <h2 className="text-sm font-semibold text-foreground">Notifications</h2>
+              <p className="text-[10px] text-foreground-muted">Alert channels and thresholds</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -102,11 +102,11 @@ export default function AdminSettingsPage() {
             ].map((item) => (
               <div key={item.label} className="flex items-center justify-between py-2">
                 <div>
-                  <p className="text-sm text-white">{item.label}</p>
-                  <p className="text-[10px] text-white/25">{item.desc}</p>
+                  <p className="text-sm text-foreground">{item.label}</p>
+                  <p className="text-[10px] text-foreground-muted">{item.desc}</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-[#34d399]/20" : "bg-white/[0.06]"}`}>
-                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-[#34d399]" : "left-0.5 bg-white/30"}`} />
+                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-[#34d399]/20" : "bg-surface-raised"}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-[#34d399]" : "left-0.5 bg-foreground-muted"}`} />
                 </div>
               </div>
             ))}
@@ -116,12 +116,12 @@ export default function AdminSettingsPage() {
         {/* Compliance */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-              <Shield size={16} className="text-white/40" />
+            <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+              <Shield size={16} className="text-foreground-tertiary" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Compliance & Security</h2>
-              <p className="text-[10px] text-white/25">ETA, Authority Matrix, and data policies</p>
+              <h2 className="text-sm font-semibold text-foreground">Compliance & Security</h2>
+              <p className="text-[10px] text-foreground-muted">ETA, Authority Matrix, and data policies</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -139,12 +139,12 @@ export default function AdminSettingsPage() {
                     <CheckCircle2 size={14} className="text-[#34d399]" />
                   )}
                   <div>
-                    <p className="text-sm text-white">{item.label}</p>
-                    <p className="text-[10px] text-white/25">{item.desc}</p>
+                    <p className="text-sm text-foreground">{item.label}</p>
+                    <p className="text-[10px] text-foreground-muted">{item.desc}</p>
                   </div>
                 </div>
-                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-[#34d399]/20" : "bg-white/[0.06]"}`}>
-                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-[#34d399]" : "left-0.5 bg-white/30"}`} />
+                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-[#34d399]/20" : "bg-surface-raised"}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-[#34d399]" : "left-0.5 bg-foreground-muted"}`} />
                 </div>
               </div>
             ))}
@@ -154,29 +154,29 @@ export default function AdminSettingsPage() {
         {/* Appearance */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-              <Palette size={16} className="text-white/40" />
+            <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+              <Palette size={16} className="text-foreground-tertiary" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Appearance</h2>
-              <p className="text-[10px] text-white/25">Theme and branding</p>
+              <h2 className="text-sm font-semibold text-foreground">Appearance</h2>
+              <p className="text-[10px] text-foreground-muted">Theme and branding</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Brand Color</label>
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Brand Color</label>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg border border-white/[0.08]" style={{ background: "var(--accent-base)" }} />
+                <div className="w-8 h-8 rounded-lg border border-subtle" style={{ background: "var(--accent-base)" }} />
                 <input
                   type="text"
                   defaultValue="#FF6B00"
-                  className="flex-1 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white font-mono focus:outline-none focus:border-accent-base/50 transition-colors"
+                  className="flex-1 px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground font-mono focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Dashboard Theme</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
+              <label className="block text-[11px] text-foreground-tertiary mb-1.5">Dashboard Theme</label>
+              <select className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none focus:border-accent-base/50 transition-colors">
                 <option value="dark">Dark (Default)</option>
                 <option value="light">Light</option>
                 <option value="system">System</option>
@@ -188,22 +188,22 @@ export default function AdminSettingsPage() {
         {/* Database */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-              <Database size={16} className="text-white/40" />
+            <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+              <Database size={16} className="text-foreground-tertiary" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Database & Backups</h2>
-              <p className="text-[10px] text-white/25">Maintenance and data export</p>
+              <h2 className="text-sm font-semibold text-foreground">Database & Backups</h2>
+              <p className="text-[10px] text-foreground-muted">Maintenance and data export</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors">
+            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-subtle10 text-foreground/70 hover:bg-surface-raised hover:text-foreground transition-colors">
               Export Tenant Data
             </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors">
+            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-subtle10 text-foreground/70 hover:bg-surface-raised hover:text-foreground transition-colors">
               Export Audit Log
             </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors">
+            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-subtle10 text-foreground/70 hover:bg-surface-raised hover:text-foreground transition-colors">
               Run Prune Job
             </button>
             <button className="px-4 py-2 rounded-lg text-xs font-medium border border-[#ef4444]/20 text-[#ef4444]/70 hover:bg-[#ef4444]/[0.03] transition-colors">

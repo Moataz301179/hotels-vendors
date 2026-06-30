@@ -66,7 +66,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
     where.status = status;
   }
 
-  const [rfgs, total] = await Promise.all([
+  const [rfqs, total] = await Promise.all([
     prisma.rfqRequest.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -81,7 +81,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   ]);
 
   return success({
-    rfgs,
+    rfqs,
     pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
   });
 });

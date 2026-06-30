@@ -46,7 +46,7 @@ function InvoiceStatusBadge({ paymentStatus, dueDate }: { paymentStatus: string;
     PAID: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Paid" },
     UNPAID: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
     PARTIAL: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Partial" },
-    REFUNDED: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Refunded" },
+    REFUNDED: { bg: "bg-surface-raised", text: "text-foreground-tertiary", dot: "bg-foreground-muted", label: "Refunded" },
   };
 
   if (isOverdue) {
@@ -75,9 +75,9 @@ export default function HotelInvoicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<StatusTab>("ALL");
 
-  const { data: invoicesData, loading, error } = useApi<Invoice[]>("/api/invoices?page=1&limit=50&sortOrder=desc");
+  const { data: invoicesData, loading, error } = useApi<{ invoices: Invoice[]; pagination: unknown }>("/api/v1/invoices?page=1&limit=50&sortOrder=desc");
 
-  const invoices = invoicesData ?? [];
+  const invoices = invoicesData?.invoices ?? [];
 
   const filtered = useMemo(() => {
     let list = [...invoices];
@@ -125,8 +125,8 @@ export default function HotelInvoicesPage() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Invoice Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Track and manage all invoices across your properties</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Invoice Management</h1>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Track and manage all invoices across your properties</p>
         </div>
       </motion.div>
 
@@ -139,8 +139,8 @@ export default function HotelInvoicesPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-accent-base text-white"
-                  : "text-white/40 hover:text-white/70 hover:bg-white/[0.03]"
+                  ? "bg-accent-base text-foreground"
+                  : "text-foreground-tertiary hover:text-foreground/70 hover:bg-surface-raised"
               }`}
             >
               {tab.label}
@@ -148,13 +148,13 @@ export default function HotelInvoicesPage() {
           ))}
         </div>
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search invoice number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-64"
+            className="pl-9 pr-4 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 w-64"
           />
         </div>
       </motion.div>
@@ -170,55 +170,55 @@ export default function HotelInvoicesPage() {
           description={searchQuery || activeTab !== "ALL" ? "Try adjusting your filters." : "Invoices will appear here once created."}
         />
       ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[800px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice #</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Issue Date</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Due Date</th>
-                <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+              <tr className="border-b border-subtle">
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Invoice #</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Supplier</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Issue Date</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Due Date</th>
+                <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((invoice) => (
-                <tr key={invoice.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={invoice.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <FileText size={14} className="text-white/20" />
-                      <span className="text-xs font-mono text-white/60">{invoice.invoiceNumber}</span>
+                      <FileText size={14} className="text-foreground-muted" />
+                      <span className="text-xs font-mono text-foreground-tertiary">{invoice.invoiceNumber}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white">{invoice.hotel?.name || "—"}</span>
+                    <span className="text-xs text-foreground">{invoice.hotel?.name || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{invoice.supplier?.name || "—"}</span>
+                    <span className="text-xs text-foreground-tertiary">{invoice.supplier?.name || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-semibold text-white">{formatCurrency(invoice.total, invoice.currency)}</span>
+                    <span className="text-xs font-semibold text-foreground">{formatCurrency(invoice.total, invoice.currency)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <InvoiceStatusBadge paymentStatus={invoice.paymentStatus} dueDate={invoice.dueDate} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{new Date(invoice.issueDate).toLocaleDateString()}</span>
+                    <span className="text-[11px] text-foreground-muted">{new Date(invoice.issueDate).toLocaleDateString()}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">
+                    <span className="text-[11px] text-foreground-muted">
                       {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : "—"}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors">
                         <Eye size={14} />
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors">
                         <Download size={14} />
                       </button>
                     </div>

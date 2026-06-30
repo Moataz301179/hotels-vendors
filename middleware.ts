@@ -5,6 +5,11 @@
  * - Every request to protected routes is verified at the edge
  * - Tenant ID is injected into headers ( NEVER trust client-sent headers )
  * - Role-based route access enforced before reaching any page or API
+ *
+ * Next.js 16 deprecation: Middleware should be migrated to the proxy pattern
+ * (edge function + _next/proxy rewrites). The matcher config format may also
+ * need updating. This warning is non-blocking — middleware continues to work.
+ * Track: https://nextjs.org/docs/app/building-your-application/routing/middleware#proxy
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -48,6 +53,7 @@ const PUBLIC_PATHS = [
   "/api/v1/supplier/onboard",
   "/api/v1/cms/content",
   "/api/v1/ai/public",
+  "/api/v1/products",
   "/api/health",
 ];
 
@@ -75,12 +81,12 @@ const ROLE_ROUTES: Record<string, string[]> = {
 };
 
 const ROLE_DEFAULT_PATH: Record<string, string> = {
-  ADMIN: "/admin",
-  HOTEL: "/hotel",
-  SUPPLIER: "/supplier",
-  FACTORING: "/factoring",
-  SHIPPING: "/shipping",
-  MARKETING: "/marketing",
+  ADMIN: "/dashboard/admin",
+  HOTEL: "/dashboard/hotel",
+  SUPPLIER: "/dashboard/supplier",
+  FACTORING: "/dashboard/factoring",
+  SHIPPING: "/dashboard/shipping",
+  MARKETING: "/dashboard/marketing",
 };
 
 /* ── Helpers ── */
@@ -261,7 +267,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect /dashboard (non-existent) to role-specific dashboard
   if (pathname === "/dashboard") {
-    const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
+    const target = ROLE_DEFAULT_PATH[platformRole] || "/dashboard/hotel";
     return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
   }
 
@@ -280,7 +286,7 @@ export async function middleware(request: NextRequest) {
 
     if (!hasAccess) {
       // Redirect to their default dashboard
-      const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
+      const target = ROLE_DEFAULT_PATH[platformRole] || "/dashboard/hotel";
       return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
     }
   }

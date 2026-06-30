@@ -7,6 +7,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { executeLLM } from "@/lib/ai/llm";
 import { HotelScoreEngine } from "@/lib/fintech/scoring/hotel-score-engine";
+import { apiRoute, authenticate, requirePermission, success } from "@/lib/api-utils";
 
 const FINANCIAL_ANALYST_PROMPT = `You are the Hotels Vendors Credit Underwriting AI — an institutional-grade financial analyst specialized in Egyptian hospitality sector credit risk.
 
@@ -41,12 +42,10 @@ OUTPUT FORMAT — JSON:
   "mitigationSuggestions": ["..."]
 }`;
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
+export const POST = apiRoute(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:inquire");
+  const { id } = await params;
     
     const app = await prisma.creditLineApplication.findUnique({
       where: { id },
@@ -207,29 +206,23 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
       },
     });
 
-    return Response.json({
-      success: true,
-      data: {
-        id: updated.id,
-        status: updated.status,
-        creditScore: updated.creditScore,
-        grade: finalGrade,
-        recommendedLimit: updated.recommendedLimit,
-        riskLevel: aiResult.riskLevel || engineScore.riskLevel,
-        approvalProbability: aiResult.approvalProbability || engineScore.approvalProbability,
-        maxTenorDays: aiResult.maxTenorDays || engineScore.maxTenorDays,
-        factoringFee: aiResult.factoringFee || engineScore.factoringFee,
-        analysis: aiResult.report,
-        riskFlags: aiResult.riskFlags,
-        keyRisks: aiResult.keyRisks,
-        mitigationSuggestions: aiResult.mitigationSuggestions,
-      },
+    return success({
+      id: updated.id,
+      status: updated.status,
+      creditScore: updated.creditScore,
+      grade: finalGrade,
+      recommendedLimit: updated.recommendedLimit,
+      riskLevel: aiResult.riskLevel || engineScore.riskLevel,
+      approvalProbability: aiResult.approvalProbability || engineScore.approvalProbability,
+      maxTenorDays: aiResult.maxTenorDays || engineScore.maxTenorDays,
+      factoringFee: aiResult.factoringFee || engineScore.factoringFee,
+      analysis: aiResult.report,
+      riskFlags: aiResult.riskFlags,
+      keyRisks: aiResult.keyRisks,
+      mitigationSuggestions: aiResult.mitigationSuggestions,
     });
-  } catch (error) {
-    console.error("Credit analysis error:", error);
-    return Response.json(
-      { success: false, error: error instanceof Error ? error.message : "Analysis failed" },
-      { status: 500 }
-    );
+  } catch (err) {
+    console.error("Credit analysis error:", err);
+    throw err;
   }
-}
+});

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { InvoiceCreateSchema, PaginationSchema } from "@/lib/zod";
+import { evaluateInvoiceForFraud } from "@/lib/fraud/detector";
 import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
@@ -87,7 +88,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
     userAgent: request.headers.get("user-agent"),
   });
 
+  const fraudResult = await evaluateInvoiceForFraud(invoice.id, auth.tenantId, auth.userId, request.headers.get("x-forwarded-for") || undefined);
+  if (fraudResult.triggered) {
+    const blocked = fraudResult.alerts.some((a) => a.autoAction === "BLOCK_TRANSACTION" || a.autoAction === "SUSPEND_ENTITY");
+    if (blocked) {
+      await prisma.invoice.update({ where: { id: invoice.id }, data: { status: "DISPUTED" } });
+      return error("Invoice blocked by fraud detection", 409);
+    }
+  }
+
   completeIdempotency(idempotencyKey, invoice.id);
 
-  return success({ invoice }, 201);
+  return success({ invoice, fraudAlerts: fraudResult.alerts }, 201);
 });

@@ -120,10 +120,10 @@ export default function PaymentsPage() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Payments & Transactions</h1>
-          <p className="text-sm text-white/40 mt-0.5">Monitor payment flows, factoring settlements, and transaction history</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Payments & Transactions</h1>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Monitor payment flows, factoring settlements, and transaction history</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-raised hover:bg-surface-raised border border-subtle text-xs text-foreground/80 transition-all">
           <Download size={14} />
           Export Report
         </button>
@@ -136,15 +136,15 @@ export default function PaymentsPage() {
             <motion.div
               key={s.label}
               variants={fadeInUp}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+              className="rounded-xl border border-subtle bg-surface-raised p-4 hover:bg-surface-raised transition-colors"
             >
               <div className="flex items-start justify-between mb-3">
-                <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                  <s.icon size={15} className="text-white/40" />
+                <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+                  <s.icon size={15} className="text-foreground-tertiary" />
                 </div>
               </div>
-              <p className="text-xl font-bold text-white">{s.value}</p>
+              <p className="text-xl font-bold text-foreground">{s.value}</p>
               <div className="flex items-center gap-1 mt-1">
                 {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
                 <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
@@ -155,13 +155,13 @@ export default function PaymentsPage() {
       )}
 
       {/* Volume Chart Placeholder */}
-      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+      <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-            <TrendingUp size={14} className="text-white/40" />
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <TrendingUp size={14} className="text-foreground-tertiary" />
             Payment Volume
           </h3>
-          <span className="text-[10px] text-white/20">Last 30 days</span>
+          <span className="text-[10px] text-foreground-muted">Last 30 days</span>
         </div>
         <div className="flex items-end gap-2 h-32">
           {[45, 62, 38, 55, 78, 42, 68, 85, 50, 72, 90, 65].map((h, i) => (
@@ -175,7 +175,7 @@ export default function PaymentsPage() {
         </div>
         <div className="flex items-center justify-between mt-2 px-1">
           {["May 1", "May 5", "May 10", "May 15", "May 20", "May 25", "May 30"].map((d, i) => (
-            <span key={i} className="text-[9px] text-white/15">{d}</span>
+            <span key={i} className="text-[9px] text-foreground/15">{d}</span>
           ))}
         </div>
       </motion.div>
@@ -184,19 +184,19 @@ export default function PaymentsPage() {
       <motion.div variants={fadeInUp} className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-md">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
             <input
               type="text"
               placeholder="Search transactions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
+            className="px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground-tertiary focus:outline-none"
           >
             <option value="all" className="bg-[var(--background)]">All Status</option>
             <option value="COMPLETED" className="bg-[var(--background)]">Completed</option>
@@ -205,32 +205,32 @@ export default function PaymentsPage() {
           </select>
         </div>
 
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <div className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Ref</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Type</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Method</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
+              <tr className="border-b border-subtle">
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Ref</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Type</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Method</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody>
               {filteredTxns.map((t) => (
-                <tr key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={t.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                   <td className="px-4 py-3">
-                    <span className="text-xs font-mono text-white/60">{t.gatewayRef}</span>
+                    <span className="text-xs font-mono text-foreground-tertiary">{t.gatewayRef}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/80">{t.transactionType || "—"}</span>
+                    <span className="text-xs text-foreground/80">{t.transactionType || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-semibold text-white">{formatAmount(t.amount, t.currency)}</span>
+                    <span className="text-xs font-semibold text-foreground">{formatAmount(t.amount, t.currency)}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.observedMethod || ""] || "bg-white/10 text-white/40"}`}>
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.observedMethod || ""] || "bg-surface-raised text-foreground-tertiary"}`}>
                       {t.observedMethod || "—"}
                     </span>
                   </td>
@@ -238,7 +238,7 @@ export default function PaymentsPage() {
                     <StatusBadge status={t.status} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{formatDate(t.createdAt)}</span>
+                    <span className="text-[11px] text-foreground-muted">{formatDate(t.createdAt)}</span>
                   </td>
                 </tr>
               ))}

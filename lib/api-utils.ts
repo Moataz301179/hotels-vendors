@@ -32,6 +32,9 @@ export interface AuthContext {
 }
 
 export async function authenticate(request: NextRequest): Promise<AuthContext> {
+  const ip = request.headers.get("x-forwarded-for") || "unknown";
+  const path = request.nextUrl?.pathname || request.headers.get("x-forwarded-path") || "/unknown";
+
   // Primary: read from session cookie
   let token = await getSessionToken();
 
@@ -42,11 +45,13 @@ export async function authenticate(request: NextRequest): Promise<AuthContext> {
   }
 
   if (!token) {
+    logAuthFailure(ip, path, "No session token provided");
     throw new ApiError("Unauthorized", 401);
   }
 
   const session = await verifySession(token);
   if (!session) {
+    logAuthFailure(ip, path, "Invalid or expired session token");
     throw new ApiError("Invalid or expired session", 401);
   }
 

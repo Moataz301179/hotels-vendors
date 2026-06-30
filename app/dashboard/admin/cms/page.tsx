@@ -46,7 +46,7 @@ function JsonEditor({
     <Textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="font-mono text-xs min-h-[500px] bg-black/40 border-white/10 text-white/90"
+      className="font-mono text-xs min-h-[500px] bg-black/40 border-subtle10 text-foreground/90"
       spellCheck={false}
     />
   );
@@ -114,7 +114,7 @@ function FormEditor({
           value={data.title || ""}
           onChange={(e) => update("title", e.target.value)}
           placeholder="Page title"
-          className="bg-black/40 border-white/10"
+          className="bg-black/40 border-subtle10"
         />
       </div>
 
@@ -124,7 +124,7 @@ function FormEditor({
           value={data.subtitle || ""}
           onChange={(e) => update("subtitle", e.target.value)}
           placeholder="Subtitle"
-          className="bg-black/40 border-white/10"
+          className="bg-black/40 border-subtle10"
         />
       </div>
 
@@ -134,7 +134,7 @@ function FormEditor({
           value={data.heroTitle || ""}
           onChange={(e) => update("heroTitle", e.target.value)}
           placeholder="Hero title"
-          className="bg-black/40 border-white/10"
+          className="bg-black/40 border-subtle10"
         />
       </div>
 
@@ -144,7 +144,7 @@ function FormEditor({
           value={data.heroDescription || ""}
           onChange={(e) => update("heroDescription", e.target.value)}
           placeholder="Hero description"
-          className="bg-black/40 border-white/10 min-h-[80px]"
+          className="bg-black/40 border-subtle10 min-h-[80px]"
         />
       </div>
 
@@ -154,7 +154,7 @@ function FormEditor({
           value={data.description || ""}
           onChange={(e) => update("description", e.target.value)}
           placeholder="Page description"
-          className="bg-black/40 border-white/10 min-h-[80px]"
+          className="bg-black/40 border-subtle10 min-h-[80px]"
         />
       </div>
 
@@ -166,7 +166,7 @@ function FormEditor({
             variant="outline"
             size="sm"
             onClick={addFeature}
-            className="border-white/10 text-white/70 hover:bg-white/5"
+            className="border-subtle10 text-foreground/70 hover:bg-surface-raised"
           >
             + Add Feature
           </Button>
@@ -174,10 +174,10 @@ function FormEditor({
         {(data.features || []).map((f, i) => (
           <div
             key={i}
-            className="space-y-2 p-3 rounded-lg border border-white/10 bg-white/[0.02]"
+            className="space-y-2 p-3 rounded-lg border border-subtle10 bg-surface-raised"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs text-white/40">Feature {i + 1}</span>
+              <span className="text-xs text-foreground-tertiary">Feature {i + 1}</span>
               <Button
                 type="button"
                 variant="ghost"
@@ -192,7 +192,7 @@ function FormEditor({
               value={f.title}
               onChange={(e) => updateFeature(i, "title", e.target.value)}
               placeholder="Feature title"
-              className="bg-black/40 border-white/10"
+              className="bg-black/40 border-subtle10"
             />
             <Textarea
               value={f.description}
@@ -200,7 +200,7 @@ function FormEditor({
                 updateFeature(i, "description", e.target.value)
               }
               placeholder="Feature description"
-              className="bg-black/40 border-white/10 min-h-[60px]"
+              className="bg-black/40 border-subtle10 min-h-[60px]"
             />
           </div>
         ))}
@@ -214,7 +214,7 @@ function FormEditor({
             variant="outline"
             size="sm"
             onClick={addFaq}
-            className="border-white/10 text-white/70 hover:bg-white/5"
+            className="border-subtle10 text-foreground/70 hover:bg-surface-raised"
           >
             + Add FAQ
           </Button>
@@ -222,10 +222,10 @@ function FormEditor({
         {(data.faqs || []).map((f, i) => (
           <div
             key={i}
-            className="space-y-2 p-3 rounded-lg border border-white/10 bg-white/[0.02]"
+            className="space-y-2 p-3 rounded-lg border border-subtle10 bg-surface-raised"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs text-white/40">FAQ {i + 1}</span>
+              <span className="text-xs text-foreground-tertiary">FAQ {i + 1}</span>
               <Button
                 type="button"
                 variant="ghost"
@@ -240,13 +240,13 @@ function FormEditor({
               value={f.question}
               onChange={(e) => updateFaq(i, "question", e.target.value)}
               placeholder="Question"
-              className="bg-black/40 border-white/10"
+              className="bg-black/40 border-subtle10"
             />
             <Textarea
               value={f.answer}
               onChange={(e) => updateFaq(i, "answer", e.target.value)}
               placeholder="Answer"
-              className="bg-black/40 border-white/10 min-h-[60px]"
+              className="bg-black/40 border-subtle10 min-h-[60px]"
             />
           </div>
         ))}
@@ -258,7 +258,7 @@ function FormEditor({
           value={data.ctaTitle || ""}
           onChange={(e) => update("ctaTitle", e.target.value)}
           placeholder="CTA title"
-          className="bg-black/40 border-white/10"
+          className="bg-black/40 border-subtle10"
         />
       </div>
 
@@ -268,7 +268,7 @@ function FormEditor({
           value={data.ctaDescription || ""}
           onChange={(e) => update("ctaDescription", e.target.value)}
           placeholder="CTA description"
-          className="bg-black/40 border-white/10 min-h-[60px]"
+          className="bg-black/40 border-subtle10 min-h-[60px]"
         />
       </div>
 
@@ -278,7 +278,7 @@ function FormEditor({
           value={data.metaTitle || ""}
           onChange={(e) => update("metaTitle", e.target.value)}
           placeholder="SEO meta title"
-          className="bg-black/40 border-white/10"
+          className="bg-black/40 border-subtle10"
         />
       </div>
 
@@ -288,7 +288,7 @@ function FormEditor({
           value={data.metaDescription || ""}
           onChange={(e) => update("metaDescription", e.target.value)}
           placeholder="SEO meta description"
-          className="bg-black/40 border-white/10 min-h-[60px]"
+          className="bg-black/40 border-subtle10 min-h-[60px]"
         />
       </div>
     </div>
@@ -373,7 +373,7 @@ export default function CmsAdminPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-subtle20 border-t-white/60 rounded-full animate-spin" />
       </div>
     );
   }
@@ -391,8 +391,8 @@ export default function CmsAdminPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Content Editor</h1>
-          <p className="text-sm text-white/50 mt-1">
+          <h1 className="text-2xl font-semibold text-foreground">Content Editor</h1>
+          <p className="text-sm text-foreground-muted mt-1">
             Edit marketing page content without code changes
           </p>
         </div>
@@ -412,7 +412,7 @@ export default function CmsAdminPage() {
           <Button
             onClick={handleSave}
             disabled={saving || !!jsonError}
-            className="bg-white text-black hover:bg-white/90"
+            className="bg-surface text-foreground hover:bg-white/90"
           >
             <Save className="w-4 h-4 mr-2" />
             {saving ? "Saving..." : "Save Changes"}
@@ -421,27 +421,27 @@ export default function CmsAdminPage() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Globe className="w-4 h-4 text-white/40" />
+        <Globe className="w-4 h-4 text-foreground-tertiary" />
         <select
           value={selectedPage}
           onChange={(e) => setSelectedPage(e.target.value)}
-          className="w-[200px] h-9 px-3 rounded-md bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:ring-1 focus:ring-white/20"
+          className="w-[200px] h-9 px-3 rounded-md bg-black/40 border border-subtle10 text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-white/20"
         >
           {PAGE_KEYS.map((key) => (
-            <option key={key} value={key} className="bg-[var(--background)] text-white">
+            <option key={key} value={key} className="bg-[var(--background)] text-foreground">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </option>
           ))}
         </select>
 
-        <div className="flex bg-white/5 rounded-lg p-0.5">
+        <div className="flex bg-surface-raised rounded-lg p-0.5">
           <button
             onClick={() => setEditMode("form")}
             className={cn(
               "px-3 py-1.5 text-xs rounded-md transition-colors",
               editMode === "form"
-                ? "bg-white/10 text-white"
-                : "text-white/50 hover:text-white/80"
+                ? "bg-surface-raised text-foreground"
+                : "text-foreground-muted hover:text-foreground/80"
             )}
           >
             Form
@@ -451,8 +451,8 @@ export default function CmsAdminPage() {
             className={cn(
               "px-3 py-1.5 text-xs rounded-md transition-colors",
               editMode === "json"
-                ? "bg-white/10 text-white"
-                : "text-white/50 hover:text-white/80"
+                ? "bg-surface-raised text-foreground"
+                : "text-foreground-muted hover:text-foreground/80"
             )}
           >
             JSON
@@ -460,7 +460,7 @@ export default function CmsAdminPage() {
         </div>
       </div>
 
-      <Card className="bg-white/[0.03] border-white/10">
+      <Card className="bg-surface-raised border-subtle10">
         <CardContent className="p-6">
           {editMode === "json" ? (
             <JsonEditor value={jsonText} onChange={handleJsonChange} />

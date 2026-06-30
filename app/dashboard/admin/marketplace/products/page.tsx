@@ -31,15 +31,15 @@ export default function AdminProductsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-subtle">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-accent-base/15 flex items-center justify-center">
               <Package className="w-4 h-4 text-accent-base" />
             </div>
             <div>
-              <h1 className="text-[22px] font-bold tracking-tight text-white">Product Catalog</h1>
-              <p className="text-[13px] text-white/40">Manage SKUs, categories, and supplier inventory</p>
+              <h1 className="text-[22px] font-bold tracking-tight text-foreground">Product Catalog</h1>
+              <p className="text-[13px] text-foreground-tertiary">Manage SKUs, categories, and supplier inventory</p>
             </div>
           </div>
         </div>
@@ -48,42 +48,42 @@ export default function AdminProductsPage() {
       <div className="px-6 py-6 space-y-5">
         {error && <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">{error}</div>}
 
-        <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
+        <div className="rounded-xl bg-[#0f0f0f] border border-subtle overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Product</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">SKU</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Category</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Price</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Stock</th>
+                <tr className="border-b border-subtle">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Product</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">SKU</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Category</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Supplier</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Price</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Stock</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.04]">
-                {loading && <tr><td colSpan={6} className="px-5 py-12 text-center text-white/30">Loading products...</td></tr>}
-                {!loading && products.length === 0 && <tr><td colSpan={6} className="px-5 py-12 text-center text-white/30">No products found</td></tr>}
+                {loading && <tr><td colSpan={6} className="px-5 py-12 text-center text-foreground-muted">Loading products...</td></tr>}
+                {!loading && products.length === 0 && <tr><td colSpan={6} className="px-5 py-12 text-center text-foreground-muted">No products found</td></tr>}
                 {products.map((p, i) => (
-                  <motion.tr key={p.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-white/[0.02] transition-colors">
+                  <motion.tr key={p.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-surface-raised transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
                           <Package className="w-4 h-4 text-purple-400" />
                         </div>
-                        <p className="text-[13px] font-medium text-white">{p.name}</p>
+                        <p className="text-[13px] font-medium text-foreground">{p.name}</p>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/40 font-mono">{p.sku || "—"}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-foreground-tertiary font-mono">{p.sku || "—"}</td>
                     <td className="px-5 py-3.5">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/[0.04] text-[10px] text-white/50">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-raised text-[10px] text-foreground-muted">
                         <Tag className="w-3 h-3" /> {p.category || "Uncategorized"}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/60 flex items-center gap-1">
+                    <td className="px-5 py-3.5 text-[12px] text-foreground-tertiary flex items-center gap-1">
                       <Store className="w-3 h-3" /> {p.supplierName || "—"}
                     </td>
-                    <td className="px-5 py-3.5 text-[13px] font-medium text-white">EGP {p.price?.toFixed(2) || "0.00"}</td>
+                    <td className="px-5 py-3.5 text-[13px] font-medium text-foreground">EGP {p.price?.toFixed(2) || "0.00"}</td>
                     <td className="px-5 py-3.5">
                       <span className={`text-[12px] font-medium ${p.stockQuantity > 10 ? "text-emerald-400" : p.stockQuantity > 0 ? "text-amber-400" : "text-red-400"}`}>
                         {p.stockQuantity} {p.unitOfMeasure}
@@ -95,11 +95,11 @@ export default function AdminProductsPage() {
             </table>
           </div>
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-[11px] text-white/30">Page {page} of {pagination.totalPages}</span>
+            <div className="px-5 py-3 border-t border-subtle flex items-center justify-between">
+              <span className="text-[11px] text-foreground-muted">Page {page} of {pagination.totalPages}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
-                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-foreground-tertiary hover:text-foreground disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-foreground-tertiary hover:text-foreground disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
               </div>
             </div>
           )}

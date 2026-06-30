@@ -24,6 +24,11 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "24", 10));
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
     const supplierId = searchParams.get("supplierId") || undefined;
+    const supplierTier = searchParams.get("supplierTier") || undefined;
+    const minPrice = searchParams.get("minPrice") ? parseFloat(searchParams.get("minPrice")!) : undefined;
+    const maxPrice = searchParams.get("maxPrice") ? parseFloat(searchParams.get("maxPrice")!) : undefined;
+    const sort = searchParams.get("sort") || "newest";
+    const featured = searchParams.get("featured");
 
     const where: Record<string, unknown> = {};
 
@@ -50,10 +55,34 @@ export async function GET(request: NextRequest) {
       where.supplierId = supplierId;
     }
 
+    // Filter by supplier tier
+    if (supplierTier) {
+      where.supplier = { tier: supplierTier };
+    }
+
+    // Price range filter
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.unitPrice = {};
+      if (minPrice !== undefined) where.unitPrice.gte = minPrice;
+      if (maxPrice !== undefined) where.unitPrice.lte = maxPrice;
+    }
+
+    // Featured filter
+    if (featured === "true") {
+      where.featured = true;
+      where.featuredUntil = { gte: new Date() };
+    }
+
+    // Sort order
+    let orderBy: Record<string, unknown> = { createdAt: "desc" };
+    if (sort === "price_asc") orderBy = { unitPrice: "asc" };
+    else if (sort === "price_desc") orderBy = { unitPrice: "desc" };
+    else if (sort === "name_asc") orderBy = { name: "asc" };
+
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
-        orderBy: { createdAt: "desc" },
+        orderBy,
         take: limit,
         skip: (page - 1) * limit,
         include: {

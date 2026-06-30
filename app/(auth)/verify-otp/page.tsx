@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Phone, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Phone, Loader2, RefreshCw, ShieldCheck, Key, Copy, Check } from "lucide-react";
 
 function VerifyOtpContent() {
   const searchParams = useSearchParams();
@@ -12,6 +12,7 @@ function VerifyOtpContent() {
   const userId = searchParams.get("userId") || "";
   const phone = searchParams.get("phone") || "";
   const devCode = searchParams.get("devCode") || "";
+  const regPassword = searchParams.get("password") || "";
 
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,8 @@ function VerifyOtpContent() {
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(60);
   const [expiryCountdown, setExpiryCountdown] = useState(600); // 10 min
+  const [showPassword, setShowPassword] = useState(false);
+  const [copied, setCopied] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Auto-fill dev code in development
@@ -106,7 +109,12 @@ function VerifyOtpContent() {
         return;
       }
 
-      // Success — redirect to dashboard
+      // Success — show password if auto-generated, then redirect
+      if (regPassword) {
+        setShowPassword(true);
+        setLoading(false);
+        return;
+      }
       router.push("/dashboard");
     } catch {
       setError("Network error. Please try again.");
@@ -181,6 +189,92 @@ function VerifyOtpContent() {
 
   const isExpired = expiryCountdown <= 0;
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(regPassword);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
+
+  if (showPassword) {
+    return (
+      <div
+        className="min-h-screen flex flex-col"
+        style={{
+          backgroundColor: "var(--bg-canvas)",
+          color: "var(--text-primary)",
+          fontFamily: "var(--font-sans)",
+        }}
+      >
+        <div className="flex-1 px-6 py-12 flex items-center justify-center">
+          <div className="mx-auto max-w-sm w-full">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl p-8 text-center"
+            >
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ backgroundColor: "rgba(34,197,94,0.1)" }}
+              >
+                <ShieldCheck size={28} style={{ color: "#22C55E" }} />
+              </div>
+              <h2 className="text-lg font-semibold mb-1">Account Created</h2>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                Your account has been verified successfully.
+              </p>
+
+              <div
+                className="mt-6 p-4 rounded-xl text-left"
+                style={{ backgroundColor: "rgba(232,168,56,0.08)", border: "1px solid rgba(232,168,56,0.15)" }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Key size={14} style={{ color: "var(--accent-base)" }} />
+                  <span className="text-xs font-medium" style={{ color: "var(--accent-base)" }}>
+                    Auto-generated password
+                  </span>
+                </div>
+                <div
+                  className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg mt-1 font-mono text-sm"
+                  style={{ backgroundColor: "var(--bg-surface-2)", border: "1px solid var(--border-visible)" }}
+                >
+                  <span style={{ color: "var(--text-primary)", wordBreak: "break-all" }}>{regPassword}</span>
+                  <button
+                    onClick={handleCopy}
+                    className="shrink-0 p-1.5 rounded-md transition-colors"
+                    style={{ color: copied ? "#22C55E" : "var(--text-secondary)" }}
+                    title="Copy password"
+                  >
+                    {copied ? <Check size={16} /> : <Copy size={16} />}
+                  </button>
+                </div>
+                <p className="text-xs mt-2" style={{ color: "var(--text-secondary)" }}>
+                  Save this password — you will need it to sign in.
+                </p>
+              </div>
+
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="w-full mt-6 py-3 rounded-xl text-[14px] font-semibold transition-all cursor-pointer"
+                style={{
+                  backgroundColor: "var(--accent-base)",
+                  color: "#FFFFFF",
+                  border: "none",
+                }}
+              >
+                Got it — Go to Dashboard
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -201,7 +295,7 @@ function VerifyOtpContent() {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: "rgba(34,197,94,0.1)" }}
+              style={{ backgroundColor: "rgba(34,197,59,0.1)" }}
             >
               <Phone size={28} style={{ color: "#22C55E" }} />
             </div>

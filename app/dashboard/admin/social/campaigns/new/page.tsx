@@ -134,19 +134,19 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-white">
+    <main className="min-h-screen bg-[var(--background)] text-foreground">
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <Link
             href="/admin/social"
-            className="p-2 rounded-lg text-white/30 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="p-2 rounded-lg text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <h1 className="text-[24px] font-bold tracking-tight">New Campaign</h1>
-            <p className="text-white/40 text-[13px]">Create a social media campaign with AI-generated content</p>
+            <p className="text-foreground-tertiary text-[13px]">Create a social media campaign with AI-generated content</p>
           </div>
         </div>
 
@@ -156,7 +156,7 @@ export default function NewCampaignPage() {
             <div
               key={s}
               className={`flex-1 h-1 rounded-full transition-colors ${
-                s <= step ? "bg-accent-base" : "bg-white/[0.06]"
+                s <= step ? "bg-accent-base" : "bg-surface-raised"
               }`}
             />
           ))}
@@ -166,29 +166,29 @@ export default function NewCampaignPage() {
         {step === 1 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Campaign Name</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Campaign Name</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="e.g., Beta Launch Awareness"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Description</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Description</label>
               <textarea
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 placeholder="What is this campaign about?"
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors resize-none"
               />
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Objective</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Objective</label>
               <div className="grid grid-cols-2 gap-2">
                 {OBJECTIVES.map((obj) => (
                   <button
@@ -197,11 +197,11 @@ export default function NewCampaignPage() {
                     className={`p-3 rounded-lg border text-left transition-colors ${
                       form.objective === obj.value
                         ? "bg-accent-base/10 border-accent-base/40"
-                        : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                        : "bg-surface-raised border-subtle hover:border-subtle[0.12]"
                     }`}
                   >
-                    <div className="text-[13px] font-medium text-white">{obj.label}</div>
-                    <div className="text-[11px] text-white/40 mt-0.5">{obj.desc}</div>
+                    <div className="text-[13px] font-medium text-foreground">{obj.label}</div>
+                    <div className="text-[11px] text-foreground-tertiary mt-0.5">{obj.desc}</div>
                   </button>
                 ))}
               </div>
@@ -209,33 +209,33 @@ export default function NewCampaignPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[12px] font-medium text-white/60 mb-2">Start Date</label>
+                <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Start Date</label>
                 <input
                   type="date"
                   value={form.startDate}
                   onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-[12px] font-medium text-white/60 mb-2">End Date (optional)</label>
+                <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">End Date (optional)</label>
                 <input
                   type="date"
                   value={form.endDate}
                   onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Budget (EGP, optional)</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Budget (EGP, optional)</label>
               <input
                 type="number"
                 value={form.budgetEgp}
                 onChange={(e) => setForm((f) => ({ ...f, budgetEgp: e.target.value }))}
                 placeholder="5000"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
@@ -255,7 +255,7 @@ export default function NewCampaignPage() {
         {step === 2 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Target Platforms</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Target Platforms</label>
               <div className="grid grid-cols-2 gap-2">
                 {PLATFORMS.map((p) => (
                   <button
@@ -264,21 +264,21 @@ export default function NewCampaignPage() {
                     className={`p-3 rounded-lg border text-left transition-colors flex items-center gap-3 ${
                       form.platforms.includes(p.value)
                         ? "bg-accent-base/10 border-accent-base/40"
-                        : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                        : "bg-surface-raised border-subtle hover:border-subtle[0.12]"
                     }`}
                   >
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: p.color }}
                     />
-                    <span className="text-[13px] font-medium text-white">{p.label}</span>
+                    <span className="text-[13px] font-medium text-foreground">{p.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Target Audience</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Target Audience</label>
               <div className="flex gap-2">
                 {ROLES.map((r) => (
                   <button
@@ -287,7 +287,7 @@ export default function NewCampaignPage() {
                     className={`px-4 py-2.5 rounded-lg border text-[13px] font-medium transition-colors ${
                       form.targetRoles.includes(r.value)
                         ? "bg-accent-base/10 border-accent-base/40 text-accent-base"
-                        : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
+                        : "bg-surface-raised border-subtle text-foreground-tertiary hover:text-foreground-tertiary"
                     }`}
                   >
                     {r.label}
@@ -299,7 +299,7 @@ export default function NewCampaignPage() {
             <div className="pt-4 flex justify-between">
               <button
                 onClick={() => setStep(1)}
-                className="px-6 py-2.5 text-[13px] font-medium text-white/50 hover:text-white border border-white/[0.08] rounded-lg transition-colors"
+                className="px-6 py-2.5 text-[13px] font-medium text-foreground-muted hover:text-foreground border border-subtle rounded-lg transition-colors"
               >
                 Back
               </button>
@@ -318,7 +318,7 @@ export default function NewCampaignPage() {
         {step === 3 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Content Tone</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Content Tone</label>
               <div className="flex gap-2">
                 {TONES.map((t) => (
                   <button
@@ -327,7 +327,7 @@ export default function NewCampaignPage() {
                     className={`px-4 py-2.5 rounded-lg border text-[13px] font-medium transition-colors ${
                       form.tone === t.value
                         ? "bg-accent-base/10 border-accent-base/40 text-accent-base"
-                        : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
+                        : "bg-surface-raised border-subtle text-foreground-tertiary hover:text-foreground-tertiary"
                     }`}
                   >
                     {t.label}
@@ -337,7 +337,7 @@ export default function NewCampaignPage() {
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Content Themes</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Content Themes</label>
               <input
                 type="text"
                 value={form.themes.join(", ")}
@@ -348,28 +348,28 @@ export default function NewCampaignPage() {
                   }))
                 }
                 placeholder="Beta launch, Supplier spotlight, Industry insights"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-white/60 mb-2">Hashtags</label>
+              <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Hashtags</label>
               <input
                 type="text"
                 value={form.hashtags}
                 onChange={(e) => setForm((f) => ({ ...f, hashtags: e.target.value }))}
                 placeholder="#HotelsVendors #EgyptHospitality"
-                className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[12px] font-medium text-white/60 mb-2">Posting Frequency</label>
+                <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Posting Frequency</label>
                 <select
                   value={form.postingFrequency}
                   onChange={(e) => setForm((f) => ({ ...f, postingFrequency: e.target.value as any }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors appearance-none"
+                  className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors appearance-none"
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f.value} value={f.value} className="bg-[var(--background)]">
@@ -379,14 +379,14 @@ export default function NewCampaignPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[12px] font-medium text-white/60 mb-2">Posts to Generate</label>
+                <label className="block text-[12px] font-medium text-foreground-tertiary mb-2">Posts to Generate</label>
                 <input
                   type="number"
                   min={1}
                   max={50}
                   value={form.postCount}
                   onChange={(e) => setForm((f) => ({ ...f, postCount: parseInt(e.target.value) || 1 }))}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-surface-raised border border-subtle text-foreground text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors"
                 />
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function NewCampaignPage() {
             <div className="pt-4 flex justify-between">
               <button
                 onClick={() => setStep(2)}
-                className="px-6 py-2.5 text-[13px] font-medium text-white/50 hover:text-white border border-white/[0.08] rounded-lg transition-colors"
+                className="px-6 py-2.5 text-[13px] font-medium text-foreground-muted hover:text-foreground border border-subtle rounded-lg transition-colors"
               >
                 Back
               </button>

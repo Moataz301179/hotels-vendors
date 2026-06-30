@@ -9,11 +9,13 @@ import { AlertTriangle, CheckCircle2, Loader2, MailCheck, ArrowRight } from "luc
 function VerifyEmailForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const emailParam = searchParams.get("email") || "";
 
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("Verifying your email...");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState("");
+  const [emailInput, setEmailInput] = useState(emailParam);
 
   useEffect(() => {
     if (!token) {
@@ -50,7 +52,7 @@ function VerifyEmailForm() {
       const res = await fetch("/api/v1/auth/resend-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "" }), // User needs to enter email
+        body: JSON.stringify({ email: emailInput }),
       });
       const data = await res.json();
       setResendMsg(data.data?.message || "Verification email sent if account exists.");
@@ -131,9 +133,23 @@ function VerifyEmailForm() {
                   <p className="text-white/40 text-sm mt-1">{message}</p>
                 </div>
                 <div className="space-y-3">
+                  {!emailInput && (
+                    <input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      placeholder="Enter your email address"
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
+                      style={{
+                        backgroundColor: "var(--bg-surface-2)",
+                        border: "1px solid var(--border-visible)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  )}
                   <button
                     onClick={handleResend}
-                    disabled={resending}
+                    disabled={resending || !emailInput}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/[0.08] text-white text-sm font-medium hover:bg-white/[0.04] transition-colors disabled:opacity-50"
                   >
                     <MailCheck className="w-4 h-4" />

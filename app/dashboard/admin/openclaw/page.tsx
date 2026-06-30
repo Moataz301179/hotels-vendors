@@ -119,7 +119,7 @@ export default async function OpenClawHubPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/admin/swarm"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-subtle10 text-foreground/70 hover:bg-surface-raised hover:text-foreground transition-colors"
           >
             <Bot size={12} />
             Swarm Center
@@ -147,8 +147,8 @@ export default async function OpenClawHubPage() {
                 <Zap size={16} className={data.health.gateway ? "text-[#34d399]" : "text-[#ef4444]"} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Gateway</p>
-                <p className="text-[10px] text-white/25">UI & Chat Interface</p>
+                <p className="text-sm font-semibold text-foreground">Gateway</p>
+                <p className="text-[10px] text-foreground-muted">UI & Chat Interface</p>
               </div>
             </div>
             {data.health.gateway ? (
@@ -159,11 +159,11 @@ export default async function OpenClawHubPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-white/30">URL</span>
-              <span className="text-white/40 font-mono truncate max-w-[180px]">{data.health.gatewayUrl}</span>
+              <span className="text-foreground-muted">URL</span>
+              <span className="text-foreground-tertiary font-mono truncate max-w-[180px]">{data.health.gatewayUrl}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-white/30">Status</span>
+              <span className="text-foreground-muted">Status</span>
               <span className={data.health.gateway ? "text-[#34d399]" : "text-[#ef4444]"}>
                 {data.health.gateway ? "Operational" : "Unreachable"}
               </span>
@@ -179,8 +179,8 @@ export default async function OpenClawHubPage() {
                 <Terminal size={16} className={data.health.automation ? "text-[#34d399]" : "text-[#ef4444]"} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Automation</p>
-                <p className="text-[10px] text-white/25">Browser & API Engine</p>
+                <p className="text-sm font-semibold text-foreground">Automation</p>
+                <p className="text-[10px] text-foreground-muted">Browser & API Engine</p>
               </div>
             </div>
             {data.health.automation ? (
@@ -191,11 +191,11 @@ export default async function OpenClawHubPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-white/30">URL</span>
-              <span className="text-white/40 font-mono truncate max-w-[180px]">{data.health.automationUrl}</span>
+              <span className="text-foreground-muted">URL</span>
+              <span className="text-foreground-tertiary font-mono truncate max-w-[180px]">{data.health.automationUrl}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-white/30">Status</span>
+              <span className="text-foreground-muted">Status</span>
               <span className={data.health.automation ? "text-[#34d399]" : "text-[#ef4444]"}>
                 {data.health.automation ? "Operational" : "Unreachable"}
               </span>
@@ -211,23 +211,23 @@ export default async function OpenClawHubPage() {
                 <Camera size={16} className="text-accent-base" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Visual Tests</p>
-                <p className="text-[10px] text-white/25">Today</p>
+                <p className="text-sm font-semibold text-foreground">Visual Tests</p>
+                <p className="text-[10px] text-foreground-muted">Today</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="text-center p-2 rounded-lg bg-[rgba(52,211,153,0.06)] border border-[rgba(52,211,153,0.12)]">
               <p className="text-lg font-bold text-[#34d399]">{data.screenshots.filter(s => s.status === "passed").length}</p>
-              <p className="text-[9px] text-white/30 uppercase">Passed</p>
+              <p className="text-[9px] text-foreground-muted uppercase">Passed</p>
             </div>
             <div className="text-center p-2 rounded-lg bg-[rgba(239,68,68,0.06)] border border-[rgba(239,68,68,0.12)]">
               <p className="text-lg font-bold text-[#ef4444]">{data.screenshots.filter(s => s.status === "failed").length}</p>
-              <p className="text-[9px] text-white/30 uppercase">Failed</p>
+              <p className="text-[9px] text-foreground-muted uppercase">Failed</p>
             </div>
-            <div className="text-center p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-              <p className="text-lg font-bold text-white">{data.statusCounts["RUNNING"] || 0}</p>
-              <p className="text-[9px] text-white/30 uppercase">Running</p>
+            <div className="text-center p-2 rounded-lg bg-surface-raised border border-subtle">
+              <p className="text-lg font-bold text-foreground">{data.statusCounts["RUNNING"] || 0}</p>
+              <p className="text-[9px] text-foreground-muted uppercase">Running</p>
             </div>
           </div>
         </div>
@@ -238,29 +238,29 @@ export default async function OpenClawHubPage() {
         {/* Workflows */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Workflow size={14} className="text-white/40" />
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Workflow size={14} className="text-foreground-tertiary" />
               Automation Workflows
             </h2>
-            <button className="text-[10px] text-white/30 hover:text-white/60 transition-colors flex items-center gap-1">
+            <button className="text-[10px] text-foreground-muted hover:text-foreground-tertiary transition-colors flex items-center gap-1">
               <RefreshCw size={10} /> Refresh
             </button>
           </div>
           <div className="space-y-2">
             {data.workflows.map((wf) => (
-              <div key={wf.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-white/[0.02] transition-colors group">
+              <div key={wf.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-surface-raised transition-colors group">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{ background: statusColor(wf.status) }}
                   />
                   <div>
-                    <p className="text-sm text-white">{wf.name}</p>
-                    <p className="text-[10px] text-white/25">{wf.frequency} · {wf.type}</p>
+                    <p className="text-sm text-foreground">{wf.name}</p>
+                    <p className="text-[10px] text-foreground-muted">{wf.frequency} · {wf.type}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] text-white/20">{wf.lastRun}</span>
+                  <span className="text-[10px] text-foreground-muted">{wf.lastRun}</span>
                   <button className="opacity-0 group-hover:opacity-100 transition-opacity">
                     {wf.status === "paused" ? (
                       <Play size={14} className="text-[#34d399]" />
@@ -277,17 +277,17 @@ export default async function OpenClawHubPage() {
         {/* Recent Screenshots */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-              <ImageIcon size={14} className="text-white/40" />
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <ImageIcon size={14} className="text-foreground-tertiary" />
               Recent Screenshots
             </h2>
-            <Link href="#" className="text-[10px] text-white/30 hover:text-white/60 transition-colors flex items-center gap-1">
+            <Link href="#" className="text-[10px] text-foreground-muted hover:text-foreground-tertiary transition-colors flex items-center gap-1">
               View All <ArrowUpRight size={10} />
             </Link>
           </div>
           <div className="space-y-2">
             {data.screenshots.map((ss) => (
-              <div key={ss.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-white/[0.02] transition-colors group">
+              <div key={ss.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-surface-raised transition-colors group">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -296,8 +296,8 @@ export default async function OpenClawHubPage() {
                     <Camera size={14} style={{ color: statusColor(ss.status) }} />
                   </div>
                   <div>
-                    <p className="text-sm text-white">{ss.name}</p>
-                    <p className="text-[10px] text-white/25">{ss.size} · {ss.timestamp}</p>
+                    <p className="text-sm text-foreground">{ss.name}</p>
+                    <p className="text-[10px] text-foreground-muted">{ss.size} · {ss.timestamp}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -311,7 +311,7 @@ export default async function OpenClawHubPage() {
                   >
                     {ss.status}
                   </span>
-                  <ExternalLink size={12} className="text-white/15 group-hover:text-white/40 transition-opacity cursor-pointer" />
+                  <ExternalLink size={12} className="text-foreground/15 group-hover:text-foreground-tertiary transition-opacity cursor-pointer" />
                 </div>
               </div>
             ))}
@@ -324,32 +324,32 @@ export default async function OpenClawHubPage() {
         {/* Recent Jobs */}
         <div className="lg:col-span-2 glass-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Terminal size={14} className="text-white/40" />
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Terminal size={14} className="text-foreground-tertiary" />
               Recent Agent Jobs
             </h2>
             <Link
               href="/admin/swarm"
-              className="text-[10px] text-white/30 hover:text-white/60 transition-colors flex items-center gap-1"
+              className="text-[10px] text-foreground-muted hover:text-foreground-tertiary transition-colors flex items-center gap-1"
             >
               Swarm Center <ArrowUpRight size={10} />
             </Link>
           </div>
           <div className="space-y-1">
             {data.recentJobs.map((job) => (
-              <div key={job.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/[0.02] transition-colors">
+              <div key={job.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-surface-raised transition-colors">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{ background: statusColor(job.status) }}
                   />
                   <div>
-                    <p className="text-sm text-white">{job.jobName}</p>
-                    <p className="text-[10px] text-white/25">{job.squad} · {job.assignedAgent}</p>
+                    <p className="text-sm text-foreground">{job.jobName}</p>
+                    <p className="text-[10px] text-foreground-muted">{job.squad} · {job.assignedAgent}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-[10px] text-white/20">
+                  <span className="text-[10px] text-foreground-muted">
                     {job.durationMs ? `${(job.durationMs / 1000).toFixed(1)}s` : "—"}
                   </span>
                   <span
@@ -370,47 +370,47 @@ export default async function OpenClawHubPage() {
 
         {/* Configuration */}
         <div className="glass-card p-5">
-          <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Settings size={14} className="text-white/40" />
+          <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Settings size={14} className="text-foreground-tertiary" />
             Configuration
           </h2>
           <div className="space-y-3">
-            <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
+            <div className="flex items-center justify-between py-2 border-b border-subtle">
               <div className="flex items-center gap-2">
-                <Shield size={14} className="text-white/30" />
-                <span className="text-xs text-white/50">Auto-screenshot on deploy</span>
+                <Shield size={14} className="text-foreground-muted" />
+                <span className="text-xs text-foreground-muted">Auto-screenshot on deploy</span>
               </div>
               <div className="w-8 h-4 rounded-full bg-[#34d399]/20 relative cursor-pointer">
                 <div className="absolute right-0.5 top-0.5 w-3 h-3 rounded-full bg-[#34d399]" />
               </div>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
+            <div className="flex items-center justify-between py-2 border-b border-subtle">
               <div className="flex items-center gap-2">
-                <Clock size={14} className="text-white/30" />
-                <span className="text-xs text-white/50">Schedule interval</span>
+                <Clock size={14} className="text-foreground-muted" />
+                <span className="text-xs text-foreground-muted">Schedule interval</span>
               </div>
-              <span className="text-[10px] text-white/40 font-mono">15 min</span>
+              <span className="text-[10px] text-foreground-tertiary font-mono">15 min</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
+            <div className="flex items-center justify-between py-2 border-b border-subtle">
               <div className="flex items-center gap-2">
-                <Link2 size={14} className="text-white/30" />
-                <span className="text-xs text-white/50">Webhook URL</span>
+                <Link2 size={14} className="text-foreground-muted" />
+                <span className="text-xs text-foreground-muted">Webhook URL</span>
               </div>
-              <span className="text-[9px] text-white/25 font-mono truncate max-w-[80px]">
+              <span className="text-[9px] text-foreground-muted font-mono truncate max-w-[80px]">
                 /api/v1/webhooks/openclaw
               </span>
             </div>
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
-                <AlertTriangle size={14} className="text-white/30" />
-                <span className="text-xs text-white/50">Fail alerts</span>
+                <AlertTriangle size={14} className="text-foreground-muted" />
+                <span className="text-xs text-foreground-muted">Fail alerts</span>
               </div>
               <div className="w-8 h-4 rounded-full bg-[#34d399]/20 relative cursor-pointer">
                 <div className="absolute right-0.5 top-0.5 w-3 h-3 rounded-full bg-[#34d399]" />
               </div>
             </div>
           </div>
-          <button className="mt-4 w-full py-2 text-[11px] font-medium border border-white/10 text-white/60 hover:bg-white/[0.03] hover:text-white transition-colors rounded-lg">
+          <button className="mt-4 w-full py-2 text-[11px] font-medium border border-subtle10 text-foreground-tertiary hover:bg-surface-raised hover:text-foreground transition-colors rounded-lg">
             Edit Configuration
           </button>
         </div>

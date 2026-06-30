@@ -70,16 +70,16 @@ export const metadata: Metadata = {
     shortcut: "/logo-icon.png",
   },
   other: {
-    "msapplication-TileColor": "#14110E",
+    "msapplication-TileColor": "#0F1729",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#14110E",
+    "theme-color": "#0F1729",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#14110E" },
-    { media: "(prefers-color-scheme: light)", color: "#14110E" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0F1D" },
+    { media: "(prefers-color-scheme: light)", color: "#0F1729" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -96,10 +96,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&family=Playfair+Display+SC:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
         <link rel="dns-prefetch" href="https://hotelsvendors.com" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
         <meta name="ICBM" content="30.0444, 31.2357" />
@@ -107,7 +108,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#14110E" id="theme-color-meta" />
+        <meta name="theme-color" content="#0F1729" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -119,7 +120,7 @@ export default function RootLayout({
                   document.documentElement.setAttribute('data-theme', mode);
                   var meta = document.getElementById('theme-color-meta');
                   if (meta) {
-                    var colors = { light: '#FAFAF8', dark: '#0A0806' };
+                    var colors = { light: '#F8FAFC', dark: '#0A0F1D' };
                     meta.setAttribute('content', colors[mode] || '#FAFAF8');
                   }
                 } catch (e) {}

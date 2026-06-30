@@ -79,6 +79,12 @@ async function main() {
     // Factoring
     { code: "factoring:inquire", name: "Inquire Factoring", description: "Request factoring quotes" },
     { code: "factoring:fund", name: "Fund Invoices", description: "Fund factored invoices" },
+    // INVO Marketplace
+    { code: "invo:read", name: "View INVO Plans", description: "View subscription plans" },
+    { code: "invo:subscribe", name: "Subscribe to INVO Plan", description: "Subscribe or change plan" },
+    { code: "invo:cancel", name: "Cancel INVO Subscription", description: "Cancel subscription" },
+    { code: "invo:manage_products", name: "Manage INVO Products", description: "Manage product listings" },
+    { code: "invo:view_analytics", name: "View INVO Analytics", description: "View product analytics" },
   ];
 
   for (const p of permissionCodes) {
@@ -95,12 +101,12 @@ async function main() {
   // ─────────────────────────────────────────
 
   const roleDefs = [
-    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
+    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "invo:read", "invo:subscribe", "invo:cancel", "invo:manage_products", "invo:view_analytics"] },
     { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
     { name: "Hotel Manager", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "product:read", "invoice:read", "invoice:submit_eta", "user:read", "user:update", "report:read", "shipping:read", "factoring:inquire"] },
     { name: "Department Head", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "product:read", "invoice:read", "user:read"] },
     { name: "Clerk", isGlobal: false, permissions: ["order:create", "order:read", "product:read", "invoice:read"] },
-    { name: "Supplier Manager", isGlobal: false, permissions: ["order:read", "product:create", "product:read", "product:update", "invoice:create", "invoice:read", "user:read", "user:update", "report:read", "shipping:create_trip", "shipping:read"] },
+    { name: "Supplier Manager", isGlobal: false, permissions: ["order:read", "product:create", "product:read", "product:update", "invoice:create", "invoice:read", "user:read", "user:update", "report:read", "shipping:create_trip", "shipping:read", "invo:read", "invo:subscribe", "invo:cancel", "invo:manage_products", "invo:view_analytics"] },
     { name: "Factoring Agent", isGlobal: false, permissions: ["invoice:read", "invoice:factor", "factoring:inquire", "factoring:fund", "report:read"] },
     { name: "Logistics Coordinator", isGlobal: false, permissions: ["shipping:create_trip", "shipping:read", "order:read", "report:read"] },
   ];
@@ -140,6 +146,21 @@ async function main() {
   }
   console.log(`🛡️ ${roleDefs.length} roles seeded with permissions`);
 
+  /** Helper: copy Owner permissions to a per-tenant role */
+  async function assignOwnerPermissions(roleId: string): Promise<void> {
+    const ownerPerms = roleDefs.find(r => r.name === "Owner")!.permissions;
+    for (const code of ownerPerms) {
+      const perm = await prisma.permission.findUnique({ where: { code } });
+      if (perm) {
+        await prisma.rolePermission.upsert({
+          where: { roleId_permissionId: { roleId, permissionId: perm.id } },
+          update: {},
+          create: { roleId, permissionId: perm.id },
+        });
+      }
+    }
+  }
+
   // ─────────────────────────────────────────
   // 4. SAMPLE HOTEL TENANT
   // ─────────────────────────────────────────
@@ -161,6 +182,7 @@ async function main() {
     update: {},
     create: { name: "Owner", tenantId: hotelTenant.id, isGlobal: false },
   });
+  await assignOwnerPermissions(hotelRole.id);
 
   const hotel = await prisma.hotel.upsert({
     where: { taxId: hotelTenant.taxId },
@@ -223,6 +245,7 @@ async function main() {
     update: {},
     create: { name: "Owner", tenantId: supplierTenant.id, isGlobal: false },
   });
+  await assignOwnerPermissions(supplierRole.id);
 
   const supplier = await prisma.supplier.upsert({
     where: { taxId: supplierTenant.taxId },
@@ -281,6 +304,7 @@ async function main() {
     update: {},
     create: { name: "Owner", tenantId: factoringTenant.id, isGlobal: false },
   });
+  await assignOwnerPermissions(factoringRole.id);
 
   const factoringCompany = await prisma.factoringCompany.upsert({
     where: { taxId: factoringTenant.taxId },
@@ -316,6 +340,51 @@ async function main() {
     },
   });
   console.log(`🏦 Factoring tenant: ${factoringTenant.id}, user: ${factoringUser.email}`);
+
+  // ─────────────────────────────────────────
+  // 6b. SUBSCRIPTION PLANS (INVO Marketplace)
+  // ─────────────────────────────────────────
+
+  const plans = [
+    {
+      name: "Starter",
+      description: "For suppliers starting out on the network. List up to 10 products.",
+      price: 0,
+      billingCycle: "MONTHLY",
+      features: ["10 products", "50 orders/month", "2 users", "Basic analytics", "Email support"],
+      maxProducts: 10,
+      maxOrders: 50,
+      maxUsers: 2,
+    },
+    {
+      name: "Professional",
+      description: "For active suppliers scaling their reach. EGP 2,500/month.",
+      price: 2500,
+      billingCycle: "MONTHLY",
+      features: ["100 products", "Unlimited orders", "10 users", "Featured listings", "Priority support", "Advanced analytics"],
+      maxProducts: 100,
+      maxOrders: 999999,
+      maxUsers: 10,
+    },
+    {
+      name: "Enterprise",
+      description: "For established suppliers with high volume. EGP 8,000/month.",
+      price: 8000,
+      billingCycle: "MONTHLY",
+      features: ["Unlimited products", "Unlimited orders", "Unlimited users", "Featured listings", "Dedicated support", "API access", "Custom branding", "Dedicated account manager"],
+      maxProducts: 999999,
+      maxOrders: 999999,
+      maxUsers: 999,
+    },
+  ];
+
+  for (const p of plans) {
+    const existing = await prisma.subscriptionPlan.findFirst({ where: { name: p.name } });
+    if (!existing) {
+      await prisma.subscriptionPlan.create({ data: p });
+    }
+  }
+  console.log(`📋 ${plans.length} subscription plans seeded`);
 
   // ─────────────────────────────────────────
   // 7. SAMPLE PRODUCTS

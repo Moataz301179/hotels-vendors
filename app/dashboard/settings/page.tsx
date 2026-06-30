@@ -34,8 +34,8 @@ function TabButton({ active, onClick, icon: Icon, label }: { active: boolean; on
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all text-left ${
         active
-          ? "bg-white/[0.06] text-white border border-white/[0.08]"
-          : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+          ? "bg-surface-raised text-foreground border border-subtle"
+          : "text-foreground-muted hover:text-foreground-tertiary hover:bg-surface-raised"
       }`}
     >
       <Icon size={14} />
@@ -46,10 +46,10 @@ function TabButton({ active, onClick, icon: Icon, label }: { active: boolean; on
 
 function SettingRow({ label, description, children }: { label: string; description: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between py-4 border-b border-white/[0.04]">
+    <div className="flex items-center justify-between py-4 border-b border-subtle">
       <div>
-        <p className="text-xs font-medium text-white">{label}</p>
-        <p className="text-[11px] text-white/25 mt-0.5">{description}</p>
+        <p className="text-xs font-medium text-foreground">{label}</p>
+        <p className="text-[11px] text-foreground-muted mt-0.5">{description}</p>
       </div>
       {children}
     </div>
@@ -60,7 +60,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
   return (
     <button
       onClick={onChange}
-      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-accent-base" : "bg-white/10"}`}
+      className={`w-10 h-5 rounded-full transition-colors relative ${checked ? "bg-accent-base" : "bg-surface-raised"}`}
     >
       <span
         className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`}
@@ -89,10 +89,10 @@ export default function SettingsPage() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage platform configuration, preferences, and integrations</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Manage platform configuration, preferences, and integrations</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-foreground font-medium transition-all">
           <Save size={14} />
           Save Changes
         </button>
@@ -115,30 +115,30 @@ export default function SettingsPage() {
         {/* Content */}
         <motion.div variants={fadeInUp} className="flex-1 min-w-0">
           {activeSection === "general" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">General Settings</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">General Settings</h3>
               <SettingRow label="Platform Name" description="Displayed across the application and emails">
                 <input
                   type="text"
                   defaultValue="Hotels Vendors"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Default Currency" description="Primary currency for all transactions">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">EGP - Egyptian Pound</option>
                   <option className="bg-[var(--background)]">USD - US Dollar</option>
                   <option className="bg-[var(--background)]">EUR - Euro</option>
                 </select>
               </SettingRow>
               <SettingRow label="Default Language" description="Interface language for new users">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">English</option>
                   <option className="bg-[var(--background)]">العربية</option>
                 </select>
               </SettingRow>
               <SettingRow label="Time Zone" description="Default timezone for scheduling and reports">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">Africa/Cairo (GMT+2)</option>
                   <option className="bg-[var(--background)]">UTC</option>
                 </select>
@@ -147,8 +147,8 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "notifications" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Notification Preferences</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Notification Preferences</h3>
               <SettingRow label="Email Notifications" description="Receive updates via email">
                 <Toggle checked={notifications.email} onChange={() => setNotifications({ ...notifications, email: !notifications.email })} />
               </SettingRow>
@@ -168,13 +168,13 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "security" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Security Settings</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Security Settings</h3>
               <SettingRow label="Two-Factor Authentication" description="Require 2FA for all admin users">
                 <Toggle checked={true} onChange={() => {}} />
               </SettingRow>
               <SettingRow label="Session Timeout" description="Auto-logout after inactivity">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">15 minutes</option>
                   <option className="bg-[var(--background)]">30 minutes</option>
                   <option className="bg-[var(--background)]">1 hour</option>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                 </select>
               </SettingRow>
               <SettingRow label="Password Policy" description="Minimum requirements for user passwords">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">Strong (12+ chars)</option>
                   <option className="bg-[var(--background)]">Medium (8+ chars)</option>
                   <option className="bg-[var(--background)]">Basic (6+ chars)</option>
@@ -190,7 +190,7 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow label="API Key" description="Your platform API key for integrations">
                 <div className="flex items-center gap-2">
-                  <code className="px-2 py-1 rounded bg-white/[0.04] text-[10px] text-white/30 font-mono">hv_live_••••••••••••</code>
+                  <code className="px-2 py-1 rounded bg-surface-raised text-[10px] text-foreground-muted font-mono">hv_live_••••••••••••</code>
                   <button className="text-[10px] text-accent-base hover:underline">Regenerate</button>
                 </div>
               </SettingRow>
@@ -198,8 +198,8 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "team" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Team Members</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Team Members</h3>
               <div className="space-y-3">
                 {[
                   { name: "Ahmed Hassan", email: "ahmed@hotelsvendors.com", role: "Admin", status: "active" },
@@ -207,21 +207,21 @@ export default function SettingsPage() {
                   { name: "Khaled Ali", email: "khaled@hotelsvendors.com", role: "Analyst", status: "active" },
                   { name: "Laila Ibrahim", email: "laila@hotelsvendors.com", role: "Viewer", status: "pending" },
                 ].map((member, i) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
+                  <div key={i} className="flex items-center justify-between py-3 border-b border-subtle">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-[10px] text-white/40 font-medium">
+                      <div className="w-8 h-8 rounded-full bg-surface-raised flex items-center justify-center text-[10px] text-foreground-tertiary font-medium">
                         {member.name.split(" ").map((n) => n[0]).join("")}
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-white">{member.name}</p>
-                        <p className="text-[10px] text-white/25">{member.email}</p>
+                        <p className="text-xs font-medium text-foreground">{member.name}</p>
+                        <p className="text-[10px] text-foreground-muted">{member.email}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                         member.role === "Admin" ? "bg-accent-base/10 text-accent-base" :
                         member.role === "Manager" ? "bg-blue-500/10 text-blue-400" :
-                        "bg-white/10 text-white/40"
+                        "bg-surface-raised text-foreground-tertiary"
                       }`}>
                         {member.role}
                       </span>
@@ -234,52 +234,52 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "organization" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Organization Profile</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Organization Profile</h3>
               <SettingRow label="Company Name" description="Legal entity name">
                 <input
                   type="text"
                   defaultValue="Hotels Vendors Egypt Ltd."
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Tax ID" description="Egyptian Tax Registration Number">
                 <input
                   type="text"
                   defaultValue="123-456-789"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Address" description="Registered business address">
                 <input
                   type="text"
                   defaultValue="123 Nile Corniche, Cairo"
-                  className="w-64 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
+                  className="w-64 px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Phone" description="Primary contact number">
                 <input
                   type="text"
                   defaultValue="+20 2 1234 5678"
-                  className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
+                  className="w-48 px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
             </div>
           )}
 
           {activeSection === "billing" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Billing & Subscription</h3>
-              <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-4 mb-4">
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Billing & Subscription</h3>
+              <div className="rounded-xl bg-surface-raised border border-subtle p-4 mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-white/40">Current Plan</span>
+                  <span className="text-xs text-foreground-tertiary">Current Plan</span>
                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-accent-base/10 text-accent-base">Enterprise</span>
                 </div>
-                <p className="text-lg font-bold text-white">EGP 25,000 / month</p>
-                <p className="text-[11px] text-white/25 mt-0.5">Next billing: June 8, 2026</p>
+                <p className="text-lg font-bold text-foreground">EGP 25,000 / month</p>
+                <p className="text-[11px] text-foreground-muted mt-0.5">Next billing: June 8, 2026</p>
               </div>
               <SettingRow label="Payment Method" description="Default payment for invoices">
-                <span className="text-xs text-white/60">Visa ending in 4242</span>
+                <span className="text-xs text-foreground-tertiary">Visa ending in 4242</span>
               </SettingRow>
               <SettingRow label="Auto-Renew" description="Automatically renew subscription">
                 <Toggle checked={true} onChange={() => {}} />
@@ -288,8 +288,8 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "integrations" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Connected Integrations</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Connected Integrations</h3>
               <div className="space-y-3">
                 {[
                   { name: "ETA E-Invoicing", status: "connected", desc: "Egyptian Tax Authority" },
@@ -298,15 +298,15 @@ export default function SettingsPage() {
                   { name: "Slack", status: "disconnected", desc: "Team notifications" },
                   { name: "WhatsApp Business", status: "pending", desc: "Customer communication" },
                 ].map((integration, i) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
+                  <div key={i} className="flex items-center justify-between py-3 border-b border-subtle">
                     <div>
-                      <p className="text-xs font-medium text-white">{integration.name}</p>
-                      <p className="text-[10px] text-white/25">{integration.desc}</p>
+                      <p className="text-xs font-medium text-foreground">{integration.name}</p>
+                      <p className="text-[10px] text-foreground-muted">{integration.desc}</p>
                     </div>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                       integration.status === "connected" ? "bg-emerald-500/10 text-emerald-400" :
                       integration.status === "pending" ? "bg-amber-500/10 text-amber-400" :
-                      "bg-white/10 text-white/40"
+                      "bg-surface-raised text-foreground-tertiary"
                     }`}>
                       {integration.status === "connected" ? "Connected" : integration.status === "pending" ? "Pending" : "Disconnected"}
                     </span>
@@ -317,10 +317,10 @@ export default function SettingsPage() {
           )}
 
           {activeSection === "appearance" && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">Appearance</h3>
+            <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Appearance</h3>
               <SettingRow label="Theme" description="Interface color scheme">
-                <select className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none">
+                <select className="px-3 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground focus:outline-none">
                   <option className="bg-[var(--background)]">Dark</option>
                   <option className="bg-[var(--background)]">Light</option>
                   <option className="bg-[var(--background)]">System</option>
@@ -328,8 +328,8 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow label="Accent Color" description="Primary brand color">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-accent-base border border-white/20" />
-                  <span className="text-[11px] text-white/40">var(--accent-base)</span>
+                  <div className="w-6 h-6 rounded-full bg-accent-base border border-subtle20" />
+                  <span className="text-[11px] text-foreground-tertiary">var(--accent-base)</span>
                 </div>
               </SettingRow>
               <SettingRow label="Compact Mode" description="Reduce padding and spacing">

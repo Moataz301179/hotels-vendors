@@ -36,16 +36,10 @@ interface Property {
   roomCount?: number;
 }
 
-interface Hotel {
-  id: string;
-  name: string;
-  properties: Property[];
-}
-
 function PropertyTypeBadge({ type }: { type: string }) {
   const label = type.charAt(0) + type.slice(1).toLowerCase().replace(/_/g, " ");
   return (
-    <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/[0.04] text-white/40 border border-white/[0.06]">
+    <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-surface-raised text-foreground-tertiary border border-subtle">
       {label}
     </span>
   );
@@ -54,7 +48,7 @@ function PropertyTypeBadge({ type }: { type: string }) {
 function PropertyStatusBadge({ status = "ACTIVE" }: { status?: string }) {
   const config: Record<string, { bg: string; text: string; dot: string }> = {
     ACTIVE: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400" },
-    INACTIVE: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40" },
+    INACTIVE: { bg: "bg-surface-raised", text: "text-foreground-tertiary", dot: "bg-foreground-muted" },
     MAINTENANCE: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400" },
   };
   const c = config[status] || config.ACTIVE;
@@ -69,23 +63,17 @@ function PropertyStatusBadge({ status = "ACTIVE" }: { status?: string }) {
 export default function HotelPropertiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: hotelsData, loading, error } = useApi<Hotel[]>("/api/hotels?page=1&limit=50");
+  const { data: propertiesData, loading, error } = useApi<{ properties: (Property & { hotel: { id: string; name: string } })[] }>("/api/v1/hotel/properties");
 
   const properties = useMemo(() => {
-    if (!hotelsData) return [];
-    const list: (Property & { hotelName: string })[] = [];
-    hotelsData.forEach((hotel) => {
-      hotel.properties?.forEach((p) => {
-        list.push({
-          ...p,
-          hotelName: hotel.name,
-          status: "ACTIVE",
-          roomCount: p.type === "HOTEL" ? 120 : p.type === "RESORT" ? 200 : 45,
-        });
-      });
-    });
-    return list;
-  }, [hotelsData]);
+    if (!propertiesData?.properties) return [];
+    return propertiesData.properties.map((p) => ({
+      ...p,
+      hotelName: p.hotel?.name ?? "—",
+      status: "ACTIVE",
+      roomCount: p.type === "HOTEL" ? 120 : p.type === "RESORT" ? 200 : 45,
+    }));
+  }, [propertiesData]);
 
   const stats = useMemo(() => {
     const total = properties.length;
@@ -121,10 +109,10 @@ export default function HotelPropertiesPage() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Property Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage all hotels and properties in your portfolio</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Property Management</h1>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Manage all hotels and properties in your portfolio</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all self-start">
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-foreground font-medium transition-all self-start">
           <Plus size={14} />
           Add Property
         </button>
@@ -138,33 +126,33 @@ export default function HotelPropertiesPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-subtle bg-surface-raised p-4 hover:bg-surface-raised transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-tertiary" />
                   </div>
                 </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
+                <p className="text-xl font-bold text-foreground">{s.value}</p>
               </motion.div>
             ))}
       </motion.div>
 
       {/* Search */}
       <motion.div variants={fadeInUp} className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-          <Building2 size={14} className="text-white/40" />
+        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+          <Building2 size={14} className="text-foreground-tertiary" />
           Properties
         </h3>
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search properties..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-56"
+            className="pl-9 pr-4 py-1.5 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 w-56"
           />
         </div>
       </motion.div>
@@ -179,51 +167,51 @@ export default function HotelPropertiesPage() {
           title="No properties found"
           description={searchQuery ? "Try a different search term." : "Properties will appear here once added."}
           action={
-            <button className="px-4 py-2 rounded-lg bg-accent-base text-xs text-white font-medium">
+            <button className="px-4 py-2 rounded-lg bg-accent-base text-xs text-foreground font-medium">
               Add Property
             </button>
           }
         />
       ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[720px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Property</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel Group</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Location</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Type</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rooms</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+              <tr className="border-b border-subtle">
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Property</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel Group</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Location</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Type</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Rooms</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((property) => (
-                <tr key={property.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={property.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                   <td className="px-4 py-3">
-                    <span className="text-xs font-medium text-white">{property.name}</span>
+                    <span className="text-xs font-medium text-foreground">{property.name}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{property.hotelName}</span>
+                    <span className="text-xs text-foreground-tertiary">{property.hotelName}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-white/20" />
-                      <span className="text-xs text-white/50">{property.city}</span>
+                      <MapPin size={12} className="text-foreground-muted" />
+                      <span className="text-xs text-foreground-muted">{property.city}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <PropertyTypeBadge type={property.type} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{property.roomCount?.toLocaleString("en-EG") || "—"}</span>
+                    <span className="text-xs text-foreground-tertiary">{property.roomCount?.toLocaleString("en-EG") || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
                     <PropertyStatusBadge status={property.status} />
                   </td>
                   <td className="px-4 py-3">
-                    <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                    <button className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors">
                       <Eye size={14} />
                     </button>
                   </td>

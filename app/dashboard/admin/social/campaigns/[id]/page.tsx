@@ -97,7 +97,7 @@ export default function CampaignDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[var(--background)] text-white flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--background)] text-foreground flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-accent-base" />
       </main>
     );
@@ -105,10 +105,10 @@ export default function CampaignDetailPage() {
 
   if (!campaign) {
     return (
-      <main className="min-h-screen bg-[var(--background)] text-white flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--background)] text-foreground flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-3" />
-          <p className="text-white/40">Campaign not found</p>
+          <p className="text-foreground-tertiary">Campaign not found</p>
           <Link href="/admin/social" className="text-accent-base hover:underline text-[13px] mt-2 inline-block">
             Back to Social Hub
           </Link>
@@ -122,13 +122,13 @@ export default function CampaignDetailPage() {
   const strategy = c.contentStrategy ? JSON.parse(c.contentStrategy) : null;
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-white">
+    <main className="min-h-screen bg-[var(--background)] text-foreground">
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <Link
             href="/admin/social"
-            className="p-2 rounded-lg text-white/30 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="p-2 rounded-lg text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
@@ -140,7 +140,7 @@ export default function CampaignDetailPage() {
               </span>
             </div>
             {c.description && (
-              <p className="text-white/40 text-[13px] mt-1">{c.description}</p>
+              <p className="text-foreground-tertiary text-[13px] mt-1">{c.description}</p>
             )}
           </div>
         </div>
@@ -157,25 +157,25 @@ export default function CampaignDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2 space-y-4">
             {/* Posts */}
-            <section className="border border-white/[0.06] rounded-xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-white/[0.06] bg-white/[0.02] flex items-center justify-between">
+            <section className="border border-subtle rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-subtle bg-surface-raised flex items-center justify-between">
                 <h2 className="text-[14px] font-semibold">Posts</h2>
-                <span className="text-[11px] text-white/30">{posts.length} total</span>
+                <span className="text-[11px] text-foreground-muted">{posts.length} total</span>
               </div>
               <div className="divide-y divide-white/[0.04]">
                 {posts.length === 0 ? (
-                  <div className="px-4 py-8 text-center text-white/30 text-[13px]">
+                  <div className="px-4 py-8 text-center text-foreground-muted text-[13px]">
                     No posts yet. Generate posts from the campaign list.
                   </div>
                 ) : (
                   posts.map((post) => (
-                    <div key={post.id} className="px-4 py-4 hover:bg-white/[0.02] transition-colors">
+                    <div key={post.id} className="px-4 py-4 hover:bg-surface-raised transition-colors">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className={`text-[10px] px-1.5 py-0.5 rounded border ${statusColors[post.status] || statusColors.DRAFT}`}>
                             {post.platform}
                           </span>
-                          <span className="text-[11px] text-white/30">
+                          <span className="text-[11px] text-foreground-muted">
                             {post.scheduledAt
                               ? new Date(post.scheduledAt).toLocaleDateString("en-GB", {
                                   day: "numeric",
@@ -190,7 +190,7 @@ export default function CampaignDetailPage() {
                           <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
                         )}
                       </div>
-                      <p className="text-[13px] text-white/70 leading-relaxed">{post.content}</p>
+                      <p className="text-[13px] text-foreground/70 leading-relaxed">{post.content}</p>
                       {post.hashtags && (
                         <p className="text-[11px] text-accent-base/60 mt-1.5">{post.hashtags}</p>
                       )}
@@ -203,7 +203,7 @@ export default function CampaignDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <div className="border border-white/[0.06] rounded-xl p-4 bg-white/[0.02]">
+            <div className="border border-subtle rounded-xl p-4 bg-surface-raised">
               <h3 className="text-[13px] font-semibold mb-3">Campaign Details</h3>
               <div className="space-y-2.5">
                 <DetailRow label="Objective" value={c.objective} />
@@ -229,17 +229,17 @@ export default function CampaignDetailPage() {
             </div>
 
             {strategy && (
-              <div className="border border-white/[0.06] rounded-xl p-4 bg-white/[0.02]">
+              <div className="border border-subtle rounded-xl p-4 bg-surface-raised">
                 <h3 className="text-[13px] font-semibold mb-3">Content Strategy</h3>
                 <div className="space-y-2.5">
                   <DetailRow label="Tone" value={strategy.tone} />
                   <DetailRow label="Frequency" value={strategy.postingFrequency} />
                   {strategy.themes && (
                     <div>
-                      <span className="text-[11px] text-white/30 block mb-1">Themes</span>
+                      <span className="text-[11px] text-foreground-muted block mb-1">Themes</span>
                       <div className="flex flex-wrap gap-1">
                         {strategy.themes.map((t: string) => (
-                          <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-white/50 border border-white/[0.06]">
+                          <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-surface-raised text-foreground-muted border border-subtle">
                             {t}
                           </span>
                         ))}
@@ -251,7 +251,7 @@ export default function CampaignDetailPage() {
             )}
 
             {/* Engagement */}
-            <div className="border border-white/[0.06] rounded-xl p-4 bg-white/[0.02]">
+            <div className="border border-subtle rounded-xl p-4 bg-surface-raised">
               <h3 className="text-[13px] font-semibold mb-3">Engagement</h3>
               <div className="space-y-2.5">
                 <DetailRow label="Likes" value={s.engagement.likes.toString()} />
@@ -271,7 +271,7 @@ function StatBox({
   label,
   value,
   icon: Icon,
-  color = "text-white/60",
+  color = "text-foreground-tertiary",
 }: {
   label: string;
   value: number;
@@ -279,10 +279,10 @@ function StatBox({
   color?: string;
 }) {
   return (
-    <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+    <div className="p-4 rounded-xl border border-subtle bg-surface-raised">
       <Icon className={`w-4 h-4 mb-2 ${color}`} />
       <div className="text-[22px] font-bold">{value}</div>
-      <div className="text-[11px] text-white/30 mt-0.5">{label}</div>
+      <div className="text-[11px] text-foreground-muted mt-0.5">{label}</div>
     </div>
   );
 }
@@ -290,8 +290,8 @@ function StatBox({
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[11px] text-white/30">{label}</span>
-      <span className="text-[12px] text-white/60 font-medium">{value}</span>
+      <span className="text-[11px] text-foreground-muted">{label}</span>
+      <span className="text-[12px] text-foreground-tertiary font-medium">{value}</span>
     </div>
   );
 }

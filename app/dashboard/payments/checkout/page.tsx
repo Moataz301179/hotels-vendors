@@ -55,7 +55,7 @@ export default function CheckoutPage() {
         </p>
         <button
           onClick={() => router.push("/payments")}
-          className="mt-8 rounded-md bg-emerald-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-emerald-700"
+          className="mt-8 rounded-md bg-emerald-600 px-6 py-2.5 text-sm font-medium text-foreground hover:bg-emerald-700"
         >
           Back to Payments
         </button>
@@ -75,7 +75,7 @@ export default function CheckoutPage() {
         <p className="mt-2 text-gray-600">Something went wrong. Please try again.</p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-8 rounded-md bg-red-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-red-700"
+          className="mt-8 rounded-md bg-red-600 px-6 py-2.5 text-sm font-medium text-foreground hover:bg-red-700"
         >
           Try Again
         </button>

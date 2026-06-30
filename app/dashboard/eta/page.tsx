@@ -58,8 +58,8 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
       onClick={onClick}
       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
         active
-          ? "bg-white/[0.06] text-white border border-white/[0.08]"
-          : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+          ? "bg-surface-raised text-foreground border border-subtle"
+          : "text-foreground-muted hover:text-foreground-tertiary hover:bg-surface-raised"
       }`}
     >
       {children}
@@ -145,19 +145,19 @@ export default function ETACenterPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold tracking-tight text-white">ETA E-Invoicing Center</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">ETA E-Invoicing Center</h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold uppercase tracking-wider">ETA</span>
           </div>
-          <p className="text-sm text-white/40 mt-0.5">Egyptian Tax Authority compliance, submission tracking, and digital signature management</p>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Egyptian Tax Authority compliance, submission tracking, and digital signature management</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-raised hover:bg-surface-raised border border-subtle text-xs text-foreground/80 transition-all">
             <RefreshCw size={14} />
             Sync with ETA
           </button>
           <button
             onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-foreground font-medium transition-all"
           >
             <FileCheck size={14} />
             Submit Invoice
@@ -173,15 +173,15 @@ export default function ETACenterPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-subtle bg-surface-raised p-4 hover:bg-surface-raised transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-tertiary" />
                   </div>
                 </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
+                <p className="text-xl font-bold text-foreground">{s.value}</p>
                 <div className="flex items-center gap-1 mt-1">
                   {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
                   <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
@@ -191,7 +191,7 @@ export default function ETACenterPage() {
       </motion.div>
 
       {/* Tabs */}
-      <motion.div variants={fadeInUp} className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.02] border border-white/[0.04] w-fit">
+      <motion.div variants={fadeInUp} className="flex items-center gap-1 p-1 rounded-xl bg-surface-raised border border-subtle w-fit">
         <TabButton active={activeTab === "invoices"} onClick={() => setActiveTab("invoices")}>Invoices</TabButton>
         <TabButton active={activeTab === "validation"} onClick={() => setActiveTab("validation")}>Validation</TabButton>
         <TabButton active={activeTab === "rules"} onClick={() => setActiveTab("rules")}>Rules Engine</TabButton>
@@ -201,13 +201,13 @@ export default function ETACenterPage() {
         <motion.div variants={fadeInUp} className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type="text"
                 placeholder="Search by invoice ID or hotel..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
+                className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
               />
             </div>
           </div>
@@ -223,45 +223,45 @@ export default function ETACenterPage() {
               action={
                 <button
                   onClick={() => { setSubmitModalOpen(true); setSubmitStep("select"); setSubmitError(""); }}
-                  className="px-4 py-2 rounded-lg bg-accent-base text-xs text-white font-medium"
+                  className="px-4 py-2 rounded-lg bg-accent-base text-xs text-foreground font-medium"
                 >
                   Submit Invoice
                 </button>
               }
             />
           ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+            <div className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
               <table className="w-full min-w-[640px]">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice ID</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">ETA UUID</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
-                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actions</th>
+                  <tr className="border-b border-subtle">
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Invoice ID</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">ETA UUID</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
+                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredInvoices.map((inv) => (
-                    <tr key={inv.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <tr key={inv.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <FileText size={14} className="text-white/20" />
-                          <span className="text-xs font-mono text-white/60">{inv.invoiceNumber}</span>
+                          <FileText size={14} className="text-foreground-muted" />
+                          <span className="text-xs font-mono text-foreground-tertiary">{inv.invoiceNumber}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3"><span className="text-xs text-white">{inv.hotel?.name}</span></td>
-                      <td className="px-4 py-3"><span className="text-xs font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</span></td>
-                      <td className="px-4 py-3"><span className="text-[10px] text-white/30 font-mono">{inv.etaUuid?.slice(0, 12)}...</span></td>
+                      <td className="px-4 py-3"><span className="text-xs text-foreground">{inv.hotel?.name}</span></td>
+                      <td className="px-4 py-3"><span className="text-xs font-semibold text-foreground">{formatCurrency(inv.total, inv.currency)}</span></td>
+                      <td className="px-4 py-3"><span className="text-[10px] text-foreground-muted font-mono">{inv.etaUuid?.slice(0, 12)}...</span></td>
                       <td className="px-4 py-3"><StatusBadge status={inv.etaStatus || "PENDING"} /></td>
-                      <td className="px-4 py-3"><span className="text-[11px] text-white/30">{new Date(inv.createdAt).toLocaleDateString()}</span></td>
+                      <td className="px-4 py-3"><span className="text-[11px] text-foreground-muted">{new Date(inv.createdAt).toLocaleDateString()}</span></td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => setSelectedInvoice(inv)} className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"><Eye size={13} /></button>
-                          <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"><QrCode size={13} /></button>
-                          <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"><Printer size={13} /></button>
+                          <button onClick={() => setSelectedInvoice(inv)} className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors"><Eye size={13} /></button>
+                          <button className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors"><QrCode size={13} /></button>
+                          <button className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors"><Printer size={13} /></button>
                         </div>
                       </td>
                     </tr>
@@ -275,8 +275,8 @@ export default function ETACenterPage() {
 
       {activeTab === "validation" && (
         <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Shield size={14} className="text-white/40" />Validation Pipeline</h3>
+          <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+            <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2"><Shield size={14} className="text-foreground-tertiary" />Validation Pipeline</h3>
             <div className="space-y-4">
               {[
                 { name: "Schema Check", desc: "Validate ETA JSON structure", time: "12ms" },
@@ -290,16 +290,16 @@ export default function ETACenterPage() {
                     <CheckCircle2 size={12} className="text-emerald-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-medium text-white">{step.name}</p>
-                    <p className="text-[10px] text-white/25">{step.desc}</p>
+                    <p className="text-xs font-medium text-foreground">{step.name}</p>
+                    <p className="text-[10px] text-foreground-muted">{step.desc}</p>
                   </div>
-                  <span className="text-[10px] text-white/20 font-mono">{step.time}</span>
+                  <span className="text-[10px] text-foreground-muted font-mono">{step.time}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><AlertTriangle size={14} className="text-white/40" />Compliance Health</h3>
+          <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+            <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2"><AlertTriangle size={14} className="text-foreground-tertiary" />Compliance Health</h3>
             <div className="flex items-center justify-center py-6">
               <div className="relative w-36 h-36">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -308,30 +308,30 @@ export default function ETACenterPage() {
                     strokeDasharray={`${2 * Math.PI * 42 * 0.988} ${2 * Math.PI * 42 * 0.012}`} strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold text-white">98.8%</span>
-                  <span className="text-[10px] text-white/30">Compliance</span>
+                  <span className="text-3xl font-bold text-foreground">98.8%</span>
+                  <span className="text-[10px] text-foreground-muted">Compliance</span>
                 </div>
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs"><span className="text-white/40">Acceptance Rate</span><span className="text-white font-medium">99.2%</span></div>
-              <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-emerald-500" style={{ width: "99.2%" }} /></div>
-              <div className="flex items-center justify-between text-xs mt-2"><span className="text-white/40">Avg. Validation Time</span><span className="text-white font-medium">124ms</span></div>
-              <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-accent-base" style={{ width: "85%" }} /></div>
+              <div className="flex items-center justify-between text-xs"><span className="text-foreground-tertiary">Acceptance Rate</span><span className="text-foreground font-medium">99.2%</span></div>
+              <div className="h-1.5 rounded-full bg-surface-raised overflow-hidden"><div className="h-full rounded-full bg-emerald-500" style={{ width: "99.2%" }} /></div>
+              <div className="flex items-center justify-between text-xs mt-2"><span className="text-foreground-tertiary">Avg. Validation Time</span><span className="text-foreground font-medium">124ms</span></div>
+              <div className="h-1.5 rounded-full bg-surface-raised overflow-hidden"><div className="h-full rounded-full bg-accent-base" style={{ width: "85%" }} /></div>
             </div>
           </div>
         </motion.div>
       )}
 
       {activeTab === "rules" && (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[480px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rule</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Description</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Pass Rate</th>
+              <tr className="border-b border-subtle">
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Rule</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Description</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Pass Rate</th>
               </tr>
             </thead>
             <tbody>
@@ -342,9 +342,9 @@ export default function ETACenterPage() {
                 { name: "Amount Threshold", desc: "High-value order dual-check", passRate: 100 },
                 { name: "Schema Compliance", desc: "ETA JSON schema validation", passRate: 98.8 },
               ].map((rule, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-3"><span className="text-xs font-medium text-white">{rule.name}</span></td>
-                  <td className="px-4 py-3"><span className="text-[11px] text-white/40">{rule.desc}</span></td>
+                <tr key={i} className="border-b border-subtle hover:bg-surface-raised transition-colors">
+                  <td className="px-4 py-3"><span className="text-xs font-medium text-foreground">{rule.name}</span></td>
+                  <td className="px-4 py-3"><span className="text-[11px] text-foreground-tertiary">{rule.desc}</span></td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />Active
@@ -352,8 +352,8 @@ export default function ETACenterPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-20 h-1.5 rounded-full bg-white/[0.04] overflow-hidden"><div className="h-full rounded-full bg-emerald-500" style={{ width: `${rule.passRate}%` }} /></div>
-                      <span className="text-[11px] text-white/40">{rule.passRate}%</span>
+                      <div className="w-20 h-1.5 rounded-full bg-surface-raised overflow-hidden"><div className="h-full rounded-full bg-emerald-500" style={{ width: `${rule.passRate}%` }} /></div>
+                      <span className="text-[11px] text-foreground-tertiary">{rule.passRate}%</span>
                     </div>
                   </td>
                 </tr>
@@ -372,26 +372,26 @@ export default function ETACenterPage() {
         {selectedInvoice && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Hotel</p>
-                <p className="text-sm text-white mt-0.5">{selectedInvoice.hotel?.name}</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Hotel</p>
+                <p className="text-sm text-foreground mt-0.5">{selectedInvoice.hotel?.name}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Supplier</p>
-                <p className="text-sm text-white mt-0.5">{selectedInvoice.supplier?.name}</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Supplier</p>
+                <p className="text-sm text-foreground mt-0.5">{selectedInvoice.supplier?.name}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Total</p>
-                <p className="text-sm text-white mt-0.5">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Total</p>
+                <p className="text-sm text-foreground mt-0.5">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5"><StatusBadge status={selectedInvoice.etaStatus || "PENDING"} /></div>
               </div>
             </div>
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-[10px] text-white/20 uppercase mb-1">Digital Signature</p>
-              <code className="text-[10px] text-white/30 font-mono break-all">{Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}</code>
+            <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+              <p className="text-[10px] text-foreground-muted uppercase mb-1">Digital Signature</p>
+              <code className="text-[10px] text-foreground-muted font-mono break-all">{Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}</code>
             </div>
           </div>
         )}
@@ -401,16 +401,16 @@ export default function ETACenterPage() {
       {submitModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeSubmitModal}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[var(--background)] shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
-              <h3 className="text-lg font-semibold text-white">Submit to ETA</h3>
-              <button onClick={closeSubmitModal} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors"><X size={18} /></button>
+          <div className="relative w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl border border-subtle bg-[var(--background)] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-subtle">
+              <h3 className="text-lg font-semibold text-foreground">Submit to ETA</h3>
+              <button onClick={closeSubmitModal} className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-tertiary hover:text-foreground transition-colors"><X size={18} /></button>
             </div>
             <div className="p-6">
               <AnimatePresence mode="wait">
                 {submitStep === "select" && (
                   <motion.div key="select" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                    <p className="text-sm text-white/40 mb-4">Select an invoice to submit to the Egyptian Tax Authority:</p>
+                    <p className="text-sm text-foreground-tertiary mb-4">Select an invoice to submit to the Egyptian Tax Authority:</p>
                     {error ? (
                       <EmptyState title="Error" description={error} />
                     ) : filteredInvoices.filter((i) => !i.etaUuid || i.etaStatus === "PENDING").length === 0 ? (
@@ -422,18 +422,18 @@ export default function ETACenterPage() {
                             key={inv.id}
                             onClick={() => { setSubmitInvoice(inv); handleETASubmit(inv); }}
                             disabled={submitLoading}
-                            className="w-full flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-all text-left"
+                            className="w-full flex items-center justify-between p-3 rounded-xl bg-surface-raised border border-subtle hover:border-subtle[0.12] transition-all text-left"
                           >
                             <div className="flex items-center gap-3">
-                              <FileText size={16} className="text-white/20" />
+                              <FileText size={16} className="text-foreground-muted" />
                               <div>
-                                <p className="text-xs font-medium text-white">{inv.invoiceNumber}</p>
-                                <p className="text-[10px] text-white/25">{inv.hotel?.name}</p>
+                                <p className="text-xs font-medium text-foreground">{inv.invoiceNumber}</p>
+                                <p className="text-[10px] text-foreground-muted">{inv.hotel?.name}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
-                              <Send size={14} className="text-white/20 inline-block mt-0.5" />
+                              <p className="text-sm font-semibold text-foreground">{formatCurrency(inv.total, inv.currency)}</p>
+                              <Send size={14} className="text-foreground-muted inline-block mt-0.5" />
                             </div>
                           </button>
                         ))}
@@ -450,8 +450,8 @@ export default function ETACenterPage() {
                 {submitStep === "submitting" && (
                   <motion.div key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-12 flex flex-col items-center gap-3">
                     <Loader2 size={28} className="animate-spin text-accent-base" />
-                    <p className="text-sm text-white/40">Submitting to Egyptian Tax Authority...</p>
-                    <p className="text-xs text-white/20">This may take a few moments</p>
+                    <p className="text-sm text-foreground-tertiary">Submitting to Egyptian Tax Authority...</p>
+                    <p className="text-xs text-foreground-muted">This may take a few moments</p>
                   </motion.div>
                 )}
 
@@ -461,15 +461,15 @@ export default function ETACenterPage() {
                       <CheckCircle2 size={32} className="text-emerald-400" />
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold text-white">Submitted Successfully</h4>
-                      <p className="text-sm text-white/40 mt-1">The invoice has been submitted to ETA for validation.</p>
+                      <h4 className="text-lg font-bold text-foreground">Submitted Successfully</h4>
+                      <p className="text-sm text-foreground-tertiary mt-1">The invoice has been submitted to ETA for validation.</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-left space-y-2">
-                      <div className="flex justify-between text-xs"><span className="text-white/30">Invoice</span><span className="text-white font-medium">{submitResult.invoiceNumber || submitInvoice?.invoiceNumber}</span></div>
-                      <div className="flex justify-between text-xs"><span className="text-white/30">ETA UUID</span><span className="text-emerald-400 font-mono">{submitResult.etaUuid || "Pending generation"}</span></div>
-                      <div className="flex justify-between text-xs"><span className="text-white/30">Status</span><span className="text-blue-400">{submitResult.etaStatus || "SUBMITTED"}</span></div>
+                    <div className="p-4 rounded-xl bg-surface-raised border border-subtle text-left space-y-2">
+                      <div className="flex justify-between text-xs"><span className="text-foreground-muted">Invoice</span><span className="text-foreground font-medium">{submitResult.invoiceNumber || submitInvoice?.invoiceNumber}</span></div>
+                      <div className="flex justify-between text-xs"><span className="text-foreground-muted">ETA UUID</span><span className="text-emerald-400 font-mono">{submitResult.etaUuid || "Pending generation"}</span></div>
+                      <div className="flex justify-between text-xs"><span className="text-foreground-muted">Status</span><span className="text-blue-400">{submitResult.etaStatus || "SUBMITTED"}</span></div>
                     </div>
-                    <button onClick={closeSubmitModal} className="px-5 py-2 rounded-xl bg-accent-base hover:bg-accent-base/80 text-white text-sm font-medium transition-colors">Done</button>
+                    <button onClick={closeSubmitModal} className="px-5 py-2 rounded-xl bg-accent-base hover:bg-accent-base/80 text-foreground text-sm font-medium transition-colors">Done</button>
                   </motion.div>
                 )}
               </AnimatePresence>

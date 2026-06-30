@@ -29,7 +29,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let supplier;
   let factoringCompany;
 
-  const platformRole = data.type.toUpperCase() as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN";
+  const ROLE_MAP: Record<string, "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING"> = {
+    hotel: "HOTEL",
+    supplier: "SUPPLIER",
+    funder: "FACTORING",
+    factoring: "FACTORING",
+    logistics: "SHIPPING",
+    shipping: "SHIPPING",
+  };
+  const platformRole = ROLE_MAP[data.type.toLowerCase()] || "SUPPLIER";
   const isIndividual = data.accountType === "individual";
   const accountType = isIndividual ? "INDIVIDUAL" : "BUSINESS";
 
@@ -139,6 +147,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   if (!user) {
     throw new Error("User creation failed");
+  }
+
+  // Mark phone as verified if OTP was previously verified for this phone
+  if (data.phone) {
+    const verifiedOtp = await prisma.phoneVerificationToken.findFirst({
+      where: { phone: data.phone, verified: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (verifiedOtp) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { phoneVerifiedAt: new Date() },
+      });
+    }
   }
 
   // Generate email verification token

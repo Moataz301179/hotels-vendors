@@ -165,7 +165,7 @@ export default function SupplierPipelinePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-black text-foreground p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Supplier Acquisition Pipeline</h1>
@@ -177,14 +177,14 @@ export default function SupplierPipelinePage() {
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
             {[
-              { label: "Total Leads", value: stats.total, color: "text-white" },
+              { label: "Total Leads", value: stats.total, color: "text-foreground" },
               { label: "Discovered", value: stats.discovered, color: "text-yellow-400" },
               { label: "Enriched", value: stats.enriched, color: "text-blue-400" },
               { label: "Contacted", value: stats.contacted, color: "text-purple-400" },
               { label: "Converted", value: stats.converted, color: "text-red-400" },
               { label: "Lost", value: stats.lost, color: "text-gray-400" },
             ].map((s) => (
-              <div key={s.label} className="bg-white/5 border border-white/10 rounded-lg p-4">
+              <div key={s.label} className="bg-surface-raised border border-subtle10 rounded-lg p-4">
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
                 <div className="text-sm text-gray-400">{s.label}</div>
               </div>
@@ -192,7 +192,7 @@ export default function SupplierPipelinePage() {
           </div>
         )}
 
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6 mb-8">
+        <div className="bg-surface-raised border border-subtle10 rounded-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Launch Acquisition Run</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {sources.map((source) => (
@@ -201,7 +201,7 @@ export default function SupplierPipelinePage() {
                 className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${
                   selectedSources.includes(source.id)
                     ? "border-red-500 bg-red-500/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                    : "border-subtle10 bg-surface-raised hover:bg-surface-raised"
                 }`}
               >
                 <input
@@ -243,12 +243,12 @@ export default function SupplierPipelinePage() {
             placeholder="Search leads..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
+            className="px-4 py-2 bg-surface-raised border border-subtle10 rounded-lg text-foreground placeholder-gray-500 focus:outline-none focus:border-red-500"
           />
           <select
             value={filterStatus}
             onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-red-500"
+            className="px-4 py-2 bg-surface-raised border border-subtle10 rounded-lg text-foreground focus:outline-none focus:border-red-500"
           >
             <option value="">All Statuses</option>
             <option value="DISCOVERED">Discovered</option>
@@ -261,10 +261,10 @@ export default function SupplierPipelinePage() {
           </select>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden overflow-x-auto">
+        <div className="bg-surface-raised border border-subtle10 rounded-lg overflow-hidden overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
-              <tr className="border-b border-white/10 text-left text-sm text-gray-400">
+              <tr className="border-b border-subtle10 text-left text-sm text-gray-400">
                 <th className="p-4">Name</th>
                 <th className="p-4">City</th>
                 <th className="p-4">Category</th>
@@ -292,7 +292,7 @@ export default function SupplierPipelinePage() {
                 leads.map((lead) => (
                   <tr
                     key={lead.id}
-                    className="border-b border-white/5 hover:bg-white/5 transition"
+                    className="border-b border-subtle5 hover:bg-surface-raised transition"
                   >
                     <td className="p-4">
                       <div className="font-medium">{lead.name}</div>
@@ -307,7 +307,7 @@ export default function SupplierPipelinePage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-1">
-                        <div className="w-16 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="w-16 h-2 bg-surface-raised rounded-full overflow-hidden">
                           <div
                             className="h-full bg-red-500 rounded-full"
                             style={{ width: `${lead.priority * 10}%` }}
@@ -354,7 +354,7 @@ export default function SupplierPipelinePage() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-surface-raised border border-subtle10 rounded-lg disabled:opacity-50"
             >
               Previous
             </button>
@@ -364,7 +364,7 @@ export default function SupplierPipelinePage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-surface-raised border border-subtle10 rounded-lg disabled:opacity-50"
             >
               Next
             </button>

@@ -140,9 +140,9 @@ export default function TrackingPage() {
                           }}
                         >
                           {stage.status === "complete" ? (
-                            <CheckCircle2 size={11} style={{ color: "#FAFAF8" }} />
+                            <CheckCircle2 size={11} style={{ color: "#F8FAFC" }} />
                           ) : (
-                            <Icon size={11} style={{ color: stage.status === "active" ? "#FAFAF8" : "var(--text-muted)" }} />
+                            <Icon size={11} style={{ color: stage.status === "active" ? "#F8FAFC" : "var(--text-muted)" }} />
                           )}
                         </div>
                         <div className="flex-1 pt-0.5">
@@ -173,10 +173,10 @@ export default function TrackingPage() {
                   <svg viewBox="0 0 300 60" className="w-full h-full">
                     <path d="M 20 30 Q 80 10 150 30 Q 220 50 280 30" fill="none" stroke="#2B6CB0" strokeWidth="1.5" strokeDasharray="3 2"/>
                     <circle cx="60" cy="22" r="4" fill="#2E7D4F"/>
-                    <circle cx="150" cy="30" r="5" fill="#C4881F" stroke="#FAFAF8" strokeWidth="1.5"/>
-                    <circle cx="240" cy="32" r="4" fill="#D4D1CC"/>
+                    <circle cx="150" cy="30" r="5" fill="#A16207" stroke="#F8FAFC" strokeWidth="1.5"/>
+                    <circle cx="240" cy="32" r="4" fill="#CBD5E1"/>
                     <text x="55" y="16" fontSize="6" fill="#2E7D4F">Cairo</text>
-                    <text x="140" y="18" fontSize="6" fill="#C4881F">Hub</text>
+                    <text x="140" y="18" fontSize="6" fill="#A16207">Hub</text>
                     <text x="230" y="18" fontSize="6" fill="#9D978E">Sharm</text>
                   </svg>
                 </div>

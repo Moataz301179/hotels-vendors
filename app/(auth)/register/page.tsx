@@ -121,9 +121,9 @@ function RegisterContent() {
         return;
       }
 
-      // Redirect to OTP verification
+      // Redirect to OTP verification with auto-generated password
       router.push(
-        `/verify-otp?userId=${encodeURIComponent(data.data.userId)}&phone=${encodeURIComponent(data.data.phone)}${data.data.devCode ? `&devCode=${data.data.devCode}` : ""}`
+        `/verify-otp?userId=${encodeURIComponent(data.data.userId)}&phone=${encodeURIComponent(data.data.phone)}${data.data.devCode ? `&devCode=${data.data.devCode}` : ""}${data.data.password ? `&password=${encodeURIComponent(data.data.password)}` : ""}`
       );
     } catch {
       setError("Network error. Please try again.");

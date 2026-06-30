@@ -43,7 +43,7 @@ function StatusBadge({ status }: { status: string }) {
     IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-    DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+    DRAFT: { bg: "bg-surface-raised", text: "text-foreground-tertiary", dot: "bg-foreground-muted", label: "Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -156,8 +156,8 @@ export default function OrdersPage() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Order Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Track, manage, and fulfill orders across the entire supply chain</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Order Management</h1>
+          <p className="text-sm text-foreground-tertiary mt-0.5">Track, manage, and fulfill orders across the entire supply chain</p>
         </div>
       </motion.div>
 
@@ -169,15 +169,15 @@ export default function OrdersPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-subtle bg-surface-raised p-4 hover:bg-surface-raised transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-tertiary" />
                   </div>
                 </div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
+                <p className="text-xl font-bold text-foreground">{s.value}</p>
                 <div className="flex items-center gap-1 mt-1">
                   {s.up ? <ArrowUpRight size={12} className="text-emerald-400" /> : <ArrowDownRight size={12} className="text-red-400" />}
                   <span className={`text-[11px] font-medium ${s.up ? "text-emerald-400" : "text-red-400"}`}>{s.change}</span>
@@ -189,19 +189,19 @@ export default function OrdersPage() {
       {/* Search + Filters */}
       <motion.div variants={fadeInUp} className="flex items-center gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search orders, hotels, suppliers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
+            className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
+          className="px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground-tertiary focus:outline-none"
         >
           <option value="all" className="bg-[var(--background)]">All Status</option>
           <option value="PENDING_APPROVAL" className="bg-[var(--background)]">Pending</option>
@@ -226,50 +226,50 @@ export default function OrdersPage() {
             action={
               <button
                 onClick={() => { setSearchQuery(""); setFilterStatus("all"); }}
-                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white transition-colors"
+                className="px-4 py-2 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground-tertiary hover:text-foreground transition-colors"
               >
                 Clear Filters
               </button>
             }
           />
         ) : (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+          <div className="rounded-xl border border-subtle bg-surface-raised overflow-hidden overflow-x-auto">
             <table className="w-full min-w-[640px]">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order ID</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Items</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Delivery</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+                <tr className="border-b border-subtle">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Order ID</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Supplier</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Items</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Delivery</th>
+                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <tr key={order.id} className="border-b border-subtle hover:bg-surface-raised transition-colors">
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-white/60">{order.orderNumber}</span>
+                      <span className="text-xs font-mono text-foreground-tertiary">{order.orderNumber}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-white">{order.hotel?.name || "—"}</span>
+                      <span className="text-xs text-foreground">{order.hotel?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/40">{order.supplier?.name || "—"}</span>
+                      <span className="text-[11px] text-foreground-tertiary">{order.supplier?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-white">{order.items?.reduce((sum, i) => sum + i.quantity, 0) || 0}</span>
+                      <span className="text-xs text-foreground">{order.items?.reduce((sum, i) => sum + i.quantity, 0) || 0}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-semibold text-white">{formatCurrency(order.total, order.currency)}</span>
+                      <span className="text-xs font-semibold text-foreground">{formatCurrency(order.total, order.currency)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={order.status} />
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/30">
+                      <span className="text-[11px] text-foreground-muted">
                         {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : "—"}
                       </span>
                     </td>
@@ -280,14 +280,14 @@ export default function OrdersPage() {
                             <button
                               onClick={() => handleApprove(order.id)}
                               disabled={actionLoading === order.id}
-                              className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-white/20 hover:text-emerald-400 transition-colors disabled:opacity-50"
+                              className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-foreground-muted hover:text-emerald-400 transition-colors disabled:opacity-50"
                               title="Approve"
                             >
                               {actionLoading === order.id ? <Loader2 size={14} className="animate-spin" /> : <ThumbsUp size={14} />}
                             </button>
                             <button
                               onClick={() => { setRejectModalOrder(order); setRejectReason(""); }}
-                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-colors"
+                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-foreground-muted hover:text-red-400 transition-colors"
                               title="Reject"
                             >
                               <XCircle size={14} />
@@ -296,7 +296,7 @@ export default function OrdersPage() {
                         )}
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-surface-raised text-foreground-muted hover:text-foreground-tertiary transition-colors"
                         >
                           <Eye size={14} />
                         </button>
@@ -321,24 +321,24 @@ export default function OrdersPage() {
         {selectedOrder && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Total</p>
-                <p className="text-sm text-white mt-0.5">{formatCurrency(selectedOrder.total, selectedOrder.currency)}</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Total</p>
+                <p className="text-sm text-foreground mt-0.5">{formatCurrency(selectedOrder.total, selectedOrder.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-raised border border-subtle">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5"><StatusBadge status={selectedOrder.status} /></div>
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-white/20 uppercase mb-2">Items</p>
+              <p className="text-[10px] text-foreground-muted uppercase mb-2">Items</p>
               <div className="space-y-1.5">
                 {selectedOrder.items?.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <span className="text-xs text-white/60">{item.product?.name}</span>
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-surface-raised border border-subtle">
+                    <span className="text-xs text-foreground-tertiary">{item.product?.name}</span>
                     <div className="text-right">
-                      <span className="text-xs text-white/40">× {item.quantity}</span>
-                      <span className="text-xs text-white ml-2">{formatCurrency(item.total, selectedOrder.currency)}</span>
+                      <span className="text-xs text-foreground-tertiary">× {item.quantity}</span>
+                      <span className="text-xs text-foreground ml-2">{formatCurrency(item.total, selectedOrder.currency)}</span>
                     </div>
                   </div>
                 ))}
@@ -375,13 +375,13 @@ export default function OrdersPage() {
       >
         <div className="space-y-4">
           <div>
-            <label className="text-xs text-white/40 uppercase tracking-wider mb-1.5 block">Reason (optional)</label>
+            <label className="text-xs text-foreground-tertiary uppercase tracking-wider mb-1.5 block">Reason (optional)</label>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Why is this order being rejected?"
               rows={3}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-red-500/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-red-500/40 resize-none"
             />
           </div>
           {actionError && (
@@ -390,7 +390,7 @@ export default function OrdersPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setRejectModalOrder(null)}
-              className="flex-1 px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white transition-colors"
+              className="flex-1 px-4 py-2 rounded-lg bg-surface-raised border border-subtle text-xs text-foreground-tertiary hover:text-foreground transition-colors"
             >
               Cancel
             </button>

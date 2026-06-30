@@ -49,15 +49,15 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-subtle">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-accent-base/15 flex items-center justify-center">
               <ClipboardList className="w-4 h-4 text-accent-base" />
             </div>
             <div>
-              <h1 className="text-[22px] font-bold tracking-tight text-white">Order Oversight</h1>
-              <p className="text-[13px] text-white/40">Cross-tenant order management and monitoring</p>
+              <h1 className="text-[22px] font-bold tracking-tight text-foreground">Order Oversight</h1>
+              <p className="text-[13px] text-foreground-tertiary">Cross-tenant order management and monitoring</p>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function AdminOrdersPage() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-tertiary bg-surface-raised border border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Statuses</option>
             <option value="PENDING">Pending</option>
@@ -82,36 +82,36 @@ export default function AdminOrdersPage() {
           </select>
         </div>
 
-        <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
+        <div className="rounded-xl bg-[#0f0f0f] border border-subtle overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Order</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Total</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Payment</th>
+                <tr className="border-b border-subtle">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Order</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Hotel</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Supplier</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Status</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Total</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">Payment</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.04]">
-                {loading && <tr><td colSpan={6} className="px-5 py-12 text-center text-white/30">Loading orders...</td></tr>}
-                {!loading && orders.length === 0 && <tr><td colSpan={6} className="px-5 py-12 text-center text-white/30">No orders found</td></tr>}
+                {loading && <tr><td colSpan={6} className="px-5 py-12 text-center text-foreground-muted">Loading orders...</td></tr>}
+                {!loading && orders.length === 0 && <tr><td colSpan={6} className="px-5 py-12 text-center text-foreground-muted">No orders found</td></tr>}
                 {orders.map((o, i) => (
-                  <motion.tr key={o.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-white/[0.02] transition-colors">
+                  <motion.tr key={o.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-surface-raised transition-colors">
                     <td className="px-5 py-3.5">
-                      <p className="text-[13px] font-medium text-white">{o.orderNumber}</p>
-                      <p className="text-[11px] text-white/30">{new Date(o.createdAt).toLocaleDateString()}</p>
+                      <p className="text-[13px] font-medium text-foreground">{o.orderNumber}</p>
+                      <p className="text-[11px] text-foreground-muted">{new Date(o.createdAt).toLocaleDateString()}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/60">{o.hotelName}</td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/60">{o.supplierName}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-foreground-tertiary">{o.hotelName}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-foreground-tertiary">{o.supplierName}</td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase border ${STATUS_STYLES[o.status] || "bg-white/5 text-white/40 border-white/10"}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase border ${STATUS_STYLES[o.status] || "bg-surface-raised text-foreground-tertiary border-subtle10"}`}>
                         {o.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-[13px] font-medium text-white">EGP {(o.total / 1000).toFixed(1)}K</td>
+                    <td className="px-5 py-3.5 text-[13px] font-medium text-foreground">EGP {(o.total / 1000).toFixed(1)}K</td>
                     <td className="px-5 py-3.5">
                       {o.paymentGuaranteed ? (
                         <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400">
@@ -129,11 +129,11 @@ export default function AdminOrdersPage() {
             </table>
           </div>
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-[11px] text-white/30">Page {page} of {pagination.totalPages}</span>
+            <div className="px-5 py-3 border-t border-subtle flex items-center justify-between">
+              <span className="text-[11px] text-foreground-muted">Page {page} of {pagination.totalPages}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
-                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-foreground-tertiary hover:text-foreground disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-foreground-tertiary hover:text-foreground disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
               </div>
             </div>
           )}

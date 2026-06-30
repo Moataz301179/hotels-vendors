@@ -104,23 +104,23 @@ export default function CoveragePage() {
                 <rect x="0" y="0" width="400" height="55" fill="#E5EEF7" opacity="0.4"/>
                 <text x="18" y="28" fontSize="8" fill="#2B6CB0" opacity="0.5">Mediterranean Sea</text>
                 {/* Red Sea label */}
-                <text x="310" y="240" fontSize="8" fill="#C4881F" opacity="0.5">Red Sea</text>
+                <text x="310" y="240" fontSize="8" fill="#A16207" opacity="0.5">Red Sea</text>
                 {/* Egypt outline */}
                 <path d="M 60 35 L 340 35 L 355 75 L 365 140 L 350 200 L 320 260 L 275 272 L 215 265 L 150 272 L 105 255 L 80 205 L 60 145 L 60 35 Z"
-                  fill="#FAFAF8" stroke="#D4D1CC" strokeWidth="1.5"/>
+                  fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5"/>
                 {/* Nile */}
                 <path d="M 210 55 Q 218 105 210 155 Q 205 195 210 260"
                   fill="none" stroke="#B8D4E8" strokeWidth="3" opacity="0.6"/>
                 {/* Cairo hub */}
-                <rect x="198" y="96" width="22" height="13" rx="3" fill="#C4881F"/>
-                <text x="201" y="105" fontSize="6" fill="#FAFAF8" fontWeight="600">CAI</text>
+                <rect x="198" y="96" width="22" height="13" rx="3" fill="#A16207"/>
+                <text x="201" y="105" fontSize="6" fill="#F8FAFC" fontWeight="600">CAI</text>
                 {/* Shark-Breaker routes from Cairo */}
                 {CITIES.filter(c => c.status !== "coming").map((city) => (
                   <path
                     key={`route-${city.name}`}
                     d={`M 210 110 Q ${(210 + city.x) / 2} ${(110 + city.y) / 2 - 10} ${city.x} ${city.y}`}
                     fill="none"
-                    stroke={city.status === "active" ? "#C4881F" : "#D4D1CC"}
+                    stroke={city.status === "active" ? "#A16207" : "#CBD5E1"}
                     strokeWidth="1"
                     strokeDasharray={city.status === "active" ? "0" : "3 2"}
                     opacity="0.5"
@@ -137,7 +137,7 @@ export default function CoveragePage() {
                           <circle cx={city.x} cy={city.y} r="9" fill={meta.color} opacity="0.15"/>
                         </>
                       )}
-                      <circle cx={city.x} cy={city.y} r="4" fill={meta.color} stroke="#FAFAF8" strokeWidth="1.5"/>
+                      <circle cx={city.x} cy={city.y} r="4" fill={meta.color} stroke="#F8FAFC" strokeWidth="1.5"/>
                       <text x={city.x + 8} y={city.y + 3} fontSize="7" fill="#1A1816" fontWeight="500">
                         {city.name}
                       </text>
