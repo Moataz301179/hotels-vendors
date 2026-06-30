@@ -53,7 +53,7 @@ export function InvoicingPortal() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)" }}
+              style={{ fontFamily: "var(--font-sans)" }}
             >
               E-Invoicing That&apos;s
               <br />
@@ -95,7 +95,7 @@ export function InvoicingPortal() {
                             <span className="text-[11px] text-white/30">{inv.supplier}</span>
                           </div>
                           <div className="text-right">
-                            <span className="text-[14px] font-bold text-white block" style={{ fontFamily: "var(--font-serif)" }}>{inv.amount}</span>
+                            <span className="text-[14px] font-bold text-white block" style={{ fontFamily: "var(--font-sans)" }}>{inv.amount}</span>
                             <span className="text-[10px] text-white/25">{inv.date}</span>
                           </div>
                         </div>

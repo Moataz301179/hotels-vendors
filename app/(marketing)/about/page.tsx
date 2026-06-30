@@ -1,198 +1,1072 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Eye, Target, Shield, Globe, Zap, MapPin, Building2, Banknote, Users } from "lucide-react";
+"use client";
 
-function FacebookIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-  );
-}
-function InstagramIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-  );
-}
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import {
+  Share2,
+  Globe,
+  Building2,
+  Target,
+  Eye,
+  Heart,
+  TrendingUp,
+} from "lucide-react";
+import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { MarketingPage } from "@/components/layout/marketing-page";
 
-export const metadata: Metadata = {
-  title: "About HotelsVendors — Founded by Moataz, 2023 | Egypt's Hospitality Fintech Infrastructure",
-  description: "HotelsVendors was founded by Moataz in 2023 to bridge Egypt's hospitality procurement gap using existing fintech infrastructure. Built for Sharm El-Sheikh and Hurghada resorts.",
-  keywords: ["B2B hospitality procurement Egypt", "hotelsvendors founder", "Egypt fintech hospitality", "Moataz hotelsvendors", "ETA e-invoicing compliance", "hospitality vendor marketplace"],
-  openGraph: {
-    title: "About HotelsVendors — Founded by Moataz, 2023",
-    description: "Egypt's B2B hospitality procurement platform. Founded in 2023, built to utilize Egypt's fintech infrastructure for hotel supply chains.",
-    type: "website",
-  },
-};
+const ACCENT = "var(--accent-base)";
+const ACCENT_BORDER = "var(--border-accent, rgba(230,155,45,0.30))";
+const TURQUOISE = "var(--turquoise-400, #2DD4BF)";
+const GREEN = "var(--green-400, #4ADE80)";
+const SURFACE = "var(--bg-surface-1, #2D1F14)";
+const SURFACE_ALT = "var(--bg-surface-2, #3D2B1F)";
+const TEXT = "var(--text-primary, #F5EDE3)";
+const TEXT_MUTED = "var(--text-muted, #A6937E)";
+const TEXT_SECONDARY = "var(--text-secondary, #D4C5B5)";
+const BORDER = "var(--border-default, rgba(245,237,227,0.08))";
+const SANS = "var(--font-sans)";
 
-const socialLinks = [
-  { icon: FacebookIcon, label: "Facebook", href: "https://www.facebook.com/hotelsvendors", color: "#1877F2" },
-  { icon: InstagramIcon, label: "Instagram", href: "https://www.instagram.com/hotelsvendors", color: "#E4405F" },
-];
+function Reveal({ children, className = "", delay = 0, x = 0 }: { children: React.ReactNode; className?: string; delay?: number; x?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32, x }}
+      animate={isInView ? { opacity: 1, y: 0, x: 0 } : { opacity: 0, y: 32, x }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function StatCard({
+  value,
+  label,
+  accent,
+  delay,
+}: {
+  value: string;
+  label: string;
+  accent: string;
+  delay: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
+      style={{
+        backgroundColor: SURFACE,
+        border: `1px solid ${BORDER}`,
+        borderRadius: "16px",
+        padding: "28px 24px",
+        textAlign: "center",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "clamp(28px,3.5vw,40px)",
+          fontWeight: 600,
+          fontFamily: SANS,
+          color: accent,
+          lineHeight: 1.1,
+          marginBottom: 4,
+        }}
+      >
+        {value}
+      </div>
+      <div
+        style={{
+          fontSize: "13px",
+          fontFamily: SANS,
+          color: TEXT_MUTED,
+          fontWeight: 400,
+        }}
+      >
+        {label}
+      </div>
+    </motion.div>
+  );
+}
+
+function ValueCard({
+  icon: Icon,
+  title,
+  desc,
+  borderColor,
+  delay,
+}: {
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+  borderColor: string;
+  delay: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
+      style={{
+        backgroundColor: SURFACE,
+        border: `1px solid ${borderColor}40`,
+        borderRadius: "16px",
+        padding: "28px 24px",
+      }}
+    >
+      <div
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: 12,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 16,
+          backgroundColor: `${borderColor}15`,
+          color: borderColor,
+        }}
+      >
+        <Icon size={20} />
+      </div>
+      <h3
+        style={{
+          fontSize: "16px",
+          fontWeight: 600,
+          fontFamily: SANS,
+          color: TEXT,
+          marginBottom: 6,
+        }}
+      >
+        {title}
+      </h3>
+      <p
+        style={{
+          fontSize: "13px",
+          fontFamily: SANS,
+          color: TEXT_MUTED,
+          lineHeight: 1.6,
+        }}
+      >
+        {desc}
+      </p>
+    </motion.div>
+  );
+}
 
 export default function AboutPage() {
   return (
     <MarketingPage>
       <MarketingNav />
 
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-muted uppercase tracking-[0.15em] mb-3 block">About</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-primary">
-            Born in 2023.<br />Built for Egypt&apos;s<br />Hospitality Infrastructure.
-          </h1>
-          <p className="text-[15px] text-muted max-w-2xl leading-relaxed">
-            HotelsVendors was founded by <strong className="text-secondary">Moataz</strong> in 2023 with a clear mission: bridge the procurement gap in Egypt&apos;s hospitality sector by leveraging the country&apos;s growing fintech infrastructure — ETA e-invoicing, embedded factoring, and digital payment rails — into one unified B2B platform.
-          </p>
+      {/* ─── Hero ─────────────────────────────────────────── */}
+      <section
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          paddingTop: 140,
+          paddingBottom: 80,
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 1.2 }}
+          animate={{ opacity: 0.5, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            translate: "-50% -50%",
+            width: 700,
+            height: 400,
+            borderRadius: "50%",
+            filter: "blur(150px)",
+            pointerEvents: "none",
+            background: `radial-gradient(circle, ${ACCENT}20 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+            textAlign: "center",
+          }}
+        >
+          <Reveal delay={0.1}>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 500,
+                fontFamily: SANS,
+                color: ACCENT,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                marginBottom: 12,
+                display: "block",
+              }}
+            >
+              About
+            </span>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <h1
+              style={{
+                fontSize: "clamp(32px,5vw,56px)",
+                fontWeight: 600,
+                fontFamily: SANS,
+                color: TEXT,
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                marginBottom: 16,
+              }}
+            >
+              About{" "}
+              <span style={{ color: ACCENT }}>HotelsVendors</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <p
+              style={{
+                fontSize: "16px",
+                fontFamily: SANS,
+                color: TEXT_MUTED,
+                maxWidth: 640,
+                margin: "0 auto",
+                lineHeight: 1.6,
+              }}
+            >
+              Egypt&apos;s leading B2B hospitality procurement platform —
+              connecting hotels with verified suppliers, automating
+              procurement, and unlocking embedded supply-chain finance
+              for the Egyptian hospitality industry.
+            </p>
+          </Reveal>
+          <Reveal delay={0.4}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                marginTop: 28,
+              }}
+            >
+              <Link
+                href="/register"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "12px 28px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  fontFamily: SANS,
+                  color: "#fff",
+                  backgroundColor: ACCENT,
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
+              >
+                Join the Platform
+                <Building2 size={15} />
+              </Link>
+              <Link
+                href="/solutions"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "12px 28px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  fontFamily: SANS,
+                  color: TEXT_SECONDARY,
+                  backgroundColor: "transparent",
+                  border: `1px solid ${BORDER}`,
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = SURFACE; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+              >
+                Explore Solutions
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Founder */}
-      <section className="py-16 marketing-section">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="label-upper mb-4 block">Founder</span>
-              <h2 className="text-[28px] font-medium text-primary mb-4">Moataz</h2>
-              <p className="text-[14px] text-muted leading-relaxed mb-4">
-                A former auditor at EY, Deloitte, and KPMG, Moataz spent years inside the financial infrastructure of Egyptian enterprises. He saw firsthand how hospitality procurement — especially in coastal resorts — was fragmented, manual, and disconnected from the fintech tools that Egypt was rapidly building.
-              </p>
-              <p className="text-[14px] text-muted leading-relaxed mb-4">
-                In 2023, he founded HotelsVendors under <strong className="text-secondary">Restaurants for E-Marketing</strong> (Tax ID: 704226146) to build the technical orchestration layer that connects hotels, suppliers, funders, and logistics providers — using Egypt&apos;s existing fintech rails rather than reinventing them.
-              </p>
-              <p className="text-[14px] text-muted leading-relaxed">
-                The company operates as a <strong className="text-secondary">technical data orchestrator</strong> — licensed for digital marketing, not cash custody or factoring. HotelsVendors plugs into licensed financial institutions for factoring and payment processing, providing the AI-powered procurement and compliance layer on top.
-              </p>
-              {/* Social Links */}
-              <div className="flex items-center gap-4 mt-6">
-                {socialLinks.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-medium transition-all hover:scale-105"
-                    style={{ backgroundColor: s.color + "15", color: s.color, border: `1px solid ${s.color}30` }}
-                  >
-                    <s.icon size={14} />
-                    {s.label}
-                  </a>
-                ))}
+      {/* ─── Mission ────────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "80px 0",
+          backgroundColor: SURFACE,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: 24,
+            }}
+          >
+            <Reveal delay={0.1}>
+              <div
+                style={{
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${ACCENT_BORDER}`,
+                  borderRadius: 20,
+                  padding: "40px 32px",
+                }}
+              >
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 20,
+                    backgroundColor: `${ACCENT}15`,
+                    color: ACCENT,
+                  }}
+                >
+                  <Target size={22} />
+                </div>
+                <h2
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    fontFamily: SANS,
+                    color: TEXT,
+                    marginBottom: 10,
+                  }}
+                >
+                  Our Mission
+                </h2>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Digitize hotel procurement end-to-end, connect suppliers
+                  to a unified marketplace with real-time inventory, and
+                  enable factoring liquidity so hotels extend payment
+                  cycles while suppliers get paid in days — not months.
+                </p>
               </div>
-            </div>
-            <div className="surface-card p-8">
-              <div className="space-y-5">
-                {[
-                  { label: "Founded", value: "2023" },
-                  { label: "Legal Entity", value: "Restaurants for E-Marketing" },
-                  { label: "Tax ID", value: "704226146" },
-                  { label: "Commercial Registry", value: "105300900196948" },
-                  { label: "License", value: "Digital Marketing" },
-                  { label: "Role", value: "Technical Data Orchestrator" },
-                  { label: "Headquarters", value: "Egypt" },
-                  { label: "Sector", value: "Hospitality B2B Procurement" },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-subtle last:border-0">
-                    <span className="text-[12px] text-muted">{item.label}</span>
-                    <span className="text-[13px] text-secondary font-medium">{item.value}</span>
-                  </div>
-                ))}
+            </Reveal>
+
+            <Reveal delay={0.2}>
+              <div
+                style={{
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${TURQUOISE}30`,
+                  borderRadius: 20,
+                  padding: "40px 32px",
+                }}
+              >
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 20,
+                    backgroundColor: `${TURQUOISE}15`,
+                    color: TURQUOISE,
+                  }}
+                >
+                  <Eye size={22} />
+                </div>
+                <h2
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    fontFamily: SANS,
+                    color: TEXT,
+                    marginBottom: 10,
+                  }}
+                >
+                  Our Vision
+                </h2>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Become the operating system for Egyptian hospitality
+                  procurement — where every order, invoice, payment, and
+                  delivery across Egypt&apos;s coastal resorts runs through
+                  a single transparent platform.
+                </p>
               </div>
-            </div>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <div
+                style={{
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${GREEN}30`,
+                  borderRadius: 20,
+                  padding: "40px 32px",
+                }}
+              >
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 20,
+                    backgroundColor: `${GREEN}15`,
+                    color: GREEN,
+                  }}
+                >
+                  <TrendingUp size={22} />
+                </div>
+                <h2
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    fontFamily: SANS,
+                    color: TEXT,
+                    marginBottom: 10,
+                  }}
+                >
+                  Our Impact
+                </h2>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  EGP 12M+ in monthly GMV processed, 500+ hotels served,
+                  and 680+ verified suppliers across Sharm El-Sheikh,
+                  Hurghada, Cairo, and the North Coast — growing month
+                  over month.
+                </p>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-8 border-y marketing-section-alt" style={{ borderColor: "var(--border-subtle)" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: MapPin, label: "Egypt-First", desc: "صُمم لسلاسل الإمداد المحلية" },
-              { icon: Building2, label: "Hospitality-Only", desc: "ليس سوقًا عامًا" },
-              { icon: Shield, label: "ETA Compliant", desc: "متوافق مع الفوترة الإلكترونية" },
-              { icon: Banknote, label: "Embedded Finance", desc: "التمويل المدمج من اليوم الأول" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "var(--accent-base)" }} />
-                <div>
-                  <p className="text-[11px] font-medium text-secondary">{b.label}</p>
-                  <p className="text-[9px] text-muted">{b.desc}</p>
+      {/* ─── Key Numbers ────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "80px 0",
+          position: "relative",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          transition={{ duration: 1.5 }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            translate: "-50% 0",
+            width: 600,
+            height: 300,
+            borderRadius: "50%",
+            filter: "blur(120px)",
+            pointerEvents: "none",
+            background: `radial-gradient(circle, ${TURQUOISE}10 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+          }}
+        >
+          <Reveal delay={0.1}>
+            <h2
+              style={{
+                fontSize: "clamp(22px,3vw,32px)",
+                fontWeight: 600,
+                fontFamily: SANS,
+                color: TEXT,
+                textAlign: "center",
+                marginBottom: 8,
+              }}
+            >
+              By the Numbers
+            </h2>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <p
+              style={{
+                fontSize: "13px",
+                fontFamily: SANS,
+                color: TEXT_MUTED,
+                textAlign: "center",
+                maxWidth: 500,
+                margin: "0 auto 40px",
+                lineHeight: 1.6,
+              }}
+            >
+              The platform trusted by Egypt&apos;s leading hotel chains and
+              hospitality suppliers
+            </p>
+          </Reveal>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 16,
+            }}
+          >
+            <StatCard
+              value="680+"
+              label="Verified Suppliers"
+              accent={ACCENT}
+              delay={0.2}
+            />
+            <StatCard
+              value="500+"
+              label="Hotels Served"
+              accent={TURQUOISE}
+              delay={0.3}
+            />
+            <StatCard
+              value="EGP 12M+"
+              label="Monthly GMV"
+              accent={GREEN}
+              delay={0.4}
+            />
+            <StatCard
+              value="98%"
+              label="On-Time Delivery"
+              accent={ACCENT}
+              delay={0.5}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Team Story ─────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "80px 0",
+          backgroundColor: SURFACE,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 40,
+              alignItems: "center",
+            }}
+          >
+            <Reveal delay={0.1} x={-20}>
+              <div>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    fontFamily: SANS,
+                    color: ACCENT,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.15em",
+                    marginBottom: 12,
+                    display: "block",
+                  }}
+                >
+                  Our Story
+                </span>
+                <h2
+                  style={{
+                    fontSize: "clamp(24px,3vw,36px)",
+                    fontWeight: 600,
+                    fontFamily: SANS,
+                    color: TEXT,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    marginBottom: 16,
+                  }}
+                >
+                  Born from a simple<br />
+                  observation: procurement<br />
+                  in Egyptian hospitality<br />
+                  was <span style={{ color: ACCENT }}>fragmented</span>.
+                </h2>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                    marginBottom: 12,
+                  }}
+                >
+                  Founded in 2023, HotelsVendors emerged from years spent inside
+                  Egypt&apos;s financial infrastructure — auditing enterprises,
+                  mapping supply chains, and watching the disconnect between
+                  the country&apos;s rapidly evolving fintech rails and the
+                  manual, paper-driven procurement processes of coastal hotels.
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  We built HotelsVendors as the orchestration layer: an
+                  AI-powered platform that sits on top of Egypt&apos;s ETA
+                  e-invoicing framework, licensed factoring institutions,
+                  and digital payment infrastructure — connecting hotels,
+                  suppliers, funders, and logistics into one seamless
+                  procurement loop.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.2} x={20}>
+              <div
+                style={{
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${BORDER}`,
+                  borderRadius: 20,
+                  padding: "40px 32px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 24,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 16,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 52,
+                      height: 52,
+                      borderRadius: "50%",
+                      backgroundColor: `${ACCENT}15`,
+                      color: ACCENT,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "20px",
+                      fontWeight: 600,
+                      fontFamily: SANS,
+                      flexShrink: 0,
+                    }}
+                  >
+                    M
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        fontFamily: SANS,
+                        color: TEXT,
+                      }}
+                    >
+                      Moataz
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        fontFamily: SANS,
+                        color: TEXT_MUTED,
+                      }}
+                    >
+                      Founder & CEO
+                    </div>
+                  </div>
+                </div>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontFamily: SANS,
+                    color: TEXT_MUTED,
+                    lineHeight: 1.7,
+                    fontStyle: "italic",
+                    borderLeft: `2px solid ${ACCENT}`,
+                    paddingLeft: 16,
+                    margin: 0,
+                  }}
+                >
+                  &ldquo;Egypt has world-class fintech infrastructure.
+                  Hotels and suppliers just needed someone to connect
+                  the dots. We built the bridge.&rdquo;
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    flexWrap: "wrap",
+                    paddingTop: 8,
+                    borderTop: `1px solid ${BORDER}`,
+                  }}
+                >
+                  {[
+                    { label: "EY", role: "Audit" },
+                    { label: "Deloitte", role: "Advisory" },
+                    { label: "KPMG", role: "Risk" },
+                  ].map((exp) => (
+                    <div
+                      key={exp.label}
+                      style={{
+                        padding: "4px 12px",
+                        borderRadius: 8,
+                        fontSize: "11px",
+                        fontFamily: SANS,
+                        color: TEXT_SECONDARY,
+                        backgroundColor: `${ACCENT}10`,
+                        border: `1px solid ${ACCENT}20`,
+                      }}
+                    >
+                      {exp.label} · {exp.role}
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Vision & Focus */}
-      <section className="py-16 marketing-section">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-start">
-            <div>
-              <Eye size={24} className="mb-4" style={{ color: "var(--accent-base)" }} />
-              <h2 className="text-[20px] font-medium text-primary mb-4">The Market Gap</h2>
-              <p className="text-[14px] text-muted leading-relaxed mb-4">
-                Egypt&apos;s hospitality sector is fragmented across thousands of manual procurement processes. Paper invoices. Extended payment cycles. Zero visibility into spend. Coastal resorts in Sharm El-Sheikh and Hurghada rely on suppliers primarily based in Cairo, with logistics costs significantly impacting every order.
-              </p>
-              <p className="text-[14px] text-muted leading-relaxed">
-                The ETA e-invoicing mandate created a digital layer, but no one built the orchestration platform on top of it. HotelsVendors fills that gap: the AI-powered procurement OS that uses Egypt&apos;s fintech infrastructure as its foundation.
-              </p>
+      {/* ─── Values ─────────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "80px 0",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+          }}
+        >
+          <Reveal delay={0.1}>
+            <h2
+              style={{
+                fontSize: "clamp(22px,3vw,32px)",
+                fontWeight: 600,
+                fontFamily: SANS,
+                color: TEXT,
+                textAlign: "center",
+                marginBottom: 8,
+              }}
+            >
+              What Drives Us
+            </h2>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <p
+              style={{
+                fontSize: "13px",
+                fontFamily: SANS,
+                color: TEXT_MUTED,
+                textAlign: "center",
+                maxWidth: 500,
+                margin: "0 auto 40px",
+                lineHeight: 1.6,
+              }}
+            >
+              Four principles that guide every decision we make
+            </p>
+          </Reveal>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: 20,
+            }}
+          >
+            <ValueCard
+              icon={Eye}
+              title="Transparency"
+              desc="Every order, invoice, and payment is traceable end-to-end. No black boxes, no hidden fees — just clear visibility into your procurement lifecycle."
+              borderColor={ACCENT}
+              delay={0.2}
+            />
+            <ValueCard
+              icon={TrendingUp}
+              title="Efficiency"
+              desc="AI-powered demand forecasting, automated purchase orders, and shared-route logistics that cut procurement time by 60% and reduce delivery costs."
+              borderColor={TURQUOISE}
+              delay={0.3}
+            />
+            <ValueCard
+              icon={Heart}
+              title="Compliance"
+              desc="Built on Egypt's ETA e-invoicing framework with cryptographic audit trails, FRA anti-fraud measures, and full regulatory adherence from day one."
+              borderColor={GREEN}
+              delay={0.4}
+            />
+            <ValueCard
+              icon={Target}
+              title="Innovation"
+              desc="We don't just digitize old processes — we reimagine them. Embedded factoring, AI agents, and real-time analytics that no other procurement platform offers."
+              borderColor={ACCENT}
+              delay={0.5}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA ────────────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "80px 0",
+          backgroundColor: SURFACE,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 800,
+            margin: "0 auto",
+            padding: "0 24px",
+            textAlign: "center",
+          }}
+        >
+          <Reveal delay={0.1}>
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 16,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 20px",
+                backgroundColor: `${ACCENT}15`,
+                color: ACCENT,
+              }}
+            >
+              <Heart size={24} />
             </div>
-            <div>
-              <Target size={24} className="mb-4" style={{ color: "var(--accent-base)" }} />
-              <h2 className="text-[20px] font-medium text-primary mb-4">Our Focus</h2>
-              <p className="text-[14px] text-muted leading-relaxed mb-4">
-                We serve coastal hotels in Sharm El-Sheikh and Hurghada first, then Cairo, Alexandria, and the North Coast. These are 100-500 room resorts with multiple F&B outlets, pools, spas, and water sports. Properties where procurement complexity is highest.
-              </p>
-              <p className="text-[14px] text-muted leading-relaxed">
-                Our target customers are local branded hotel chains (Stella Di Mare, Sunrise, Jaz, Baron), not just international 5-star brands. These groups operate 5-30 properties and need portfolio-level procurement control.
-              </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <h2
+              style={{
+                fontSize: "clamp(22px,3vw,32px)",
+                fontWeight: 600,
+                fontFamily: SANS,
+                color: TEXT,
+                marginBottom: 12,
+              }}
+            >
+              Ready to transform your<br />
+              hospitality procurement?
+            </h2>
+          </Reveal>
+          <Reveal delay={0.25}>
+            <p
+              style={{
+                fontSize: "14px",
+                fontFamily: SANS,
+                color: TEXT_MUTED,
+                maxWidth: 480,
+                margin: "0 auto 32px",
+                lineHeight: 1.6,
+              }}
+            >
+              Whether you&apos;re a hotel chain looking to digitize
+              procurement or a supplier seeking verified buyers,
+              HotelsVendors is your platform.
+            </p>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <Link
+                href="/register"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "14px 32px",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  fontFamily: SANS,
+                  color: "#fff",
+                  backgroundColor: ACCENT,
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
+              >
+                Join HotelsVendors
+                <Building2 size={16} />
+              </Link>
+              <Link
+                href="/contact"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "14px 32px",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  fontFamily: SANS,
+                  color: TEXT_SECONDARY,
+                  backgroundColor: "transparent",
+                  border: `1px solid ${BORDER}`,
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = SURFACE_ALT; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+              >
+                Contact Us
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
+          </Reveal>
 
-      {/* Values */}
-      <section className="py-16 marketing-section-alt">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="label-upper mb-8 text-center">What Drives Us</h2>
-          <div className="grid md:grid-cols-4 gap-4">
-            {[
-              { icon: Shield, title: "Compliance First", titleAr: "الامتثال أولاً", desc: "ETA e-invoicing, FRA anti-fraud, and cryptographic audit trails are built in — not bolted on.", color: "var(--accent-base)" },
-              { icon: Globe, title: "Egypt-Focused", titleAr: "تركيز مصري", desc: "Built for Egyptian supply chains, payment cycles, and regulatory requirements.", color: "var(--success)" },
-              { icon: Zap, title: "AI-Native", titleAr: "ذكاء اصطناعي أصلي", desc: "Demand forecasting, anomaly detection, and autonomous agents are core architecture.", color: "var(--info)" },
-              { icon: Target, title: "Hospitality-Only", titleAr: "ضيافة فقط", desc: "We do not serve every industry. We serve hospitality better than anyone else.", color: "var(--warning)" },
-            ].map((v) => (
-              <div key={v.title} className="surface-card p-6 text-center transition-all">
-                <v.icon size={24} className="mx-auto mb-3" style={{ color: v.color }} />
-                <h3 className="text-[14px] font-medium text-primary mb-1">{v.title}</h3>
-                <p className="text-[10px] text-muted mb-2" dir="rtl">{v.titleAr}</p>
-                <p className="text-[12px] text-muted leading-relaxed">{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 marketing-section">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-primary">Want to Learn More?</h2>
-          <p className="text-[13px] text-muted mb-8 max-w-lg mx-auto">We&apos;re always looking for partners who share our vision for Egyptian hospitality.</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text)" }}>
-              Get Started <ArrowRight size={14} />
-            </Link>
-            <Link href="/solutions" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-surface-hover" style={{ border: "1px solid var(--border-visible)", color: "var(--text-secondary)" }}>
-              Explore Solutions
-            </Link>
-          </div>
+          {/* Social / Share */}
+          <Reveal delay={0.35}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 16,
+                marginTop: 40,
+                paddingTop: 28,
+                borderTop: `1px solid ${BORDER}`,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontFamily: SANS,
+                  color: TEXT_MUTED,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                Follow us
+              </span>
+              <a
+                href="https://twitter.com/hotelsvendors"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: TEXT_MUTED,
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${BORDER}`,
+                  transition: "all 0.2s",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = ACCENT;
+                  e.currentTarget.style.borderColor = ACCENT_BORDER;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = TEXT_MUTED;
+                  e.currentTarget.style.borderColor = BORDER;
+                }}
+              >
+                <Twitter size={15} />
+              </a>
+              <a
+                href="https://facebook.com/hotelsvendors"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: TEXT_MUTED,
+                  backgroundColor: SURFACE_ALT,
+                  border: `1px solid ${BORDER}`,
+                  transition: "all 0.2s",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = ACCENT;
+                  e.currentTarget.style.borderColor = ACCENT_BORDER;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = TEXT_MUTED;
+                  e.currentTarget.style.borderColor = BORDER;
+                }}
+              >
+                <Share2 size={15} />
+              </a>
+            </div>
+          </Reveal>
         </div>
       </section>
 

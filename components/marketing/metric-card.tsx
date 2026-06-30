@@ -31,7 +31,7 @@ export function MetricCard({
         className="text-[36px] md:text-[48px] lg:text-[56px] font-bold tracking-tight"
         style={{
           fontVariantNumeric: "tabular-nums",
-          fontFamily: "var(--font-serif)",
+          fontFamily: "var(--font-sans)",
           color: "#ffffff",
         }}
       >

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Moon } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
@@ -95,13 +95,6 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block">
           <Settings size={18} />
         </Link>
-
-        <div
-          className="relative p-2 rounded-lg text-white/30 hidden sm:block"
-          title="Dark theme"
-        >
-          <Moon size={18} />
-        </div>
 
         <button
           onClick={toggleCart}

@@ -85,7 +85,7 @@ function BentoCardLarge({
         </div>
         <h3
           className="text-[20px] md:text-[24px] font-semibold text-white mb-3 leading-tight"
-          style={{ fontFamily: "var(--font-serif)" }}
+          style={{ fontFamily: "var(--font-sans)" }}
         >
           {title}
         </h3>
@@ -98,7 +98,7 @@ function BentoCardLarge({
             style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
           >
             <Zap size={14} style={{ color: A }} />
-            <span className="text-[15px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>
+            <span className="text-[15px] font-bold text-white" style={{ fontFamily: "var(--font-sans)" }}>
               {metric.value}
             </span>
             <span className="text-[11px] text-white/30">{metric.label}</span>
@@ -131,7 +131,7 @@ export function FeatureBentoGrid() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)" }}
+              style={{ fontFamily: "var(--font-sans)" }}
             >
               Three Engines.
               <br />
@@ -204,7 +204,7 @@ export function FeatureBentoGrid() {
                   </span>
                   <h3
                     className="text-[20px] md:text-[24px] font-semibold text-white mb-3 leading-tight mt-1"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    style={{ fontFamily: "var(--font-sans)" }}
                   >
                     Automated Procurement Matching Analytics
                   </h3>
@@ -216,7 +216,7 @@ export function FeatureBentoGrid() {
                     style={{ backgroundColor: AM, border: `1px solid ${AB}` }}
                   >
                     <Zap size={14} style={{ color: A }} />
-                    <span className="text-[15px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>
+                    <span className="text-[15px] font-bold text-white" style={{ fontFamily: "var(--font-sans)" }}>
                       94%
                     </span>
                     <span className="text-[11px] text-white/30">forecast accuracy</span>
@@ -284,7 +284,7 @@ export function FeatureBentoGrid() {
                         style={{ borderTop: `1px solid ${B1}` }}
                       >
                         <span className="text-[11px] text-white/30">Average match score</span>
-                        <span className="text-[16px] font-bold" style={{ color: A, fontFamily: "var(--font-serif)" }}>
+                        <span className="text-[16px] font-bold" style={{ color: A, fontFamily: "var(--font-sans)" }}>
                           86.4%
                         </span>
                       </div>

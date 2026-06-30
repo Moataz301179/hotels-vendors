@@ -53,7 +53,7 @@ const SURFACE = "var(--surface, #FFFFFF)";
 const TEXT_INVERSE = "var(--text-inverse, #F8FAFC)";
 
 const SANS = "var(--font-sans, 'Karla, Inter, system-ui, sans-serif')";
-const HEADING = "var(--font-serif)";
+const HEADING = "var(--font-sans)";
 
 /* ═══════════════════════════════════════════════════════════════
    SHARED HELPERS

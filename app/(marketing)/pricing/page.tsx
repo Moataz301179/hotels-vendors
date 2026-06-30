@@ -5,12 +5,12 @@ import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
-  title: "Enterprise Hospitality Procurement Pricing | HotelsVendors Egypt",
-  description: "Transparent subscription pricing for Egyptian hospitality procurement. No per-transaction fees. Revenue embedded in factoring funding fees (FRA/ETA compliant disclosure).",
+  title: "Pricing | HotelsVendors Egypt",
+  description: "Transparent pricing for Egyptian hospitality procurement. Hotels & suppliers: free trial. Funders & logistics: per-transaction fees. FRA/ETA compliant disclosure.",
   keywords: ["B2B hospitality procurement Egypt", "hotel procurement pricing Egypt", "factoring funding fees", "SaaS subscription hospitality", "تسعير المشتريات الفندقية مصر"],
   openGraph: {
-    title: "Enterprise Hospitality Procurement Pricing | HotelsVendors Egypt",
-    description: "Transparent subscription pricing for Egyptian hospitality. No per-transaction fees. Factoring-embedded funding fees.",
+    title: "Pricing | HotelsVendors Egypt",
+    description: "Transparent pricing for Egyptian hospitality. Hotels & suppliers free trial. Funders & logistics: per-transaction fees.",
     type: "website",
   },
 };
@@ -23,75 +23,96 @@ const borderSubtle = "var(--border-subtle)";
 
 const tiers = [
   {
-    name: "Essential",
-    price: "2,500",
-    period: "EGP /property /month",
-    desc: "For single-property hotels and small resorts (100-200 rooms).",
+    name: "Hotels",
+    price: "Free Trial",
+    period: "limited period",
+    desc: "For hotels and resorts of all sizes. Free during trial — we'll decide pricing together based on volume.",
     features: [
-      "AI demand forecasting (14-day window)",
-      "ETA e-invoicing compliance (unlimited)",
-      "Automated PO generation & budget blockades",
-      "Factoring eligibility assessment",
-      "Up to 200 orders/month (hard cap)",
-      "3 user seats (no expansion)",
-      "Email & chat support (48h SLA)",
+      "Full platform access during trial",
+      "AI demand forecasting",
+      "ETA e-invoicing compliance",
+      "Automated PO generation",
+      "Multi-property management",
+      "Real-time spend analytics",
+      "No payment required to start",
     ],
     metrics: [
-      { label: "Monthly Orders", value: "200 max" },
-      { label: "Factoring Fee (HV)", value: "1.8%" },
-      { label: "Platform Volume Cap", value: "800K EGP" },
+      { label: "Monthly Orders", value: "Unlimited (trial)" },
+      { label: "Platform Fee", value: "Free (trial)" },
+      { label: "Per-Transaction Fee", value: "None" },
     ],
-    cta: "Get Started",
+    cta: "Start Free Trial",
     highlighted: false,
     icon: Building2,
   },
   {
-    name: "Business",
-    price: "5,900",
-    period: "EGP /property /month",
-    desc: "For multi-property hotel groups and chains (200-500 rooms).",
+    name: "Suppliers",
+    price: "Free Trial",
+    period: "limited period",
+    desc: "For suppliers and vendors of all categories. Free during trial to build your catalog and onboard.",
     features: [
-      "Unlimited orders across all properties",
-      "Multi-property authority matrix",
-      "Shared-route logistics integration",
-      "Embedded factoring (Net-60 terms)",
-      "Real-time cost control & anomaly detection",
-      "Budget blockades at branch/department level",
-      "15 user seats (expandable to 50)",
-      "Priority support & account manager (4h SLA)",
+      "Full catalog management",
+      "Receive POs from 680+ hotels",
+      "Issue ETA-compliant invoices",
+      "48-hour factoring payout option",
+      "Real-time order notifications",
+      "Analytics dashboard",
+      "No payment required to start",
     ],
     metrics: [
-      { label: "Monthly Orders", value: "Unlimited" },
-      { label: "Factoring Fee (HV)", value: "1.2%" },
-      { label: "Platform Volume Cap", value: "5M EGP" },
+      { label: "Monthly Orders", value: "Unlimited (trial)" },
+      { label: "Platform Fee", value: "Free (trial)" },
+      { label: "Per-Transaction Fee", value: "None" },
+    ],
+    cta: "Start Free Trial",
+    highlighted: true,
+    icon: Shield,
+  },
+  {
+    name: "Funders",
+    price: "Transaction-Based",
+    period: "per invoice funded",
+    desc: "For factoring companies, banks, and financial institutions funding supplier invoices.",
+    features: [
+      "Access pre-verified invoice pool",
+      "Competitive bidding dashboard",
+      "FRA anti-fraud compliance",
+      "Bank-direct settlement",
+      "Risk scoring engine",
+      "Real-time portfolio analytics",
+      "Per-transaction fee applies",
+    ],
+    metrics: [
+      { label: "Transaction Fee (HV)", value: "0.8%–1.8%" },
+      { label: "Minimum Invoice", value: "EGP 5,000" },
+      { label: "Settlement", value: "Bank-direct" },
     ],
     cta: "Contact Sales",
-    highlighted: true,
-    icon: Building2,
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    period: "tailored pricing",
-    desc: "For large hotel chains, resort groups, and management companies (500+ rooms).",
-    features: [
-      "Everything in Business, plus:",
-      "Unlimited properties & user seats",
-      "Custom authority matrices (branch/department/role)",
-      "Dedicated account & success manager",
-      "API access & ERP integrations (SAP, Opera, Mews)",
-      "Custom SLA with 99.99% uptime guarantee",
-      "Volume-based factoring fee discounts (down to 0.8%)",
-      "White-label portal option",
-    ],
-    metrics: [
-      { label: "Monthly Orders", value: "Unlimited" },
-      { label: "Factoring Fee (HV)", value: "0.8–1.5%" },
-      { label: "Platform Volume Cap", value: "Unlimited" },
-    ],
-    cta: "Talk to Us",
     highlighted: false,
     icon: Landmark,
+  },
+  {
+    name: "Logistics",
+    price: "Transaction-Based",
+    period: "per delivery settled",
+    desc: "For logistics providers handling hotel supply deliveries and shared-route optimization.",
+    features: [
+      "Shared-route optimization",
+      "GPS tracking integration",
+      "Auto-settlement on POD",
+      "Coastal hub model access",
+      "Delivery confirmation system",
+      "On-time payment guarantee",
+      "Per-transaction fee applies",
+    ],
+    metrics: [
+      { label: "Transaction Fee (HV)", value: "2.5%–4.0%" },
+      { label: "Min. Load Value", value: "EGP 2,000" },
+      { label: "Settlement", value: "Auto (POD)" },
+    ],
+    cta: "Contact Sales",
+    highlighted: false,
+    icon: TrendingUp,
   },
 ];
 
@@ -104,12 +125,14 @@ export default function PricingPage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, ${accentMuted} 0%, transparent 70%)` }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Layer 2 — Financing & Monetization</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>
-            No Per-Transaction Fees.<br />Subscription-Based.<br />Factoring-Funded.
+          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Simple, Transparent Pricing</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>
+            Free Trial for Hotels & Suppliers.<br />Transaction-Based for Funders & Logistics.
           </h1>
           <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
-            HotelsVendors charges a <strong className="text-foreground">monthly subscription</strong> based on your property size and room count — <strong className="text-foreground">not per transaction</strong>. Platform revenue is generated through <strong className="text-foreground">factoring funding fees (HV)</strong>, fully disclosed under FRA and ETA compliance frameworks.
+            Hotels and suppliers start free during our trial period — no payment required. 
+            Funders (factoring companies) and logistics providers pay per-transaction fees. 
+            We'll decide long-term pricing together based on volume and usage.
           </p>
         </div>
       </section>
@@ -118,11 +141,11 @@ export default function PricingPage() {
       <section className="py-8 border-y" style={{ borderColor: borderSubtle, backgroundColor: "var(--background)" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: Shield, label: "FRA Compliant Disclosure", desc: "Fully transparent" },
-              { icon: Zap, label: "No Per-Transaction Fees", desc: "Subscription only" },
-              { icon: Scale, label: "ETA Compliance Ready", desc: "Funding fee disclosure" },
-            ].map((b) => (
+              {[
+                { icon: Shield, label: "FRA Compliant", desc: "Fully transparent" },
+                { icon: Zap, label: "Hotels & Suppliers: Free Trial", desc: "No payment needed" },
+                { icon: Scale, label: "Funders & Logistics: Per-Txn", desc: "Only when you transact" },
+              ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: accent }} />
                 <div>
@@ -141,21 +164,24 @@ export default function PricingPage() {
           <div className="rounded-2xl p-6 max-w-3xl mx-auto" style={{ backgroundColor: surface, border: `1px solid ${accentBorder}` }}>
             <h2 className="text-[14px] font-semibold text-foreground mb-4 flex items-center gap-2">
               <Banknote size={16} style={{ color: accent }} />
-              How HotelsVendors Generates Revenue
+              How Pricing Works
             </h2>
             <div className="space-y-4 text-[12px] leading-relaxed text-foreground-secondary">
               <p>
-                <strong className="text-foreground">1. Subscription Fees:</strong> Hotels pay a monthly subscription based on property size, room count, and number of properties in your chain. No per-transaction fees. No hidden charges.
+                <strong className="text-foreground">🏨 Hotels — Free Trial:</strong> Full platform access during trial. No subscription fees, no per-transaction fees. We'll evaluate usage patterns together to determine a fair model once the trial ends.
               </p>
               <p>
-                <strong className="text-foreground">2. Factoring Funding Fees (HV):</strong> Revenue is generated through the factoring process. When a supplier opts for early payment via reverse factoring, a <strong className="text-foreground">Funding Fee (HV)</strong> of 0.8%–1.8% is embedded in the factoring spread based on your tier. This is fully compliant with FRA anti-fraud regulations and ETA e-invoicing disclosure requirements.
+                <strong className="text-foreground">📦 Suppliers — Free Trial:</strong> Onboard your catalog, receive POs, issue ETA invoices, and get paid — all free during trial. We'll decide on a fair structure after we see traction.
               </p>
               <p>
-                <strong className="text-foreground">3. No Hidden Costs:</strong> Your subscription covers the full platform — from AI forecasting to ETA compliance to settlement. Revenue is generated when value is created through the factoring process, not on every purchase order.
+                <strong className="text-foreground">🏦 Funders — Per-Transaction Fee:</strong> A fee of <strong className="text-foreground">0.8%–1.8%</strong> per invoice funded. This covers risk assessment, platform processing, and settlement. Fully FRA/ETA compliant.
+              </p>
+              <p>
+                <strong className="text-foreground">🚚 Logistics — Per-Transaction Fee:</strong> A fee of <strong className="text-foreground">2.5%–4.0%</strong> per delivery settled. Covers route optimization, tracking, and auto-settlement processing.
               </p>
               <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}>
                 <p className="text-[11px] text-foreground-muted">
-                  <strong className="text-foreground-secondary">Regulatory Note:</strong> Funding Fees (HV) are disclosed in accordance with FRA Anti-Fraud Compliance (three-way matching gate: PO + ETA UUID + Signed Digital GRN) and ETA e-invoicing regulations. All fees are itemized in the factoring bid terms and settlement documentation.
+                  <strong className="text-foreground-secondary">Regulatory Note:</strong> All fees are fully disclosed under FRA Anti-Fraud Compliance (three-way matching: PO + ETA UUID + Signed Digital GRN) and ETA e-invoicing regulations. No hidden charges.
                 </p>
               </div>
             </div>
@@ -166,8 +192,8 @@ export default function PricingPage() {
       {/* Pricing Tiers */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-[10px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6 text-center">Subscription Plans — Based on Your Property Size</p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <p className="text-[10px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6 text-center">Pricing by Role — Choose Your Path</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {tiers.map((tier) => (
               <div
                 key={tier.name}
@@ -228,9 +254,10 @@ export default function PricingPage() {
           <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Frequently Asked</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto text-left">
             {[
-              { q: "How is my subscription calculated?", a: "Based on your number of properties, total room count, and monthly order volume. Essential fits single properties (100-200 rooms), Business fits groups (200-500 rooms), Enterprise is tailored for larger portfolios." },
-              { q: "What is the Factoring Funding Fee (HV)?", a: "When a supplier opts for early payment via reverse factoring, a Funding Fee (HV) is embedded in the factoring spread: Essential 1.8%, Business 1.2%, Enterprise 0.8–1.5% (volume-based). This is fully FRA/ETA compliant and disclosed in bid terms." },
-              { q: "Can I switch plans later?", a: "Yes. Upgrade or downgrade at any time. When you add properties or your volume grows, we'll adjust your plan accordingly. No penalties for scaling up or down." },
+              { q: "How long is the free trial for hotels and suppliers?", a: "The trial period is designed to give you full access to evaluate the platform. We'll work with you to determine a fair long-term pricing model based on your usage and volume once we have enough data." },
+              { q: "What are the per-transaction fees for funders?", a: "Funders pay 0.8%–1.8% per invoice funded, depending on volume and risk profile. This covers risk scoring, platform processing, and bank-direct settlement." },
+              { q: "What are the per-transaction fees for logistics providers?", a: "Logistics providers pay 2.5%–4.0% per delivery settled. This includes route optimization, GPS tracking, and auto-settlement on proof of delivery." },
+              { q: "Why free trial instead of fixed pricing?", a: "We want to understand real usage patterns before committing to a pricing structure. This ensures fairness for all parties and lets us build a model that aligns with actual value delivered." },
             ].map((faq) => (
               <div key={faq.q} className="surface-card rounded-xl p-5">
                 <h3 className="text-[13px] font-medium text-foreground mb-2">{faq.q}</h3>
@@ -244,10 +271,10 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>Ready to Get Started?</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Tell us about your property portfolio. We'll build a subscription plan that fits your size, volume, and factoring needs.</p>
+          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>Ready to Get Started?</h2>
+          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Tell us about your business. Hotels & suppliers start free. Funders & logistics — let's talk about your volume.</p>
           <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>
-            Get Your Quote <ArrowRight size={14} className="cta-arrow" />
+            Start Free Trial <ArrowRight size={14} className="cta-arrow" />
           </Link>
         </div>
       </section>

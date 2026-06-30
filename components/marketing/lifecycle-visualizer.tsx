@@ -51,7 +51,7 @@ export function LifecycleVisualizer() {
             </span>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] font-normal tracking-tight text-white mb-4 leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)" }}
+              style={{ fontFamily: "var(--font-sans)" }}
             >
               From Forecast to Settlement.
               <br />
@@ -140,7 +140,7 @@ export function LifecycleVisualizer() {
                     <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: PHASES[activePhase].color }}>
                       Phase {PHASES[activePhase].num} · {PHASES[activePhase].time}
                     </span>
-                    <h3 className="text-[18px] font-semibold text-white" style={{ fontFamily: "var(--font-serif)" }}>
+                    <h3 className="text-[18px] font-semibold text-white" style={{ fontFamily: "var(--font-sans)" }}>
                       {PHASES[activePhase].title}
                     </h3>
                   </div>
@@ -155,7 +155,7 @@ export function LifecycleVisualizer() {
               </div>
               <div className="flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-[40px] font-bold" style={{ color: PHASES[activePhase].color, fontFamily: "var(--font-serif)" }}>
+                  <div className="text-[40px] font-bold" style={{ color: PHASES[activePhase].color, fontFamily: "var(--font-sans)" }}>
                     {activePhase + 1}/6
                   </div>
                   <div className="text-[10px] text-white/25 mt-1">Phases complete</div>
@@ -186,7 +186,7 @@ export function LifecycleVisualizer() {
               { value: "48h", label: "To settlement", end: "End-to-end" },
             ].map((m) => (
               <div key={m.label} className="rounded-xl p-4 text-center" style={{ backgroundColor: SC, border: `1px solid ${B1}` }}>
-                <div className="text-[16px] font-bold text-white" style={{ fontFamily: "var(--font-serif)" }}>{m.value}</div>
+                <div className="text-[16px] font-bold text-white" style={{ fontFamily: "var(--font-sans)" }}>{m.value}</div>
                 <div className="text-[11px] text-white/40">{m.label}</div>
                 <div className="text-[9px] text-white/20">{m.sub || m.end}</div>
               </div>

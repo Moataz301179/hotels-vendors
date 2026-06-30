@@ -70,14 +70,14 @@ export const metadata: Metadata = {
     shortcut: "/logo-icon.png",
   },
   other: {
-    "msapplication-TileColor": "#0F1729",
+    "msapplication-TileColor": "#0A0807",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0F1729",
+    "theme-color": "#0A0807",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0F1729",
+  themeColor: "#0A0807",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -93,7 +93,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&family=Playfair+Display+SC:wght@400;700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <link rel="dns-prefetch" href="https://hotelsvendors.com" />
@@ -105,7 +105,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#0F1729" />
+        <meta name="theme-color" content="#0A0807" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -151,10 +151,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className="font-sans min-h-full flex flex-col bg-background text-foreground antialiased"
-        style={{ fontFamily: "var(--font-sans)", background: "var(--bg-canvas)", color: "var(--text-primary)" }}
-      >
+      <body className="font-sans min-h-full flex flex-col antialiased">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-black focus:text-white"

@@ -62,7 +62,7 @@ export default function SolutionsPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)` }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Solutions</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>
             One Platform.<br />Four Stakeholder Workflows.<br />Infinite Scale.
           </h1>
           <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
@@ -130,7 +130,7 @@ export default function SolutionsPage() {
       <section className="py-16" style={{ backgroundColor: "var(--bg-surface-1)" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
           <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: accent }} />
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>The Full Picture</h2>
+          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>The Full Picture</h2>
           <p className="text-[13px] text-foreground-secondary mb-8 max-w-xl mx-auto">
             All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver, with AI orchestrating every step.
           </p>
@@ -154,7 +154,7 @@ export default function SolutionsPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: accent }} />
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-serif)" }}>ETA Compliant. FRA Secure.</h2>
+          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>ETA Compliant. FRA Secure.</h2>
           <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/register?sector=procurement" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>

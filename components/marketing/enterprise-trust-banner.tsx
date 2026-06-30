@@ -45,7 +45,7 @@ function AnimatedCounter({ end, suffix = "", prefix = "", highlight = false }: {
         className="text-[28px] md:text-[36px] lg:text-[40px] font-bold tracking-tight leading-none"
         style={{
           fontVariantNumeric: "tabular-nums",
-          fontFamily: "var(--font-serif)",
+          fontFamily: "var(--font-sans)",
           color: "#ffffff",
         }}
       >
