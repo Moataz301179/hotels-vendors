@@ -2,6 +2,39 @@
 
 import { useEffect, useState, useRef } from "react";
 
+interface TickerItem {
+  nameAr: string;
+  nameEn: string;
+  price: number;
+  unit: string;
+  change: number;
+}
+
+const SEED_ITEMS: TickerItem[] = [
+  { nameAr: "مواد غذائية طازجة", nameEn: "Fresh Food Supplies", price: 185, unit: "كجم", change: 1.2 },
+  { nameAr: "مستلزمات نظافة", nameEn: "Cleaning Supplies", price: 42, unit: "لتر", change: -0.8 },
+  { nameAr: "مفروشات فندقية", nameEn: "Hotel Linens", price: 320, unit: "قطعة", change: 2.4 },
+  { nameAr: "مشروبات غازية", nameEn: "Soft Drinks", price: 12, unit: "كرتون", change: -1.5 },
+  { nameAr: "مواد تعقيم", nameEn: "Sanitizers", price: 65, unit: "لتر", change: 0.6 },
+  { nameAr: "فواكه طازجة", nameEn: "Fresh Fruits", price: 28, unit: "كجم", change: 3.1 },
+  { nameAr: "لحوم مجمدة", nameEn: "Frozen Meat", price: 210, unit: "كجم", change: -2.1 },
+  { nameAr: "منتجات ألبان", nameEn: "Dairy Products", price: 35, unit: "كجم", change: 0.3 },
+  { nameAr: "مواد خام للطبخ", nameEn: "Cooking Ingredients", price: 55, unit: "كجم", change: 1.8 },
+  { nameAr: "مستلزمات حمام", nameEn: "Bathroom Amenities", price: 85, unit: "مجموعة", change: -0.4 },
+  { nameAr: "كيماويات مسابح", nameEn: "Pool Chemicals", price: 120, unit: "كجم", change: 2.7 },
+  { nameAr: "غسيل ومبيضات", nameEn: "Laundry & Bleach", price: 38, unit: "كجم", change: -1.2 },
+  { nameAr: "إضاءة LED", nameEn: "LED Lighting", price: 150, unit: "وحدة", change: 0.9 },
+  { nameAr: "أدوات مطبخ", nameEn: "Kitchen Tools", price: 275, unit: "قطعة", change: -0.6 },
+  { nameAr: "ورق تواليت", nameEn: "Toilet Paper", price: 5, unit: "رول", change: 1.4 },
+  { nameAr: "مناديل ورقية", nameEn: "Paper Towels", price: 18, unit: "حزمة", change: -0.3 },
+  { nameAr: "بطاريات صناعية", nameEn: "Industrial Batteries", price: 420, unit: "وحدة", change: 2.2 },
+  { nameAr: "فلاتر مياه", nameEn: "Water Filters", price: 95, unit: "فلتر", change: 0.1 },
+];
+
+function randomChange() {
+  return +(Math.random() * 6 - 2.5).toFixed(2);
+}
+
 export function MarketTicker() {
   const [items, setItems] = useState<TickerItem[]>(SEED_ITEMS);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
