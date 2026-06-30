@@ -1035,7 +1035,7 @@ export default function AboutPage() {
                   e.currentTarget.style.borderColor = BORDER;
                 }}
               >
-                <Twitter size={15} />
+                <Globe size={15} />
               </a>
               <a
                 href="https://facebook.com/hotelsvendors"
