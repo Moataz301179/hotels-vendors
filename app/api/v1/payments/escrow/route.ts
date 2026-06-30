@@ -41,6 +41,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     supplierName: invoice.supplier?.name || "Supplier",
     dueDate: invoice.dueDate,
     etaUuid: invoice.etaUuid,
+    tenantId: auth.tenantId,
   });
 
   return success(result);

@@ -8,7 +8,7 @@ import {
   Grid3X3, List, Eye, Filter, Star, ArrowUpDown,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
-import { LoadingCard } from "@/components/dashboards/shared/loading-card";
+import { LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
 import { StatusPill } from "@/components/dashboards/shared/status-pill";
 
@@ -94,7 +94,7 @@ export default function InvoProductsPage() {
     );
   }
 
-  if (loading) return <LoadingCard rows={6} />;
+  if (loading) return <LoadingTable rows={6} />;
 
   return (
     <div>
@@ -183,7 +183,7 @@ export default function InvoProductsPage() {
           icon={<Package className="w-12 h-12" />}
           title="No products found"
           description={searchQuery ? "Try a different search term" : "Add your first product to get started"}
-          action={!searchQuery ? { label: "Add Product", href: "/dashboard/supplier/products/new" } : undefined}
+          action={!searchQuery ? <a href="/dashboard/supplier/products/new" className="px-4 py-2 rounded-lg bg-accent-base text-foreground text-sm font-medium">Add Product</a> : undefined}
         />
       ) : viewMode === "list" ? (
         <div className="rounded-xl border border-subtle overflow-hidden">

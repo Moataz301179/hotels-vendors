@@ -67,6 +67,7 @@ export interface EscrowInvoice {
   supplierName: string;
   dueDate?: Date | null;
   etaUuid?: string | null;
+  tenantId: string;
 }
 
 export interface EscrowCreateResult {
@@ -99,14 +100,16 @@ export async function createEscrowDeposit(invoice: EscrowInvoice): Promise<Escro
 
   await prisma.payment.create({
     data: {
+      paymentNumber: `PAY-${Date.now()}`,
       amount: invoice.amount,
       currency: "EGP",
       method: "ESCROW",
       status: "PENDING",
-      reference: escrowReference,
-      providerRef: String(order.id),
+      referenceCode: escrowReference,
+      gatewayRef: String(order.id),
       invoiceId: invoice.invoiceId,
       hotelId: invoice.hotelId,
+      tenantId: invoice.tenantId,
       metadata: JSON.stringify({
         paymobOrderId: order.id,
         dueDate: invoice.dueDate?.toISOString(),
@@ -204,10 +207,11 @@ export async function releaseEscrowToken(input: TokenReleaseInput): Promise<{ re
     await prisma.factoringRequest.create({
       data: {
         invoiceId: input.invoiceId,
-        funderId: input.funderId,
-        amount: Number(payment.amount),
-        status: "FUNDED",
-        fundedAt: new Date(),
+        factoringCompanyId: input.funderId,
+        requestedAmount: Number(payment.amount),
+        status: "DISBURSED",
+        disbursedAt: new Date(),
+        tenantId: payment.tenantId,
       },
     });
   }
@@ -223,8 +227,8 @@ export async function releaseEscrowToken(input: TokenReleaseInput): Promise<{ re
   await prisma.payment.update({
     where: { id: payment.id },
     data: {
-      status: "COMPLETED",
-      completedAt: new Date(),
+      status: "PAID",
+      paidAt: new Date(),
       metadata: JSON.stringify({
         ...metadata,
         releasedAt: new Date().toISOString(),
@@ -238,7 +242,7 @@ export async function releaseEscrowToken(input: TokenReleaseInput): Promise<{ re
 
   await prisma.invoice.update({
     where: { id: input.invoiceId },
-    data: { paidAt: new Date(), etaStatus: "PAID" },
+    data: { paidDate: new Date() },
   });
 
   await prisma.auditLog.create({
@@ -281,7 +285,7 @@ export async function getEscrowStatus(invoiceId: string): Promise<{
 
   return {
     funded: payment.status !== "PENDING",
-    released: payment.status === "COMPLETED",
+    released: payment.status === "PAID",
     amount: Number(payment.amount),
   };
 }

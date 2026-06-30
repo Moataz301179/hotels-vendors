@@ -6,7 +6,7 @@ import {
   TrendingUp, Eye, ShoppingCart, MessageSquare,
   ArrowUpRight, ArrowDownRight, Package, Calendar,
 } from "lucide-react";
-import { LoadingCard } from "@/components/dashboards/shared/loading-card";
+import { LoadingTable } from "@/components/dashboards/shared/loading-card";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -57,7 +57,7 @@ export default function InvoAnalyticsPage() {
     { icon: TrendingUp, label: "Avg. Conversion", value: totalViews > 0 ? `${((totalOrders / totalViews) * 100).toFixed(1)}%` : "0%", trend: "+1.2%", positive: true },
   ];
 
-  if (loading) return <LoadingCard rows={8} />;
+  if (loading) return <LoadingTable rows={8} />;
 
   return (
     <div>

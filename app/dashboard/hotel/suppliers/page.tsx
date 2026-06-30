@@ -72,7 +72,7 @@ export default function HotelSuppliersPage() {
       </motion.div>
 
       {loading ? (
-        <LoadingTable rows={5} cols={4} />
+        <LoadingTable rows={5} />
       ) : suppliers.length === 0 ? (
         <EmptyState icon={<Building2 className="w-12 h-12 text-foreground-muted" />} title="No suppliers yet" description="Invite your suppliers to start procuring through the platform." action={<Link href="/dashboard/hotel/suppliers/invite" className="px-4 py-2 rounded-lg bg-accent-base text-foreground text-sm font-medium">Invite Supplier</Link>} />
       ) : (

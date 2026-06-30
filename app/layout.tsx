@@ -77,14 +77,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0A0F1D" },
-    { media: "(prefers-color-scheme: light)", color: "#0F1729" },
-  ],
+  themeColor: "#0F1729",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "dark light",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -108,32 +105,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#0F1729" id="theme-color-meta" />
+        <meta name="theme-color" content="#0F1729" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                try {
-                  var valid = ['light', 'dark'];
-                  var saved = localStorage.getItem('hv-theme');
-                  var mode = valid.indexOf(saved) !== -1  ? saved : 'light';
-                  document.documentElement.setAttribute('data-theme', mode);
-                  var meta = document.getElementById('theme-color-meta');
-                  if (meta) {
-                    var colors = { light: '#F8FAFC', dark: '#0A0F1D' };
-                    meta.setAttribute('content', colors[mode] || '#FAFAF8');
-                  }
-                } catch (e) {}
-                if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
-                  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                    window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                        console.warn('SW registration failed:', err);
-                      });
+              document.documentElement.setAttribute('data-theme', 'dark');
+              if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                      console.warn('SW registration failed:', err);
                     });
-                  }
+                  });
                 }
-              })();
+              }
             `,
           }}
         />

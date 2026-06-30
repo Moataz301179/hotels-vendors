@@ -50,7 +50,8 @@ export async function evaluateOrderForFraud(
     }
   }
 
-  const builtInAlerts = await evaluateBuiltInRules(order, tenantId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const builtInAlerts = await evaluateBuiltInRules(order as any, tenantId);
   alerts.push(...builtInAlerts);
 
   for (const alert of alerts) {
@@ -96,7 +97,8 @@ export async function evaluateInvoiceForFraud(
 
   const alerts: FraudAlertResult[] = [];
 
-  const builtInAlerts = await evaluateInvoiceBuiltInRules(invoice, tenantId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const builtInAlerts = await evaluateInvoiceBuiltInRules(invoice as any, tenantId);
   alerts.push(...builtInAlerts);
 
   for (const alert of alerts) {

@@ -3,12 +3,8 @@ import withSerwistInit from "@serwist/next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-
-  experimental: {
-    turbopack: {
-      root: __dirname,
-    },
-  },
+  serverExternalPackages: ["pg"],
+  turbopack: {},
 
   // Enable React DevTools and source-map-backed editing in Chrome DevTools
   // Allows "Save for Overrides" to persist changes from browser to local filesystem

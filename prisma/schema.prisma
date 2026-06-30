@@ -939,6 +939,7 @@ enum EtaStatus {
   PENDING
   SUBMITTING
   ACCEPTED
+  VALIDATED
   REJECTED
   RETRYING
   MANUAL_RESOLUTION
@@ -1660,6 +1661,8 @@ model Payment {
   virtualAccountId String?
 
   settlementType SettlementType @default(DIRECT)
+
+  metadata String?
 }
 
 enum SettlementType {
@@ -1694,6 +1697,7 @@ enum PaymentMethod {
   CHECK
   CREDIT_CARD
   E_WALLET
+  ESCROW
 }
 
 // ─────────────────────────────────────────

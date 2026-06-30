@@ -3,30 +3,34 @@ import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { Serwist } from "serwist";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   interface WorkerGlobalScope extends SerwistGlobalConfig {
     __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
   }
 }
 
-declare const self: ServiceWorkerGlobalScope;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const swSelf: any = self;
 
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries: swSelf.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: defaultCache,
   fallbacks: {
-    entries: [{ url: "/offline", name: "offlineFallback" }],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    entries: [{ url: "/offline" } as any],
   },
 });
 
 serwist.addEventListeners();
 
-self.addEventListener("push", (event) => {
+swSelf.addEventListener("push", (event: any) => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || "HotelsVendors";
-  const options: NotificationOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const options: any = {
     body: data.body || "You have a new notification",
     icon: "/icons/icon-192x192.png",
     badge: "/icons/icon-192x192.png",
@@ -34,22 +38,22 @@ self.addEventListener("push", (event) => {
     data: { url: data.url || "/" },
     actions: data.actions || [],
   };
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(swSelf.registration.showNotification(title, options));
 });
 
-self.addEventListener("notificationclick", (event) => {
+swSelf.addEventListener("notificationclick", (event: any) => {
   event.notification.close();
   const targetUrl = event.notification.data?.url || "/";
   event.waitUntil(
-    self.clients
+    swSelf.clients
       .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clients) => {
+      .then((clients: any[]) => {
         for (const client of clients) {
           if (client.url.includes(targetUrl) && "focus" in client) {
             return client.focus();
           }
         }
-        return self.clients.openWindow(targetUrl);
+        return swSelf.clients.openWindow(targetUrl);
       })
   );
 });

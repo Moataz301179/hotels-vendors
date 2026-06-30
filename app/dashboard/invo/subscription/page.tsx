@@ -7,7 +7,7 @@ import {
   Check, CreditCard, ArrowRight, AlertCircle,
   Loader2, Shield, Zap, Users, Package,
 } from "lucide-react";
-import { LoadingCard } from "@/components/dashboards/shared/loading-card";
+import { LoadingTable } from "@/components/dashboards/shared/loading-card";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -25,6 +25,7 @@ interface Plan {
   maxProducts: number;
   maxOrders: number;
   maxUsers: number;
+  cta?: string;
 }
 
 interface Subscription {
@@ -114,7 +115,7 @@ export default function InvoSubscriptionPage() {
     }
   }
 
-  if (loading) return <LoadingCard rows={8} />;
+  if (loading) return <LoadingTable rows={8} />;
 
   return (
     <div>

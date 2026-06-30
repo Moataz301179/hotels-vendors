@@ -46,7 +46,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
   const auth = await authenticate(request);
   await requirePermission(auth, "factoring:inquire");
   const { id } = await params;
-    
+  try {
     const app = await prisma.creditLineApplication.findUnique({
       where: { id },
     });
@@ -221,8 +221,8 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
       keyRisks: aiResult.keyRisks,
       mitigationSuggestions: aiResult.mitigationSuggestions,
     });
-  } catch (err) {
-    console.error("Credit analysis error:", err);
-    throw err;
-  }
+    } catch (err) {
+      console.error("Credit analysis error:", err);
+      throw err;
+    }
 });

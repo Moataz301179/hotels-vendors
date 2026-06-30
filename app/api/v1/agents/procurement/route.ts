@@ -11,7 +11,7 @@ const DispatchSchema = z.object({
   hotelId: z.string().optional(),
   supplierId: z.string().optional(),
   input: z.any(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const POST = apiRoute(async (request: NextRequest) => {

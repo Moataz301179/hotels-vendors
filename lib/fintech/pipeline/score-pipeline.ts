@@ -162,8 +162,8 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
     riskFlags = parsed.riskFlags || [];
     finalScore = Number(parsed.creditScore) || engineScore.overallScore;
     finalLimit = Number(parsed.recommendedLimit) || engineScore.recommendedLimit;
-    finalGrade = (parsed.grade as string) || engineScore.grade;
-    finalRiskLevel = (parsed.riskLevel as string) || engineScore.riskLevel;
+    finalGrade = (parsed.grade as "AAA" | "AA" | "A" | "BBB" | "BB" | "B" | "CCC" | "D") || engineScore.grade;
+    finalRiskLevel = (parsed.riskLevel as "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH") || engineScore.riskLevel;
     finalTenor = Number(parsed.maxTenorDays) || engineScore.maxTenorDays;
     finalFee = Number(parsed.factoringFee) || engineScore.factoringFee;
     finalApprovalProb = Number(parsed.approvalProbability) || engineScore.approvalProbability;

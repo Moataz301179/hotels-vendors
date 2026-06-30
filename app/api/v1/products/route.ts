@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get("sort") || "newest";
     const featured = searchParams.get("featured");
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, any> = {};
 
     // Always filter by ACTIVE for public catalog unless explicitly overridden
     if (status) {
@@ -62,9 +62,10 @@ export async function GET(request: NextRequest) {
 
     // Price range filter
     if (minPrice !== undefined || maxPrice !== undefined) {
-      where.unitPrice = {};
-      if (minPrice !== undefined) where.unitPrice.gte = minPrice;
-      if (maxPrice !== undefined) where.unitPrice.lte = maxPrice;
+      const priceFilter: Record<string, unknown> = {};
+      if (minPrice !== undefined) priceFilter.gte = minPrice;
+      if (maxPrice !== undefined) priceFilter.lte = maxPrice;
+      (where as Record<string, unknown>).unitPrice = priceFilter;
     }
 
     // Featured filter

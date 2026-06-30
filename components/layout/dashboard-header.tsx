@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon, Palette } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
 import { NotificationBell } from "@/components/notifications/notification-bell";
-import { useTheme } from "@/components/theme/theme-provider";
 
 interface UserData {
   id: string;
@@ -36,7 +35,6 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
   const { totalItems, toggleCart } = useCart();
-  const { mode, cycleMode } = useTheme();
 
   return (
     <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 border-b border-white/[0.05] bg-[#111827]/90">
@@ -98,14 +96,12 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
           <Settings size={18} />
         </Link>
 
-        <button
-          onClick={cycleMode}
-          className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:block"
-          aria-label="Cycle theme"
-          title={`Theme: ${mode}`}
+        <div
+          className="relative p-2 rounded-lg text-white/30 hidden sm:block"
+          title="Dark theme"
         >
-          <Sun size={18} />
-        </button>
+          <Moon size={18} />
+        </div>
 
         <button
           onClick={toggleCart}

@@ -53,13 +53,13 @@ const HANDLERS: Record<ProcurementAgentId, AgentHandler> = {
 
     await prisma.lead.createMany({
       data: invites.map((i) => ({
+        entityType: "SUPPLIER",
+        name: i.supplierName,
         source: "HOTEL_INVITE",
         email: "",
         phone: "",
-        company: i.supplierName,
-        status: "INVITED_SENT",
+        discoveredBy: "SYSTEM",
         tenantId: task.tenantId,
-        metadata: JSON.stringify(i),
       })),
       skipDuplicates: true,
     });
@@ -168,7 +168,7 @@ const HANDLERS: Record<ProcurementAgentId, AgentHandler> = {
       where: {
         hotelId: task.hotelId,
         etaStatus: "ACCEPTED",
-        paidAt: null,
+        paidDate: null,
       },
       orderBy: { dueDate: "asc" },
     });
@@ -249,25 +249,31 @@ export async function executeAgentTask(task: AgentTask): Promise<AgentActionResu
       agentId: task.agentId,
       status: "failed",
       error: `No handler for agent: ${task.agentId}`,
+      output: null,
       durationMs: Date.now() - start,
     };
   }
 
   try {
-    await prisma.swarmJob.create({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (prisma.swarmJob.create as any)({
       data: {
-        agentId: task.agentId,
-        taskType: task.type,
+        queueName: "procurement",
+        jobType: task.type,
+        jobName: task.agentId,
+        payload: JSON.stringify(task.input),
         status: "RUNNING",
-        input: JSON.stringify(task.input),
-        tenantId: task.tenantId,
+        assignedAgent: task.agentId,
+        squad: task.tenantId,
+        startedAt: new Date(),
       },
     });
 
     const output = await handler(task);
 
-    await prisma.swarmJob.updateMany({
-      where: { agentId: task.agentId, status: "RUNNING" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (prisma.swarmJob.updateMany as any)({
+      where: { assignedAgent: task.agentId, status: "RUNNING" },
       data: { status: "COMPLETED", output: JSON.stringify(output), completedAt: new Date() },
     });
 
@@ -281,8 +287,9 @@ export async function executeAgentTask(task: AgentTask): Promise<AgentActionResu
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
 
-    await prisma.swarmJob.updateMany({
-      where: { agentId: task.agentId, status: "RUNNING" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (prisma.swarmJob.updateMany as any)({
+      where: { assignedAgent: task.agentId, status: "RUNNING" },
       data: { status: "FAILED", output: message, completedAt: new Date() },
     });
 
@@ -291,6 +298,7 @@ export async function executeAgentTask(task: AgentTask): Promise<AgentActionResu
       agentId: task.agentId,
       status: "failed",
       error: message,
+      output: null,
       durationMs: Date.now() - start,
     };
   }
@@ -304,6 +312,7 @@ export async function dispatchAgentTask(task: AgentTask): Promise<AgentActionRes
       agentId: task.agentId,
       status: "failed",
       error: `Unknown agent: ${task.agentId}`,
+      output: null,
       durationMs: 0,
     };
   }

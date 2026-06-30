@@ -1,4 +1,4 @@
-import { Shield, CheckCircle2, FileCheck, ArrowRight, Building2, Truck, DollarSign, AlertTriangle } from "lucide-react";
+import { Shield, CheckCircle2, FileCheck, ArrowRight, Building2, Truck, DollarSign, AlertTriangle, XCircle } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
