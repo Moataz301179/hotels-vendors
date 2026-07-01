@@ -1,9 +1,9 @@
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev --legacy-peer-deps
 
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 ARG DATABASE_URL=postgresql://localhost:5432/hotels_vendors_build
 ARG NEXT_PUBLIC_SUPABASE_URL=https://wnyeuaasktaknlvcoypo.supabase.co
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndueWV1YWFza3Rha25sdmNveXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2OTIxMjIsImV4cCI6MjA5NjI2ODEyMn0.Pc-us4RzUsKGxGQMbjsr5naTmRTP0ru3ooEx5mr1_dQ
@@ -17,7 +17,7 @@ RUN echo "DATABASE_URL=$DATABASE_URL" > .env && \
 RUN npx prisma generate
 RUN npx next build
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
