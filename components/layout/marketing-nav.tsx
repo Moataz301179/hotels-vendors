@@ -194,7 +194,7 @@ export function MarketingNav() {
               Sign In
             </Link>
             <Link
-              href="/about"
+              href="/contact"
               className="text-[13px] font-medium tracking-wide uppercase px-3 py-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
               style={{ color: "var(--text-secondary)" }}
               onMouseEnter={(e) => {
@@ -308,7 +308,7 @@ export function MarketingNav() {
                   Sign In
                 </Link>
                 <Link
-                  href="/about"
+                  href="/contact"
                   className="w-full text-center py-2.5 text-[12px] font-medium border rounded-xl transition-colors"
                   style={{ borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}
                   onClick={() => setMobileOpen(false)}

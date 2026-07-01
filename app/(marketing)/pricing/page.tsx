@@ -5,12 +5,12 @@ import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 export const metadata: Metadata = {
-  title: "Pricing | HotelsVendors Egypt",
-  description: "Transparent pricing for Egyptian hospitality procurement. Hotels & suppliers: free trial. Funders & logistics: per-transaction fees. FRA/ETA compliant disclosure.",
-  keywords: ["B2B hospitality procurement Egypt", "hotel procurement pricing Egypt", "factoring funding fees", "SaaS subscription hospitality", "تسعير المشتريات الفندقية مصر"],
+  title: "Pricing",
+  description: "HotelsVendors — procurement platform for Egyptian hospitality.",
+  keywords: ["B2B hospitality procurement Egypt", "hotel procurement pricing Egypt", "تسعير المشتريات الفندقية مصر"],
   openGraph: {
-    title: "Pricing | HotelsVendors Egypt",
-    description: "Transparent pricing for Egyptian hospitality. Hotels & suppliers free trial. Funders & logistics: per-transaction fees.",
+    title: "Pricing — HotelsVendors",
+    description: "HotelsVendors procurement platform for Egyptian hospitality.",
     type: "website",
   },
 };
@@ -83,7 +83,7 @@ const tiers = [
       "Per-transaction fee applies",
     ],
     metrics: [
-      { label: "Transaction Fee (HV)", value: "0.8%–1.8%" },
+      { label: "Pricing", value: "Volume-based" },
       { label: "Minimum Invoice", value: "EGP 5,000" },
       { label: "Settlement", value: "Bank-direct" },
     ],
@@ -106,9 +106,9 @@ const tiers = [
       "Per-transaction fee applies",
     ],
     metrics: [
-      { label: "Transaction Fee (HV)", value: "2.5%–4.0%" },
-      { label: "Min. Load Value", value: "EGP 2,000" },
-      { label: "Settlement", value: "Auto (POD)" },
+      { label: "Pricing", value: "Per-delivery" },
+      { label: "Min. Delivery", value: "EGP 2,000" },
+      { label: "Payment", value: "On POD" },
     ],
     cta: "Contact Sales",
     highlighted: false,
@@ -121,20 +121,9 @@ export default function PricingPage() {
     <main style={{ backgroundColor: "var(--background)", color: "var(--text-primary)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
 
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      {/* Hero — no title, the cards speak for themselves */}
+      <section className="pt-28 pb-8 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, ${accentMuted} 0%, transparent 70%)` }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Simple, Transparent Pricing</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>
-            Free Trial for Hotels & Suppliers.<br />Transaction-Based for Funders & Logistics.
-          </h1>
-          <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
-            Hotels and suppliers start free during our trial period — no payment required. 
-            Funders (factoring companies) and logistics providers pay per-transaction fees. 
-            We'll decide long-term pricing together based on volume and usage.
-          </p>
-        </div>
       </section>
 
       {/* Trust Bar */}
@@ -143,8 +132,8 @@ export default function PricingPage() {
           <div className="flex flex-wrap justify-center gap-8">
               {[
                 { icon: Shield, label: "FRA Compliant", desc: "Fully transparent" },
-                { icon: Zap, label: "Hotels & Suppliers: Free Trial", desc: "No payment needed" },
-                { icon: Scale, label: "Funders & Logistics: Per-Txn", desc: "Only when you transact" },
+                { icon: Zap, label: "Free to Start", desc: "No payment needed" },
+                { icon: Scale, label: "Pay As You Grow", desc: "Only when you transact" },
               ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: accent }} />
@@ -162,26 +151,19 @@ export default function PricingPage() {
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="rounded-2xl p-6 max-w-3xl mx-auto" style={{ backgroundColor: surface, border: `1px solid ${accentBorder}` }}>
-            <h2 className="text-[14px] font-semibold text-foreground mb-4 flex items-center gap-2">
-              <Banknote size={16} style={{ color: accent }} />
-              How Pricing Works
-            </h2>
             <div className="space-y-4 text-[12px] leading-relaxed text-foreground-secondary">
               <p>
-                <strong className="text-foreground">🏨 Hotels — Free Trial:</strong> Full platform access during trial. No subscription fees, no per-transaction fees. We'll evaluate usage patterns together to determine a fair model once the trial ends.
+                <strong className="text-foreground">Hotels & Suppliers:</strong> Full platform access during trial. No subscription fees, no per-transaction fees.
               </p>
               <p>
-                <strong className="text-foreground">📦 Suppliers — Free Trial:</strong> Onboard your catalog, receive POs, issue ETA invoices, and get paid — all free during trial. We'll decide on a fair structure after we see traction.
+                <strong className="text-foreground">Funders & Logistics:</strong> Competitive per-transaction fees based on volume and usage. Contact us for a custom quote.
               </p>
               <p>
-                <strong className="text-foreground">🏦 Funders — Per-Transaction Fee:</strong> A fee of <strong className="text-foreground">0.8%–1.8%</strong> per invoice funded. This covers risk assessment, platform processing, and settlement. Fully FRA/ETA compliant.
-              </p>
-              <p>
-                <strong className="text-foreground">🚚 Logistics — Per-Transaction Fee:</strong> A fee of <strong className="text-foreground">2.5%–4.0%</strong> per delivery settled. Covers route optimization, tracking, and auto-settlement processing.
+                <strong className="text-foreground">Logistics Partners:</strong> Competitive per-delivery fees. Covers route optimization, tracking, and auto-settlement processing.
               </p>
               <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: accentMuted, border: `1px solid ${accentBorder}` }}>
                 <p className="text-[11px] text-foreground-muted">
-                  <strong className="text-foreground-secondary">Regulatory Note:</strong> All fees are fully disclosed under FRA Anti-Fraud Compliance (three-way matching: PO + ETA UUID + Signed Digital GRN) and ETA e-invoicing regulations. No hidden charges.
+                  <strong className="text-foreground-secondary">Regulatory Note:</strong> All fees are fully disclosed and comply with FRA and ETA regulations. No hidden charges.
                 </p>
               </div>
             </div>
@@ -192,7 +174,6 @@ export default function PricingPage() {
       {/* Pricing Tiers */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-[10px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6 text-center">Pricing by Role — Choose Your Path</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {tiers.map((tier) => (
               <div
@@ -251,12 +232,11 @@ export default function PricingPage() {
       {/* FAQ */}
       <section className="py-16" style={{ backgroundColor: "var(--bg-surface-1)" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Frequently Asked</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto text-left">
             {[
               { q: "How long is the free trial for hotels and suppliers?", a: "The trial period is designed to give you full access to evaluate the platform. We'll work with you to determine a fair long-term pricing model based on your usage and volume once we have enough data." },
-              { q: "What are the per-transaction fees for funders?", a: "Funders pay 0.8%–1.8% per invoice funded, depending on volume and risk profile. This covers risk scoring, platform processing, and bank-direct settlement." },
-              { q: "What are the per-transaction fees for logistics providers?", a: "Logistics providers pay 2.5%–4.0% per delivery settled. This includes route optimization, GPS tracking, and auto-settlement on proof of delivery." },
+                { q: "What are the fees for funders?", a: "Funders pay a competitive per-invoice fee based on volume and risk profile. This covers risk scoring, platform processing, and bank-direct settlement. Contact sales for a custom quote." },
+                { q: "What are the fees for logistics providers?", a: "Logistics providers pay a competitive per-delivery fee. This includes route optimization, GPS tracking, and auto-settlement on proof of delivery. Contact sales for details." },
               { q: "Why free trial instead of fixed pricing?", a: "We want to understand real usage patterns before committing to a pricing structure. This ensures fairness for all parties and lets us build a model that aligns with actual value delivered." },
             ].map((faq) => (
               <div key={faq.q} className="surface-card rounded-xl p-5">
@@ -271,8 +251,6 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>Ready to Get Started?</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Tell us about your business. Hotels & suppliers start free. Funders & logistics — let's talk about your volume.</p>
           <Link href="/register" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>
             Start Free Trial <ArrowRight size={14} className="cta-arrow" />
           </Link>

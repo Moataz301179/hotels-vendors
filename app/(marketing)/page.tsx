@@ -326,212 +326,179 @@ function HeroFlowDiagram() {
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   return (
     <section className="relative overflow-hidden min-h-screen flex items-center">
-      {/* Background — CSS gradient */}
+      {/* Background — solid dark brown */}
+      <div className="absolute inset-0" style={{ background: "var(--bg-canvas)" }} />
+      {/* Warm accent glow top-right */}
       <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(135deg, #0A0F1D 0%, #0F1729 30%, #1A2438 60%, #0F1729 100%)",
-        }}
-      />
-      {/* Subtle warm glow top-right */}
-      <div
-        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-20 blur-3xl pointer-events-none"
+        className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-15 blur-3xl pointer-events-none"
         style={{ background: "radial-gradient(circle, var(--accent-dark) 0%, transparent 70%)" }}
       />
-      {/* Subtle cool glow bottom-left */}
+      {/* Emerald glow bottom-left */}
       <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl pointer-events-none"
+        className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl pointer-events-none"
         style={{ background: "radial-gradient(circle, var(--success) 0%, transparent 70%)" }}
       />
-
-      {/* Decorative grid overlay */}
+      {/* Subtle grid */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
         {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8"
-        >
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-8">
           <span
             className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full"
-            style={{
-              background: "var(--accent-muted)",
-              color: "var(--accent-light)",
-              border: "1px solid var(--border-accent)",
-              fontFamily: SANS,
-              fontWeight: 500,
-            }}
+            style={{ background: "var(--accent-muted)", color: "var(--accent-light)", border: "1px solid var(--border-accent)", fontFamily: SANS, fontWeight: 500 }}
           >
-            Egypt&apos;s B2B Hospitality Infrastructure
+            Built for Egyptian Hospitality
           </span>
         </motion.div>
 
-        {/* Split layout */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left column — text + CTA */}
-          <div>
-            {/* Headline — stagger animation */}
-            <h1
-              className="text-[36px] md:text-[56px] lg:text-[64px] mb-6 leading-[1.05] tracking-tight"
-              style={{ fontFamily: HEADING, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
-            >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-                className="block"
-              >
-                Egypt&apos;s First Procurement
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.18 }}
-                className="block"
-                style={{ color: "var(--accent-light)" }}
-              >
-                Orchestration Platform
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.26 }}
-                className="block"
-              >
-                for Hotels
-              </motion.span>
-            </h1>
+        {/* Headline */}
+        <div className="max-w-4xl">
+          <h1
+            className="text-[36px] md:text-[52px] lg:text-[62px] mb-6 leading-[1.08] tracking-tight"
+            style={{ fontFamily: HEADING, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
+          >
+            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="block">
+              Procure Smarter.
+            </motion.span>
+            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18 }} className="block" style={{ color: "var(--accent-light)" }}>
+              Pay Faster.
+            </motion.span>
+            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.26 }} className="block">
+              Scale Together.
+            </motion.span>
+          </h1>
 
-            {/* Subtext */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-[15px] md:text-[17px] max-w-xl mb-10 leading-[1.7]"
-              style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
-            >
-              INVO marketplace connects hotels with verified suppliers. HotelsVendors automates procurement, ETA compliance, and escrow payments — one unified workflow.
-            </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-[15px] md:text-[17px] max-w-xl mb-10 leading-[1.7]"
+            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
+          >
+            One platform connecting hotels, suppliers, funders, and logistics. AI-powered procurement, ETA-compliant invoicing, embedded factoring — all in a single workflow.
+          </motion.p>
 
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-3 mb-10"
+          {/* CTAs */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 mb-10">
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+              style={{ background: "var(--accent-base)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 600 }}
             >
-              <Link
-                href="/sandbox"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
-                style={{
-                  background: "linear-gradient(135deg, var(--accent-dark), var(--accent-light))",
-                  color: "var(--accent-text, #FFFFFF)",
-                  fontFamily: SANS,
-                  fontWeight: 600,
-                  boxShadow: "0 0 24px var(--accent-glow)",
-                }}
-              >
-                Explore the Sandbox
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
-                style={{
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  color: "#FFFFFF",
-                  fontFamily: SANS,
-                  fontWeight: 500,
-                }}
-              >
-                Talk to Sales
-              </Link>
-            </motion.div>
-
-            {/* Social proof */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex items-center gap-2 text-[12px]"
-              style={{ fontFamily: SANS, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}
+              Start Free Trial
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/sandbox"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+              style={{ border: "1px solid var(--border-visible)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 500 }}
             >
-              <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
-              Trusted by Orascom Hotels, Jaz, Pickalbatros + 200+ properties across Egypt
-            </motion.div>
-          </div>
+              <Play size={14} />
+              Watch Demo
+            </Link>
+          </motion.div>
 
-          {/* Right column — flow diagram */}
-          <div className="flex justify-center lg:justify-end pt-4">
-            <HeroFlowDiagram />
-          </div>
+          {/* Social proof */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="flex items-center gap-2 text-[12px]" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
+            <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
+            Trusted by Orascom, Jaz, Pickalbatros + 500 hotels across Egypt
+          </motion.div>
         </div>
 
-        {/* Value prop row */}
-        <div className="grid md:grid-cols-3 gap-4 mt-20">
+        {/* Hero image grid — 3 cards with real imagery */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="grid md:grid-cols-3 gap-4 mt-16"
+        >
+          {/* Hotel card */}
+          <div
+            className="relative rounded-2xl overflow-hidden h-[260px] group"
+            style={{ border: "1px solid var(--border-subtle)" }}
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80')" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Building2 size={14} style={{ color: "var(--accent-light)" }} />
+                <span className="text-[10px] uppercase tracking-wider font-medium" style={{ color: "var(--accent-light)", fontFamily: SANS }}>Hotels</span>
+              </div>
+              <h3 className="text-[15px] font-semibold text-white mb-1" style={{ fontFamily: SANS }}>AI-Powered Procurement</h3>
+              <p className="text-[12px] text-white/60 leading-relaxed" style={{ fontFamily: SANS }}>Demand forecasting, automated POs, budget control across all your properties.</p>
+            </div>
+          </div>
+
+          {/* Supplier card */}
+          <div
+            className="relative rounded-2xl overflow-hidden h-[260px] group"
+            style={{ border: "1px solid var(--border-subtle)" }}
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80')" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Store size={14} style={{ color: "var(--accent-light)" }} />
+                <span className="text-[10px] uppercase tracking-wider font-medium" style={{ color: "var(--accent-light)", fontFamily: SANS }}>Suppliers</span>
+              </div>
+              <h3 className="text-[15px] font-semibold text-white mb-1" style={{ fontFamily: SANS }}>Get Paid in 48 Hours</h3>
+              <p className="text-[12px] text-white/60 leading-relaxed" style={{ fontFamily: SANS }}>List products, receive POs, issue ETA invoices, get paid via embedded factoring.</p>
+            </div>
+          </div>
+
+          {/* Logistics card */}
+          <div
+            className="relative rounded-2xl overflow-hidden h-[260px] group"
+            style={{ border: "1px solid var(--border-subtle)" }}
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&q=80')" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Truck size={14} style={{ color: "var(--accent-light)" }} />
+                <span className="text-[10px] uppercase tracking-wider font-medium" style={{ color: "var(--accent-light)", fontFamily: SANS }}>Logistics</span>
+              </div>
+              <h3 className="text-[15px] font-semibold text-white mb-1" style={{ fontFamily: SANS }}>Shared-Route Delivery</h3>
+              <p className="text-[12px] text-white/60 leading-relaxed" style={{ fontFamily: SANS }}>GPS tracking, route optimization, auto-settlement on proof of delivery.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.6 }}
+          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
+        >
           {[
-            {
-              title: "For Hotel Finance",
-              desc: "Automated ETA e-invoicing, escrow payment protection — every invoice bankable.",
-              icon: Receipt,
-            },
-            {
-              title: "For Hotel Procurement",
-              desc: "Browse INVO marketplace, AI-powered PO approval, real-time budget control.",
-              icon: Store,
-            },
-            {
-              title: "For Suppliers",
-              desc: "List products on INVO, get paid on time via escrow — no more 90-day waits.",
-              icon: Banknote,
-            },
-          ].map((card, i) => {
-            const CardIcon = card.icon;
-            return (
-              <Reveal key={card.title} delay={i * 0.1}>
-                <div
-                  className="p-6 rounded-2xl h-full"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    backdropFilter: "blur(8px)",
-                  }}
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                    style={{
-                      background: "var(--accent-muted)",
-                      border: "1px solid var(--border-accent)",
-                    }}
-                  >
-                    <CardIcon size={18} style={{ color: "var(--accent-light)" }} />
-                  </div>
-                  <h3
-                    className="text-[15px] mb-2"
-                    style={{ fontFamily: HEADING, fontWeight: 500, color: "#FFFFFF" }}
-                  >
-                    {card.title}
-                  </h3>
-                  <p
-                    className="text-[13px] leading-relaxed"
-                    style={{ fontFamily: SANS, color: "rgba(255,255,255,0.6)", fontWeight: 400 }}
-                  >
-                    {card.desc}
-                  </p>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+            { value: "500+", label: "Hotels" },
+            { value: "680+", label: "Verified Suppliers" },
+            { value: "EGP 12M+", label: "Monthly GMV" },
+            { value: "98%", label: "On-Time Delivery" },
+          ].map((stat, i) => (
+            <div key={stat.label} className="text-center py-4 px-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border-subtle)" }}>
+              <div className="text-[22px] font-bold" style={{ color: "var(--accent-light)", fontFamily: SANS }}>{stat.value}</div>
+              <div className="text-[11px] text-white/40 mt-1 uppercase tracking-wider" style={{ fontFamily: SANS }}>{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
