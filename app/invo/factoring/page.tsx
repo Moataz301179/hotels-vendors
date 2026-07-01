@@ -30,8 +30,8 @@ export default async function FactoringPage() {
   ]);
 
   const totalFaceValue = requests.reduce((sum, r) => sum + Number(r.faceValue), 0);
-  const funded = requests.filter((r) => r.matchStatus === "FUNDED").length;
-  const bidding = requests.filter((r) => r.status === "BIDDING_OPEN").length;
+  const funded = requests.filter((r) => r.matchStatus === "funded").length;
+  const bidding = requests.filter((r) => r.status === "bidding_open").length;
   const totalFees = fees.reduce((sum, f) => sum + Number(f.feeAmountEgp), 0);
 
   return (
