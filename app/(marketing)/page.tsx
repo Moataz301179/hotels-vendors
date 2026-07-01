@@ -208,7 +208,7 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   return (
-    <section className="relative overflow-hidden min-h-screen flex items-center">
+    <section className="relative overflow-hidden flex flex-col">
       {/* Background — deep charcoal */}
       <div className="absolute inset-0" style={{ background: "var(--bg-canvas)" }} />
       {/* Amber glow — top center */}
@@ -225,7 +225,8 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
         }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 md:py-32 w-full flex flex-col items-center text-center">
+      {/* ── Above the fold: centered core ── */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 w-full min-h-screen flex flex-col items-center justify-center text-center">
         {/* 1. Logo — centered */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -233,7 +234,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           transition={{ duration: 0.6 }}
           className="mb-10"
         >
-          <BrandLogo variant="light" size="lg" forceColor="original" />
+          <BrandLogo variant="light" size="xl" />
         </motion.div>
 
         {/* 2. Title — centered */}
@@ -287,13 +288,16 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
           Trusted by Orascom, Jaz, Pickalbatros + 500 hotels across Egypt
         </motion.div>
+      </div>
 
-        {/* Image cards — below the fold */}
+      {/* ── Below the fold: image cards + stats ── */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 w-full pb-24 md:pb-32">
+        {/* Image cards */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid md:grid-cols-3 gap-4 mt-16 w-full"
+          className="grid md:grid-cols-3 gap-4 w-full"
         >
           <div className="relative rounded-2xl overflow-hidden h-[260px] group" style={{ border: "1px solid var(--border-subtle)" }}>
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -341,7 +345,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+          className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
         >
           {[
             { value: "500+", label: "Hotels" },
