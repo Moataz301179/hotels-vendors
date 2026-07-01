@@ -479,7 +479,7 @@ function PricingSection() {
                       : "border border-white/10 text-white/50 hover:bg-white/5 hover:text-white"
                   }`}
                 >
-                  {p.price === 0 ? "Start Free" : isPro ? "Start Free Trial" : "Contact Sales"}
+                  {p.price === 0 ? "Start Free" : isPro ? "Start Free Trial" : "Deploy with AI"}
                 </Link>
               </div>
             );

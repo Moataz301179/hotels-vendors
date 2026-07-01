@@ -203,7 +203,7 @@ export function MarketingNav() {
                 (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
               }}
             >
-              Contact Sales
+              AI Demo
             </Link>
             <button
               onClick={() => setWizardOpen(true)}
@@ -312,7 +312,7 @@ export function MarketingNav() {
                   style={{ borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}
                   onClick={() => setMobileOpen(false)}
                 >
-                  Contact Sales
+                  AI Demo
                 </Link>
                 <button
                   onClick={() => {

@@ -264,7 +264,7 @@ export default function CoveragePage() {
                   Register Interest <ArrowRight size={14} />
                 </Link>
                 <Link href="/contact" className="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--border-visible)] text-[var(--foreground-secondary)] text-sm font-medium rounded-xl transition-all duration-200 hover:border-[var(--accent-base)] hover:text-[var(--foreground)]">
-                  Contact Sales
+                  AI Onboarding <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
