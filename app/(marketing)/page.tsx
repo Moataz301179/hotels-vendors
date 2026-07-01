@@ -28,6 +28,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
