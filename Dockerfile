@@ -8,8 +8,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
 COPY . .
-RUN npx prisma generate
-RUN npm run build
+RUN npx prisma generate && npx next build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
