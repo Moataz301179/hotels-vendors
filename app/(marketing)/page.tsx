@@ -30,7 +30,6 @@ import {
 import Link from "next/link";
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { MarketTicker } from "@/components/marketing/market-ticker";
 import { HotelDashboardMockup } from "@/components/marketing/hotel-dashboard-mockup";
 import { SupplierDashboardMockup } from "@/components/marketing/supplier-dashboard-mockup";
 import { FunderDashboardMockup } from "@/components/marketing/funder-dashboard-mockup";
@@ -243,13 +242,13 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           style={{ fontFamily: HEADING, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.02em" }}
         >
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="block">
-            Procure Smarter.
+            Automated Procurement.
           </motion.span>
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18 }} className="block" style={{ color: "var(--accent-light)" }}>
-            Pay Faster.
+            Unified Liquidity.
           </motion.span>
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.26 }} className="block">
-            Scale Together.
+            Capital Efficient.
           </motion.span>
         </h1>
 
@@ -937,7 +936,6 @@ export default function HomePage() {
       <MarketingNav />
 
       <HeroSection onCTAClick={openWizard} />
-      <MarketTicker />
       <ProblemSection />
       <HowItWorks />
       <RoleValueSection onCTAClick={openWizard} />

@@ -35,6 +35,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { InvoNav } from "@/components/invo/invo-nav";
+import { MarketTicker } from "@/components/marketing/market-ticker";
 import { InvoFooter } from "@/components/invo/invo-footer";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -789,6 +790,8 @@ export default function InvoMarketplacePage() {
 
       {/* ── LIVE ACTIVITY TICKER ── */}
       <ActivityTicker />
+
+      <MarketTicker />
 
       {/* ── FOR SUPPLIERS ── */}
       <section id="for-suppliers" className="py-24 lg:py-32">
