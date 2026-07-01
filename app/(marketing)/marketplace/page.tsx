@@ -20,6 +20,7 @@ import { CategoryNav } from "@/components/marketplace/category-nav";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { CompareDrawer } from "@/components/marketplace/compare-drawer";
 import { useCompare, CompareProvider } from "@/components/marketplace/compare-context";
+import { MarketTicker } from "@/components/marketing/market-ticker";
 import { HOTEL_CATEGORIES } from "@/lib/marketplace/categories";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
 
@@ -69,7 +70,7 @@ function MarketplaceContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { addItem: addToCompare, removeItem: removeFromCompare, isInCompare } = useCompare();
+  const { addItem: addToCompare, isInCompare } = useCompare();
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -132,10 +133,6 @@ function MarketplaceContent() {
     window.location.href = `/marketplace/${id}`;
   };
 
-  const handleAddToCart = (_id: string, _qty: number) => {
-    // placeholder
-  };
-
   return (
     <main className="min-h-screen" style={{ backgroundColor: "var(--bg-canvas)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />
@@ -182,6 +179,8 @@ function MarketplaceContent() {
           </div>
         </div>
       </section>
+
+      <MarketTicker />
 
       {/* ═══ Category Filter Pills + Product Grid ═══ */}
       <section className="py-16">

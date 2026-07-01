@@ -6,7 +6,6 @@ import {
   FileCheck,
   Lock,
   Scale,
-  FileText,
   Server,
   Eye,
   Building2,

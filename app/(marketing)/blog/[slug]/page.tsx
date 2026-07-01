@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import {
   getPostBySlug,
   getAllSlugs,
-  type BlogPost,
 } from "@/lib/blog/posts";
 
 export async function generateStaticParams() {

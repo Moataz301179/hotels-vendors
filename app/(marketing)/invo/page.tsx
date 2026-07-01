@@ -7,11 +7,9 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Check,
-  Star,
   TrendingUp,
   DollarSign,
   ShieldCheck,
-  Zap,
   Building2,
   Store,
   Search,
@@ -19,23 +17,14 @@ import {
   BarChart3,
   Clock,
   FileCheck,
-  Users,
   Sparkles,
-  X,
-  Menu,
   ChevronDown,
-  Percent,
   Award,
   RefreshCw,
-  ShoppingCart,
   Eye,
-  Smartphone,
-  Truck,
-  HelpCircle,
   MessageCircle,
 } from "lucide-react";
 import { InvoNav } from "@/components/invo/invo-nav";
-import { MarketTicker } from "@/components/marketing/market-ticker";
 import { InvoFooter } from "@/components/invo/invo-footer";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -614,7 +603,6 @@ export default function InvoMarketplacePage() {
   const router = useRouter();
   const [roleTab, setRoleTab] = useState<"supplier" | "hotel">("supplier");
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     document.title = "INVO — Egypt's B2B Hospitality Marketplace";
@@ -790,8 +778,6 @@ export default function InvoMarketplacePage() {
 
       {/* ── LIVE ACTIVITY TICKER ── */}
       <ActivityTicker />
-
-      <MarketTicker />
 
       {/* ── FOR SUPPLIERS ── */}
       <section id="for-suppliers" className="py-24 lg:py-32">
