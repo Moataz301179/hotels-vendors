@@ -12,6 +12,9 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
 }
 
 export async function createClient() {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error("Supabase env vars not configured");
+  }
   const cookieStore = await cookies();
   return createServerClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
     cookies: {
