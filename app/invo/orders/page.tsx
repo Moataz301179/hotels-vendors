@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import Link from "next/link";
@@ -12,18 +12,14 @@ const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
 const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function OrdersPage() {
-  const supabase = await createClient();
+  const orderList = await prisma.invoOrder.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+  });
 
-  const { data: orders } = await supabase
-    .from("orders")
-    .select("*, hotels(name), suppliers(name)")
-    .order("created_at", { ascending: false })
-    .limit(100);
-
-  const orderList = orders || [];
-  const totalValue = orderList.reduce((sum, o) => sum + (o.total_value || 0), 0);
-  const draftCount = orderList.filter((o) => o.procurement_state === "draft").length;
-  const disputedCount = orderList.filter((o) => o.procurement_state === "disputed").length;
+  const totalValue = orderList.reduce((sum, o) => sum + Number(o.totalValue), 0);
+  const draftCount = orderList.filter((o) => o.procurementState === "draft").length;
+  const disputedCount = orderList.filter((o) => o.procurementState === "disputed").length;
 
   return (
     <div className="space-y-6">
@@ -89,24 +85,20 @@ export default async function OrdersPage() {
                         {order.id.slice(0, 8)}...
                       </Link>
                     </td>
-                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(order as any).hotels?.name || "—"}</td>
-                    <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{(order as any).suppliers?.name || "—"}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{order.hotelId.slice(0, 8) || "—"}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{order.supplierId.slice(0, 8) || "—"}</td>
                     <td className="px-5 py-3 text-right font-semibold" style={{ color: TEXT_PRIMARY }}>
-                      {(order.total_value || 0).toLocaleString("en-EG")} {order.currency || "EGP"}
+                      {Number(order.totalValue).toLocaleString("en-EG")} {order.currency || "EGP"}
                     </td>
-                    <td className="px-5 py-3 text-center"><StatusBadge status={order.procurement_state || "draft"} /></td>
+                    <td className="px-5 py-3 text-center"><StatusBadge status={order.procurementState} /></td>
                     <td className="px-5 py-3 text-center text-[11px] font-mono" style={{ color: TEXT_MUTED }}>
-                      {order.maker_user_id?.slice(0, 6) || "—"}
+                      {order.makerUserId?.slice(0, 6) || "—"}
                     </td>
                     <td className="px-5 py-3 text-center">
-                      {order.checker_approved ? (
-                        <CheckCircle className="w-4 h-4 mx-auto" style={{ color: ACCENT_LIME }} />
-                      ) : (
-                        <span className="text-[11px]" style={{ color: TEXT_MUTED }}>—</span>
-                      )}
+                      <span className="text-[11px]" style={{ color: TEXT_MUTED }}>—</span>
                     </td>
                     <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>
-                      {order.created_at ? new Date(order.created_at).toLocaleDateString("en-EG") : "—"}
+                      {order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-EG") : "—"}
                     </td>
                   </tr>
                 ))}

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/v1/invo/orders
- * Creates an order in Supabase (Invo marketplace layer).
- * The HotelsVendors (Prisma) layer syncs via background reconciliation.
+ * Creates an order in the Invo marketplace layer.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -18,27 +17,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
-    const { data: order, error } = await supabase
-      .from("orders")
-      .insert({
-        hotel_id,
-        supplier_id,
-        total_value,
+    const order = await prisma.invoOrder.create({
+      data: {
+        hotelId: hotel_id,
+        supplierId: supplier_id,
+        totalValue: total_value,
         currency,
-        procurement_state: "draft",
-        maker_user_id: maker_user_id || null,
-      })
-      .select()
-      .single();
-
-    if (error || !order) {
-      return NextResponse.json(
-        { error: `Order creation failed: ${error?.message}` },
-        { status: 500 }
-      );
-    }
+        procurementState: "draft",
+        makerUserId: maker_user_id || null,
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -53,7 +41,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * GET /api/v1/invo/orders
- * List orders from Supabase with optional filtering.
+ * List orders from Invo marketplace with optional filtering.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -63,24 +51,18 @@ export async function GET(req: NextRequest) {
     const state = searchParams.get("state");
     const limit = parseInt(searchParams.get("limit") || "50", 10);
 
-    const supabase = await createClient();
-    let query = supabase
-      .from("orders")
-      .select("*, hotels(name), suppliers(name)")
-      .order("created_at", { ascending: false })
-      .limit(limit);
+    const where: Record<string, unknown> = {};
+    if (hotel_id) where.hotelId = hotel_id;
+    if (supplier_id) where.supplierId = supplier_id;
+    if (state) where.procurementState = state;
 
-    if (hotel_id) query = query.eq("hotel_id", hotel_id);
-    if (supplier_id) query = query.eq("supplier_id", supplier_id);
-    if (state) query = query.eq("procurement_state", state);
+    const orders = await prisma.invoOrder.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
 
-    const { data, error } = await query;
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ orders: data || [] });
+    return NextResponse.json({ orders });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

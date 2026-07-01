@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { Bot, Play, CheckCircle, Clock, AlertTriangle } from "lucide-react";
@@ -18,21 +18,22 @@ const AGENT_PIPELINE = [
 ];
 
 export default async function AgentsPage() {
-  const supabase = await createClient();
-
-  const [auditRes, alertsRes] = await Promise.all([
-    supabase.from("agent_audit_log").select("*").order("created_at", { ascending: false }).limit(50),
-    supabase.from("alerts").select("*").order("created_at", { ascending: false }).limit(20),
+  const [auditLog, alerts] = await Promise.all([
+    prisma.agentAuditLog.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }),
+    prisma.alert.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
   ]);
 
-  const auditLog = auditRes.data || [];
-  const alerts = alertsRes.data || [];
   const openAlerts = alerts.filter((a) => a.status === "open").length;
 
-  // Count actions per agent
   const agentCounts: Record<string, number> = {};
   auditLog.forEach((log) => {
-    agentCounts[log.agent_name] = (agentCounts[log.agent_name] || 0) + 1;
+    agentCounts[log.agentName] = (agentCounts[log.agentName] || 0) + 1;
   });
 
   return (
@@ -49,7 +50,7 @@ export default async function AgentsPage() {
         <KPICard title="Open Alerts" value={openAlerts} accent={openAlerts > 0} icon={<AlertTriangle className="w-4 h-4" />} />
         <KPICard title="Pipeline Steps" value={4} icon={<Play className="w-4 h-4" />} />
         <KPICard title="Last 24h" value={auditLog.filter((l) => {
-          const d = new Date(l.created_at);
+          const d = new Date(l.createdAt);
           return Date.now() - d.getTime() < 86400000;
         }).length} accent icon={<CheckCircle className="w-4 h-4" />} />
       </KPIGrid>
@@ -129,22 +130,22 @@ export default async function AgentsPage() {
               <tbody>
                 {auditLog.map((log) => (
                   <tr
-                    key={log.log_id}
+                    key={log.logId}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,107,0,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
-                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_LIME }}>{log.agent_name}</td>
-                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{log.action_executed}</td>
+                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_LIME }}>{log.agentName}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{log.actionExecuted}</td>
                     <td className="px-5 py-3 font-mono text-[11px]" style={{ color: TEXT_MUTED }}>
-                      {log.invoice_id?.slice(0, 8) || "—"}
+                      {log.invoiceId?.slice(0, 8) || "—"}
                     </td>
                     <td className="px-5 py-3 text-[12px]" style={{ color: TEXT_SECONDARY }}>
-                      {log.previous_state || "—"} → {log.new_state || "—"}
+                      {log.previousState || "—"} → {log.newState || "—"}
                     </td>
                     <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>
-                      {log.created_at ? new Date(log.created_at).toLocaleString("en-EG") : "—"}
+                      {log.createdAt ? new Date(log.createdAt).toLocaleString("en-EG") : "—"}
                     </td>
                   </tr>
                 ))}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/v1/invo/invoices
- * Creates an invoice in Supabase (Invo layer) with ETA compliance fields.
+ * Creates an invoice in the Invo layer with ETA compliance fields.
  * Triggers agent_1_ingestion audit log entry.
  */
 export async function POST(req: NextRequest) {
@@ -26,40 +26,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
-    const { data: invoice, error } = await supabase
-      .from("invoices")
-      .insert({
-        order_id,
-        hotel_id,
-        supplier_id,
-        face_value,
+    const invoice = await prisma.invoInvoice.create({
+      data: {
+        orderId: order_id,
+        hotelId: hotel_id,
+        supplierId: supplier_id,
+        faceValue: face_value,
         currency,
-        issue_date: issue_date || new Date().toISOString().split("T")[0],
-        due_date: due_date || null,
-        workflow_state: "ingested",
-        qualification_status: "pending_documents",
-        fraud_gate_status: "pending",
-        eta_status: "pending",
-      })
-      .select()
-      .single();
-
-    if (error || !invoice) {
-      return NextResponse.json(
-        { error: `Invoice creation failed: ${error?.message}` },
-        { status: 500 }
-      );
-    }
+        issueDate: issue_date || new Date().toISOString().split("T")[0],
+        dueDate: due_date || null,
+        workflowState: "ingested",
+        qualificationStatus: "pending_documents",
+        fraudGateStatus: "pending",
+        etaStatus: "pending",
+      },
+    });
 
     // Log agent audit entry
-    await supabase.from("agent_audit_log").insert({
-      agent_name: "agent_1_ingestion",
-      action_executed: "invoice_created",
-      invoice_id: invoice.id,
-      previous_state: "none",
-      new_state: "ingested",
+    await prisma.agentAuditLog.create({
+      data: {
+        agentName: "agent_1_ingestion",
+        actionExecuted: "invoice_created",
+        invoiceId: invoice.id,
+        previousState: "none",
+        newState: "ingested",
+      },
     });
 
     return NextResponse.json({
@@ -75,7 +66,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * GET /api/v1/invo/invoices
- * List invoices from Supabase with filtering.
+ * List invoices from Invo layer with filtering.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -86,25 +77,19 @@ export async function GET(req: NextRequest) {
     const eta_status = searchParams.get("eta_status");
     const limit = parseInt(searchParams.get("limit") || "50", 10);
 
-    const supabase = await createClient();
-    let query = supabase
-      .from("invoices")
-      .select("*, hotels(name), suppliers(name)")
-      .order("created_at", { ascending: false })
-      .limit(limit);
+    const where: Record<string, unknown> = {};
+    if (hotel_id) where.hotelId = hotel_id;
+    if (supplier_id) where.supplierId = supplier_id;
+    if (qualification) where.qualificationStatus = qualification;
+    if (eta_status) where.etaStatus = eta_status;
 
-    if (hotel_id) query = query.eq("hotel_id", hotel_id);
-    if (supplier_id) query = query.eq("supplier_id", supplier_id);
-    if (qualification) query = query.eq("qualification_status", qualification);
-    if (eta_status) query = query.eq("eta_status", eta_status);
+    const invoices = await prisma.invoInvoice.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
 
-    const { data, error } = await query;
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ invoices: data || [] });
+    return NextResponse.json({ invoices });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

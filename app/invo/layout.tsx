@@ -116,7 +116,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
 
           <div className="flex items-center gap-4">
             <span className="text-[12px]" style={{ color: TEXT_MUTED }}>
-              Supabase · INVO
+              PostgreSQL · INVO
             </span>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold"

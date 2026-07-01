@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { FileText, CheckCircle, Clock, AlertTriangle } from "lucide-react";
@@ -11,19 +11,15 @@ const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
 const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function InvoicesPage() {
-  const supabase = await createClient();
+  const invoiceList = await prisma.invoInvoice.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+  });
 
-  const { data: invoices } = await supabase
-    .from("invoices")
-    .select("*, hotels(name), suppliers(name)")
-    .order("created_at", { ascending: false })
-    .limit(100);
-
-  const invoiceList = invoices || [];
-  const totalFaceValue = invoiceList.reduce((sum, inv) => sum + (inv.face_value || 0), 0);
-  const qualified = invoiceList.filter((inv) => inv.qualification_status === "qualified").length;
-  const pending = invoiceList.filter((inv) => inv.qualification_status === "pending_documents").length;
-  const etaSubmitted = invoiceList.filter((inv) => inv.eta_status === "submitted").length;
+  const totalFaceValue = invoiceList.reduce((sum, inv) => sum + Number(inv.faceValue), 0);
+  const qualified = invoiceList.filter((inv) => inv.qualificationStatus === "qualified").length;
+  const pending = invoiceList.filter((inv) => inv.qualificationStatus === "pending_documents").length;
+  const etaSubmitted = invoiceList.filter((inv) => inv.etaStatus === "submitted").length;
 
   return (
     <div className="space-y-6">
@@ -80,17 +76,17 @@ export default async function InvoicesPage() {
                     <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>
                       {inv.id.slice(0, 8)}...
                     </td>
-                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(inv as any).hotels?.name || "—"}</td>
-                    <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{(inv as any).suppliers?.name || "—"}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{inv.hotelId.slice(0, 8) || "—"}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_SECONDARY }}>{inv.supplierId.slice(0, 8) || "—"}</td>
                     <td className="px-5 py-3 text-right font-semibold" style={{ color: TEXT_PRIMARY }}>
-                      {(inv.face_value || 0).toLocaleString("en-EG")} {inv.currency || "EGP"}
+                      {Number(inv.faceValue).toLocaleString("en-EG")} {inv.currency || "EGP"}
                     </td>
-                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.workflow_state || "ingested"} /></td>
-                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.qualification_status || "pending_documents"} /></td>
-                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.fraud_gate_status || "pending"} /></td>
-                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.eta_status || "pending"} /></td>
+                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.workflowState} /></td>
+                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.qualificationStatus} /></td>
+                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.fraudGateStatus} /></td>
+                    <td className="px-5 py-3 text-center"><StatusBadge status={inv.etaStatus} /></td>
                     <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>
-                      {inv.due_date || "—"}
+                      {inv.dueDate || "—"}
                     </td>
                   </tr>
                 ))}

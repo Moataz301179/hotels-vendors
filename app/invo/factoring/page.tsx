@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { TrendingUp, DollarSign, Clock, CheckCircle } from "lucide-react";
@@ -11,24 +11,28 @@ const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
 const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function FactoringPage() {
-  const supabase = await createClient();
-
-  const [requestsRes, bidsRes, fundersRes, feesRes] = await Promise.all([
-    supabase.from("factoring_requests").select("*, hotels(name)").order("created_at", { ascending: false }).limit(50),
-    supabase.from("factoring_bids").select("*").order("created_at", { ascending: false }).limit(50),
-    supabase.from("funder_configs").select("*").eq("is_active", true),
-    supabase.from("success_fees").select("*").order("created_at", { ascending: false }).limit(20),
+  const [requests, bids, funders, fees] = await Promise.all([
+    prisma.invoFactoringRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }),
+    prisma.invoFactoringBid.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }),
+    prisma.invoFunderConfig.findMany({
+      where: { isActive: true },
+    }),
+    prisma.invoSuccessFee.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
   ]);
 
-  const requests = requestsRes.data || [];
-  const bids = bidsRes.data || [];
-  const funders = fundersRes.data || [];
-  const fees = feesRes.data || [];
-
-  const totalFaceValue = requests.reduce((sum, r) => sum + (r.face_value || 0), 0);
-  const funded = requests.filter((r) => r.match_status === "funded").length;
-  const bidding = requests.filter((r) => r.status === "bidding_open").length;
-  const totalFees = fees.reduce((sum, f) => sum + (f.fee_amount_egp || 0), 0);
+  const totalFaceValue = requests.reduce((sum, r) => sum + Number(r.faceValue), 0);
+  const funded = requests.filter((r) => r.matchStatus === "FUNDED").length;
+  const bidding = requests.filter((r) => r.status === "BIDDING_OPEN").length;
+  const totalFees = fees.reduce((sum, f) => sum + Number(f.feeAmountEgp), 0);
 
   return (
     <div className="space-y-6">
@@ -62,9 +66,9 @@ export default async function FactoringPage() {
               <div key={funder.id} className="rounded-lg p-4" style={{ backgroundColor: "var(--background)", border: `1px solid ${BORDER}` }}>
                 <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{funder.name || "Unnamed"}</div>
                 <div className="text-[12px] mt-2 space-y-1" style={{ color: TEXT_SECONDARY }}>
-                  <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{(funder.credit_limit || 0).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{(funder.min_invoice || 0).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{(funder.rate_min || 0).toFixed(2)}% to {(funder.rate_max || 0).toFixed(2)}%</span></div>
+                  <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{Number(funder.creditLimit).toLocaleString("en-EG")} EGP</span></div>
+                  <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{Number(funder.minInvoice).toLocaleString("en-EG")} EGP</span></div>
+                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{Number(funder.rateMin).toFixed(2)}% to {Number(funder.rateMax).toFixed(2)}%</span></div>
                 </div>
               </div>
             ))}
@@ -100,7 +104,7 @@ export default async function FactoringPage() {
               </thead>
               <tbody>
                 {requests.map((req) => {
-                  const reqBids = bids.filter((b) => b.request_id === req.id);
+                  const reqBids = bids.filter((b) => b.requestId === req.id);
                   return (
                     <tr
                       key={req.id}
@@ -112,14 +116,14 @@ export default async function FactoringPage() {
                       <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>
                         {req.id.slice(0, 8)}...
                       </td>
-                      <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(req as any).hotels?.name || "—"}</td>
+                      <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{req.hotelId ? req.hotelId.slice(0, 8) : "—"}</td>
                       <td className="px-5 py-3 text-right font-semibold" style={{ color: TEXT_PRIMARY }}>
-                        {(req.face_value || 0).toLocaleString("en-EG")} EGP
+                        {Number(req.faceValue).toLocaleString("en-EG")} EGP
                       </td>
-                      <td className="px-5 py-3 text-center"><StatusBadge status={req.status || "bidding_open"} /></td>
-                      <td className="px-5 py-3 text-center"><StatusBadge status={req.match_status || "not_submitted"} /></td>
+                      <td className="px-5 py-3 text-center"><StatusBadge status={req.status.toLowerCase()} /></td>
+                      <td className="px-5 py-3 text-center"><StatusBadge status={req.matchStatus.toLowerCase()} /></td>
                       <td className="px-5 py-3 text-center" style={{ color: TEXT_SECONDARY }}>{reqBids.length}</td>
-                      <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>{req.maturity_date || "—"}</td>
+                      <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>{req.maturityDate || "—"}</td>
                     </tr>
                   );
                 })}
