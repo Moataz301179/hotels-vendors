@@ -11,5 +11,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 export function createClient() {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error("Supabase env vars not configured");
+  }
   return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
