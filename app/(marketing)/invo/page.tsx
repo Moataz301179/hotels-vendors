@@ -955,18 +955,18 @@ export default function InvoMarketplacePage() {
               <div
                 className="surface-card p-8 lg:p-10 relative overflow-hidden group"
                 style={{
-                  background: "linear-gradient(135deg, rgba(59,130,246,0.04), transparent)",
-                  border: "1px solid rgba(59,130,246,0.1)",
+                  background: "linear-gradient(135deg, rgba(212,168,67,0.04), transparent)",
+                  border: "1px solid rgba(212,168,67,0.1)",
                 }}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[rgba(59,130,246,0.04)] blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700" />
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[rgba(212,168,67,0.04)] blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-11 h-11 rounded-xl bg-[#3B82F6] flex items-center justify-center">
-                      <Building2 className="w-5 h-5 text-white" />
+                    <div className="w-11 h-11 rounded-xl bg-[#D4A843] flex items-center justify-center">
+                      <Building2 className="w-5 h-5 text-black" />
                     </div>
                     <div>
-                      <div className="text-[10px] uppercase tracking-wider text-[#3B82F6] font-medium">For Hotels</div>
+                      <div className="text-[10px] uppercase tracking-wider text-[#D4A843] font-medium">For Hotels</div>
                       <h3 className="text-[18px] text-white font-medium">Procure from 680+ suppliers</h3>
                     </div>
                   </div>
@@ -980,14 +980,14 @@ export default function InvoMarketplacePage() {
                       "Authority Matrix for budget control",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2.5 text-[13px] text-white/50">
-                        <Check className="w-4 h-4 text-[#3B82F6] shrink-0 mt-0.5" />
+                        <Check className="w-4 h-4 text-[#D4A843] shrink-0 mt-0.5" />
                         {item}
                       </li>
                     ))}
                   </ul>
                   <Link
                     href="/register"
-                    className="inline-flex items-center gap-2 text-[13px] text-[#3B82F6] hover:text-[#60A5FA] transition-colors font-medium"
+                    className="inline-flex items-center gap-2 text-[13px] text-[#D4A843] hover:text-[#e0b856] transition-colors font-medium"
                   >
                     Start buying <ArrowRight className="w-3.5 h-3.5" />
                   </Link>

@@ -48,7 +48,7 @@ export default function ContactPage() {
                   { icon: Bot, label: "Ingestion", desc: "Parse submission and validate inputs", color: "var(--accent-base)" },
                   { icon: ShieldCheck, label: "Compliance", desc: "ETA compliance and fraud checks", color: "var(--success)" },
                   { icon: Zap, label: "Sign-off", desc: "Portfolio scoring and credit decision", color: "#F59E0B" },
-                  { icon: Network, label: "Routing", desc: "Tenant provisioning + credential dispatch", color: "#3B82F6" },
+                  { icon: Network, label: "Routing", desc: "Tenant provisioning + credential dispatch", color: "#D4A843" },
                 ].map((agent) => (
                   <div key={agent.label} className="flex items-start gap-3">
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--accent-muted)" }}>
