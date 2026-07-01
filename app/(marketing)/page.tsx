@@ -39,20 +39,25 @@ import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN TOKENS — Liquid Glass (navy + gold)
+   EMBER DESIGN TOKENS — Deep charcoal + rich amber
    ═══════════════════════════════════════════════════════════════ */
-const ACCENT = "var(--accent-base, #A16207)";
-const ACCENT_LIGHT = "var(--accent-light, #D97706)";
-const ACCENT_MUTED = "var(--accent-muted, rgba(161,98,7,0.08))";
-const ACCENT_BORDER = "var(--border-accent, rgba(161,98,7,0.30))";
-const BG = "var(--bg-canvas, #F8FAFC)";
-const TEXT = "var(--text-primary, #0F1729)";
-const TEXT_SECONDARY = "var(--text-secondary, #334155)";
-const TEXT_MUTED = "var(--text-muted, #94A3B8)";
-const SURFACE = "var(--surface, #FFFFFF)";
-const TEXT_INVERSE = "var(--text-inverse, #F8FAFC)";
+const ACCENT = "var(--accent-base, #F59E0B)";
+const ACCENT_LIGHT = "var(--accent-light, #FBBF24)";
+const ACCENT_MUTED = "var(--accent-muted, rgba(245,158,11,0.10))";
+const ACCENT_BORDER = "var(--border-accent, rgba(245,158,11,0.38))";
+const BG = "var(--bg-canvas, #0F172A)";
+const BG_LIGHT = "var(--bg-light-canvas, #FFFDF5)";
+const BG_LIGHT_SURFACE = "var(--bg-light-surface, #FFFFFF)";
+const TEXT = "var(--text-primary, #F8FAFC)";
+const TEXT_SECONDARY = "var(--text-secondary, #CBD5E1)";
+const TEXT_MUTED = "var(--text-muted, #64748B)";
+const TEXT_LIGHT = "var(--text-light-primary, #1C1917)";
+const TEXT_LIGHT_SECONDARY = "var(--text-light-secondary, #57534E)";
+const TEXT_LIGHT_MUTED = "var(--text-light-muted, #A8A29E)";
+const SURFACE = "var(--surface, #1E293B)";
+const TEXT_INVERSE = "var(--text-inverse, #0F172A)";
 
-const SANS = "var(--font-sans, 'Karla, Inter, system-ui, sans-serif')";
+const SANS = "var(--font-sans, 'Plus Jakarta Sans, Inter, system-ui, sans-serif')";
 const HEADING = "var(--font-sans)";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -197,237 +202,102 @@ function SandboxDashboardPanel({ onCTAClick }: { onCTAClick: () => void }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   1. HERO — Procurement Orchestration Platform
-   Split layout: left text + right animated flow diagram
+   1. HERO — Center-Aligned Ember Layout
+   Logo → Title → Subtext + CTAs (vertically centered)
    ═══════════════════════════════════════════════════════════ */
-
-function HeroFlowDiagram() {
-  const steps = [
-    { icon: Store, label: "INVO Marketplace" },
-    { icon: ShoppingCart, label: "Order" },
-    { icon: Receipt, label: "ETA Verification" },
-    { icon: ShieldCheck, label: "Escrow Payment" },
-    { icon: Banknote, label: "Release" },
-  ];
-
-  const [activeIndex, setActiveIndex] = useState(-1);
-
-  useEffect(() => {
-    const timers = steps.map((_, i) =>
-      setTimeout(() => setActiveIndex(i), 600 + i * 900)
-    );
-
-    const interval = setInterval(() => {
-      setActiveIndex(-1);
-      requestAnimationFrame(() => {
-        steps.forEach((_, i) => {
-          setTimeout(() => setActiveIndex(i), i * 900);
-        });
-      });
-    }, 6000);
-
-    return () => {
-      timers.forEach(clearTimeout);
-      clearInterval(interval);
-    };
-  }, []);
-
-  return (
-    <div className="flex flex-col items-center">
-      {steps.map((step, i) => {
-        const StepIcon = step.icon;
-        const isActive = activeIndex >= i;
-        const isCurrent = activeIndex === i;
-
-        return (
-          <div key={step.label} className="flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, x: 40, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                background: isActive
-                  ? "linear-gradient(135deg, rgba(196,136,31,0.2), rgba(232,168,56,0.1))"
-                  : "rgba(255,255,255,0.04)",
-                border: isActive
-                  ? "1px solid rgba(232,168,56,0.35)"
-                  : "1px solid rgba(255,255,255,0.06)",
-                backdropFilter: "blur(12px)",
-                transform: isCurrent ? "scale(1.03)" : "scale(1)",
-                boxShadow: isCurrent
-                  ? "0 0 30px rgba(196,136,31,0.15), inset 0 1px 0 rgba(255,255,255,0.1)"
-                  : isActive
-                  ? "inset 0 1px 0 rgba(255,255,255,0.08)"
-                  : "inset 0 1px 0 rgba(255,255,255,0.04)",
-              }}
-              className="flex items-center gap-3.5 px-5 py-3.5 rounded-2xl w-full min-w-[230px] transition-all duration-500"
-            >
-              <div
-                style={{
-                  background: isActive
-                    ? "linear-gradient(135deg, var(--accent-dark), var(--accent-light))"
-                    : "rgba(255,255,255,0.06)",
-                  boxShadow: isActive ? "0 0 16px var(--accent-glow)" : "none",
-                }}
-                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500"
-              >
-                <StepIcon
-                  size={18}
-                  style={{
-                    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.3)",
-                    transition: "color 0.5s",
-                  }}
-                />
-              </div>
-              <span
-                className="text-[14px] font-medium transition-all duration-500"
-                style={{
-                  fontFamily: SANS,
-                  color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.35)",
-                }}
-              >
-                {step.label}
-              </span>
-            </motion.div>
-
-            {i < steps.length - 1 && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 36 }}
-                transition={{ duration: 0.4, delay: 0.1 + i * 0.15 + 0.2 }}
-                className="flex items-center justify-center overflow-hidden"
-              >
-                <motion.svg
-                  width="16"
-                  height="36"
-                  viewBox="0 0 16 36"
-                  fill="none"
-                  animate={activeIndex > i ? { y: [0, 4, 0] } : { y: 0 }}
-                  transition={{ duration: 1.5, repeat: activeIndex > i ? Infinity : 0, ease: "easeInOut" }}
-                >
-                  <path
-                    d="M8 4L8 32M8 32L2 26M8 32L14 26"
-                    stroke={activeIndex > i ? "var(--accent-base)" : "rgba(255,255,255,0.1)"}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="transition-colors duration-500"
-                  />
-                </motion.svg>
-              </motion.div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
   return (
     <section className="relative overflow-hidden min-h-screen flex items-center">
-      {/* Background — solid dark brown */}
+      {/* Background — deep charcoal */}
       <div className="absolute inset-0" style={{ background: "var(--bg-canvas)" }} />
-      {/* Warm accent glow top-right */}
+      {/* Amber glow — top center */}
       <div
-        className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-15 blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, var(--accent-dark) 0%, transparent 70%)" }}
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full opacity-20 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, var(--accent-dark) 0%, transparent 70%)" }}
       />
-      {/* Emerald glow bottom-left */}
+      {/* Subtle grid overlay */}
       <div
-        className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, var(--success) 0%, transparent 70%)" }}
-      />
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
-        {/* Badge */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-8">
-          <span
-            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] px-4 py-1.5 rounded-full"
-            style={{ background: "var(--accent-muted)", color: "var(--accent-light)", border: "1px solid var(--border-accent)", fontFamily: SANS, fontWeight: 500 }}
-          >
-            Built for Egyptian Hospitality
-          </span>
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 md:py-32 w-full flex flex-col items-center text-center">
+        {/* 1. Logo — centered */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-10"
+        >
+          <BrandLogo variant="light" size="lg" forceColor="original" />
         </motion.div>
 
-        {/* Headline */}
-        <div className="max-w-4xl">
-          <h1
-            className="text-[36px] md:text-[52px] lg:text-[62px] mb-6 leading-[1.08] tracking-tight"
-            style={{ fontFamily: HEADING, fontWeight: 600, color: "#FFFFFF", letterSpacing: "-0.02em" }}
+        {/* 2. Title — centered */}
+        <h1
+          className="text-[36px] md:text-[52px] lg:text-[64px] mb-6 leading-[1.08] tracking-tight max-w-4xl"
+          style={{ fontFamily: HEADING, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.02em" }}
+        >
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="block">
+            Procure Smarter.
+          </motion.span>
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18 }} className="block" style={{ color: "var(--accent-light)" }}>
+            Pay Faster.
+          </motion.span>
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.26 }} className="block">
+            Scale Together.
+          </motion.span>
+        </h1>
+
+        {/* 3. Subtext + CTAs — centered */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-[15px] md:text-[17px] max-w-2xl mb-10 leading-[1.7] mx-auto"
+          style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
+        >
+          One platform connecting hotels, suppliers, funders, and logistics. AI-powered procurement, ETA-compliant invoicing, embedded factoring — all in a single workflow.
+        </motion.p>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 mb-12">
+          <Link
+            href="/register"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+            style={{ background: "var(--accent-base)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 600 }}
           >
-            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="block">
-              Procure Smarter.
-            </motion.span>
-            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18 }} className="block" style={{ color: "var(--accent-light)" }}>
-              Pay Faster.
-            </motion.span>
-            <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.26 }} className="block">
-              Scale Together.
-            </motion.span>
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-[15px] md:text-[17px] max-w-xl mb-10 leading-[1.7]"
-            style={{ fontFamily: SANS, color: "rgba(255,255,255,0.7)", fontWeight: 400 }}
+            Start Free Trial
+            <ArrowRight size={16} />
+          </Link>
+          <Link
+            href="/sandbox"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
+            style={{ border: "1px solid var(--border-visible)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 500 }}
           >
-            One platform connecting hotels, suppliers, funders, and logistics. AI-powered procurement, ETA-compliant invoicing, embedded factoring — all in a single workflow.
-          </motion.p>
+            <Play size={14} />
+            Watch Demo
+          </Link>
+        </motion.div>
 
-          {/* CTAs */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 mb-10">
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
-              style={{ background: "var(--accent-base)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 600 }}
-            >
-              Start Free Trial
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              href="/sandbox"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[14px] rounded-xl transition-all duration-200 hover:scale-[1.03]"
-              style={{ border: "1px solid var(--border-visible)", color: "#FFFFFF", fontFamily: SANS, fontWeight: 500 }}
-            >
-              <Play size={14} />
-              Watch Demo
-            </Link>
-          </motion.div>
+        {/* Social proof */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="flex items-center gap-2 text-[12px]" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
+          <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
+          Trusted by Orascom, Jaz, Pickalbatros + 500 hotels across Egypt
+        </motion.div>
 
-          {/* Social proof */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="flex items-center gap-2 text-[12px]" style={{ fontFamily: SANS, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
-            <ShieldCheck size={14} style={{ color: "var(--accent-light)" }} />
-            Trusted by Orascom, Jaz, Pickalbatros + 500 hotels across Egypt
-          </motion.div>
-        </div>
-
-        {/* Hero image grid — 3 cards with real imagery */}
+        {/* Image cards — below the fold */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid md:grid-cols-3 gap-4 mt-16"
+          className="grid md:grid-cols-3 gap-4 mt-16 w-full"
         >
-          {/* Hotel card */}
-          <div
-            className="relative rounded-2xl overflow-hidden h-[260px] group"
-            style={{ border: "1px solid var(--border-subtle)" }}
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80')" }}
-            />
+          <div className="relative rounded-2xl overflow-hidden h-[260px] group" style={{ border: "1px solid var(--border-subtle)" }}>
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80')" }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5">
               <div className="flex items-center gap-2 mb-2">
@@ -438,16 +308,9 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
               <p className="text-[12px] text-white/60 leading-relaxed" style={{ fontFamily: SANS }}>Demand forecasting, automated POs, budget control across all your properties.</p>
             </div>
           </div>
-
-          {/* Supplier card */}
-          <div
-            className="relative rounded-2xl overflow-hidden h-[260px] group"
-            style={{ border: "1px solid var(--border-subtle)" }}
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80')" }}
-            />
+          <div className="relative rounded-2xl overflow-hidden h-[260px] group" style={{ border: "1px solid var(--border-subtle)" }}>
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80')" }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5">
               <div className="flex items-center gap-2 mb-2">
@@ -458,16 +321,9 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
               <p className="text-[12px] text-white/60 leading-relaxed" style={{ fontFamily: SANS }}>List products, receive POs, issue ETA invoices, get paid via embedded factoring.</p>
             </div>
           </div>
-
-          {/* Logistics card */}
-          <div
-            className="relative rounded-2xl overflow-hidden h-[260px] group"
-            style={{ border: "1px solid var(--border-subtle)" }}
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&q=80')" }}
-            />
+          <div className="relative rounded-2xl overflow-hidden h-[260px] group" style={{ border: "1px solid var(--border-subtle)" }}>
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&q=80')" }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5">
               <div className="flex items-center gap-2 mb-2">
@@ -485,7 +341,7 @@ function HeroSection({ onCTAClick }: { onCTAClick: () => void }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
+          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
         >
           {[
             { value: "500+", label: "Hotels" },
@@ -532,7 +388,7 @@ function ProblemSection() {
   ];
 
   return (
-    <section id="problem" className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG }}>
+    <section id="problem" className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG_LIGHT }}>
       {/* Subtle warning glow */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.04] blur-3xl pointer-events-none"
         style={{ background: "radial-gradient(circle, var(--warning) 0%, transparent 70%)" }}
@@ -543,14 +399,14 @@ function ProblemSection() {
             <SectionLabel>The Problem</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT_LIGHT }}
             >
               Hotel Procurement Is Broken
             </h2>
             <div className="w-12 h-px mx-auto mb-5" style={{ background: "var(--warning)" }} />
             <p
               className="text-[14px] max-w-lg mx-auto"
-              style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+              style={{ fontFamily: SANS, color: TEXT_LIGHT_SECONDARY, fontWeight: 400 }}
             >
               Egypt&apos;s coastal resorts lose 15–25% of procurement value to inefficiency. Here&apos;s what that looks like.
             </p>
@@ -565,28 +421,28 @@ function ProblemSection() {
               <div
                 className="p-6 h-full rounded-2xl transition-all duration-300"
                 style={{
-                  background: "linear-gradient(135deg, rgba(202,138,4,0.04), rgba(202,138,4,0.01))",
-                  border: "1px solid rgba(202,138,4,0.12)",
+                  background: BG_LIGHT_SURFACE,
+                  border: "1px solid var(--border-subtle)",
                 }}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
                   style={{
-                    background: "rgba(202,138,4,0.08)",
-                    border: "1px solid rgba(202,138,4,0.15)",
+                    background: "var(--accent-muted)",
+                    border: "1px solid var(--border-accent)",
                   }}
                 >
-                  <Icon size={18} style={{ color: "var(--warning)" }} />
+                  <Icon size={18} style={{ color: "var(--accent-base)" }} />
                 </div>
                 <h3
                   className="text-[15px] mb-2"
-                  style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
+                  style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT_LIGHT }}
                 >
                   {p.title}
                 </h3>
                 <p
                   className="text-[13px] leading-relaxed"
-                  style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+                  style={{ fontFamily: SANS, color: TEXT_LIGHT_MUTED, fontWeight: 400 }}
                 >
                   {p.desc}
                 </p>
@@ -739,14 +595,14 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
   ];
 
   return (
-    <section className="py-24 md:py-32 relative" style={{ background: BG }}>
+    <section className="py-24 md:py-32 relative" style={{ background: BG_LIGHT }}>
       <div className="max-w-5xl mx-auto px-6">
         <Reveal>
           <div className="text-center mb-14">
             <SectionLabel>One Platform, Three Stakeholders</SectionLabel>
             <h2
               className="text-[26px] md:text-[36px] lg:text-[40px] tracking-tight mb-4 leading-[1.1]"
-              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
+              style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT_LIGHT }}
             >
               Built for Your Role
             </h2>
@@ -760,7 +616,8 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
             return (
               <Reveal key={role.title} delay={i * 0.1}>
                 <div
-                  className="surface-card p-8 md:p-10"
+                  className="p-8 md:p-10 rounded-2xl"
+                  style={{ background: BG_LIGHT_SURFACE, border: "1px solid var(--border-subtle)" }}
                 >
                   <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
                     <div className="flex-1">
@@ -780,7 +637,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                           </span>
                           <h3
                             className="text-[18px] md:text-[22px]"
-                            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
+                            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT_LIGHT }}
                           >
                             {role.headline}
                           </h3>
@@ -791,7 +648,7 @@ function RoleValueSection({ onCTAClick }: { onCTAClick: () => void }) {
                           <li
                             key={p}
                             className="flex items-start gap-2.5 text-[13px]"
-                            style={{ fontFamily: SANS, color: TEXT_SECONDARY, fontWeight: 400 }}
+                            style={{ fontFamily: SANS, color: TEXT_LIGHT_SECONDARY, fontWeight: 400 }}
                           >
                             <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: ACCENT }} />
                             {p}
@@ -994,7 +851,7 @@ function SocialProof() {
    ═══════════════════════════════════════════════════════════ */
 function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG }}>
+    <section className="py-24 md:py-32 relative overflow-hidden" style={{ background: BG_LIGHT }}>
       {/* Subtle accent glow at bottom */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
@@ -1006,20 +863,20 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
         <Reveal>
           <h2
             className="text-[28px] md:text-[44px] tracking-tight mb-5 leading-tight"
-            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT }}
+            style={{ fontFamily: HEADING, fontWeight: 500, color: TEXT_LIGHT }}
           >
             Ready to Modernize Your Procurement?
           </h2>
           <div className="w-12 h-px mx-auto mb-5" style={{ background: ACCENT }} />
           <p
             className="text-[15px] mb-10 max-w-lg mx-auto leading-relaxed"
-            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+            style={{ fontFamily: SANS, color: TEXT_LIGHT_MUTED, fontWeight: 400 }}
           >
             Join 500+ Egyptian hotels already on HotelsVendors. Free to start. Live in 24 hours. No credit card.
           </p>
           <p
             className="text-[10px] mt-2 max-w-xl mx-auto"
-            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400, opacity: 0.7 }}
+            style={{ fontFamily: SANS, color: TEXT_LIGHT_MUTED, fontWeight: 400, opacity: 0.7 }}
           >
             Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.
           </p>
@@ -1043,7 +900,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[14px] rounded-2xl transition-all duration-200"
               style={{
                 border: "1px solid var(--border-visible)",
-                color: TEXT_SECONDARY,
+                color: TEXT_LIGHT_SECONDARY,
                 fontFamily: SANS,
                 fontWeight: 500,
               }}
@@ -1054,7 +911,7 @@ function FinalCTA({ onCTAClick }: { onCTAClick: () => void }) {
           </div>
           <p
             className="text-[11px] mt-8"
-            style={{ fontFamily: SANS, color: TEXT_MUTED, fontWeight: 400 }}
+            style={{ fontFamily: SANS, color: TEXT_LIGHT_MUTED, fontWeight: 400 }}
           >
             No credit card required · Free forever for hotels · Dedicated onboarding
           </p>

@@ -4,16 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-// ── Brand Palette (light surface, brand accent) ──
-const BG_PAGE = "#f7f8fa";
-const BG_SURFACE = "#ffffff";
-const BG_SIDEBAR = "#fafbfc";
-const BORDER = "#e3e8ee";
-const TEXT_PRIMARY = "#1a1f36";
-const TEXT_SECONDARY = "#525f7f";
-const TEXT_MUTED = "#8898aa";
-const ACCENT = "#E88820";
-const ACCENT_LIGHT = "rgba(232, 136, 32, 0.08)";
+// ── Ember Palette (warm light surface, rich amber accent) ──
+const BG_PAGE = "#FFFDF5";
+const BG_SURFACE = "#FFFFFF";
+const BG_SIDEBAR = "#FFFBEB";
+const BORDER = "#FDE68A";
+const TEXT_PRIMARY = "#1C1917";
+const TEXT_SECONDARY = "#57534E";
+const TEXT_MUTED = "#A8A29E";
+const ACCENT = "#F59E0B";
+const ACCENT_LIGHT = "rgba(245, 158, 11, 0.10)";
 
 const NAV_ITEMS = [
   { href: "/invo/dashboard", label: "Dashboard" },

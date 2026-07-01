@@ -256,7 +256,7 @@ export function DashboardShell({ children, role, userName, tenantName, userId, t
   return (
     <DashboardContext.Provider value={{ userId: userId || "", platformRole: role, tenantId: tenantId || "", hotelId, supplierId }}>
     <DashboardCartWrapper>
-    <div style={{ minHeight: "100vh", backgroundColor: BG_PAGE, fontFamily: "'Karla', 'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: BG_PAGE, fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
       {/* Mobile overlay */}
       {mobileOpen && (
         <div

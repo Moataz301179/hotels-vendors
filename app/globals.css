@@ -2,95 +2,104 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════
-     DARK UMBER-EMERALD SOLID BACKGROUND
-     Inspired by Stripe, Notion, Revolut-level richness
+     EMBER THEME — Deep charcoal canvas + rich amber accents
+     Warm sophisticated aesthetic, optimal contrast for readability
      ═══════════════════════════════════════════════════════════════ */
 
-  /* Background — solid dark umber-emerald, no shadows */
-  --bg-canvas: #0A0807;
-  --bg-surface-1: #15100C;
-  --bg-surface-2: #221A14;
-  --bg-surface-3: #30251D;
-  --bg-elevated: #3D3026;
+  /* Dark section backgrounds — deep charcoal */
+  --bg-canvas: #0F172A;
+  --bg-surface-1: #1E293B;
+  --bg-surface-2: #334155;
+  --bg-surface-3: #475569;
+  --bg-elevated: #5B6A82;
 
   --background: var(--bg-canvas);
   --surface: var(--bg-surface-1);
   --surface-raised: var(--bg-surface-2);
   --surface-hover: var(--bg-surface-3);
 
+  /* Light section backgrounds — warm cream/off-white */
+  --bg-light-canvas: #FFFDF5;
+  --bg-light-surface: #FFFFFF;
+  --bg-light-surface-2: #FFFBEB;
+  --bg-light-elevated: #FEF3C7;
+
   /* ═══════════════════════════════════════════════════════════════
-     ACCENT COLOR FAMILIES — Rich, Stripe/Notion/Revolut quality
+     ACCENT — Rich Amber (F59E0B primary)
      ═══════════════════════════════════════════════════════════════ */
+  --amber-50:  #FFFBEB;
+  --amber-100: #FEF3C7;
+  --amber-200: #FDE68A;
+  --amber-300: #FCD34D;
+  --amber-400: #FBBF24;
+  --amber-500: #F59E0B;
+  --amber-600: #D97706;
+  --amber-700: #B45309;
 
-  /* Amber / Gold (primary CTA, highlights, icons, frames) */
-  --amber-50:  #2A1500;
-  --amber-100: #4A2500;
-  --amber-200: #7A3E00;
-  --amber-300: #B85E00;
-  --amber-400: #E88820;
-  --amber-500: #FFA23A;
-  --amber-600: #FFBB66;
-  --amber-700: #FFD499;
-
-  --accent-base:   var(--amber-400);
-  --accent-light:  var(--amber-500);
-  --accent-dark:   var(--amber-200);
-  --accent-muted:  rgba(232, 136, 32, 0.10);
-  --accent-glow:   rgba(232, 136, 32, 0.18);
+  --accent-base:   #F59E0B;
+  --accent-light:  #FBBF24;
+  --accent-dark:   #D97706;
+  --accent-muted:  rgba(245, 158, 11, 0.10);
+  --accent-glow:   rgba(245, 158, 11, 0.18);
+  --accent-text:   #FFFFFF;
 
   /* Emerald (secondary, success, positive indicators) */
-  --emerald-300: #008F5E;
-  --emerald-400: #00A86B;
-  --emerald-500: #00CC80;
-  --emerald-600: #33D699;
-  --emerald-muted: rgba(0, 168, 107, 0.10);
+  --emerald-400: #10B981;
+  --emerald-500: #34D399;
+  --emerald-600: #6EE7B7;
+  --emerald-muted: rgba(16, 185, 129, 0.10);
 
   /* Teal / Turquoise (tertiary, badges, info) */
-  --teal-300:  #009988;
-  --teal-400:  #00BFA5;
-  --teal-500:  #33CCB8;
-  --teal-600:  #66D9CC;
-  --teal-muted: rgba(0, 191, 165, 0.10);
+  --teal-400:  #14B8A6;
+  --teal-500:  #2DD4BF;
+  --teal-600:  #5EEAD4;
+  --teal-muted: rgba(20, 184, 166, 0.10);
 
   /* ═══════════════════════════════════════════════════════════════
-     TEXT — primary white, warm secondary tones
+     TEXT — Dark mode (primary white, warm secondary)
      ═══════════════════════════════════════════════════════════════ */
-  --text-primary:    #FFFFFF;
-  --text-secondary:  #D4CDBF;
-  --text-tertiary:   #A89B8C;
-  --text-muted:      #7A6E60;
+  --text-primary:    #F8FAFC;
+  --text-secondary:  #CBD5E1;
+  --text-tertiary:   #94A3B8;
+  --text-muted:      #64748B;
 
   --foreground:           var(--text-primary);
   --foreground-secondary: var(--text-secondary);
   --foreground-tertiary:  var(--text-tertiary);
   --foreground-muted:     var(--text-muted);
-  --text-inverse:         var(--bg-canvas);
+  --text-inverse:         #0F172A;
+
+  /* Text — Light mode (for light sections) */
+  --text-light-primary:   #1C1917;
+  --text-light-secondary: #57534E;
+  --text-light-tertiary:  #78716C;
+  --text-light-muted:     #A8A29E;
 
   /* ═══════════════════════════════════════════════════════════════
-     BORDERS — thin, solid, accent-colored
+     BORDERS — thin, solid, accent-tinted
      ═══════════════════════════════════════════════════════════════ */
   --border-invisible: var(--bg-surface-3);
-  --border-subtle:    rgba(232, 136, 32, 0.12);
-  --border-visible:   rgba(232, 136, 32, 0.20);
-  --border-accent:    rgba(232, 136, 32, 0.35);
+  --border-subtle:    rgba(245, 158, 11, 0.12);
+  --border-visible:   rgba(245, 158, 11, 0.22);
+  --border-accent:    rgba(245, 158, 11, 0.38);
 
   /* ═══════════════════════════════════════════════════════════════
-     SHADOWS — minimal, only where absolutely needed
+     SHADOWS
      ═══════════════════════════════════════════════════════════════ */
   --shadow-card:      none;
   --shadow-elevated:  none;
-  --shadow-glow-accent: 0 0 12px rgba(232, 136, 32, 0.12);
+  --shadow-glow-accent: 0 0 14px rgba(245, 158, 11, 0.15);
 
   /* ═══════════════════════════════════════════════════════════════
-     FONT — single modern rounded sans (Karla) everywhere
+     FONT — Plus Jakarta Sans everywhere
      ═══════════════════════════════════════════════════════════════ */
-  --font-sans:    "Karla", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans:    "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-body:    var(--font-sans);
   --font-display: var(--font-sans);
   --font-serif:   var(--font-sans);
 
   /* ═══════════════════════════════════════════════════════════════
-     RADIUS — rounded corners
+     RADIUS
      ═══════════════════════════════════════════════════════════════ */
   --radius-sm:    8px;
   --radius-md:    12px;
@@ -131,9 +140,9 @@
   --color-info: var(--info);
   --color-turquoise: var(--teal-400);
   --color-green-accent: var(--emerald-400);
-  --font-sans: "Karla", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-body: "Karla", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Karla", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 html { scroll-behavior: smooth; }

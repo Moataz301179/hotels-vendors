@@ -70,14 +70,14 @@ export const metadata: Metadata = {
     shortcut: "/logo-icon.png",
   },
   other: {
-    "msapplication-TileColor": "#0A0807",
+    "msapplication-TileColor": "#0F172A",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0A0807",
+    "theme-color": "#0F172A",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0807",
+  themeColor: "#0F172A",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -93,7 +93,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
         <link rel="dns-prefetch" href="https://hotelsvendors.com" />
@@ -105,7 +105,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#0A0807" />
+        <meta name="theme-color" content="#0F172A" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
