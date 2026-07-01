@@ -1,9 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-const SUPABASE_URL = "https://wnyeuaasktaknlvcoypo.supabase.co";
-const SUPABASE_SERVICE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndueWV1YWFza3Rha25sdmNveXBvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDY5MjEyMiwiZXhwIjoyMDk2MjY4MTIyfQ.e7_C6VgUmAKZzhCkCBK_myPPPJAUQ6-M3hNP2zf-LR4";
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  throw new Error(
+    "FATAL: SUPABASE_URL and SUPABASE_SERVICE_KEY must be set in environment variables. " +
+    "Add them to .env.local for development or your hosting provider's env config for production."
+  );
+}
 
 export async function createClient() {
   const cookieStore = await cookies();

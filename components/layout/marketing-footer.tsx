@@ -70,7 +70,6 @@ export function MarketingFooter() {
                 { label: "Solutions", href: "/solutions" },
                 { label: "Sandbox Demo", href: "/sandbox" },
                 { label: "Marketplace", href: "/marketplace" },
-                { label: "Pricing", href: "/pricing" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link href={item.href} className="text-[13px] transition-colors text-muted hover:text-primary">

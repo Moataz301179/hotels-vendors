@@ -16,8 +16,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const SESSION_COOKIE = "hv_session";
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error(
+    "FATAL: SESSION_SECRET environment variable is required in production. " +
+    "Generate one with: openssl rand -hex 32"
+  );
+}
 const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
+  SESSION_SECRET || "dev-secret-do-not-use-in-production"
 );
 
 /* ── Route Configuration ── */
@@ -34,7 +42,6 @@ const PUBLIC_PATHS = [
   "/marketplace",
   "/suppliers",
   "/about",
-  "/pricing",
   "/solutions",
   "/contact",
   "/become-supplier",

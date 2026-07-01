@@ -11,6 +11,8 @@ import { z } from "zod";
 const StagedRegisterSchema = z.object({
   email: z.string().email("Invalid email address"),
   name: z.string().min(2, "Name must be at least 2 characters"),
+  companyName: z.string().min(2, "Company name must be at least 2 characters"),
+  taxId: z.string().regex(/^\d{9}$/, "Egyptian Tax Registration Number must be exactly 9 digits"),
   phone: z.string().min(10, "Phone number must be at least 10 characters"),
   platformRole: z.enum(["HOTEL", "SUPPLIER", "FACTORING", "SHIPPING"]),
   password: z.string().min(8).optional(),
@@ -60,12 +62,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   // Generate tenant slug
   const tenantSlug = `${data.platformRole.toLowerCase()}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const uniquePlaceholder = `PENDING-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
   // 1. Create Tenant
   const tenant = await prisma.tenant.create({
     data: {
-      name: `${data.name}'s Tenant`,
+      name: data.companyName,
       slug: tenantSlug,
       type:
         data.platformRole === "HOTEL"
@@ -75,6 +76,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
             : data.platformRole === "FACTORING"
               ? "FACTORING_COMPANY"
               : "SHIPPING_PROVIDER",
+      taxId: data.taxId,
     },
   });
 
@@ -90,13 +92,14 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const userBase = {
     email: data.email,
     name: data.name,
+    companyName: data.companyName,
     phone: data.phone,
     passwordHash,
     platformRole: data.platformRole,
     role: "OWNER" as const,
     tenantId: tenant.id,
     roleId: ownerRole.id,
-    accountType: "INDIVIDUAL" as const,
+    accountType: "BUSINESS" as const,
   };
 
   // 3. Create platform-specific entity + user with entity link
@@ -105,8 +108,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (data.platformRole === "HOTEL") {
     const hotel = await prisma.hotel.create({
       data: {
-        name: data.name,
-        taxId: uniquePlaceholder,
+        name: data.companyName,
+        taxId: data.taxId,
         city: "Cairo",
         governorate: "Cairo",
         email: data.email,
@@ -121,8 +124,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
   } else if (data.platformRole === "SUPPLIER") {
     const supplier = await prisma.supplier.create({
       data: {
-        name: data.name,
-        taxId: uniquePlaceholder,
+        name: data.companyName,
+        taxId: data.taxId,
         email: data.email,
         city: "Cairo",
         governorate: "Cairo",
@@ -139,8 +142,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
   } else if (data.platformRole === "FACTORING") {
     const factoringCompany = await prisma.factoringCompany.create({
       data: {
-        name: data.name,
-        taxId: uniquePlaceholder,
+        name: data.companyName,
+        taxId: data.taxId,
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
@@ -155,7 +158,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     // SHIPPING — create Carrier record
     const carrier = await prisma.carrier.create({
       data: {
-        name: data.name,
+        name: data.companyName,
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
@@ -201,7 +204,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   try {
     const welcome = welcomeTemplate({
-      name: data.name,
+      name: data.companyName,
       loginUrl: `${baseUrl}/login`,
     });
     await sendEmail({

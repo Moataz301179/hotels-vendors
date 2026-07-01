@@ -51,7 +51,6 @@ export function MarketingNav() {
   const navLinks = [
     { label: "Platform", href: "/platform", dropdown: platformItems },
     { label: "Marketplace", href: "/marketplace" },
-    { label: "Pricing", href: "/pricing" },
     { label: "Solutions", href: "/solutions", dropdown: solutionItems },
     { label: "Blog", href: "/blog" },
   ];

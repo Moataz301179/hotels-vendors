@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-// ── Stripe Palette ──
+// ── Brand Palette (light surface, brand accent) ──
 const BG_PAGE = "#f7f8fa";
 const BG_SURFACE = "#ffffff";
 const BG_SIDEBAR = "#fafbfc";
@@ -12,8 +12,8 @@ const BORDER = "#e3e8ee";
 const TEXT_PRIMARY = "#1a1f36";
 const TEXT_SECONDARY = "#525f7f";
 const TEXT_MUTED = "#8898aa";
-const ACCENT = "#635bff";
-const ACCENT_LIGHT = "#ededff";
+const ACCENT = "#E88820";
+const ACCENT_LIGHT = "rgba(232, 136, 32, 0.08)";
 
 const NAV_ITEMS = [
   { href: "/invo/dashboard", label: "Dashboard" },

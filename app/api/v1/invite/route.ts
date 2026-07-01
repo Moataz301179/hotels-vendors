@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authenticate, apiRoute, success, error } from "@/lib/api-utils";
+import { enforceTenantSeatCapacity, SeatLimitExceededError } from "@/lib/seat-limits";
 import { z } from "zod";
 import crypto from "crypto";
 
@@ -24,6 +25,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   const body = await request.json();
   const parsed = CreateInviteSchema.parse(body);
+
+  // Enforce seat capacity before allowing invite
+  try {
+    await enforceTenantSeatCapacity(auth.tenantId);
+  } catch (e) {
+    if (e instanceof SeatLimitExceededError) {
+      return error(e.message, 403);
+    }
+    throw e;
+  }
 
   // Fetch inviting user info
   const inviter = await prisma.user.findUnique({

@@ -10,7 +10,7 @@
  * 5. Mark order paymentGuaranteed = true
  */
 
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
 const PAYMOB_PUBLIC_KEY = process.env.PAYMOB_PUBLIC_KEY;
@@ -188,7 +188,11 @@ export function verifyPaymobCallback(
     .update(hmacString)
     .digest("hex");
 
-  return calculated === receivedHmac;
+  // Constant-time comparison to prevent timing attacks
+  const calcBuf = Buffer.from(calculated, "hex");
+  const recvBuf = Buffer.from(receivedHmac, "hex");
+  if (calcBuf.length !== recvBuf.length) return false;
+  return timingSafeEqual(calcBuf, recvBuf);
 }
 
 // ── Transaction Status Lookup ───────────────────────────────────

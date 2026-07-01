@@ -2,10 +2,10 @@
 // PostgreSQL + Multi-tenant schema
 // Last updated: 2026-06-07
 //
-// ⚠️  LEGAL CONSTRAINT: This platform does NOT hold or transfer cash.
-// The platform operator holds a DIGITAL MARKETING license only.
-// All financial services (factoring, credit, payments) are operated by
-// licensed third-party partners. The platform only charges:
+// ⚠️  LEGAL CONSTRAINT: This platform holds a RETAIL THROUGH INTERNET
+// (تجارة إلكترونية) commercial registration — NOT a digital marketing license.
+// This permits marketplace operations, e-invoicing, and embedded fintech
+// via licensed third-party partners. The platform charges:
 //   1. SaaS subscription fees (supplier listing plans via INVO)
 //   2. Document processing fees (ETA invoice submission per-document)
 //   3. Marketplace commission on transactions (not financial spreads)

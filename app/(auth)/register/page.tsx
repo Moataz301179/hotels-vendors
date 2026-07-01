@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -84,10 +84,19 @@ function RegisterContent() {
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [taxId, setTaxId] = useState("");
   const [userCount, setUserCount] = useState("1");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [registered, setRegistered] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/v1/auth/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d?.success) setIsLoggedIn(true); })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,6 +119,8 @@ function RegisterContent() {
     try {
       const body: Record<string, unknown> = {
         name: companyName,
+        companyName,
+        taxId,
         email,
         platformRole: selectedRole,
         numberOfUsers: userCount,
@@ -335,6 +346,29 @@ function RegisterContent() {
               />
             </div>
 
+            {/* Tax Registration Number — corporate only */}
+            <div>
+              <label
+                className="block text-[12px] font-medium mb-1.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Egyptian Tax Registration Number
+              </label>
+              <input
+                type="text"
+                value={taxId}
+                onChange={(e) => setTaxId(e.target.value.replace(/[^0-9]/g, "").slice(0, 9))}
+                placeholder="9-digit ETA number"
+                className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
+                style={{
+                  backgroundColor: "var(--bg-surface-1)",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-primary)",
+                  fontFamily: "var(--font-sans)",
+                }}
+              />
+            </div>
+
             {/* Email */}
             <div>
               <label
@@ -504,20 +538,22 @@ function RegisterContent() {
             ))}
           </motion.div>
 
-          {/* Sign in link */}
-          <p
-            className="text-center text-[12px] mt-5"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="hover:underline font-medium"
-              style={{ color: "var(--accent-base)" }}
+          {/* Sign in link — only for non-authenticated users */}
+          {!isLoggedIn && (
+            <p
+              className="text-center text-[12px] mt-5"
+              style={{ color: "var(--text-secondary)" }}
             >
-              Sign in
-            </Link>
-          </p>
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="hover:underline font-medium"
+                style={{ color: "var(--accent-base)" }}
+              >
+                Sign in
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     </div>
