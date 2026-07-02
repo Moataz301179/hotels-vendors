@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/Moataz/hotels-vendors/app/%28marketing%29/layout.tsx"],"sourcesContent":["import type { Metadata } from \"next\";\nimport { ThemeProvider } from \"@/components/theme/theme-provider\";\n\nexport const metadata: Metadata = {\n  title: \"HotelsVendors — B2B Procurement for Egyptian Hospitality\",\n};\n\nexport default function MarketingLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <ThemeProvider>\n      {children}\n    </ThemeProvider>\n  );\n}\n"],"names":["metadata","title","MarketingLayout","children"],"mappings":";;;;;;;AACA;;;AAEO,MAAMA,WAAqB;IAChCC,OAAO;AACT;AAEe,SAASC,gBAAgB,EACtCC,QAAQ,EAGT;IACC,qBACE,8OAAC,0JAAa;kBACXA;;;;;;AAGP"}}]
+}

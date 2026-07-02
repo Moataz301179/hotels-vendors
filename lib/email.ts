@@ -1,0 +1,94 @@
+import nodemailer from "nodemailer"
+
+const smtpHost = process.env.SMTP_HOST || ""
+const smtpPort = parseInt(process.env.SMTP_PORT || "465", 10)
+const smtpUser = process.env.SMTP_USER || ""
+const smtpPass = process.env.SMTP_PASS || ""
+const emailFrom = process.env.EMAIL_FROM || "noreply@hotelprocure.com"
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+
+let transporter: nodemailer.Transporter | null = null
+
+function getTransporter(): nodemailer.Transporter {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    })
+  }
+  return transporter
+}
+
+export async function sendVerificationEmail(email: string, token: string): Promise<boolean> {
+  const verifyUrl = `${appUrl}/verify?token=${token}&email=${encodeURIComponent(email)}`
+
+  if (!smtpHost || !smtpUser || !smtpPass) {
+    console.log("[EMAIL] SMTP not configured. Verification URL:", verifyUrl)
+    return false
+  }
+
+  try {
+    await getTransporter().sendMail({
+      from: emailFrom,
+      to: email,
+      subject: "Verify your HotelProcure account",
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: #6c5ce7;">Welcome to HotelProcure</h2>
+          <p>Click the button below to verify your email address and activate your account.</p>
+          <a href="${verifyUrl}"
+             style="display: inline-block; padding: 12px 24px; background: #6c5ce7; color: #fff;
+                    text-decoration: none; border-radius: 6px; margin: 16px 0;">
+            Verify Email
+          </a>
+          <p style="color: #8b8b9e; font-size: 14px;">
+            Or paste this link in your browser:<br/>
+            <span style="color: #6c5ce7;">${verifyUrl}</span>
+          </p>
+          <p style="color: #8b8b9e; font-size: 12px;">This link expires in 24 hours.</p>
+        </div>
+      `,
+    })
+    return true
+  } catch (error) {
+    console.error("[EMAIL] Failed to send verification email:", error)
+    return false
+  }
+}
+
+export async function sendInviteEmail(email: string, inviterName: string, token: string): Promise<boolean> {
+  const inviteUrl = `${appUrl}/signup?invite=${token}`
+
+  if (!smtpHost || !smtpUser || !smtpPass) {
+    console.log("[EMAIL] SMTP not configured. Invite URL:", inviteUrl)
+    return false
+  }
+
+  try {
+    await getTransporter().sendMail({
+      from: emailFrom,
+      to: email,
+      subject: `${inviterName} invited you to HotelProcure`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: #6c5ce7;">You've been invited</h2>
+          <p><strong>${inviterName}</strong> has invited you to join their team on HotelProcure.</p>
+          <a href="${inviteUrl}"
+             style="display: inline-block; padding: 12px 24px; background: #6c5ce7; color: #fff;
+                    text-decoration: none; border-radius: 6px; margin: 16px 0;">
+            Accept Invitation
+          </a>
+        </div>
+      `,
+    })
+    return true
+  } catch (error) {
+    console.error("[EMAIL] Failed to send invite email:", error)
+    return false
+  }
+}

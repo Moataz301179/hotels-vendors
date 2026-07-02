@@ -1,73 +1,10 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
-
-# vercel
-.vercel
-
-# typescript
+node_modules/
+.next/
+.env
+.env.local
+.env.*.local
 *.tsbuildinfo
 next-env.d.ts
+playwright-report/
+test-results/
 
-/app/generated/prisma
-.ssh/
-
-# uploaded assets (generated at runtime)
-/public/uploads/
-
-# playwright MCP test artifacts
-.playwright-mcp/
-
-# marketing collateral (not part of source code)
-/marketing/
-
-# auto-generated from build
-/lib/blog-data.ts
-
-# screenshots
-hero-full-page.png
-factoring-full.png
-homepage-full.png
-marketplace-full.png
-
-# orphaned / temp files — never commit
-dev.db
-*.log
-*.pid
-*.zip
-.dev.pid
-session-*.zip
-tmp/
-graphify-out/

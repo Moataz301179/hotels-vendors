@@ -1,116 +1,85 @@
-import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/theme/theme-provider";
+"use client"
 
-export const metadata: Metadata = {
-  title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
-  description:
-    "Egypt's B2B hospitality procurement infrastructure. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route logistics — purpose-built for coastal hotel chains in Sharm El-Sheikh and Hurghada.",
-  keywords: [
-    "B2B hospitality procurement Egypt",
-    "automated factoring lines Cairo",
-    "hotel supply chain management Egypt",
-    "ETA e-invoicing compliance",
-    "hospitality vendor marketplace",
-    " Sharm El-Sheikh hotel suppliers",
-    "Hurghada resort procurement",
-    "digital invoice Egypt",
-    "تجهيزات الفنادق بالجملة",
-    "منصة المشتريات الفندقية مصر",
-    "الفوترة الإلكترونية هيئة الضرائب",
-    "تمويل فندقي مصر",
-    "سلسلة التوريد الفندقية",
-  ],
-  openGraph: {
-    title: "HotelsVendors — Egypt's B2B Hospitality Procurement Infrastructure",
-    description:
-      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance. Purpose-built for Egyptian coastal hotel chains.",
-    type: "website",
-    locale: "en_EG",
-    alternateLocale: "ar_EG",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "HotelsVendors — Egypt's B2B Hospitality Procurement Infrastructure",
-    description:
-      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
-  },
-  alternates: {
-    languages: {
-      "en": "/",
-      "ar": "/ar",
-    },
-  },
-};
+import { type ReactNode } from "react"
+import { Sparkles } from "lucide-react"
+import Link from "next/link"
+import { AIAssistantProvider } from "@/components/ai/assistant-context"
+import { AIAssistant } from "@/components/ai/ai-assistant"
 
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "HotelsVendors",
-  "legalName": "Restaurants for E-Marketing",
-  "taxID": "704226146",
-  "identifier": {
-    "@type": "PropertyValue",
-    "name": "Unified Commercial Registry Number",
-    "value": "105300900196948"
-  },
-  "url": "https://hotelsvendors.com",
-  "logo": "https://hotelsvendors.com/logo.svg",
-  "description": "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "EG",
-    "addressLocality": "Cairo"
-  },
-  "areaServed": [
-    {
-      "@type": "City",
-      "name": "Sharm El-Sheikh"
-    },
-    {
-      "@type": "City",
-      "name": "Hurghada"
-    },
-    {
-      "@type": "City",
-      "name": "Cairo"
-    },
-    {
-      "@type": "City",
-      "name": "Alexandria"
-    }
-  ],
-  "sameAs": [
-    "https://linkedin.com/company/hotelsvendors",
-    "https://twitter.com/hotelsvendors"
-  ],
-  "knowsAbout": [
-    "B2B Hospitality Procurement",
-    "Egyptian Tax Authority E-Invoicing",
-    "Reverse Factoring",
-    "Hotel Supply Chain Management",
-    "Coastal Logistics Egypt"
-  ]
-};
+const navLinks = [
+  { label: "Marketplace", href: "/invo" },
+  { label: "VAT Engine", href: "/vat-invoicing" },
+  { label: "Solutions", href: "/solutions" },
+  { label: "About", href: "/about" },
+]
 
-export default function MarketingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider>
+    <AIAssistantProvider>
       <div
-        className="marketing-main min-h-screen"
+        className="min-h-screen flex flex-col"
         style={{
+          backgroundColor: "var(--bg-canvas)",
+          color: "var(--text-primary)",
           fontFamily: "var(--font-sans)",
         }}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-        />
-          {children}
-        </div>
-    </ThemeProvider>
-  );
+        <nav
+          className="fixed top-0 left-0 right-0 z-40 h-16"
+          style={{
+            backgroundColor: "var(--bg-canvas)",
+            borderBottom: "1px solid var(--border-subtle)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: "var(--accent-base)" }}
+              >
+                <Sparkles className="w-4 h-4" style={{ color: "var(--bg-canvas)" }} />
+              </div>
+              <span
+                className="font-semibold text-lg"
+                style={{ color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}
+              >
+                HotelProcure
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium transition-colors duration-200 hover:opacity-100"
+                  style={{
+                    color: "var(--text-secondary)",
+                    fontFamily: "var(--font-sans)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-base)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        <main className="flex-1 pt-16">{children}</main>
+
+        <footer className="py-12" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                &copy; {new Date().getFullYear()} HotelProcure. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+
+        <AIAssistant />
+      </div>
+    </AIAssistantProvider>
+  )
 }
