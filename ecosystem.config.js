@@ -3,11 +3,11 @@
  *
  * Usage:
  *   pm2 start ecosystem.config.js --env production
- *   pm2 reload hotels-vendors      # zero-downtime reload
- *   pm2 logs hotels-vendors       # tail logs
- *   pm2 monit                     # CPU/memory dashboard
+ *   pm2 reload hotelsvendors       # zero-downtime reload
+ *   pm2 logs hotelsvendors         # tail logs
+ *   pm2 monit                      # CPU/memory dashboard
  *
- * Cluster mode: 1 worker per CPU core (adjust `instances` if needed).
+ * Fork mode (Next.js doesn't support cluster mode).
  * Memory ceiling: 1.5 GB per worker — auto-restart if exceeded.
  */
 
@@ -17,9 +17,9 @@ module.exports = {
       name: "hotelsvendors",
       script: "npm",
       args: "start",
-      cwd: "/var/www/hotels-vendors/current",
-      instances: "max",
-      exec_mode: "cluster",
+      cwd: "/var/www/hotelsvendors-v2",
+      instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       max_memory_restart: "1500M",

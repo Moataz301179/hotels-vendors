@@ -406,7 +406,8 @@ export async function recordApproval(
   approverId: string,
   tenantId: string,
   action: "APPROVED" | "REJECTED" | "ESCALATED" | "ADMIN_OVERRIDE",
-  reason?: string
+  reason?: string,
+  beforeState?: string,
 ): Promise<void> {
   await prisma.orderApproval.create({
     data: {
@@ -414,10 +415,11 @@ export async function recordApproval(
       approverId,
       action,
       reason,
+      beforeState: beforeState ?? null,
+      afterState: JSON.stringify({ action, reason }),
     },
   });
 
-  // Update order status
   const newStatus: OrderStatus =
     action === "APPROVED" ? "APPROVED" :
     action === "REJECTED" ? "REJECTED" :
@@ -430,7 +432,6 @@ export async function recordApproval(
     data: { status: newStatus },
   });
 
-  // Audit log
   await prisma.auditLog.create({
     data: {
       entityType: "ORDER",
@@ -438,9 +439,21 @@ export async function recordApproval(
       action: `ORDER_${action}`,
       tenantId,
       actorId: approverId,
-      afterState: JSON.stringify({ status: newStatus, action }),
+      beforeState: beforeState ?? null,
+      afterState: JSON.stringify({ status: newStatus, action, reason }),
     },
   });
+
+  const { notifyOrderStakeholders } = await import("@/lib/notifications/create");
+  await notifyOrderStakeholders(
+    orderId,
+    tenantId,
+    action === "APPROVED" ? "ORDER_APPROVED" :
+    action === "REJECTED" ? "ORDER_REJECTED" : "ORDER_CANCELLED",
+    approverId,
+    orderId.slice(0, 8),
+    reason,
+  ).catch(() => undefined);
 }
 
 // ─────────────────────────────────────────

@@ -2,16 +2,16 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════
-     EMBER THEME — Deep charcoal canvas + rich amber accents
+     DARK LUXURY PALETTE — Obsidian Espresso + Gold Filament
      Warm sophisticated aesthetic, optimal contrast for readability
      ═══════════════════════════════════════════════════════════════ */
 
-  /* Dark section backgrounds — deep charcoal */
-  --bg-canvas: #0F172A;
-  --bg-surface-1: #1E293B;
-  --bg-surface-2: #334155;
-  --bg-surface-3: #475569;
-  --bg-elevated: #5B6A82;
+  /* Dark section backgrounds — Obsidian Espresso deep brown */
+  --bg-canvas: #0f100e;
+  --bg-surface-1: #1A120B;
+  --bg-surface-2: #2A1F14;
+  --bg-surface-3: #3D2E1E;
+  --bg-elevated: #4E3A26;
 
   --background: var(--bg-canvas);
   --surface: var(--bg-surface-1);
@@ -19,55 +19,62 @@
   --surface-hover: var(--bg-surface-3);
 
   /* Light section backgrounds — warm cream/off-white */
-  --bg-light-canvas: #FFFDF5;
+  --bg-light-canvas: #FCF7F0;
   --bg-light-surface: #FFFFFF;
-  --bg-light-surface-2: #FFFBEB;
-  --bg-light-elevated: #FEF3C7;
+  --bg-light-surface-2: #F5EDE0;
+  --bg-light-elevated: #EDE0CC;
 
   /* ═══════════════════════════════════════════════════════════════
-     ACCENT — Rich Amber (F59E0B primary)
+     ACCENT — Metallic Muted Gold (#D4AF37 / #E5BA73)
      ═══════════════════════════════════════════════════════════════ */
-  --amber-50:  #FFFBEB;
-  --amber-100: #FEF3C7;
-  --amber-200: #FDE68A;
-  --amber-300: #FCD34D;
-  --amber-400: #FBBF24;
-  --amber-500: #F59E0B;
-  --amber-600: #D97706;
-  --amber-700: #B45309;
+  --gold-50:  #FBF5E8;
+  --gold-100: #F5E6C8;
+  --gold-200: #EDD6A3;
+  --gold-300: #E5C67E;
+  --gold-400: #DDBA5A;
+  --gold-500: #D4AF37;
+  --gold-600: #B8942E;
+  --gold-700: #9C7A25;
 
-  --accent-base:   #F59E0B;
-  --accent-light:  #FBBF24;
-  --accent-dark:   #D97706;
-  --accent-muted:  rgba(245, 158, 11, 0.10);
-  --accent-glow:   rgba(245, 158, 11, 0.18);
+  --accent-base:   #8c6c2c;
+  --accent-light:  #a07d3c;
+  --accent-dark:   #B8942E;
+  --accent-muted:  rgba(212, 175, 55, 0.10);
+  --accent-glow:   rgba(212, 175, 55, 0.18);
   --accent-text:   #FFFFFF;
 
-  /* Emerald (secondary, success, positive indicators) */
-  --emerald-400: #10B981;
-  --emerald-500: #34D399;
-  --emerald-600: #6EE7B7;
-  --emerald-muted: rgba(16, 185, 129, 0.10);
+  /* Emerald (compliance, success, settled nodes) — Deep Royal Emerald */
+  --emerald-400: #1B6A3A;
+  --emerald-500: #216F40;
+  --emerald-600: #28804A;
+  --emerald-muted: rgba(20, 66, 43, 0.25);
+  --emerald-bg: #14422B;
+
+  /* Terracotta (system alerts, budget overruns) — Vintage Burnt */
+  --terracotta-400: #C85C11;
+  --terracotta-500: #B4510F;
+  --terracotta-600: #A0460D;
+  --terracotta-muted: rgba(200, 92, 17, 0.15);
 
   /* Teal / Turquoise (tertiary, badges, info) */
-  --teal-400:  #14B8A6;
-  --teal-500:  #2DD4BF;
-  --teal-600:  #5EEAD4;
-  --teal-muted: rgba(20, 184, 166, 0.10);
+  --teal-400:  #5B8C7A;
+  --teal-500:  #4A7B69;
+  --teal-600:  #3D6A58;
+  --teal-muted: rgba(91, 140, 122, 0.10);
 
   /* ═══════════════════════════════════════════════════════════════
-     TEXT — Dark mode (primary white, warm secondary)
+     TEXT — Crisp Alabaster White + Slate Gray
      ═══════════════════════════════════════════════════════════════ */
-  --text-primary:    #F8FAFC;
-  --text-secondary:  #CBD5E1;
-  --text-tertiary:   #94A3B8;
-  --text-muted:      #64748B;
+  --text-primary:    #ffffff;
+  --text-secondary:  #D4D4D4;
+  --text-tertiary:   #A0A0A0;
+  --text-muted:      #6B6B6B;
 
   --foreground:           var(--text-primary);
   --foreground-secondary: var(--text-secondary);
   --foreground-tertiary:  var(--text-tertiary);
   --foreground-muted:     var(--text-muted);
-  --text-inverse:         #0F172A;
+  --text-inverse:         #ffffff;
 
   /* Text — Light mode (for light sections) */
   --text-light-primary:   #1C1917;
@@ -76,22 +83,24 @@
   --text-light-muted:     #A8A29E;
 
   /* ═══════════════════════════════════════════════════════════════
-     BORDERS — thin, solid, accent-tinted
+     BORDERS — thin, solid, gold-tinted
      ═══════════════════════════════════════════════════════════════ */
   --border-invisible: var(--bg-surface-3);
-  --border-subtle:    rgba(245, 158, 11, 0.12);
-  --border-visible:   rgba(245, 158, 11, 0.22);
-  --border-accent:    rgba(245, 158, 11, 0.38);
+  --border-subtle:    rgba(212, 175, 55, 0.10);
+  --border-visible:   rgba(212, 175, 55, 0.20);
+  --border-accent:    rgba(212, 175, 55, 0.35);
 
   /* ═══════════════════════════════════════════════════════════════
      SHADOWS
      ═══════════════════════════════════════════════════════════════ */
   --shadow-card:      none;
   --shadow-elevated:  none;
-  --shadow-glow-accent: 0 0 14px rgba(245, 158, 11, 0.15);
+  --shadow-glow-accent: 0 0 14px rgba(212, 175, 55, 0.15);
+  --shadow-glow-terracotta: 0 0 14px rgba(200, 92, 17, 0.15);
+  --shadow-glow-emerald: 0 0 14px rgba(20, 66, 43, 0.25);
 
   /* ═══════════════════════════════════════════════════════════════
-     FONT — Plus Jakarta Sans everywhere
+     FONT — Plus Jakarta Sans everywhere (NO bold weights)
      ═══════════════════════════════════════════════════════════════ */
   --font-sans:    "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-body:    var(--font-sans);
@@ -114,7 +123,7 @@
   --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Status colors */
-  --error:   #EF4444;
+  --error:   var(--terracotta-400);
   --success: var(--emerald-400);
   --warning: var(--accent-base);
   --info:    var(--teal-400);
@@ -140,6 +149,10 @@
   --color-info: var(--info);
   --color-turquoise: var(--teal-400);
   --color-green-accent: var(--emerald-400);
+  --color-terracotta: var(--terracotta-400);
+  --color-terracotta-muted: var(--terracotta-muted);
+  --color-emerald-bg: var(--emerald-bg);
+  --color-emerald-muted: var(--emerald-muted);
   --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-body: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -155,6 +168,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
 }
+strong, b, .font-bold, h1, h2, h3, h4, h5, h6 { font-weight: 500; }
 ::selection { background: var(--accent-muted); color: var(--text-primary); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -284,11 +298,12 @@ body {
 @media (max-width: 768px) { .marquee-content { animation: marquee 25s linear infinite; } }
 
 /* Bento grid */
-.bento-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(1, 1fr); }
-@media (min-width: 640px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1024px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
-.bento-cell-2x { grid-column: span 1; }
-@media (min-width: 1024px) { .bento-cell-2x { grid-column: span 2; } }
+.bento-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 768px) { .bento-grid { grid-template-columns: 1fr 1fr; } }
+.bento-cell { display: flex; flex-direction: column; }
+.bento-inner { background: var(--bg-surface-1); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem; height: 100%; display: flex; flex-direction: column; transition: border-color 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo); }
+.bento-inner:hover { border-color: var(--border-accent); box-shadow: var(--shadow-glow-accent); }
+.bento-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-base); }
 
 /* Layout */
 .section-padding { padding-top: 5rem; padding-bottom: 5rem; }

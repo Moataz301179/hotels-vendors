@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
-// ── Ember Palette (warm light surface, rich amber accent) ──
+  // ── Dark Luxury Palette (obsidian surface, gold filament accent) ──
 const BG_PAGE = "#FFFDF5";
 const BG_SURFACE = "#FFFFFF";
 const BG_SIDEBAR = "#FFFBEB";

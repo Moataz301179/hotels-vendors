@@ -18,16 +18,27 @@ const AGENT_PIPELINE = [
 ];
 
 export default async function AgentsPage() {
-  const [auditLog, alerts] = await Promise.all([
-    prisma.agentAuditLog.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }),
-    prisma.alert.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    }),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let auditLog: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let alerts: any[] = [];
+
+  try {
+    const results = await Promise.all([
+      prisma.agentAuditLog.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }),
+      prisma.alert.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+    ]);
+    auditLog = results[0] as any[];
+    alerts = results[1] as any[];
+  } catch {
+    // Tables may not exist yet — render with empty data
+  }
 
   const openAlerts = alerts.filter((a) => a.status === "open").length;
 

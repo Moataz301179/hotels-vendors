@@ -11,10 +11,17 @@ const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
 const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function InvoicesPage() {
-  const invoiceList = await prisma.invoInvoice.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let invoiceList: any[] = [];
+
+  try {
+    invoiceList = await prisma.invoInvoice.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }) as any[];
+  } catch {
+    // Tables may not exist yet — render with empty data
+  }
 
   const totalFaceValue = invoiceList.reduce((sum, inv) => sum + Number(inv.faceValue), 0);
   const qualified = invoiceList.filter((inv) => inv.qualificationStatus === "qualified").length;

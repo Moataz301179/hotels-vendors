@@ -111,10 +111,10 @@ export default function OrdersPage() {
     setActionLoading(rejectModalOrder.id);
     setActionError("");
     try {
-      const res = await fetch(`/api/v1/orders/${rejectModalOrder.id}/approve`, {
+      const res = await fetch(`/api/v1/orders/${rejectModalOrder.id}/reject`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "REJECTED", reason: rejectReason || undefined }),
+        body: JSON.stringify({ reason: rejectReason || "Rejected by approver" }),
       });
       const json = await res.json();
       if (json.success) {

@@ -66,7 +66,7 @@ export function MarketTicker() {
   const textMuted = isHercules ? "#94a3b8" : "rgba(255,255,255,0.70)";
   const textFaint = isHercules ? "#64748b" : "rgba(255,255,255,0.30)";
   const textPrice = isHercules ? "#94a3b8" : "rgba(255,255,255,0.40)";
-  const sepColor = isHercules ? "#475569" : "rgba(255,255,255,0.10)";
+  const sepColor = isHercules ? "rgba(61, 46, 30, 0.6)" : "rgba(255,255,255,0.10)";
 
   return (
     <div

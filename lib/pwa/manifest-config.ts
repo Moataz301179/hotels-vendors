@@ -7,9 +7,9 @@ const ICONS = {
   ],
   apple: [{ src: "/logo-icon-white.png", sizes: "180x180", type: "image/png" }],
 } as const;
+const THEME = "#0f100e";
 
-const THEME = "#14110E";
-const BACKGROUND = "#14110E";
+const BACKGROUND = "#0f100e";
 
 const ROLE_VARIANTS = {
   driver: {

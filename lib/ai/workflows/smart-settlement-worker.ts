@@ -1,9 +1,10 @@
 /**
  * Smart Settlement Worker
  * Polls for delivered-but-unsettled orders and routes them through settlement.
+ * Lazy-imports Prisma to avoid webpack tracing Node built-ins at compile time.
  */
 
-import { prisma } from "@/lib/prisma";
+import type { PrismaClient } from "@prisma/client";
 import { processSettlements, type SettlementOrder } from "./smart-settlement";
 
 const POLL_INTERVAL_MS = 60_000;
@@ -11,13 +12,23 @@ const BATCH_SIZE = 50;
 
 let timer: ReturnType<typeof setInterval> | null = null;
 let running = false;
+let prisma: PrismaClient | null = null;
+
+async function getPrisma(): Promise<PrismaClient> {
+  if (!prisma) {
+    const { prisma: p } = await import("@/lib/prisma");
+    prisma = p;
+  }
+  return prisma;
+}
 
 async function tick(): Promise<void> {
   if (running) return;
   running = true;
 
   try {
-    const dueOrders = await prisma.order.findMany({
+    const db = await getPrisma();
+    const dueOrders = await db.order.findMany({
       where: {
         status: "DELIVERED",
       },
@@ -45,13 +56,12 @@ async function tick(): Promise<void> {
 
     for (const r of results) {
       if (r.status === "settled") {
-        await prisma.order
+        await db.order
           .update({ where: { id: r.orderId }, data: { paymentGuaranteeSetAt: new Date() } })
           .catch(() => undefined);
       }
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error("[SmartSettlementWorker] tick failed:", err);
   } finally {
     running = false;

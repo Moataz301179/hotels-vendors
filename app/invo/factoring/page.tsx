@@ -11,23 +11,29 @@ const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
 const ACCENT_LIME = "var(--accent-base, #FF6B00)";
 
 export default async function FactoringPage() {
-  const [requests, bids, funders, fees] = await Promise.all([
-    prisma.invoFactoringRequest.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }),
-    prisma.invoFactoringBid.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }),
-    prisma.invoFunderConfig.findMany({
-      where: { isActive: true },
-    }),
-    prisma.invoSuccessFee.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    }),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let requests: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let bids: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let funders: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let fees: any[] = [];
+
+  try {
+    const results = await Promise.all([
+      prisma.invoFactoringRequest.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+      prisma.invoFactoringBid.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+      prisma.invoFunderConfig.findMany({ where: { isActive: true } }),
+      prisma.invoSuccessFee.findMany({ orderBy: { createdAt: "desc" }, take: 20 }),
+    ]);
+    requests = results[0] as any[];
+    bids = results[1] as any[];
+    funders = results[2] as any[];
+    fees = results[3] as any[];
+  } catch {
+    // Tables may not exist yet — render with empty data
+  }
 
   const totalFaceValue = requests.reduce((sum, r) => sum + Number(r.faceValue), 0);
   const funded = requests.filter((r) => r.matchStatus === "funded").length;

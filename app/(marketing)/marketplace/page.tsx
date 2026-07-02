@@ -133,6 +133,10 @@ function MarketplaceContent() {
     window.location.href = `/marketplace/${id}`;
   };
 
+  const handleAddToCart = (id: string) => {
+    window.location.href = `/marketplace/${id}`;
+  };
+
   return (
     <main className="min-h-screen" style={{ backgroundColor: "var(--bg-canvas)", fontFamily: "var(--font-sans)" }}>
       <MarketingNav />

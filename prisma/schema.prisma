@@ -4263,6 +4263,92 @@ model GrnItem {
   @@index([grnId])
 }
 
+// ─────────────────────────────────────────
+// INVO Phase 2 — Proxy Billing & Financial Analytics
+// ─────────────────────────────────────────
+
+enum CostCenter {
+  FOOD_AND_BEVERAGE
+  HOUSEKEEPING
+  MAINTENANCE
+  OPERATIONS
+}
+
+enum InvoiceType {
+  DIRECT_SUPPLIER
+  PROXY_COMPLIANT_SERVICE
+}
+
+model ProxyInvoiceLedger {
+  id                    String      @id @default(uuid())
+  orderId               String      @unique
+  hotelTenantId         String
+  supplierTenantId      String
+  invoiceType           InvoiceType @default(PROXY_COMPLIANT_SERVICE)
+
+  subTotal              Decimal     @db.Decimal(18, 4)
+  vatAmount             Decimal     @db.Decimal(18, 4)
+  proxyServiceFee       Decimal     @db.Decimal(18, 4)
+  totalPayable          Decimal     @db.Decimal(18, 4)
+
+  etaUuid               String      @unique
+  egsCodingStandard     String
+  isSettled             Boolean     @default(false)
+  createdAt             DateTime    @default(now())
+
+  @@index([hotelTenantId])
+  @@index([supplierTenantId])
+}
+
+model HotelFinancialMetric {
+  id                             String    @id @default(uuid())
+  tenantId                       String
+  costCenter                     CostCenter
+  currentStockValue              Decimal   @db.Decimal(18, 4)
+  allocatedMonthlyBudget         Decimal   @db.Decimal(18, 4)
+  consumedBudgetYTD              Decimal   @db.Decimal(18, 4)
+  inflationRiskIndex             Decimal   @db.Decimal(3, 2)
+  predictedConsumptionNext30Days Decimal   @db.Decimal(18, 4)
+  hedgingOpportunityDetected     Boolean   @default(false)
+  updatedAt                      DateTime  @updatedAt
+
+  @@index([tenantId, costCenter])
+}
+
+model PromotionalPriceMatrix {
+  id              String   @id @default(uuid())
+  tenantId        String
+  supplierId      String
+  productId       String
+  priceTier       String
+  minVolume       Int
+  maxVolume       Int?
+  adjustedPrice   Decimal  @db.Decimal(18, 4)
+  validFrom       DateTime
+  validTo         DateTime
+  seasonalTag     String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId, supplierId])
+  @@index([productId, validFrom, validTo])
+}
+
+model HedgingRecommendation {
+  id              String   @id @default(uuid())
+  tenantId        String
+  category        String
+  inflationRisk   Decimal  @db.Decimal(3, 2)
+  recommendedAction String
+  estimatedSaving Decimal  @db.Decimal(18, 4)
+  domesticAlternatives String?
+  isApplied       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@index([tenantId, category])
+}
+
 enum GrnStatus {
   DRAFT
   PENDING_VERIFICATION

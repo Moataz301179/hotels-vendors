@@ -22,6 +22,7 @@ import {
   Package,
 } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
+import { OrderPaymentButton } from "@/components/dashboards/shared/order-payment";
 
 interface OrderItem {
   id: string;
@@ -153,10 +154,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     setActionError("");
     setActionSuccess("");
     try {
-      const res = await fetch(`/api/v1/orders/${id}/approve`, {
+      const res = await fetch(`/api/v1/orders/${id}/reject`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "REJECTED", reason: rejectReason || undefined }),
+        body: JSON.stringify({ reason: rejectReason || "No reason provided" }),
       });
       const json = await res.json();
       if (json.success) {
@@ -168,6 +169,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         if (refreshedJson.success) setOrder(refreshedJson.data?.order ?? refreshedJson.order);
       } else {
         setActionError(json.error || "Failed to reject");
+      }
+    } catch {
+      setActionError("Network error");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (newStatus: string) => {
+    setActionLoading(true);
+    setActionError("");
+    setActionSuccess("");
+    try {
+      const res = await fetch(`/api/v1/orders/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setActionSuccess(`Order status updated to ${newStatus.replace(/_/g, " ")}`);
+        const refreshed = await fetch(`/api/v1/orders/${id}`);
+        const refreshedJson = await refreshed.json();
+        if (refreshedJson.success) setOrder(refreshedJson.data?.order ?? refreshedJson.order);
+      } else {
+        setActionError(json.error || "Failed to update status");
       }
     } catch {
       setActionError("Network error");
@@ -407,6 +434,57 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <XCircle size={14} />
             Reject
           </button>
+        </div>
+      )}
+
+      {/* Supplier Fulfillment Controls */}
+      {order.status === "CONFIRMED" && (
+        <div className="flex items-center gap-3 p-4 rounded-xl border border-subtle bg-surface-raised">
+          <span className="text-xs text-foreground-tertiary flex-1">This order is ready for fulfillment</span>
+          <button
+            onClick={() => handleStatusUpdate("IN_TRANSIT")}
+            disabled={actionLoading}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-base/10 border border-accent-base/20 text-accent-base text-sm font-medium hover:bg-accent-base/20 transition-colors disabled:opacity-50"
+          >
+            {actionLoading ? <Loader2 size={14} className="animate-spin" /> : <Truck size={14} />}
+            Mark as In Transit
+          </button>
+        </div>
+      )}
+
+      {order.status === "IN_TRANSIT" && (
+        <div className="flex items-center gap-3 p-4 rounded-xl border border-subtle bg-surface-raised">
+          <span className="text-xs text-foreground-tertiary flex-1">Shipment is in transit</span>
+          <button
+            onClick={() => handleStatusUpdate("DELIVERED")}
+            disabled={actionLoading}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+          >
+            {actionLoading ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+            Mark as Delivered
+          </button>
+        </div>
+      )}
+
+      {/* Payment */}
+      {order.status === "APPROVED" && (
+        <div className="rounded-xl border border-subtle bg-surface-raised p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <CreditCard size={14} className="text-foreground-muted" />
+            <h3 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">Payment</h3>
+          </div>
+          <OrderPaymentButton
+            orderId={order.id}
+            amount={order.total}
+            currency={order.currency}
+            onPaymentComplete={() => {
+              fetch(`/api/v1/orders/${order.id}`)
+                .then(r => r.json())
+                .then(json => {
+                  if (json.success) setOrder(json.data?.order ?? json.order);
+                });
+            }}
+          />
         </div>
       )}
 

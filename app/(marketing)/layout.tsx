@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { AIAssistantWrapper } from "@/components/ai/assistant-wrapper";
 
 export const metadata: Metadata = {
   title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
@@ -110,10 +109,8 @@ export default function MarketingLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
-        <AIAssistantWrapper>
           {children}
-        </AIAssistantWrapper>
-      </div>
+        </div>
     </ThemeProvider>
   );
 }

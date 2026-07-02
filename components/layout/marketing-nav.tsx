@@ -2,17 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, X, ChevronDown, ShoppingCart } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { RegistrationWizard } from "@/components/auth/registration-wizard";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+
 import { useCart } from "@/components/cart/cart-context";
+import { AskAI } from "@/components/ai/ask-ai";
 
 export function MarketingNav() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileAnimating, setMobileAnimating] = useState(false);
-  const [wizardOpen, setWizardOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { totalItems, openCart } = useCart();
 
@@ -178,6 +180,7 @@ export function MarketingNav() {
                 </span>
               )}
             </button>
+            <AskAI />
             <ThemeToggle />
             <Link
               href="/login"
@@ -206,7 +209,7 @@ export function MarketingNav() {
               AI Demo
             </Link>
             <button
-              onClick={() => setWizardOpen(true)}
+              onClick={() => router.push('/register')}
               className="text-[13px] font-semibold tracking-wide uppercase px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
               style={{
                 background: "var(--accent-base)",
@@ -236,6 +239,7 @@ export function MarketingNav() {
                 </span>
               )}
             </button>
+            <AskAI />
             <button
               className="p-2 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-base)]/50"
               style={{ color: "var(--text-primary)" }}
@@ -317,7 +321,7 @@ export function MarketingNav() {
                 <button
                   onClick={() => {
                     setMobileOpen(false);
-                    setWizardOpen(true);
+                    router.push('/register');
                   }}
                   className="w-full text-center py-2.5 text-[12px] font-semibold rounded-xl transition-all cursor-pointer"
                   style={{ background: "var(--accent-base)", color: "var(--accent-text)" }}
@@ -329,11 +333,6 @@ export function MarketingNav() {
           </div>
         )}
       </header>
-
-      <RegistrationWizard
-        isOpen={wizardOpen}
-        onClose={() => setWizardOpen(false)}
-      />
     </>
   );
 }
