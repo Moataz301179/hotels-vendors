@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
-export default function VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
@@ -105,5 +105,13 @@ export default function VerifyPage() {
         </Link>
       )}
     </div>
+  )
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md mx-auto text-center py-12"><Loader2 className="w-8 h-8 animate-spin mx-auto" style={{ color: "var(--accent-base)" }} /></div>}>
+      <VerifyContent />
+    </Suspense>
   )
 }
