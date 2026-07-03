@@ -46,10 +46,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. VAT registration status (mock - query Prisma for existing user, else mock valid)
-    const existingUser = await prisma.user.findFirst({
+    const existingSupplier = await prisma.supplier.findFirst({
       where: { taxId: companyTaxId },
     })
-    if (!existingUser) {
+    if (!existingSupplier) {
       issues.push("Company not found in our system. VAT registration could not be verified automatically.")
     }
 
