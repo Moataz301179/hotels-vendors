@@ -1,51 +1,41 @@
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { TrendingUp, DollarSign, Clock, CheckCircle } from "lucide-react";
 
-const BG_CARD = "var(--surface-raised, #1a1e23)";
-const BORDER = "var(--border-subtle, rgba(60,64,67,0.50))";
-const TEXT_PRIMARY = "var(--foreground, #E9ECEF)";
-const TEXT_SECONDARY = "var(--foreground-secondary, #9AA0A6)";
-const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
-const ACCENT_LIME = "var(--accent-base, #FF6B00)";
+const BG_CARD = "#1a1e23";
+const BORDER = "rgba(60,64,67,0.50)";
+const TEXT_PRIMARY = "#E9ECEF";
+const TEXT_SECONDARY = "#9AA0A6";
+const TEXT_MUTED = "#6C757D";
+const ACCENT_LIME = "#84cc16";
 
 export default async function FactoringPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let requests: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let bids: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let funders: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let fees: any[] = [];
+  const supabase = await createClient();
 
-  try {
-    const results = await Promise.all([
-      prisma.invoFactoringRequest.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-      prisma.invoFactoringBid.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-      prisma.invoFunderConfig.findMany({ where: { isActive: true } }),
-      prisma.invoSuccessFee.findMany({ orderBy: { createdAt: "desc" }, take: 20 }),
-    ]);
-    requests = results[0] as any[];
-    bids = results[1] as any[];
-    funders = results[2] as any[];
-    fees = results[3] as any[];
-  } catch {
-    // Tables may not exist yet — render with empty data
-  }
+  const [requestsRes, bidsRes, fundersRes, feesRes] = await Promise.all([
+    supabase.from("factoring_requests").select("*, hotels(name)").order("created_at", { ascending: false }).limit(50),
+    supabase.from("factoring_bids").select("*").order("created_at", { ascending: false }).limit(50),
+    supabase.from("funder_configs").select("*").eq("is_active", true),
+    supabase.from("success_fees").select("*").order("created_at", { ascending: false }).limit(20),
+  ]);
 
-  const totalFaceValue = requests.reduce((sum, r) => sum + Number(r.faceValue), 0);
-  const funded = requests.filter((r) => r.matchStatus === "funded").length;
+  const requests = requestsRes.data || [];
+  const bids = bidsRes.data || [];
+  const funders = fundersRes.data || [];
+  const fees = feesRes.data || [];
+
+  const totalFaceValue = requests.reduce((sum, r) => sum + (r.face_value || 0), 0);
+  const funded = requests.filter((r) => r.match_status === "funded").length;
   const bidding = requests.filter((r) => r.status === "bidding_open").length;
-  const totalFees = fees.reduce((sum, f) => sum + Number(f.feeAmountEgp), 0);
+  const totalFees = fees.reduce((sum, f) => sum + (f.fee_amount_egp || 0), 0);
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold tracking-tight">Factoring</h1>
         <p className="text-[13px] mt-1" style={{ color: TEXT_SECONDARY }}>
-          Reverse factoring: get paid early, let funders compete
+          Reverse factoring — get paid early, let funders compete
         </p>
       </div>
 
@@ -69,12 +59,12 @@ export default async function FactoringPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
             {funders.map((funder) => (
-              <div key={funder.id} className="rounded-lg p-4" style={{ backgroundColor: "var(--background)", border: `1px solid ${BORDER}` }}>
+              <div key={funder.id} className="rounded-lg p-4" style={{ backgroundColor: "#14171a", border: `1px solid ${BORDER}` }}>
                 <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{funder.name || "Unnamed"}</div>
                 <div className="text-[12px] mt-2 space-y-1" style={{ color: TEXT_SECONDARY }}>
-                  <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{Number(funder.creditLimit).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{Number(funder.minInvoice).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{Number(funder.rateMin).toFixed(2)}% to {Number(funder.rateMax).toFixed(2)}%</span></div>
+                  <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{(funder.credit_limit || 0).toLocaleString("en-EG")} EGP</span></div>
+                  <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{(funder.min_invoice || 0).toLocaleString("en-EG")} EGP</span></div>
+                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{(funder.rate_min || 0).toFixed(2)}% — {(funder.rate_max || 0).toFixed(2)}%</span></div>
                 </div>
               </div>
             ))}
@@ -110,26 +100,26 @@ export default async function FactoringPage() {
               </thead>
               <tbody>
                 {requests.map((req) => {
-                  const reqBids = bids.filter((b) => b.requestId === req.id);
+                  const reqBids = bids.filter((b) => b.request_id === req.id);
                   return (
                     <tr
                       key={req.id}
                       className="border-t transition-colors"
                       style={{ borderColor: BORDER }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,107,0,0.02)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(132,204,22,0.02)")}
                       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                     >
                       <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>
                         {req.id.slice(0, 8)}...
                       </td>
-                      <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{req.hotelId ? req.hotelId.slice(0, 8) : "—"}</td>
+                      <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(req as any).hotels?.name || "—"}</td>
                       <td className="px-5 py-3 text-right font-semibold" style={{ color: TEXT_PRIMARY }}>
-                        {Number(req.faceValue).toLocaleString("en-EG")} EGP
+                        {(req.face_value || 0).toLocaleString("en-EG")} EGP
                       </td>
-                      <td className="px-5 py-3 text-center"><StatusBadge status={req.status.toLowerCase()} /></td>
-                      <td className="px-5 py-3 text-center"><StatusBadge status={req.matchStatus.toLowerCase()} /></td>
+                      <td className="px-5 py-3 text-center"><StatusBadge status={req.status || "bidding_open"} /></td>
+                      <td className="px-5 py-3 text-center"><StatusBadge status={req.match_status || "not_submitted"} /></td>
                       <td className="px-5 py-3 text-center" style={{ color: TEXT_SECONDARY }}>{reqBids.length}</td>
-                      <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>{req.maturityDate || "—"}</td>
+                      <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>{req.maturity_date || "—"}</td>
                     </tr>
                   );
                 })}

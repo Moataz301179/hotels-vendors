@@ -1,14 +1,14 @@
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { Bot, Play, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
-const BG_CARD = "var(--surface-raised, #1a1e23)";
-const BORDER = "var(--border-subtle, rgba(60,64,67,0.50))";
-const TEXT_PRIMARY = "var(--foreground, #E9ECEF)";
-const TEXT_SECONDARY = "var(--foreground-secondary, #9AA0A6)";
-const TEXT_MUTED = "var(--foreground-muted, #6C757D)";
-const ACCENT_LIME = "var(--accent-base, #FF6B00)";
+const BG_CARD = "#1a1e23";
+const BORDER = "rgba(60,64,67,0.50)";
+const TEXT_PRIMARY = "#E9ECEF";
+const TEXT_SECONDARY = "#9AA0A6";
+const TEXT_MUTED = "#6C757D";
+const ACCENT_LIME = "#84cc16";
 
 const AGENT_PIPELINE = [
   { id: "agent_1_ingestion", name: "Ingestion", desc: "Parse and validate incoming invoices", icon: "📥" },
@@ -18,34 +18,21 @@ const AGENT_PIPELINE = [
 ];
 
 export default async function AgentsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let auditLog: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let alerts: any[] = [];
+  const supabase = await createClient();
 
-  try {
-    const results = await Promise.all([
-      prisma.agentRun.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      }),
-      prisma.agentRun.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { status: "FAILED" },
-        take: 20,
-      }),
-    ]);
-    auditLog = results[0] as any[];
-    alerts = results[1] as any[];
-  } catch {
-    // Tables may not exist yet — render with empty data
-  }
+  const [auditRes, alertsRes] = await Promise.all([
+    supabase.from("agent_audit_log").select("*").order("created_at", { ascending: false }).limit(50),
+    supabase.from("alerts").select("*").order("created_at", { ascending: false }).limit(20),
+  ]);
 
-  const openAlerts = alerts.filter((a) => a.status === "FAILED").length;
+  const auditLog = auditRes.data || [];
+  const alerts = alertsRes.data || [];
+  const openAlerts = alerts.filter((a) => a.status === "open").length;
 
+  // Count actions per agent
   const agentCounts: Record<string, number> = {};
   auditLog.forEach((log) => {
-    agentCounts[log.agentName] = (agentCounts[log.agentName] || 0) + 1;
+    agentCounts[log.agent_name] = (agentCounts[log.agent_name] || 0) + 1;
   });
 
   return (
@@ -53,7 +40,7 @@ export default async function AgentsPage() {
       <div>
         <h1 className="text-xl font-bold tracking-tight">Agent System</h1>
         <p className="text-[13px] mt-1" style={{ color: TEXT_SECONDARY }}>
-          Automated procurement pipeline: 4-agent orchestration
+          Automated procurement pipeline — 4-agent orchestration
         </p>
       </div>
 
@@ -62,7 +49,7 @@ export default async function AgentsPage() {
         <KPICard title="Open Alerts" value={openAlerts} accent={openAlerts > 0} icon={<AlertTriangle className="w-4 h-4" />} />
         <KPICard title="Pipeline Steps" value={4} icon={<Play className="w-4 h-4" />} />
         <KPICard title="Last 24h" value={auditLog.filter((l) => {
-          const d = new Date(l.createdAt);
+          const d = new Date(l.created_at);
           return Date.now() - d.getTime() < 86400000;
         }).length} accent icon={<CheckCircle className="w-4 h-4" />} />
       </KPIGrid>
@@ -77,7 +64,7 @@ export default async function AgentsPage() {
             <div
               key={agent.id}
               className="rounded-xl p-5 text-center"
-              style={{ backgroundColor: "var(--background)", border: `1px solid ${BORDER}` }}
+              style={{ backgroundColor: "#14171a", border: `1px solid ${BORDER}` }}
             >
               <div className="text-3xl mb-3">{agent.icon}</div>
               <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{agent.name}</div>
@@ -88,7 +75,7 @@ export default async function AgentsPage() {
               <div className="mt-3">
                 <button
                   className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
-                  style={{ backgroundColor: "rgba(255,107,0,0.10)", color: ACCENT_LIME, border: "1px solid rgba(255,107,0,0.20)" }}
+                  style={{ backgroundColor: "rgba(132,204,22,0.10)", color: ACCENT_LIME, border: "1px solid rgba(132,204,22,0.20)" }}
                 >
                   Run Agent
                 </button>
@@ -142,22 +129,22 @@ export default async function AgentsPage() {
               <tbody>
                 {auditLog.map((log) => (
                   <tr
-                    key={log.logId}
+                    key={log.log_id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,107,0,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(132,204,22,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
-                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_LIME }}>{log.agentName}</td>
-                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{log.actionExecuted}</td>
+                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_LIME }}>{log.agent_name}</td>
+                    <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{log.action_executed}</td>
                     <td className="px-5 py-3 font-mono text-[11px]" style={{ color: TEXT_MUTED }}>
-                      {log.invoiceId?.slice(0, 8) || "—"}
+                      {log.invoice_id?.slice(0, 8) || "—"}
                     </td>
                     <td className="px-5 py-3 text-[12px]" style={{ color: TEXT_SECONDARY }}>
-                      {log.previousState || "—"} → {log.newState || "—"}
+                      {log.previous_state || "—"} → {log.new_state || "—"}
                     </td>
                     <td className="px-5 py-3 text-right text-[12px]" style={{ color: TEXT_MUTED }}>
-                      {log.createdAt ? new Date(log.createdAt).toLocaleString("en-EG") : "—"}
+                      {log.created_at ? new Date(log.created_at).toLocaleString("en-EG") : "—"}
                     </td>
                   </tr>
                 ))}

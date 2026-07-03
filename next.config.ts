@@ -1,20 +1,7 @@
 import type { NextConfig } from "next";
-import withSerwistInit from "@serwist/next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  serverExternalPackages: ["pg"],
-  turbopack: {
-    root: "/Users/Moataz/hotels-vendors",
-  },
-
-  // Enable React DevTools and source-map-backed editing in Chrome DevTools
-  // Allows "Save for Overrides" to persist changes from browser to local filesystem
-  productionBrowserSourceMaps: false,
-  compiler: {
-    // Preserve component names in production for easier debugging
-    reactRemoveProperties: false,
-  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -22,24 +9,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "logo.clearbit.com" },
       { protocol: "https", hostname: "**.gravatar.com" },
     ],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-
-  async redirects() {
-    return [
-      {
-        source: "/pricing",
-        destination: "/solutions",
-        permanent: true,
-      },
-      {
-        source: "/favicon.ico",
-        destination: "/logo-icon.png",
-        permanent: false,
-      },
-    ];
   },
 
   // Disable aggressive static page caching — we control cache at nginx level
@@ -91,8 +60,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwistInit({
-  swSrc: "app/sw.ts",
-  swDest: "public/sw.js",
-  disable: process.env.NODE_ENV !== "production",
-})(nextConfig);
+export default nextConfig;

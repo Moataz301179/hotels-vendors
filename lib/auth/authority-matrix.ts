@@ -252,19 +252,15 @@ export async function evaluateAuthority(
   // Merge DB rules with built-in rules (DB overrides built-in if same priority)
   const allRules = mergeRules(BUILT_IN_RULES, dbRules.map(r => ({
     ...r,
-    name: r.name || "",
-    minValue: Number(r.minValue),
-    maxValue: Number(r.maxValue),
-    supplierTier: r.supplierTier as SupplierTier | null | undefined,
     requiresPaymentGuarantee: false,
     requiresEtaValidation: false,
     requiresDualSignOff: false,
-  })));
+  })) as AuthorityRule[]);
 
   // 4. Evaluate each rule in priority order
   for (const rule of allRules) {
     const match = checkRuleMatch(rule, {
-      total: Number(order.total),
+      total: order.total,
       hotel: { tier: order.hotel.tier, riskTier: order.hotel.riskTier },
       supplier: { tier: order.supplier.tier },
       requesterRole: order.requesterId ? ctx.userRole : null,
@@ -275,7 +271,7 @@ export async function evaluateAuthority(
     if (rule.requiresPaymentGuarantee && !order.paymentGuaranteed) {
       // For HIGH/CRITICAL risk, offer Smart Fixes
       if (riskAssessment.riskTier === "HIGH" || riskAssessment.riskTier === "CRITICAL") {
-        const smartFixes = await generateSmartFixes(orderId, order.hotelId, Number(order.total), ctx.tenantId);
+        const smartFixes = await generateSmartFixes(orderId, order.hotelId, order.total, ctx.tenantId);
         return {
           action: "SMART_FIX_REQUIRED",
           rule,
@@ -406,8 +402,7 @@ export async function recordApproval(
   approverId: string,
   tenantId: string,
   action: "APPROVED" | "REJECTED" | "ESCALATED" | "ADMIN_OVERRIDE",
-  reason?: string,
-  beforeState?: string,
+  reason?: string
 ): Promise<void> {
   await prisma.orderApproval.create({
     data: {
@@ -415,11 +410,10 @@ export async function recordApproval(
       approverId,
       action,
       reason,
-      beforeState: beforeState ?? null,
-      afterState: JSON.stringify({ action, reason }),
     },
   });
 
+  // Update order status
   const newStatus: OrderStatus =
     action === "APPROVED" ? "APPROVED" :
     action === "REJECTED" ? "REJECTED" :
@@ -432,6 +426,7 @@ export async function recordApproval(
     data: { status: newStatus },
   });
 
+  // Audit log
   await prisma.auditLog.create({
     data: {
       entityType: "ORDER",
@@ -439,21 +434,9 @@ export async function recordApproval(
       action: `ORDER_${action}`,
       tenantId,
       actorId: approverId,
-      beforeState: beforeState ?? null,
-      afterState: JSON.stringify({ status: newStatus, action, reason }),
+      afterState: JSON.stringify({ status: newStatus, action }),
     },
   });
-
-  const { notifyOrderStakeholders } = await import("@/lib/notifications/create");
-  await notifyOrderStakeholders(
-    orderId,
-    tenantId,
-    action === "APPROVED" ? "ORDER_APPROVED" :
-    action === "REJECTED" ? "ORDER_REJECTED" : "ORDER_CANCELLED",
-    approverId,
-    orderId.slice(0, 8),
-    reason,
-  ).catch(() => undefined);
 }
 
 // ─────────────────────────────────────────
