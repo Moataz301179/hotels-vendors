@@ -65,6 +65,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         statusDescription: charge.statusDescription,
       }),
       tenantId: auth.tenantId,
+      updatedAt: new Date(),
     },
   });
 
