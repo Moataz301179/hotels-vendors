@@ -1,0 +1,61 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+
+interface BrandLogoProps {
+  className?: string;
+  variant?: "dark" | "light";
+  size?: "sm" | "md" | "lg" | "xl";
+}
+
+const SIZE_MAP = {
+  sm: { width: 28, height: 32 },
+  md: { width: 36, height: 42 },
+  lg: { width: 48, height: 56 },
+  xl: { width: 64, height: 76 },
+};
+
+/**
+ * Hotels Vendors brand logo — clean SVG horse head.
+ * No baked-in text. No "OS". Scales crisply at any size.
+ * Use variant="dark" on dark backgrounds (white logo).
+ * Use variant="light" on light backgrounds (dark logo).
+ */
+export function BrandLogo({
+  className,
+  variant = "light",
+  size = "md",
+}: BrandLogoProps) {
+  const dims = SIZE_MAP[size];
+  const fill = variant === "dark" ? "#ffffff" : "#0B0F1A";
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 120 140"
+      width={dims.width}
+      height={dims.height}
+      fill={fill}
+      className={cn("shrink-0", className)}
+      aria-label="Hotels Vendors"
+    >
+      <path
+        d="M85 15 C95 15, 105 22, 110 32 L108 42 C112 48, 115 55, 112 62 L105 75 C100 82, 92 85, 84 83 L72 88 C65 92, 58 98, 55 105 L48 120 C45 128, 38 135, 30 138 L20 135 C15 132, 12 125, 15 118 L22 98 C25 90, 32 85, 40 82 L52 78 C58 76, 62 72, 60 66 L55 52 C52 42, 58 32, 68 28 L78 22 C80 18, 82 15, 85 15Z"
+        opacity="0.95"
+      />
+      <path
+        d="M58 32 C62 28, 68 26, 74 28 L80 42 C82 48, 80 55, 75 60 L65 70 C60 75, 55 78, 50 76 L42 72 C38 70, 36 65, 38 60 L45 45 C48 38, 52 34, 58 32Z"
+        opacity="0.5"
+      />
+      <circle cx="88" cy="38" r="4" opacity="0.8" />
+      <path
+        d="M25 125 C30 122, 35 120, 40 122"
+        fill="none"
+        stroke={fill}
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+    </svg>
+  );
+}
