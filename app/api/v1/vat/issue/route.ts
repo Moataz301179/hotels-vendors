@@ -89,15 +89,15 @@ export async function POST(req: NextRequest) {
         tenantId: "VAT-STANDALONE",
         issueDate: new Date(),
         updatedAt: new Date(),
-        etaResponse: {
+        submissionLog: JSON.stringify({
           submissionId: `ETA-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
           submittedAt: new Date().toISOString(),
           status: "ACCEPTED",
-        },
+        }),
       },
     })
 
-    const etaResponse = invoice.etaResponse as Record<string, unknown> | null
+    const etaResponse = invoice.submissionLog ? JSON.parse(invoice.submissionLog) as Record<string, unknown> : null
 
     return ok({
       success: true,
