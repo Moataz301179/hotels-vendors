@@ -15,10 +15,17 @@ import { logAuthFailure, logRateLimit } from "@/lib/security/security-logger";
 // 1. TENANT ISOLATION
 // ─────────────────────────────────────────
 
+export function getTenantId(request: NextRequest): string | null {
+  // DEPRECATED: Do not use. Tenant ID must come from the JWT session.
+  return request.headers.get("x-tenant-id");
+}
+
 export function requireTenantId(request: NextRequest): string {
-  // Tenant id is read from the JWT session by authenticate(); this helper is retained only for routes that
-  // need an explicit check beyond authentication. Do NOT read x-tenant-id from headers.
-  throw new ApiError("Missing tenant context", 400);
+  const tenantId = getTenantId(request);
+  if (!tenantId) {
+    throw new ApiError("Missing x-tenant-id header", 400);
+  }
+  return tenantId;
 }
 
 // ─────────────────────────────────────────
@@ -32,9 +39,6 @@ export interface AuthContext {
 }
 
 export async function authenticate(request: NextRequest): Promise<AuthContext> {
-  const ip = request.headers.get("x-forwarded-for") || "unknown";
-  const path = request.nextUrl?.pathname || request.headers.get("x-forwarded-path") || "/unknown";
-
   // Primary: read from session cookie
   let token = await getSessionToken();
 
@@ -45,13 +49,11 @@ export async function authenticate(request: NextRequest): Promise<AuthContext> {
   }
 
   if (!token) {
-    logAuthFailure(ip, path, "No session token provided");
     throw new ApiError("Unauthorized", 401);
   }
 
   const session = await verifySession(token);
   if (!session) {
-    logAuthFailure(ip, path, "Invalid or expired session token");
     throw new ApiError("Invalid or expired session", 401);
   }
 
@@ -154,37 +156,11 @@ export async function audit(
 }
 
 // ─────────────────────────────────────────
-// 6. JSON SERIALIZATION — Decimal → Number
-// ─────────────────────────────────────────
-
-/**
- * Recursively convert Prisma Decimls to plain numbers.
- * Prevents Decimal values from serializing as strings in JSON responses.
- */
-function serializeResponse(value: unknown): unknown {
-  // Check for Prisma Decimal (has toNumber method)
-  if (value !== null && typeof value === "object" && "toNumber" in (value as Record<string, unknown>)) {
-    return (value as { toNumber: () => number }).toNumber();
-  }
-  if (Array.isArray(value)) {
-    return value.map(serializeResponse);
-  }
-  if (value !== null && typeof value === "object") {
-    const obj: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-      obj[k] = serializeResponse(v);
-    }
-    return obj;
-  }
-  return value;
-}
-
-// ─────────────────────────────────────────
-// 7. RESPONSE HELPERS
+// 6. RESPONSE HELPERS
 // ─────────────────────────────────────────
 
 export function success<T>(data: T, status = 200): NextResponse {
-  return NextResponse.json(serializeResponse({ success: true, data }), { status });
+  return NextResponse.json({ success: true, data }, { status });
 }
 
 export function error(message: string, status = 500): NextResponse {

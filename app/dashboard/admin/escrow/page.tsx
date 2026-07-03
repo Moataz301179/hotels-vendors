@@ -1,256 +1,501 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react"
+import { motion } from "framer-motion"
 import {
-  Search, ShieldCheck, DollarSign, CheckCircle2, XCircle,
-  Loader2, ExternalLink, Copy, ArrowUpRight, Landmark,
-} from "lucide-react";
+  Search,
+  ShieldCheck,
+  CreditCard,
+  ExternalLink,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  FileText,
+  Lock,
+  Unlock,
+  ArrowUpRight,
+  Copy,
+} from "lucide-react"
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
-};
+}
 
 const staggerContainer = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06 } },
-};
+}
+
+type EscrowStatus = {
+  funded: boolean
+  released: boolean
+  amount: number
+  paymentUrl?: string
+}
+
+type EscrowCreateResponse = {
+  paymobOrderId: string
+  paymentUrl: string
+  escrowReference: string
+}
+
+type EscrowReleaseResponse = {
+  released: boolean
+  message: string
+}
 
 export default function EscrowAdminPage() {
-  const [invoiceId, setInvoiceId] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [releasing, setReleasing] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [error, setError] = useState("");
-  const [escrowStatus, setEscrowStatus] = useState<{ funded: boolean; released: boolean; amount: number; paymentUrl?: string } | null>(null);
-  const [escrowResult, setEscrowResult] = useState<{ paymobOrderId: number; paymentUrl: string; escrowReference: string } | null>(null);
-  const [releaseResult, setReleaseResult] = useState<{ released: boolean; message: string } | null>(null);
-  const [releaseType, setReleaseType] = useState<string>("DUE_DATE");
-  const [coApproverId, setCoApproverId] = useState("");
-  const [copied, setCopied] = useState("");
+  const [invoiceId, setInvoiceId] = useState("")
+  const [status, setStatus] = useState<EscrowStatus | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [statusError, setStatusError] = useState("")
 
-  const checkInvoice = async () => {
-    if (!invoiceId.trim()) return;
-    setLoading(true);
-    setError("");
-    setEscrowStatus(null);
-    setEscrowResult(null);
-    setReleaseResult(null);
+  const [createResult, setCreateResult] = useState<EscrowCreateResponse | null>(null)
+  const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState("")
+
+  const [releaseType, setReleaseType] = useState("DUE_DATE")
+  const [coApproverId, setCoApproverId] = useState("")
+  const [releaseResult, setReleaseResult] = useState<EscrowReleaseResponse | null>(null)
+  const [releasing, setReleasing] = useState(false)
+  const [releaseError, setReleaseError] = useState("")
+
+  const [copiedIndex, setCopiedIndex] = useState<string | null>(null)
+
+  async function handleCheck() {
+    if (!invoiceId.trim()) return
+    setLoading(true)
+    setStatusError("")
+    setStatus(null)
+    setCreateResult(null)
+    setReleaseResult(null)
     try {
-      const res = await fetch(`/api/v1/payments/escrow?invoiceId=${encodeURIComponent(invoiceId)}`);
-      const json = await res.json();
-      if (json.success) setEscrowStatus(json.data);
-      else setError(json.error || "Failed to check invoice");
-    } catch { setError("Network error"); }
-    finally { setLoading(false); }
-  };
+      const res = await fetch(`/api/v1/payments/escrow?invoiceId=${encodeURIComponent(invoiceId.trim())}`)
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || "Failed to fetch escrow status")
+      setStatus(json)
+    } catch (e) {
+      setStatusError((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const createEscrow = async () => {
-    setCreating(true);
-    setError("");
-    setEscrowResult(null);
+  async function handleCreateEscrow() {
+    setCreating(true)
+    setCreateError("")
+    setCreateResult(null)
     try {
       const res = await fetch("/api/v1/payments/escrow", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoiceId }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setEscrowResult(json.data);
-        setEscrowStatus((prev) => prev ? { ...prev, funded: true } : prev);
-      } else setError(json.error || "Failed to create escrow");
-    } catch { setError("Network error"); }
-    finally { setCreating(false); }
-  };
+        body: JSON.stringify({ invoiceId: invoiceId.trim() }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || "Failed to create escrow")
+      setCreateResult(json)
+      setStatus((prev) => (prev ? { ...prev, funded: true } : prev))
+    } catch (e) {
+      setCreateError((e as Error).message)
+    } finally {
+      setCreating(false)
+    }
+  }
 
-  const releaseEscrow = async () => {
-    if (!coApproverId.trim()) { setError("Co-approver ID is required"); return; }
-    setReleasing(true);
-    setError("");
-    setReleaseResult(null);
+  async function handleReleaseEscrow() {
+    if (!coApproverId.trim()) return
+    setReleasing(true)
+    setReleaseError("")
+    setReleaseResult(null)
     try {
       const res = await fetch("/api/v1/payments/escrow", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoiceId, releaseType, coApproverId }),
-      });
-      const json = await res.json();
-      if (json.success) setReleaseResult(json.data);
-      else setError(json.error || "Failed to release escrow");
-    } catch { setError("Network error"); }
-    finally { setReleasing(false); }
-  };
+        body: JSON.stringify({
+          invoiceId: invoiceId.trim(),
+          releaseType,
+          coApproverId: coApproverId.trim(),
+        }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || "Failed to release escrow")
+      setReleaseResult(json)
+      if (json.released) {
+        setStatus((prev) => (prev ? { ...prev, released: true } : prev))
+      }
+    } catch (e) {
+      setReleaseError((e as Error).message)
+    } finally {
+      setReleasing(false)
+    }
+  }
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-    setTimeout(() => setCopied(""), 2000);
-  };
+  async function handleCopy(text: string, key: string) {
+    await navigator.clipboard.writeText(text)
+    setCopiedIndex(key)
+    setTimeout(() => setCopiedIndex(null), 2000)
+  }
 
   return (
-    <motion.div className="max-w-3xl mx-auto space-y-6" variants={staggerContainer} initial="hidden" animate="visible">
+    <motion.div
+      className="max-w-3xl mx-auto space-y-6"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header */}
       <motion.div variants={fadeInUp}>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Escrow Management</h1>
-        <p className="text-sm text-foreground-tertiary mt-0.5">Create, manage, and release escrow deposits for invoices</p>
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-8 h-8 rounded-lg bg-accent-base/10 flex items-center justify-center">
+            <ShieldCheck size={16} className="text-accent-base" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Escrow Management</h1>
+        </div>
+        <p className="text-sm text-foreground-tertiary ml-11">
+          Look up, create, and release payment escrows for invoices
+        </p>
       </motion.div>
 
-      <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised p-5">
-        <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-          <Search size={14} className="text-foreground-muted" />
-          Invoice Lookup
-        </h2>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={invoiceId}
-            onChange={(e) => setInvoiceId(e.target.value)}
-            placeholder="Enter invoice ID"
-            className="flex-1 px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
-          />
+      {/* Invoice Lookup */}
+      <motion.div
+        variants={fadeInUp}
+        className="rounded-xl border border-subtle bg-surface-raised p-5"
+      >
+        <div className="flex items-center gap-2 mb-4">
+          <FileText size={14} className="text-foreground-muted" />
+          <h2 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">
+            Invoice Lookup
+          </h2>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
+            <input
+              type="text"
+              placeholder="Enter Invoice ID..."
+              value={invoiceId}
+              onChange={(e) => {
+                setInvoiceId(e.target.value)
+                setStatus(null)
+                setCreateResult(null)
+                setReleaseResult(null)
+                setStatusError("")
+              }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleCheck() }}
+              className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
+            />
+          </div>
           <button
-            onClick={checkInvoice}
+            onClick={handleCheck}
             disabled={loading || !invoiceId.trim()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-base/10 border border-accent-base/20 text-accent-base text-sm font-medium hover:bg-accent-base/20 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-base/10 border border-accent-base/20 text-accent-base text-sm font-medium hover:bg-accent-base/20 transition-colors disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
             Check
           </button>
         </div>
+
+        {/* Status Error */}
+        {statusError && (
+          <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+            <AlertCircle size={14} />
+            {statusError}
+          </div>
+        )}
       </motion.div>
 
-      {error && (
-        <motion.div variants={fadeInUp} className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-          <XCircle size={14} /> {error}
-        </motion.div>
-      )}
+      {/* Escrow Status */}
+      {status && (
+        <motion.div variants={fadeInUp} className="space-y-4">
+          {/* Status Card */}
+          <div className="rounded-xl border border-subtle bg-surface-raised p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldCheck size={14} className="text-foreground-muted" />
+              <h2 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">
+                Escrow Status
+              </h2>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="p-3 rounded-lg border border-subtle bg-surface-raised">
+                <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Funded</p>
+                <div className="flex items-center gap-1.5">
+                  {status.funded ? (
+                    <>
+                      <CheckCircle2 size={14} className="text-emerald-400" />
+                      <span className="text-xs font-semibold text-emerald-400">Yes</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle size={14} className="text-amber-400" />
+                      <span className="text-xs font-semibold text-amber-400">No</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="p-3 rounded-lg border border-subtle bg-surface-raised">
+                <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Released</p>
+                <div className="flex items-center gap-1.5">
+                  {status.released ? (
+                    <>
+                      <CheckCircle2 size={14} className="text-emerald-400" />
+                      <span className="text-xs font-semibold text-emerald-400">Yes</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={14} className="text-amber-400" />
+                      <span className="text-xs font-semibold text-amber-400">No</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="p-3 rounded-lg border border-subtle bg-surface-raised">
+                <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Amount</p>
+                <p className="text-xs font-semibold text-foreground">
+                  EGP {status.amount.toLocaleString("en-EG")}
+                </p>
+              </div>
+            </div>
+            {status.paymentUrl && (
+              <div className="mt-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs flex items-center gap-2">
+                <ExternalLink size={14} />
+                <a
+                  href={status.paymentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-blue-300"
+                >
+                  View Payment Page
+                </a>
+              </div>
+            )}
+          </div>
 
-      {escrowStatus && (
-        <>
-          <motion.div variants={fadeInUp} className="grid grid-cols-3 gap-3">
-            <div className="p-4 rounded-xl bg-surface-raised border border-subtle">
-              <div className="flex items-center gap-2 mb-2"><DollarSign size={14} className="text-foreground-muted" /><span className="text-[10px] text-foreground-muted uppercase tracking-wider">Amount</span></div>
-              <p className="text-lg font-bold text-foreground">EGP {escrowStatus.amount.toLocaleString()}</p>
-            </div>
-            <div className="p-4 rounded-xl bg-surface-raised border border-subtle">
-              <div className="flex items-center gap-2 mb-2"><CheckCircle2 size={14} className="text-foreground-muted" /><span className="text-[10px] text-foreground-muted uppercase tracking-wider">Funded</span></div>
-              <p className={`text-lg font-bold ${escrowStatus.funded ? "text-emerald-400" : "text-amber-400"}`}>{escrowStatus.funded ? "Yes" : "No"}</p>
-            </div>
-            <div className="p-4 rounded-xl bg-surface-raised border border-subtle">
-              <div className="flex items-center gap-2 mb-2"><ShieldCheck size={14} className="text-foreground-muted" /><span className="text-[10px] text-foreground-muted uppercase tracking-wider">Released</span></div>
-              <p className={`text-lg font-bold ${escrowStatus.released ? "text-emerald-400" : "text-foreground-tertiary"}`}>{escrowStatus.released ? "Yes" : "No"}</p>
-            </div>
-          </motion.div>
-
-          {!escrowStatus.funded && (
-            <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised p-5">
-              <h2 className="text-sm font-semibold text-foreground mb-3">Create Escrow Deposit</h2>
+          {/* Create Escrow */}
+          {!status.funded && (
+            <motion.div
+              variants={fadeInUp}
+              className="rounded-xl border border-subtle bg-surface-raised p-5"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <CreditCard size={14} className="text-foreground-muted" />
+                <h2 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">
+                  Create Escrow Deposit
+                </h2>
+              </div>
+              <p className="text-xs text-foreground-tertiary mb-4">
+                This invoice has not been funded yet. Create an escrow deposit to secure payment.
+              </p>
               <button
-                onClick={createEscrow}
+                onClick={handleCreateEscrow}
                 disabled={creating}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-base/10 border border-accent-base/20 text-accent-base text-sm font-medium hover:bg-accent-base/20 transition-colors disabled:opacity-50"
               >
-                {creating ? <Loader2 size={14} className="animate-spin" /> : <Landmark size={14} />}
-                {creating ? "Creating..." : "Create Escrow"}
+                {creating ? <Loader2 size={14} className="animate-spin" /> : <CreditCard size={14} />}
+                {creating ? "Creating Escrow..." : "Create Escrow"}
               </button>
-            </motion.div>
-          )}
 
-          {escrowResult && (
-            <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised p-5 space-y-3">
-              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <CheckCircle2 size={14} className="text-emerald-400" />
-                Escrow Created
-              </h2>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-raised border border-subtle">
-                <span className="text-xs text-foreground-muted">Payment URL</span>
-                <div className="flex items-center gap-2">
-                  <a href={escrowResult.paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent-base hover:underline">{escrowResult.paymentUrl.slice(0, 40)}...</a>
-                  <button onClick={() => copyToClipboard(escrowResult.paymentUrl, "url")} className="p-1 hover:bg-surface-raised rounded"><Copy size={12} className="text-foreground-muted" /></button>
-                  <a href={escrowResult.paymentUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-surface-raised rounded"><ExternalLink size={12} className="text-foreground-muted" /></a>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-raised border border-subtle">
-                <span className="text-xs text-foreground-muted">Escrow Reference</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-foreground-tertiary">{escrowResult.escrowReference}</span>
-                  <button onClick={() => copyToClipboard(escrowResult.escrowReference, "ref")} className="p-1 hover:bg-surface-raised rounded"><Copy size={12} className="text-foreground-muted" /></button>
-                </div>
-              </div>
-              <a
-                href={escrowResult.paymentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors"
-              >
-                <ExternalLink size={14} /> Proceed to Payment
-              </a>
-            </motion.div>
-          )}
-
-          {escrowStatus.funded && !escrowStatus.released && (
-            <motion.div variants={fadeInUp} className="rounded-xl border border-subtle bg-surface-raised p-5 space-y-4">
-              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <ShieldCheck size={14} className="text-foreground-muted" />
-                Release Escrow
-              </h2>
-              <div>
-                <label className="text-xs text-foreground-tertiary uppercase tracking-wider mb-1.5 block">Release Type</label>
-                <select
-                  value={releaseType}
-                  onChange={(e) => setReleaseType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none"
-                >
-                  <option value="DUE_DATE">Due Date</option>
-                  <option value="EARLY_PAYMENT">Early Payment</option>
-                  <option value="MANUAL">Manual</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs text-foreground-tertiary uppercase tracking-wider mb-1.5 block">Co-Approver ID</label>
-                <input
-                  type="text"
-                  value={coApproverId}
-                  onChange={(e) => setCoApproverId(e.target.value)}
-                  placeholder="User ID of co-approver"
-                  className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
-                />
-              </div>
-              {releaseResult && (
-                <div className={`p-3 rounded-lg flex items-center gap-2 text-xs ${
-                  releaseResult.released
-                    ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
-                    : "bg-amber-500/10 border border-amber-500/20 text-amber-400"
-                }`}>
-                  {releaseResult.released ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
-                  {releaseResult.message}
+              {createError && (
+                <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                  <AlertCircle size={14} />
+                  {createError}
                 </div>
               )}
-              <button
-                onClick={releaseEscrow}
-                disabled={releasing}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
-              >
-                {releasing ? <Loader2 size={14} className="animate-spin" /> : <ArrowUpRight size={14} />}
-                {releasing ? "Releasing..." : "Release Escrow"}
-              </button>
+
+              {createResult && (
+                <div className="mt-4 space-y-2">
+                  <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-xs text-emerald-400 flex items-center gap-2">
+                    <CheckCircle2 size={14} />
+                    Escrow deposit created successfully
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-subtle bg-surface-raised">
+                      <div>
+                        <p className="text-[10px] text-foreground-muted uppercase">Payment URL</p>
+                        <a
+                          href={createResult.paymentUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-accent-base hover:underline flex items-center gap-1 mt-0.5"
+                        >
+                          {createResult.paymentUrl.length > 50
+                            ? `${createResult.paymentUrl.slice(0, 50)}...`
+                            : createResult.paymentUrl}
+                          <ExternalLink size={10} />
+                        </a>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(createResult.paymentUrl, "paymentUrl")}
+                        className="p-1.5 rounded-lg hover:bg-accent-base/10 text-foreground-muted hover:text-accent-base transition-colors"
+                        title="Copy URL"
+                      >
+                        {copiedIndex === "paymentUrl" ? (
+                          <CheckCircle2 size={12} className="text-emerald-400" />
+                        ) : (
+                          <Copy size={12} />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-subtle bg-surface-raised">
+                      <div>
+                        <p className="text-[10px] text-foreground-muted uppercase">Escrow Reference</p>
+                        <p className="text-xs font-mono text-foreground mt-0.5">{createResult.escrowReference}</p>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(createResult.escrowReference, "escrowRef")}
+                        className="p-1.5 rounded-lg hover:bg-accent-base/10 text-foreground-muted hover:text-accent-base transition-colors"
+                        title="Copy Reference"
+                      >
+                        {copiedIndex === "escrowRef" ? (
+                          <CheckCircle2 size={12} className="text-emerald-400" />
+                        ) : (
+                          <Copy size={12} />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-subtle bg-surface-raised">
+                      <div>
+                        <p className="text-[10px] text-foreground-muted uppercase">Paymob Order ID</p>
+                        <p className="text-xs font-mono text-foreground-tertiary mt-0.5">{createResult.paymobOrderId}</p>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(createResult.paymobOrderId, "paymobId")}
+                        className="p-1.5 rounded-lg hover:bg-accent-base/10 text-foreground-muted hover:text-accent-base transition-colors"
+                        title="Copy Paymob ID"
+                      >
+                        {copiedIndex === "paymobId" ? (
+                          <CheckCircle2 size={12} className="text-emerald-400" />
+                        ) : (
+                          <Copy size={12} />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <a
+                    href={createResult.paymentUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full mt-2 px-5 py-2.5 rounded-lg bg-accent-base/10 border border-accent-base/20 text-accent-base text-sm font-medium hover:bg-accent-base/20 transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                    Proceed to Payment
+                    <ArrowUpRight size={14} />
+                  </a>
+                </div>
+              )}
             </motion.div>
           )}
 
-          {escrowStatus.funded && escrowStatus.released && (
-            <motion.div variants={fadeInUp} className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-2">
-              <CheckCircle2 size={16} /> Funds have been fully released for this invoice.
+          {/* Release Escrow */}
+          {status.funded && !status.released && (
+            <motion.div
+              variants={fadeInUp}
+              className="rounded-xl border border-subtle bg-surface-raised p-5"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Unlock size={14} className="text-foreground-muted" />
+                <h2 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">
+                  Release Escrow
+                </h2>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1.5 block">
+                    Release Type
+                  </label>
+                  <select
+                    value={releaseType}
+                    onChange={(e) => setReleaseType(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground focus:outline-none focus:border-accent-base/50"
+                  >
+                    <option value="DUE_DATE" className="bg-[var(--bg-surface)]">Due Date</option>
+                    <option value="EARLY_PAYMENT" className="bg-[var(--bg-surface)]">Early Payment</option>
+                    <option value="MANUAL" className="bg-[var(--bg-surface)]">Manual</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1.5 block">
+                    Co-Approver User ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter co-approver user ID..."
+                    value={coApproverId}
+                    onChange={(e) => setCoApproverId(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-lg bg-surface-raised border border-subtle text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
+                  />
+                  <p className="text-[10px] text-foreground-muted mt-1">
+                    Dual-approval required. Enter the ID of the second admin who must approve this release.
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleReleaseEscrow}
+                  disabled={releasing || !coApproverId.trim()}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+                >
+                  {releasing ? <Loader2 size={14} className="animate-spin" /> : <Unlock size={14} />}
+                  {releasing ? "Releasing..." : "Release Escrow"}
+                </button>
+
+                {releaseError && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                    <AlertCircle size={14} />
+                    {releaseError}
+                  </div>
+                )}
+
+                {releaseResult && (
+                  <div
+                    className={`p-3 rounded-lg border text-xs flex items-center gap-2 ${
+                      releaseResult.released
+                        ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+                        : "border-amber-500/20 bg-amber-500/5 text-amber-400"
+                    }`}
+                  >
+                    {releaseResult.released ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+                    {releaseResult.message}
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
-        </>
+
+          {/* Fully Released */}
+          {status.funded && status.released && (
+            <motion.div
+              variants={fadeInUp}
+              className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5"
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={18} className="text-emerald-400" />
+                <div>
+                  <p className="text-sm font-semibold text-emerald-400">Escrow Released</p>
+                  <p className="text-xs text-emerald-400/70 mt-0.5">
+                    This escrow has been fully released. No further actions are available.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
       )}
 
-      {!escrowStatus && !loading && !error && (
-        <motion.div variants={fadeInUp} className="text-center py-12 text-foreground-muted text-sm">
-          Enter an invoice ID above to check its escrow status
+      {/* Empty State */}
+      {!loading && !status && !statusError && (
+        <motion.div
+          variants={fadeInUp}
+          className="rounded-xl border border-subtle bg-surface-raised p-12 text-center"
+        >
+          <ShieldCheck size={32} className="text-foreground-muted mx-auto mb-3" />
+          <p className="text-sm font-medium text-foreground-tertiary">Enter an Invoice ID to begin</p>
+          <p className="text-xs text-foreground-muted mt-1">
+            Look up escrow status, create deposits, or release funds.
+          </p>
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 }

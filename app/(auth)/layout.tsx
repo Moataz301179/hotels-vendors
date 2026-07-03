@@ -6,7 +6,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background flex font-sans" style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
+    <div className="min-h-screen bg-[#0B0F1A] flex">
       {/* Left Panel — Brand, social proof, value props (desktop only) */}
       <AuthLeftPanel />
 

@@ -13,8 +13,8 @@ export async function checkCreditLimit(
     return { allowed: false, available: 0, reason: "Hotel not found" };
   }
 
-  const creditLimit = Number(hotel.creditLimit ?? 0);
-  const creditUsed = Number(hotel.creditUsed ?? 0);
+  const creditLimit = hotel.creditLimit ?? 0;
+  const creditUsed = hotel.creditUsed ?? 0;
 
   // Sum approved/confirmed/in_transit orders that are not yet invoiced
   const uncapturedOrders = await prisma.order.findMany({
@@ -27,7 +27,7 @@ export async function checkCreditLimit(
   });
 
   const uncapturedTotal = uncapturedOrders.reduce(
-    (sum, o) => sum + Number(o.total ?? 0),
+    (sum, o) => sum + (o.total ?? 0),
     0
   );
 

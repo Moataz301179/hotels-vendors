@@ -94,7 +94,7 @@ export async function autoResolveOrderBlocks(
     return { orderId, wasBlocked: false, fixApplied: false, requiresHumanAction: false, message: "Order already resolved" };
   }
 
-  const orderTotal = Number(order.total);
+  const orderTotal = order.total;
   const hotelId = order.hotelId;
 
   // Check if order is blocked

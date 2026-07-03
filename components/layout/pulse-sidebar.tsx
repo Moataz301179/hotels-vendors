@@ -35,9 +35,6 @@ import {
   FileEdit,
   Search,
   Brain,
-  ScanLine,
-  RotateCcw,
-  PackageCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -68,13 +65,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: BarChart3, label: "AI Inventory", href: "/hotel/ai-inventory" },
         { icon: BrainCircuit, label: "Intelligence", href: "/hotel/intelligence" },
-      ],
-    },
-    {
-      section: "MOBILE",
-      items: [
-        { icon: ScanLine, label: "Scanner", href: "/scanner" },
-        { icon: RotateCcw, label: "Returns", href: "/returns" },
       ],
     },
     {
@@ -123,8 +113,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: ClipboardList, label: "Procurement", href: "/procurement" },
         { icon: ShoppingBag, label: "Orders", href: "/orders" },
         { icon: Truck, label: "Shipping", href: "/shipping" },
-        { icon: PackageCheck, label: "Deliveries", href: "/deliveries" },
-        { icon: ScanLine, label: "Scanner", href: "/scanner" },
         { icon: Calendar, label: "Scheduler", href: "/scheduler" },
         { icon: FileCheck, label: "ETA Center", href: "/eta" },
       ],
@@ -214,11 +202,10 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
 export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSidebarProps) {
   const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
-  const isOriginal = false;
 
   if (collapsed) {
     return (
-      <div className={`h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] ${isOriginal ? "bg-[var(--background)]" : "bg-[#111827]"}`}>
+      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(255,255,255,0.06)] bg-[#111827]">
         <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/10 transition-colors">
           <BrandLogo variant="dark" size="md" />
         </Link>
@@ -264,7 +251,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   }
 
   return (
-    <div className={`h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] ${isOriginal ? "bg-[var(--background)]" : "bg-[#111827]"}`}>
+    <div className="h-full flex flex-col border-r border-[rgba(255,255,255,0.06)] bg-[#111827]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(255,255,255,0.04)]">
         <Link href="/" className="flex items-center gap-2.5 group">

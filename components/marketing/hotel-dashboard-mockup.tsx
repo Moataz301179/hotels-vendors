@@ -2,28 +2,27 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import {
   Building2, ShoppingCart, Receipt, Truck, Banknote, TrendingUp, TrendingDown,
-  CheckCircle2, Clock, ArrowUpRight, Search, Bell,
+  CheckCircle2, Clock, AlertCircle, ArrowUpRight, Search, Bell,
 } from "lucide-react";
 
 const kpiCards = [
-  { label: "Open POs", value: "18", change: "+4 wk", up: true, color: "var(--accent-base)" },
-  { label: "Pending Invoices", value: "EGP 847K", change: "12 invoices", up: false, color: "#3B82F6" },
-  { label: "Active Deliveries", value: "7", change: "ETA: 2 today", up: true, color: "#D4A843" },
-  { label: "Factored MTD", value: "EGP 1.2M", change: "+32% MoM", up: true, color: "#22C55E" },
+  { label: "Open POs", value: "24", change: "+3", up: true, color: "#84cc16" },
+  { label: "Pending Invoices", value: "8", change: "-2", up: false, color: "#3B82F6" },
+  { label: "Active Deliveries", value: "12", change: "+5", up: true, color: "#D4A843" },
+  { label: "Factored This Month", value: "EGP 180K", change: "+12%", up: true, color: "#22C55E" },
 ];
 
-const chartBars = [42, 58, 48, 72, 61, 78, 65, 88, 75, 92, 82, 98];
+const recentActivity = [
+  { icon: CheckCircle2, text: "PO-2024-0892 approved", time: "2m ago", color: "#22C55E" },
+  { icon: Clock, text: "Invoice #INV-4451 pending ETA", time: "8m ago", color: "#D4A843" },
+  { icon: Truck, text: "Shipment SH-009 in transit", time: "15m ago", color: "#3B82F6" },
+  { icon: AlertCircle, text: "Budget alert: F&B > 85%", time: "32m ago", color: "#EF4444" },
+];
+
+const chartBars = [35, 52, 45, 68, 55, 72, 60, 85, 70, 90, 78, 95];
 const chartLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-const activityFeed = [
-  { icon: CheckCircle2, text: "PO #INVO-0421 approved — Steigenberger El Gouna", time: "12 min ago", color: "#22C55E" },
-  { icon: Receipt, text: "Invoice #HV-00419 validated — ETA UUID confirmed", time: "1 hr ago", color: "var(--accent-base)" },
-  { icon: Truck, text: "Delivery #DLV-033 arrived at Jaz Almaza Resort", time: "2 hr ago", color: "#3B82F6" },
-  { icon: Banknote, text: "Settlement EGP 243K released — 24h factoring", time: "3 hr ago", color: "#D4A843" },
-];
 
 export function HotelDashboardMockup() {
   const ref = useRef(null);
@@ -37,10 +36,10 @@ export function HotelDashboardMockup() {
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
       className="relative"
     >
-      <div className="absolute -inset-4 rounded-3xl blur-[60px] pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(255,107,0,0.06) 0%, transparent 70%)" }} />
-      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
+      <div className="absolute -inset-4 rounded-3xl blur-[60px] pointer-events-none" style={{ background: "radial-gradient(ellipse at center, rgba(132,204,22,0.06) 0%, transparent 70%)" }} />
+      <div className="rounded-2xl overflow-hidden relative" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)" }}>
         {/* Title bar */}
-        <div className="flex items-center justify-between px-4 py-2.5" style={{ backgroundColor: "var(--foreground)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        <div className="flex items-center justify-between px-4 py-2.5" style={{ backgroundColor: "#0f0f0f", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#EF4444" }} />
@@ -51,27 +50,22 @@ export function HotelDashboardMockup() {
           </div>
         </div>
         <div className="p-4">
-          {/* Header — with HV logo */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "var(--background)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                <BrandLogo size="xs" showText={false} />
-              </div>
-              <div>
-                <h3 className="text-[13px] font-semibold text-white">Hotel Dashboard</h3>
-                <p className="text-[9px] text-white/25">Steigenberger Resort El Gouna</p>
-              </div>
+            <div>
+              <h3 className="text-[13px] font-semibold text-white">Hotel Dashboard</h3>
+              <p className="text-[9px] text-white/25">Stella Di Mare Resort · Sharm El-Sheikh</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-20 h-6 rounded-md flex items-center gap-1 px-2" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <Search size={9} style={{ color: "rgba(255,255,255,0.2)" }} />
-                <span className="text-[8px] text-white/15">Search POs...</span>
+                <span className="text-[8px] text-white/15">Search...</span>
               </div>
               <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <Bell size={10} style={{ color: "rgba(255,255,255,0.25)" }} />
               </div>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,107,0,0.15)" }}>
-                <span className="text-[7px]" style={{ color: "var(--accent-base)", fontWeight: 700 }}>AM</span>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(132,204,22,0.15)" }}>
+                <span className="text-[7px]" style={{ color: "#84cc16", fontWeight: 700 }}>AM</span>
               </div>
             </div>
           </div>
@@ -94,12 +88,12 @@ export function HotelDashboardMockup() {
           <div className="grid grid-cols-5 gap-3">
             <div className="col-span-3 rounded-lg p-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[9px] font-medium text-white/40">Procurement Spend (YoY)</span>
+                <span className="text-[9px] font-medium text-white/40">Procurement Spend</span>
                 <div className="flex items-center gap-1"><span className="text-[8px]" style={{ color: "#22C55E" }}>+18.2%</span><ArrowUpRight size={8} style={{ color: "#22C55E" }} /></div>
               </div>
               <div className="flex items-end gap-[3px] h-12">
                 {chartBars.map((h, i) => (
-                  <div key={i} className="flex-1 rounded-t-sm transition-all duration-300 hover:opacity-100" style={{ height: `${h}%`, backgroundColor: i === chartBars.length - 1 ? "var(--accent-base)" : "rgba(255,107,0,0.12)", opacity: i === chartBars.length - 1 ? 1 : 0.6 }} />
+                  <div key={i} className="flex-1 rounded-t-sm" style={{ height: `${h}%`, backgroundColor: i === chartBars.length - 1 ? "#84cc16" : "rgba(132,204,22,0.12)" }} />
                 ))}
               </div>
               <div className="flex justify-between mt-1.5">
@@ -107,14 +101,14 @@ export function HotelDashboardMockup() {
               </div>
             </div>
             <div className="col-span-2 rounded-lg p-3" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-              <span className="text-[9px] font-medium text-white/40 block mb-2">Activity Feed</span>
+              <span className="text-[9px] font-medium text-white/40 block mb-2">Activity</span>
               <div className="space-y-2">
-                {activityFeed.map((item, i) => (
+                {recentActivity.map((item, i) => (
                   <div key={i} className="flex items-start gap-1.5">
                     <item.icon size={8} className="mt-0.5 flex-shrink-0" style={{ color: item.color }} />
                     <div className="min-w-0">
-                      <p className="text-[7px] text-white/60 leading-tight">{item.text}</p>
-                      <p className="text-[6px] text-white/20">{item.time}</p>
+                      <p className="text-[7px] text-white/40 leading-tight truncate">{item.text}</p>
+                      <p className="text-[6px] text-white/15">{item.time}</p>
                     </div>
                   </div>
                 ))}
@@ -122,23 +116,24 @@ export function HotelDashboardMockup() {
             </div>
           </div>
           {/* Pipeline */}
-          <div className="mt-3 rounded-lg p-2.5 flex items-center justify-between" style={{ backgroundColor: "rgba(255,107,0,0.03)", border: "1px solid rgba(255,107,0,0.06)" }}>
+          <div className="mt-3 rounded-lg p-2.5 flex items-center justify-between" style={{ backgroundColor: "rgba(132,204,22,0.03)", border: "1px solid rgba(132,204,22,0.06)" }}>
             <div className="flex items-center gap-3">
               {[{ label: "Forecast", status: "done" }, { label: "PO Sent", status: "done" }, { label: "Invoice", status: "active" }, { label: "Delivery", status: "pending" }, { label: "Settled", status: "pending" }].map((step, i) => (
                 <div key={step.label} className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: step.status === "done" ? "#22C55E" : step.status === "active" ? "var(--accent-base)" : "rgba(255,255,255,0.1)" }} />
-                  <span className="text-[7px]" style={{ color: step.status === "done" ? "rgba(255,255,255,0.4)" : step.status === "active" ? "var(--accent-base)" : "rgba(255,255,255,0.15)" }}>{step.label}</span>
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: step.status === "done" ? "#22C55E" : step.status === "active" ? "#84cc16" : "rgba(255,255,255,0.1)" }} />
+                  <span className="text-[7px]" style={{ color: step.status === "done" ? "rgba(255,255,255,0.4)" : step.status === "active" ? "#84cc16" : "rgba(255,255,255,0.15)" }}>{step.label}</span>
                   {i < 4 && <div className="w-3 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />}
                 </div>
               ))}
             </div>
-            <span className="text-[7px] font-medium" style={{ color: "var(--accent-base)" }}>PO #INVO-0421</span>
+            <span className="text-[7px] font-medium" style={{ color: "#84cc16" }}>PO-2024-0892</span>
           </div>
         </div>
       </div>
-      {/* Honest label — not "Live" */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "var(--foreground)", border: "1px solid rgba(255,107,0,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
-        <span className="text-[8px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>Hotel Procurement OS</span>
+      {/* Floating badge */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8, duration: 0.5 }} className="absolute -bottom-3 -right-2 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: "#0f0f0f", border: "1px solid rgba(132,204,22,0.15)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
+        <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#84cc16" }} />
+        <span className="text-[8px] font-medium" style={{ color: "#84cc16" }}>Live · ETA Connected</span>
       </motion.div>
     </motion.div>
   );

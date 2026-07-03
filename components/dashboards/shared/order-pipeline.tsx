@@ -21,16 +21,6 @@ const PIPELINE_STEPS = [
 
 const TERMINAL_STATES = ["REJECTED", "CANCELLED", "DISPUTED"];
 
-const STATUS_COLORS: Record<string, { fg: string; border: string }> = {
-  DELIVERED: { fg: "text-success", border: "border-success/30" },
-  IN_TRANSIT: { fg: "text-info", border: "border-info/30" },
-  CONFIRMED: { fg: "text-accent-base", border: "border-accent-base/30" },
-  APPROVED: { fg: "text-accent-base", border: "border-accent-base/30" },
-  DISPUTED: { fg: "text-warning", border: "border-warning/30" },
-  REJECTED: { fg: "text-error", border: "border-error/30" },
-  CANCELLED: { fg: "text-foreground-muted", border: "border-foreground-muted/20" },
-};
-
 export function OrderPipeline({ status }: { status: string }) {
   const isTerminal = TERMINAL_STATES.includes(status);
   const currentIndex = PIPELINE_STEPS.findIndex((s) => s.key === status);
@@ -45,39 +35,42 @@ export function OrderPipeline({ status }: { status: string }) {
         {PIPELINE_STEPS.map((step, i) => {
           const isComplete = i < currentIndex;
           const isCurrent = i === currentIndex;
+          const isFuture = i > currentIndex;
           const Icon = step.icon;
 
           return (
             <div key={step.key} className="flex items-center flex-1 last:flex-none">
+              {/* Step dot */}
               <div className="flex flex-col items-center relative">
                 <div
-                  className={`w-8 h-8 rounded-sm flex items-center justify-center border transition-colors shrink-0 ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors shrink-0 ${
                     isComplete
-                      ? "bg-accent-muted border-accent-base/40 text-accent-base"
+                      ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400"
                       : isCurrent
-                      ? "bg-accent-muted border-accent-base text-accent-base"
-                      : "bg-surface border-border-subtle text-foreground-muted"
+                      ? "bg-accent-base/15 border-accent-base/40 text-accent-base animate-pulse"
+                      : "bg-white/[0.03] border-white/[0.08] text-white/20"
                   }`}
                 >
                   <Icon size={14} />
                 </div>
                 <span
-                  className={`mt-1.5 label-upper whitespace-nowrap ${
+                  className={`mt-1.5 text-[10px] font-medium whitespace-nowrap ${
                     isComplete
-                      ? "text-accent-base"
+                      ? "text-emerald-400/70"
                       : isCurrent
-                      ? "text-foreground"
-                      : "text-foreground-muted"
+                      ? "text-accent-base"
+                      : "text-white/20"
                   }`}
                 >
                   {step.label}
                 </span>
               </div>
 
+              {/* Connector line */}
               {i < PIPELINE_STEPS.length - 1 && (
                 <div
-                  className={`h-px flex-1 mx-1 mb-5 transition-colors ${
-                    isComplete ? "bg-accent-base/40" : "bg-border-subtle"
+                  className={`h-[2px] flex-1 mx-1 mb-5 rounded-full transition-colors ${
+                    isComplete ? "bg-emerald-500/30" : "bg-white/[0.06]"
                   }`}
                 />
               )}
@@ -90,28 +83,41 @@ export function OrderPipeline({ status }: { status: string }) {
 }
 
 function TerminalStatus({ status }: { status: string }) {
-  const config: Record<string, { icon: React.ElementType; fg: string; border: string; label: string }> = {
-    REJECTED: { icon: XCircle, fg: "text-error", border: "border-error/20", label: "Rejected" },
-    CANCELLED: { icon: XCircle, fg: "text-foreground-muted", border: "border-foreground-muted/15", label: "Cancelled" },
-    DISPUTED: { icon: AlertCircle, fg: "text-warning", border: "border-warning/20", label: "Disputed" },
+  const config: Record<string, { icon: React.ElementType; color: string; bg: string; label: string }> = {
+    REJECTED: { icon: XCircle, color: "text-red-400", bg: "bg-red-400/10 border-red-400/20", label: "Rejected" },
+    CANCELLED: { icon: XCircle, color: "text-white/30", bg: "bg-white/[0.04] border-white/[0.08]", label: "Cancelled" },
+    DISPUTED: { icon: AlertCircle, color: "text-amber-400", bg: "bg-amber-400/10 border-amber-400/20", label: "Disputed" },
   };
   const c = config[status] || config.CANCELLED;
   const Icon = c.icon;
 
   return (
-    <div className={`status-pill ${c.fg} ${c.border}`}>
-      <Icon size={12} />
-      <span>{c.label}</span>
+    <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border ${c.bg}`}>
+      <Icon size={16} className={c.color} />
+      <span className={`text-[13px] font-medium ${c.color}`}>{c.label}</span>
     </div>
   );
 }
 
 export function OrderStatusPill({ status }: { status: string }) {
   const s = status?.toUpperCase();
-  const colors = STATUS_COLORS[s] || STATUS_COLORS.CANCELLED;
+  const color =
+    s === "DELIVERED"
+      ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20"
+      : s === "IN_TRANSIT"
+      ? "text-blue-400 bg-blue-400/10 border-blue-400/20"
+      : s === "CONFIRMED" || s === "APPROVED"
+      ? "text-[#8B0000] bg-[rgba(139,0,0,0.1)] border-[rgba(139,0,0,0.2)]"
+      : s === "DISPUTED"
+      ? "text-amber-400 bg-amber-400/10 border-amber-400/20"
+      : s === "REJECTED" || s === "CANCELLED"
+      ? "text-red-400 bg-red-400/10 border-red-400/20"
+      : "text-white/40 bg-white/[0.04] border-white/[0.08]";
 
   return (
-    <span className={`status-pill ${colors.fg} ${colors.border}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider border ${color}`}
+    >
       {status?.replace(/_/g, " ") || "DRAFT"}
     </span>
   );

@@ -80,7 +80,7 @@ export function createFactoringWorker(): Worker {
             hotelName: invoice.hotel.name,
             hotelRiskScore: risk.compositeScore,
             hotelRiskTier: risk.riskTier,
-            invoiceAmount: Number(invoice.total),
+            invoiceAmount: invoice.total,
             invoiceCurrency: "EGP",
             invoiceDueDate: invoice.dueDate || new Date(Date.now() + 30 * 86400000),
             etaUuid: invoice.etaUuid || "",
@@ -120,25 +120,20 @@ export function createFactoringWorker(): Worker {
             throw new Error(`Cannot fund request in status ${request.status}`);
           }
 
-          const totalNum = Number(invoice.total);
-          const platformFee = Number(request.platformFee) || totalNum * 0.025;
-          const partnerFee = Number(request.factoringFee) || 0;
-          const netDisbursement = totalNum - platformFee - partnerFee;
+          const platformFee = request.platformFee || invoice.total * 0.025;
+          const partnerFee = request.factoringFee || 0;
+          const netDisbursement = invoice.total - platformFee - partnerFee;
 
-          const partnerId = request.factoringCompanyId;
-          if (!partnerId) {
-            throw new Error("Factoring partner not assigned to this request");
-          }
-          const partner = getPartner(partnerId);
+          const partner = getPartner(request.factoringCompanyId || "");
           if (!partner) {
             throw new Error("Factoring partner not found");
           }
 
-          const funding = await fundThroughPartner(partnerId, {
+          const funding = await fundThroughPartner(request.factoringCompanyId, {
             eligibilityResponseId: request.id,
             invoiceId: invoice.id,
             etaUuid: invoice.etaUuid || "",
-            grossAmount: Number(invoice.total),
+            grossAmount: invoice.total,
             platformFee,
             netDisbursement,
             supplierBankAccount: invoice.supplier.bankAccount || "",
@@ -178,7 +173,7 @@ export function createFactoringWorker(): Worker {
                 invoiceId: invoice.id,
                 factoringCompanyId: request.factoringCompanyId,
                 type: "FACTORING_ADVANCE",
-                amount: Number(funding.disbursedAmount),
+                amount: funding.disbursedAmount,
                 description: `Factoring disbursement — ${funding.transactionReference}`,
               },
               {
@@ -187,7 +182,7 @@ export function createFactoringWorker(): Worker {
                 invoiceId: invoice.id,
                 factoringCompanyId: request.factoringCompanyId,
                 type: "FACTORING_COLLECTION",
-                amount: Number(platformFee),
+                amount: platformFee,
                 description: `Platform fee on factoring — ${invoice.invoiceNumber}`,
               },
               {
@@ -196,7 +191,7 @@ export function createFactoringWorker(): Worker {
                 invoiceId: invoice.id,
                 factoringCompanyId: request.factoringCompanyId,
                 type: "ADJUSTMENT",
-                amount: Number(partnerFee),
+                amount: partnerFee,
                 description: `Factoring partner fee — ${invoice.invoiceNumber}`,
               },
             ],
@@ -204,8 +199,8 @@ export function createFactoringWorker(): Worker {
 
           // Auto-post factoring journal: Dr Bank / Cr Factoring Liability
           const journalLines = [
-            { accountCode: "1100", accountName: "Bank / Cash",            debit: Number(funding.disbursedAmount), credit: 0 },
-            { accountCode: "2300", accountName: "Factoring Liability", debit: 0, credit: Number(funding.disbursedAmount) },
+            { accountCode: "1100", accountName: "Bank / Cash", debit: funding.disbursedAmount, credit: 0 },
+            { accountCode: "2300", accountName: "Factoring Liability", debit: 0, credit: funding.disbursedAmount },
           ];
           await prisma.journalEntry.create({
             data: {
@@ -216,8 +211,8 @@ export function createFactoringWorker(): Worker {
               sourceId: invoice.id,
               description: `Factoring disbursement — ${funding.transactionReference}`,
               lines: JSON.stringify(journalLines),
-              totalDebit: Number(funding.disbursedAmount),
-              totalCredit: Number(funding.disbursedAmount),
+              totalDebit: funding.disbursedAmount,
+              totalCredit: funding.disbursedAmount,
               status: "POSTED",
               hotelId: invoice.hotelId,
             },
@@ -227,7 +222,7 @@ export function createFactoringWorker(): Worker {
           await prisma.creditFacility.updateMany({
             where: { hotelId: invoice.hotelId, status: "ACTIVE" },
             data: {
-              utilized: { increment: Number(invoice.total) },
+              utilized: { increment: invoice.total },
             },
           });
 
@@ -236,7 +231,7 @@ export function createFactoringWorker(): Worker {
             const template = factoringDisbursedTemplate({
               supplierName: invoice.supplier.name,
               invoiceId: invoice.invoiceNumber || invoice.id,
-              amount: Number(funding.disbursedAmount),
+              amount: funding.disbursedAmount,
               currency: "EGP",
               partnerName: request.factoringCompany?.name || "Factoring Partner",
             });
@@ -257,7 +252,7 @@ export function createFactoringWorker(): Worker {
         }
 
         case "COLLECT_FEES": {
-          const platformFee = Number(request.platformFee || 0);
+          const platformFee = request.platformFee || 0;
 
           if (platformFee > 0) {
             await prisma.creditTransaction.create({

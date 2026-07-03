@@ -1,3 +1,10 @@
+const BG_CARD = "#1a1e23";
+const BORDER = "rgba(60,64,67,0.50)";
+const TEXT_PRIMARY = "#E9ECEF";
+const TEXT_SECONDARY = "#9AA0A6";
+const TEXT_MUTED = "#6C757D";
+const ACCENT_LIME = "#84cc16";
+
 export function KPICard({
   title,
   value,
@@ -12,16 +19,26 @@ export function KPICard({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className={`card-outlined p-5 ${accent ? "border-accent-base/30" : ""}`}>
+    <div
+      className="rounded-xl p-5"
+      style={{
+        backgroundColor: BG_CARD,
+        border: `1px solid ${accent ? "rgba(132,204,22,0.20)" : BORDER}`,
+      }}
+    >
       <div className="flex items-center justify-between mb-3">
-        <span className="label-upper">{title}</span>
-        {icon && <span className="text-accent-base">{icon}</span>}
+        <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: TEXT_MUTED }}>
+          {title}
+        </span>
+        {icon && <span style={{ color: ACCENT_LIME }}>{icon}</span>}
       </div>
-      <div className={`metric-value text-2xl tracking-tight ${accent ? "text-accent-base" : "text-foreground"}`}>
+      <div className="text-2xl font-bold tracking-tight" style={{ color: accent ? ACCENT_LIME : TEXT_PRIMARY }}>
         {typeof value === "number" ? value.toLocaleString("en-EG") : value}
       </div>
       {subtitle && (
-        <p className="text-sm text-foreground-secondary mt-1">{subtitle}</p>
+        <p className="text-[12px] mt-1" style={{ color: TEXT_SECONDARY }}>
+          {subtitle}
+        </p>
       )}
     </div>
   );

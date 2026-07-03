@@ -20,8 +20,6 @@ import {
   error,
 } from "@/lib/api-utils";
 import { z } from "zod";
-import { etaClient } from "@/lib/eta/client";
-import type { EtaInvoicePayload } from "@/lib/eta/types";
 
 const CheckoutSchema = z.object({
   items: z.array(
@@ -72,11 +70,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   if (products.length !== data.items.length) {
     return error("Some products were not found", 400);
-  }
-
-  // Verify all products belong to the user's tenant
-  if (products.some((p) => p.tenantId !== auth.tenantId)) {
-    return error("Some products do not belong to your tenant", 403);
   }
 
   const productMap = new Map(products.map((p) => [p.id, p]));
@@ -182,13 +175,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
           },
         });
 
-        orders.push({
-          id: order.id,
-          orderNumber: order.orderNumber,
-          supplier: order.supplier,
-          total: Number(order.total),
-          status: order.status,
-        });
+        orders.push(order);
         orderIndex++;
       }
 
@@ -210,140 +197,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
     const message =
       txErr instanceof Error ? txErr.message : "Checkout transaction failed";
     return error(`Checkout failed: ${message}`, 500);
-  }
-
-  // ── ETA SUBMISSION (fire-and-forget) ──
-  // Create an Invoice record per order, then submit to ETA.
-  // ETA failure NEVER blocks the order — checkout already committed.
-  // Restaurants for E-Marketing operates strictly as a technical data orchestrator.
-  // Zero liability for counterparty collection defaults.
-  for (const o of createdOrders) {
-    void (async () => {
-      try {
-        const fullOrder = await prisma.order.findUnique({
-          where: { id: o.id },
-          include: {
-            items: { include: { product: true } },
-            supplier: true,
-            hotel: true,
-          },
-        });
-        if (!fullOrder) return;
-
-        const invoice = await prisma.invoice.create({
-          data: {
-            invoiceNumber: `INV-${o.orderNumber}`,
-            status: "DRAFT",
-            etaStatus: "PENDING",
-            subtotal: fullOrder.subtotal,
-            vatAmount: fullOrder.vatAmount,
-            vatRate: 14.0,
-            total: fullOrder.total,
-            currency: fullOrder.currency,
-            issueDate: new Date(),
-            orderId: fullOrder.id,
-            hotelId: fullOrder.hotelId,
-            supplierId: fullOrder.supplierId,
-            tenantId: auth.tenantId,
-          },
-        });
-
-        const payload: EtaInvoicePayload = {
-          issuer: {
-            type: "B",
-            id: fullOrder.hotel.taxId ?? "PENDING-TAX-ID",
-            name: fullOrder.hotel.name,
-            address: {
-              country: "EG",
-              governate: fullOrder.hotel.governorate,
-              regionCity: fullOrder.hotel.city,
-              street: fullOrder.hotel.address || "Unknown",
-              buildingNumber: "1",
-            },
-          },
-          receiver: {
-            type: "B",
-            id: fullOrder.supplier.taxId ?? "PENDING-TAX-ID",
-            name: fullOrder.supplier.name,
-            address: {
-              country: "EG",
-              governate: fullOrder.supplier.governorate,
-              regionCity: fullOrder.supplier.city,
-              street: fullOrder.supplier.address || "Unknown",
-              buildingNumber: "1",
-            },
-          },
-          documentType: "I",
-          documentTypeVersion: "1.0",
-          dateIssued: new Date().toISOString(),
-          internalId: invoice.invoiceNumber,
-          purchaseOrderReference: fullOrder.orderNumber,
-          payment: { terms: "Net 30" },
-          delivery: { approach: "By Truck", terms: "DAP" },
-          invoiceLines: fullOrder.items.map((item) => ({
-            description: item.product.name,
-            itemType: "EGS",
-            itemCode: item.product.sku,
-            unitType: item.product.unitOfMeasure,
-            quantity: item.quantity,
-            internalCode: item.product.sku,
-            salesTotal: Number(item.total),
-            total: Number(item.total),
-            valueDifference: 0,
-            totalTaxableFees: 0,
-            netTotal: Number(item.total),
-            itemsDiscount: 0,
-            discount: { amount: 0 },
-            taxableItems: [
-              {
-                taxType: "T1",
-                amount: Number(item.total) * 0.14,
-                subType: "V001",
-                rate: 14,
-              },
-            ],
-          })),
-          totalSalesAmount: Number(fullOrder.subtotal),
-          netAmount: Number(fullOrder.subtotal),
-          taxTotals: [
-            { taxType: "T1", amount: Number(fullOrder.vatAmount) },
-          ],
-          totalAmount: Number(fullOrder.total),
-        };
-
-        const result = await etaClient.submitInvoice(payload);
-
-        await prisma.invoice.update({
-          where: { id: invoice.id },
-          data: {
-            etaUuid: result.uuid,
-            etaStatus: "ACCEPTED",
-            status: "SUBMITTED",
-            submissionLog: JSON.stringify({ submission: result }),
-          },
-        });
-      } catch (etaErr) {
-        const errMsg = etaErr instanceof Error ? etaErr.message : "ETA submission failed";
-        // Best-effort update — invoice may not exist if creation failed
-        try {
-          const failed = await prisma.invoice.findFirst({
-            where: { orderId: o.id },
-          });
-          if (failed) {
-            await prisma.invoice.update({
-              where: { id: failed.id },
-              data: {
-                etaStatus: "RETRYING",
-                submissionLog: JSON.stringify({ error: errMsg, at: new Date().toISOString() }),
-              },
-            });
-          }
-        } catch {
-          // Swallow — never let ETA failure reach the caller
-        }
-        console.error(`[checkout] ETA submission failed for order ${o.id}: ${errMsg}`);
-      }
-    })();
   }
 
   return success({

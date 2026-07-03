@@ -8,10 +8,8 @@
 - Docker overhead (400-600 MB RAM) wastes 10-15% of VPS memory budget
 - Bare-metal PostgreSQL gives direct `shared_buffers`, WAL, NVMe tuning
 - ETA AES-256-GCM credentials need kernel-level isolation, not container isolation
-- GitHub Actions $\rightarrow$ SSH $\rightarrow$ native deploy has 4 fewer failure points than Docker Compose orchestration
+- GitHub Actions → SSH → native deploy has 4 fewer failure points than Docker Compose orchestration
 - PM2 cluster mode gives zero-downtime reload, auto-restart, log aggregation
-- **Deployment Path**: The project is deployed via GitHub Actions using a Native PM2 workflow (see `.github/workflows/deploy-hostinger.yml`). Docker is strictly avoided in production to maximize performance and minimize resource overhead.
-
 
 ---
 

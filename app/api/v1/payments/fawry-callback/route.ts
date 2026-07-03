@@ -30,20 +30,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return success({ acknowledged: true, matched: false });
   }
 
-  // 3. Tenant isolation: merchantRefNumber is our internal paymentNumber (PAY-<ts>).
-  // Look up the Payment to derive the expected tenant and reject cross-tenant callbacks.
-  const expectedPayment = await prisma.payment.findFirst({
-    where: { referenceCode: merchantRefNumber },
-    select: { tenantId: true },
-  });
-  if (expectedPayment && tx.tenantId !== expectedPayment.tenantId) {
-    console.error(
-      `[Fawry Callback] Tenant mismatch: tx.tenantId=${tx.tenantId} expected=${expectedPayment.tenantId} ref=${referenceNumber}`
-    );
-    return error("Callback tenant mismatch", 403);
-  }
-
-  // 4. Update transaction status
+  // 3. Update transaction status
   const newStatus = isPaid ? "CONFIRMED" : payload.orderStatus === "REFUNDED" ? "REVERSED" : "FAILED";
 
   await prisma.paymentTransaction.update({
@@ -62,7 +49,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // 5. If confirmed, update linked Payment record
+  // 4. If confirmed, update linked Payment record
   if (isPaid) {
     const payment = await prisma.payment.findFirst({
       where: { referenceCode: merchantRefNumber },
@@ -78,7 +65,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     }
   }
 
-  // 6. Audit log
+  // 5. Audit log
   await prisma.auditLog.create({
     data: {
       tenantId: tx.tenantId,

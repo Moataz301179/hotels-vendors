@@ -1,28 +1,221 @@
-name: Deploy to Vercel
+# ═══════════════════════════════════════════════════════════════════
+# HotelsVendors — Production Deployment Pipeline
+# ═══════════════════════════════════════════════════════════════════
+#
+# Triggered on: push to `main` branch
+# Target: Hostinger VPS (hotelsvendors.com)
+#
+# Pipeline:
+#   1. Checkout + install
+#   2. Generate Prisma client
+#   3. Type-check (fail fast on TS errors)
+#   4. Build standalone Next.js output
+#   5. SSH → pull → migrate → reload PM2
+#
+# Required GitHub Secrets:
+#   HOSTINGER_HOST       — VPS IP or hostname
+#   HOSTINGER_USER       — SSH username (e.g., `root` or `hotels`)
+#   HOSTINGER_SSH_KEY    — Private SSH key (ed25519 or RSA)
+#   HOSTINGER_PORT       — SSH port (default: 22)
+#
+# Required Hostinger Environment:
+#   /var/www/hotels-vendors/current  — symlink to latest release
+#   /var/www/hotels-vendors/releases/ — timestamped release folders
+#   /var/www/hotels-vendors/shared/   — persistent .env, node_modules, logs
+# ═══════════════════════════════════════════════════════════════════
+
+name: "Production Deploy — HotelsVendors"
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Deployment reason (manual trigger)"
+        required: false
+        default: "manual"
+
+concurrency:
+  group: "production-deploy"
+  cancel-in-progress: false
 
 env:
-  VERCEL_ORG_ID: team_BPnTu1FgLycQZWzwLboum1Kz
-  VERCEL_PROJECT_ID: prj_HOlS5yFTfBlqxVxE9WcQv4enu44A
+  NODE_VERSION: "22"
+  DEPLOY_PATH: "/var/www/hotels-vendors"
+  APP_NAME: "hotels-vendors"
 
 jobs:
-  deploy:
+  # ── Job 1: Validate ──────────────────────────────────────────────
+  validate:
+    name: "Validate Build"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v4
+      - name: "Checkout"
+        uses: actions/checkout@v4
 
-      - name: Create Vercel project config
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: "Install dependencies"
+        run: npm ci --legacy-peer-deps --ignore-scripts
+
+      - name: "Generate Prisma client"
+        run: npx prisma generate
+
+      - name: "TypeScript type-check"
+        run: npx tsc --noEmit
+
+      - name: "Prisma schema validation"
+        run: npx prisma validate
+
+  # ── Job 2: Deploy ────────────────────────────────────────────────
+  deploy:
+    name: "Deploy to Hostinger"
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: "Install dependencies"
+        run: npm ci --legacy-peer-deps --ignore-scripts
+
+      - name: "Generate Prisma client"
+        run: npx prisma generate
+
+      - name: "Build standalone output"
+        run: npm run build
+
+      - name: "Prepare deployment archive"
         run: |
-          mkdir -p .vercel
-          cat > .vercel/project.json << 'EOF'
-          {"projectId":"prj_HOlS5yFTfBlqxVxE9WcQv4enu44A","orgId":"team_BPnTu1FgLycQZWzwLboum1Kz"}
-          EOF
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "RELEASE_TAG=$TIMESTAMP" >> $GITHUB_ENV
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel
+          # Create archive of standalone output + prisma + ecosystem
+          tar -czf /tmp/deploy-release.tar.gz \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='app/(marketing)/page.tsx.bak' \
+            --exclude='app/(marketing)/page.tsx.old' \
+            standalone/ \
+            prisma/ \
+            ecosystem.config.js \
+            package.json \
+            package-lock.json \
+            next.config.ts \
+            .env.production
 
-      - name: Deploy to Vercel
-        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+      - name: "Setup SSH key"
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          known_hosts: ${{ secrets.HOSTINGER_KNOWN_HOSTS || '' }}
+          config: |
+            Host hostinger
+              HostName ${{ secrets.HOSTINGER_HOST }}
+              User ${{ secrets.HOSTINGER_USER }}
+              Port ${{ secrets.HOSTINGER_PORT || 22 }}
+              IdentityFile ~/.ssh/deploy_key
+              StrictHostKeyChecking accept-new
+
+      - name: "Deploy to Hostinger"
+        run: |
+          set -euo pipefail
+
+          RELEASE="${{ env.RELEASE_TAG }}"
+          RELEASE_DIR="${{ env.DEPLOY_PATH }}/releases/${RELEASE}"
+          SHARED_DIR="${{ env.DEPLOY_PATH }}/shared"
+          CURRENT_LINK="${{ env.DEPLOY_PATH }}/current"
+
+          echo "═══ Creating release directory ═══"
+          ssh hostinger "mkdir -p ${RELEASE_DIR} ${SHARED_DIR}/logs ${SHARED_DIR}/node_modules"
+
+          echo "═══ Uploading release archive ═══"
+          scp /tmp/deploy-release.tar.gz hostinger:${RELEASE_DIR}/release.tar.gz
+
+          echo "═══ Extracting and configuring ═══"
+          ssh hostinger << 'REMOTE_SCRIPT'
+            set -euo pipefail
+
+            RELEASE_DIR="${{ env.DEPLOY_PATH }}/releases/${{ env.RELEASE_TAG }}"
+            SHARED_DIR="${{ env.DEPLOY_PATH }}/shared"
+
+            # Extract
+            cd ${RELEASE_DIR}
+            tar -xzf release.tar.gz
+            rm release.tar.gz
+
+            # Symlink shared resources
+            ln -sfn ${SHARED_DIR}/.env ${RELEASE_DIR}/.env
+            ln -sfn ${SHARED_DIR}/node_modules ${RELEASE_DIR}/node_modules
+            ln -sfn ${SHARED_DIR}/logs ${RELEASE_DIR}/logs
+
+            # Install production deps (if shared node_modules is empty)
+            if [ ! -d "${SHARED_DIR}/node_modules" ] || [ -z "$(ls -A ${SHARED_DIR}/node_modules)" ]; then
+              echo "═══ Installing production dependencies ═══"
+              cd ${RELEASE_DIR}
+              npm ci --legacy-peer-deps --production --ignore-scripts
+              cp -r node_modules ${SHARED_DIR}/node_modules
+            fi
+
+            # Generate Prisma client
+            echo "═══ Generating Prisma client ═══"
+            cd ${RELEASE_DIR}
+            npx prisma generate
+
+            # Run database migrations
+            echo "═══ Running database migrations ═══"
+            npx prisma migrate deploy
+
+            # Atomic symlink swap
+            echo "═══ Activating release ═══"
+            ln -sfn ${RELEASE_DIR} ${{ env.DEPLOY_PATH }}/current
+
+            # Reload PM2
+            echo "═══ Reloading PM2 ═══"
+            cd ${{ env.DEPLOY_PATH }}/current
+            pm2 reload ecosystem.config.js --env production
+
+            # Prune old releases (keep last 5)
+            echo "═══ Pruning old releases ═══"
+            cd ${{ env.DEPLOY_PATH }}/releases
+            ls -t | tail -n +6 | xargs -r rm -rf
+
+            echo "═══ Deployment complete ═══"
+          REMOTE_SCRIPT
+
+      - name: "Health check"
+        run: |
+          echo "Waiting for app to stabilize..."
+          sleep 15
+
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://www.hotelsvendors.com/ || echo "000")
+
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Health check passed (HTTP $HTTP_STATUS)"
+          else
+            echo "⚠️ Health check returned HTTP $HTTP_STATUS — check PM2 logs"
+            ssh hostinger "pm2 logs hotels-vendors --nostream --lines 30" || true
+            exit 1
+          fi
+
+      - name: "Notify on failure"
+        if: failure()
+        run: |
+          echo "::error::Deployment failed for release ${{ env.RELEASE_TAG }}"
+          # Add Slack/Discord webhook notification here if desired

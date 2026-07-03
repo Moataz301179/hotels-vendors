@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
-import { MarketingPage } from "@/components/layout/marketing-page";
+import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
@@ -16,8 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-const accent = "var(--accent-base)";
-
 const solutions = [
   {
     icon: Building2,
@@ -26,6 +21,7 @@ const solutions = [
     features: ["AI demand forecasting", "Budget blockades", "Multi-property control", "Net-60 factoring", "48-hour delivery"],
     href: "/register?sector=procurement",
     cta: "Register Hotel",
+    color: "#84cc16",
   },
   {
     icon: Store,
@@ -34,14 +30,16 @@ const solutions = [
     features: ["Catalog management", "PO notifications", "ETA invoicing", "24hr payment", "Analytics dashboard"],
     href: "/register?sector=procurement",
     cta: "Become a Supplier",
+    color: "#22C55E",
   },
   {
     icon: Landmark,
     title: "For Factoring Companies",
-    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector.",
+    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector is a $12B market.",
     features: ["Pre-verified invoices", "Competitive bidding", "Non-recourse", "Bank-direct settlement", "Risk scoring"],
     href: "/register?sector=cashflow",
     cta: "Register Grantor",
+    color: "#D4A843",
   },
   {
     icon: Truck,
@@ -50,29 +48,29 @@ const solutions = [
     features: ["Load consolidation", "Route optimization", "Guaranteed volume", "On-time payment", "GPS tracking"],
     href: "/register?sector=procurement",
     cta: "Register Carrier",
+    color: "#3B82F6",
   },
 ];
 
 export default function SolutionsPage() {
   return (
-    <MarketingPage>
-      <MarketingNav />
+    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: `radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)` }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Solutions</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>
-            One Platform.<br />Four Stakeholder Workflows.<br />Infinite Scale.
+          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
+            One Platform.<br /><span className="text-gradient-lime">Four Stakeholder Workflows.<br />Infinite Scale.</span>
           </h1>
-          <p className="text-[15px] text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
-            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier, HotelsVendors has a tailored workflow for you. Every role. One operating system.
+          <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
+            Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier — HotelsVendors has a tailored workflow for you. Every role. One operating system.
           </p>
         </div>
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "var(--border-subtle)", backgroundColor: "var(--background)" }}>
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -82,10 +80,10 @@ export default function SolutionsPage() {
               { icon: MapPin, label: "6 Governorates", desc: "Full coverage" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: accent }} />
+                <b.icon size={16} style={{ color: "#84cc16" }} />
                 <div>
-                  <p className="text-[11px] font-medium text-foreground-secondary">{b.label}</p>
-                  <p className="text-[9px] text-foreground-muted">{b.desc}</p>
+                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
+                  <p className="text-[9px] text-white/25">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -97,27 +95,27 @@ export default function SolutionsPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-6">
           {solutions.map((s) => (
-            <div key={s.title} className="surface-card rounded-2xl p-8 transition-all">
+            <div key={s.title} className="rounded-2xl p-8 transition-all hover:border-[#84cc16]/10" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--accent-muted)" }}>
-                      <s.icon size={20} style={{ color: accent }} />
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: s.color + "15" }}>
+                      <s.icon size={20} style={{ color: s.color }} />
                     </div>
-                    <h2 className="text-[20px] font-medium text-foreground">{s.title}</h2>
+                    <h2 className="text-[20px] font-medium text-white">{s.title}</h2>
                   </div>
-                  <p className="text-[14px] text-foreground-secondary leading-relaxed mb-5 max-w-xl">{s.desc}</p>
+                  <p className="text-[14px] text-white/40 leading-relaxed mb-5 max-w-xl">{s.desc}</p>
                   <div className="flex flex-wrap gap-2">
                     {s.features.map((f) => (
-                      <span key={f} className="px-3 py-1.5 rounded-lg text-[11px] font-medium" style={{ backgroundColor: "var(--accent-muted)", color: accent }}>
+                      <span key={f} className="px-3 py-1.5 rounded-lg text-[11px] font-medium" style={{ backgroundColor: s.color + "10", color: s.color }}>
                         {f}
                       </span>
                     ))}
                   </div>
                 </div>
                 <div className="flex items-center justify-center lg:justify-end">
-                  <Link href={s.href} className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>
-                    {s.cta} <ArrowRight size={14} className="cta-arrow" />
+                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+                    {s.cta} <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>
@@ -127,23 +125,23 @@ export default function SolutionsPage() {
       </section>
 
       {/* Ecosystem Overview */}
-      <section className="py-16" style={{ backgroundColor: "var(--bg-surface-1)" }}>
+      <section className="py-16" style={{ backgroundColor: "#050505" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: accent }} />
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>The Full Picture</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-xl mx-auto">
-            All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver, with AI orchestrating every step.
+          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <h2 className="text-[24px] font-medium mb-4 text-white">The Full Picture</h2>
+          <p className="text-[13px] text-white/40 mb-8 max-w-xl mx-auto">
+            All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver — with AI orchestrating every step.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
-              { icon: Building2, label: "Hotels", color: "var(--accent-base)" },
-              { icon: Store, label: "Suppliers", color: "var(--success)" },
-              { icon: Landmark, label: "Funders", color: "var(--warning)" },
-              { icon: Truck, label: "Carriers", color: "var(--info)" },
+              { icon: Building2, label: "Hotels", color: "#84cc16" },
+              { icon: Store, label: "Suppliers", color: "#22C55E" },
+              { icon: Landmark, label: "Funders", color: "#D4A843" },
+              { icon: Truck, label: "Carriers", color: "#3B82F6" },
             ].map((item) => (
-              <div key={item.label} className="surface-card rounded-xl p-4 transition-all">
+              <div key={item.label} className="rounded-xl p-4 transition-all hover:border-[#84cc16]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <item.icon size={20} className="mx-auto mb-2" style={{ color: item.color }} />
-                <p className="text-[12px] font-medium text-foreground-secondary">{item.label}</p>
+                <p className="text-[12px] font-medium text-white/60">{item.label}</p>
               </div>
             ))}
           </div>
@@ -153,17 +151,19 @@ export default function SolutionsPage() {
       {/* Compliance */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: accent }} />
-          <h2 className="text-[24px] font-semibold mb-4 text-foreground" style={{ fontFamily: "var(--font-sans)" }}>ETA Compliant. FRA Secure.</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
+          <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: "#84cc16" }} />
+          <h2 className="text-[24px] font-medium mb-4 text-white">ETA Compliant. FRA Secure.</h2>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="cta-glow inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all" style={{ backgroundColor: accent, color: "var(--accent-text)" }}>
-              Get Started <ArrowRight size={14} className="cta-arrow" />
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+              Get Started <ArrowRight size={14} />
+            </Link>
+            <Link href="/compliance" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              View Compliance
             </Link>
           </div>
         </div>
       </section>
-      <MarketingFooter />
-    </MarketingPage>
+    </main>
   );
 }

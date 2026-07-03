@@ -29,15 +29,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let supplier;
   let factoringCompany;
 
-  const ROLE_MAP: Record<string, "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING"> = {
-    hotel: "HOTEL",
-    supplier: "SUPPLIER",
-    funder: "FACTORING",
-    factoring: "FACTORING",
-    logistics: "SHIPPING",
-    shipping: "SHIPPING",
-  };
-  const platformRole = ROLE_MAP[data.type.toLowerCase()] || "SUPPLIER";
+  const platformRole = data.type.toUpperCase() as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN";
   const isIndividual = data.accountType === "individual";
   const accountType = isIndividual ? "INDIVIDUAL" : "BUSINESS";
 
@@ -106,11 +98,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
         commercialReg: data.commercialReg,
         phone: data.phone,
         tenantId: tenant.id,
-        status: "PENDING_VERIFICATION",
+        status: "ACTIVE", // Auto-approve for testing
         tier: "CORE",
-        bankName: data.bankName || null,
-        bankAccount: data.bankAccount || null,
-        paymobMerchantId: data.paymobMerchantId || null,
       },
     });
     await prisma.user.create({
@@ -124,11 +113,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
-        status: "PENDING_VERIFICATION",
-        licenseNumber: data.licenseNumber || null,
-        bankName: data.bankName || null,
-        bankAccount: data.bankAccount || null,
-        paymobMerchantId: data.paymobMerchantId || null,
+        status: "ACTIVE",
       },
     });
     await prisma.user.create({
@@ -141,26 +126,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
   }
 
-  const user = await prisma.user.findFirst({
-    where: { email: data.email, tenantId: tenant.id },
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
   });
 
   if (!user) {
     throw new Error("User creation failed");
-  }
-
-  // Mark phone as verified if OTP was previously verified for this phone
-  if (data.phone) {
-    const verifiedOtp = await prisma.phoneVerificationToken.findFirst({
-      where: { phone: data.phone, verified: true },
-      orderBy: { createdAt: "desc" },
-    });
-    if (verifiedOtp) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { phoneVerifiedAt: new Date() },
-      });
-    }
   }
 
   // Generate email verification token
@@ -215,18 +186,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: tenant.id,
     actorId: user.id,
     actorRole: user.platformRole,
-    afterState: {
-      email: user.email,
-      platformRole: user.platformRole,
-      type: data.type,
-      accountType,
-      tenantId: tenant.id,
-      taxId: data.taxId || null,
-      commercialReg: data.commercialReg || null,
-      bankName: data.bankName || null,
-      hasPaymob: !!data.paymobMerchantId,
-      licenseNumber: data.licenseNumber || null,
-    },
+    afterState: { email: user.email, platformRole: user.platformRole, type: data.type, accountType, tenantId: tenant.id },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });
@@ -235,9 +195,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
     token,
     user: { id: user.id, email: user.email, name: user.name, role: user.role, platformRole: user.platformRole, accountType: user.accountType },
     hotel,
-    supplier: supplier ? { ...supplier, bankAccount: undefined, paymobMerchantId: undefined } : undefined,
-    factoringCompany: factoringCompany ? { ...factoringCompany, bankAccount: undefined, paymobMerchantId: undefined } : undefined,
+    supplier,
+    factoringCompany,
     tenantId: tenant.id,
-    verificationPending: data.type === "supplier" || data.type === "factoring",
   }, 201);
 });

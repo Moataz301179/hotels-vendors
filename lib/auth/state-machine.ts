@@ -15,8 +15,7 @@ import { OrderStatus } from "@prisma/client";
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   DRAFT: ["PENDING_APPROVAL", "CANCELLED"],
   PENDING_APPROVAL: ["APPROVED", "REJECTED", "CANCELLED"],
-  APPROVED: ["PENDING_CONFIRMATION", "CONFIRMED", "CANCELLED"],
-  PENDING_CONFIRMATION: ["CONFIRMED", "APPROVED", "CANCELLED"],
+  APPROVED: ["CONFIRMED", "CANCELLED"],
   REJECTED: ["DRAFT"], // Can be resubmitted
   CONFIRMED: ["IN_TRANSIT", "CANCELLED"],
   IN_TRANSIT: ["PARTIALLY_DELIVERED", "DELIVERED", "DISPUTED"],
@@ -72,8 +71,7 @@ export interface TransitionGate {
 }
 
 const TRANSITION_GATES: TransitionGate[] = [
-  { from: "PENDING_CONFIRMATION", to: "CONFIRMED", requires: { paymentGuarantee: true } },
-  { from: "APPROVED", to: "PENDING_CONFIRMATION", requires: {} },
+  { from: "APPROVED", to: "CONFIRMED", requires: { paymentGuarantee: true } },
   { from: "CONFIRMED", to: "IN_TRANSIT", requires: { paymentGuarantee: true, etaValidation: true } },
   { from: "IN_TRANSIT", to: "DELIVERED", requires: { authorityApproval: true } },
 ];

@@ -2,18 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
-  // ── Dark Luxury Palette (obsidian surface, gold filament accent) ──
-const BG_PAGE = "#FFFDF5";
-const BG_SURFACE = "#FFFFFF";
-const BG_SIDEBAR = "#FFFBEB";
-const BORDER = "#FDE68A";
-const TEXT_PRIMARY = "#1C1917";
-const TEXT_SECONDARY = "#57534E";
-const TEXT_MUTED = "#A8A29E";
-const ACCENT = "#F59E0B";
-const ACCENT_LIGHT = "rgba(245, 158, 11, 0.10)";
+// ── Stripe Palette ──
+const BG_PAGE = "#f7f8fa";
+const BG_SURFACE = "#ffffff";
+const BG_SIDEBAR = "#fafbfc";
+const BORDER = "#e3e8ee";
+const TEXT_PRIMARY = "#1a1f36";
+const TEXT_SECONDARY = "#525f7f";
+const TEXT_MUTED = "#8898aa";
+const ACCENT = "#635bff";
+const ACCENT_LIGHT = "#ededff";
 
 const NAV_ITEMS = [
   { href: "/invo/dashboard", label: "Dashboard" },
@@ -40,7 +39,12 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="px-5 py-5 border-b" style={{ borderColor: BORDER }}>
           <Link href="/invo/dashboard" className="flex items-center gap-2.5">
-            <BrandLogo variant="light" size="xs" showText={false} forceColor="bw" />
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold"
+              style={{ backgroundColor: ACCENT, color: "#ffffff" }}
+            >
+              HV
+            </div>
             <div>
               <span className="text-sm font-semibold tracking-tight" style={{ color: TEXT_PRIMARY }}>
                 HotelsVendors
@@ -89,7 +93,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
               Marketplace Engine
             </div>
             <div className="text-[10px] mt-0.5" style={{ color: TEXT_MUTED }}>
-              PostgreSQL · Prisma
+              Supabase · Live
             </div>
           </div>
         </div>
@@ -116,7 +120,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
 
           <div className="flex items-center gap-4">
             <span className="text-[12px]" style={{ color: TEXT_MUTED }}>
-              PostgreSQL · INVO
+              Supabase · INVO
             </span>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold"

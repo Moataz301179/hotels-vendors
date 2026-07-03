@@ -93,7 +93,7 @@ export function transformToMarketplaceProduct(
     description: string | null;
     category: ProductCategory;
     subcategory: string | null;
-    unitPrice: number | { toNumber: () => number };
+    unitPrice: number;
     currency: string;
     stockQuantity: number;
     minOrderQty: number;
@@ -117,10 +117,6 @@ export function transformToMarketplaceProduct(
     ? (JSON.parse(product.images) as string[])
     : null;
 
-  const unitPrice = typeof product.unitPrice === "number"
-    ? product.unitPrice
-    : Number(product.unitPrice);
-
   return {
     id: product.id,
     sku: product.sku,
@@ -129,7 +125,7 @@ export function transformToMarketplaceProduct(
     category: toMarketplaceCategory(product.category),
     prismaCategory: product.category,
     subcategory: product.subcategory,
-    unitPrice,
+    unitPrice: product.unitPrice,
     currency: product.currency,
     stockQuantity: product.stockQuantity,
     minOrderQty: product.minOrderQty,

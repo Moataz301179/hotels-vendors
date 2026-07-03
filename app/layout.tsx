@@ -1,13 +1,35 @@
 import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
 import { LanguageProvider } from "@/lib/i18n/language-context";
 
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "HotelsVendors | Digital Procurement Hub for B2B Hospitality",
-    template: "%s | HotelsVendors",
+    default: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
+    template: "%s | Hotels Vendors",
   },
   description:
     "Egypt's leading B2B procurement platform for hotels. Connect with verified suppliers, streamline logistics, and unlock factoring liquidity — all with integrated ETA e-invoicing compliance.",
@@ -31,9 +53,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_EG",
-    url: "https://hotelsvendors.com",
+    url: "https://hotels-vendors.com",
     siteName: "Hotels Vendors",
-    title: "HotelsVendors | Digital Procurement Hub for B2B Hospitality",
+    title: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
     description:
       "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
     images: [
@@ -41,23 +63,23 @@ export const metadata: Metadata = {
         url: "/hotelsvendors-logo.png",
         width: 1200,
         height: 630,
-        alt: "HotelsVendors — Smarter Together",
+        alt: "Hotels Vendors — Smarter Together",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HotelsVendors | Digital Procurement Hub",
+    title: "Hotels Vendors | Digital Procurement Hub",
     description:
       "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
     images: ["/hotelsvendors-logo.png"],
     creator: "@hotelsvendors",
   },
   alternates: {
-    canonical: "https://hotelsvendors.com",
+    canonical: "https://hotels-vendors.com",
     languages: {
-      "en-EG": "https://hotelsvendors.com",
-      "ar-EG": "https://hotelsvendors.com/ar",
+      "en-EG": "https://hotels-vendors.com",
+      "ar-EG": "https://hotels-vendors.com/ar",
     },
   },
   icons: {
@@ -65,38 +87,44 @@ export const metadata: Metadata = {
       { url: "/logo-icon.png", sizes: "32x32", type: "image/png" },
       { url: "/logo-icon-white.png", sizes: "192x192", type: "image/png" },
     ],
-    apple: [{ url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: "/logo-icon-white.png", sizes: "180x180", type: "image/png" },
+    ],
     shortcut: "/logo-icon.png",
   },
+  manifest: "/manifest.json",
+  verification: {
+    google: "google-site-verification-code",
+  },
   other: {
-    "msapplication-TileColor": "#0f100e",
+    "msapplication-TileColor": "#F97316",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0f100e",
+    "theme-color": "#0C0814",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f100e",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "dark",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" dir="ltr" className="h-full">
+    <html
+      lang="en"
+      dir="ltr"
+      className={`h-full ${plusJakarta.variable} ${jetbrainsMono.variable} ${inter.variable}`}
+    >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600&family=Alan+Sans:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="dns-prefetch" href="https://hotelsvendors.com" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="dns-prefetch" href="https://hotels-vendors.com" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
         <meta name="ICBM" content="30.0444, 31.2357" />
@@ -104,20 +132,34 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#0f100e" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              document.documentElement.setAttribute('data-theme', 'dark');
-              if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
-                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                  window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                      console.warn('SW registration failed:', err);
+              (function() {
+                try {
+                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
+                  if (mode === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    var meta = document.getElementById('theme-color-meta');
+                    if (meta) meta.setAttribute('content', '#f8f9fa');
+                  } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    var meta = document.getElementById('theme-color-meta');
+                    if (meta) meta.setAttribute('content', '#121212');
+                  }
+                } catch (e) {}
+                if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                    window.addEventListener('load', function() {
+                      navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                        console.warn('SW registration failed:', err);
+                      });
                     });
-                  });
+                  }
                 }
-              }
+              })();
             `,
           }}
         />
@@ -128,9 +170,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Hotels Vendors",
-              url: "https://hotelsvendors.com",
-              logo: "https://hotelsvendors.com/hotelsvendors-logo.png",
-              description: "Egypt's leading B2B procurement platform for the hospitality sector.",
+              url: "https://hotels-vendors.com",
+              logo: "https://hotels-vendors.com/hotelsvendors-logo.png",
+              description:
+                "Egypt's leading B2B procurement platform for the hospitality sector.",
               sameAs: [
                 "https://facebook.com/hotelsvendors",
                 "https://instagram.com/hotelsvendors",
@@ -150,19 +193,16 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans min-h-full flex flex-col antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-black focus:text-white"
-          style={{ position: "absolute", left: -9999, top: "auto", width: 1, height: 1, overflow: "hidden" }}
-        >
-          Skip to main content
-        </a>
+      <body
+        className="min-h-full flex flex-col antialiased"
+        style={{
+          fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          background: "var(--bg-canvas)",
+        }}
+      >
         <LanguageProvider>
           <NotificationProvider>
-            <ThemeProvider>
-              <main id="main-content">{children}</main>
-            </ThemeProvider>
+            <ThemeProvider>{children}</ThemeProvider>
           </NotificationProvider>
         </LanguageProvider>
       </body>

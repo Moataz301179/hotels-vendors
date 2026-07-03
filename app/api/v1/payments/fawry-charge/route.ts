@@ -1,27 +1,35 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createFawryCharge } from "@/lib/payments/fawry";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, success, error, requirePermission, audit } from "@/lib/api-utils";
 import { z } from "zod";
 
 const FawryChargeSchema = z.object({
-  orderId: z.string().min(1),
+  orderId: z.string(),
   customerEmail: z.string().email(),
-  customerMobile: z.string().min(10),
-  customerName: z.string().min(1),
+  customerMobile: z.string(),
+  customerName: z.string(),
   amount: z.number().positive(),
-  description: z.string().max(200).default("Order deposit payment"),
+  description: z.string().optional(),
 });
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "order:read");
   const body = await request.json();
-  const data = FawryChargeSchema.parse(body);
+  const data = validateBody(FawryChargeSchema, body);
 
-  const merchantRefNum = `HV-FAWRY-${Date.now()}-${auth.userId.slice(-6)}`;
+  const order = await prisma.order.findUnique({
+    where: { id: data.orderId },
+    select: { tenantId: true, paymentGuaranteed: true, paymentGuaranteeMethod: true },
+  });
 
-  const chargeResponse = await createFawryCharge({
-    merchantRefNum,
+  if (!order || order.tenantId !== auth.tenantId) return error("Not found", 404);
+  if (order.paymentGuaranteed) return error("Deposit already paid", 400);
+  if (order.paymentGuaranteeMethod?.startsWith("FAWRY")) return error("Deposit already pending", 409);
+
+  const charge = await createFawryCharge({
+    merchantRefNum: data.orderId,
     customerProfileId: auth.userId,
     customerName: data.customerName,
     customerEmail: data.customerEmail,
@@ -29,65 +37,62 @@ export const POST = apiRoute(async (request: NextRequest) => {
     paymentMethod: "PayAtFawry",
     amount: data.amount,
     currencyCode: "EGP",
-    description: data.description,
+    description: data.description || "Deposit payment for order",
     chargeItems: [
       {
         itemId: data.orderId,
-        description: data.description,
+        description: "Order deposit",
         price: data.amount,
         quantity: 1,
       },
     ],
-    paymentExpiry: 24 * 60,
   });
 
   await prisma.paymentTransaction.create({
     data: {
-      tenantId: auth.tenantId,
-      amount: data.amount,
+      id: `FAWRY-${charge.referenceNumber}`,
+      gatewayRef: charge.referenceNumber,
+      transactionType: "FAWRY_CHARGE",
+      amount: charge.paymentAmount,
       currency: "EGP",
-      gatewayRef: chargeResponse.referenceNumber,
       status: "PENDING",
-      transactionType: "MARKETPLACE_COMMISSION",
-      observedMethod: "FAWRY",
+      observedMethod: "FAWRY_B2B",
       metadata: JSON.stringify({
-        merchantRefNum,
-        referenceNumber: chargeResponse.referenceNumber,
-        expirationTime: chargeResponse.expirationTime,
-        fawryFees: chargeResponse.fawryFees,
-        orderId: data.orderId,
+        merchantRefNum: data.orderId,
+        expirationTime: charge.expirationTime,
+        fawryFees: charge.fawryFees,
+        statusCode: charge.statusCode,
+        statusDescription: charge.statusDescription,
       }),
+      tenantId: auth.tenantId,
+      updatedAt: new Date(),
     },
   });
 
   await prisma.order.update({
-    where: { id: data.orderId, tenantId: auth.tenantId },
+    where: { id: data.orderId },
     data: {
-      paymentGuaranteeMethod: `DEPOSIT_FAWRY:${chargeResponse.referenceNumber}`,
-      paymentGuaranteed: false,
+      paymentGuaranteeMethod: `FAWRY:${charge.referenceNumber}`,
+      paymentGuaranteeSetAt: new Date(),
     },
   });
 
   await audit({
-    entityType: "PAYMENT",
+    entityType: "Order",
     entityId: data.orderId,
     action: "FAWRY_CHARGE_CREATED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
-    actorRole: auth.platformRole,
     afterState: {
-      amount: data.amount,
-      currency: "EGP",
-      referenceNumber: chargeResponse.referenceNumber,
-      orderId: data.orderId,
+      referenceNumber: charge.referenceNumber,
+      amount: charge.paymentAmount,
+      expirationTime: charge.expirationTime,
     },
-    ipAddress: request.headers.get("x-forwarded-for") || null,
-    userAgent: request.headers.get("user-agent"),
   });
 
   return success({
-    referenceNumber: chargeResponse.referenceNumber,
-    paymentAmount: chargeResponse.paymentAmount,
-    expirationTime: chargeResponse.expirationTime,
-  }, 201);
+    referenceNumber: charge.referenceNumber,
+    paymentAmount: charge.paymentAmount,
+    expirationTime: charge.expirationTime,
+  });
 }, { rateLimit: "financial" });

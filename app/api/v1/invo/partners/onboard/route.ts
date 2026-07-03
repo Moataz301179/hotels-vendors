@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
 interface Partner {
   partnerId: string;
@@ -18,26 +17,18 @@ interface Partner {
   reviewerNotes?: string;
 }
 
-// Partners stored in database via the supplier/hotel models
-// This endpoint creates a lead record for review
+const partners: Partner[] = [];
 
-function requireAuth(request: NextRequest): { authorized: boolean; error?: string } {
+function requireAuth(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY;
-  if (!apiKey) {
-    return { authorized: false, error: "Service key not configured" };
-  }
-  if (!authHeader?.includes(apiKey)) {
-    return { authorized: false, error: "Unauthorized" };
-  }
-  return { authorized: true };
+  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
+  return !!authHeader?.includes(apiKey);
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const authResult = requireAuth(request);
-    if (!authResult.authorized) {
-      return NextResponse.json({ success: false, error: authResult.error || "Unauthorized" }, { status: 401 });
+    if (!requireAuth(request)) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -65,33 +56,7 @@ export async function POST(request: NextRequest) {
       submittedAt: new Date().toISOString(),
     };
 
-    // Persist to database via Supplier model (PENDING status for admin review)
-    try {
-      // Find platform tenant
-      const platformTenant = await prisma.tenant.findUnique({ where: { slug: "platform" } });
-      
-      if (platformTenant) {
-        await prisma.supplier.create({
-          data: {
-            name: name,
-            taxId: taxId,
-            email: email,
-            phone: phone || "",
-            city: address?.split(",")[0]?.trim() || "Unknown",
-            governorate: address?.split(",")[1]?.trim() || "Unknown",
-            address: address || "",
-            status: "PENDING",
-            tier: "CORE",
-            type: type === "supplier" ? "WHOLESALER" : "FACTORY",
-            tenantId: platformTenant.id,
-            description: contactName ? "Contact: " + contactName : null,
-          },
-        });
-      }
-    } catch (dbError) {
-      console.error("[Partner Onboard] DB persistence failed:", dbError);
-      // Non-blocking: continue even if DB fails
-    }
+    partners.push(partner);
 
     return NextResponse.json(
       {

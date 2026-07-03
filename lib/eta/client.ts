@@ -20,7 +20,6 @@ import type {
 
 const ETA_CONFIG: EtaConfig = {
   baseUrl: process.env.ETA_API_URL || "https://api.preprod.invoicing.eta.gov.eg",
-  authUrl: process.env.ETA_AUTH_URL || "https://id.preprod.eta.gov.eg",
   apiVersion: "api/v1",
   clientId: process.env.ETA_CLIENT_ID || "",
   clientSecret: process.env.ETA_CLIENT_SECRET || "",
@@ -28,29 +27,6 @@ const ETA_CONFIG: EtaConfig = {
   maxRetries: 3,
   retryDelayMs: 2000,
 };
-
-const STUB_MODE =
-  process.env.ETA_STUB_MODE === "true" ||
-  (!process.env.ETA_CLIENT_ID && !process.env.ETA_CLIENT_SECRET);
-
-function assertLiveInProduction(): void {
-  if (STUB_MODE && process.env.NODE_ENV === "production") {
-    throw new Error("[ETA] STUB_MODE enabled in production — refusing to start. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false.");
-  }
-  if (STUB_MODE && process.env.NODE_ENV === "development") {
-    console.log(
-      "[ETA] Running in STUB MODE — no real ETA API calls. Set ETA_CLIENT_ID + ETA_CLIENT_SECRET + ETA_STUB_MODE=false to use the real sandbox."
-    );
-  }
-}
-
-function generateStubUuid(): string {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 // ─────────────────────────────────────────
 // 2. AUTHENTICATION
@@ -70,7 +46,7 @@ async function getAccessToken(): Promise<string> {
     return cachedToken.token;
   }
 
-  const url = `${ETA_CONFIG.authUrl}/connect/token`;
+  const url = `${ETA_CONFIG.baseUrl}/connect/token`;
   const body = new URLSearchParams({
     grant_type: "client_credentials",
     client_id: ETA_CONFIG.clientId,
@@ -150,35 +126,7 @@ async function etaFetch(path: string, options: RequestInit = {}): Promise<Respon
 /**
  * Submit an invoice to the ETA.
  */
-export async function submitInvoice(
-  payload: EtaInvoicePayload
-): Promise<EtaSubmissionResponse> {
-  assertLiveInProduction();
-  if (STUB_MODE) {
-    const now = new Date().toISOString();
-    const uuid = generateStubUuid();
-    return {
-      submissionId: `stub-${uuid}`,
-      uuid,
-      longId: `STUB-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
-      internalId: `INT-${Date.now()}`,
-      typeName: "Invoice",
-      typeVersionName: "1.0",
-      issuerId: payload.issuer?.id || "ISSUER-001",
-      issuerName: payload.issuer?.name || "Hotel",
-      receiverId: payload.receiver?.id || "RECEIVER-001",
-      receiverName: payload.receiver?.name || "Supplier",
-      dateTimeIssued: now,
-      dateTimeReceived: now,
-      totalSales: payload.totalSalesAmount || 0,
-      totalDiscount: payload.totalDiscountAmount || 0,
-      netAmount: payload.netAmount || 0,
-      total: payload.totalAmount || 0,
-      status: "Submitted",
-      documentCount: 1,
-    };
-  }
-
+export async function submitInvoice(payload: EtaInvoicePayload): Promise<EtaSubmissionResponse> {
   const response = await etaFetch("/documentsubmissions", {
     method: "POST",
     body: JSON.stringify({
@@ -226,34 +174,7 @@ export async function submitInvoice(
 /**
  * Get an invoice by UUID from ETA.
  */
-export async function getInvoice(
-  uuid: string
-): Promise<EtaSubmissionResponse | null> {
-  assertLiveInProduction();
-  if (STUB_MODE) {
-    return {
-      submissionId: `stub-${uuid}`,
-      uuid,
-      longId: `STUB-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
-      internalId: `INT-${Date.now()}`,
-      typeName: "Invoice",
-      typeVersionName: "1.0",
-      issuerId: "ISSUER-001",
-      issuerName: "Hotel",
-      receiverId: "RECEIVER-001",
-      receiverName: "Supplier",
-      dateTimeIssued: new Date().toISOString(),
-      dateTimeReceived: new Date().toISOString(),
-      totalSales: 0,
-      totalDiscount: 0,
-      netAmount: 0,
-      total: 0,
-      status: "Valid",
-      documentCount: 1,
-      dateTimeValidated: new Date().toISOString(),
-    };
-  }
-
+export async function getInvoice(uuid: string): Promise<EtaSubmissionResponse | null> {
   const response = await etaFetch(`/documents/${uuid}/raw`);
 
   if (response.status === 404) {
@@ -293,14 +214,7 @@ export async function getInvoice(
 /**
  * Get invoice status by UUID.
  */
-export async function getInvoiceStatus(
-  uuid: string
-): Promise<EtaDocumentStatus | null> {
-  assertLiveInProduction();
-  if (STUB_MODE) {
-    return "Valid";
-  }
-
+export async function getInvoiceStatus(uuid: string): Promise<EtaDocumentStatus | null> {
   const response = await etaFetch(`/documents/${uuid}/status`);
 
   if (response.status === 404) {
@@ -319,20 +233,13 @@ export async function getInvoiceStatus(
  * Cancel a submitted invoice (before validation).
  */
 export async function cancelInvoice(uuid: string, reason: string): Promise<void> {
-  assertLiveInProduction();
-  if (STUB_MODE) {
-    return;
-  }
-
   const response = await etaFetch(`/documents/${uuid}/cancel`, {
     method: "PUT",
     body: JSON.stringify({ reason }),
   });
 
   if (!response.ok) {
-    throw new Error(
-      `ETA cancel failed: ${response.status} ${await response.text()}`
-    );
+    throw new Error(`ETA cancel failed: ${response.status} ${await response.text()}`);
   }
 }
 
@@ -340,20 +247,13 @@ export async function cancelInvoice(uuid: string, reason: string): Promise<void>
  * Reject a received invoice.
  */
 export async function rejectInvoice(uuid: string, reason: string): Promise<void> {
-  assertLiveInProduction();
-  if (STUB_MODE) {
-    return;
-  }
-
   const response = await etaFetch(`/documents/${uuid}/reject`, {
     method: "PUT",
     body: JSON.stringify({ reason }),
   });
 
   if (!response.ok) {
-    throw new Error(
-      `ETA reject failed: ${response.status} ${await response.text()}`
-    );
+    throw new Error(`ETA reject failed: ${response.status} ${await response.text()}`);
   }
 }
 
@@ -378,7 +278,6 @@ export interface EtaCallbackPayload {
  * integrity for any internal callers.
  */
 export async function processCallback(payload: EtaCallbackPayload): Promise<void> {
-  assertLiveInProduction();
   const { prisma } = await import("@/lib/prisma");
 
   const invoice = await prisma.invoice.findUnique({
@@ -454,20 +353,6 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
 // 6. EXPORT
 // ─────────────────────────────────────────
 
-export function getEtaStatus(): {
-  mode: "stub" | "live";
-  configured: boolean;
-  baseUrl: string;
-  authUrl: string;
-} {
-  return {
-    mode: STUB_MODE ? "stub" : "live",
-    configured: Boolean(process.env.ETA_CLIENT_ID && process.env.ETA_CLIENT_SECRET),
-    baseUrl: ETA_CONFIG.baseUrl,
-    authUrl: ETA_CONFIG.authUrl,
-  };
-}
-
 export const etaClient = {
   submitInvoice,
   getInvoice,
@@ -475,5 +360,4 @@ export const etaClient = {
   cancelInvoice,
   rejectInvoice,
   processCallback,
-  getEtaStatus,
 };

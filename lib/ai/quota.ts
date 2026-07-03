@@ -37,17 +37,11 @@ function startOfDay(d: Date = new Date()): Date {
 /**
  * Ensure AiUsage record exists for user. Create if missing.
  */
-export async function ensureAiUsage(userId: string, tenantId?: string): Promise<void> {
+export async function ensureAiUsage(userId: string): Promise<void> {
   const existing = await prisma.aiUsage.findUnique({ where: { userId } });
   if (!existing) {
-    // Find user's tenant if not provided
-    let tid = tenantId;
-    if (!tid) {
-      const user = await prisma.user.findUnique({ where: { id: userId }, select: { tenantId: true } });
-      tid = user?.tenantId || "";
-    }
     await prisma.aiUsage.create({
-      data: { userId, tenantId: tid, messagesToday: 0, tokensToday: 0, messagesTotal: 0, tokensTotal: 0 },
+      data: { userId, messagesToday: 0, tokensToday: 0, messagesTotal: 0, tokensTotal: 0 },
     });
   }
 }

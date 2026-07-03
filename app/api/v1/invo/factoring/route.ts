@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 /**
  * POST /api/v1/invo/factoring
@@ -25,40 +25,51 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check invoice qualification
-    const qualification = await prisma.invoiceQualification.findUnique({
-      where: { invoiceId: invoice_id },
-    });
+    const supabase = await createClient();
 
-    if (qualification && !qualification.factoringEligible) {
+    // Verify invoice is qualified for factoring
+    const { data: qualification } = await supabase
+      .from("invoice_qualification_details")
+      .select("*")
+      .eq("invoice_id", invoice_id)
+      .single();
+
+    if (qualification && !qualification.factoring_eligible) {
       return NextResponse.json(
         { error: "Invoice is not eligible for factoring", qualification },
         { status: 422 }
       );
     }
 
-    const request = await prisma.invoFactoringRequest.create({
-      data: {
-        invoiceId: invoice_id,
-        hotelId: hotel_id,
-        faceValue: face_value,
-        creditorName: creditor_name || null,
-        debtorName: debtor_name || null,
-        maturityDate: maturity_date || null,
+    const { data: request, error } = await supabase
+      .from("factoring_requests")
+      .insert({
+        invoice_id,
+        hotel_id,
+        face_value,
+        creditor_name: creditor_name || null,
+        debtor_name: debtor_name || null,
+        maturity_date: maturity_date || null,
         status: "bidding_open",
-        matchStatus: "not_submitted",
-      },
-    });
+        match_status: "not_submitted",
+      })
+      .select()
+      .single();
 
-    // Log agent audit entry
-    await prisma.agentAuditLog.create({
-      data: {
-        agentName: "agent_4_routing",
-        actionExecuted: "factoring_request_created",
-        invoiceId: invoice_id,
-        previousState: "qualified",
-        newState: "bidding_open",
-      },
+    if (error || !request) {
+      return NextResponse.json(
+        { error: `Factoring request failed: ${error?.message}` },
+        { status: 500 }
+      );
+    }
+
+    // Log agent action
+    await supabase.from("agent_audit_log").insert({
+      agent_name: "agent_4_routing",
+      action_executed: "factoring_request_created",
+      invoice_id,
+      previous_state: "qualified",
+      new_state: "bidding_open",
     });
 
     return NextResponse.json({
@@ -83,18 +94,23 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get("status");
     const limit = parseInt(searchParams.get("limit") || "50", 10);
 
-    const where: Record<string, unknown> = {};
-    if (hotel_id) where.hotelId = hotel_id;
-    if (status) where.status = status;
+    const supabase = await createClient();
+    let query = supabase
+      .from("factoring_requests")
+      .select("*, hotels(name), factoring_bids(*)")
+      .order("created_at", { ascending: false })
+      .limit(limit);
 
-    const requests = await prisma.invoFactoringRequest.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      take: limit,
-      include: { bids: true },
-    });
+    if (hotel_id) query = query.eq("hotel_id", hotel_id);
+    if (status) query = query.eq("status", status);
 
-    return NextResponse.json({ requests });
+    const { data, error } = await query;
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ requests: data || [] });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

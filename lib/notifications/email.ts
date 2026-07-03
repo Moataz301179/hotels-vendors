@@ -60,16 +60,16 @@ export function approvalRequiredTemplate(params: {
   const subject = `Approval Required: Order ${params.orderId} — ${params.total.toLocaleString()} ${params.currency}`;
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-      <h2 style="color: #FF6B00;">Hotels Vendors — Approval Request</h2>
+      <h2 style="color: #c41e3a;">Hotels Vendors — Approval Request</h2>
       <p>Hello ${params.approverName},</p>
       <p>A new purchase order requires your approval:</p>
       <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Order ID</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${params.orderId}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Hotel</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${params.hotelName}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Supplier</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${params.supplierName}</td></tr>
-        <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Total</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee; color: #FF6B00; font-weight: bold;">${params.total.toLocaleString()} ${params.currency}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Total</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee; color: #c41e3a; font-weight: bold;">${params.total.toLocaleString()} ${params.currency}</td></tr>
       </table>
-      <a href="${params.orderUrl}" style="display: inline-block; padding: 12px 24px; background: #FF6B00; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Review & Approve</a>
+      <a href="${params.orderUrl}" style="display: inline-block; padding: 12px 24px; background: #c41e3a; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Review & Approve</a>
       <p style="margin-top: 24px; font-size: 12px; color: #666;">This is an automated message from Hotels Vendors Authority Matrix.</p>
     </div>
   `;
@@ -108,10 +108,10 @@ export function factoringDisbursedTemplate(params: {
   const subject = `💰 Factoring Funds Disbursed — ${params.invoiceId}`;
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #FF6B00;">Factoring Disbursement Complete</h2>
+      <h2 style="color: #c41e3a;">Factoring Disbursement Complete</h2>
       <p>Hello ${params.supplierName},</p>
       <p>Your invoice has been funded through ${params.partnerName}:</p>
-      <p style="font-size: 24px; color: #FF6B00; font-weight: bold;">${params.amount.toLocaleString()} ${params.currency}</p>
+      <p style="font-size: 24px; color: #c41e3a; font-weight: bold;">${params.amount.toLocaleString()} ${params.currency}</p>
       <p>Funds will reach your account within 24 hours.</p>
     </div>
   `;
@@ -136,7 +136,7 @@ export function smartFixTemplate(params: {
         <strong>${params.fixType}</strong><br/>
         ${params.description}
       </div>
-      <a href="${params.actionUrl}" style="display: inline-block; padding: 12px 24px; background: #FF6B00; color: white; text-decoration: none; border-radius: 6px;">Resolve Now</a>
+      <a href="${params.actionUrl}" style="display: inline-block; padding: 12px 24px; background: #c41e3a; color: white; text-decoration: none; border-radius: 6px;">Resolve Now</a>
     </div>
   `;
   return { subject, html };
@@ -150,15 +150,15 @@ export function welcomeTemplate(params: {
   const subject = "Welcome to Hotels Vendors — Your Procurement Advantage Starts Now";
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-      <h2 style="color: #FF6B00;">Welcome aboard, ${params.name}</h2>
+      <h2 style="color: #8B0000;">Welcome aboard, ${params.name}</h2>
       <p>You have successfully joined Hotels Vendors — Egypt's smartest procurement platform for hospitality.</p>
-      <div style="background: #fef2f2; border-left: 4px solid #FF6B00; padding: 16px; margin: 16px 0;">
+      <div style="background: #fef2f2; border-left: 4px solid #8B0000; padding: 16px; margin: 16px 0;">
         <strong>What is next?</strong><br/>
         1. Verify your email address<br/>
         2. Complete your profile<br/>
         3. Start browsing 1,200+ verified suppliers
       </div>
-      <a href="${params.loginUrl}" style="display: inline-block; padding: 12px 24px; background: #FF6B00; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Log In to Your Account</a>
+      <a href="${params.loginUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Log In to Your Account</a>
       <p style="margin-top: 24px; font-size: 12px; color: #666;">Need help? Reply to this email or contact us at hello@hotelsvendors.com</p>
     </div>
   `;
@@ -173,10 +173,10 @@ export function emailVerificationTemplate(params: {
   const subject = "Verify your email — Hotels Vendors";
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-      <h2 style="color: #FF6B00;">Verify your email address</h2>
+      <h2 style="color: #8B0000;">Verify your email address</h2>
       <p>Hello ${params.name},</p>
       <p>Please confirm your email address to activate your Hotels Vendors account.</p>
-      <a href="${params.verificationUrl}" style="display: inline-block; padding: 12px 24px; background: #FF6B00; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Verify Email Address</a>
+      <a href="${params.verificationUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Verify Email Address</a>
       <p style="margin-top: 16px; font-size: 13px; color: #666;">This link expires in 24 hours. If you did not create an account, you can safely ignore this email.</p>
       <p style="margin-top: 8px; font-size: 12px; color: #666;">If the button does not work, copy and paste this link:<br/>${params.verificationUrl}</p>
     </div>
@@ -192,10 +192,10 @@ export function passwordResetTemplate(params: {
   const subject = "Reset your Hotels Vendors password";
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-      <h2 style="color: #FF6B00;">Password reset requested</h2>
+      <h2 style="color: #8B0000;">Password reset requested</h2>
       <p>Hello ${params.name},</p>
       <p>We received a request to reset your password. Click the button below to set a new password. This link expires in 24 hours.</p>
-      <a href="${params.resetUrl}" style="display: inline-block; padding: 12px 24px; background: #FF6B00; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Reset Password</a>
+      <a href="${params.resetUrl}" style="display: inline-block; padding: 12px 24px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">Reset Password</a>
       <p style="margin-top: 16px; font-size: 13px; color: #666;">If you did not request this reset, your account is secure — no changes have been made.</p>
       <p style="margin-top: 8px; font-size: 12px; color: #666;">If the button does not work, copy and paste this link:<br/>${params.resetUrl}</p>
     </div>
@@ -210,7 +210,7 @@ export function passwordResetConfirmationTemplate(params: {
   const subject = "Your password has been reset";
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-      <h2 style="color: #FF6B00;">Password updated successfully</h2>
+      <h2 style="color: #8B0000;">Password updated successfully</h2>
       <p>Hello ${params.name},</p>
       <p>Your Hotels Vendors password has been changed. You can now log in with your new password.</p>
       <p style="margin-top: 16px; font-size: 13px; color: #666;">If you did not make this change, please contact us immediately at hello@hotelsvendors.com.</p>

@@ -302,8 +302,8 @@ async function calculateAnomalyScore(
   };
 
   // Amount deviation
-  const avgAmount = recentOrders.reduce((s, o) => s + Number(o.total), 0) / recentOrders.length;
-  const maxAmount = Math.max(...recentOrders.map((o) => Number(o.total)));
+  const avgAmount = recentOrders.reduce((s, o) => s + o.total, 0) / recentOrders.length;
+  const maxAmount = Math.max(...recentOrders.map((o) => o.total));
   if (amount > maxAmount * 2) {
     factors.amountDeviation = 1.0;
   } else if (amount > avgAmount * 3) {

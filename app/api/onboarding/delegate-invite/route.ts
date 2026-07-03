@@ -80,7 +80,7 @@ async function sendInviteEmail(to: string, token: string, tenantName: string): P
             <strong>${tenantName}</strong> has invited you to securely submit their Egyptian Tax Authority (ETA) API credentials.
             This link expires in <strong>24 hours</strong>.
           </p>
-          <a href="${inviteUrl}" style="display: inline-block; background-color: #FF6B00; color: #000; font-weight: 600; font-size: 14px; padding: 14px 32px; border-radius: 12px; text-decoration: none; margin-bottom: 24px;">
+          <a href="${inviteUrl}" style="display: inline-block; background-color: #39FF14; color: #000; font-weight: 600; font-size: 14px; padding: 14px 32px; border-radius: 12px; text-decoration: none; margin-bottom: 24px;">
             Submit ETA Credentials
           </a>
           <p style="color: #a3a3a3; font-size: 12px; line-height: 1.5;">
@@ -175,8 +175,8 @@ export async function POST(request: NextRequest) {
 
     // Check if invitee already exists as an active user
     if (payload.email) {
-      const existingUser = await prisma.user.findFirst({
-        where: { email: payload.email, tenantId: payload.tenantId },
+      const existingUser = await prisma.user.findUnique({
+        where: { email: payload.email },
       });
 
       if (existingUser && existingUser.status === "ACTIVE") {
@@ -216,8 +216,8 @@ export async function POST(request: NextRequest) {
       let delegateUser;
 
       if (payload.email) {
-        const existing = await tx.user.findFirst({
-          where: { email: payload.email, tenantId: payload.tenantId },
+        const existing = await tx.user.findUnique({
+          where: { email: payload.email },
         });
 
         if (existing) {

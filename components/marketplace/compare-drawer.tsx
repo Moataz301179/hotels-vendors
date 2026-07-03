@@ -50,7 +50,7 @@ export function CompareDrawer() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-white/[0.08] bg-[var(--background)] overflow-hidden"
+              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-white/[0.08] bg-[#0a0a0a] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}

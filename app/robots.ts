@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/dashboard/", "/admin/", "/hotel/", "/supplier/", "/factoring/", "/shipping/"],
     },
-    sitemap: "https://hotelsvendors.com/sitemap.xml",
+    sitemap: "https://hotels-vendors.com/sitemap.xml",
   };
 }

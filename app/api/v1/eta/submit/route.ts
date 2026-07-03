@@ -68,19 +68,19 @@ export const POST = apiRoute(async (request: NextRequest) => {
       unitType: item.product.unitOfMeasure,
       quantity: item.quantity,
       internalCode: item.product.sku,
-      salesTotal: Number(item.total),
-      total: Number(item.total),
+      salesTotal: item.total,
+      total: item.total,
       valueDifference: 0,
       totalTaxableFees: 0,
-      netTotal: Number(item.total),
+      netTotal: item.total,
       itemsDiscount: 0,
       discount: { amount: 0 },
-      taxableItems: [{ taxType: "T1" as const, amount: Number(item.total) * 0.14, subType: "V001", rate: 14 }],
+      taxableItems: [{ taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 }],
     })),
-    totalSalesAmount: Number(invoice.subtotal),
-    netAmount: Number(invoice.subtotal),
-    taxTotals: [{ taxType: "T1" as const, amount: Number(invoice.vatAmount) }],
-    totalAmount: Number(invoice.total),
+    totalSalesAmount: invoice.subtotal,
+    netAmount: invoice.subtotal,
+    taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],
+    totalAmount: invoice.total,
   };
 
   try {
@@ -122,9 +122,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
     return success({ message: "Invoice submitted to ETA", etaUuid: result.uuid, submissionId: result.submissionId });
   } catch (err) {
-    // Sanitize: never leak upstream stack traces or internal host details to the client.
-    // eslint-disable-next-line no-console
-    console.error("[ETA_SUBMIT]", err);
-    return error("ETA submission failed — please try again or contact support.", 502);
+    const message = err instanceof Error ? err.message : "Unknown ETA error";
+    return error(`ETA submission failed: ${message}`, 502);
   }
 }, { rateLimit: "api" });

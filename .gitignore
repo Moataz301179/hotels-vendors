@@ -32,7 +32,6 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-!.env.example
 
 # vercel
 .vercel
@@ -43,24 +42,6 @@ next-env.d.ts
 
 /app/generated/prisma
 .ssh/
-
-# uploaded assets (generated at runtime)
-/public/uploads/
-
-# playwright MCP test artifacts
-.playwright-mcp/
-
-# marketing collateral (not part of source code)
-/marketing/
-
-# auto-generated from build
-/lib/blog-data.ts
-
-# screenshots
-hero-full-page.png
-factoring-full.png
-homepage-full.png
-marketplace-full.png
 
 # orphaned / temp files — never commit
 dev.db

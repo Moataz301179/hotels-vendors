@@ -217,11 +217,11 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <MarketingNav />
 
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[var(--background)]/90 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
           <div className="flex-1 max-w-2xl">
             <div className="relative flex items-center">
@@ -341,7 +341,7 @@ export default function MarketplacePage() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[var(--background)] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
+          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#050505] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
             {mobileSidebarOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
                 <span className="text-sm font-semibold text-white">{t("categories")}</span>
@@ -456,7 +456,7 @@ export default function MarketplacePage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.02 }}
-                    className="group relative flex flex-col rounded-2xl border border-white/[0.06] bg-[#0B0F17] overflow-hidden hover:border-white/[0.10] transition-all duration-300"
+                    className="group relative flex flex-col rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden hover:border-white/[0.10] transition-all duration-300"
                   >
                     {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden">

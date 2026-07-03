@@ -12,9 +12,8 @@ export function SandboxBanner() {
     <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
       <div className="max-w-lg mx-auto px-6 text-center">
         {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-          style={{ backgroundColor: "var(--accent-muted)", border: "1px solid rgba(232,168,56,0.2)" }}>
-          <Construction className="w-8 h-8" style={{ color: "var(--accent-base)" }} />
+        <div className="w-16 h-16 rounded-2xl bg-[rgba(139,0,0,0.15)] border border-[rgba(139,0,0,0.2)] flex items-center justify-center mx-auto mb-6">
+          <Construction className="w-8 h-8 text-[#8B0000]" />
         </div>
 
         {/* Title */}
@@ -39,7 +38,7 @@ export function SandboxBanner() {
             In Development
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-base)", opacity: 0.6 }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#8B0000]/60" />
             Private Sandbox
           </span>
         </div>
@@ -48,8 +47,7 @@ export function SandboxBanner() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href="/invo"
-            className="inline-flex items-center gap-2 px-6 py-3 text-[14px] font-medium rounded-xl transition-colors"
-            style={{ backgroundColor: "var(--accent-base)", color: "var(--accent-text, #fff)" }}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B0000] text-white text-[14px] font-medium rounded-xl hover:bg-[#a50000] transition-colors"
           >
             View INVO Platform
             <ExternalLink className="w-4 h-4" />

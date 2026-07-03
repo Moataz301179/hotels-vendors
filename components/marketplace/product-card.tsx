@@ -8,19 +8,7 @@ import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
 import { useCompare } from "./compare-context";
 
-function ProductImageDisplay({ name, category, image }: { name: string; category: string; image?: string | null }) {
-  if (image) {
-    return (
-      <Image
-        src={image}
-        alt={name}
-        fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-        unoptimized
-      />
-    );
-  }
-
+function ProductImageDisplay({ name, category }: { name: string; category: string }) {
   const resolved = getProductImage({ name, category });
 
   if (resolved.type === "url") {
@@ -160,7 +148,7 @@ export function ProductCard({
     >
       {/* Image Area */}
       <div className="relative aspect-[4/3] bg-black overflow-hidden">
-        <ProductImageDisplay name={name} category={category} image={images?.[0] ?? null} />
+        <ProductImageDisplay name={name} category={category} />
 
         {/* Overlays */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
@@ -213,7 +201,7 @@ export function ProductCard({
 
         {/* Temp Badge */}
         {tempBadge && (
-          <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-[#D4A843]/20 border border-[#D4A843]/30 text-[10px] text-[#D4A843] font-medium">
+          <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-[10px] text-blue-300 font-medium">
             {tempBadge}
           </div>
         )}

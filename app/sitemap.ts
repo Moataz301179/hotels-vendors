@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
-import { getAllSlugs } from "@/lib/blog/posts";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://hotelsvendors.com";
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://hotels-vendors.com";
 
   const routes = [
     "",
@@ -11,33 +10,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/pricing",
     "/marketplace",
     "/become-supplier",
-    "/sandbox",
-    "/compliance",
     "/social-media",
     "/login",
     "/register",
-    "/blog",
   ];
 
-  const slugs = await getAllSlugs();
-  const blogRoutes = slugs.map((slug) => `/blog/${slug}`);
-
-  return [...routes, ...blogRoutes].map((route) => ({
+  return routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency:
-      route === "" || route === "/marketplace"
-        ? "daily"
-        : route.startsWith("/blog")
-          ? "weekly"
-          : "weekly",
-    priority:
-      route === ""
-        ? 1.0
-        : route === "/marketplace"
-          ? 0.9
-          : route.startsWith("/blog")
-            ? 0.6
-            : 0.7,
+    changeFrequency: route === "" || route === "/marketplace" ? "daily" : "weekly",
+    priority: route === "" ? 1.0 : route === "/marketplace" ? 0.9 : 0.7,
   }));
 }

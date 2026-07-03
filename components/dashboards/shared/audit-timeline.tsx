@@ -27,17 +27,17 @@ interface AuditEntry {
 }
 
 const ACTION_CONFIG: Record<string, { icon: LucideIcon; color: string; label: string }> = {
-  CREATE: { icon: FileText, color: "text-info", label: "Created" },
-  APPROVE: { icon: CheckCircle2, color: "text-success", label: "Approved" },
-  REJECT: { icon: XCircle, color: "text-error", label: "Rejected" },
-  DISPUTE: { icon: AlertTriangle, color: "text-warning", label: "Disputed" },
-  SUBMIT_GRN: { icon: FileCheck, color: "text-accent-base", label: "GRN Submitted" },
-  CONFIRM_DELIVERY: { icon: Package, color: "text-success", label: "Delivery Confirmed" },
-  SHIP: { icon: Truck, color: "text-info", label: "Shipped" },
-  SUBMIT_INVOICE: { icon: FileText, color: "text-accent-base", label: "Invoice Submitted" },
-  QUALIFY_INVOICE: { icon: Shield, color: "text-success", label: "Invoice Qualified" },
-  FACTOR: { icon: Banknote, color: "text-accent-base", label: "Factored" },
-  PAY: { icon: Banknote, color: "text-success", label: "Paid" },
+  CREATE: { icon: FileText, color: "text-blue-400", label: "Created" },
+  APPROVE: { icon: CheckCircle2, color: "text-emerald-400", label: "Approved" },
+  REJECT: { icon: XCircle, color: "text-red-400", label: "Rejected" },
+  DISPUTE: { icon: AlertTriangle, color: "text-amber-400", label: "Disputed" },
+  SUBMIT_GRN: { icon: FileCheck, color: "text-[#8B0000]", label: "GRN Submitted" },
+  CONFIRM_DELIVERY: { icon: Package, color: "text-emerald-400", label: "Delivery Confirmed" },
+  SHIP: { icon: Truck, color: "text-blue-400", label: "Shipped" },
+  SUBMIT_INVOICE: { icon: FileText, color: "text-[#D4A843]", label: "Invoice Submitted" },
+  QUALIFY_INVOICE: { icon: Shield, color: "text-emerald-400", label: "Invoice Qualified" },
+  FACTOR: { icon: Banknote, color: "text-[#D4A843]", label: "Factored" },
+  PAY: { icon: Banknote, color: "text-emerald-400", label: "Paid" },
 };
 
 function getActionConfig(action: string) {
@@ -45,7 +45,7 @@ function getActionConfig(action: string) {
   return (
     ACTION_CONFIG[upper] || {
       icon: Clock,
-      color: "text-foreground-muted",
+      color: "text-white/30",
       label: action.replace(/_/g, " "),
     }
   );
@@ -54,17 +54,17 @@ function getActionConfig(action: string) {
 export function AuditTimeline({ entries }: { entries: AuditEntry[] }) {
   if (!entries.length) {
     return (
-      <div className="text-center py-12">
-        <Clock className="w-5 h-5 text-foreground-muted mx-auto mb-3" />
-        <p className="text-sm text-foreground-muted">No audit entries yet</p>
-        <p className="text-xs text-foreground-muted/60 mt-1">Entries will appear here as actions are taken on this order.</p>
+      <div className="text-center py-8">
+        <Clock className="w-6 h-6 text-white/10 mx-auto mb-2" />
+        <p className="text-[13px] text-white/25">No audit entries yet</p>
       </div>
     );
   }
 
   return (
     <div className="relative">
-      <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border-subtle" />
+      {/* Vertical line */}
+      <div className="absolute left-[15px] top-2 bottom-2 w-[1px] bg-white/[0.06]" />
 
       <div className="space-y-0">
         {entries.map((entry, i) => {
@@ -74,55 +74,81 @@ export function AuditTimeline({ entries }: { entries: AuditEntry[] }) {
             typeof entry.createdAt === "string"
               ? new Date(entry.createdAt)
               : entry.createdAt;
-          const isFirst = i === 0;
 
           return (
-            <div key={entry.id} className="relative flex gap-4 py-3 group">
+            <div
+              key={entry.id}
+              className="relative flex gap-4 py-3 group"
+            >
+              {/* Dot */}
               <div className="relative z-10 shrink-0 w-[31px] flex items-start justify-center pt-0.5">
                 <div
-                  className={`w-[18px] h-[18px] rounded-sm border flex items-center justify-center bg-surface ${
-                    isFirst ? "border-accent-base" : "border-border-subtle"
+                  className={`w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center bg-black ${
+                    i === 0
+                      ? "border-accent-base"
+                      : "border-white/[0.12]"
                   }`}
                 >
                   <Icon
                     size={8}
-                    className={isFirst ? "text-accent-base" : "text-foreground-muted"}
+                    className={i === 0 ? "text-accent-base" : "text-white/20"}
                   />
                 </div>
               </div>
 
+              {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className={`text-sm ${isFirst ? "text-foreground font-medium" : "text-foreground-secondary"}`}>
+                    <p
+                      className={`text-[13px] font-medium ${
+                        i === 0 ? "text-white/80" : "text-white/50"
+                      }`}
+                    >
                       {config.label}
                     </p>
                     {entry.actorName && (
-                      <p className="text-xs text-foreground-muted mt-0.5">
+                      <p className="text-[11px] text-white/25 mt-0.5">
                         by {entry.actorName}
                         {entry.actorRole && (
-                          <span className="text-foreground-muted/60"> · {entry.actorRole}</span>
+                          <span className="text-white/15">
+                            {" "}
+                            · {entry.actorRole}
+                          </span>
                         )}
                       </p>
                     )}
                     {entry.beforeState && entry.afterState && (
-                      <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                        <span className="status-pill text-foreground-muted border-border-subtle bg-surface">
+                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-white/25 border border-white/[0.06]">
                           {entry.beforeState.replace(/_/g, " ")}
                         </span>
-                        <span className="text-foreground-muted text-xs">→</span>
-                        <span className="status-pill text-accent-base border-accent-base/20 bg-accent-muted">
+                        <span className="text-white/15 text-[10px]">→</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent-base/10 text-accent-base/70 border border-accent-base/15">
                           {entry.afterState.replace(/_/g, " ")}
                         </span>
                       </div>
                     )}
                   </div>
-                  <span className="label-upper text-foreground-muted whitespace-nowrap shrink-0">
-                    {time.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  <span className="text-[10px] text-white/15 whitespace-nowrap shrink-0">
+                    {time.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
                     {", "}
-                    {time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                    {time.toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
+
+                {/* Hash chain indicator */}
+                {entry.hash && (
+                  <p className="text-[9px] text-white/10 font-mono mt-1 truncate max-w-[200px]">
+                    🔗 {entry.hash.slice(0, 16)}…
+                  </p>
+                )}
               </div>
             </div>
           );

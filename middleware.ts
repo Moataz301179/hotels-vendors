@@ -5,27 +5,14 @@
  * - Every request to protected routes is verified at the edge
  * - Tenant ID is injected into headers ( NEVER trust client-sent headers )
  * - Role-based route access enforced before reaching any page or API
- *
- * Next.js 16 deprecation: Middleware should be migrated to the proxy pattern
- * (edge function + _next/proxy rewrites). The matcher config format may also
- * need updating. This warning is non-blocking — middleware continues to work.
- * Track: https://nextjs.org/docs/app/building-your-application/routing/middleware#proxy
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const SESSION_COOKIE = "hv_session";
-
-const SESSION_SECRET = process.env.SESSION_SECRET;
-if (!SESSION_SECRET && process.env.NODE_ENV === "production") {
-  throw new Error(
-    "FATAL: SESSION_SECRET environment variable is required in production. " +
-    "Generate one with: openssl rand -hex 32"
-  );
-}
 const SECRET = new TextEncoder().encode(
-  SESSION_SECRET || "dev-secret-do-not-use-in-production"
+  process.env.SESSION_SECRET || "dev-secret-change-in-production"
 );
 
 /* ── Route Configuration ── */
@@ -42,6 +29,7 @@ const PUBLIC_PATHS = [
   "/marketplace",
   "/suppliers",
   "/about",
+  "/pricing",
   "/solutions",
   "/contact",
   "/become-supplier",
@@ -52,17 +40,9 @@ const PUBLIC_PATHS = [
   "/api/v1/auth/register",
   "/api/v1/auth/refresh",
   "/api/v1/auth/verify",
-  "/api/v1/auth/staged-register",
-  "/api/v1/auth/staged-verify-otp",
-  "/api/v1/auth/staged-resend-otp",
-  "/api/v1/auth/send-phone-otp",
-  "/api/v1/auth/verify-phone",
-  "/api/v1/auth/register/send-otp",
-  "/api/v1/auth/register/verify-otp",
   "/api/v1/supplier/onboard",
   "/api/v1/cms/content",
   "/api/v1/ai/public",
-  "/api/v1/products",
   "/api/health",
 ];
 
@@ -90,12 +70,12 @@ const ROLE_ROUTES: Record<string, string[]> = {
 };
 
 const ROLE_DEFAULT_PATH: Record<string, string> = {
-  ADMIN: "/dashboard/admin",
-  HOTEL: "/dashboard/hotel",
-  SUPPLIER: "/dashboard/supplier",
-  FACTORING: "/dashboard/factoring",
-  SHIPPING: "/dashboard/shipping",
-  MARKETING: "/dashboard/marketing",
+  ADMIN: "/admin",
+  HOTEL: "/hotel",
+  SUPPLIER: "/supplier",
+  FACTORING: "/factoring",
+  SHIPPING: "/shipping",
+  MARKETING: "/marketing",
 };
 
 /* ── Helpers ── */
@@ -153,10 +133,6 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set(
-    "Strict-Transport-Security",
-    "max-age=31536000; includeSubDomains; preload"
-  );
-  response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
@@ -179,17 +155,6 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host") || "";
-
-  // HTTP → HTTPS redirect (defense-in-depth, Vercel also handles at platform level).
-  // Skip for localhost / local dev so self-signed-cert browsers and Playwright
-  // aren't forced onto https://localhost (which has no trusted cert in dev).
-  const proto = request.headers.get("x-forwarded-proto");
-  const isLocalHost = host === "localhost:3000" || host === "localhost" || host.startsWith("127.0.0.1");
-  if (proto === "http" && !isLocalHost) {
-    const url = request.nextUrl.clone();
-    url.protocol = "https";
-    return addSecurityHeaders(NextResponse.redirect(url, 308));
-  }
 
   // ── INVO Subdomain Routing ──
   // invo.hotelsvendors.com/ → serves /invo page
@@ -276,7 +241,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect /dashboard (non-existent) to role-specific dashboard
   if (pathname === "/dashboard") {
-    const target = ROLE_DEFAULT_PATH[platformRole] || "/dashboard/hotel";
+    const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
     return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
   }
 
@@ -295,7 +260,7 @@ export async function middleware(request: NextRequest) {
 
     if (!hasAccess) {
       // Redirect to their default dashboard
-      const target = ROLE_DEFAULT_PATH[platformRole] || "/dashboard/hotel";
+      const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
       return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
     }
   }

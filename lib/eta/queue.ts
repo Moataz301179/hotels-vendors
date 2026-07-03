@@ -13,7 +13,6 @@ import { etaClient } from "./client";
 import { validateForSubmission } from "./validator";
 import { recordSwarmEvent } from "@/lib/swarm/monitoring";
 import { moveToDeadLetter } from "@/lib/queues/dead-letter";
-import { MANDATORY_DISCLAIMER } from "@/lib/compliance/fee-structure";
 
 // ── Queue ──
 export const etaQueue = new Queue("eta-submission", {
@@ -118,21 +117,21 @@ export function createEtaWorker(): Worker {
           unitType: item.product.unitOfMeasure,
           quantity: item.quantity,
           internalCode: item.product.sku,
-          salesTotal: Number(item.total),
-          total: Number(item.total),
+          salesTotal: item.total,
+          total: item.total,
           valueDifference: 0,
           totalTaxableFees: 0,
-          netTotal: Number(item.total),
+          netTotal: item.total,
           itemsDiscount: 0,
           discount: { amount: 0 },
           taxableItems: [
-            { taxType: "T1" as const, amount: Number(item.total) * 0.14, subType: "V001", rate: 14 },
+            { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
           ],
         })),
-        totalSalesAmount: Number(invoice.subtotal),
-        netAmount: Number(invoice.subtotal),
-        taxTotals: [{ taxType: "T1" as const, amount: Number(invoice.vatAmount) }],
-        totalAmount: Number(invoice.total),
+        totalSalesAmount: invoice.subtotal,
+        netAmount: invoice.subtotal,
+        taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],
+        totalAmount: invoice.total,
       };
 
       // Submit to ETA
@@ -200,8 +199,6 @@ export function createEtaDeadLetterWorker(): Worker {
         data: { etaStatus: "MANUAL_RESOLUTION" },
       });
 
-      const finalReason = `${job.failedReason ?? "Unknown ETA failure"} | ${MANDATORY_DISCLAIMER}`;
-
       await prisma.auditLog.create({
         data: {
           tenantId,
@@ -209,7 +206,7 @@ export function createEtaDeadLetterWorker(): Worker {
           entityId: invoiceId,
           action: "ETA_SUBMIT_DLQ",
           actorId: "system",
-          afterState: JSON.stringify({ error: finalReason, attempts: job.attemptsMade }),
+          afterState: JSON.stringify({ error: job.failedReason, attempts: job.attemptsMade }),
         },
       });
 
@@ -217,7 +214,7 @@ export function createEtaDeadLetterWorker(): Worker {
         jobId: job.id,
         invoiceId,
         tenantId,
-        reason: finalReason,
+        reason: job.failedReason,
       });
 
       return { deadLettered: true };

@@ -1,0 +1,3 @@
+{
+  "/api/auth/users/count/route": "app/api/auth/users/count/route.js"
+}

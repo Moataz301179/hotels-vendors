@@ -10,7 +10,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { transformManyToMarketplace, toPrismaCategory } from "@/lib/marketplace/category-mapper";
 import { ProductCategory, ProductStatus } from "@prisma/client";
-import { authenticate } from "@/lib/api-utils";
 import { z } from "zod";
 
 // ── GET: Public Catalog ───────────────────────────────────────
@@ -24,13 +23,8 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "24", 10));
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
     const supplierId = searchParams.get("supplierId") || undefined;
-    const supplierTier = searchParams.get("supplierTier") || undefined;
-    const minPrice = searchParams.get("minPrice") ? parseFloat(searchParams.get("minPrice")!) : undefined;
-    const maxPrice = searchParams.get("maxPrice") ? parseFloat(searchParams.get("maxPrice")!) : undefined;
-    const sort = searchParams.get("sort") || "newest";
-    const featured = searchParams.get("featured");
 
-    const where: Record<string, any> = {};
+    const where: Record<string, unknown> = {};
 
     // Always filter by ACTIVE for public catalog unless explicitly overridden
     if (status) {
@@ -55,35 +49,10 @@ export async function GET(request: NextRequest) {
       where.supplierId = supplierId;
     }
 
-    // Filter by supplier tier
-    if (supplierTier) {
-      where.supplier = { tier: supplierTier };
-    }
-
-    // Price range filter
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      const priceFilter: Record<string, unknown> = {};
-      if (minPrice !== undefined) priceFilter.gte = minPrice;
-      if (maxPrice !== undefined) priceFilter.lte = maxPrice;
-      (where as Record<string, unknown>).unitPrice = priceFilter;
-    }
-
-    // Featured filter
-    if (featured === "true") {
-      where.featured = true;
-      where.featuredUntil = { gte: new Date() };
-    }
-
-    // Sort order
-    let orderBy: Record<string, unknown> = { createdAt: "desc" };
-    if (sort === "price_asc") orderBy = { unitPrice: "asc" };
-    else if (sort === "price_desc") orderBy = { unitPrice: "desc" };
-    else if (sort === "name_asc") orderBy = { name: "asc" };
-
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
-        orderBy,
+        orderBy: { createdAt: "desc" },
         take: limit,
         skip: (page - 1) * limit,
         include: {
@@ -148,9 +117,10 @@ const CreateProductSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Authenticate from JWT session — NEVER trust client headers
-    const auth = await authenticate(request);
-    const { userId, platformRole, tenantId } = auth;
+    // Read auth context from middleware-injected headers
+    const userId = request.headers.get("x-user-id");
+    const platformRole = request.headers.get("x-platform-role");
+    const tenantId = request.headers.get("x-tenant-id");
 
     // Reject if not authenticated
     if (!userId || !platformRole) {
@@ -227,26 +197,6 @@ export async function POST(request: NextRequest) {
         { success: false, error: "You can only create products for your own supplier" },
         { status: 403 }
       );
-    }
-
-    // Phase C3: Supplier product limit check
-    if (platformRole !== "ADMIN") {
-      const invoSub = await prisma.invoSubscription.findFirst({
-        where: { supplierId: supplierId },
-      });
-      const maxProducts = invoSub?.maxProducts ?? 100;
-      const currentProductCount = await prisma.product.count({
-        where: { supplierId: supplierId },
-      });
-      if (currentProductCount >= maxProducts) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: `Product limit reached (${currentProductCount}/${maxProducts}). Upgrade your plan to add more products.`,
-          },
-          { status: 403 }
-        );
-      }
     }
 
     const prismaCategory = toPrismaCategory(data.category);

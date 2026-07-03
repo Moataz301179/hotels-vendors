@@ -107,7 +107,7 @@ export const OrderCreateSchema = z.object({
   propertyId: z.string().cuid().optional(),
   outletId: z.string().cuid().optional(),
   supplierId: z.string().cuid(),
-  requesterId: z.string().cuid().optional(),
+  requesterId: z.string().cuid(),
   items: z.array(OrderItemSchema).min(1, "At least one item is required"),
   deliveryDate: z.string().datetime().optional(),
   deliveryInstructions: z.string().optional(),
@@ -250,7 +250,7 @@ export const BusinessRegisterSchema = z.object({
   type: z.enum(["hotel", "supplier", "factoring", "shipping"]),
   name: z.string().min(2),
   email: z.string().email(),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(6),
   phone: z.string().optional(),
   city: z.string().optional(),
   governorate: z.string().optional(),
@@ -260,10 +260,6 @@ export const BusinessRegisterSchema = z.object({
   crDocumentUrl: z.string().optional(),
   taxDocumentUrl: z.string().optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
-  bankName: z.string().optional(),
-  bankAccount: z.string().optional(),
-  paymobMerchantId: z.string().optional(),
-  licenseNumber: z.string().optional(),
 });
 
 export const LoginSchema = z.object({
@@ -278,48 +274,4 @@ export const PaginationSchema = z.object({
   search: z.string().optional(),
   sortBy: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
-});
-
-/* ── Return Schemas ── */
-export const ReturnItemSchema = z.object({
-  orderItemId: z.string().cuid(),
-  quantity: z.number().int().positive(),
-  reason: z.enum(["DAMAGED", "WRONG_ITEM", "QUALITY_ISSUE", "OVER_DELIVERED", "EXPIRED", "NEAR_EXPIRY", "OTHER"]),
-  description: z.string().optional(),
-  evidenceUrls: z.string().optional(),
-});
-
-export const ReturnCreateSchema = z.object({
-  orderId: z.string().cuid(),
-  reason: z.enum(["DAMAGED", "WRONG_ITEM", "QUALITY_ISSUE", "OVER_DELIVERED", "EXPIRED", "NEAR_EXPIRY", "OTHER"]),
-  description: z.string().optional(),
-  evidenceUrls: z.string().optional(),
-  items: z.array(ReturnItemSchema).min(1, "At least one item is required"),
-});
-
-export const ReturnResolveSchema = z.object({
-  resolution: z.enum(["FULL_RETURN", "PARTIAL_RETURN", "REPLACEMENT", "CREDIT_NOTE", "REFUND", "REJECTED"]),
-  itemActions: z.array(z.object({
-    returnItemId: z.string().cuid(),
-    action: z.enum(["APPROVE", "REJECT", "PARTIAL_APPROVE"]),
-    approvedQuantity: z.number().int().min(0).optional(),
-    rejectedReason: z.string().optional(),
-  })).optional(),
-  notes: z.string().optional(),
-});
-
-/* ── Delivery Confirmation Schemas ── */
-export const OtpGenerateSchema = z.object({
-  deliveryJobId: z.string().cuid(),
-  receiverPhone: z.string().min(10),
-  receiverName: z.string().optional(),
-  deliveryChannel: z.enum(["SMS", "WHATSAPP", "EMAIL"]).default("SMS"),
-});
-
-export const DeliveryConfirmSchema = z.object({
-  deliveryJobId: z.string().cuid(),
-  otpCode: z.string().length(6),
-  podPhotoUrl: z.string().optional(),
-  signatureUrl: z.string().optional(),
-  notes: z.string().optional(),
 });

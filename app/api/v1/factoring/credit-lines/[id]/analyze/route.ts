@@ -7,7 +7,6 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { executeLLM } from "@/lib/ai/llm";
 import { HotelScoreEngine } from "@/lib/fintech/scoring/hotel-score-engine";
-import { apiRoute, authenticate, requirePermission, success } from "@/lib/api-utils";
 
 const FINANCIAL_ANALYST_PROMPT = `You are the Hotels Vendors Credit Underwriting AI — an institutional-grade financial analyst specialized in Egyptian hospitality sector credit risk.
 
@@ -42,11 +41,13 @@ OUTPUT FORMAT — JSON:
   "mitigationSuggestions": ["..."]
 }`;
 
-export const POST = apiRoute(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
-  const auth = await authenticate(request);
-  await requirePermission(auth, "factoring:inquire");
-  const { id } = await params;
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+    
     const app = await prisma.creditLineApplication.findUnique({
       where: { id },
     });
@@ -62,16 +63,16 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
 
     // ── STEP 1: Run proprietary scoring engine ────────────────────
     const financials = {
-      annualRevenue: Number(app.annualRevenue || 0),
-      netProfit: Number(app.netProfit || 0),
-      totalAssets: Number(app.totalAssets || 0),
-      currentAssets: Number(app.currentAssets || 0),
-      totalLiabilities: Number(app.totalLiabilities || 0),
-      currentLiabilities: Number(app.currentLiabilities || 0),
-      bankBalance: Number(app.bankBalance || 0),
-      monthlyPurchases: Number(app.monthlyPurchases || 0),
-      avgPaymentDays: Number(app.avgPaymentDays || 0),
-      existingDebt: Number(app.existingDebt || 0),
+      annualRevenue: app.annualRevenue || 0,
+      netProfit: app.netProfit || 0,
+      totalAssets: app.totalAssets || 0,
+      currentAssets: app.currentAssets || 0,
+      totalLiabilities: app.totalLiabilities || 0,
+      currentLiabilities: app.currentLiabilities || 0,
+      bankBalance: app.bankBalance || 0,
+      monthlyPurchases: app.monthlyPurchases || 0,
+      avgPaymentDays: app.avgPaymentDays || 0,
+      existingDebt: app.existingDebt || 0,
     };
 
     const profile = {
@@ -87,7 +88,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params: 
       bankGuarantee: app.bankGuarantee,
       personalGuarantee: app.personalGuarantee,
       equipmentCollateral: app.equipmentCollateral,
-      depositAmount: Number(app.depositAmount || 0),
+      depositAmount: app.depositAmount || 0,
     };
 
     const market = {
@@ -106,22 +107,22 @@ PROPERTIES: ${app.properties || 1} | ROOMS: ${app.rooms || "N/A"}
 LOCATION: ${app.governorate || "Unknown"}
 
 FINANCIAL SNAPSHOT:
-- Annual Revenue: EGP ${Number(app.annualRevenue || 0).toLocaleString()}
-- Net Profit: EGP ${Number(app.netProfit || 0).toLocaleString()} (${Number(app.annualRevenue || 0) > 0 ? (Number(app.netProfit || 0) / Number(app.annualRevenue) * 100).toFixed(1) : "N/A"}% margin)
-- Total Assets: EGP ${Number(app.totalAssets || 0).toLocaleString()}
-- Total Liabilities: EGP ${Number(app.totalLiabilities || 0).toLocaleString()}
-- Current Ratio: ${Number(app.currentLiabilities || 0) > 0 ? (Number(app.currentAssets || 0) / Number(app.currentLiabilities || 1)).toFixed(2) : "N/A"}
-- Bank Balance: EGP ${Number(app.bankBalance || 0).toLocaleString()}
-- Monthly Purchases: EGP ${Number(app.monthlyPurchases || 0).toLocaleString()}
+- Annual Revenue: EGP ${(app.annualRevenue || 0).toLocaleString()}
+- Net Profit: EGP ${(app.netProfit || 0).toLocaleString()} (${app.annualRevenue ? ((app.netProfit || 0) / app.annualRevenue * 100).toFixed(1) : "N/A"}% margin)
+- Total Assets: EGP ${(app.totalAssets || 0).toLocaleString()}
+- Total Liabilities: EGP ${(app.totalLiabilities || 0).toLocaleString()}
+- Current Ratio: ${(app.currentLiabilities || 0) > 0 ? ((app.currentAssets || 0) / (app.currentLiabilities || 1)).toFixed(2) : "N/A"}
+- Bank Balance: EGP ${(app.bankBalance || 0).toLocaleString()}
+- Monthly Purchases: EGP ${(app.monthlyPurchases || 0).toLocaleString()}
 - Average Payment Days: ${app.avgPaymentDays || "N/A"}
-- Existing Debt: EGP ${Number(app.existingDebt || 0).toLocaleString()}
+- Existing Debt: EGP ${(app.existingDebt || 0).toLocaleString()}
 
 COLLATERAL:
 - Property Deed: ${app.propertyDeed ? "YES" : "NO"}
 - Bank Guarantee: ${app.bankGuarantee ? "YES" : "NO"}
 - Personal Guarantee: ${app.personalGuarantee ? "YES" : "NO"}
 - Equipment Collateral: ${app.equipmentCollateral ? "YES" : "NO"}
-- Cash Deposit: EGP ${Number(app.depositAmount || 0).toLocaleString()}
+- Cash Deposit: EGP ${(app.depositAmount || 0).toLocaleString()}
 
 PROPRIETARY ENGINE SCORE: ${engineScore.overallScore}/1000
 GRADE: ${engineScore.grade} | RISK: ${engineScore.riskLevel}
@@ -206,23 +207,29 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
       },
     });
 
-    return success({
-      id: updated.id,
-      status: updated.status,
-      creditScore: updated.creditScore,
-      grade: finalGrade,
-      recommendedLimit: updated.recommendedLimit,
-      riskLevel: aiResult.riskLevel || engineScore.riskLevel,
-      approvalProbability: aiResult.approvalProbability || engineScore.approvalProbability,
-      maxTenorDays: aiResult.maxTenorDays || engineScore.maxTenorDays,
-      factoringFee: aiResult.factoringFee || engineScore.factoringFee,
-      analysis: aiResult.report,
-      riskFlags: aiResult.riskFlags,
-      keyRisks: aiResult.keyRisks,
-      mitigationSuggestions: aiResult.mitigationSuggestions,
+    return Response.json({
+      success: true,
+      data: {
+        id: updated.id,
+        status: updated.status,
+        creditScore: updated.creditScore,
+        grade: finalGrade,
+        recommendedLimit: updated.recommendedLimit,
+        riskLevel: aiResult.riskLevel || engineScore.riskLevel,
+        approvalProbability: aiResult.approvalProbability || engineScore.approvalProbability,
+        maxTenorDays: aiResult.maxTenorDays || engineScore.maxTenorDays,
+        factoringFee: aiResult.factoringFee || engineScore.factoringFee,
+        analysis: aiResult.report,
+        riskFlags: aiResult.riskFlags,
+        keyRisks: aiResult.keyRisks,
+        mitigationSuggestions: aiResult.mitigationSuggestions,
+      },
     });
-    } catch (err) {
-      console.error("Credit analysis error:", err);
-      throw err;
-    }
-});
+  } catch (error) {
+    console.error("Credit analysis error:", error);
+    return Response.json(
+      { success: false, error: error instanceof Error ? error.message : "Analysis failed" },
+      { status: 500 }
+    );
+  }
+}

@@ -95,7 +95,7 @@ export const translations = {
         price: "Custom",
         period: "tailored pricing",
         desc: "For hotel groups with 5+ properties",
-        cta: "Deploy with AI",
+        cta: "Contact Sales",
       },
     },
     // CTA
@@ -237,7 +237,7 @@ export const translations = {
         price: "مخصص",
         period: "تسعير مخصص",
         desc: "لمجموعات الفنادق ذات 5+ فنادق",
-        cta: "الإعداد الآلي",
+        cta: "تواصل مع المبيعات",
       },
     },
     // CTA

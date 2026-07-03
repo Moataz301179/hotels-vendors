@@ -102,7 +102,7 @@ export async function generateDynamicTcpReport(orderId: string): Promise<Dynamic
   }
 
   const market = EGYPT_2026;
-  const orderTotal = Number(order.total);
+  const orderTotal = order.total;
   const paymentTermsDays = 90; // Default Egyptian hospitality terms
 
   const lineItems: TcpLineItem[] = [];

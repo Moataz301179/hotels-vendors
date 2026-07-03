@@ -1,66 +1,132 @@
-/**
- * Dashboard Overview — Role Router
- *
- * Serves as the /dashboard entry point. Detects the user's platform role
- * and renders the appropriate role-specific dashboard.
- *
- * Existing per-role pages (/dashboard/hotel, /dashboard/supplier, etc.)
- * remain accessible for direct navigation and deep links.
- */
+"use client"
 
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
-import { RoleDashboard } from "@/components/dashboard/RoleDashboard";
-import { getDashboardRole } from "@/components/dashboard/get-dashboard-role";
-import { prisma } from "@/lib/prisma";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Sparkles, LogOut, Building2, Users, Star, Loader2 } from "lucide-react"
 
-const SESSION_COOKIE = "hv_session";
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
+type UserData = {
+  user: {
+    id: string
+    email: string
+    name: string
+    companyName: string
+    platformRole: string
+    isVerified: boolean
+  }
+  tenant: {
+    id: string
+    name: string
+    maxUsers: number
+    seatCount: number
+    rating?: number | null
+  }
+}
 
-export default async function DashboardOverviewPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+export default function DashboardPage() {
+  const router = useRouter()
+  const [data, setData] = useState<UserData | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  if (!token) {
-    redirect("/login");
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => {
+        if (!res.ok) throw new Error("Not authenticated")
+        return res.json()
+      })
+      .then((d) => setData(d))
+      .catch(() => router.push("/login"))
+      .finally(() => setLoading(false))
+  }, [router])
+
+  async function handleLogout() {
+    await fetch("/api/auth/me", { method: "POST" })
+    router.push("/login")
   }
 
-  let role: string | null = null;
-  let userId: string | null = null;
-
-  try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
-    role = (payload.platformRole as string) || null;
-    userId = (payload.userId as string) || null;
-  } catch {
-    redirect("/login");
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--bg-canvas)" }}
+      >
+        <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--accent-base)" }} />
+      </div>
+    )
   }
 
-  if (!role) {
-    redirect("/login");
-  }
+  if (!data) return null
 
-  // Fetch user for role detection
-  let dashboardRole = getDashboardRole({ platformRole: role });
+  return (
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundColor: "var(--bg-canvas)",
+        color: "var(--text-primary)",
+        fontFamily: "var(--font-sans)",
+      }}
+    >
+      <header
+        className="h-16 flex items-center justify-between px-6"
+        style={{ borderBottom: "1px solid var(--border-subtle)" }}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: "var(--accent-base)" }}
+          >
+            <Sparkles className="w-4 h-4" style={{ color: "var(--bg-canvas)" }} />
+          </div>
+          <span className="font-semibold text-lg">HotelProcure</span>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          <LogOut className="w-4 h-4" />
+          Sign out
+        </button>
+      </header>
 
-  // For non-admin roles, also check if we should redirect to their dedicated page
-  // Admin stays on the overview; others get their role dashboard rendered here
-  if (userId) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { platformRole: true, roleId: true },
-      });
-      if (user) {
-        dashboardRole = getDashboardRole(user);
-      }
-    } catch {
-      // Silently continue with JWT-derived role
-    }
-  }
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold">
+            Welcome, {data.user.name}
+          </h1>
+          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+            {data.user.companyName} &middot; {data.user.platformRole}
+          </p>
+        </div>
 
-  return <RoleDashboard role={dashboardRole} />;
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            className="p-4 rounded-lg"
+            style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}
+          >
+            <Building2 className="w-5 h-5 mb-2" style={{ color: "var(--accent-base)" }} />
+            <p className="text-2xl font-semibold">{data.tenant.name}</p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>Company</p>
+          </div>
+          <div
+            className="p-4 rounded-lg"
+            style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}
+          >
+            <Users className="w-5 h-5 mb-2" style={{ color: "var(--accent-base)" }} />
+            <p className="text-2xl font-semibold">{data.tenant.maxUsers}</p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>Max Users</p>
+          </div>
+          <div
+            className="p-4 rounded-lg"
+            style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}
+          >
+            <Star className="w-5 h-5 mb-2" style={{ color: "var(--accent-base)" }} />
+            <p className="text-2xl font-semibold">
+              {data.tenant.rating ? data.tenant.rating.toFixed(1) : "—"}
+            </p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>Rating</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
 }

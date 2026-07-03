@@ -11,12 +11,6 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import type {
-  EtaInvoicePayload,
-  EtaInvoiceLine,
-  EtaTaxpayer,
-  EtaTaxableItem,
-} from "@/lib/eta/types";
 
 // ─── Mock prisma before importing any module that depends on it ──
 vi.mock("@/lib/prisma", () => ({
@@ -67,6 +61,13 @@ const {
   isValidTaxType,
   getTaxLabel,
 } = await import("@/lib/eta/tax-codes");
+
+const {
+  EtaInvoicePayload,
+  EtaInvoiceLine,
+  EtaTaxpayer,
+  EtaTaxableItem,
+} = await import("@/lib/eta/types");
 
 // ─── Test Fixtures ───────────────────────────────────────────────
 
@@ -503,7 +504,7 @@ describe("Multi-Sector Procurement Order — Full Payload Validation", () => {
     expect(MOCK_FULL_PAYLOAD.invoiceLines[2].salesTotal).toBe(25000.0);
 
     // Total should match sum
-    const lineTotal = MOCK_FULL_PAYLOAD.invoiceLines.reduce((sum: number, l) => sum + l.salesTotal, 0);
+    const lineTotal = MOCK_FULL_PAYLOAD.invoiceLines.reduce((sum, l) => sum + l.salesTotal, 0);
     expect(lineTotal).toBe(MOCK_FULL_PAYLOAD.totalSalesAmount);
 
     // VAT should be 14% of subtotal (allow 0.01 tolerance for float arithmetic)

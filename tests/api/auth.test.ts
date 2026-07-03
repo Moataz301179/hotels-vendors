@@ -75,12 +75,10 @@ describe("Auth Layer", () => {
       expect(result.success).toBe(true);
     });
 
-    it("should reject invalid email format when a valid-looking email is required", () => {
-      // LoginSchema accepts any non-empty string for email (supports username login like "admin")
-      // This test verifies that a plain username without @ is accepted (by design)
+    it("should reject invalid email", () => {
       const data = { email: "not-an-email", password: "password123" };
       const result = LoginSchema.safeParse(data);
-      expect(result.success).toBe(true); // username-style login is intentionally supported
+      expect(result.success).toBe(false);
     });
 
     it("should reject empty password", () => {
@@ -109,10 +107,11 @@ describe("Auth Layer", () => {
     });
 
     it("should reject missing required fields", () => {
-      // type, name, email, password are required. Sending only email+password should fail.
       const data = {
         email: "hotel@example.com",
         password: "SecurePass123!",
+        name: "Grand Hotel",
+        type: "hotel",
       };
       const result = BusinessRegisterSchema.safeParse(data);
       expect(result.success).toBe(false);

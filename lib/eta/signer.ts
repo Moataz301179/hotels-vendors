@@ -140,32 +140,16 @@ export async function signEtaDocument(
     }
   }
 
-  // 2. SOFTWARE SIGNING (ETA Pre-Production / Integration Toolkit)
-  // ETA pre-production accepts software-based signatures generated via the
-  // ETA Integration Toolkit. This mode is used for UAT and testing.
-  // For production, replace with a real certificate from Egypt Trust or e-Tax.
-  const softwareSigningKey = process.env.ETA_SOFTWARE_KEY || tenantId;
-  if (process.env.ETA_SOFTWARE_SIGNING === "true" || !process.env.PKCS11_DRIVER_PATH) {
-    try {
-      const hash = crypto.createHash("sha256").update(Buffer.from(canonicalizedString, "utf8")).digest();
-      const signature = crypto.createHmac("sha256", softwareSigningKey).update(hash).digest("base64");
-      return {
-        signatureType: "I",
-        value: signature,
-      };
-    } catch (error) {
-      throw new Error(
-        `SOFTWARE_SIGNING_FAILURE: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-  }
-
-  // 3. SOFT-HSM FALLBACK (legacy emulation)
+  // 2. SOFT-HSM / ETA EMULATION LAYER (Mock Detached Cryptography Driver)
+  // Replicates PKCS#11 hardware output using standard tenant-bound public/private keys
   try {
     const hash = crypto.createHash("sha256").update(Buffer.from(canonicalizedString, "utf8")).digest();
+
+    // Generate a secure, consistent emulated signature keyed by hash and tenantId
     const secureHmac = crypto.createHmac("sha256", tenantId)
       .update(hash)
       .digest("base64");
+
     return {
       signatureType: "I",
       value: secureHmac

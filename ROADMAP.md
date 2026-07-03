@@ -1,6 +1,6 @@
 # Hotels Vendors — Platform Architecture & Execution Roadmap
 
-> **Last Updated:** 2026-06-29  
+> **Last Updated:** 2026-05-23  
 > **Manager:** AI Supervisor (Kimi 2.6 Swarm Orchestrator)  
 > **Status:** MVP Skeleton → Production Hardening (Phase 1.5)
 
@@ -73,22 +73,22 @@
 | 2.2 | Landing pages targeting "hotel procurement Egypt" | seo-strategist | ✅ Done |
 | 2.3 | Hotel Procurement Portal MVP | procurement-designer | ✅ Done |
 | 2.4 | Fee-calculation service with idempotency keys | fee-engineer | ✅ Done |
-| 2.5 | **Product Detail Page** with specs, MOQ, lead time, bulk pricing | procurement-designer | ✅ Done |
-| 2.6 | **RFQ (Request for Quote)** flow — list, create, detail, API | hotel-lead | ✅ Done |
-| 2.7 | **Supplier onboarding** KYC + document verification | onboarding-specialist | 🔄 Partial (form + admin review done, doc upload stubbed) |
-| 2.8 | Mobile responsive tables below 1024px | procurement-designer | ✅ Handled via overflow-x-auto |
+| 2.5 | **Product Detail Page** with specs, MOQ, lead time | procurement-designer | 🔄 In Progress |
+| 2.6 | **RFQ (Request for Quote)** flow | hotel-lead | ❌ Not started |
+| 2.7 | **Supplier onboarding** KYC + document verification | onboarding-specialist | 🔄 Partial |
+| 2.8 | Mobile responsive tables below 1024px | procurement-designer | ❌ Not started |
 
 ### Phase 3 — Compliance & Scale (Days 61–90)
 
 | # | Task | Owner | Status |
 |---|---|---|---|
 | 3.1 | Production ETA submission pipeline + dead-letter queue | eta-officer | 🔄 Waiting sandbox |
-| 3.2 | Route-level authorization + field-level permission checks | api-security | ✅ Done (middleware.ts — JWT, RBAC, security headers) |
-| 3.3 | Cross-module dependency audit + Zod on all v1 routes | the-auditor | 🔄 In Progress (~70%) |
+| 3.2 | Route-level authorization + field-level permission checks | api-security | 🔄 In Progress |
+| 3.3 | Cross-module dependency audit + Zod on all v1 routes | the-auditor | 🔄 In Progress |
 | 3.4 | Close first factoring company term sheet | growth-lead | ❌ Not started |
 | 3.5 | Search engine (Meilisearch/Elasticsearch) for 10K+ products | ai-architect | ❌ Not started |
 | 3.6 | Analytics Dashboard with Recharts | hotel-analyst | ❌ Not started |
-| 3.7 | Payment / Factoring Workflow (Paymob integration) | fintech-lead | ✅ Done (deposit, callback, status, dashboard API) |
+| 3.7 | Payment / Factoring Workflow (Paymob integration) | fintech-lead | 🔄 Partial |
 | 3.8 | Review / Rating System | trust-assessor | ❌ Not started |
 
 ---
@@ -142,14 +142,14 @@ docker compose -f docker-compose.swarm.yml up -d
 ## Success Metrics
 
 | Metric | Target | Current |
-|---|---|---|---|
+|---|---|---|
 | API endpoints with Zod + RBAC | 100% | ~70% |
 | Test coverage (business logic) | 80% | 0% |
 | Pilot hotels signed | 5 groups (20 properties) | 0 |
 | Suppliers onboarded | 200 | 50 (seeded) |
 | Swarm jobs completed (24h) | 50+ | 0 (workers now fixed) |
 | ETA sandbox integration | Live | Pending access |
-| Platform build passes | Always | ✅ Passing |
+| Platform build passes | Always | Intermittent |
 
 ---
 

@@ -46,7 +46,7 @@ async function tick(): Promise<void> {
       invoiceId: o.invoices?.[0]?.id ?? "",
       supplierId: o.supplierId,
       supplierName: o.supplier?.name ?? "Unknown",
-      amountCents: Math.round((o.total?.toNumber() ?? 0) * 100),
+      amountCents: Math.round((o.total ?? 0) * 100),
       deliveredAt: o.deliveryDate?.toISOString() ?? new Date().toISOString(),
       termsDays: 60,
       factoringEligible: false,
