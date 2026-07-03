@@ -45,7 +45,6 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     auth.tenantId,
     "REJECTED" as ApprovalAction,
     reason,
-    orderBefore ? JSON.stringify(orderBefore) : undefined,
   );
 
   await audit({
