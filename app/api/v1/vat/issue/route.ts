@@ -87,6 +87,8 @@ export async function POST(req: NextRequest) {
         hotelId: "VAT-STANDALONE",
         supplierId: "VAT-STANDALONE",
         tenantId: "VAT-STANDALONE",
+        issueDate: new Date(),
+        updatedAt: new Date(),
         etaResponse: {
           submissionId: `ETA-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
           submittedAt: new Date().toISOString(),
