@@ -61,6 +61,48 @@ export async function sendVerificationEmail(email: string, token: string): Promi
   }
 }
 
+export async function sendContactEmail(params: {
+  name: string
+  email: string
+  company?: string
+  message: string
+  type: string
+}): Promise<boolean> {
+  const { name, email, company, message, type } = params
+
+  if (!smtpHost || !smtpUser || !smtpPass) {
+    console.log("[EMAIL] SMTP not configured. Contact message from:", email)
+    return false
+  }
+
+  try {
+    await getTransporter().sendMail({
+      from: emailFrom,
+      to: emailFrom,
+      replyTo: email,
+      subject: `[${type.toUpperCase()}] Contact from ${name}${company ? ` (${company})` : ""}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: #6c5ce7;">New Contact Inquiry</h2>
+          <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+            <tr><td style="padding: 8px; color: #8b8b9e;">Name</td><td style="padding: 8px;">${name}</td></tr>
+            <tr><td style="padding: 8px; color: #8b8b9e;">Email</td><td style="padding: 8px;">${email}</td></tr>
+            ${company ? `<tr><td style="padding: 8px; color: #8b8b9e;">Company</td><td style="padding: 8px;">${company}</td></tr>` : ""}
+            <tr><td style="padding: 8px; color: #8b8b9e;">Type</td><td style="padding: 8px;">${type}</td></tr>
+          </table>
+          <div style="border-top: 1px solid #eee; padding-top: 16px;">
+            <p style="color: #333;">${message}</p>
+          </div>
+        </div>
+      `,
+    })
+    return true
+  } catch (error) {
+    console.error("[EMAIL] Failed to send contact email:", error)
+    return false
+  }
+}
+
 export async function sendInviteEmail(email: string, inviterName: string, token: string): Promise<boolean> {
   const inviteUrl = `${appUrl}/signup?invite=${token}`
 
