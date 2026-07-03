@@ -15,10 +15,11 @@ module.exports = {
   apps: [
     {
       name: "hotels-vendors",
-      script: "server.js",
-      cwd: "/var/www/hotels-vendors/current",
-      instances: "max",
-      exec_mode: "cluster",
+      script: "node_modules/.bin/next",
+      args: ["start"],
+      cwd: "/var/www/hotelsvendors-v2",
+      instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       max_memory_restart: "1500M",
