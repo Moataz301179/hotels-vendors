@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CreditCard, Loader2, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react";
 
 interface OrderPaymentProps {
@@ -10,10 +10,32 @@ interface OrderPaymentProps {
   onPaymentComplete?: () => void;
 }
 
+interface UserInfo {
+  email: string;
+  name: string;
+  phone: string;
+}
+
 export function OrderPaymentButton({ orderId, amount, currency = "EGP", onPaymentComplete }: OrderPaymentProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    fetch("/api/v1/auth/me")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setUser({
+            email: json.data.email || "",
+            name: json.data.name || "",
+            phone: json.data.phone || "01000000000",
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handlePay = async () => {
     setLoading(true);
@@ -24,10 +46,10 @@ export function OrderPaymentButton({ orderId, amount, currency = "EGP", onPaymen
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount,
-          email: "buyer@hotel.com",
-          firstName: "Hotel",
-          lastName: "Buyer",
-          phone: "01000000000",
+          email: user?.email || "",
+          firstName: user?.name?.split(" ")[0] || "",
+          lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+          phone: user?.phone || "01000000000",
           description: `Payment for order ${orderId}`,
           referenceType: "MARKETPLACE_COMMISSION",
           referenceId: orderId,

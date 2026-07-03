@@ -22,7 +22,7 @@ import {
   Package,
 } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
-import { OrderPaymentButton } from "@/components/dashboards/shared/order-payment";
+import { PaymentMethods } from "@/components/dashboards/shared/payment-methods";
 
 interface OrderItem {
   id: string;
@@ -473,7 +473,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <CreditCard size={14} className="text-foreground-muted" />
             <h3 className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">Payment</h3>
           </div>
-          <OrderPaymentButton
+          <PaymentMethods
             orderId={order.id}
             amount={order.total}
             currency={order.currency}

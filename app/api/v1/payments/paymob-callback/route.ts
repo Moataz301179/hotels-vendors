@@ -45,13 +45,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
   // Log to audit
   await prisma.auditLog.create({
     data: {
-          tenantId: order.tenantId,
-        
+      tenantId: order.tenantId,
       entityType: "ORDER",
       entityId: order.id,
       action: "DEPOSIT_PAID",
       actorId: "paymob",
       actorRole: "SYSTEM",
+      beforeState: JSON.stringify({ status: order.status }),
       afterState: JSON.stringify({
         paymobOrderId,
         amountCents: payload.amount_cents,

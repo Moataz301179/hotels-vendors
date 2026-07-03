@@ -60,6 +60,23 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
+  // Link Paymob order to Order record so paymob-callback can find it
+  if (data.referenceId && data.referenceType) {
+    const order = await prisma.order.findUnique({
+      where: { id: data.referenceId, tenantId: auth.tenantId },
+      select: { id: true },
+    });
+    if (order) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentGuaranteeMethod: `DEPOSIT_PAYMOB:${paymobOrderId}`,
+          paymentGuaranteed: false,
+        },
+      });
+    }
+  }
+
   const iframeId = process.env.PAYMOB_IFRAME_ID;
   const iframeBaseUrl = process.env.PAYMOB_IFRAME_BASE_URL || "https://accept.paymob.com";
   const paymentUrl = iframeId
