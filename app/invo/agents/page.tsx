@@ -25,12 +25,13 @@ export default async function AgentsPage() {
 
   try {
     const results = await Promise.all([
-      prisma.agentAuditLog.findMany({
+      prisma.agentRun.findMany({
         orderBy: { createdAt: "desc" },
         take: 50,
       }),
-      prisma.alert.findMany({
+      prisma.agentRun.findMany({
         orderBy: { createdAt: "desc" },
+        where: { status: "FAILED" },
         take: 20,
       }),
     ]);
@@ -40,7 +41,7 @@ export default async function AgentsPage() {
     // Tables may not exist yet — render with empty data
   }
 
-  const openAlerts = alerts.filter((a) => a.status === "open").length;
+  const openAlerts = alerts.filter((a) => a.status === "FAILED").length;
 
   const agentCounts: Record<string, number> = {};
   auditLog.forEach((log) => {
