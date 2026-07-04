@@ -144,6 +144,7 @@ const CreateProductSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // TODO (security): Confirm permission mapping exists for `product:create` and add unit tests.
     const auth = await authenticate(request);
     await requirePermission(auth, "product:create");
 

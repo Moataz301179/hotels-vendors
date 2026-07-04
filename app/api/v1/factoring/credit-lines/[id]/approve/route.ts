@@ -1,3 +1,6 @@
+// TODO (security): Ensure server-side RBAC and tenant scoping — call authenticate() and requirePermission(...)
+// Also ensure tenantWhereClause(ctx) is used for DB queries.
+
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 

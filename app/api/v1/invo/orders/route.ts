@@ -9,6 +9,7 @@ import { authenticate, requirePermission } from "@/lib/api-utils";
  */
 export async function POST(req: NextRequest) {
   try {
+    // TODO (security): Add unit tests for permission `order:create` and validate Supabase row-level tenant enforcement.
     const auth = await authenticate(req);
     await requirePermission(auth, "order:create");
 
