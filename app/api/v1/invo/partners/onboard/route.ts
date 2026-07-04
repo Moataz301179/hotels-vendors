@@ -19,17 +19,15 @@ interface Partner {
 
 const partners: Partner[] = [];
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const body = await request.json();
     const { type, name, taxId, email, phone, contactName, address, categories, documents } = body;

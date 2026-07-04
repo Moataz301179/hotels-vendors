@@ -22,24 +22,22 @@ let catalog: CatalogItem[] = [
   { id: "cat_5", sku: "HV-HK-005", name: "Egyptian Cotton Towels", category: "Housekeeping", price: 15000, quantity: 300, supplierId: "sup_2", unit: "dozen", createdAt: "2026-06-01T00:00:00Z", updatedAt: "2026-06-01T00:00:00Z" },
 ];
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function GET(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const { searchParams } = new URL(request.url);
     const supplierId = searchParams.get("supplierId");
     const category = searchParams.get("category");
     const search = searchParams.get("search");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
 
     let results = [...catalog];
 
@@ -66,9 +64,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const body = await request.json();
     const { sku, name, category, price, quantity, supplierId, unit } = body;

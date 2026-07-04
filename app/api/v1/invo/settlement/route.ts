@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const body = await request.json();
     const { invoiceId, supplierId, amount, method } = body;
@@ -22,7 +20,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Mock settlement
     const settlementId = `set_${Date.now()}`;
 
     return NextResponse.json({
@@ -37,7 +34,7 @@ export async function POST(request: NextRequest) {
         status: "completed",
         executedAt: new Date().toISOString(),
         receiptUrl: `https://invo.hotelsvendors.com/receipts/${settlementId}`,
-        platformFee: Math.floor(amount * 0.025), // 2.5%
+        platformFee: Math.floor(amount * 0.025),
         netAmount: Math.floor(amount * 0.975),
       },
     });

@@ -88,10 +88,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
       },
     });
 
-    // Trigger AI analysis asynchronously
+    // Trigger AI analysis asynchronously with internal service authentication.
     fetch(`${process.env.APP_URL || "http://localhost:3000"}/api/v1/factoring/credit-lines/${application.id}/analyze`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.INVO_SERVICE_KEY || "dev-key-insecure"}`,
+      },
     }).catch(() => {});
 
     return success({ id: application.id, status: application.status });

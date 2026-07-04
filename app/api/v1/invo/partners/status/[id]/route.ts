@@ -17,13 +17,12 @@ interface Partner {
   reviewerNotes?: string;
 }
 
-// In-memory store shared with onboard route (simplified)
 const partners: Partner[] = [];
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function GET(
@@ -31,15 +30,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const { id } = await params;
     const partner = partners.find((p) => p.partnerId === id);
 
     if (!partner) {
-      // Return mock data for demo
       return NextResponse.json({
         success: true,
         data: {

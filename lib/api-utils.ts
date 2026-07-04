@@ -29,6 +29,26 @@ export function requireTenantId(request: NextRequest): string {
   return tenantId;
 }
 
+export function getBearerToken(request: NextRequest): string | null {
+  const header = request.headers.get("authorization")?.trim();
+  if (!header || !header.toLowerCase().startsWith("bearer ")) {
+    return null;
+  }
+  return header.slice(7).trim();
+}
+
+export function requireServiceKey(request: NextRequest, envName = "INVO_SERVICE_KEY") {
+  const apiKey = process.env[envName] || (process.env.NODE_ENV !== "production" ? "dev-key-insecure" : undefined);
+  if (!apiKey) {
+    throw new ApiError(`${envName} is not configured`, 500);
+  }
+
+  const token = getBearerToken(request);
+  if (!token || token !== apiKey) {
+    throw new ApiError("Unauthorized", 401);
+  }
+}
+
 // ─────────────────────────────────────────
 // 2. AUTH
 // ─────────────────────────────────────────

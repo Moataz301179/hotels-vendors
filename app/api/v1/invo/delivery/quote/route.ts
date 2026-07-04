@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const body = await request.json();
     const { pickup, dropoff, weightKg, volumeM3, urgency } = body;
 
-    // Mock pricing calculation
-    const baseRate = 250; // EGP base
-    const distanceFactor = 1.5; // Mock distance multiplier
+    const baseRate = 250;
+    const distanceFactor = 1.5;
     const weightFactor = (weightKg || 10) * 0.5;
     const volumeFactor = (volumeM3 || 0.1) * 100;
     const urgencyMultiplier = urgency === "express" ? 2.0 : urgency === "same_day" ? 1.5 : 1.0;

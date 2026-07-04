@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function requireAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const apiKey = process.env.INVO_SERVICE_KEY || "dev-key-insecure";
-  return !!authHeader?.includes(apiKey);
+import { requireServiceKey } from "@/lib/api-utils";
+
+function requireAuth(request: NextRequest): void {
+  requireServiceKey(request, "INVO_SERVICE_KEY");
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!requireAuth(request)) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-    }
+    requireAuth(request);
 
     const body = await request.json();
     const { orderIds, vehicleType, consolidate } = body;
@@ -27,7 +25,7 @@ export async function POST(request: NextRequest) {
       data: {
         routeId: `route_${Date.now()}`,
         stops: mockStops,
-        estimatedDuration: mockStops.length * 2, // hours
+        estimatedDuration: mockStops.length * 2,
         vehicleType: vehicleType || "van",
         consolidate: consolidate ?? true,
         driverAssigned: true,

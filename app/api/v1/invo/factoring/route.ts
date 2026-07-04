@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { authenticate, requirePermission } from "@/lib/api-utils";
+import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/v1/invo/factoring
@@ -8,6 +10,9 @@ import { createClient } from "@/lib/supabase/server";
  */
 export async function POST(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "invoice:factor");
+
     const body = await req.json();
     const {
       invoice_id,
@@ -23,6 +28,16 @@ export async function POST(req: NextRequest) {
         { error: "Missing required fields: invoice_id, hotel_id, face_value" },
         { status: 400 }
       );
+    }
+
+    if (auth.platformRole !== "ADMIN") {
+      const hotel = await prisma.hotel.findFirst({
+        where: { id: hotel_id, tenantId: auth.tenantId },
+        select: { id: true },
+      });
+      if (!hotel) {
+        return NextResponse.json({ error: "Unauthorized hotel" }, { status: 403 });
+      }
     }
 
     const supabase = await createClient();

@@ -20,6 +20,7 @@ import { NextRequest } from "next/server";
 import { generateTcpReport, type TcpReport } from "@/lib/fintech/hub-revenue";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { authenticate, requirePermission } from "@/lib/api-utils";
 
 const tcpReportSchema = z.object({
   orderId: z.string().optional(),
@@ -36,6 +37,9 @@ const tcpReportSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await authenticate(request);
+    await requirePermission(auth, "report:read");
+
     const body = await request.json();
     const parsed = tcpReportSchema.safeParse(body);
 
@@ -55,13 +59,13 @@ export async function POST(request: NextRequest) {
 
     // If orderId provided, fetch from database
     if (params.orderId) {
-      const order = await prisma.order.findUnique({
-        where: { id: params.orderId },
+      const order = await prisma.order.findFirst({
+        where: { id: params.orderId, tenantId: auth.tenantId },
         include: { hotel: true },
       });
 
       if (!order) {
-        return Response.json({ error: "Order not found" }, { status: 404 });
+        return Response.json({ error: "Order not found or unauthorized" }, { status: 404 });
       }
 
       orderTotal = order.total;
@@ -69,8 +73,8 @@ export async function POST(request: NextRequest) {
       hotelId = order.hotelId;
       orderId = order.id;
     } else if (params.hotelId) {
-      const hotel = await prisma.hotel.findUnique({
-        where: { id: params.hotelId },
+      const hotel = await prisma.hotel.findFirst({
+        where: { id: params.hotelId, tenantId: auth.tenantId },
       });
 
       if (!hotel) {

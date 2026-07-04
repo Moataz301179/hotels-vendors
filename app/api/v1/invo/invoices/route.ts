@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { authenticate, requirePermission } from "@/lib/api-utils";
+import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/v1/invo/invoices
@@ -8,6 +10,9 @@ import { createClient } from "@/lib/supabase/server";
  */
 export async function POST(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "invoice:create");
+
     const body = await req.json();
     const {
       order_id,
@@ -24,6 +29,27 @@ export async function POST(req: NextRequest) {
         { error: "Missing required fields: order_id, hotel_id, supplier_id, face_value" },
         { status: 400 }
       );
+    }
+
+    if (auth.platformRole !== "ADMIN") {
+      if (hotel_id) {
+        const hotel = await prisma.hotel.findFirst({
+          where: { id: hotel_id, tenantId: auth.tenantId },
+          select: { id: true },
+        });
+        if (!hotel) {
+          return NextResponse.json({ error: "Unauthorized hotel" }, { status: 403 });
+        }
+      }
+      if (supplier_id) {
+        const supplier = await prisma.supplier.findFirst({
+          where: { id: supplier_id, tenantId: auth.tenantId },
+          select: { id: true },
+        });
+        if (!supplier) {
+          return NextResponse.json({ error: "Unauthorized supplier" }, { status: 403 });
+        }
+      }
     }
 
     const supabase = await createClient();
@@ -79,12 +105,36 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "invoice:read");
+
     const { searchParams } = new URL(req.url);
     const hotel_id = searchParams.get("hotel_id");
     const supplier_id = searchParams.get("supplier_id");
     const qualification = searchParams.get("qualification");
     const eta_status = searchParams.get("eta_status");
     const limit = parseInt(searchParams.get("limit") || "50", 10);
+
+    if (auth.platformRole !== "ADMIN") {
+      if (hotel_id) {
+        const hotel = await prisma.hotel.findFirst({
+          where: { id: hotel_id, tenantId: auth.tenantId },
+          select: { id: true },
+        });
+        if (!hotel) {
+          return NextResponse.json({ error: "Unauthorized hotel" }, { status: 403 });
+        }
+      }
+      if (supplier_id) {
+        const supplier = await prisma.supplier.findFirst({
+          where: { id: supplier_id, tenantId: auth.tenantId },
+          select: { id: true },
+        });
+        if (!supplier) {
+          return NextResponse.json({ error: "Unauthorized supplier" }, { status: 403 });
+        }
+      }
+    }
 
     const supabase = await createClient();
     let query = supabase
