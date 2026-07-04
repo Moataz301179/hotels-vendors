@@ -3,31 +3,23 @@
   "middleware": {
     "/": {
       "files": [
-        "server/edge/chunks/node_modules_next_dist_esm_build_templates_edge-wrapper_0a9gg_0.js",
-        "server/edge/chunks/[root-of-the-server]__13_ter7._.js",
-        "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_0fw-8-g.js"
+        "server/edge/chunks/02gj_next_dist_esm_build_templates_edge-wrapper_0-9b7p6.js",
+        "server/edge/chunks/[root-of-the-server]__0p7t8rg._.js",
+        "server/edge/chunks/08or_next_dist_esm_build_templates_edge-wrapper_0~vdttw.js"
       ],
       "name": "middleware",
       "page": "/",
-      "entrypoint": "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_0fw-8-g.js",
+      "entrypoint": "server/edge/chunks/08or_next_dist_esm_build_templates_edge-wrapper_0~vdttw.js",
       "matchers": [
         {
-          "regexp": "/:nextData(_next/data/[^/]{1,})?/api/:path*{(\\\\.json)}?",
-          "originalSource": "/api/:path*"
-        },
-        {
-          "regexp": "/:nextData(_next/data/[^/]{1,})?/dashboard/:path*{(\\\\.json)}?",
-          "originalSource": "/dashboard/:path*"
-        },
-        {
-          "regexp": "/:nextData(_next/data/[^/]{1,})?/settings/:path*{(\\\\.json)}?",
-          "originalSource": "/settings/:path*"
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*){(\\\\.json)}?",
+          "originalSource": "/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*)"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "90kaBdz0NzyRU1hP4NY64",
+        "__NEXT_BUILD_ID": "P1zOO03mhX58vpRbgFSYi",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "ZHgG+bn7SJXSp8L+wT5SNBdc4xxBye1ov51jym0XBTI=",
         "__NEXT_PREVIEW_MODE_ID": "87a8ed83914e68c08997dc37039bc178",
         "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "1a5bb8eb0beb479ba469dd4b06b795e12f2719b14fc5adc12a2433f0bc76eb30",

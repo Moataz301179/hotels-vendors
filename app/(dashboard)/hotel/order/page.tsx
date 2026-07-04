@@ -37,15 +37,17 @@ export default function OrderBuilderPage() {
       // Group by supplier — for simplicity, use the first supplier
       const supplierId = items[0].supplierId;
       const orderNumber = `PO-${Date.now().toString(36).toUpperCase()}`;
+      const idempotencyKey = crypto.randomUUID?.() ?? `order-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
       const res = await fetch("/api/v1/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-idempotency-key": idempotencyKey,
+        },
         body: JSON.stringify({
           orderNumber,
           supplierId,
-          hotelId: "", // Will be resolved server-side from auth context
-          requesterId: "", // Will be resolved server-side
           items: items.map((i) => ({
             productId: i.productId,
             quantity: i.quantity,

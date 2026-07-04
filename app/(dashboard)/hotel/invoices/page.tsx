@@ -75,7 +75,7 @@ export default function HotelInvoicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<StatusTab>("ALL");
 
-  const { data: invoicesData, loading, error } = useApi<Invoice[]>("/api/invoices?page=1&limit=50&sortOrder=desc");
+  const { data: invoicesData, loading, error } = useApi<Invoice[]>("/api/v1/invoices?page=1&limit=50&sortOrder=desc");
 
   const invoices = invoicesData ?? [];
 

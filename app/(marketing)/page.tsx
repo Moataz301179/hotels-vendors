@@ -359,6 +359,9 @@ export default function HomePage() {
                 <Link href="/sandbox" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(132,204,22,0.25)", color: "#84cc16" }}>
                   <Play size={13} /> Try Sandbox
                 </Link>
+                <Link href="/demo" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff" }}>
+                  Live Demo — Inventory & Checkout
+                </Link>
               </motion.div>
 
               {/* Social proof — mobile compact */}

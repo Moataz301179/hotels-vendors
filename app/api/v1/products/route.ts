@@ -22,7 +22,33 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") || "ACTIVE";
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "24", 10));
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const productId = searchParams.get("productId") || undefined;
     const supplierId = searchParams.get("supplierId") || undefined;
+
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: { id: productId },
+        include: {
+          supplier: {
+            select: {
+              id: true,
+              name: true,
+              tier: true,
+              rating: true,
+              reviewCount: true,
+              city: true,
+            },
+          },
+        },
+      });
+
+      if (!product) {
+        return NextResponse.json({ success: false, error: "Product not found" }, { status: 404 });
+      }
+
+      const marketplaceProduct = transformManyToMarketplace([product])[0];
+      return NextResponse.json({ success: true, data: { data: marketplaceProduct } });
+    }
 
     const where: Record<string, unknown> = {};
 

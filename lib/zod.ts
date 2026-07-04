@@ -103,11 +103,11 @@ export const OrderItemSchema = z.object({
 
 export const OrderCreateSchema = z.object({
   orderNumber: z.string().min(1),
-  hotelId: z.string().cuid(),
+  hotelId: z.string().cuid().optional(),
   propertyId: z.string().cuid().optional(),
   outletId: z.string().cuid().optional(),
   supplierId: z.string().cuid(),
-  requesterId: z.string().cuid(),
+  requesterId: z.string().cuid().optional(),
   items: z.array(OrderItemSchema).min(1, "At least one item is required"),
   deliveryDate: z.string().datetime().optional(),
   deliveryInstructions: z.string().optional(),

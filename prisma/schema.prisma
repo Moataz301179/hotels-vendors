@@ -1303,6 +1303,7 @@ model Payment {
 
   paidAt        DateTime?
   referenceCode String?
+  metadata      String?
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -1338,6 +1339,7 @@ enum PaymentMethod {
   CHECK
   CREDIT_CARD
   E_WALLET
+  ESCROW
 }
 
 // ─────────────────────────────────────────

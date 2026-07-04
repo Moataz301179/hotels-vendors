@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, validateBody, validateQuery, success, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
+import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -38,9 +38,32 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = validateBody(OrderCreateSchema, body);
 
-  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "CREATE_ORDER", amount: 0 });
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    include: { hotel: true },
+  });
 
-  // Calculate totals from items
+  if (!user) {
+    return error("User account not found", 404);
+  }
+  if (!user.hotelId) {
+    return error("No hotel associated with user", 400);
+  }
+
+  const hotelId = data.hotelId || user.hotelId;
+  const requesterId = data.requesterId || auth.userId;
+
+  const supplier = await prisma.supplier.findUnique({ where: { id: data.supplierId } });
+  if (!supplier || supplier.tenantId !== auth.tenantId) {
+    return error("Supplier not found or unavailable", 404);
+  }
+
+  const idempotencyKey = await requireIdempotencyKey(request, {
+    userId: auth.userId,
+    action: "CREATE_ORDER",
+    amount: data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0),
+  });
+
   const subtotal = data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
   const vatRate = 14;
   const vatAmount = subtotal * (vatRate / 100);
@@ -50,11 +73,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     data: {
       tenantId: auth.tenantId,
       orderNumber: data.orderNumber,
-      hotelId: data.hotelId,
+      hotelId,
       propertyId: data.propertyId,
       outletId: data.outletId,
       supplierId: data.supplierId,
-      requesterId: data.requesterId,
+      requesterId,
       subtotal,
       vatAmount,
       total,

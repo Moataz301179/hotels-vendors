@@ -91,7 +91,7 @@ export default function FinanceDashboardPage() {
   const [modalError, setModalError] = useState("");
 
   const { data: facilitiesData, loading: facilitiesLoading, error: facilitiesError } = useApi<Facility[]>(
-    "/api/factoring/facilities"
+    "/api/v1/factoring/credit-lines?page=1&limit=50"
   );
 
   const { data: requestsData, loading: requestsLoading } = useApi<{ requests: FactoringRequest[]; pagination: { total: number } }>(
@@ -99,7 +99,7 @@ export default function FinanceDashboardPage() {
   );
 
   const { data: invoicesData, loading: invoicesLoading } = useApi<{ data: Invoice[]; meta: { total: number } }>(
-    "/api/invoices?page=1&limit=10"
+    "/api/v1/invoices?page=1&limit=10"
   );
 
   const facilities = facilitiesData ?? [];

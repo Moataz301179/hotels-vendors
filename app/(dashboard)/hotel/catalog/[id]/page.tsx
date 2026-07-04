@@ -110,8 +110,8 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const productId = params.id as string;
 
-  const { data: productData, loading, error } = useApi<{ data: ApiProduct }>(`/api/products/${productId}`);
-  const { data: relatedData } = useApi<{ products: ApiProduct[] }>(`/api/v1/hotel/catalog?page=1&limit=8`);
+  const { data: productData, loading, error } = useApi<{ data: ApiProduct }>(`/api/v1/products?productId=${productId}`);
+  const { data: relatedData } = useApi<{ products: ApiProduct[] }>(`/api/v1/products?page=1&limit=8`);
 
   const apiProduct = productData?.data;
   const product = apiProduct ? mapProduct(apiProduct) : null;

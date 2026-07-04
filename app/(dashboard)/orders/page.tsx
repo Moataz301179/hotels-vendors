@@ -76,7 +76,7 @@ export default function OrdersPage() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const { data: ordersData, loading, error } = useApi<Order[]>("/api/orders?page=1&limit=50&sortOrder=desc");
+  const { data: ordersData, loading, error } = useApi<Order[]>("/api/v1/orders?page=1&limit=50&sortOrder=desc");
   const orders = ordersData ?? [];
 
   const stats = [
