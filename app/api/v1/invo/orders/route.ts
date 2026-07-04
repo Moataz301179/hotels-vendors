@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { authenticate, requirePermission } from "@/lib/api-utils";
 
 /**
  * POST /api/v1/invo/orders
@@ -8,6 +9,9 @@ import { createClient } from "@/lib/supabase/server";
  */
 export async function POST(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "order:create");
+
     const body = await req.json();
     const { hotel_id, supplier_id, total_value, currency = "EGP", maker_user_id } = body;
 
@@ -57,6 +61,9 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "order:read");
+
     const { searchParams } = new URL(req.url);
     const hotel_id = searchParams.get("hotel_id");
     const supplier_id = searchParams.get("supplier_id");

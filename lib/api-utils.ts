@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifySession, getSessionToken } from "@/lib/session";
+import { initSentry, captureException } from "./sentry";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
 import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } from "@/lib/redis";
 import { rateLimitResponse, type RateLimitTier } from "@/lib/security/rate-limiter";
@@ -224,6 +225,13 @@ export function apiRoute(
       if (!options?.skipAuthLog && err instanceof ApiError && err.statusCode === 401) {
         const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
         logAuthFailure(ip, request.url, err.message);
+      }
+      // Capture unexpected errors in Sentry (if configured)
+      try {
+        initSentry();
+        captureException(err);
+      } catch {
+        // ignore Sentry init failures
       }
       return handleApiError(err);
     }

@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { transformManyToMarketplace, toPrismaCategory } from "@/lib/marketplace/category-mapper";
 import { ProductCategory, ProductStatus } from "@prisma/client";
 import { z } from "zod";
+import { authenticate, requirePermission } from "@/lib/api-utils";
 
 // ── GET: Public Catalog ───────────────────────────────────────
 
@@ -143,26 +144,8 @@ const CreateProductSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Read auth context from middleware-injected headers
-    const userId = request.headers.get("x-user-id");
-    const platformRole = request.headers.get("x-platform-role");
-    const tenantId = request.headers.get("x-tenant-id");
-
-    // Reject if not authenticated
-    if (!userId || !platformRole) {
-      return NextResponse.json(
-        { success: false, error: "Authentication required" },
-        { status: 401 }
-      );
-    }
-
-    // Only suppliers and admins can create products
-    if (platformRole !== "SUPPLIER" && platformRole !== "ADMIN") {
-      return NextResponse.json(
-        { success: false, error: "Only suppliers can create products" },
-        { status: 403 }
-      );
-    }
+    const auth = await authenticate(request);
+    await requirePermission(auth, "product:create");
 
     const body = await request.json();
     const parsed = CreateProductSchema.safeParse(body);
@@ -192,7 +175,7 @@ export async function POST(request: NextRequest) {
     let supplierId = data.supplierId;
     if (!supplierId) {
       const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: auth.userId },
         select: { supplierId: true },
       });
       supplierId = user?.supplierId || undefined;
@@ -217,10 +200,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Non-admin users can only create products for their own supplier
-    if (platformRole !== "ADMIN" && tenantId && supplier.tenantId !== tenantId) {
+    // Non-admin users can only create products for their own tenant
+    if (auth.platformRole !== "ADMIN" && auth.tenantId && supplier.tenantId !== auth.tenantId) {
       return NextResponse.json(
-        { success: false, error: "You can only create products for your own supplier" },
+        { success: false, error: "You can only create products for your own supplier/tenant" },
         { status: 403 }
       );
     }
