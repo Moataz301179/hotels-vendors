@@ -20,6 +20,7 @@ import { CategoryNav } from "@/components/marketplace/category-nav";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { CompareDrawer } from "@/components/marketplace/compare-drawer";
 import { useCompare, CompareProvider } from "@/components/marketplace/compare-context";
+import { CartProvider } from "@/components/cart/cart-context";
 import { MarketTicker } from "@/components/marketing/market-ticker";
 import { HOTEL_CATEGORIES } from "@/lib/marketplace/categories";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
@@ -349,8 +350,10 @@ function MarketplaceContent() {
 
 export default function MarketplacePage() {
   return (
-    <CompareProvider>
-      <MarketplaceContent />
-    </CompareProvider>
+    <CartProvider>
+      <CompareProvider>
+        <MarketplaceContent />
+      </CompareProvider>
+    </CartProvider>
   );
 }

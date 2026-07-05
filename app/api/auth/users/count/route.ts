@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma"
 import { getAuthUser } from "@/lib/auth"
 import { ok, unauthorized } from "@/lib/api-response"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     const payload = await getAuthUser()

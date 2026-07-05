@@ -18,6 +18,7 @@ import {
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { MarketingPage } from "@/components/layout/marketing-page";
+import { CartProvider } from "@/components/cart/cart-context";
 
 export const metadata: Metadata = {
   title: "Payme — Invoice Financing Marketplace for Hospitality | HotelsVendors",
@@ -104,7 +105,8 @@ const partners = [
 export default function FactoringServicePage() {
   return (
     <MarketingPage>
-      <MarketingNav />
+      <CartProvider>
+        <MarketingNav />
 
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
@@ -370,6 +372,7 @@ export default function FactoringServicePage() {
       </section>
 
       <MarketingFooter />
+      </CartProvider>
     </MarketingPage>
   );
 }
