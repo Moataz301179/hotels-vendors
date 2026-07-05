@@ -15,7 +15,7 @@ export default async function InvoicesPage() {
   let invoiceList: any[] = [];
 
   try {
-    invoiceList = await prisma.invoInvoice.findMany({
+    invoiceList = await (prisma as any).invoInvoice.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
     }) as any[];

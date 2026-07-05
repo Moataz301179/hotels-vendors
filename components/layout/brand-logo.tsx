@@ -5,10 +5,13 @@ import { cn } from "@/lib/utils";
 interface BrandLogoProps {
   className?: string;
   variant?: "dark" | "light";
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  showText?: boolean;
+  forceColor?: "bw" | string;
 }
 
 const SIZE_MAP = {
+  xs: { width: 22, height: 26 },
   sm: { width: 28, height: 32 },
   md: { width: 36, height: 42 },
   lg: { width: 48, height: 56 },
@@ -25,9 +28,11 @@ export function BrandLogo({
   className,
   variant = "light",
   size = "md",
+  showText,
+  forceColor,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const fill = variant === "dark" ? "#ffffff" : "#0B0F1A";
+  const fill = forceColor && forceColor !== "bw" ? forceColor : variant === "dark" ? "#ffffff" : "#0B0F1A";
 
   return (
     <svg

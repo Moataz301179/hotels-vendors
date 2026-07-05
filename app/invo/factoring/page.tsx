@@ -22,10 +22,10 @@ export default async function FactoringPage() {
 
   try {
     const results = await Promise.all([
-      prisma.invoFactoringRequest.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-      prisma.invoFactoringBid.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-      prisma.invoFunderConfig.findMany({ where: { isActive: true } }),
-      prisma.invoSuccessFee.findMany({ orderBy: { createdAt: "desc" }, take: 20 }),
+      (prisma as any).invoFactoringRequest.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+      (prisma as any).invoFactoringBid.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+      (prisma as any).invoFunderConfig.findMany({ where: { isActive: true } }),
+      (prisma as any).invoSuccessFee.findMany({ orderBy: { createdAt: "desc" }, take: 20 }),
     ]);
     requests = results[0] as any[];
     bids = results[1] as any[];
