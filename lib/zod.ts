@@ -260,10 +260,38 @@ export const BusinessRegisterSchema = z.object({
   crDocumentUrl: z.string().optional(),
   taxDocumentUrl: z.string().optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
+}).superRefine((data, ctx) => {
+  if (data.accountType === "business") {
+    if (!data.taxId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Tax ID is required for business accounts",
+        path: ["taxId"],
+      });
+    }
+    if (!data.city) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "City is required for business accounts",
+        path: ["city"],
+      });
+    }
+    if (!data.governorate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Governorate is required for business accounts",
+        path: ["governorate"],
+      });
+    }
+  }
 });
 
 export const LoginSchema = z.object({
-  email: z.string().min(1, "Username or email is required"),
+  email: z.string().email("Valid email is required").or(
+    z.string().min(1).refine(val => val.toLowerCase() === "admin", {
+      message: "Valid email or 'admin' is required"
+    })
+  ),
   password: z.string().min(1, "Password is required"),
 });
 
