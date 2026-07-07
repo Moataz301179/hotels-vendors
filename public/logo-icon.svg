@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="white">
+  <!-- H left vertical bar -->
+  <rect x="20" y="20" width="26" height="180" rx="4"/>
+  <!-- H horizontal crossbar -->
+  <rect x="20" y="95" width="90" height="26" rx="4"/>
+  <!-- V left arm (shares space with H right area) -->
+  <path d="M80 20 L110 20 L170 180 L140 180 Z" opacity="0.95"/>
+  <!-- V right arm -->
+  <path d="M120 20 L150 20 L180 180 L110 180 Z" opacity="0.85"/>
+  <!-- Diagonal weave stripes (ATT-style) -->
+  <path d="M20 55 L100 95 L100 80 L20 40 Z" opacity="0.3"/>
+  <path d="M20 145 L100 185 L100 170 L20 130 Z" opacity="0.3"/>
+  <path d="M100 55 L180 95 L180 80 L100 40 Z" opacity="0.25"/>
+</svg>
