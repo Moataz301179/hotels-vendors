@@ -56,7 +56,7 @@ export default function LoginPage() {
           Welcome back
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
-          Sign in to your HotelProcure account
+          Sign in to your HotelsVendors account
         </p>
       </div>
 

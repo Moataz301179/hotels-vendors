@@ -109,7 +109,7 @@ const faqs = [
     a: "You pay 1% of the invoice subtotal as a service fee. No monthly subscription, no minimums. If you issue EGP 10,000 in invoices, you pay EGP 100.",
   },
   {
-    q: "Do I need to be a HotelProcure marketplace user?",
+    q: "Do I need to be a HotelsVendors marketplace user?",
     a: "No. VAT Engine is a standalone service. You only need a registered business with a valid Egyptian Tax ID. You can use the marketplace too, but you don't have to.",
   },
   {

@@ -114,7 +114,7 @@ export default function SignupPage() {
           Create your account
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
-          Join HotelProcure as a verified member
+          Join HotelsVendors as a verified member
         </p>
       </div>
 

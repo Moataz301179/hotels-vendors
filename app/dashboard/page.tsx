@@ -76,7 +76,7 @@ export default function DashboardPage() {
           >
             <Sparkles className="w-4 h-4" style={{ color: "var(--bg-canvas)" }} />
           </div>
-          <span className="font-semibold text-lg">HotelProcure</span>
+          <span className="font-semibold text-lg">HotelsVendors</span>
         </div>
         <button
           onClick={handleLogout}

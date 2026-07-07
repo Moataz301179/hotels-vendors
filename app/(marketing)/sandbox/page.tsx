@@ -378,7 +378,7 @@ export default function SandboxPage() {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-semibold text-lg text-white" style={{ fontFamily: "var(--font-sans)" }}>
-              HotelProcure
+              HotelsVendors
             </span>
           </div>
           <div className="hidden md:flex items-center gap-8">
@@ -562,7 +562,7 @@ export default function SandboxPage() {
                     <div className="w-3 h-3 rounded-full bg-green-500/50" />
                   </div>
                   <span className="text-sm text-neutral-500" style={{ fontFamily: "var(--font-sans)" }}>
-                    HotelProcure Dashboard — {currentRole.label}
+                    HotelsVendors Dashboard — {currentRole.label}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-neutral-600">
@@ -727,7 +727,7 @@ export default function SandboxPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title={`How It Works — ${currentRole.label}`}
-            subtitle="A step-by-step walkthrough of your workflow on HotelProcure."
+            subtitle="A step-by-step walkthrough of your workflow on HotelsVendors."
           />
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             {/* Step Navigation */}
@@ -895,7 +895,7 @@ export default function SandboxPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Trusted by Industry Leaders"
-            subtitle="Hear from procurement professionals already using HotelProcure."
+            subtitle="Hear from procurement professionals already using HotelsVendors."
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {testimonials.map((t, i) => (
@@ -996,7 +996,7 @@ export default function SandboxPage() {
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <span className="font-semibold text-white" style={{ fontFamily: "var(--font-sans)" }}>
-                  HotelProcure
+                  HotelsVendors
                 </span>
               </div>
               <p className="text-sm text-neutral-600 leading-relaxed max-w-xs" style={{ fontFamily: "var(--font-sans)" }}>
@@ -1024,7 +1024,7 @@ export default function SandboxPage() {
           </div>
           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-neutral-700" style={{ fontFamily: "var(--font-sans)" }}>
-              &copy; 2026 HotelProcure. All rights reserved.
+              &copy; 2026 HotelsVendors. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <button className="text-xs text-neutral-700 hover:text-neutral-500 transition-colors" style={{ fontFamily: "var(--font-sans)" }}>Privacy Policy</button>

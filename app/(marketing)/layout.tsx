@@ -45,7 +45,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
                 className="font-semibold text-lg"
                 style={{ color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}
               >
-                HotelProcure
+                HotelsVendors
               </span>
             </div>
             <div className="hidden md:flex items-center gap-6">
@@ -74,7 +74,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                &copy; {new Date().getFullYear()} HotelProcure. All rights reserved.
+                &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
               </p>
             </div>
           </div>
