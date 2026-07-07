@@ -59,16 +59,16 @@ function Navbar() {
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 h-14 transition-all duration-300 ${scrolled ? "bg-[#0f0d0a] border-b border-white/10" : "bg-transparent"}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 h-16 transition-all duration-300 ${scrolled ? "bg-[#0f0d0a] border-b border-white/10" : "bg-transparent"}`}>
       <nav className="flex h-full max-w-6xl mx-auto items-center justify-between px-5 lg:px-8">
         <Link href="/" className="z-50 flex items-center">
-          <img src="/logo.svg" alt="HotelsVendors" className="h-5 sm:h-6" />
+          <img src="/logo.svg" alt="HotelsVendors" className="h-6 sm:h-7" />
         </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">Features</a>
-          <a href="#how-it-works" className="text-sm text-white/60 hover:text-white transition-colors">How It Works</a>
-          <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Sign In</Link>
-          <Link href="/signup" className="inline-flex items-center justify-center h-9 px-4 rounded-lg bg-[#b8aa88] text-[11px] font-semibold uppercase tracking-widest text-[#0f0d0a] hover:bg-[#c9b999] transition-all">Get Started</Link>
+        <div className="hidden md:flex items-center gap-8">
+          <a href="#features" className="text-sm font-medium text-white/70 hover:text-white transition-colors">Features</a>
+          <a href="#how-it-works" className="text-sm font-medium text-white/70 hover:text-white transition-colors">How It Works</a>
+          <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">Sign In</Link>
+          <Link href="/signup" className="inline-flex items-center justify-center h-10 px-5 rounded-lg bg-[#b8aa88] text-xs font-semibold uppercase tracking-widest text-[#0f0d0a] hover:bg-[#c9b999] transition-all">Get Started</Link>
         </div>
         <button onClick={() => setOpen(!open)} className="md:hidden z-50 flex items-center justify-center h-10 w-10 text-white/60" aria-label="Menu">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
@@ -77,7 +77,7 @@ function Navbar() {
         </button>
       </nav>
       {open && (
-        <div className="fixed inset-0 top-14 z-40 bg-[#0f0d0a] md:hidden">
+        <div className="fixed inset-0 top-16 z-40 bg-[#0f0d0a] md:hidden">
           <div className="flex flex-col items-center gap-6 pt-16">
             <a href="#features" onClick={() => setOpen(false)} className="text-lg text-white/80 hover:text-white">Features</a>
             <a href="#how-it-works" onClick={() => setOpen(false)} className="text-lg text-white/80 hover:text-white">How It Works</a>
@@ -94,22 +94,10 @@ function Navbar() {
 /* ─────────── Hero ─────────── */
 
 function Hero() {
-  const [i, setI] = useState(0);
-  const slides = [
-    { src: "/carousel-hotel-procurement.jpg" },
-    { src: "/carousel-ai-forecasting.jpg" },
-    { src: "/carousel-supplier-payment.jpg" },
-  ];
-
-  useEffect(() => {
-    const id = setInterval(() => setI(p => (p + 1) % slides.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <section className="bg-[#0f0d0a]">
-      <div className="max-w-6xl mx-auto px-5 lg:px-8 pt-14 pb-10 sm:pb-14">
-        <div className="max-w-3xl">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8 pt-16 pb-20 sm:pb-24">
+        <div className="mx-auto max-w-3xl text-center">
           <FadeUp>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#b8aa88]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#b8aa88] animate-pulse" />
@@ -117,50 +105,40 @@ function Hero() {
             </span>
           </FadeUp>
           <FadeUp delay={80}>
-            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.12] text-white">
+            <h1 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.12] text-white">
               Turning Hotel Procurement Into a<br />
               <span className="text-[#b8aa88]">Financial Advantage</span>
             </h1>
           </FadeUp>
           <FadeUp delay={160}>
-            <p className="mt-4 text-base leading-relaxed text-white/50 max-w-lg">
-              AI-powered procurement platform with embedded reverse factoring and ETA e-invoicing.
-              Your suppliers get paid in 48 hours — you keep your terms.
+            <p className="mt-4 mx-auto text-base leading-relaxed text-white/50 max-w-lg">
+              AI-powered procurement with embedded reverse factoring and ETA e-invoicing.
+              Suppliers paid in 48 hours — you keep your terms.
             </p>
           </FadeUp>
           <FadeUp delay={240}>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/signup" className="inline-flex items-center justify-center h-11 px-6 rounded-xl bg-[#b8aa88] text-xs font-bold uppercase tracking-widest text-[#0f0d0a] hover:bg-[#c9b999] active:scale-[0.97] transition-all">
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link href="/signup" className="inline-flex items-center justify-center h-12 px-7 rounded-xl bg-[#b8aa88] text-sm font-bold uppercase tracking-widest text-[#0f0d0a] hover:bg-[#c9b999] active:scale-[0.97] transition-all">
                 Get Started
-                <svg className="ml-2 w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </Link>
-              <Link href="/sandbox" className="inline-flex items-center justify-center h-11 px-6 rounded-xl border border-white/20 text-xs font-bold uppercase tracking-widest text-white/80 hover:bg-white/5 hover:border-white/30 active:scale-[0.97] transition-all">
-                <svg className="mr-2 w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="m8 5 11 7-11 7z"/></svg>
+              <Link href="/sandbox" className="inline-flex items-center justify-center h-12 px-7 rounded-xl border border-white/20 text-sm font-bold uppercase tracking-widest text-white/80 hover:bg-white/5 hover:border-white/30 active:scale-[0.97] transition-all">
+                <svg className="mr-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="m8 5 11 7-11 7z"/></svg>
                 See Platform
               </Link>
             </div>
           </FadeUp>
-        </div>
-
-        <FadeUp delay={320}>
-          <div className="mt-8 overflow-hidden rounded-xl border border-white/10">
-            <div className="aspect-[4/3] sm:aspect-[21/9] relative">
-              {slides.map((s, idx) => (
-                <div key={idx} className={`absolute inset-0 transition-all duration-700 ${idx === i ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"}`}>
-                  <img src={s.src} alt="" className="h-full w-full object-cover" loading={idx === i ? "eager" : "lazy"} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0d0a] via-[#0f0d0a]/20 to-transparent" />
-                </div>
-              ))}
+          <FadeUp delay={320}>
+            <div className="mt-8 flex items-center justify-center gap-2 text-xs text-white/30">
+              <span className="flex -space-x-2">
+                {[1,2,3,4].map(c => (
+                  <span key={c} className="w-6 h-6 rounded-full border-2 border-[#0f0d0a] bg-gradient-to-br from-white/20 to-white/5" />
+                ))}
+              </span>
+              <span>Trusted by <strong className="text-white/50">500+ hotels</strong> from Sharm El Sheikh to the North Coast</span>
             </div>
-          </div>
-        </FadeUp>
-
-        <FadeUp delay={400}>
-          <div className="mt-4 flex items-center gap-2 text-sm text-white/40">
-            <svg className="w-3.5 h-3.5 text-[#b8aa88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
-            <span>Trusted by 500+ hotels from Sharm El Sheikh to the North Coast</span>
-          </div>
-        </FadeUp>
+          </FadeUp>
+        </div>
       </div>
     </section>
   );
