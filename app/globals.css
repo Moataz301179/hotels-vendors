@@ -1,8 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius: 0.625rem;
+  --background: 40 16% 5%;
+  --foreground: 36 20% 92%;
+  --card: 40 16% 7%;
+  --card-foreground: 36 20% 92%;
+  --popover: 40 16% 5%;
+  --popover-foreground: 36 20% 92%;
+  --primary: 39 26% 63%;
+  --primary-foreground: 40 16% 5%;
+  --secondary: 40 10% 12%;
+  --secondary-foreground: 36 20% 92%;
+  --muted: 40 10% 12%;
+  --muted-foreground: 36 10% 60%;
+  --accent: 39 26% 63%;
+  --accent-foreground: 40 16% 5%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 36 20% 92%;
+  --border: 40 10% 15%;
+  --input: 40 10% 18%;
+  --ring: 39 26% 63%;
 }
 
 html {
@@ -10,8 +32,8 @@ html {
 }
 
 body {
-  background-color: #0f0d0a;
-  color: #f0ebe5;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,17 +46,35 @@ body {
 }
 
 ::selection {
-  background-color: rgba(184, 170, 136, 0.3);
-  color: #f0ebe5;
+  background-color: hsl(var(--primary) / 0.3);
+  color: hsl(var(--foreground));
 }
 
 input:-webkit-autofill {
   -webkit-background-clip: text;
 }
 
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
