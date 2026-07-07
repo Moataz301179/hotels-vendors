@@ -360,7 +360,7 @@ export async function setSmartFixAutoOptIn(
 ): Promise<{ success: boolean; optIn: boolean }> {
   // For now, we store this in memory/config. In production, add a HotelPreference model
   // or a `preferences` JSON field to the Hotel schema.
-  // eslint-disable-next-line no-console
+   
   console.log(`[SmartFix] Hotel ${hotelId} auto-opt-in set to: ${optIn}`);
   return { success: true, optIn };
 }

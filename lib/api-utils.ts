@@ -171,7 +171,7 @@ export async function audit(
     await appendAuditEntry(params);
   } catch {
     // Audit failure should not break the request, but log it somewhere
-    // eslint-disable-next-line no-console
+     
     console.error("Audit log failed:", params);
   }
 }

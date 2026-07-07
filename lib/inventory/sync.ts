@@ -46,7 +46,7 @@ export async function processInventorySync(
   }
 
   // Find existing product by SKU within tenant
-  let product = await prisma.product.findFirst({
+  const product = await prisma.product.findFirst({
     where: { sku, tenantId },
   });
 

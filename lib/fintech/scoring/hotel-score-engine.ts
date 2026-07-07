@@ -353,7 +353,7 @@ export class HotelScoreEngine {
 
   private static calculateLimit(f: HotelFinancials, score: number, c: Collateral): number {
     const monthlyPurch = f.monthlyPurchases || f.annualRevenue * 0.3 / 12;
-    let base = monthlyPurch * (score >= 800 ? 3 : score >= 600 ? 2 : score >= 400 ? 1 : 0.5);
+    const base = monthlyPurch * (score >= 800 ? 3 : score >= 600 ? 2 : score >= 400 ? 1 : 0.5);
     
     // Cap at 10% of revenue
     const cap = f.annualRevenue * 0.1;

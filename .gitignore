@@ -52,3 +52,13 @@ dev.db
 session-*.zip
 tmp/
 graphify-out/
+
+# playwright MCP captures (local debugging only)
+.playwright-mcp/
+
+# ad-hoc SQL dumps — real migrations live in prisma/migrations/
+/schema-v6-*.sql
+
+# macOS
+.DS_Store
+**/.DS_Store

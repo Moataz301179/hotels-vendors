@@ -45,7 +45,7 @@ export function getRedis(): Redis | null {
       redis.on("error", (err) => {
         redisAvailable = false;
         if (!isBuildTime) {
-          // eslint-disable-next-line no-console
+           
           console.error("[Redis] Connection error:", err.message);
         }
       });

@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  HotelsVendors palette system
+  Default dark: Executive Olive — deep hospitality-fintech tone.
+  Optional palettes: Carbon Gold, Midnight Sand.
+*/
+:root,
+.dark,
+html[data-palette="olive"] {
+  --bg: #11160f;
+  --bg-1: #161d13;
+  --bg-2: #1d2619;
+  --bg-3: #283420;
+  --fg: #ffffff;
+  --fg-2: #f3efe4;
+  --fg-3: #d6cebd;
+  --fg-4: #a8aa9f;
+  --border: rgba(235, 223, 196, 0.10);
+  --border-2: rgba(235, 223, 196, 0.17);
+  --border-3: rgba(235, 223, 196, 0.26);
+  --lime: #d6a73a;
+  --lime-light: #f0c35a;
+  --lime-dim: rgba(214, 167, 58, 0.14);
+  --lime-glow: rgba(214, 167, 58, 0.20);
+  --gold: #e7c56a;
+  --gold-dim: rgba(231, 197, 106, 0.13);
+  --beige: #e8ddc3;
+  --grey: #9aa09a;
+  --red: #ff6b6b;
+  --green: #73d99f;
+  --blue: #8eb8ff;
+  --yellow: #f0c35a;
+  --ring: rgba(214, 167, 58, 0.34);
+}
+
+html[data-palette="carbon"] {
+  --bg: #080806;
+  --bg-1: #10100d;
+  --bg-2: #181812;
+  --bg-3: #242316;
+  --fg: #ffffff;
+  --fg-2: #f5f0e5;
+  --fg-3: #cfc6b5;
+  --fg-4: #9b9b91;
+  --border: rgba(255,255,255,0.08);
+  --border-2: rgba(255,255,255,0.14);
+  --border-3: rgba(255,255,255,0.24);
+  --lime: #c99933;
+  --lime-light: #e5bb5a;
+  --lime-dim: rgba(201,153,51,0.14);
+  --gold: #d8b45c;
+  --gold-dim: rgba(216,180,92,0.12);
+  --beige: #eee2c7;
+  --grey: #92958d;
+}
+
+html[data-palette="midnight"] {
+  --bg: #10191c;
+  --bg-1: #142023;
+  --bg-2: #1b2a2e;
+  --bg-3: #24363b;
+  --fg: #ffffff;
+  --fg-2: #eef2ef;
+  --fg-3: #cad4ce;
+  --fg-4: #98a39e;
+  --border: rgba(230,235,228,0.10);
+  --border-2: rgba(230,235,228,0.17);
+  --border-3: rgba(230,235,228,0.26);
+  --lime: #d9ad4b;
+  --lime-light: #edc66f;
+  --lime-dim: rgba(217,173,75,0.14);
+  --gold: #efd089;
+  --gold-dim: rgba(239,208,137,0.12);
+  --beige: #e2d5bb;
+  --grey: #8f9997;
+}
+
+.light,
+html.light[data-palette="olive"] {
+  --bg: #f5efe1;
+  --bg-1: #fffaf0;
+  --bg-2: #ebe2cf;
+  --bg-3: #ddd0b5;
+  --fg: #162011;
+  --fg-2: #2f392b;
+  --fg-3: #5e665a;
+  --fg-4: #8a8d84;
+  --border: rgba(22,32,17,0.10);
+  --border-2: rgba(22,32,17,0.16);
+  --border-3: rgba(22,32,17,0.25);
+  --lime: #9b6f12;
+  --lime-light: #b78722;
+  --lime-dim: rgba(155,111,18,0.12);
+  --gold: #a87918;
+  --gold-dim: rgba(168,121,24,0.12);
+  --beige: #efe3c8;
+  --grey: #74796f;
+  --ring: rgba(155,111,18,0.28);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-fg-4: var(--fg-4);
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
+  --color-border-3: var(--border-3);
+  --color-lime: var(--lime);
+  --color-lime-light: var(--lime-light);
+  --color-lime-dim: var(--lime-dim);
+  --color-gold: var(--gold);
+  --color-gold-dim: var(--gold-dim);
+  --color-beige: var(--beige);
+  --color-grey: var(--grey);
+  --color-red: var(--red);
+  --color-green: var(--green);
+  --color-blue: var(--blue);
+  --color-yellow: var(--yellow);
+  /* Compatibility aliases for existing dashboard pages */
+  --color-background: var(--bg);
+  --color-surface: var(--bg-1);
+  --color-surface-2: var(--bg-2);
+  --color-surface-3: var(--bg-3);
+  --color-foreground: var(--fg);
+  --color-muted: var(--fg-3);
+  --color-muted-2: var(--fg-4);
+  --color-brand: var(--lime);
+  --color-brand-2: var(--lime-light);
+  --color-brand-soft: var(--lime-dim);
+  --color-accent: var(--gold);
+  --color-success: var(--green);
+  --color-warning: var(--yellow);
+  --color-danger: var(--red);
+  --color-info: var(--blue);
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+* { border-color: var(--border); }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::selection { background: var(--lime-dim); color: var(--fg); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--grey); }
+h1,h2,h3,h4,h5,h6 { font-weight: 600; color: var(--fg); }
+
+@layer utilities {
+  .card {
+    border: 1px solid var(--border);
+    background: var(--bg-1);
+    border-radius: 1.5rem;
+  }
+  .card-2 {
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    border-radius: 1.5rem;
+  }
+  .shadow-soft { box-shadow: 0 24px 80px -48px rgba(0,0,0,.55); }
+  .shadow-lift { box-shadow: 0 34px 100px -54px rgba(0,0,0,.75); }
+}
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes step-pulse { 0%, 100% { opacity: .62; transform: scale(1); } 50% { opacity: 1; transform: scale(1.04); } }
+.anim-up { animation: fade-up .6s cubic-bezier(.16,1,.3,1) both; }
+.anim-in { animation: fade-in .6s ease both; }
+.d1 { animation-delay: .1s; } .d2 { animation-delay: .2s; } .d3 { animation-delay: .3s; } .d4 { animation-delay: .4s; }
+.ticker-track { animation: ticker 34s linear infinite; }
+.workflow-dot { animation: step-pulse 2.4s ease-in-out infinite; }

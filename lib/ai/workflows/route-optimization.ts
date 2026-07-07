@@ -42,7 +42,7 @@ export async function optimizeRoutes(
   depot: { lat: number; lng: number }
 ): Promise<OptimizedRoute[]> {
   const routes: OptimizedRoute[] = [];
-  let unassigned = [...orders];
+  const unassigned = [...orders];
 
   for (const vehicle of vehicles) {
     if (unassigned.length === 0) break;

@@ -1,0 +1,12 @@
+{
+  "name": "HotelsVendors",
+  "short_name": "HV",
+  "description": "Enterprise hospitality procurement, ETA compliance, GRN, payments, factoring and AI cashflow automation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F5EF",
+  "theme_color": "#111827",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "business", "productivity"],
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
