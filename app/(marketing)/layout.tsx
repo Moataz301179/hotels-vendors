@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react"
 import Link from "next/link"
 import { AIAssistantProvider } from "@/components/ai/assistant-context"
 import { AIAssistant } from "@/components/ai/ai-assistant"
+import { CartProvider } from "@/components/cart/cart-context"
 
 const navLinks = [
   { label: "Marketplace", href: "/invo" },
@@ -15,6 +16,7 @@ const navLinks = [
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
+    <CartProvider>
     <AIAssistantProvider>
       <div
         className="min-h-screen flex flex-col"
@@ -81,5 +83,6 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
         <AIAssistant />
       </div>
     </AIAssistantProvider>
+    </CartProvider>
   )
 }
