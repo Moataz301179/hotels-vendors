@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- White geometric HV on transparent -->
+  <g fill="#ffffff" stroke="#ffffff" stroke-width="12" stroke-linejoin="round">
+    <!-- H: Vertical + horizontal bars -->
+    <rect x="80" y="100" width="40" height="200" rx="8"/>
+    <rect x="80" y="140" width="160" height="40" rx="8"/>
+    <!-- V: Angled arms -->
+    <path d="M260 100 L300 300 L340 100"/>
+    <!-- Fusion accents -->
+    <path d="M120 300 Q200 280 280 300" stroke-width="8" fill="none"/>
+  </g>
+</svg>
