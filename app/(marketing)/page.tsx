@@ -322,7 +322,7 @@ function Footer() {
           <Link href="/signup" className="text-xs text-white/30 hover:text-white/60 transition-colors">Get Started</Link>
         </div>
       </div>
-    </section>
+    </footer>
   );
 }
 
