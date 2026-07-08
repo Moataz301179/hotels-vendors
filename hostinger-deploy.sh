@@ -21,7 +21,7 @@ fi
 
 # 1. Build & export
 echo "🔨 Building Next.js (production)..."
-npm run build:host
+npm run build
 
 # 2. Confirm output directory
 EXPORT_DIR="_next"
