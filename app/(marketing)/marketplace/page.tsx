@@ -143,7 +143,7 @@ function MarketplaceContent() {
       <MarketingNav />
 
       {/* ═══ Hero ═══ */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      <section className="pt-[4rem] pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] rounded-full blur-[200px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-muted) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: "var(--accent-muted)", border: "1px solid var(--accent-glow)" }}>

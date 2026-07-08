@@ -459,7 +459,7 @@ export default function SandboxPage() {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+      <section ref={heroRef} className="relative pt-[4rem] pb-24 md:pt-40 md:pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/10 to-orange-500/5 rounded-full blur-3xl" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">

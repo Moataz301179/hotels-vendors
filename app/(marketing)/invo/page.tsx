@@ -211,7 +211,7 @@ export default function InvoPage() {
       }}
     >
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+      <section className="relative pt-[4rem] pb-24 md:pt-40 md:pb-32 overflow-hidden">
         <div
           className="absolute inset-0"
           style={{

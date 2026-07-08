@@ -82,12 +82,13 @@ function Header() {
     </header>
   )
 }
+}
 
 function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#b8aa88]/5 via-transparent to-transparent pointer-events-none" />
-      <div className="relative max-w-6xl mx-auto px-5 lg:px-8 pt-32 pb-24 sm:pt-40 sm:pb-32">
+      <div className="relative max-w-6xl mx-auto px-5 lg:px-8 pt-[4rem] pb-[4rem] sm:pt-40 sm:pb-32">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -150,7 +151,7 @@ const stats = [
 
 function StatsBar() {
   return (
-    <section className="border-y border-white/10">
+    <section className="border-y border-white/10 mt-16">
       <div className="max-w-6xl mx-auto px-5 lg:px-8 py-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((s, i) => (

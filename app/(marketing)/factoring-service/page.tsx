@@ -109,7 +109,7 @@ export default function FactoringServicePage() {
         <MarketingNav />
 
       {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      <section className="pt-[4rem] pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] mb-4" style={{ color: "var(--accent-base)" }}>
