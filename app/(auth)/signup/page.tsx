@@ -43,7 +43,7 @@ export default function SignupPage() {
     setLoading(true)
 
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,7 +114,7 @@ export default function SignupPage() {
           Create your account
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
-          Join HotelProcure as a verified member
+          Join HotelsVendors as a verified member
         </p>
       </div>
 
@@ -133,15 +133,15 @@ export default function SignupPage() {
                 }}
                 className="w-full p-4 rounded-lg text-left transition-all"
                 style={{
-                  backgroundColor: selected ? "var(--accent-muted)" : "var(--bg-surface)",
-                  border: `1px solid ${selected ? "var(--accent-base)" : "var(--border-base)"}`,
+                  backgroundColor: selected ? "var(--accent-muted)" : "var(--bg-surface-1)",
+                  border: `1px solid ${selected ? "var(--accent-base)" : "var(--border-subtle)"}`,
                 }}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
                     style={{
-                      backgroundColor: selected ? "var(--accent-base)" : "var(--bg-elevated)",
+                      backgroundColor: selected ? "var(--accent-base)" : "var(--bg-surface-2)",
                     }}
                   >
                     <Icon
@@ -188,7 +188,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: "var(--bg-surface)" }}>
+          <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: "var(--bg-surface-1)" }}>
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ backgroundColor: "var(--accent-muted)" }}
@@ -218,12 +218,12 @@ export default function SignupPage() {
               required
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors"
               style={{
-                backgroundColor: "var(--bg-surface)",
+                backgroundColor: "var(--bg-surface-1)",
                 color: "var(--text-primary)",
-                border: "1px solid var(--border-base)",
+                border: "1px solid var(--border-subtle)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
             />
           </div>
 
@@ -239,12 +239,12 @@ export default function SignupPage() {
               required
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors"
               style={{
-                backgroundColor: "var(--bg-surface)",
+                backgroundColor: "var(--bg-surface-1)",
                 color: "var(--text-primary)",
-                border: "1px solid var(--border-base)",
+                border: "1px solid var(--border-subtle)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
             />
           </div>
 
@@ -260,12 +260,12 @@ export default function SignupPage() {
               required
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors"
               style={{
-                backgroundColor: "var(--bg-surface)",
+                backgroundColor: "var(--bg-surface-1)",
                 color: "var(--text-primary)",
-                border: "1px solid var(--border-base)",
+                border: "1px solid var(--border-subtle)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
             />
           </div>
 
@@ -283,12 +283,12 @@ export default function SignupPage() {
                 minLength={8}
                 className="w-full px-3 py-2.5 pr-10 rounded-lg text-sm outline-none transition-colors"
                 style={{
-                  backgroundColor: "var(--bg-surface)",
+                  backgroundColor: "var(--bg-surface-1)",
                   color: "var(--text-primary)",
-                  border: "1px solid var(--border-base)",
+                  border: "1px solid var(--border-subtle)",
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-                onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
               />
               <button
                 type="button"
@@ -312,12 +312,12 @@ export default function SignupPage() {
               placeholder="+20 100 000 0000"
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors"
               style={{
-                backgroundColor: "var(--bg-surface)",
+                backgroundColor: "var(--bg-surface-1)",
                 color: "var(--text-primary)",
-                border: "1px solid var(--border-base)",
+                border: "1px solid var(--border-subtle)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
             />
           </div>
 
@@ -332,12 +332,12 @@ export default function SignupPage() {
               placeholder="Egyptian Tax Identification Number"
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors"
               style={{
-                backgroundColor: "var(--bg-surface)",
+                backgroundColor: "var(--bg-surface-1)",
                 color: "var(--text-primary)",
-                border: "1px solid var(--border-base)",
+                border: "1px solid var(--border-subtle)",
               }}
               onFocus={(e) => (e.target.style.borderColor = "var(--accent-base)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border-base)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--border-subtle)")}
             />
             {taxId && taxId.length > 0 && (
               <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>

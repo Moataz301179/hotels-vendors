@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "environments": {
+    "development": {
+      "Command": "npm run dev",
+      "buffed": false
+    },
+    "production": {
+      "Command": "npm run build && npm run start",
+      "buffed": true
+    }
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/(marketing)/page.tsx"
+    }
+  ]
+}

@@ -23,7 +23,7 @@ function VerifyContent() {
 
     const verify = async () => {
       try {
-        const res = await fetch(`/api/auth/verify?token=${encodeURIComponent(token)}${email ? `&email=${encodeURIComponent(email)}` : ""}`)
+        const res = await fetch(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}${email ? `&email=${encodeURIComponent(email)}` : ""}`)
         const data = await res.json()
 
         if (res.ok) {
