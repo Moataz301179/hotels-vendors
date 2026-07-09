@@ -23,6 +23,16 @@ import {
   Factory,
   Truck,
   Boxes,
+  CircuitBoard,
+  Wallet,
+  LineChart,
+  Shield,
+  BrainCircuit,
+  Receipt,
+  Banknote,
+  BarChart3,
+  Cpu,
+  Lock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoFull } from "@/components/logo";
