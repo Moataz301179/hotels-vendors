@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { prisma } from "@/lib/prisma";
 
 const SESSION_COOKIE = "hv_session";
@@ -70,8 +70,7 @@ export default async function DashboardLayout({
   return (
     <DashboardShell
       role={validRole}
-      userName={userData?.name || undefined}
-      tenantName={userData?.tenantName || undefined}
+      user={userData || null}
     >
       {children}
     </DashboardShell>
