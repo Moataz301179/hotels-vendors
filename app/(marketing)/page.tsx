@@ -72,7 +72,7 @@ function FloatingParticle({ delay = 0, size = 2 }: { delay?: number; size?: numb
         repeat: Infinity,
         ease: "linear"
       }}
-      initial={{ y: -20, x: Math.random() * window.innerWidth }}
+      initial={{ y: -20, x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 800) }}
     />
   );
 }
