@@ -179,12 +179,10 @@ export default function HotelCatalogPage() {
     if (!product) return;
     addItem(
       {
-        productId: product.id,
+        id: product.id,
         name: product.name,
+        price: product.unitPrice,
         sku: product.sku,
-        unitPrice: product.unitPrice,
-        supplierId: product.supplierId,
-        supplierName: product.supplierName,
         image: product.images?.[0] || undefined,
       },
       qty
