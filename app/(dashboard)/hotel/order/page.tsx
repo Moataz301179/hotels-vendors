@@ -49,9 +49,9 @@ export default function OrderBuilderPage() {
           orderNumber,
           supplierId,
           items: items.map((i) => ({
-            productId: i.productId,
+            productId: i.id,
             quantity: i.quantity,
-            unitPrice: i.unitPrice,
+            unitPrice: i.price,
             notes: "",
           })),
           deliveryDate: deliveryDate || undefined,
@@ -138,7 +138,7 @@ export default function OrderBuilderPage() {
             </div>
             <div className="divide-y divide-border-subtle">
               {items.map((item) => (
-                <div key={item.productId} className="flex items-center gap-4 px-5 py-4">
+                <div key={item.id} className="flex items-center gap-4 px-5 py-4">
                   <div className="w-12 h-12 rounded-lg bg-surface-raised flex items-center justify-center shrink-0">
                     <ShoppingBag size={20} className="text-foreground-muted" />
                   </div>
@@ -148,25 +148,25 @@ export default function OrderBuilderPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center hover:bg-surface-hover transition-colors"
                     >
                       <Minus size={14} />
                     </button>
                     <span className="w-8 text-center text-sm font-medium text-foreground">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center hover:bg-surface-hover transition-colors"
                     >
                       <Plus size={14} />
                     </button>
                   </div>
                   <div className="text-right min-w-[80px]">
-                    <p className="text-sm font-semibold text-foreground">{(item.quantity * item.unitPrice).toLocaleString()}</p>
+                    <p className="text-sm font-semibold text-foreground">{(item.quantity * item.price).toLocaleString()}</p>
                     <p className="text-xs text-foreground-faint">EGP</p>
                   </div>
                   <button
-                    onClick={() => removeItem(item.productId)}
+                    onClick={() => removeItem(item.id)}
                     className="p-2 rounded-lg hover:bg-brand-900/30 text-foreground-faint hover:text-brand-400 transition-colors"
                   >
                     <Trash2 size={16} />

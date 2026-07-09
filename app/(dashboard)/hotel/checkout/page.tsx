@@ -73,9 +73,9 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((i) => ({
-            productId: i.productId,
+            productId: i.id,
             quantity: i.quantity,
-            unitPrice: i.unitPrice,
+            unitPrice: i.price,
           })),
           address,
           shippingMethod,
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="space-y-3">
                   {supplierItems.map((item) => (
-                    <div key={item.productId} className="flex items-center gap-3">
+                    <div key={item.id} className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-300 shrink-0">
                         {item.name.slice(0, 2).toUpperCase()}
                       </div>
@@ -378,24 +378,24 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50"
                         >
                           <Minus size={12} />
                         </button>
                         <span className="text-sm font-medium text-gray-900 w-6 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50"
                         >
                           <Plus size={12} />
                         </button>
                       </div>
                       <span className="text-sm font-medium text-gray-900 w-20 text-right">
-                        EGP {(item.quantity * item.unitPrice).toFixed(2)}
+                        EGP {(item.quantity * item.price).toFixed(2)}
                       </span>
                       <button
-                        onClick={() => removeItem(item.productId)}
+                        onClick={() => removeItem(item.id)}
                         className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <Trash2 size={14} />
