@@ -172,12 +172,10 @@ export default function ProductDetailPage() {
   const addProductToCart = (p: Product, quantity: number) => {
     addToCart(
       {
-        productId: p.id,
+        id: p.id,
         name: p.name,
+        price: p.unitPrice,
         sku: p.sku,
-        unitPrice: p.unitPrice,
-        supplierId: p.supplierId || p.supplierName,
-        supplierName: p.supplierName,
         image: p.images?.[0] || undefined,
       },
       quantity
