@@ -192,7 +192,7 @@ export default function SignupPage() {
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ backgroundColor: "var(--accent-muted)" }}
             >
-              {platformRole === "HOTEL" ? (
+              {platformRole === "hotel" ? (
                 <Building2 className="w-4 h-4" style={{ color: "var(--accent-base)" }} />
               ) : (
                 <Store className="w-4 h-4" style={{ color: "var(--accent-base)" }} />
@@ -200,7 +200,7 @@ export default function SignupPage() {
             </div>
             <div>
               <p className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>
-                {platformRole === "HOTEL" ? "Hotel Account" : "Supplier Account"}
+                {platformRole === "hotel" ? "Hotel Account" : "Supplier Account"}
               </p>
             </div>
           </div>
