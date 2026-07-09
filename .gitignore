@@ -52,6 +52,10 @@ dev.db
 session-*.zip
 tmp/
 graphify-out/
+backup_frontend/
+extracted_roadmap/
+.crew-venv/
+crew/
 
 # playwright MCP captures (local debugging only)
 .playwright-mcp/
