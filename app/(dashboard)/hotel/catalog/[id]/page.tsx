@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ChevronRight, Star, ShoppingCart, Heart, Scale, Package,
-  Truck, ShieldCheck, MapPin, Check, Minus, Plus,
+  Truck, ShieldCheck, MapPin, Minus, Plus,
   Clock, Thermometer, Calendar, ArrowLeft,
 } from "lucide-react";
 import { getCategoryById } from "@/lib/marketplace/categories";
@@ -120,7 +120,7 @@ export default function ProductDetailPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const { addItem: addToCompare, removeItem: removeFromCompare, isInCompare } = useCompare();
-  const { addItem: addToCart, lastAdded, openCart } = useCart();
+  const { addItem: addToCart, openCart } = useCart();
 
   // Reset qty when product loads
   const effectiveQty = product ? Math.max(qty, product.minOrderQty) : qty;
@@ -299,7 +299,7 @@ export default function ProductDetailPage() {
                 disabled={product.stockQuantity === 0}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base hover:bg-accent-base/80 disabled:bg-white/[0.05] disabled:text-white/20 text-white font-medium transition-all active:scale-[0.98]"
               >
-                {lastAdded === product?.id ? <><Check className="w-5 h-5" /><span>Added to Cart</span></> : <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>}
+                <><ShoppingCart className="w-5 h-5" /><span>Add to Cart</span></>
               </button>
 
               <button onClick={() => setIsWishlisted(!isWishlisted)} className={`p-3 rounded-xl border transition-colors ${isWishlisted ? "bg-accent-base border-accent-base text-white" : "border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/[0.14]"}`}>
