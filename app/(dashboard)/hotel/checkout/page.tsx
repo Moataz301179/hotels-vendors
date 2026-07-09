@@ -34,7 +34,7 @@ const STEPS = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, updateQuantity, removeItem, subtotal, clearCart } = useCart();
+  const { items, updateQuantity, removeItem, totalPrice: subtotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);

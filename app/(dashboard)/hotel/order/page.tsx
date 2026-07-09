@@ -17,7 +17,7 @@ import {
 
 export default function OrderBuilderPage() {
   const router = useRouter();
-  const { items, updateQuantity, removeItem, subtotal, clearCart } = useCart();
+  const { items, updateQuantity, removeItem, totalPrice: subtotal, clearCart } = useCart();
   const [deliveryDate, setDeliveryDate] = useState("");
   const [instructions, setInstructions] = useState("");
   const [submitting, setSubmitting] = useState(false);
