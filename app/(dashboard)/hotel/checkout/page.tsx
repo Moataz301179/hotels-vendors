@@ -60,8 +60,8 @@ export default function CheckoutPage() {
 
   // Group by supplier
   const supplierGroups = items.reduce((acc, item) => {
-    if (!acc[item.supplierName]) acc[item.supplierName] = [];
-    acc[item.supplierName].push(item);
+    if (!acc[item.supplierName || "Unknown"]) acc[item.supplierName || "Unknown"] = [];
+    acc[item.supplierName || "Unknown"].push(item);
     return acc;
   }, {} as Record<string, typeof items>);
 
