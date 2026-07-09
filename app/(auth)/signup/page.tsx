@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Sparkles, Eye, EyeOff, Loader2, Building2, Store } from "lucide-react"
 
-type PlatformRole = "HOTEL" | "SUPPLIER"
+type PlatformRole = "hotel" | "supplier"
 
 export default function SignupPage() {
   const router = useRouter()
   const [step, setStep] = useState<"role" | "form">("role")
-  const [platformRole, setPlatformRole] = useState<PlatformRole>("HOTEL")
+  const [platformRole, setPlatformRole] = useState<PlatformRole>("hotel")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
@@ -24,13 +24,13 @@ export default function SignupPage() {
 
   const roles = [
     {
-      value: "HOTEL" as PlatformRole,
+      value: "hotel" as PlatformRole,
       icon: Building2,
       title: "Hotel",
       description: "I work for a hotel or hotel group",
     },
     {
-      value: "SUPPLIER" as PlatformRole,
+      value: "supplier" as PlatformRole,
       icon: Store,
       title: "Supplier",
       description: "I represent a supplier company",
@@ -47,13 +47,12 @@ export default function SignupPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          type: platformRole,
           email,
           password,
           name,
-          companyName,
           phone: phone || undefined,
           taxId: taxId || undefined,
-          platformRole,
         }),
       })
 
