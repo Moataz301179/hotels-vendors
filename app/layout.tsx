@@ -28,58 +28,60 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
-    template: "%s | Hotels Vendors",
+    default: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
+    template: "%s | HotelsVendors",
   },
   description:
-    "Egypt's leading B2B procurement platform for hotels. Connect with verified suppliers, streamline logistics, and unlock factoring liquidity — all with integrated ETA e-invoicing compliance.",
+    "Egypt's B2B hospitality procurement infrastructure. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route logistics — purpose-built for coastal hotel chains.",
   keywords: [
-    "hotel procurement",
-    "hospitality suppliers Egypt",
-    "B2B hotel sourcing",
-    "hotel supply chain",
-    "procurement hub",
-    "ETA e-invoicing",
-    "hospitality logistics",
-    "supplier factoring",
-    "موردين فنادق",
-    "توريدات الفنادق",
-    "مشتريات الفنادق",
+    "B2B hospitality procurement Egypt",
+    "automated factoring lines Cairo",
+    "hotel supply chain management Egypt",
+    "ETA e-invoicing compliance",
+    "hospitality vendor marketplace",
+    "Sharm El-Sheikh hotel suppliers",
+    "Hurghada resort procurement",
+    "digital invoice Egypt",
+    "تجهيزات الفنادق بالجملة",
+    "منصة المشتريات الفندقية مصر",
+    "الفوترة الإلكترونية هيئة الضرائب",
+    "تمويل فندقي مصر",
+    "سلسلة التوريد الفندقية",
   ],
-  authors: [{ name: "Hotels Vendors" }],
-  creator: "Hotels Vendors",
-  publisher: "Hotels Vendors",
+  authors: [{ name: "HotelsVendors" }],
+  creator: "HotelsVendors",
+  publisher: "HotelsVendors",
   robots: "index, follow",
   openGraph: {
     type: "website",
     locale: "en_EG",
-    url: "https://hotels-vendors.com",
-    siteName: "Hotels Vendors",
-    title: "Hotels Vendors | Digital Procurement Hub for B2B Hospitality",
+    url: "https://www.hotelsvendors.com",
+    siteName: "HotelsVendors",
+    title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
     description:
-      "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
+      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance. Purpose-built for Egyptian coastal hotel chains.",
     images: [
       {
-        url: "/hotelsvendors-logo.png",
+        url: "/assets/logo.svg",
         width: 1200,
         height: 630,
-        alt: "Hotels Vendors — Smarter Together",
+        alt: "HotelsVendors — The Market Changer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hotels Vendors | Digital Procurement Hub",
+    title: "HotelsVendors — B2B Procurement & Fintech",
     description:
-      "Egypt's leading B2B procurement platform for hotels. Verified suppliers, streamlined logistics, and integrated ETA e-invoicing.",
-    images: ["/hotelsvendors-logo.png"],
+      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
+    images: ["/assets/logo.svg"],
     creator: "@hotelsvendors",
   },
   alternates: {
-    canonical: "https://hotels-vendors.com",
+    canonical: "https://www.hotelsvendors.com",
     languages: {
-      "en-EG": "https://hotels-vendors.com",
-      "ar-EG": "https://hotels-vendors.com/ar",
+      "en": "https://www.hotelsvendors.com",
+      "ar": "https://www.hotelsvendors.com/ar",
     },
   },
   icons: {
@@ -93,25 +95,22 @@ export const metadata: Metadata = {
     shortcut: "/logo-icon.png",
   },
   manifest: "/manifest.json",
-  verification: {
-    google: "google-site-verification-code",
-  },
   other: {
-    "msapplication-TileColor": "#F97316",
+    "msapplication-TileColor": "#84cc16",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0C0814",
+    "theme-color": "#000000",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "light",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -124,16 +123,16 @@ export default function RootLayout({
       className={`h-full ${plusJakarta.variable} ${jetbrainsMono.variable} ${inter.variable}`}
     >
       <head>
-        <link rel="dns-prefetch" href="https://hotels-vendors.com" />
+        <link rel="dns-prefetch" href="https://www.hotelsvendors.com" />
         <meta name="geo.region" content="EG" />
         <meta name="geo.placename" content="Cairo, Egypt" />
         <meta name="ICBM" content="30.0444, 31.2357" />
-        <meta name="application-name" content="Hotels Vendors" />
-        <meta name="apple-mobile-web-app-title" content="Hotels Vendors" />
+        <meta name="application-name" content="HotelsVendors" />
+        <meta name="apple-mobile-web-app-title" content="HotelsVendors" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
+        <meta name="theme-color" content="#000000" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -147,7 +146,7 @@ export default function RootLayout({
                   } else {
                     document.documentElement.removeAttribute('data-theme');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#121212');
+                    if (meta) meta.setAttribute('content', '#000000');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -169,15 +168,14 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Hotels Vendors",
-              url: "https://hotels-vendors.com",
-              logo: "https://hotels-vendors.com/hotelsvendors-logo.png",
+              name: "HotelsVendors",
+              url: "https://www.hotelsvendors.com",
+              logo: "https://www.hotelsvendors.com/assets/logo.svg",
               description:
-                "Egypt's leading B2B procurement platform for the hospitality sector.",
+                "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
               sameAs: [
-                "https://facebook.com/hotelsvendors",
-                "https://instagram.com/hotelsvendors",
                 "https://linkedin.com/company/hotelsvendors",
+                "https://twitter.com/hotelsvendors",
               ],
               address: {
                 "@type": "PostalAddress",
