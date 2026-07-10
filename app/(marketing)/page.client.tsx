@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 /* ──────────────────────────────────────────────────────────────
    SCROLL ANIMATION HOOK
@@ -709,7 +710,7 @@ export default function MarketingPage() {
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(to right, #39ff7e 1px, transparent 1px), linear-gradient(to bottom, #39ff7e 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-          <img src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x" alt="HotelsVendors" className="w-14 h-14 mx-auto mb-6 object-contain" width={56} height={56} />
+          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" /></div>
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-white">
             The Future of Hotel<br /><span style={{ color: "#39ff7e" }}>Procurement is Here.</span>
           </h2>
