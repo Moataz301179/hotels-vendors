@@ -388,6 +388,16 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   TEXT GRADIENT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.text-gradient-lime {
+  background: linear-gradient(135deg, #39ff7e, #ff7e1a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    SCROLLBAR
    ═══════════════════════════════════════════════════════════════ */
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
