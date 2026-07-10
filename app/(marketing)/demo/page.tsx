@@ -44,7 +44,7 @@ export default function DemoPage() {
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-[#0c0c12] text-white p-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Live Demo — Inventory Upload & Checkout</h1>
         <p className="text-sm text-white/60 mb-4">Upload a CSV with columns: name,qty,unit,price to seed demo inventory. Proceed to checkout without a payment step.</p>
@@ -64,7 +64,7 @@ export default function DemoPage() {
                     <div className="font-medium">{it.name}</div>
                     <div className="text-sm text-white/50">{it.qty} {it.unit} · EGP {it.price}</div>
                   </div>
-                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-green-500 text-black rounded">Add</button>
+                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-[#39ff7e] text-black rounded">Add</button>
                 </li>
               ))}
             </ul>

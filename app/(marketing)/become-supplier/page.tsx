@@ -155,18 +155,18 @@ export default function SupplierOnboardingPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-[#0c0c12]">
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
-            <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-8">
-              <CheckCircle2 size={40} className="text-emerald-400" />
+            <div className="w-20 h-20 rounded-full bg-[#39ff7e]/10 border border-[#39ff7e]/20 flex items-center justify-center mx-auto mb-8">
+              <CheckCircle2 size={40} className="text-[#39ff7e]" />
             </div>
             <h1 className="text-3xl font-medium text-white mb-4">Application Submitted</h1>
             <p className="text-white/40 text-lg mb-10 max-w-md mx-auto">
               Thank you for applying to join Hotels Vendors. Our compliance team will review your application within 2–3 business days.
             </p>
 
-            <div className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] text-left space-y-4 mb-10">
+            <div className="p-6 rounded-2xl bg-[#12121a] border border-white/[0.06] text-left space-y-4 mb-10">
               <p className="text-[11px] font-medium text-white/30 uppercase tracking-wider">What happens next?</p>
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-white/50" /></div>
@@ -183,8 +183,8 @@ export default function SupplierOnboardingPage() {
             </div>
 
             <div className="flex gap-4 justify-center">
-              <Link href="/" className="px-6 py-3 rounded-xl bg-[#0a0a0a] border border-white/[0.06] text-white/60 text-sm font-medium hover:bg-white/[0.04] transition-colors">Back to Home</Link>
-              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#D4A843] text-black text-sm font-medium hover:bg-[#e0b856] transition-colors">Apply Another Business</button>
+              <Link href="/" className="px-6 py-3 rounded-xl bg-[#12121a] border border-white/[0.06] text-white/60 text-sm font-medium hover:bg-white/[0.04] transition-colors">Back to Home</Link>
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-[#ff7e1a] text-black text-sm font-medium hover:bg-[#ff9640] transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
         </div>
@@ -193,7 +193,7 @@ export default function SupplierOnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0c0c12]">
 
       {/* Hero */}
       <section className="relative pt-36 pb-16 border-b border-white/[0.04]">
@@ -206,7 +206,7 @@ export default function SupplierOnboardingPage() {
             <h1 className="text-[32px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
               Join Egypt&apos;s Leading
               <br />
-              <span className="text-[#D4A843]">Hospitality Supply Network</span>
+              <span className="text-[#ff7e1a]">Hospitality Supply Network</span>
             </h1>
             <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
               Get direct access to 52+ verified hotel properties, guaranteed payments through embedded factoring, and shared-route logistics that cut your delivery costs. No bidding wars. No hidden fees.
@@ -231,14 +231,14 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-[#D4A843] text-black" : isCompleted ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
+                          isActive ? "bg-[#ff7e1a] text-black" : isCompleted ? "bg-[#39ff7e]/10 text-[#39ff7e] border border-[#39ff7e]/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
-                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-white" : isCompleted ? "text-emerald-400/60" : "text-white/20"}`}>{s.label}</span>
+                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-white" : isCompleted ? "text-[#39ff7e]/60" : "text-white/20"}`}>{s.label}</span>
                       </div>
                       {i < STEPS.length - 1 && (
-                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-emerald-500/20" : "bg-white/[0.04]"}`} />
+                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-[#39ff7e]/20" : "bg-white/[0.04]"}`} />
                       )}
                     </div>
                   );
@@ -247,7 +247,7 @@ export default function SupplierOnboardingPage() {
             </div>
 
             {/* Form Card */}
-            <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={step}
@@ -306,8 +306,8 @@ export default function SupplierOnboardingPage() {
                         <div>
                           <label className="block text-[13px] font-medium text-white/50 mb-2">Governorate <span className="text-red-400">*</span></label>
                           <select value={form.governorate} onChange={(e) => updateField("governorate", e.target.value)} className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] focus:border-white/[0.15] focus:outline-none transition-colors appearance-none">
-                            <option value="" className="bg-[#0a0a0a]">Select governorate</option>
-                            {GOVERNORATES.map((g) => (<option key={g} value={g} className="bg-[#0a0a0a]">{g}</option>))}
+                            <option value="" className="bg-[#12121a]">Select governorate</option>
+                            {GOVERNORATES.map((g) => (<option key={g} value={g} className="bg-[#12121a]">{g}</option>))}
                           </select>
                         </div>
                         <div>
@@ -372,7 +372,7 @@ export default function SupplierOnboardingPage() {
                           {CATEGORIES.map((cat) => {
                             const selected = form.categories.includes(cat);
                             return (
-                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#D4A843]/10 text-[#D4A843] border border-[#D4A843]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={cat} onClick={() => toggleArray("categories", cat)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#ff7e1a]/10 text-[#ff7e1a] border border-[#ff7e1a]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
                                 {cat}
                               </button>
                             );
@@ -385,7 +385,7 @@ export default function SupplierOnboardingPage() {
                           {DELIVERY_AREAS.map((area) => {
                             const selected = form.deliveryAreas.includes(area);
                             return (
-                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#39ff7e]/10 text-[#39ff7e] border border-[#39ff7e]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
                                 {area}
                               </button>
                             );
@@ -474,11 +474,11 @@ export default function SupplierOnboardingPage() {
                   <ArrowLeft size={16} />Back
                 </button>
                 {step < 5 ? (
-                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#D4A843] text-black text-[13px] font-medium hover:bg-[#e0b856] transition-colors">
+                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#ff7e1a] text-black text-[13px] font-medium hover:bg-[#ff9640] transition-colors">
                     Continue<ArrowRight size={16} />
                   </button>
                 ) : (
-                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#D4A843] text-black text-[13px] font-medium hover:bg-[#e0b856] disabled:opacity-50 transition-colors">
+                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#ff7e1a] text-black text-[13px] font-medium hover:bg-[#ff9640] disabled:opacity-50 transition-colors">
                     {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                     {submitting ? "Submitting..." : "Submit Application"}
                   </button>
@@ -508,7 +508,7 @@ function MobileBenefits() {
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#0a0a0a] border border-white/[0.06] text-white text-[13px] font-medium">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#12121a] border border-white/[0.06] text-white text-[13px] font-medium">
         <span>Why join as a Supplier?</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>

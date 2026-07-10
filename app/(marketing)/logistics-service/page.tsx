@@ -14,26 +14,26 @@ export const metadata: Metadata = {
 };
 
 const governorates = [
-  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#84cc16" },
-  { name: "Hurghada", type: "Red Sea", color: "#22C55E" },
-  { name: "Cairo", type: "Central Hub", color: "#3B82F6" },
-  { name: "Alexandria", type: "Mediterranean", color: "#D4A843" },
-  { name: "Marsa Alam", type: "Red Sea South", color: "#00E5CC" },
-  { name: "North Coast", type: "Seasonal", color: "#FF8C00" },
+  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#39ff7e" },
+  { name: "Hurghada", type: "Red Sea", color: "#39ff7e" },
+  { name: "Cairo", type: "Central Hub", color: "#64b5f6" },
+  { name: "Alexandria", type: "Mediterranean", color: "#ff7e1a" },
+  { name: "Marsa Alam", type: "Red Sea South", color: "#c455ff" },
+  { name: "North Coast", type: "Seasonal", color: "#ff7e1a" },
 ];
 
 const features = [
-  { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#84cc16" },
-  { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#3B82F6" },
-  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#22C55E" },
-  { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "#D4A843" },
-  { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "#00E5CC" },
-  { icon: Banknote, title: "Paid in 4 Hours", desc: "Not 90 days. Not 30 days. Digital POD triggers automated payment within 4 hours of confirmed delivery.", color: "#FF8C00" },
+  { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#39ff7e" },
+  { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#64b5f6" },
+  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#39ff7e" },
+  { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "#ff7e1a" },
+  { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "#c455ff" },
+  { icon: Banknote, title: "Paid in 4 Hours", desc: "Not 90 days. Not 30 days. Digital POD triggers automated payment within 4 hours of confirmed delivery.", color: "#ff7e1a" },
 ];
 
 export default function LogisticsServicePage() {
   return (
-    <main style={{ backgroundColor: "#000000", color: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)" }} />
@@ -46,7 +46,7 @@ export default function LogisticsServicePage() {
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS. Built for carriers who want guaranteed volume and fast settlement.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
               Register as Carrier <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -57,7 +57,7 @@ export default function LogisticsServicePage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#030303" }}>
+      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -67,7 +67,7 @@ export default function LogisticsServicePage() {
               { icon: Banknote, label: "4-Hour Payment", desc: "Digital POD trigger" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#3B82F6" }} />
+                <b.icon size={16} style={{ color: "#64b5f6" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -79,12 +79,12 @@ export default function LogisticsServicePage() {
       </section>
 
       {/* Coverage Map */}
-      <section className="py-16" style={{ backgroundColor: "#050505" }}>
+      <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Coverage Map</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {governorates.map((g) => (
-              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={g.name} className="rounded-xl p-4 text-center transition-all hover:border-[#64b5f6]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <MapPin size={16} className="mx-auto mb-2" style={{ color: g.color }} />
                 <p className="text-[12px] font-medium text-white">{g.name}</p>
                 <p className="text-[10px] text-white/25">{g.type}</p>
@@ -100,7 +100,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Carriers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#3B82F6]/20" style={{ backgroundColor: "#0a0a0a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#64b5f6]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-3" style={{ color: f.color }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
@@ -113,11 +113,11 @@ export default function LogisticsServicePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <PackageCheck size={28} className="mx-auto mb-6" style={{ color: "#3B82F6" }} />
+          <PackageCheck size={28} className="mx-auto mb-6" style={{ color: "#64b5f6" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Need Reliable Hotel Delivery?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Whether you&apos;re a hotel needing deliveries or a carrier looking for volume, we&apos;ve got you covered.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(132,204,22,0.2)]" style={{ backgroundColor: "#84cc16", color: "#000000" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
               Register Hotel <ArrowRight size={14} />
             </Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

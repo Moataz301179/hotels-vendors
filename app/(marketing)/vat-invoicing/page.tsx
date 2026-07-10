@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { motion, useInView } from "framer-motion"
 import {
   FileCheck,
@@ -141,7 +141,7 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-lg text-neutral-400 max-w-2xl mx-auto"
+          className="text-lg text-text-white/45 max-w-2xl mx-auto"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {subtitle}
@@ -214,7 +214,7 @@ function ComplianceSandbox() {
                 value={taxId}
                 onChange={(e) => setTaxId(e.target.value)}
                 placeholder="9-15 digit Tax ID"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-neutral-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-text-white/30 outline-none transition-all"
                 style={{
                   backgroundColor: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.08)",
@@ -231,7 +231,7 @@ function ComplianceSandbox() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="e.g. 50000"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-neutral-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-text-white/30 outline-none transition-all"
                 style={{
                   backgroundColor: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.08)",
@@ -271,9 +271,9 @@ function ComplianceSandbox() {
             >
               <div className="flex items-center gap-2 mb-2">
                 {result.compliant ? (
-                  <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  <CheckCircle2 className="w-5 h-5 text-[#39ff7e]" />
                 ) : (
-                  <AlertTriangle className="w-5 h-5 text-red-400" />
+                  <AlertTriangle className="w-5 h-5 text-[#EF4444]" />
                 )}
                 <span className="text-sm font-semibold text-white">
                   {result.compliant ? "Compliant" : "Issues Found"}
@@ -282,12 +282,12 @@ function ComplianceSandbox() {
               <div className="space-y-1">
                 {Array.isArray(result.issues) && result.issues.length > 0 ? (
                   result.issues.map((issue: string, i: number) => (
-                    <p key={i} className="text-xs text-red-300" style={{ fontFamily: "var(--font-sans)" }}>
+                    <p key={i} className="text-xs text-[#EF4444]" style={{ fontFamily: "var(--font-sans)" }}>
                       {issue}
                     </p>
                   ))
                 ) : (
-                  <p className="text-xs text-green-300" style={{ fontFamily: "var(--font-sans)" }}>
+                  <p className="text-xs text-[#39ff7e]" style={{ fontFamily: "var(--font-sans)" }}>
                     All checks passed. ETA-compliant invoice can be issued.
                   </p>
                 )}
@@ -380,7 +380,7 @@ export default function VatInvoicingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+              className="text-lg md:text-xl text-text-white/45 max-w-2xl mx-auto mb-10 leading-relaxed"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Generate fully ETA-compliant e-invoices on demand. No marketplace required.
@@ -406,7 +406,7 @@ export default function VatInvoicingPage() {
               </a>
               <a
                 href="#sandbox"
-                className="px-8 py-4 rounded-full text-base font-medium text-neutral-300 hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
+                className="px-8 py-4 rounded-full text-base font-medium text-text-white/60 hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
                 style={{ border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <Search className="w-5 h-5" />
