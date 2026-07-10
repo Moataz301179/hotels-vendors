@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Eye,
@@ -11,12 +11,13 @@ import {
   Lock,
   User,
   ArrowRight,
-  Check,
   AlertTriangle,
   Hotel,
   Store,
   Landmark,
   Truck,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
@@ -28,30 +29,8 @@ const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType }[
   { value: "LOGISTICS", label: "Logistics Provider", icon: Truck },
 ];
 
-export default function RegisterPageWrapper() {
-  return (
-    <Suspense fallback={<RegisterSkeleton />}>
-      <RegisterPage />
-    </Suspense>
-  );
-}
-
-function RegisterSkeleton() {
-  return (
-    <div className="animate-pulse">
-      <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden p-8 space-y-5">
-        <div className="h-6 bg-white/[0.04] rounded w-1/3" />
-        <div className="h-12 bg-white/[0.04] rounded" />
-        <div className="h-12 bg-white/[0.04] rounded" />
-        <div className="h-12 bg-white/[0.04] rounded" />
-      </div>
-    </div>
-  );
-}
-
-function RegisterPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -63,14 +42,6 @@ function RegisterPage() {
     password: "",
     role: "HOTEL" as StakeholderRole,
   });
-
-  useEffect(() => {
-    const roleParam = searchParams.get("role");
-    const validRoles: StakeholderRole[] = ["HOTEL", "SUPPLIER", "FACTORING", "LOGISTICS"];
-    if (roleParam && validRoles.includes(roleParam.toUpperCase() as StakeholderRole)) {
-      setForm((prev) => ({ ...prev, role: roleParam.toUpperCase() as StakeholderRole }));
-    }
-  }, [searchParams]);
 
   const updateForm = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -119,197 +90,192 @@ function RegisterPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-20" style={{ backgroundColor: "#000000" }}>
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-8 justify-center"
-        >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-            <span className="text-black font-bold text-lg">HV</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-medium tracking-tight text-white">HotelsVendors</h1>
-            <p className="text-[10px] text-white/30 uppercase tracking-wider">B2B Procurement Egypt</p>
-          </div>
-        </motion.div>
-
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
-          className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
-        >
-          {registered ? (
-            <div className="p-8 text-center space-y-6">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
-                style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)" }}
-              >
-                <Check className="w-10 h-10 text-[#22C55E]" />
-              </motion.div>
-              <div>
-                <h2 className="text-xl font-medium text-white">Welcome aboard, {form.name}!</h2>
-                <p className="text-sm text-white/40 mt-2 max-w-sm mx-auto">
+  if (registered) {
+    return (
+      <main className="min-h-screen bg-black">
+        <section className="relative pt-36 pb-16">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
+                <div className="w-20 h-20 rounded-full bg-[#84cc16]/10 border border-[#84cc16]/20 flex items-center justify-center mx-auto mb-8">
+                  <CheckCircle2 size={40} className="text-[#84cc16]" />
+                </div>
+                <h1 className="text-[28px] font-medium text-white mb-4">Welcome aboard, {form.name}!</h1>
+                <p className="text-white/40 text-[15px] mb-10 max-w-md mx-auto">
                   Your account has been created successfully. Redirecting you to sign in...
                 </p>
-              </div>
+              </motion.div>
             </div>
-          ) : (
-            <>
-              {/* Header */}
-              <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-                <h2 className="text-lg font-medium text-white">Create your account</h2>
-                <p className="text-sm text-white/40 mt-1">
-                  Quick signup — only name, email & password required
-                </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-black">
+      {/* Hero */}
+      <section className="relative pt-36 pb-16 border-b border-white/[0.04]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/60 text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
+              <Store className="w-3 h-3" />
+              Account Registration
+            </div>
+            <h1 className="text-[32px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+              Create Your
+              <br />
+              <span className="text-[#84cc16]">HotelsVendors Account</span>
+            </h1>
+            <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
+              Join Egypt&apos;s leading B2B hospitality procurement platform. Connect with verified suppliers, streamline procurement, and unlock embedded financing.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Form */}
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="max-w-2xl">
+          <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+            {/* Header */}
+            <div className="px-8 pt-8 pb-6 border-b border-white/[0.04]">
+              <h2 className="text-[15px] font-medium text-white flex items-center gap-2.5">
+                <User size={18} className="text-white/40" />
+                Create Account
+              </h2>
+              <p className="text-[13px] text-white/35 mt-1.5">
+                Quick signup — only name, email & password required
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-8 space-y-5">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-[13px]"
+                >
+                  <AlertTriangle size={14} />
+                  {error}
+                </motion.div>
+              )}
+
+              {/* Role Selection */}
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-white/50">I am a...</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {ROLES.map((role) => {
+                    const Icon = role.icon;
+                    return (
+                      <button
+                        key={role.value}
+                        type="button"
+                        onClick={() => updateForm("role", role.value)}
+                        className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[13px] font-medium transition-all ${
+                          form.role === role.value
+                            ? "bg-[#84cc16] text-black border-[#84cc16]"
+                            : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                        }`}
+                      >
+                        <Icon size={14} />
+                        {role.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="p-8 space-y-5">
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm"
-                    style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#EF4444" }}
+              {/* Name */}
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-white/50">
+                  Full Name <span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                  <input
+                    type="text"
+                    value={form.name}
+                    onChange={(e) => updateForm("name", e.target.value)}
+                    placeholder="Your full name"
+                    required
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-white/50">
+                  Email <span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => updateForm("email", e.target.value)}
+                    placeholder="you@company.com"
+                    required
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-white/50">
+                  Password <span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={form.password}
+                    onChange={(e) => updateForm("password", e.target.value)}
+                    placeholder="Min 6 characters"
+                    required
+                    minLength={6}
+                    className="w-full pl-10 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
                   >
-                    <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                    <span>{error}</span>
-                  </motion.div>
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#84cc16] text-black text-[13px] font-medium hover:bg-[#a3e635] disabled:opacity-50 transition-colors"
+              >
+                {loading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <>
+                    Create Account
+                    <ArrowRight size={16} />
+                  </>
                 )}
+              </button>
+            </form>
+          </div>
 
-                {/* Role Selection */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    I am a...
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {ROLES.map((role) => {
-                      const Icon = role.icon;
-                      return (
-                        <button
-                          key={role.value}
-                          type="button"
-                          onClick={() => updateForm("role", role.value)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
-                            form.role === role.value
-                              ? "text-black"
-                              : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
-                          }`}
-                          style={form.role === role.value ? { backgroundColor: "#84cc16", borderColor: "#84cc16" } : {}}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {role.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Name */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type="text"
-                      value={form.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
-                      placeholder="Your full name"
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => updateForm("email", e.target.value)}
-                      placeholder="you@example.com"
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={form.password}
-                      onChange={(e) => updateForm("password", e.target.value)}
-                      placeholder="Min 6 characters"
-                      required
-                      minLength={6}
-                      className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-                  style={{ backgroundColor: "#84cc16", color: "#000000" }}
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <span>Create Account</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-            </>
-          )}
-        </motion.div>
-
-        {/* Footer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center text-sm text-white/30 mt-6"
-        >
-          Already have an account?{" "}
-          <Link href="/login" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
-            Sign in
-          </Link>
-        </motion.p>
+          {/* Footer */}
+          <p className="text-center text-[13px] text-white/30 mt-6">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

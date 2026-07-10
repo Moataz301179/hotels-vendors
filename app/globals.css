@@ -1,100 +1,80 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS + INVO — DUAL-THEME DESIGN SYSTEM v7
-   HotelsVendors: Muted Lime accent (#8EF26E) — Procurement Marketplace
-   INVO: Gold accent (#D4A843) — Factoring & Financial Services
-   OLED black background (#000000), white text, institutional premium feel.
+   HOTELS VENDORS — DESIGN SYSTEM v8 (Reference-Aligned)
+   Green: #39ff7e — Primary / HotelsVendors
+   Orange: #ff7e1a — Fast / INVO / Factoring
+   Purple: #c455ff — AI / Compliance
+   Background: oklch(0.10 0.015 280) / #0c0c12
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Background Layers — Pure dark ── */
-  --bg-canvas: #000000;
-  --bg-surface-1: #0a0a0a;
-  --bg-surface-2: #111111;
-  --bg-surface-3: #1a1a1a;
+  /* ── Background Layers — Dark reference ── */
+  --bg-canvas: #0c0c12;
+  --bg-surface-1: #12121a;
+  --bg-surface-2: #1a1a24;
+  --bg-surface-3: #22222e;
 
-  --background: #000000;
-  --surface: #0a0a0a;
-  --surface-raised: #111111;
-  --surface-hover: #1a1a1a;
+  --background: #0c0c12;
+  --surface: #12121a;
+  --surface-raised: #1a1a24;
+  --surface-hover: #22222e;
 
   /* ── Text Hierarchy ── */
   --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-tertiary: #666666;
-  --text-muted: #444444;
-  --text-inverse: #000000;
+  --text-secondary: #a0a0b0;
+  --text-tertiary: #666678;
+  --text-muted: #44445a;
 
   --foreground: #ffffff;
-  --foreground-secondary: #a0a0a0;
-  --foreground-tertiary: #666666;
-  --foreground-muted: #444444;
+  --foreground-secondary: #a0a0b0;
+  --foreground-tertiary: #666678;
+  --foreground-muted: #44445a;
 
   /* ── Borders ── */
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(132, 204, 22, 0.20);
+  --border-accent: rgba(57, 255, 126, 0.20);
 
-  /* ── HotelsVendors Accent (Muted Lime) ── */
-  --accent-base: #84cc16;
-  --accent-light: #a3e635;
-  --accent-dark: #6ba111;
-  --accent-muted: rgba(132, 204, 22, 0.10);
-  --accent-glow: rgba(132, 204, 22, 0.12);
+  /* ── Primary: Green #39ff7e ── */
+  --accent-base: #39ff7e;
+  --accent-light: #5fff9a;
+  --accent-dark: #20e060;
+  --accent-muted: rgba(57, 255, 126, 0.10);
+  --accent-glow: rgba(57, 255, 126, 0.12);
 
-  /* ── INVO Accent (Gold/Amber) ── */
-  --invo-base: #D4A843;
-  --invo-light: #e0b856;
-  --invo-dark: #b8922e;
-  --invo-muted: rgba(212, 168, 67, 0.10);
-  --invo-glow: rgba(212, 168, 67, 0.12);
+  /* ── Orange #ff7e1a ── */
+  --orange-base: #ff7e1a;
+  --orange-light: #ff9640;
+  --orange-dark: #e06800;
+  --orange-muted: rgba(255, 126, 26, 0.10);
+  --orange-glow: rgba(255, 126, 26, 0.12);
 
-  /* ── Neon Frame Accents ── */
-  --neon-turquoise: #00E5CC;
-  --neon-turquoise-muted: rgba(0, 229, 204, 0.10);
-  --neon-turquoise-glow: rgba(0, 229, 204, 0.15);
-  --neon-orange: #FF8C00;
-  --neon-orange-muted: rgba(255, 140, 0, 0.10);
-  --neon-orange-glow: rgba(255, 140, 0, 0.15);
+  /* ── Purple #c455ff ── */
+  --purple-base: #c455ff;
+  --purple-light: #d47aff;
+  --purple-dark: #a030e0;
+  --purple-muted: rgba(196, 85, 255, 0.10);
+  --purple-glow: rgba(196, 85, 255, 0.12);
 
   /* ── Semantic ── */
   --error: #EF4444;
-  --success: #22C55E;
-  --warning: #EAB308;
-  --info: #3B82F6;
+  --success: #39ff7e;
+  --warning: #ff7e1a;
+  --info: #64b5f6;
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-red: 0 0 40px rgba(132, 204, 22, 0.08);
-  --shadow-glow-gold: 0 0 40px rgba(212, 168, 67, 0.08);
+  --shadow-glow-green: 0 0 40px rgba(57, 255, 126, 0.08);
+  --shadow-glow-orange: 0 0 40px rgba(255, 126, 26, 0.08);
+  --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   /* ── Layout ── */
   --header-height: 64px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
-}
-
-/* ── INVO accent overrides ── */
-html[data-accent="invo"] {
-  --accent-base: #D4A843;
-  --accent-light: #e0b856;
-  --accent-dark: #b8922e;
-  --accent-muted: rgba(212, 168, 67, 0.10);
-  --accent-glow: rgba(212, 168, 67, 0.12);
-  --border-accent: rgba(212, 168, 67, 0.20);
-}
-
-/* ── Neon Frame Accents for Hover ── */
-.hover-frame-turquoise:hover {
-  border-color: #00E5CC !important;
-  box-shadow: 0 0 20px rgba(0, 229, 204, 0.15), inset 0 0 20px rgba(0, 229, 204, 0.03);
-}
-.hover-frame-orange:hover {
-  border-color: #FF8C00 !important;
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.15), inset 0 0 20px rgba(255, 140, 0, 0.03);
 }
 
 @theme inline {
@@ -140,61 +120,84 @@ body {
   html { scroll-behavior: auto; }
 }
 
-/* ── FONT WEIGHT ENFORCEMENT — NO BOLD ── */
-h1, h2, h3, h4, h5, h6,
-.font-bold, .font-extrabold, .font-black {
-  font-weight: 500 !important;
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* ── Thin header border ── */
-.nav-border {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+.animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+.animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+.animate-scale-in { animation: scale-in 0.4s ease-out forwards; }
+.animate-bounce { animation: bounce 2s infinite; }
+.animate-pulse { animation: pulse 2s infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
-/* ── Gradient text ── */
-.text-gradient-red-gold {
-  background: linear-gradient(90deg, #8B0000 0%, #D4A843 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
 
-.text-gradient-lime {
-  background: linear-gradient(90deg, #8EF26E 0%, #22C55E 50%, #3B82F6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Initial hidden state for animated elements */
+.animate-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
 
-/* ── Hero glows ── */
-.hero-glow-red {
-  position: relative;
-}
-.hero-glow-red::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(139,0,0,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
+/* Stagger children */
+.stagger-children .animate-on-scroll:nth-child(1) { transition-delay: 0s; }
+.stagger-children .animate-on-scroll:nth-child(2) { transition-delay: 0.08s; }
+.stagger-children .animate-on-scroll:nth-child(3) { transition-delay: 0.16s; }
+.stagger-children .animate-on-scroll:nth-child(4) { transition-delay: 0.24s; }
+.stagger-children .animate-on-scroll:nth-child(5) { transition-delay: 0.32s; }
+.stagger-children .animate-on-scroll:nth-child(6) { transition-delay: 0.40s; }
 
-.hero-glow-gold {
-  position: relative;
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+
+/* ═══════════════════════════════════════════════════════════════
+   NEON CARD — hover glow effect
+   ═══════════════════════════════════════════════════════════════ */
+.neon-card {
+  transition: all 0.3s ease;
 }
-.hero-glow-gold::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+.neon-card:hover {
+  transform: scale(1.01);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -243,10 +246,10 @@ h1, h2, h3, h4, h5, h6,
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
   background: var(--accent-base);
-  color: #fff;
+  color: #07090f;
   font-size: 14px;
   font-weight: 500;
-  border-radius: 10px;
+  border-radius: 6px;
   border: none;
   transition: all 0.3s var(--ease-out-expo);
   cursor: pointer;
@@ -255,10 +258,6 @@ h1, h2, h3, h4, h5, h6,
   background: var(--accent-light);
   transform: translateY(-1px);
   box-shadow: 0 4px 20px var(--accent-glow);
-}
-.btn-accent:active {
-  background: var(--accent-dark);
-  transform: translateY(0);
 }
 
 .btn-ghost {
@@ -271,7 +270,7 @@ h1, h2, h3, h4, h5, h6,
   color: var(--foreground-secondary);
   font-size: 14px;
   font-weight: 500;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid var(--border-subtle);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -280,28 +279,6 @@ h1, h2, h3, h4, h5, h6,
   background: rgba(255,255,255,0.04);
   color: #fff;
   border-color: var(--border-visible);
-}
-
-/* ── INVO gold button variant ── */
-.btn-gold {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: var(--invo-base);
-  color: #000;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 10px;
-  border: none;
-  transition: all 0.3s var(--ease-out-expo);
-  cursor: pointer;
-}
-.btn-gold:hover {
-  background: var(--invo-light);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px var(--invo-gold);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -329,41 +306,6 @@ h1, h2, h3, h4, h5, h6,
   letter-spacing: 0.05em;
   border: 1px solid;
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   ANIMATIONS
-   ═══════════════════════════════════════════════════════════════ */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s var(--ease-out-expo) both;
-}
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
 
 /* ═══════════════════════════════════════════════════════════════
    METRIC / STAT UTILITIES
@@ -437,32 +379,6 @@ h1, h2, h3, h4, h5, h6,
 @media (min-width: 1024px) { .bento-cell-2x { grid-column: span 2; } }
 
 /* ═══════════════════════════════════════════════════════════════
-   STAT STRIP
-   ═══════════════════════════════════════════════════════════════ */
-.stat-strip {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 2rem;
-  padding: 3rem 1.5rem;
-}
-.stat-strip-item { text-align: center; }
-.stat-strip-value {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-.stat-strip-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* ═══════════════════════════════════════════════════════════════
    SECTION DIVIDERS
    ═══════════════════════════════════════════════════════════════ */
 .section-divider {
@@ -472,36 +388,15 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FULL-BLEED CTA
-   ═══════════════════════════════════════════════════════════════ */
-.cta-bleed {
-  position: relative;
-  overflow: hidden;
-}
-.cta-bleed::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* ═══════════════════════════════════════════════════════════════
    SCROLLBAR
    ═══════════════════════════════════════════════════════════════ */
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════
-   LAYERED COMPOSITION
+   BACKDROP BLUR FALLBACK
    ═══════════════════════════════════════════════════════════════ */
-.layered-visual { position: relative; }
-.layered-visual > *:nth-child(1) { position: relative; z-index: 3; }
-.layered-visual > *:nth-child(2) {
-  position: absolute; top: -1rem; right: -1rem; z-index: 2; opacity: 0.6; transform: scale(0.95);
+@supports not (backdrop-filter: blur(12px)) {
+  .backdrop-blur-xl { background-color: oklch(0.10 0.015 280 / 0.95); }
+  .backdrop-blur-sm { background-color: oklch(0.14 0.015 280 / 0.9); }
 }
-.layered-visual > *:nth-child(3) {
-  position: absolute; top: -2rem; right: -2rem; z-index: 1; opacity: 0.3; transform: scale(0.9);
-}
-

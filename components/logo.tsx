@@ -11,11 +11,16 @@ export function Logo({ className = "h-8 w-8" }: { className?: string }) {
 export function LogoFull({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <Logo className="h-9 w-9" />
-      <div className="leading-none">
-        <span className="block text-[15px] font-semibold tracking-[0.08em] text-fg">HOTELS VENDORS</span>
-        <span className="mt-1 block text-[9px] font-medium tracking-[0.34em] text-fg-3">THE MARKET CHANGER</span>
-      </div>
+      <img
+        src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
+        alt="HotelsVendors"
+        className="w-9 h-9 object-contain"
+        width={36}
+        height={36}
+      />
+      <span className="tracking-[0.15em] font-semibold text-foreground text-base">
+        HOTELS VENDORS
+      </span>
     </div>
   );
 }

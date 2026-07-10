@@ -3,85 +3,100 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { LogoFull } from "@/components/logo";
 
 const links = [
-  { href: "/about", label: "About" },
-  { href: "/marketplace", label: "Marketplace" },
+  { href: "/#how", label: "How It Works" },
+  { href: "/#invo", label: "INVO" },
+  { href: "/factoring-service", label: "Factoring" },
+  { href: "/compliance", label: "Compliance" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/solutions", label: "Solutions" },
-  { href: "/become-supplier", label: "For Suppliers" },
+  { href: "/marketplace", label: "Marketplace" },
 ];
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 h-16 border-b border-white/[0.06] bg-black/80 backdrop-blur-md">
-      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 lg:px-8">
-        <Link href="/" aria-label="HotelsVendors home">
-          <LogoFull />
-        </Link>
-        <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="inline-flex items-center rounded-lg px-3 py-2 text-sm text-white/50 transition hover:bg-white/[0.04] hover:text-white"
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-3">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl">
+      <Link href="/" className="flex items-center gap-3">
+        <img
+          src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
+          alt="HotelsVendors"
+          className="w-9 h-9 object-contain"
+          width={36}
+          height={36}
+        />
+        <span className="tracking-[0.15em] font-semibold text-foreground text-base">
+          HOTELS VENDORS
+        </span>
+      </Link>
+
+      {/* Desktop nav */}
+      <div className="hidden md:flex items-center gap-7">
+        {links.map((l) => (
           <Link
-            href="/login"
-            className="hidden px-3 py-2 text-sm text-white/50 transition hover:text-white sm:block"
+            key={l.href}
+            href={l.href}
+            className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer"
           >
-            Sign in
+            {l.label}
           </Link>
-          <Link
-            href="/register"
-            className="hidden rounded-lg bg-[#84cc16] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#a3e635] sm:inline-flex"
-          >
-            Get Started
-          </Link>
-          <button
-            onClick={() => setOpen(!open)}
-            className="grid h-8 w-8 place-items-center rounded-lg border border-white/[0.06] text-white/50 hover:text-white lg:hidden"
-            aria-label="Menu"
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
-        </div>
+        ))}
       </div>
+
+      {/* Desktop actions */}
+      <div className="hidden md:flex items-center gap-3">
+        <Link
+          href="/login"
+          className="text-sm px-4 py-2 text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent font-sans"
+        >
+          Sign In
+        </Link>
+        <Link
+          href="/register"
+          className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#39ff7e] text-[#07090f]"
+        >
+          Try the Demo
+        </Link>
+      </div>
+
+      {/* Mobile toggle */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="md:hidden text-white/50 cursor-pointer bg-transparent border-0 p-2"
+        aria-label="Toggle menu"
+      >
+        {open ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
+      {/* Mobile menu */}
       {open && (
-        <div className="border-t border-white/[0.06] bg-black px-5 py-4 lg:hidden">
+        <div className="absolute top-full left-0 right-0 bg-[#12121a] border-b border-white/[0.06] px-6 py-4 flex flex-col gap-4 md:hidden">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="flex items-center rounded-lg px-3 py-2.5 text-sm text-white/50 hover:bg-white/[0.04] hover:text-white"
+              className="text-sm text-white/50 hover:text-white"
             >
               {l.label}
             </Link>
           ))}
-          <div className="mt-3 flex gap-2">
-            <Link
-              href="/login"
-              className="flex-1 rounded-lg border border-white/[0.06] py-2.5 text-center text-sm text-white/50 hover:text-white"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/register"
-              className="flex-1 rounded-lg bg-[#84cc16] py-2.5 text-center text-sm font-medium text-black"
-            >
-              Get Started
-            </Link>
-          </div>
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className="text-sm text-white/50 hover:text-white"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/register"
+            onClick={() => setOpen(false)}
+            className="text-sm px-4 py-2 font-semibold rounded-md bg-[#39ff7e] text-[#07090f] text-center"
+          >
+            Try the Demo
+          </Link>
         </div>
       )}
-    </header>
+    </nav>
   );
 }

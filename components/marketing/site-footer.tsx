@@ -1,72 +1,206 @@
 import Link from "next/link";
-import { LogoFull } from "@/components/logo";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/[0.06] bg-black">
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-1">
-            <LogoFull />
-            <p className="mt-4 text-sm text-white/40 leading-relaxed max-w-xs">
-              Enterprise hospitality procurement, ETA e-invoicing, reverse factoring and AI cashflow automation for Egyptian hotels.
+    <footer className="border-t py-12 px-6" style={{ borderColor: "#39ff7e18" }}>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
+          {/* Brand */}
+          <div className="max-w-xs">
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
+                alt="HotelsVendors"
+                className="w-8 h-8 object-contain"
+                width={32}
+                height={32}
+              />
+              <span className="font-semibold text-base tracking-[0.15em] text-white">
+                HOTELS VENDORS
+              </span>
+            </div>
+            <p className="text-white/45 text-sm leading-relaxed mb-4">
+              The world&apos;s first AI-driven B2B procurement platform for
+              hospitality. ETA &amp; FRA compliant. Free to start.
             </p>
+            <div className="flex gap-2 flex-wrap">
+              <span
+                className="text-xs px-2 py-0.5 rounded-full border font-semibold"
+                style={{
+                  borderColor: "#39ff7e44",
+                  color: "#39ff7e",
+                }}
+              >
+                ETA
+              </span>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full border font-semibold"
+                style={{
+                  borderColor: "#ff7e1a44",
+                  color: "#ff7e1a",
+                }}
+              >
+                FRA
+              </span>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full border font-semibold"
+                style={{
+                  borderColor: "#c455ff44",
+                  color: "#c455ff",
+                }}
+              >
+                ISO 27001
+              </span>
+            </div>
           </div>
-          {[
-            {
-              title: "Platform",
-              links: [
-                ["Marketplace", "/marketplace"],
-                ["Pricing", "/pricing"],
-                ["Solutions", "/solutions"],
-                ["ETA Compliance", "/compliance"],
-              ],
-            },
-            {
-              title: "Capital",
-              links: [
-                ["Factoring Service", "/factoring-service"],
-                ["Logistics", "/logistics-service"],
-                ["VAT Invoicing", "/vat-invoicing"],
-                ["Become a Supplier", "/become-supplier"],
-              ],
-            },
-            {
-              title: "Access",
-              links: [
-                ["Sign in", "/login"],
-                ["Get started", "/register"],
-                ["About Us", "/about"],
-              ],
-            },
-          ].map((col) => (
-            <div key={col.title}>
-              <h4 className="text-sm font-medium text-white">{col.title}</h4>
-              <ul className="mt-3 space-y-2">
-                {col.links.map(([label, href]) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-sm text-white/40 hover:text-white transition"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
+
+          {/* Link columns */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+            <div>
+              <div className="font-semibold mb-3 text-white">Platform</div>
+              <ul className="flex flex-col gap-2">
+                <li>
+                  <Link
+                    href="/marketplace"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    HotelsVendors
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/marketplace"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    INVO Marketplace
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/sandbox"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    AI Agents
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/factoring-service"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Reverse Factoring
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/compliance"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Compliance
+                  </Link>
+                </li>
               </ul>
             </div>
-          ))}
-        </div>
-        <div className="mt-10 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
-          <p>&copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="/about" className="hover:text-white transition">
-              Terms
-            </Link>
-            <Link href="/about" className="hover:text-white transition">
-              Privacy
-            </Link>
+            <div>
+              <div className="font-semibold mb-3 text-white">Company</div>
+              <ul className="flex flex-col gap-2">
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <span className="text-white/45">Blog</span>
+                </li>
+                <li>
+                  <span className="text-white/45">Careers</span>
+                </li>
+                <li>
+                  <span className="text-white/45">Press</span>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div className="font-semibold mb-3 text-white">Legal</div>
+              <ul className="flex flex-col gap-2">
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Security
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/compliance"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    ETA Compliance
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/compliance"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    FRA Compliance
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-white/30"
+          style={{ borderColor: "#39ff7e15" }}
+        >
+          <span>&copy; {new Date().getFullYear()} HotelsVendors Inc. All rights reserved.</span>
+          <span className="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#39ff7e"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            ETA &middot; FRA &middot; ISO 27001 &middot; PCI DSS &middot; AML/KYC Compliant
+          </span>
         </div>
       </div>
     </footer>

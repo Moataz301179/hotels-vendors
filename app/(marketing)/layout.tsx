@@ -106,7 +106,7 @@ export default function MarketingLayout({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
       />
       <SiteNav />
-      <main className="pt-16">{children}</main>
+      <main>{children}</main>
       <SiteFooter />
     </ThemeProvider>
   );

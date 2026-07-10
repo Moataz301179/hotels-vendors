@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Eye,
@@ -13,12 +14,12 @@ import {
   AlertTriangle,
   Hotel,
   UserCog,
-  MailCheck,
   Store,
   Landmark,
   Truck,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,8 +28,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [resendMsg, setResendMsg] = useState("");
-  const [resending, setResending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,234 +60,169 @@ export default function LoginPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-20" style={{ backgroundColor: "#000000" }}>
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-8 justify-center"
-        >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#84cc16" }}>
-            <span className="text-black font-bold text-lg">HV</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-medium tracking-tight text-white">HotelsVendors</h1>
-            <p className="text-[10px] text-white/30 uppercase tracking-wider">B2B Procurement Egypt</p>
-          </div>
-        </motion.div>
+  const DEMO_ACCOUNTS = [
+    { label: "Hotel", icon: Hotel, email: "hotel.owner@nilegrand.com", pass: "HotelOwner123!" },
+    { label: "Supplier", icon: Store, email: "supplier@freshfoods.com", pass: "Supplier123!" },
+    { label: "Factoring", icon: Landmark, email: "fund@cib.com.eg", pass: "Factor123!" },
+    { label: "Logistics", icon: Truck, email: "ops@sharkbreaker.com", pass: "Logistics123!" },
+    { label: "Admin", icon: UserCog, email: "admin", pass: "1234Harly" },
+  ];
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.08 }}
-          className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden"
-        >
-          {/* Header */}
-          <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-            <h2 className="text-lg font-medium text-white">Welcome back</h2>
-            <p className="text-sm text-white/40 mt-1">
-              Sign in to your procurement portal
+  return (
+    <main className="min-h-screen bg-black">
+      {/* Hero */}
+      <section className="relative pt-36 pb-16 border-b border-white/[0.04]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/60 text-[11px] font-medium uppercase tracking-[0.15em] mb-6">
+              <Shield className="w-3 h-3" />
+              Secure Access
+            </div>
+            <h1 className="text-[32px] md:text-[44px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+              Welcome to
+              <br />
+              <span className="text-[#84cc16]">HotelsVendors</span>
+            </h1>
+            <p className="mt-5 text-[15px] text-white/40 leading-relaxed max-w-lg">
+              Sign in to access your procurement portal, manage orders, track invoices, and connect with verified suppliers across Egypt.
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-8 space-y-5">
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm"
-                style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#EF4444" }}
-              >
-                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                <span>{error}</span>
-              </motion.div>
-            )}
-
-            {resendMsg && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm"
-                style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", color: "#22C55E" }}
-              >
-                <MailCheck className="w-4 h-4 flex-shrink-0" />
-                <span>{resendMsg}</span>
-              </motion.div>
-            )}
-
-            {/* Email / Username */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                Email or Username
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                <input
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@hotel.com or admin"
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                />
+      {/* Form */}
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Left: Login Form */}
+          <div className="lg:col-span-2">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden">
+              {/* Header */}
+              <div className="px-8 pt-8 pb-6 border-b border-white/[0.04]">
+                <h2 className="text-[15px] font-medium text-white flex items-center gap-2.5">
+                  <Lock size={18} className="text-white/40" />
+                  Sign In
+                </h2>
+                <p className="text-[13px] text-white/35 mt-1.5">
+                  Enter your credentials to access your account
+                </p>
               </div>
-            </div>
 
-            {/* Password */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-white/40 uppercase tracking-wider">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#84cc16]/60 focus:ring-1 focus:ring-[#84cc16]/20 transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember + Forgot */}
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 text-white/40 cursor-pointer hover:text-white/60 transition-colors">
-                <input
-                  type="checkbox"
-                  className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#84cc16]"
-                />
-                <span>Remember me</span>
-              </label>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    const resolvedEmail = email === "admin" ? "admin@hotelsvendors.com" : email;
-                    if (!resolvedEmail) { setError("Please enter your email first"); return; }
-                    setResending(true);
-                    setResendMsg("");
-                    try {
-                      const res = await fetch("/api/v1/auth/resend-verification", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email: resolvedEmail }),
-                      });
-                      const data = await res.json();
-                      setResendMsg(data.data?.message || "Verification email sent if account exists.");
-                    } catch {
-                      setResendMsg("Failed to send. Please try again.");
-                    } finally {
-                      setResending(false);
-                    }
-                  }}
-                  disabled={resending}
-                  className="text-white/30 hover:text-white/50 transition-colors font-medium disabled:opacity-50"
-                >
-                  {resending ? "Sending..." : "Resend verification"}
-                </button>
-                <Link
-                  href="/forgot-password"
-                  className="text-[#84cc16] hover:opacity-80 transition-opacity font-medium"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-              style={{ backgroundColor: "#84cc16", color: "#000000" }}
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-              ) : (
-                <>
-                  <span>Sign In</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-white/[0.06]" />
-              <span className="text-[10px] text-white/20 uppercase tracking-wider">
-                or continue with
-              </span>
-              <div className="flex-1 h-px bg-white/[0.06]" />
-            </div>
-
-            {/* Demo credentials */}
-            <div className="space-y-2">
-              <p className="text-[10px] text-center text-white/20 uppercase tracking-wider">
-                Demo Accounts
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { label: "Hotel", icon: Hotel, email: "hotel.owner@nilegrand.com", pass: "HotelOwner123!" },
-                  { label: "Supplier", icon: Store, email: "supplier@freshfoods.com", pass: "Supplier123!" },
-                  { label: "Factoring", icon: Landmark, email: "fund@cib.com.eg", pass: "Factor123!" },
-                  { label: "Logistics", icon: Truck, email: "ops@sharkbreaker.com", pass: "Logistics123!" },
-                  { label: "Admin", icon: UserCog, email: "admin", pass: "1234Harly" },
-                ].map((acc) => (
-                  <button
-                    key={acc.label}
-                    type="button"
-                    onClick={() => { setEmail(acc.email); setPassword(acc.pass); }}
-                    className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] text-xs text-white/40 hover:text-white/60 hover:border-white/[0.10] transition-all text-center"
+              <form onSubmit={handleSubmit} className="p-8 space-y-5">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-[13px]"
                   >
-                    <acc.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                    <div className="text-left min-w-0">
-                      <span className="block font-medium">{acc.label}</span>
-                      <span className="block text-[10px] text-white/20 mt-0.5 truncate">{acc.email}</span>
-                    </div>
-                  </button>
-                ))}
+                    <AlertTriangle size={14} />
+                    {error}
+                  </motion.div>
+                )}
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <label className="block text-[13px] font-medium text-white/50">
+                    Email or Username <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                    <input
+                      type="text"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                      placeholder="you@hotel.com or admin"
+                      required
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div className="space-y-2">
+                  <label className="block text-[13px] font-medium text-white/50">
+                    Password <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => { setPassword(e.target.value); setError(""); }}
+                      placeholder="Min 6 characters"
+                      required
+                      minLength={6}
+                      className="w-full pl-10 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-white/[0.15] focus:outline-none transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember + Forgot */}
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-white/35 text-[13px] cursor-pointer hover:text-white/50 transition-colors">
+                    <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#84cc16]" />
+                    Remember me
+                  </label>
+                  <Link href="/forgot-password" className="text-[13px] text-[#84cc16] hover:opacity-80 transition-opacity font-medium">
+                    Forgot password?
+                  </Link>
+                </div>
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#84cc16] text-black text-[13px] font-medium hover:bg-[#a3e635] disabled:opacity-50 transition-colors"
+                >
+                  {loading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight size={16} />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Right: Demo Accounts */}
+          <div className="hidden lg:block">
+            <div className="sticky top-24">
+              <div className="rounded-2xl border border-white/[0.06] bg-[#0a0a0a] p-6">
+                <h3 className="text-[12px] font-medium text-white/30 uppercase tracking-wider mb-4">Quick Access</h3>
+                <p className="text-[13px] text-white/35 mb-5">Use a demo account to explore the platform:</p>
+                <div className="space-y-2">
+                  {DEMO_ACCOUNTS.map((acc) => (
+                    <button
+                      key={acc.label}
+                      type="button"
+                      onClick={() => { setEmail(acc.email); setPassword(acc.pass); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-white/[0.06] bg-white/[0.02] text-left hover:border-white/[0.12] hover:bg-white/[0.04] transition-all"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
+                        <acc.icon size={14} className="text-white/40" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="block text-[13px] font-medium text-white/60">{acc.label}</span>
+                        <span className="block text-[11px] text-white/25 truncate">{acc.email}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </form>
-        </motion.div>
-
-        {/* Footer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center text-sm text-white/30 mt-6"
-        >
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#84cc16] hover:opacity-80 font-medium transition-opacity">
-            Create account
-          </Link>
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="flex items-center justify-center gap-2 mt-4 text-[10px] text-white/20"
-        >
-          <Shield className="w-3 h-3" />
-          <span>Secured with JWT + RBAC + Email Verification</span>
-        </motion.div>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
