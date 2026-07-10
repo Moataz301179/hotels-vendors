@@ -29,11 +29,11 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
   }, []);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0B0F1A]">
+    <div className="flex h-screen w-full overflow-hidden bg-[#0c0c12]">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${
-          desktopCollapsed ? "w-[72px]" : "w-[280px]"
+          desktopCollapsed ? "w-[72px]" : "w-[260px]"
         }`}
       >
         <PulseSidebar
@@ -47,7 +47,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
       {mobileOpen && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/60 md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
             onClick={() => setMobileOpen(false)}
           />
           <aside className="fixed left-0 top-0 z-50 h-full w-[280px] md:hidden">

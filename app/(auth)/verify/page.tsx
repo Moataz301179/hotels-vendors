@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react"
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
 function VerifyContent() {
   const searchParams = useSearchParams()
@@ -25,7 +25,6 @@ function VerifyContent() {
       try {
         const res = await fetch(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}${email ? `&email=${encodeURIComponent(email)}` : ""}`)
         const data = await res.json()
-
         if (res.ok) {
           setStatus("success")
           setMessage(data.message || "Email verified successfully!")
@@ -43,64 +42,38 @@ function VerifyContent() {
   }, [searchParams])
 
   return (
-    <div
-      className="w-full max-w-md mx-auto text-center"
-      style={{ fontFamily: "var(--font-sans)" }}
-    >
-      <div
-        className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4"
-        style={{
-          backgroundColor:
-            status === "loading"
-              ? "var(--accent-muted)"
-              : status === "success"
-                ? "rgba(52, 211, 153, 0.1)"
-                : "rgba(239, 68, 68, 0.1)",
-        }}
-      >
+    <div className="text-center space-y-6 py-4">
+      <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${
+        status === "loading" ? "bg-[#39ff7e]/10 border border-[#39ff7e]/20" :
+        status === "success" ? "bg-[#39ff7e]/10 border border-[#39ff7e]/20" :
+        "bg-red-500/10 border border-red-500/20"
+      }`}>
         {status === "loading" ? (
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--accent-base)" }} />
+          <Loader2 className="w-8 h-8 text-[#39ff7e] animate-spin" />
         ) : status === "success" ? (
-          <CheckCircle2 className="w-8 h-8" style={{ color: "var(--success)" }} />
+          <CheckCircle2 className="w-8 h-8 text-[#39ff7e]" />
         ) : (
-          <XCircle className="w-8 h-8" style={{ color: "var(--error)" }} />
+          <XCircle className="w-8 h-8 text-red-400" />
         )}
       </div>
 
-      <h1 className="text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
-        {status === "loading"
-          ? "Verifying..."
-          : status === "success"
-            ? "Verified!"
-            : "Verification failed"}
-      </h1>
-
-      <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
-        {message}
-      </p>
+      <div>
+        <h1 className="text-[24px] font-semibold text-white">
+          {status === "loading" ? "Verifying..." : status === "success" ? "Verified!" : "Verification failed"}
+        </h1>
+        <p className="text-[14px] text-white/40 mt-2">{message}</p>
+      </div>
 
       {status === "success" && (
-        <button
-          onClick={() => router.push("/login")}
-          className="mt-6 px-6 py-2.5 rounded-lg text-sm font-medium transition-opacity"
-          style={{
-            backgroundColor: "var(--accent-base)",
-            color: "#fff",
-          }}
-        >
+        <button onClick={() => router.push("/login")}
+          className="px-6 py-3 rounded-xl text-[13px] font-semibold bg-[#39ff7e] text-[#07090f] hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]">
           Sign in to your account
         </button>
       )}
 
       {status === "error" && (
-        <Link
-          href="/login"
-          className="inline-block mt-6 px-6 py-2.5 rounded-lg text-sm font-medium transition-opacity"
-          style={{
-            backgroundColor: "var(--accent-base)",
-            color: "#fff",
-          }}
-        >
+        <Link href="/login"
+          className="inline-block px-6 py-3 rounded-xl text-[13px] font-semibold bg-[#39ff7e] text-[#07090f] hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]">
           Back to login
         </Link>
       )}
@@ -110,7 +83,7 @@ function VerifyContent() {
 
 export default function VerifyPage() {
   return (
-    <Suspense fallback={<div className="w-full max-w-md mx-auto text-center py-12"><Loader2 className="w-8 h-8 animate-spin mx-auto" style={{ color: "var(--accent-base)" }} /></div>}>
+    <Suspense fallback={<div className="w-full text-center py-12"><Loader2 className="w-8 h-8 animate-spin mx-auto text-[#39ff7e]" /></div>}>
       <VerifyContent />
     </Suspense>
   )

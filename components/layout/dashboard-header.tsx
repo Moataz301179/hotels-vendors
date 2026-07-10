@@ -24,12 +24,12 @@ interface DashboardHeaderProps {
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-accent-base" },
-  hotel: { label: "Hotel Buyer", badgeColor: "bg-emerald-500" },
-  supplier: { label: "Supplier", badgeColor: "bg-blue-500" },
-  factoring: { label: "Factoring Partner", badgeColor: "bg-amber-500" },
-  shipping: { label: "Logistics", badgeColor: "bg-cyan-500" },
-  marketing: { label: "Marketing", badgeColor: "bg-purple-500" },
+  admin: { label: "Platform Admin", badgeColor: "bg-[#39ff7e]" },
+  hotel: { label: "Hotel Buyer", badgeColor: "bg-[#39ff7e]" },
+  supplier: { label: "Supplier", badgeColor: "bg-[#ff7e1a]" },
+  factoring: { label: "Factoring Partner", badgeColor: "bg-[#c455ff]" },
+  shipping: { label: "Logistics", badgeColor: "bg-[#64b5f6]" },
+  marketing: { label: "Marketing", badgeColor: "bg-[#c455ff]" },
 };
 
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
@@ -53,7 +53,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
   };
 
   return (
-    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#111827]/90 border-b border-white/[0.05]">
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#12121a]/90 backdrop-blur-xl border-b border-white/[0.06]">
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
@@ -65,23 +65,25 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         </button>
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <BrandLogo variant="dark" size="md" />
-          <span className="text-sm font-semibold text-white hidden lg:block">Hotels Vendors</span>
+          <span className="text-sm font-semibold text-white uppercase tracking-[0.08em] hidden lg:block">
+            Hotels<span className="text-[#39ff7e]">Vendors</span>
+          </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">
-          <span className="text-xs font-medium text-white/30 uppercase tracking-wider">Dashboard</span>
+          <span className="text-xs font-medium text-white/25 uppercase tracking-[0.15em]">Dashboard</span>
           <span className="text-white/10">/</span>
-          <span className="text-xs font-medium text-white/60">{config.label}</span>
+          <span className="text-xs font-medium text-white/50">{config.label}</span>
         </div>
       </div>
 
       {/* Center: Search */}
       <div className="flex-1 max-w-xl mx-2 sm:mx-4 lg:mx-8">
         <div className="relative group flex items-center">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent-base transition-colors z-10" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#39ff7e] transition-colors z-10" />
           <input
             type="text"
             placeholder="Search orders, suppliers, products..."
-            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40 focus:ring-1 focus:ring-accent-base/10 transition-all"
+            className="w-full h-9 pl-9 pr-20 sm:pr-24 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
           />
           <button className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors border border-white/[0.06]">
             <SlidersHorizontal size={11} />
@@ -94,7 +96,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]">
           <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
-          <span className="text-xs font-medium text-white/60">{config.label}</span>
+          <span className="text-xs font-medium text-white/50">{config.label}</span>
         </div>
 
         {role === "admin" && (
@@ -126,7 +128,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         >
           <ShoppingCart size={18} />
           {totalItems > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#111827]">
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#39ff7e] text-[10px] font-bold text-[#07090f] flex items-center justify-center ring-2 ring-[#12121a]">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}
