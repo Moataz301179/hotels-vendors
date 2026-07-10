@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { SiteNav } from "@/components/marketing/site-nav";
+import { SiteFooter } from "@/components/marketing/site-footer";
 
 export const metadata: Metadata = {
   title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
@@ -103,7 +105,9 @@ export default function MarketingLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
       />
-      {children}
+      <SiteNav />
+      <main className="pt-16">{children}</main>
+      <SiteFooter />
     </ThemeProvider>
   );
 }
