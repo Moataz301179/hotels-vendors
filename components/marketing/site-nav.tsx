@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 const links = [
   { href: "/#how", label: "How It Works" },
@@ -17,16 +18,10 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl">
-      <Link href="/" className="flex items-center gap-3">
-        <img
-          src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
-          alt="HotelsVendors"
-          className="w-9 h-9 object-contain"
-          width={36}
-          height={36}
-        />
-        <span className="tracking-[0.15em] font-semibold text-foreground text-base">
-          HOTELS VENDORS
+      <Link href="/" className="flex items-center gap-2.5">
+        <BrandLogo variant="dark" size="sm" />
+        <span className="tracking-[0.12em] font-semibold text-white text-[15px] uppercase">
+          Hotels<span className="text-[#39ff7e]">Vendors</span>
         </span>
       </Link>
 

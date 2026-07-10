@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function Logo({ className = "h-8 w-8" }: { className?: string }) {
   return (
@@ -10,16 +11,10 @@ export function Logo({ className = "h-8 w-8" }: { className?: string }) {
 
 export function LogoFull({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <img
-        src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
-        alt="HotelsVendors"
-        className="w-9 h-9 object-contain"
-        width={36}
-        height={36}
-      />
-      <span className="tracking-[0.15em] font-semibold text-foreground text-base">
-        HOTELS VENDORS
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      <BrandLogo variant="dark" size="sm" />
+      <span className="tracking-[0.12em] font-semibold text-white text-[15px] uppercase">
+        Hotels<span className="text-[#39ff7e]">Vendors</span>
       </span>
     </div>
   );

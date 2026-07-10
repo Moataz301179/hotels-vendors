@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function SiteFooter() {
   return (
@@ -7,16 +8,10 @@ export function SiteFooter() {
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
           {/* Brand */}
           <div className="max-w-xs">
-            <div className="flex items-center gap-3 mb-3">
-              <img
-                src="https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x"
-                alt="HotelsVendors"
-                className="w-8 h-8 object-contain"
-                width={32}
-                height={32}
-              />
-              <span className="font-semibold text-base tracking-[0.15em] text-white">
-                HOTELS VENDORS
+            <div className="flex items-center gap-2.5 mb-3">
+              <BrandLogo variant="dark" size="sm" />
+              <span className="font-semibold text-[15px] tracking-[0.12em] text-white uppercase">
+                Hotels<span className="text-[#39ff7e]">Vendors</span>
               </span>
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">
