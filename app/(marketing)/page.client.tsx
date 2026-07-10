@@ -36,7 +36,6 @@ import {
   Lock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogoFull } from "@/components/logo";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
 
 // 3D Background Component
@@ -249,27 +248,6 @@ export default function PremiumLandingPage() {
           <FloatingParticle key={i} delay={i * 0.3} size={Math.random() * 3 + 1} />
         ))}
       </div>
-
-      {/* Navigation */}
-      <nav className="relative z-50 flex justify-between items-center px-6 py-4 backdrop-blur-md bg-black/20 border-b border-white/10">
-        <Link href="/" className="flex items-center gap-3">
-          <LogoFull className="h-8" />
-        </Link>
-        
-        <div className="hidden lg:flex items-center gap-8">
-          <Link href="#platform" className="text-sm text-gray-300 hover:text-white transition-colors">Platform</Link>
-          <Link href="#infrastructure" className="text-sm text-gray-300 hover:text-white transition-colors">Infrastructure</Link>
-          <Link href="#pricing" className="text-sm text-gray-300 hover:text-white transition-colors">Pricing</Link>
-          <Link href="/sandbox" className="text-sm text-gray-300 hover:text-white transition-colors">Sandbox</Link>
-          <Link href="/login" className="text-sm text-gray-300 hover:text-white transition-colors">Sign In</Link>
-          <Link 
-            href="/register" 
-            className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-green-500/25 transition-all"
-          >
-            Request Access
-          </Link>
-        </div>
-      </nav>
 
       {/* Hero Section with 3D Animation */}
       <section className="relative z-10 min-h-screen flex items-center justify-center px-6">
@@ -721,53 +699,6 @@ export default function PremiumLandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 bg-black/40 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <LogoFull className="h-8" />
-              </div>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Enterprise hospitality procurement platform. AI-powered automation, crypto-compliant, built for Egyptian market.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/sandbox" className="hover:text-white transition-colors">Interactive Sandbox</Link></li>
-                <li><Link href="#platform" className="hover:text-white transition-colors">Architecture</Link></li>
-                <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/vision" className="hover:text-white transition-colors">Vision</Link></li>
-                <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Compliance</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>ETA Phase 1 & 2 Compliant</li>
-                <li>ISO 27001 Certified</li>
-                <li>GDPR Aligned</li>
-                <li>Ministry of Finance Partner</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-white/10 mt-12 pt-8 text-center">
-            <p className="text-sm text-gray-500">
-              © 2024 HotelsVendors. All rights reserved. Built for Egyptian hospitality.
-            </p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }
