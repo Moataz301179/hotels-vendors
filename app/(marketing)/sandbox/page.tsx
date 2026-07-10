@@ -24,8 +24,6 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 type Role = "hotel" | "supplier" | "factoring" | "shipping";
 
@@ -133,7 +131,6 @@ export default function SandboxPage() {
 
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#000000", color: "#ffffff" }}>
-      <MarketingNav />
 
       <section className="pt-28 pb-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(132,204,22,0.03) 0%, transparent 70%)" }} />
@@ -376,8 +373,6 @@ export default function SandboxPage() {
           </AnimatePresence>
         </div>
       </section>
-
-      <MarketingFooter />
     </main>
   );
 }

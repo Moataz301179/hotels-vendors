@@ -25,8 +25,6 @@ import {
   Store,
   ChevronDown,
 } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { RoleBenefits } from "@/components/auth/role-benefits";
 
 interface FormData {
@@ -158,7 +156,6 @@ export default function SupplierOnboardingPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-black">
-        <MarketingNav />
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
             <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-8">
@@ -191,14 +188,12 @@ export default function SupplierOnboardingPage() {
             </div>
           </motion.div>
         </div>
-        <MarketingFooter />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-black">
-      <MarketingNav />
 
       {/* Hero */}
       <section className="relative pt-36 pb-16 border-b border-white/[0.04]">
@@ -505,8 +500,6 @@ export default function SupplierOnboardingPage() {
           <MobileBenefits />
         </div>
       </div>
-
-      <MarketingFooter />
     </div>
   );
 }

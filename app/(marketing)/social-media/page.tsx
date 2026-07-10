@@ -19,8 +19,6 @@ import {
   Sparkles,
   Check,
 } from "lucide-react";
-import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -39,7 +37,6 @@ const stagger = {
 export default function SocialMediaPage() {
   return (
     <main className="bg-black min-h-screen">
-      <MarketingNav />
 
       {/* Hero */}
       <section className="relative pt-36 pb-20">
@@ -469,8 +466,6 @@ export default function SocialMediaPage() {
           </motion.div>
         </div>
       </section>
-
-      <MarketingFooter />
     </main>
   );
 }
