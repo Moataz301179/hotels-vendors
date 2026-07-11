@@ -143,7 +143,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
-    "img-src 'self' data: blob:; " +
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net; " +
     "connect-src 'self'; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +

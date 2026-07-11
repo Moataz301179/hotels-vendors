@@ -1,4 +1,4 @@
-const CACHE = "wasla-v3";
+const CACHE = "wasla-v5";
 const SHELL = ["/", "/offline"];
 
 self.addEventListener("install", (event) => {

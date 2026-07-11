@@ -3,6 +3,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import {
+  FileText,
+  CheckCircle2,
+  Truck,
+  CreditCard,
+  ChevronRight,
+  ChevronLeft,
+  ShoppingCart,
+  Package,
+  MapPin,
+  Building2,
+} from "lucide-react";
 
 /* ──────────────────────────────────────────────────────────────
    SCROLL ANIMATION HOOK
@@ -153,33 +165,8 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* ═══════════ VIDEO DEMO ═══════════ */}
-      <section className="py-20 border-y animate-on-scroll" style={{ borderColor: "#39ff7e18" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <span className="text-xs tracking-widest uppercase" style={{ color: "#39ff7e" }}>Platform Demo</span>
-            <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-medium">See It in Action</h2>
-            <p className="text-white/45 text-sm max-w-xl mx-auto">Watch how HotelsVendors and INVO work together to streamline hotel procurement, payments, and supplier financing.</p>
-          </div>
-          <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#39ff7e44", boxShadow: "0 0 50px 4px #39ff7e10" }}>
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-[#12121a]/80">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#39ff7e" }} />
-              <div className="flex-1 mx-4 bg-[#0c0c12]/50 rounded px-3 py-1 text-xs text-white/30 border border-white/[0.06]/50">app.hotelsvendors.com — Platform Overview</div>
-            </div>
-            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-              <iframe className="absolute inset-0 w-full h-full" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1&controls=1" title="HotelsVendors Platform Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-            </div>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4 mt-8 text-xs text-white/40">
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#39ff7e" }} />Hotel Dashboard Overview</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#ff7e1a" }} />INVO Marketplace Tour</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#c455ff" }} />AI Chatbot in Action</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#39ff7e" }} />Reverse Factoring Flow</span>
-          </div>
-        </div>
-      </section>
+      {/* ═══════════ SANDBOX CAROUSEL ═══════════ */}
+      <SandboxCarousel />
 
       {/* ═══════════ DUAL LAYERS ═══════════ */}
       <section id="invo" className="py-24 border-y" style={{ borderColor: "#c455ff18" }}>
@@ -729,5 +716,239 @@ export default function MarketingPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────
+   SANDBOX CAROUSEL — Procurement flow: PO → Execution → Delivery → Payment
+   ────────────────────────────────────────────────────────────── */
+const STEPS = [
+  {
+    step: 1,
+    title: "Purchase Order",
+    subtitle: "Hotel initiates procurement",
+    color: "#39ff7e",
+    icon: FileText,
+    items: [
+      { icon: ShoppingCart, text: "Browse supplier catalogs" },
+      { icon: Building2, text: "Select items & quantities" },
+      { icon: FileText, text: "Submit purchase order" },
+    ],
+    dashboard: {
+      title: "New Purchase Order",
+      table: [
+        { item: "Premium Detergent (4×5L)", qty: "12 units", price: "EGP 4,200" },
+        { item: "Cotton Bath Towels (500gsm)", qty: "200 pcs", price: "EGP 18,000" },
+        { item: "Mineral Water (500ml×24)", qty: "50 cases", price: "EGP 3,750" },
+      ],
+      total: "EGP 25,950",
+    },
+  },
+  {
+    step: 2,
+    title: "Execution",
+    subtitle: "Supplier confirms & processes",
+    color: "#ff7e1a",
+    icon: CheckCircle2,
+    items: [
+      { icon: CheckCircle2, text: "Supplier confirms order" },
+      { icon: Package, text: "Picks & packs inventory" },
+      { icon: FileText, text: "ETA e-invoice generated" },
+    ],
+    dashboard: {
+      title: "Order Confirmed",
+      table: [
+        { item: "Order #HV-2026-0847", qty: "Status: Processing", price: "ETA UUID: ✓" },
+        { item: "Supplier: CleanPro Egypt", qty: "Tier: Gold", price: "ETA Status: Accepted" },
+        { item: "ETA Digital Signature", qty: "Verified", price: "Invoice #INV-4821" },
+      ],
+      total: "Payment guaranteed ✓",
+    },
+  },
+  {
+    step: 3,
+    title: "Delivery",
+    subtitle: "Logistics fulfills & ships",
+    color: "#c455ff",
+    icon: Truck,
+    items: [
+      { icon: Truck, text: "Route optimization" },
+      { icon: MapPin, text: "Real-time GPS tracking" },
+      { icon: CheckCircle2, text: "Proof of delivery" },
+    ],
+    dashboard: {
+      title: "Shipment Tracking",
+      table: [
+        { item: "Shipment #SHP-1192", qty: "Route: 6th Oct → Hurg", price: "ETA: 2h 15m" },
+        { item: "Carrier: SwiftLog Egypt", qty: "Vehicle: Refrigerated", price: "Status: In Transit" },
+        { item: "GPS Checkpoint 3/5", qty: "Cairo-Alex Rd.", price: "Temp: 4°C ✓" },
+      ],
+      total: "On-time delivery 98.2%",
+    },
+  },
+  {
+    step: 4,
+    title: "Payment",
+    subtitle: "Settlement & factoring",
+    color: "#64b5f6",
+    icon: CreditCard,
+    items: [
+      { icon: CreditCard, text: "Payment processed" },
+      { icon: Building2, text: "Factoring liquidity" },
+      { icon: CheckCircle2, text: "Revenue secured" },
+    ],
+    dashboard: {
+      title: "Payment Settlement",
+      table: [
+        { item: "Invoice #INV-4821", qty: "Amount: EGP 25,950", price: "Status: Settled" },
+        { item: "Platform Fee (2.5%)", qty: "EGP 648.75", price: "Deducted" },
+        { item: "Factoring Spread", qty: "EGP 389.25", price: "To partner" },
+      ],
+      total: "Supplier paid: EGP 24,912",
+    },
+  },
+];
+
+export function SandboxCarousel() {
+  const [active, setActive] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const resetTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setActive((p) => (p + 1) % STEPS.length), 6000);
+  };
+
+  useEffect(() => {
+    resetTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []);
+
+  const go = (dir: number) => {
+    setActive((p) => (p + dir + STEPS.length) % STEPS.length);
+    resetTimer();
+  };
+
+  const step = STEPS[active];
+
+  return (
+    <section className="py-20 border-y animate-on-scroll" style={{ borderColor: "#39ff7e18" }}>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center mb-10">
+          <span className="text-xs tracking-widest uppercase" style={{ color: "#39ff7e" }}>Platform Demo</span>
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-medium">See It in Action</h2>
+          <p className="text-white/45 text-sm max-w-xl mx-auto">Follow a complete procurement cycle — from order placement to payment settlement.</p>
+        </div>
+
+        {/* Step indicator */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          {STEPS.map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <React.Fragment key={s.step}>
+                {i > 0 && <div className="hidden sm:block w-8 h-px" style={{ background: i <= active ? step.color : "rgba(255,255,255,0.08)" }} />}
+                <button
+                  onClick={() => { setActive(i); resetTimer(); }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer"
+                  style={{
+                    background: i === active ? `${s.color}15` : "transparent",
+                    border: i === active ? `1px solid ${s.color}33` : "1px solid transparent",
+                    color: i === active ? s.color : "rgba(255,255,255,0.3)",
+                  }}
+                >
+                  <Icon size={14} />
+                  <span className="hidden sm:inline">{s.title}</span>
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* Main card */}
+        <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: `${step.color}44`, boxShadow: `0 0 50px 4px ${step.color}10` }}>
+          {/* Title bar */}
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-[#12121a]/80">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: step.color }} />
+            <div className="flex-1 mx-4 bg-[#0c0c12]/50 rounded px-3 py-1 text-xs text-white/30 border border-white/[0.06]/50">
+              app.hotelsvendors.com — Step {step.step}: {step.title}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="bg-[#0c0c12] p-6 sm:p-8">
+            <div className="grid sm:grid-cols-[1fr_1.5fr] gap-6">
+              {/* Left: step details */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${step.color}15`, border: `1px solid ${step.color}33` }}>
+                    <step.icon size={20} style={{ color: step.color }} />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold text-[15px]">Step {step.step}: {step.title}</h3>
+                    <p className="text-white/40 text-[12px]">{step.subtitle}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {step.items.map((item, j) => {
+                    const Icon = item.icon;
+                    return (
+                      <div key={j} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                        <Icon size={14} style={{ color: step.color }} className="shrink-0" />
+                        <span className="text-white/70 text-[13px]">{item.text}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Right: mock dashboard */}
+              <div className="rounded-xl border border-white/[0.06] bg-[#12121a]/50 overflow-hidden">
+                <div className="px-4 py-3 border-b border-white/[0.06] flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: step.color }} />
+                  <span className="text-white/60 text-[12px] font-medium">{step.dashboard.title}</span>
+                </div>
+                <div className="divide-y divide-white/[0.04]">
+                  {step.dashboard.table.map((row, j) => (
+                    <div key={j} className="flex items-center justify-between px-4 py-3">
+                      <span className="text-white/70 text-[12px]">{row.item}</span>
+                      <span className="text-white/40 text-[12px]">{row.qty}</span>
+                      <span className="text-[12px] font-medium" style={{ color: step.color }}>{row.price}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-4 py-3 border-t border-white/[0.06] flex items-center justify-between">
+                  <span className="text-white/30 text-[11px] uppercase tracking-wider">Summary</span>
+                  <span className="text-[13px] font-semibold" style={{ color: step.color }}>{step.dashboard.total}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Nav arrows */}
+          <button onClick={() => go(-1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121a]/80 border border-white/[0.08] flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm">
+            <ChevronLeft size={16} />
+          </button>
+          <button onClick={() => go(1)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121a]/80 border border-white/[0.08] flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm">
+            <ChevronRight size={16} />
+          </button>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {STEPS.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => { setActive(i); resetTimer(); }}
+              className="w-2 h-2 rounded-full transition-all cursor-pointer"
+              style={{
+                background: i === active ? s.color : "rgba(255,255,255,0.1)",
+                boxShadow: i === active ? `0 0 8px ${s.color}44` : "none",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

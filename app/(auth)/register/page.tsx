@@ -16,6 +16,8 @@ import {
   Truck,
   Loader2,
   CheckCircle2,
+  MapPin,
+  Building2,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
@@ -25,6 +27,14 @@ const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; c
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "#ff7e1a" },
   { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "#c455ff" },
   { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "#64b5f6" },
+];
+
+const GOVERNORATES = [
+  "Cairo", "Alexandria", "Giza", "Sharm El-Sheikh", "Hurghada", "Luxor", "Aswan",
+  "Port Said", "Suez", "Ismailia", "Dakahlia", "Sharqia", "Qalyubia", "Gharbia",
+  "Monufia", "Beheira", "Kafr El Sheikh", "Damietta", "Port Said", "North Sinai",
+  "South Sinai", "Red Sea", "New Valley", "Matruh", "Fayoum", "Beni Suef",
+  "Minya", "Assiut", "Sohag", "Qena", "Aswan", "Red Sea",
 ];
 
 export default function RegisterPage() {
@@ -39,6 +49,9 @@ export default function RegisterPage() {
     email: "",
     password: "",
     role: "HOTEL" as StakeholderRole,
+    taxId: "",
+    city: "",
+    governorate: "",
   });
 
   const updateForm = (field: string, value: string) => {
@@ -61,6 +74,11 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
+    if (!form.taxId || !form.city || !form.governorate) {
+      setError("Tax ID, City, and Governorate are required for business accounts");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/v1/auth/register", {
@@ -71,6 +89,9 @@ export default function RegisterPage() {
           name: form.name,
           email: form.email,
           password: form.password,
+          taxId: form.taxId,
+          city: form.city,
+          governorate: form.governorate,
           accountType: "business",
         }),
       });
@@ -215,6 +236,63 @@ export default function RegisterPage() {
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
+            </div>
+          </div>
+
+          {/* Tax ID */}
+          <div className="space-y-2">
+            <label className="block text-[13px] font-medium text-white/50">
+              Tax ID <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <input
+                type="text"
+                value={form.taxId}
+                onChange={(e) => updateForm("taxId", e.target.value)}
+                placeholder="Egyptian Tax Identification Number"
+                required
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* City */}
+          <div className="space-y-2">
+            <label className="block text-[13px] font-medium text-white/50">
+              City <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <input
+                type="text"
+                value={form.city}
+                onChange={(e) => updateForm("city", e.target.value)}
+                placeholder="e.g. Cairo, Sharm El-Sheikh"
+                required
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Governorate */}
+          <div className="space-y-2">
+            <label className="block text-[13px] font-medium text-white/50">
+              Governorate <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <select
+                value={form.governorate}
+                onChange={(e) => updateForm("governorate", e.target.value)}
+                required
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all appearance-none"
+              >
+                <option value="" className="bg-[#12121a] text-white/40">Select governorate</option>
+                {GOVERNORATES.map((g) => (
+                  <option key={g} value={g} className="bg-[#12121a] text-white">{g}</option>
+                ))}
+              </select>
             </div>
           </div>
 
