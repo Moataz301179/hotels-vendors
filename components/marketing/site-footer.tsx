@@ -88,6 +88,14 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
+                    href="/financing/oliv"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    Oliv Financing
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/compliance"
                     className="text-white/45 hover:text-white transition-colors"
                   >

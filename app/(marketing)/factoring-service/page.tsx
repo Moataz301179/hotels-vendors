@@ -111,6 +111,24 @@ export default function FactoringServicePage() {
         </div>
       </section>
 
+      {/* Oliv Partner Section */}
+      <section className="py-16 border-y" style={{ borderColor: "#4A7C5918" }}>
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "#4A7C5922", backgroundColor: "#4A7C5906" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>Oliv Partnership</span>
+            </div>
+            <h2 className="text-2xl font-semibold text-white mb-3">Supplier Invoice Financing</h2>
+            <p className="text-[13px] text-white/40 max-w-lg mx-auto mb-6">
+              HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
+            </p>
+            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+              Learn More <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">

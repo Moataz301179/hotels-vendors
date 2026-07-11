@@ -9,6 +9,7 @@ const links = [
   { href: "/#how", label: "How It Works" },
   { href: "/#invo", label: "INVO" },
   { href: "/factoring-service", label: "Factoring" },
+  { href: "/financing/oliv", label: "Oliv Financing" },
   { href: "/compliance", label: "Compliance" },
   { href: "/pricing", label: "Pricing" },
   { href: "/marketplace", label: "Marketplace" },
