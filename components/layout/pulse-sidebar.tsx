@@ -53,23 +53,16 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/hotel" },
         { icon: Building2, label: "Properties", href: "/hotel/properties" },
-        { icon: Users, label: "Suppliers", href: "/hotel/suppliers" },
         { icon: PackageSearch, label: "Catalog", href: "/hotel/catalog" },
         { icon: ClipboardList, label: "Orders", href: "/hotel/order" },
         { icon: FileText, label: "Invoices", href: "/hotel/invoices" },
         { icon: Calculator, label: "Accounting", href: "/hotel/accounting" },
-      ],
-    },
-    {
-      section: "INTELLIGENCE",
-      items: [
-        { icon: BarChart3, label: "AI Inventory", href: "/hotel/ai-inventory" },
-        { icon: BrainCircuit, label: "Intelligence", href: "/hotel/intelligence" },
+        { icon: ShoppingBag, label: "Checkout", href: "/hotel/checkout" },
       ],
     },
     {
       section: "COMPLIANCE",
-      items: [{ icon: Zap, label: "ETA Demo", href: "/eta-demo" }],
+      items: [{ icon: Zap, label: "ETA Invoicing", href: "/vat-invoicing" }],
     },
     {
       section: "SUPPORT",
@@ -81,8 +74,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "COMMAND CENTER",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-        { icon: Search, label: "Data Explorer", href: "/admin/explorer" },
-        { icon: Brain, label: "AI Insights", href: "/admin/ai-insights" },
         { icon: Users, label: "Users", href: "/admin/users" },
         { icon: BarChart3, label: "Reports", href: "/admin/reports" },
       ],
@@ -90,11 +81,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
     {
       section: "AI & AUTOMATION",
       items: [
-        { icon: BrainCircuit, label: "Orchestrator", href: "/admin/orchestrator" },
-        { icon: BrainCircuit, label: "Grok Brain", href: "/admin/grok-brain" },
         { icon: BrainCircuit, label: "Swarm", href: "/admin/swarm" },
         { icon: Bot, label: "OpenClaw", href: "/admin/openclaw" },
-        { icon: Bot, label: "AI Agents", href: "/ai-agents" },
       ],
     },
     {
@@ -103,18 +91,16 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: PackageSearch, label: "Products", href: "/admin/marketplace/products" },
         { icon: ShoppingBag, label: "Orders", href: "/admin/marketplace/orders" },
         { icon: Building2, label: "Hotels", href: "/admin/marketplace/hotels" },
-        { icon: Users, label: "Suppliers", href: "/admin/suppliers/pipeline" },
-        { icon: ShieldCheck, label: "Review", href: "/admin/suppliers/review" },
+        { icon: Users, label: "Suppliers Pipeline", href: "/admin/suppliers/pipeline" },
+        { icon: ShieldCheck, label: "Supplier Review", href: "/admin/suppliers/review" },
       ],
     },
     {
       section: "OPERATIONS",
       items: [
-        { icon: ClipboardList, label: "Procurement", href: "/procurement" },
-        { icon: ShoppingBag, label: "Orders", href: "/orders" },
+        { icon: ClipboardList, label: "Orders", href: "/orders" },
         { icon: Truck, label: "Shipping", href: "/shipping" },
-        { icon: Calendar, label: "Scheduler", href: "/scheduler" },
-        { icon: FileCheck, label: "ETA Center", href: "/eta" },
+        { icon: FileCheck, label: "ETA Center", href: "/vat-invoicing" },
       ],
     },
     {
@@ -129,8 +115,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: HeartPulse, label: "Health", href: "/admin/health" },
         { icon: FileEdit, label: "Content Editor", href: "/admin/cms" },
-        { icon: Scale, label: "Disputes", href: "/dispute" },
-        { icon: Shield, label: "Security", href: "/security" },
         { icon: Settings, label: "Settings", href: "/settings" },
       ],
     },
@@ -145,6 +129,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/supplier" },
         { icon: Store, label: "Products", href: "/supplier/products" },
+        { icon: FileEdit, label: "New Product", href: "/supplier/products/new" },
         { icon: ClipboardList, label: "Orders", href: "/supplier/orders" },
         { icon: BarChart3, label: "Analytics", href: "/supplier/analytics" },
       ],
@@ -159,8 +144,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "PORTFOLIO",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/factoring" },
-        { icon: FileText, label: "Invoices", href: "/factoring/invoices" },
-        { icon: Landmark, label: "Risk Engine", href: "/factoring/risk" },
+        { icon: FileText, label: "Credit Lines", href: "/factoring/credit-lines" },
+        { icon: FileCheck, label: "Review", href: "/factoring/credit-lines/review" },
       ],
     },
     {
@@ -173,8 +158,6 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "LOGISTICS",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/shipping" },
-        { icon: Truck, label: "Routes", href: "/shipping/routes" },
-        { icon: ClipboardList, label: "Deliveries", href: "/shipping/deliveries" },
       ],
     },
     {
