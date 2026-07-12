@@ -96,6 +96,22 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
+                    href="/suppliers/join"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    For Suppliers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/hotels/join"
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    For Hotels
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/compliance"
                     className="text-white/45 hover:text-white transition-colors"
                   >
