@@ -40,6 +40,7 @@ const PUBLIC_PATHS = [
   "/financing/oliv",
   "/suppliers/join",
   "/hotels/join",
+  "/factoring-service",
   "/api/v1/auth/login",
   "/api/v1/auth/register",
   "/api/v1/auth/refresh",
