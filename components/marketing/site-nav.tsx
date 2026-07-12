@@ -10,6 +10,8 @@ const links = [
   { href: "/#invo", label: "INVO" },
   { href: "/factoring-service", label: "Factoring" },
   { href: "/financing/oliv", label: "Oliv Financing" },
+  { href: "/suppliers/join", label: "For Suppliers" },
+  { href: "/hotels/join", label: "For Hotels" },
   { href: "/compliance", label: "Compliance" },
   { href: "/pricing", label: "Pricing" },
   { href: "/marketplace", label: "Marketplace" },
