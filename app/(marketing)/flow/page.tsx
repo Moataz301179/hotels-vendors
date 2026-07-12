@@ -115,9 +115,9 @@ function StepCard({ step, index }: { step: typeof FLOW_STEPS[0]; index: number }
   return (
     <div className="relative rounded-2xl border bg-[#12121a] p-6 hover:border-white/[0.10] transition-all" style={{ borderColor: `${step.color}22` }}>
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${step.color}15`, border: `1px solid ${step.color}33` }}>
-          <Icon size={224A7C59 size={22} style={{ color: step.color }} />
-        </div>
+<div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${step.color}15`, border: `1px solid ${step.color}33` }}>
+            <Icon size={22} style={{ color: step.color }} />
+          </div>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[11px] font-bold uppercase tracking-[0.15em]" style={{ color: step.color }}>{step.number}</span>
