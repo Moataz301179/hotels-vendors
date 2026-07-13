@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,6 +11,9 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  Upload,
+  X,
+  ImageIcon,
 } from "lucide-react";
 import { HOTEL_CATEGORIES } from "@/lib/marketplace/categories";
 
@@ -21,9 +24,13 @@ const fadeInUp = {
 
 export default function NewProductPage() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     sku: "",
@@ -47,6 +54,52 @@ export default function NewProductPage() {
     setError(null);
   };
 
+  const handleImageUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    setUploadingImages(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      for (let i = 0; i < Math.min(files.length, 5); i++) {
+        formData.append("files", files[i]);
+      }
+
+      const res = await fetch("/api/v1/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+
+      if (!json.success) {
+        throw new Error(json.error || "Failed to upload images");
+      }
+
+      const newUrls = json.data.urls as string[];
+      setImageUrls((prev) => [...prev, ...newUrls]);
+
+      // Create previews
+      for (const file of Array.from(files).slice(0, 5)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImagePreviews((prev) => [...prev, e.target?.result as string]);
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload images");
+    } finally {
+      setUploadingImages(false);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImageUrls((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -63,6 +116,7 @@ export default function NewProductPage() {
           minOrderQty: parseInt(form.minOrderQty, 10),
           leadTimeDays: parseInt(form.leadTimeDays, 10),
           shelfLifeDays: form.shelfLifeDays ? parseInt(form.shelfLifeDays, 10) : undefined,
+          images: imageUrls.length > 0 ? imageUrls : undefined,
         }),
       });
 
@@ -189,6 +243,64 @@ export default function NewProductPage() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Product Images */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-white/70 flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-white/30" />
+            Product Images
+          </h2>
+
+          <div className="flex items-center gap-4">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              onChange={(e) => handleImageUpload(e.target.files)}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingImages || imageUrls.length >= 5}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-white/50 hover:text-white/70 hover:border-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploadingImages ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Upload className="w-4 h-4" />
+              )}
+              {uploadingImages ? "Uploading..." : "Upload Images"}
+            </button>
+            <span className="text-[11px] text-white/30">
+              {imageUrls.length}/5 images • JPEG, PNG, WebP • Max 5MB each
+            </span>
+          </div>
+
+          {imagePreviews.length > 0 && (
+            <div className="flex flex-wrap gap-3">
+              {imagePreviews.map((preview, index) => (
+                <div key={index} className="relative group">
+                  <div className="w-20 h-20 rounded-lg overflow-hidden border border-white/[0.08]">
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Pricing & Inventory */}
