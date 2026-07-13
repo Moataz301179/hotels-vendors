@@ -53,7 +53,6 @@ export async function processSettlements(
 
       // For demo/development, log instead of calling real API
       if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
   console.log(`[SmartSettlement] Order ${order.orderId}:`, {
           gross: order.amountCents,
           platformFee: platformFeeCents,

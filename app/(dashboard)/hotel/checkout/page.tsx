@@ -40,7 +40,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string }>>([]);
 
   const [address, setAddress] = useState<Address>({
     address: "",

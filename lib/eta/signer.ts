@@ -72,9 +72,7 @@ export async function signEtaDocument(
   const driverPath = process.env.PKCS11_DRIVER_PATH || "/usr/lib/libepskey.so";
 
   if (process.env.NODE_ENV === "development") {
-  // eslint-disable-next-line no-console
   console.log(`[Signer Log] Beginning signing for tenant: ${tenantId}`);
-  // eslint-disable-next-line no-console
   console.log(`[Signer Log] Loading driver path configuration: ${driverPath}`);
   }
 
@@ -84,7 +82,6 @@ export async function signEtaDocument(
     nodePkcs11 = require("node-pkcs11");
   } catch (e) {
     if (process.env.NODE_ENV === "development") {
-      // eslint-disable-next-line no-console
   console.log("[Signer Log] node-pkcs11 driver package not loaded on host. Engaging Soft-HSM Emulation Layer.");
     }
   }

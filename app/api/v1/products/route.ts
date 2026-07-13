@@ -9,7 +9,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { transformManyToMarketplace, toPrismaCategory } from "@/lib/marketplace/category-mapper";
-import { ProductCategory, ProductStatus } from "@prisma/client";
 import { z } from "zod";
 import { authenticate, requirePermission } from "@/lib/api-utils";
 
