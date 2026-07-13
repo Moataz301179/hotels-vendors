@@ -23,6 +23,14 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = validateBody(BusinessRegisterSchema, body);
 
+  // Check if email is already registered
+  const existingUser = await prisma.user.findUnique({
+    where: { email: data.email },
+  });
+  if (existingUser) {
+    return error("An account with this email already exists. Please login or use a different email.", 409);
+  }
+
   const passwordHash = await hashPassword(data.password);
 
   let hotel;

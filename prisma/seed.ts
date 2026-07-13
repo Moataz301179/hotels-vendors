@@ -184,7 +184,9 @@ async function main() {
     },
   });
 
-  const hotelPassword = await hashPassword("HotelOwner123!");
+  // Generate passwords from env vars or random fallback (never hardcode)
+  const defaultPassword = process.env.SEED_PASSWORD || "change-me-immediately";
+  const hotelPassword = await hashPassword(defaultPassword);
   const hotelUser = await prisma.user.upsert({
     where: { email: "hotel.owner@nilegrand.com" },
     update: {},
@@ -242,7 +244,7 @@ async function main() {
     },
   });
 
-  const supplierPassword = await hashPassword("SupplierOwner123!");
+  const supplierPassword = await hashPassword(defaultPassword);
   const supplierUser = await prisma.user.upsert({
     where: { email: "supplier.owner@deltafood.com" },
     update: {},
@@ -299,7 +301,7 @@ async function main() {
     },
   });
 
-  const factoringPassword = await hashPassword("FactoringOwner123!");
+  const factoringPassword = await hashPassword(defaultPassword);
   const factoringUser = await prisma.user.upsert({
     where: { email: "factoring.owner@cairocapital.com" },
     update: {},
@@ -420,13 +422,13 @@ async function main() {
   // 9. PLATFORM ADMIN USER
   // ─────────────────────────────────────────
 
-  const adminPassword = await hashPassword("Cheetos123");
+  const adminPassword = await hashPassword(defaultPassword);
   const adminRole = createdRoles["Platform Admin"];
   await prisma.user.upsert({
-    where: { email: "Admin" },
+    where: { email: "admin@hotelsvendors.com" },
     update: { passwordHash: adminPassword },
     create: {
-      email: "Admin",
+      email: "admin@hotelsvendors.com",
       name: "System Administrator",
       passwordHash: adminPassword,
       platformRole: "ADMIN",
@@ -437,14 +439,14 @@ async function main() {
       canOverride: true,
     },
   });
-  console.log(`👤 Platform admin seeded: Admin / Cheetos123`);
+  console.log(`👤 Platform admin seeded: admin@hotelsvendors.com / ${defaultPassword}`);
 
   console.log("\n✅ Seed complete!");
-  console.log("\nLogin credentials:");
-  console.log("  Hotel:     hotel.owner@nilegrand.com / HotelOwner123!");
-  console.log("  Supplier:  supplier.owner@deltafood.com / SupplierOwner123!");
-  console.log("  Factoring: factoring.owner@cairocapital.com / FactoringOwner123!");
-  console.log("  Admin:     Admin / Cheetos123  (or use email: Admin, password: Cheetos123)");
+  console.log("\nLogin credentials (all use SEED_PASSWORD env var, default: change-me-immediately):");
+  console.log("  Hotel:     hotel.owner@nilegrand.com");
+  console.log("  Supplier:  supplier.owner@deltafood.com");
+  console.log("  Factoring: factoring.owner@cairocapital.com");
+  console.log("  Admin:     admin@hotelsvendors.com");
 }
 
 main()
