@@ -25,7 +25,7 @@ export async function seedDatabase() {
     RESTART IDENTITY CASCADE;
   `);
 
-  const pw = await bcrypt.hash("demo1234", 10);
+  const pw = await bcrypt.hash(process.env.SEED_PASSWORD || "change-me-immediately", 10);
 
   const [nileRitz, steigen, marsaHotel] = await db
     .insert(organizations)

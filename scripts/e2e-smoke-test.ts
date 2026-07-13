@@ -131,10 +131,12 @@ async function runTests() {
   // ── 1. ADMIN LOGIN ─────────────────────────────────────────────
   log(`\n${colors.yellow}─── 1. ADMIN LOGIN ───${colors.reset}`);
 
-  await test("Admin login with Admin/Cheetos123", async () => {
+  await test("Admin login with env credentials", async () => {
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@hotelsvendors.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "change-me-immediately";
     const { status, data } = await client.post("/api/v1/auth/login", {
-      email: "Admin",
-      password: "Cheetos123",
+      email: adminEmail,
+      password: adminPassword,
     });
     assert(status === 200, `Expected 200, got ${status}: ${data?.error}`);
     assert(data?.success === true, "Login returned success=false");
@@ -269,9 +271,11 @@ async function runTests() {
 
   await test("Admin login for explorer", async () => {
     client.clearCookies();
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@hotelsvendors.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "change-me-immediately";
     const { status, data } = await client.post("/api/v1/auth/login", {
-      email: "Admin",
-      password: "Cheetos123",
+      email: adminEmail,
+      password: adminPassword,
     });
     assert(status === 200, `Expected 200, got ${status}: ${data?.error}`);
   });
@@ -361,10 +365,12 @@ async function runTests() {
 // Health check — verify server is running
 async function healthCheck(): Promise<boolean> {
   try {
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@hotelsvendors.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "change-me-immediately";
     const res = await fetch(`${BASE_URL}/api/v1/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "Admin", password: "Cheetos123" }),
+      body: JSON.stringify({ email: adminEmail, password: adminPassword }),
       signal: AbortSignal.timeout(10000),
     });
     return res.status === 200;

@@ -56,14 +56,6 @@ export default function LoginPage() {
     }
   };
 
-  const DEMO_ACCOUNTS = [
-    { label: "Hotel", icon: Hotel, email: "hotel.owner@nilegrand.com", pass: "HotelOwner123!" },
-    { label: "Supplier", icon: Store, email: "supplier@freshfoods.com", pass: "Supplier123!" },
-    { label: "Factoring", icon: Landmark, email: "fund@cib.com.eg", pass: "Factor123!" },
-    { label: "Logistics", icon: Truck, email: "ops@sharkbreaker.com", pass: "Logistics123!" },
-    { label: "Admin", icon: UserCog, email: "admin", pass: "1234Harly" },
-  ];
-
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -160,34 +152,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-      </div>
-
-      {/* Demo Accounts */}
-      <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6">
-        <h3 className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.15em] mb-1">
-          Quick Access
-        </h3>
-        <p className="text-[13px] text-white/30 mb-4">
-          Explore the platform with a demo account:
-        </p>
-        <div className="grid grid-cols-1 gap-2">
-          {DEMO_ACCOUNTS.map((acc) => (
-            <button
-              key={acc.label}
-              type="button"
-              onClick={() => { setEmail(acc.email); setPassword(acc.pass); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-left hover:border-[#39ff7e]/20 hover:bg-[#39ff7e]/[0.03] transition-all group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] group-hover:bg-[#39ff7e]/[0.08] flex items-center justify-center shrink-0 transition-colors">
-                <acc.icon size={14} className="text-white/40 group-hover:text-[#39ff7e]/70 transition-colors" />
-              </div>
-              <div className="min-w-0">
-                <span className="block text-[13px] font-medium text-white/60 group-hover:text-white/80 transition-colors">{acc.label}</span>
-                <span className="block text-[11px] text-white/25 truncate">{acc.email}</span>
-              </div>
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Footer */}
