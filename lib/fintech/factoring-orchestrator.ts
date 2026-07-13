@@ -29,6 +29,7 @@ import {
   type SettlementStatus,
 } from "@/lib/fintech/factoring-bridge";
 import { recordDisbursementJournal } from "@/lib/fintech/accounting-ledger";
+import { checkFraCompliance, validateFactoringPartner } from "@/lib/compliance/fra-license";
 
 // ─────────────────────────────────────────
 // 1. TYPES
@@ -142,6 +143,18 @@ export async function orchestrateFactoring(
     };
   }
 
+  // ── FRA COMPLIANCE GATE: Verify platform license scope ──
+  const fraCheck = await checkFraCompliance("FACTORING_REFERRAL", tenantId, triggeredBy);
+  if (!fraCheck.allowed) {
+    return {
+      success: false,
+      stage: "FAILED",
+      error: `FRA compliance violation: ${fraCheck.reason}`,
+      errorCode: "FRA_COMPLIANCE_VIOLATION",
+      details: { riskAssessment, fraCheck },
+    };
+  }
+
   // ── Stage 2: ETA Validation (COMPLIANCE GATE) ──────────────
   const etaResult = await validateForFactoring(invoiceId);
   if (!etaResult.valid) {
@@ -196,6 +209,23 @@ export async function orchestrateFactoring(
       error: "No factoring partner approved this invoice. All partners rejected.",
       errorCode: "NO_PARTNER_APPROVAL",
       details: { riskAssessment, etaValid: true, partnerOffers: allOffers, bestOffer: null },
+    };
+  }
+
+  // ── FRA PARTNER VALIDATION: Verify partner license ──
+  const partnerValidation = await validateFactoringPartner(bestOffer.partnerId!, tenantId, triggeredBy);
+  if (!partnerValidation.valid) {
+    await prisma.factoringRequest.update({
+      where: { id: factoringRequest.id },
+      data: { status: "REJECTED" },
+    });
+    return {
+      success: false,
+      stage: "FAILED",
+      factoringRequestId: factoringRequest.id,
+      error: `Factoring partner validation failed: ${partnerValidation.error}`,
+      errorCode: "PARTNER_VALIDATION_FAILED",
+      details: { riskAssessment, etaValid: true, partnerOffers: allOffers, bestOffer },
     };
   }
 
@@ -563,9 +593,12 @@ export async function orchestrateConsolidatedFactoring(
   const distinctApprovers = new Set(approvals.map((a) => a.actorId).filter(Boolean));
 
   if (distinctApprovers.size < 2) {
-    if (process.env.BYPASS_FOUR_EYES === "true") {
+    const isDev = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+    if (process.env.BYPASS_FOUR_EYES === "true" && isDev) {
       console.error(
-        `[SECURITY] Four-eyes bypass activated for package ${consolidatedInvoiceId} by actor ${triggeredBy}. Dual authorization was skipped.`
+        `[SECURITY] Four-eyes bypass activated for package ${consolidatedInvoiceId} by actor ${triggeredBy}. ` +
+        `Dual authorization was skipped. WARNING: This bypass is ONLY allowed in development mode. ` +
+        `If this appears in production, investigate immediately.`
       );
     } else {
       return {
@@ -759,29 +792,35 @@ export async function orchestrateConsolidatedFactoring(
   const hotelAdminFeeAmount = grossAmount * hotelAdminFeeRate;
 
   // ── Yield Spread Guard Verification ──
-  const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true";
+  const isDev = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+  const isTreasuryOverridden = process.env.TREASURY_OVERRIDE === "true" && isDev;
+  if (process.env.TREASURY_OVERRIDE === "true" && !isDev) {
+    console.warn(
+      `[SECURITY] TREASURY_OVERRIDE is set but ignored in production. ` +
+      `This override is ONLY permitted in development/test environments.`
+    );
+  }
 
   for (const invoice of ci.invoices) {
     const supplierDiscountRateNum = invoice.supplierDiscountRate != null ? Number(invoice.supplierDiscountRate) : 0;
     const margin = supplierDiscountRateNum - factorDiscountRate;
     if (margin < 0.015 && !isTreasuryOverridden) {
-      // Log a 'YIELD_SPREAD_BREACH' exception to our append-only AuditLog
-      await prisma.auditLog.create({
-        data: {
-          action: "YIELD_SPREAD_BREACH",
-          entityType: "CONSOLIDATED_INVOICE",
-          entityId: consolidatedInvoiceId,
-          actorId: triggeredBy,
-          afterState: JSON.stringify({
-            message: `Yield Spread Breach: Margin for Invoice ${invoice.invoiceNumber} (${(margin * 100).toFixed(2)}%) fell below the net positive 1.5% platform margin requirement.`,
-            invoiceId: invoice.id,
-            invoiceNumber: invoice.invoiceNumber,
-            supplierDiscountRate: supplierDiscountRateNum,
-            factorDiscountRate,
-            margin,
-          }),
-          tenantId,
-        }
+      // Log a 'YIELD_SPREAD_BREACH' exception to our append-only AuditLog (tamper-proof chain)
+      const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+      await appendAuditEntry({
+        action: "YIELD_SPREAD_BREACH",
+        entityType: "CONSOLIDATED_INVOICE",
+        entityId: consolidatedInvoiceId,
+        actorId: triggeredBy,
+        afterState: {
+          message: `Yield Spread Breach: Margin for Invoice ${invoice.invoiceNumber} (${(margin * 100).toFixed(2)}%) fell below the net positive 1.5% platform margin requirement.`,
+          invoiceId: invoice.id,
+          invoiceNumber: invoice.invoiceNumber,
+          supplierDiscountRate: supplierDiscountRateNum,
+          factorDiscountRate,
+          margin,
+        },
+        tenantId,
       });
 
       await releaseLock();

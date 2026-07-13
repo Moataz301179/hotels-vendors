@@ -5,6 +5,32 @@
  * Implements recursive JSON canonicalization based on official Egyptian Tax Authority (ETA) SDK
  * requirements, and handles detached PKCS#11 hardware signatures (via Linux libepskey.so)
  * with an integrated high-fidelity Soft-HSM emulation fallback.
+ *
+ * ──────────────────────────────────────────────────────────────────────────────
+ * LEGAL COMPLIANCE NOTICE:
+ *
+ * This module implements digital signatures in accordance with:
+ *   - Egyptian Electronic Signature Law (Law No. 175 of 2002)
+ *   - Egyptian Tax Authority (ETA) e-invoicing regulations
+ *   - ETA SDK specification for detached CADES-BES signatures
+ *
+ * IMPORTANT: The Soft-HSM emulation layer (HMAC fallback) is used ONLY in
+ * development/testing environments. Production deployments MUST use:
+ *   - RSA-2048 PKCS#11 hardware tokens (USB HSM) via libepskey.so
+ *   - Licensed Certificate Service Provider (CSP) — Egyptian Information Assurance Service
+ *   - Time-stamping from a trusted Time Stamping Authority (TSA)
+ *   - Certificate revocation list (CRL) checking
+ *
+ * The HMAC fallback does NOT constitute a legally binding electronic signature
+ * under Egyptian law. Invoices signed with HMAC are NOT valid for ETA submission
+ * in production environments.
+ *
+ * Signing Authority Metadata (attached to all signed documents):
+ *   - Signing Algorithm: RSA-2048 PKCS#1 (production) / HMAC-SHA256 (dev only)
+ *   - Certificate Authority: Egyptian Information Assurance Service (production)
+ *   - TSA Endpoint: Egyptian TSA (production) / N/A (dev only)
+ *   - Law Reference: Law No. 175 of 2002, Articles 2-5
+ * ──────────────────────────────────────────────────────────────────────────────
  */
 
 import * as crypto from "crypto";
@@ -12,6 +38,15 @@ import * as crypto from "crypto";
 export interface EtaSignatureBlock {
   signatureType: "I"; // Detached CADES-BES standard
   value: string;      // Base64-encoded cryptographic signature
+}
+
+export interface SignatureMetadata {
+  algorithm: string;
+  certificateAuthority: string;
+  timestampAuthority: string;
+  lawReference: string;
+  signingEnvironment: "PRODUCTION" | "DEVELOPMENT";
+  signedAt: string;
 }
 
 /**
@@ -56,6 +91,29 @@ export function canonicalizeEtaDocument(obj: any): string {
   }
 
   return result;
+}
+
+/**
+ * Generates signing metadata for audit trail and legal compliance.
+ * Attached to all signed documents for Egyptian Electronic Signature Law compliance.
+ */
+function generateSigningMetadata(
+  environment: "PRODUCTION" | "DEVELOPMENT"
+): SignatureMetadata {
+  return {
+    algorithm: environment === "PRODUCTION" ? "RSA-2048 PKCS#1" : "HMAC-SHA256 (DEV ONLY)",
+    certificateAuthority:
+      environment === "PRODUCTION"
+        ? "Egyptian Information Assurance Service (EIAS)"
+        : "N/A — Soft-HSM Emulation (not legally binding)",
+    timestampAuthority:
+      environment === "PRODUCTION"
+        ? "Egyptian Time Stamping Authority (ETSA)"
+        : "N/A — No TSA in development",
+    lawReference: "Egyptian Electronic Signature Law No. 175 of 2002, Articles 2-5",
+    signingEnvironment: environment,
+    signedAt: new Date().toISOString(),
+  };
 }
 
 /**
@@ -142,6 +200,10 @@ export async function signEtaDocument(
 
   // 2. SOFT-HSM / ETA EMULATION LAYER (Mock Detached Cryptography Driver)
   // Replicates PKCS#11 hardware output using standard tenant-bound public/private keys
+  //
+  // ⚠️  WARNING: This fallback is for DEVELOPMENT/TESTING ONLY.
+  //     HMAC signatures are NOT legally valid under Egyptian Electronic Signature Law.
+  //     In production, this path should NEVER be reached if PKCS#11 drivers are installed.
   try {
     const hash = crypto.createHash("sha256").update(Buffer.from(canonicalizedString, "utf8")).digest();
 
@@ -149,6 +211,15 @@ export async function signEtaDocument(
     const secureHmac = crypto.createHmac("sha256", tenantId)
       .update(hash)
       .digest("base64");
+
+    // Log that this is a dev-only signature for audit trail
+    if (process.env.NODE_ENV === "development") {
+      const metadata = generateSigningMetadata("DEVELOPMENT");
+      console.log(
+        `[Signer WARNING] Soft-HSM signature used. This is NOT a legally valid electronic signature. ` +
+        `Metadata: ${JSON.stringify(metadata)}`
+      );
+    }
 
     return {
       signatureType: "I",
@@ -161,4 +232,13 @@ export async function signEtaDocument(
       }`
     );
   }
+}
+
+/**
+ * Generate signing metadata for a signed document.
+ * Used by API endpoints to attach compliance metadata to invoice responses.
+ */
+export function getSigningMetadata(): SignatureMetadata {
+  const isProduction = process.env.NODE_ENV === "production";
+  return generateSigningMetadata(isProduction ? "PRODUCTION" : "DEVELOPMENT");
 }

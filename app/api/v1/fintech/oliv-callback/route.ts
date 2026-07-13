@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, audit } from "@/lib/api-utils";
 import { olivFinanceAdapter } from "@/lib/fintech/oliv-bridge";
+import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
+import { checkWebhookReplay, markWebhookProcessed, olivEventId } from "@/lib/security/webhook-idempotency";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +32,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Unauthorized", 401);
   }
 
+  // IP whitelisting — reject webhooks from untrusted sources
+  const clientIp = getClientIp(request);
+  if (!isWebhookIpAllowed(clientIp, "oliv")) {
+    return error("Forbidden: untrusted webhook source", 403);
+  }
+
   const payload = await request.json();
+
+  // Replay protection — reject duplicate webhook deliveries
+  const eventId = olivEventId(payload);
+  const { isReplay } = await checkWebhookReplay("oliv", eventId);
+  if (isReplay) {
+    return success({ duplicate: true, message: "Webhook already processed" });
+  }
 
   // 2. Normalize payload through Oliv adapter
   const result = await olivFinanceAdapter.handleWebhook(payload);
@@ -143,6 +158,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       updates: result.updates,
     },
   });
+
+  // Mark webhook as processed (replay protection)
+  await markWebhookProcessed("oliv", eventId, `${actionLabel}:${matchedRequest.id}`);
 
   return success({
     acknowledged: true,

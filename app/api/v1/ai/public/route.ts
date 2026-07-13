@@ -8,6 +8,7 @@ import { NextRequest } from "next/server";
 import { executeLLM } from "@/lib/swarm/model-router";
 import { checkRateLimit } from "@/lib/redis";
 import { PUBLIC_SYSTEM_PROMPT } from "@/components/ai-assistant/prompts/public-prompt";
+import { sanitizeUserInput } from "@/lib/ai/sanitization";
 import { z } from "zod";
 
 const PublicAskSchema = z.object({
@@ -55,8 +56,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Sanitize user input (prompt injection defense)
+    const sanitization = sanitizeUserInput(data.question);
+    if (sanitization.injectionDetected) {
+      console.warn(
+        `[SECURITY] Prompt injection attempt detected from IP ${ip}:`,
+        sanitization.injectionPatterns
+      );
+    }
+
     // Call LLM with fallback chain
-    const result = await executeLLM(PUBLIC_SYSTEM_PROMPT, data.question, {
+    const result = await executeLLM(PUBLIC_SYSTEM_PROMPT, sanitization.sanitized, {
       maxTokens: 600,
       temperature: 0.5,
       preferredModel: "auto",

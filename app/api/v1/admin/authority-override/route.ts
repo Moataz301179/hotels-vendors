@@ -7,7 +7,6 @@ const OverrideSchema = z.object({
   orderId: z.string().cuid(),
   reason: z.string().min(20),
   waivePaymentGuarantee: z.boolean().default(false),
-  authorizerId: z.string().cuid(),
   coAuthorizerId: z.string().cuid(),
 });
 
@@ -18,12 +17,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = OverrideSchema.parse(body);
 
+  // G10: Always use server-side session user as primary authorizer — never trust client
+  const authorizerId = auth.userId;
+
   const result = await adminOverride({
     orderId: data.orderId,
     action: "ADMIN_OVERRIDE",
     reason: data.reason,
     waivePaymentGuarantee: data.waivePaymentGuarantee,
-    authorizerId: data.authorizerId,
+    authorizerId,
     coAuthorizerId: data.coAuthorizerId,
     tenantId: auth.tenantId,
   });

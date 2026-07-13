@@ -3,6 +3,9 @@
  *
  * Run: npx prisma db seed
  * Or:  npx tsx prisma/seed.ts
+ *
+ * ⚠️  DEVELOPMENT ONLY — All data below is obviously fake test data.
+ *     Do NOT use in production. Do NOT commit real PII.
  */
 
 import { Prisma } from "@prisma/client";
@@ -148,11 +151,11 @@ async function main() {
     where: { slug: "demo-hotel" },
     update: {},
     create: {
-      name: "Nile Grand Hotel",
+      name: "Hotel Test Alpha",
       slug: "demo-hotel",
       type: "HOTEL_GROUP",
       status: "ACTIVE",
-      taxId: "100-123-456",
+      taxId: "TEST-000-001",
     },
   });
 
@@ -166,15 +169,15 @@ async function main() {
     where: { taxId: hotelTenant.taxId },
     update: {},
     create: {
-      name: "Nile Grand Hotel",
-      legalName: "Nile Grand Hotels SAE",
+      name: "Hotel Test Alpha",
+      legalName: "Hotel Test Alpha (Dev Only)",
       taxId: hotelTenant.taxId,
-      commercialReg: "CR-2020-001",
-      address: "126 Nile Corniche, Cairo",
+      commercialReg: "TEST-CR-001",
+      address: "123 Test Street, Cairo",
       city: "Cairo",
       governorate: "Cairo",
-      phone: "+20 2 2577 0000",
-      email: "procurement@nilegrand.com",
+      phone: "+20 000 000 0000",
+      email: "test-hotel@test.hotelsvendors.com",
       starRating: 5,
       roomCount: 320,
       tier: "CORE",
@@ -188,11 +191,11 @@ async function main() {
   const defaultPassword = process.env.SEED_PASSWORD || "change-me-immediately";
   const hotelPassword = await hashPassword(defaultPassword);
   const hotelUser = await prisma.user.upsert({
-    where: { email: "hotel.owner@nilegrand.com" },
+    where: { email: "hotel-test@test.hotelsvendors.com" },
     update: {},
     create: {
-      email: "hotel.owner@nilegrand.com",
-      name: "Omar El-Sayed",
+      email: "hotel-test@test.hotelsvendors.com",
+      name: "Hotel Test User",
       passwordHash: hotelPassword,
       platformRole: "HOTEL",
       role: "OWNER",
@@ -212,11 +215,11 @@ async function main() {
     where: { slug: "demo-supplier" },
     update: {},
     create: {
-      name: "Delta Food Supply",
+      name: "Supplier Test Beta",
       slug: "demo-supplier",
       type: "SUPPLIER",
       status: "ACTIVE",
-      taxId: "200-789-012",
+      taxId: "TEST-000-002",
     },
   });
 
@@ -230,27 +233,27 @@ async function main() {
     where: { taxId: supplierTenant.taxId },
     update: {},
     create: {
-      name: "Delta Food Supply",
-      legalName: "Delta Food Supply Co. SAE",
+      name: "Supplier Test Beta",
+      legalName: "Supplier Test Beta (Dev Only)",
       taxId: supplierTenant.taxId,
-      commercialReg: "CR-2019-045",
-      address: "45 Industrial Zone, 6th of October",
+      commercialReg: "TEST-CR-002",
+      address: "456 Test Avenue, 6th of October",
       city: "6th of October",
       governorate: "Giza",
-      phone: "+20 2 3838 5500",
-      email: "orders@deltafood.com",
-      website: "https://deltafood.com",
+      phone: "+20 000 000 0000",
+      email: "test-supplier@test.hotelsvendors.com",
+      website: "https://test-supplier.example.com",
       tenantId: supplierTenant.id,
     },
   });
 
   const supplierPassword = await hashPassword(defaultPassword);
   const supplierUser = await prisma.user.upsert({
-    where: { email: "supplier.owner@deltafood.com" },
+    where: { email: "supplier-test@test.hotelsvendors.com" },
     update: {},
     create: {
-      email: "supplier.owner@deltafood.com",
-      name: "Amir Khalil",
+      email: "supplier-test@test.hotelsvendors.com",
+      name: "Supplier Test User",
       passwordHash: supplierPassword,
       platformRole: "SUPPLIER",
       role: "OWNER",
@@ -270,11 +273,11 @@ async function main() {
     where: { slug: "demo-factoring" },
     update: {},
     create: {
-      name: "Cairo Capital Factoring",
+      name: "Factoring Test Gamma",
       slug: "demo-factoring",
       type: "FACTORING_COMPANY",
       status: "ACTIVE",
-      taxId: "300-111-222",
+      taxId: "TEST-000-003",
     },
   });
 
@@ -288,11 +291,11 @@ async function main() {
     where: { taxId: factoringTenant.taxId },
     update: {},
     create: {
-      name: "Cairo Capital Factoring",
-      legalName: "Cairo Capital Factoring SAE",
+      name: "Factoring Test Gamma",
+      legalName: "Factoring Test Gamma (Dev Only)",
       taxId: factoringTenant.taxId,
-      contactEmail: "factoring@cairocapital.com",
-      contactPhone: "+20 2 2400 5000",
+      contactEmail: "test-factoring@test.hotelsvendors.com",
+      contactPhone: "+20 000 000 0000",
       status: "ACTIVE",
       maxFacility: 10000000,
       interestRate: 0.022,
@@ -303,11 +306,11 @@ async function main() {
 
   const factoringPassword = await hashPassword(defaultPassword);
   const factoringUser = await prisma.user.upsert({
-    where: { email: "factoring.owner@cairocapital.com" },
+    where: { email: "factoring-test@test.hotelsvendors.com" },
     update: {},
     create: {
-      email: "factoring.owner@cairocapital.com",
-      name: "Hassan Ibrahim",
+      email: "factoring-test@test.hotelsvendors.com",
+      name: "Factoring Test User",
       passwordHash: factoringPassword,
       platformRole: "FACTORING",
       role: "OWNER",
@@ -425,11 +428,11 @@ async function main() {
   const adminPassword = await hashPassword(defaultPassword);
   const adminRole = createdRoles["Platform Admin"];
   await prisma.user.upsert({
-    where: { email: "admin@hotelsvendors.com" },
+    where: { email: "admin-test@test.hotelsvendors.com" },
     update: { passwordHash: adminPassword },
     create: {
-      email: "admin@hotelsvendors.com",
-      name: "System Administrator",
+      email: "admin-test@test.hotelsvendors.com",
+      name: "Admin Test User",
       passwordHash: adminPassword,
       platformRole: "ADMIN",
       role: "OWNER",
@@ -439,14 +442,15 @@ async function main() {
       canOverride: true,
     },
   });
-  console.log(`👤 Platform admin seeded: admin@hotelsvendors.com / ${defaultPassword}`);
+  console.log(`👤 Platform admin seeded: admin-test@test.hotelsvendors.com / ${defaultPassword}`);
 
   console.log("\n✅ Seed complete!");
+  console.log("\n⚠️  DEVELOPMENT ONLY — Do NOT use in production. Do NOT commit real PII.");
   console.log("\nLogin credentials (all use SEED_PASSWORD env var, default: change-me-immediately):");
-  console.log("  Hotel:     hotel.owner@nilegrand.com");
-  console.log("  Supplier:  supplier.owner@deltafood.com");
-  console.log("  Factoring: factoring.owner@cairocapital.com");
-  console.log("  Admin:     admin@hotelsvendors.com");
+  console.log("  Hotel:     hotel-test@test.hotelsvendors.com");
+  console.log("  Supplier:  supplier-test@test.hotelsvendors.com");
+  console.log("  Factoring: factoring-test@test.hotelsvendors.com");
+  console.log("  Admin:     admin-test@test.hotelsvendors.com");
 }
 
 main()

@@ -76,6 +76,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: tenant.id,
     roleId: ownerRole.id,
     accountType: accountType as "INDIVIDUAL" | "BUSINESS",
+    marketingConsent: data.marketingConsent ?? false,
+    termsAcceptedAt: new Date(),
+    privacyPolicyVersion: process.env.PRIVACY_POLICY_VERSION || "1.0",
   };
 
   if (data.type === "hotel") {

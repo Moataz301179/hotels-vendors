@@ -370,6 +370,9 @@ export function WorkspaceChatbot({ mode, userId }: WorkspaceChatbotProps) {
               disabled={isLoading}
               placeholder="Ask anything about your workspace..."
             />
+            <p className="text-[9px] text-white/20 text-center pb-1">
+              AI-generated responses may contain errors. Verify critical information.
+            </p>
             <p className="text-[9px] text-white/15 text-center pb-1.5">
               Powered by Hotels Vendors Intelligence Engine
             </p>

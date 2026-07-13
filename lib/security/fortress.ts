@@ -245,17 +245,16 @@ export async function triggerAdminLockdown(userId: string, reason: string): Prom
     data: { status: "SUSPENDED" },
   });
 
-  // 4. Write security audit log
-  await prisma.auditLog.create({
-    data: {
-      entityType: "USER",
-      entityId: userId,
-      action: "SECURITY_LOCKDOWN",
-      tenantId: user.tenantId,
-      actorId: "SYSTEM",
-      actorRole: "SECURITY",
-      afterState: JSON.stringify({ reason, status: "SUSPENDED" }),
-    },
+  // 4. Write security audit log (tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    entityType: "USER",
+    entityId: userId,
+    action: "SECURITY_LOCKDOWN",
+    tenantId: user.tenantId,
+    actorId: "SYSTEM",
+    actorRole: "SECURITY",
+    afterState: { reason, status: "SUSPENDED" },
   });
 
   // 5. TODO: Send immediate alert to all admins (email + in-app + SMS)

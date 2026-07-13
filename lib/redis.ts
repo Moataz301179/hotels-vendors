@@ -8,6 +8,7 @@
 import { Redis } from "ioredis";
 
 const REDIS_URL = process.env.REDIS_URL;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 
 let redis: Redis | null = null;
 let redisAvailable = false;
@@ -34,6 +35,7 @@ export function getRedis(): Redis | null {
   if (!redis) {
     try {
       redis = new Redis(REDIS_URL, {
+        password: REDIS_PASSWORD,
         retryStrategy: (times) => Math.min(times * 50, 2000),
         maxRetriesPerRequest: 1,
         connectTimeout: 5000,

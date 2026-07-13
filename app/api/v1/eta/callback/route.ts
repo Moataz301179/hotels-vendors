@@ -169,18 +169,17 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // STEP 9: Write audit log
-  await prisma.auditLog.create({
-    data: {
-      entityType: "INVOICE",
-      entityId: invoice.id,
-      action: "ETA_CALLBACK_PROCESSED",
-      tenantId: invoice.tenantId,
-      actorId: "system",
-      actorRole: "SYSTEM",
-      beforeState: JSON.stringify({ etaStatus: invoice.etaStatus }),
-      afterState: JSON.stringify({ etaStatus: newEtaStatus }),
-    },
+  // STEP 9: Write audit log (tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    entityType: "INVOICE",
+    entityId: invoice.id,
+    action: "ETA_CALLBACK_PROCESSED",
+    tenantId: invoice.tenantId,
+    actorId: "system",
+    actorRole: "SYSTEM",
+    beforeState: { etaStatus: invoice.etaStatus },
+    afterState: { etaStatus: newEtaStatus },
   });
 
   return NextResponse.json(

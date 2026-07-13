@@ -43,6 +43,8 @@ interface AutoExecConfig {
   maxAutoExtensionsPerMonth: number;
   /** Min payment history score to auto-extend (0-100, lower=better) */
   minPaymentHistoryForAutoExtend: number;
+  /** If extension exceeds this % of current limit, require human approval (0-1) */
+  creditExtensionApprovalThreshold: number;
 }
 
 const DEFAULT_CONFIG: AutoExecConfig = {
@@ -50,6 +52,7 @@ const DEFAULT_CONFIG: AutoExecConfig = {
   autoSplitOptInHotels: new Set(), // Populated from DB at runtime
   maxAutoExtensionsPerMonth: 2,
   minPaymentHistoryForAutoExtend: 15, // Score < 15 = >85% on-time
+  creditExtensionApprovalThreshold: 0.05, // >5% extension requires human approval
 };
 
 // ─────────────────────────────────────────
@@ -196,6 +199,7 @@ async function executeFix(
 
 /**
  * Auto-extend credit limit for hotels with flawless payment history.
+ * Extensions exceeding the approval threshold require human approval.
  */
 async function executeAutoLimitExtension(
   fix: SmartFix,
@@ -224,19 +228,44 @@ async function executeAutoLimitExtension(
     return { success: false, details: { reason: "Monthly auto-extension limit reached" } };
   }
 
+  // Check approval threshold: if extension > 5% of current limit, require human approval
+  const extensionPercentage = payload.currentLimit > 0
+    ? payload.extensionAmount / payload.currentLimit
+    : 0;
+
+  if (extensionPercentage > config.creditExtensionApprovalThreshold) {
+    const thresholdPct = (config.creditExtensionApprovalThreshold * 100).toFixed(0);
+    console.warn(
+      `[GOVERNANCE] Credit extension of ${(extensionPercentage * 100).toFixed(1)}% exceeds ${thresholdPct}% threshold. ` +
+      `Hotel ${hotelId}: ${payload.currentLimit} → ${payload.newLimit} EGP. Human approval required.`
+    );
+    return {
+      success: false,
+      details: {
+        reason: `Extension of ${(extensionPercentage * 100).toFixed(1)}% exceeds ${thresholdPct}% threshold — requires human approval`,
+        extensionPercentage,
+        currentLimit: payload.currentLimit,
+        extensionAmount: payload.extensionAmount,
+        newLimit: payload.newLimit,
+        requiresApproval: true,
+      },
+    };
+  }
+
   // Apply extension
+  const previousLimit = payload.currentLimit;
   await prisma.hotel.update({
     where: { id: hotelId },
     data: { creditLimit: { increment: payload.extensionAmount } },
   });
 
-  // Audit log
+  // Audit log with before/after state
   const reason = (fix.payload as AutoLimitExtensionPayload).reason || "Auto limit extension";
   await prisma.creditTransaction.create({
     data: {
       type: "ADJUSTMENT",
       amount: payload.extensionAmount,
-      description: `Auto limit extension: ${payload.currentLimit} → ${payload.newLimit} EGP (${reason})`,
+      description: `Auto limit extension: ${previousLimit} → ${payload.newLimit} EGP (${reason}, ${(extensionPercentage * 100).toFixed(1)}% increase)`,
       hotelId,
       tenantId,
     },
@@ -245,10 +274,12 @@ async function executeAutoLimitExtension(
   return {
     success: true,
     details: {
-      oldLimit: payload.currentLimit,
+      oldLimit: previousLimit,
       newLimit: payload.newLimit,
       extensionAmount: payload.extensionAmount,
+      extensionPercentage,
       extensionsThisMonth: extensionsThisMonth + 1,
+      requiresApproval: false,
     },
   };
 }

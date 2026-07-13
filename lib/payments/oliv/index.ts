@@ -1,19 +1,20 @@
 /**
- * Oliv Finance Invoice Factoring Integration
+ * Oliv Finance — Canonical Adapter (index)
  * Hotels Vendors Fintech Layer - Egyptian Market
  *
- * Oliv Finance provides invoice factoring services for B2B procurement.
- * This adapter handles asynchronous invoice factoring status synchronization
- * from INITIALIZED through MATURED states.
- *
- * Integration handles:
- * - Invoice submission for factoring eligibility
- * - Status webhook callbacks (INITIALIZED -> APPROVED -> DISBURSED -> MATURED)
- * - HMAC signature verification for webhook security
- * - Sandbox mode for end-to-end testing
+ * SINGLE source of truth for all Oliv Finance integrations:
+ * - Phase 1: Referral URL generation (checkout redirect, hotel/supplier apply)
+ * - Phase 2: Invoice factoring submission, status tracking, HMAC webhook verification
+ * - FactoringPartnerAdapter implementation for the partner bridge orchestration
  */
 
 import * as crypto from "crypto";
+import type {
+  FactoringPartnerAdapter,
+  InvoiceDataForPartner,
+  PartnerOffer,
+  WebhookResult,
+} from "@/lib/fintech/factoring-bridge";
 
 // ============================================================================
 // 1. CONFIGURATION & ENVIRONMENT
@@ -48,8 +49,8 @@ export interface OlivInvoiceSubmission {
   hotelId: string;
   amount: number;
   currency: "EGP";
-  issueDate: string; // ISO 8601
-  dueDate: string; // ISO 8601
+  issueDate: string;
+  dueDate: string;
   vatAmount: number;
   netAmount: number;
   invoiceItems: OlivInvoiceItem[];
@@ -153,7 +154,6 @@ export function verifyOlivWebhook(payload: OlivWebhookPayload): boolean {
   if (USE_MOCK) return true;
   if (!OLIV_WEBHOOK_SECRET) return false;
 
-  // Oliv HMAC verification: concatenate specific fields in deterministic order
   const { event, timestamp, data } = payload;
   const hmacString = [
     event,
@@ -212,32 +212,21 @@ async function olivFetch<T>(path: string, options: RequestInit = {}): Promise<T>
 // 5. PRODUCTION FUNCTIONS
 // ============================================================================
 
-/**
- * Submit invoice for factoring eligibility assessment
- */
 export async function submitInvoiceForFactoring(
   submission: OlivInvoiceSubmission
 ): Promise<OlivSubmissionResponse> {
   if (USE_MOCK) return _mockSubmitInvoice(submission);
-
   return olivFetch<OlivSubmissionResponse>("/v1/factoring/invoices", {
     method: "POST",
     body: JSON.stringify(submission),
   });
 }
 
-/**
- * Get factoring request status by ID
- */
 export async function getFactoringStatus(factoringRequestId: string): Promise<OlivFactoringRequestDetails> {
   if (USE_MOCK) return _mockFactoringStatus(factoringRequestId);
-
   return olivFetch<OlivFactoringRequestDetails>(`/v1/factoring/requests/${factoringRequestId}`);
 }
 
-/**
- * Poll for factoring status updates (for client-side polling fallback)
- */
 export async function pollFactoringStatus(
   factoringRequestId: string,
   intervalMs: number = 30000,
@@ -245,31 +234,20 @@ export async function pollFactoringStatus(
 ): Promise<OlivFactoringRequestDetails> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const status = await getFactoringStatus(factoringRequestId);
-    
-    // Terminal states
     if (["MATURED", "DEFAULTED", "CANCELLED", "REJECTED"].includes(status.status)) {
       return status;
     }
-    
-    // Wait before next poll
     if (attempt < maxAttempts - 1) {
       await _simulateLatency(intervalMs);
     }
   }
-  
-  // Return last known status if max attempts reached
   return getFactoringStatus(factoringRequestId);
 }
 
-/**
- * Batch get statuses for multiple factoring requests
- */
 export async function getBatchFactoringStatuses(
   factoringRequestIds: string[]
 ): Promise<Map<string, OlivFactoringRequestDetails>> {
   const results = new Map<string, OlivFactoringRequestDetails>();
-  
-  // Process in batches of 10 to avoid rate limits
   const batchSize = 10;
   for (let i = 0; i < factoringRequestIds.length; i += batchSize) {
     const batch = factoringRequestIds.slice(i, i + batchSize);
@@ -284,26 +262,33 @@ export async function getBatchFactoringStatuses(
       })
     );
   }
-  
   return results;
 }
 
 /**
- * Webhook handler for asynchronous status updates
- * Call this from your webhook endpoint (e.g., /api/webhooks/oliv)
+ * Webhook handler for asynchronous status updates.
+ * Supports two calling patterns:
+ * 1. handleOlivWebhook(rawJsonString, signature) — Phase 2 HMAC-verified
+ * 2. handleOlivWebhook({ type, orderId, status, amount }) — Phase 1 referral webhook
  */
 export async function handleOlivWebhook(
-  rawPayload: string,
-  signature: string
-): Promise<OlivStatusUpdate | null> {
+  rawPayload: string | Record<string, unknown>,
+  signature?: string
+): Promise<OlivStatusUpdate | Record<string, unknown> | null> {
   try {
-    const payload: OlivWebhookPayload = JSON.parse(rawPayload);
-    payload.signature = signature;
-    
+    if (typeof rawPayload === "object" && rawPayload !== null && !("event" in rawPayload)) {
+      const event = rawPayload as { type?: string; orderId?: string; status?: string; amount?: number };
+      console.log("[Oliv Webhook] Received:", event.type, event.orderId);
+      return rawPayload as Record<string, unknown>;
+    }
+
+    const payload: OlivWebhookPayload = JSON.parse(rawPayload as string);
+    if (signature) payload.signature = signature;
+
     if (!verifyOlivWebhook(payload)) {
       throw new Error("Invalid webhook signature");
     }
-    
+
     return payload.data;
   } catch (error) {
     console.error("Oliv webhook verification failed:", error);
@@ -312,20 +297,16 @@ export async function handleOlivWebhook(
 }
 
 // ============================================================================
-// 6. MOCK IMPLEMENTATIONS (for sandbox/development)
+// 6. MOCK IMPLEMENTATIONS
 // ============================================================================
 
-async function _mockSubmitInvoice(submission: OlivInvoiceSubmission): Promise<OlivSubmissionResponse> {
+async function _mockSubmitInvoice(_submission: OlivInvoiceSubmission): Promise<OlivSubmissionResponse> {
   await _simulateLatency(500);
-  
   const factoringRequestId = `OLIV-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-  const submittedAt = new Date().toISOString();
-  
-  // Simulate instant approval for sandbox
   return {
     factoringRequestId,
     status: "INITIALIZED",
-    submittedAt,
+    submittedAt: new Date().toISOString(),
     estimatedDecisionDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     advanceRate: 0.90,
     discountRate: 0.02,
@@ -335,28 +316,18 @@ async function _mockSubmitInvoice(submission: OlivInvoiceSubmission): Promise<Ol
 
 async function _mockFactoringStatus(factoringRequestId: string): Promise<OlivFactoringRequestDetails> {
   await _simulateLatency(200);
-  
-  // In mock mode, simulate progression through states based on request ID hash
   const hash = factoringRequestId.split("-").pop() || "";
   const stateIndex = parseInt(hash, 36) % 7;
   const states: OlivFactoringStatus[] = [
-    "INITIALIZED",
-    "UNDER_REVIEW",
-    "APPROVED",
-    "DISBURSED",
-    "MATURED",
-    "REJECTED",
-    "CANCELLED",
+    "INITIALIZED", "UNDER_REVIEW", "APPROVED", "DISBURSED", "MATURED", "REJECTED", "CANCELLED",
   ];
   const status = states[stateIndex] || "INITIALIZED";
-  
-  const baseDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
-  
+
   return {
     factoringRequestId,
     invoiceId: `INV-${factoringRequestId}`,
     status,
-    submittedAt: baseDate.toISOString(),
+    submittedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date().toISOString(),
     advanceRate: 0.90,
     discountRate: 0.02,
@@ -379,7 +350,229 @@ function _simulateLatency(ms: number): Promise<void> {
 }
 
 // ============================================================================
-// 7. STATUS FLOW UTILITIES
+// 7. FACTORING PARTNER ADAPTER
+// ============================================================================
+
+const OLIV_CONFIG = {
+  standardAdvanceRate: 0.88,
+  standardDiscountRate: 0.025,
+  highRiskAdvanceRate: 0.82,
+  highRiskDiscountRate: 0.035,
+  minInvoiceAmount: 5000,
+  maxInvoiceAmount: 5_000_000,
+  standardSettlementDays: 90,
+  highRiskSettlementDays: 60,
+};
+
+export class OlivFinanceAdapter implements FactoringPartnerAdapter {
+  id = "oliv_finance";
+  name = "Oliv Finance";
+  type = "PAYMENT_RAIL" as const;
+
+  async checkEligibility(invoice: InvoiceDataForPartner): Promise<PartnerOffer> {
+    if (USE_MOCK) return this._mockEligibility(invoice);
+    const res = await olivFetch<{ eligible: boolean; max_advance_rate: number; discount_rate: number; inquiry_id: string; estimated_disbursement?: number; rejection_reason?: string }>(
+      "/inquiries", {
+        method: "POST",
+        body: JSON.stringify({
+          hotel_tax_id: invoice.hotel.taxId,
+          hotel_name: invoice.hotel.name,
+          invoice_amount: invoice.grossAmount,
+          eta_uuid: invoice.etaUuid,
+          sector: "hospitality",
+        }),
+      }
+    );
+    return {
+      eligible: res.eligible,
+      partnerId: this.id,
+      partnerName: this.name,
+      maxAdvanceRate: res.max_advance_rate,
+      discountRate: res.discount_rate,
+      responseId: res.inquiry_id,
+      estimatedDisbursement: res.estimated_disbursement,
+      rejectionReason: res.rejection_reason,
+    };
+  }
+
+  async submitInstruction(invoice: InvoiceDataForPartner): Promise<{
+    success: boolean;
+    instructionId: string;
+    partnerFundingId: string;
+    estimatedDisbursementDate: string;
+  }> {
+    if (USE_MOCK) return this._mockSubmit(invoice);
+    const res = await olivFetch<{
+      instruction_id: string;
+      funding_id: string;
+      estimated_disbursement_date: string;
+    }>("/factoring-instructions", {
+      method: "POST",
+      headers: { "Idempotency-Key": invoice.invoiceId },
+      body: JSON.stringify({
+        invoice_number: invoice.invoiceNumber,
+        eta_uuid: invoice.etaUuid,
+        gross_amount: invoice.grossAmount,
+        supplier: invoice.supplier,
+        hotel: invoice.hotel,
+        delivery_confirmed_at: invoice.deliveryConfirmedAt,
+      }),
+    });
+    return {
+      success: true,
+      instructionId: res.instruction_id,
+      partnerFundingId: res.funding_id,
+      estimatedDisbursementDate: res.estimated_disbursement_date,
+    };
+  }
+
+  async trackInstruction(instructionId: string) {
+    if (USE_MOCK) return this._mockTrack(instructionId);
+    try {
+      const res = await olivFetch<{ status: string; disbursed_at?: string; settled_at?: string }>(
+        `/instructions/${instructionId}/status`
+      );
+      return {
+        status: res.status.toUpperCase() as "PENDING" | "DISBURSED" | "SETTLED" | "DEFAULTED" | "DISPUTED",
+        disbursedAt: res.disbursed_at ? new Date(res.disbursed_at) : undefined,
+        settledAt: res.settled_at ? new Date(res.settled_at) : undefined,
+      };
+    } catch {
+      return { status: "PENDING" as const };
+    }
+  }
+
+  async handleWebhook(payload: unknown): Promise<WebhookResult> {
+    const event = payload as Record<string, unknown>;
+    const eventType = (event.event_type as string) || "UNKNOWN";
+    switch (eventType) {
+      case "funding.disbursed":
+        return { processed: true, eventType, instructionId: (event.instruction_id as string) || undefined, partnerFundingId: (event.funding_id as string) || undefined, updates: { disbursedAt: event.disbursed_at, status: "DISBURSED" } };
+      case "funding.settled":
+        return { processed: true, eventType, instructionId: (event.instruction_id as string) || undefined, updates: { settledAt: event.settled_at, status: "SETTLED" } };
+      case "funding.defaulted":
+        return { processed: true, eventType, instructionId: (event.instruction_id as string) || undefined, updates: { status: "DEFAULTED" } };
+      default:
+        return { processed: true, eventType, instructionId: (event.instruction_id as string) || undefined, updates: event };
+    }
+  }
+
+  private async _mockEligibility(invoice: InvoiceDataForPartner): Promise<PartnerOffer> {
+    await _simulateLatency(400);
+    if (invoice.grossAmount < OLIV_CONFIG.minInvoiceAmount) {
+      return { eligible: false, partnerId: this.id, partnerName: this.name, maxAdvanceRate: 0, discountRate: 0, responseId: `oliv_${Date.now()}`, rejectionReason: `Below Oliv minimum of ${OLIV_CONFIG.minInvoiceAmount} EGP` };
+    }
+    return { eligible: true, partnerId: this.id, partnerName: this.name, maxAdvanceRate: OLIV_CONFIG.standardAdvanceRate, discountRate: OLIV_CONFIG.standardDiscountRate, responseId: `oliv_${Date.now()}`, estimatedDisbursement: invoice.grossAmount * OLIV_CONFIG.standardAdvanceRate };
+  }
+
+  private async _mockSubmit(_invoice: InvoiceDataForPartner) {
+    await _simulateLatency(600);
+    return { success: true, instructionId: `oliv_inst_${Date.now()}`, partnerFundingId: `oliv_fund_${Date.now()}`, estimatedDisbursementDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() };
+  }
+
+  private async _mockTrack(_instructionId: string) {
+    await _simulateLatency(250);
+    return { status: "DISBURSED" as const, disbursedAt: new Date() };
+  }
+}
+
+// ============================================================================
+// 8. REFERRAL URL GENERATORS (Phase 1)
+// ============================================================================
+
+export interface OlivReferralPayload {
+  orderId: string;
+  invoiceId: string;
+  supplierId: string;
+  supplierName: string;
+  supplierEmail: string;
+  amount: number;
+  currency: string;
+  invoiceNumber: string;
+  hotelName: string;
+}
+
+export interface OlivHotelReferralPayload {
+  hotelId: string;
+  hotelName: string;
+  hotelEmail: string;
+  taxId: string;
+  propertyType: string;
+  numberOfProperties: string;
+  financingType: "factoring" | "reverse_factoring";
+  etaToken?: string;
+}
+
+export interface OlivCheckoutPayload {
+  hotelId: string;
+  hotelName: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  items: Array<{ name: string; quantity: number; price: number }>;
+}
+
+export interface OlivReferralResponse {
+  success: boolean;
+  referralUrl?: string;
+  referralId?: string;
+  error?: string;
+}
+
+export function generateOlivReferralUrl(payload: OlivReferralPayload): string {
+  const params = new URLSearchParams({
+    ref: payload.supplierId,
+    order: payload.orderId,
+    invoice: payload.invoiceId,
+    amount: payload.amount.toString(),
+    currency: payload.currency,
+    name: payload.supplierName,
+    email: payload.supplierEmail,
+    source: "hotelsvendors",
+  });
+  return `https://oliv.finance/apply?${params.toString()}`;
+}
+
+export function generateOlivHotelReferralUrl(payload: OlivHotelReferralPayload): string {
+  const params = new URLSearchParams({
+    ref: payload.hotelId,
+    name: payload.hotelName,
+    email: payload.hotelEmail,
+    taxId: payload.taxId,
+    propertyType: payload.propertyType,
+    properties: payload.numberOfProperties,
+    financingType: payload.financingType,
+    source: "hotelsvendors",
+  });
+  if (payload.etaToken) params.set("etaToken", payload.etaToken);
+  return `https://oliv.finance/hotel-apply?${params.toString()}`;
+}
+
+export function generateOlivCheckoutUrl(payload: OlivCheckoutPayload): string {
+  const params = new URLSearchParams({
+    hotel: payload.hotelId,
+    hotelName: payload.hotelName,
+    order: payload.orderId,
+    amount: payload.amount.toString(),
+    currency: payload.currency,
+    source: "hotelsvendors_checkout",
+  });
+  params.set("items", JSON.stringify(payload.items));
+  return `https://oliv.finance/checkout?${params.toString()}`;
+}
+
+export async function createOlivReferral(payload: OlivReferralPayload) {
+  const referralId = `OLIV-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  return { id: referralId, ...payload, status: "PENDING", createdAt: new Date() };
+}
+
+export async function createOlivHotelReferral(payload: OlivHotelReferralPayload) {
+  const referralId = `OLIV-HTL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  return { id: referralId, ...payload, status: "PENDING", createdAt: new Date() };
+}
+
+// ============================================================================
+// 9. STATUS FLOW UTILITIES
 // ============================================================================
 
 export const OLIV_STATUS_FLOW: Record<OlivFactoringStatus, OlivFactoringStatus[]> = {
@@ -387,10 +580,10 @@ export const OLIV_STATUS_FLOW: Record<OlivFactoringStatus, OlivFactoringStatus[]
   UNDER_REVIEW: ["APPROVED", "REJECTED", "CANCELLED"],
   APPROVED: ["DISBURSED", "CANCELLED"],
   DISBURSED: ["MATURED", "DEFAULTED"],
-  MATURED: [], // Terminal
-  REJECTED: [], // Terminal
-  DEFAULTED: [], // Terminal
-  CANCELLED: [], // Terminal
+  MATURED: [],
+  REJECTED: [],
+  DEFAULTED: [],
+  CANCELLED: [],
 };
 
 export function isTerminalStatus(status: OlivFactoringStatus): boolean {
@@ -403,35 +596,28 @@ export function canTransition(from: OlivFactoringStatus, to: OlivFactoringStatus
 
 export function getStatusDisplayName(status: OlivFactoringStatus): string {
   const names: Record<OlivFactoringStatus, string> = {
-    INITIALIZED: "Initialized",
-    UNDER_REVIEW: "Under Review",
-    APPROVED: "Approved",
-    REJECTED: "Rejected",
-    DISBURSED: "Disbursed",
-    MATURED: "Matured",
-    DEFAULTED: "Defaulted",
-    CANCELLED: "Cancelled",
+    INITIALIZED: "Initialized", UNDER_REVIEW: "Under Review", APPROVED: "Approved",
+    REJECTED: "Rejected", DISBURSED: "Disbursed", MATURED: "Matured",
+    DEFAULTED: "Defaulted", CANCELLED: "Cancelled",
   };
   return names[status];
 }
 
 export function getStatusColor(status: OlivFactoringStatus): string {
   const colors: Record<OlivFactoringStatus, string> = {
-    INITIALIZED: "bg-blue-100 text-blue-800",
-    UNDER_REVIEW: "bg-yellow-100 text-yellow-800",
-    APPROVED: "bg-green-100 text-green-800",
-    REJECTED: "bg-red-100 text-red-800",
-    DISBURSED: "bg-purple-100 text-purple-800",
-    MATURED: "bg-emerald-100 text-emerald-800",
-    DEFAULTED: "bg-red-100 text-red-800",
-    CANCELLED: "bg-gray-100 text-gray-800",
+    INITIALIZED: "bg-blue-100 text-blue-800", UNDER_REVIEW: "bg-yellow-100 text-yellow-800",
+    APPROVED: "bg-green-100 text-green-800", REJECTED: "bg-red-100 text-red-800",
+    DISBURSED: "bg-purple-100 text-purple-800", MATURED: "bg-emerald-100 text-emerald-800",
+    DEFAULTED: "bg-red-100 text-red-800", CANCELLED: "bg-gray-100 text-gray-800",
   };
   return colors[status];
 }
 
 // ============================================================================
-// 8. EXPORTS
+// 10. EXPORTS
 // ============================================================================
+
+export const olivFinanceAdapter = new OlivFinanceAdapter();
 
 export const olivAdapter = {
   submitInvoice: submitInvoiceForFactoring,
@@ -440,16 +626,4 @@ export const olivAdapter = {
   getBatchStatuses: getBatchFactoringStatuses,
   handleWebhook: handleOlivWebhook,
   verifyWebhook: verifyOlivWebhook,
-};
-
-export type {
-  OlivFactoringStatus,
-  OlivInvoiceSubmission,
-  OlivInvoiceItem,
-  OlivHotelDetails,
-  OlivSupplierDetails,
-  OlivSubmissionResponse,
-  OlivStatusUpdate,
-  OlivWebhookPayload,
-  OlivFactoringRequestDetails,
 };

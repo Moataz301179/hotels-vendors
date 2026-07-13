@@ -1,19 +1,19 @@
 {
-  "version": 2,
-  "environments": {
-    "development": {
-      "Command": "npm run dev",
-      "buffed": false
-    },
-    "production": {
-      "Command": "npm run build && npm run start",
-      "buffed": true
+  "buildCommand": "npm ci --legacy-peer-deps && npx prisma generate && npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm ci --legacy-peer-deps",
+  "regions": ["fra1"],
+  "functions": {
+    "app/api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 30
     }
   },
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/",
-      "destination": "/(marketing)/page.tsx"
+      "source": "/api/v1/ai/:path*",
+      "destination": "/api/v1/ai/:path*"
     }
   ]
 }

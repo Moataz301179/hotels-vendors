@@ -334,18 +334,17 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
     },
   });
 
-  // Write audit log
-  await prisma.auditLog.create({
-    data: {
-      entityType: "INVOICE",
-      entityId: invoice.id,
-      action: "ETA_CALLBACK_PROCESSED",
-      tenantId: invoice.tenantId,
-      actorId: "system",
-      actorRole: "SYSTEM",
-      beforeState: JSON.stringify({ etaStatus: invoice.etaStatus }),
-      afterState: JSON.stringify({ etaStatus: newEtaStatus }),
-    },
+  // Write audit log (via tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    entityType: "INVOICE",
+    entityId: invoice.id,
+    action: "ETA_CALLBACK_PROCESSED",
+    tenantId: invoice.tenantId,
+    actorId: "system",
+    actorRole: "SYSTEM",
+    beforeState: { etaStatus: invoice.etaStatus },
+    afterState: { etaStatus: newEtaStatus },
   });
 }
 

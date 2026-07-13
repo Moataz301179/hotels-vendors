@@ -8,6 +8,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { checkCreditLimit } from "@/lib/credit-gate";
+import { checkBiasInRiskAssessment } from "@/lib/ai/explainability";
 
 // ─────────────────────────────────────────
 // 1. TYPES
@@ -169,7 +170,7 @@ export async function assessRisk(hotelId: string, tenantId?: string): Promise<Ri
 
   const riskTier = scoreToTier(compositeScore);
 
-  return {
+  const assessment: RiskAssessment = {
     hotelId,
     compositeScore,
     riskTier,
@@ -187,6 +188,17 @@ export async function assessRisk(hotelId: string, tenantId?: string): Promise<Ri
     totalExposure: totalUtilized,
     assessedAt: new Date(),
   };
+
+  // Bias detection: log fairness metrics for auditing
+  const biasCheck = checkBiasInRiskAssessment(assessment);
+  if (biasCheck.hasBias) {
+    console.warn(
+      `[FAIRNESS] Bias detected in risk assessment for hotel ${hotelId}:`,
+      biasCheck.factors.map((f) => `[${f.severity}] ${f.factor}: ${f.concern}`).join("; ")
+    );
+  }
+
+  return assessment;
 }
 
 function scoreToTier(score: number): RiskTier {

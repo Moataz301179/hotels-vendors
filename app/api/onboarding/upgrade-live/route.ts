@@ -12,7 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authenticate } from "@/lib/api-utils";
-import crypto from "crypto";
+import { encrypt } from "@/lib/crypto/encryption";
 
 // ─── ETA Credential Validation ─────────────────────────────────────
 
@@ -40,16 +40,6 @@ function validateEtaCredentials(body: Record<string, string>): EtaCredentials {
   }
 
   return { clientId, clientSecret, taxId, environment };
-}
-
-function encryptSecret(secret: string): string {
-  const key = Buffer.from(process.env.ETA_ENCRYPTION_KEY || "default-key-32-chars-long!!!!!", "utf-8");
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
-  let encrypted = cipher.update(secret, "utf-8", "hex");
-  encrypted += cipher.final("hex");
-  const authTag = cipher.getAuthTag().toString("hex");
-  return `${iv.toString("hex")}:${authTag}:${encrypted}`;
 }
 
 // ─── Route Handler ─────────────────────────────────────────────────
@@ -170,7 +160,7 @@ export async function POST(request: NextRequest) {
       });
 
       // 3f. Store encrypted ETA credentials (upsert)
-      const encryptedSecret = encryptSecret(credentials.clientSecret);
+      const encryptedSecret = encrypt(credentials.clientSecret);
       await tx.etaCredential.upsert({
         where: { tenantId },
         create: {
@@ -191,21 +181,20 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 3g. Audit log
-      await tx.auditLog.create({
-        data: {
-          action: "TENANT_UPGRADED_TO_LIVE",
-          entityType: "TENANT",
-          entityId: tenantId,
-          actorId: auth.userId,
-          actorRole: auth.platformRole,
-          tenantId,
-          afterState: JSON.stringify({
-            status: "ACTIVE",
-            etaEnvironment: credentials.environment,
-            taxId: credentials.taxId,
-            demoDataCleared: true,
-          }),
+      // 3g. Audit log (tamper-proof chain)
+      const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+      await appendAuditEntry({
+        action: "TENANT_UPGRADED_TO_LIVE",
+        entityType: "TENANT",
+        entityId: tenantId,
+        actorId: auth.userId,
+        actorRole: auth.platformRole,
+        tenantId,
+        afterState: {
+          status: "ACTIVE",
+          etaEnvironment: credentials.environment,
+          taxId: credentials.taxId,
+          demoDataCleared: true,
         },
       });
     });

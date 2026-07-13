@@ -1,137 +1,157 @@
-# Hotels Vendors — Swarm Infrastructure Deployment
+# Hotels Vendors — Production Deployment Guide
 
-## Architecture Overview
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    HOSTINGER VPS (Ubuntu)                   │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────────────┐  │
-│  │   App   │  │ OpenClaw│  │ Agent0  │  │Swarm Worker  │  │
-│  │ :3000   │  │ :8000   │  │ :9000   │  │ (BullMQ)     │  │
-│  │ Next.js │  │Browser  │  │ LLM     │  │ Background   │  │
-│  │         │  │Automation│  │Router   │  │ Jobs         │  │
-│  └────┬────┘  └────┬────┘  └────┬────┘  └──────┬───────┘  │
-│       │            │            │               │          │
-│  ┌────┴────────────┴────────────┴───────────────┘          │
-│  │              Docker Network (hv-network)                 │
-│  └────┬────────────┬───────────────────────────────────────┘
-│       │            │
-│  ┌────┴────┐  ┌────┴────┐
-│  │ Postgres│  │  Redis  │
-│  │ :5432   │  │ :6379   │
-│  └─────────┘  └─────────┘
-│
-│  ┌─────────┐  ┌─────────────────┐
-│  │  Nginx  │  │ Cloudflare Tunnel│ (optional)
-│  │ :80/443 │  │ (if no direct IP)│
-│  └─────────┘  └─────────────────┘
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    HOSTINGER VPS (Ubuntu)                │
+│                                                         │
+│  ┌─────────┐ ┌──────────┐ ┌─────────┐ ┌────────────┐  │
+│  │  Next.js │ │ OpenClaw │ │ Agent0  │ │Swarm Worker│  │
+│  │  :3000   │ │  :8000   │ │  :9000  │ │ (BullMQ)   │  │
+│  └────┬─────┘ └────┬─────┘ └────┬────┘ └─────┬──────┘  │
+│       │             │            │             │         │
+│  ┌────┴─────────────┴────────────┴─────────────┴──────┐ │
+│  │              Docker Network (hv-network)            │ │
+│  └────┬───────────────────────────────────────┬───────┘ │
+│       │                                       │         │
+│  ┌────┴─────┐                            ┌────┴─────┐  │
+│  │ Postgres │                            │  Redis   │  │
+│  │ :5432    │                            │ :6379    │  │
+│  └──────────┘                            └──────────┘  │
+│                                                         │
+│  ┌──────────────┐  ┌────────────────┐                   │
+│  │ Nginx :80/443│  │ Certbot (SSL)  │                   │
+│  └──────────────┘  └────────────────┘                   │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## Quick Start
+## Strategy: Docker Compose (Primary)
 
-### 1. Provision Hostinger VPS
+**This is the single canonical deployment strategy.** All other strategies (PM2 native, hybrid Vercel+VPS) are archived for reference only.
+
+### Why Docker Compose?
+- Consistent dev/prod parity
+- Isolated services with clear dependency chains
+- Built-in health checks and restart policies
+- Swarm workers scale horizontally
+
+### 1. Provision VPS
 - Ubuntu 22.04 LTS
-- 4 vCPU, 8GB RAM minimum (for swarm + OpenClaw)
+- 4 vCPU, 8GB RAM minimum
 - 100GB SSD
 
-### 2. Run Deploy Script
+### 2. Install Docker
 ```bash
-ssh ubuntu@YOUR_VPS_IP
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+```
+
+### 3. Clone & Deploy
+```bash
 git clone https://github.com/Moataz301179/hotels-vendors.git
 cd hotels-vendors
-chmod +x deploy/hostinger-v2.sh
-./deploy/hostinger-v2.sh production
+cp .env.example .env
+nano .env  # Fill in all secrets
 ```
 
-### 3. Configure Environment
-Edit `.env` with your actual API keys:
+### 4. Start Services
 ```bash
-nano /var/www/hotelsvendors/.env
-# Set: DATABASE_URL, SESSION_SECRET, KIMI_API_KEY, XAI_API_KEY, EMAIL_API_KEY
+docker compose -f docker-compose.swarm.yml up -d --build
 ```
 
-### 4. Restart Services
+### 5. Initialize Database
 ```bash
-cd /var/www/hotelsvendors
-docker-compose -f docker-compose.swarm.yml restart
+docker compose -f docker-compose.swarm.yml exec app npx prisma db push
 ```
 
-## Swarm Management
-
-### Trigger Director Cycle (Manual)
+### 6. Configure Firewall
 ```bash
-curl -X POST https://www.hotelsvendors.com/api/v1/swarm/director/plan \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
 ```
 
-### Check Swarm Health
-```bash
-curl https://www.hotelsvendors.com/api/v1/swarm/health \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
-```
+## Environment Variables
 
-### List All Agents
-```bash
-curl https://www.hotelsvendors.com/api/v1/swarm/agents \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
-```
+### Required (production)
 
-### View Jobs
-```bash
-curl "https://www.hotelsvendors.com/api/v1/swarm/jobs?status=PENDING&limit=20" \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
-```
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@postgres:5432/hotels_vendors?connection_limit=10` |
+| `REDIS_PASSWORD` | Redis auth password (must match `requirepass`) | `your-secure-password` |
+| `REDIS_URL` | Redis connection with auth | `redis://:your-secure-password@redis:6379` |
+| `SESSION_SECRET` | JWT signing key (64 bytes) | `openssl rand -base64 64` |
+| `ETA_ENCRYPTION_KEY` | AES-256-GCM key for ETA | `openssl rand -base64 32` |
+| `POSTGRES_PASSWORD` | PostgreSQL password | `your-secure-password` |
 
-## Scheduled Jobs (Auto-Running)
+### Connection Pool (lib/prisma.ts)
 
-| Job | Schedule | Squad |
-|-----|----------|-------|
-| Director Daily Plan | 6:00 AM Cairo | Director |
-| Lead Scout | Every 4 hours | Growth |
-| Price Benchmark | 8:00 AM daily | Intelligence |
-| Health Check | Every 2 hours | Operations |
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DB_POOL_MAX` | `10` | Max connections in pool |
+| `DB_IDLE_TIMEOUT` | `30000` | Idle connection timeout (ms) |
+| `DB_CONNECT_TIMEOUT` | `5000` | Connection attempt timeout (ms) |
 
-## Logs
+## Database Backups
+
+Daily automated backups via cron. See [docs/backup-strategy.md](../docs/backup-strategy.md).
 
 ```bash
-# App logs
-docker-compose -f docker-compose.swarm.yml logs -f app
+# Quick manual backup
+./scripts/backup-db.sh
 
-# Swarm worker logs
-docker-compose -f docker-compose.swarm.yml logs -f swarm-worker
-
-# OpenClaw logs
-docker-compose -f docker-compose.swarm.yml logs -f openclaw
-
-# Agent0 logs
-docker-compose -f docker-compose.swarm.yml logs -f agent0
+# Setup cron (daily 3 AM)
+sudo crontab -e -u postgres
+# 0 3 * * * /var/www/hotels-vendors/scripts/backup-db.sh >> /var/log/hotels-vendors-backup.log 2>&1
 ```
 
-## Scaling
+## Operations
 
+### Logs
 ```bash
-# Scale swarm workers
-docker-compose -f docker-compose.swarm.yml up -d --scale swarm-worker=4
-
-# Restart single service
-docker-compose -f docker-compose.swarm.yml restart swarm-worker
+docker compose -f docker-compose.swarm.yml logs -f app
+docker compose -f docker-compose.swarm.yml logs -f swarm-worker
 ```
 
-## Troubleshooting
-
-### OpenClaw browser fails
+### Scaling Workers
 ```bash
-docker-compose -f docker-compose.swarm.yml exec openclaw playwright install chromium
+docker compose -f docker-compose.swarm.yml up -d --scale swarm-worker=4
 ```
 
-### Database connection issues
+### Rollback
 ```bash
-docker-compose -f docker-compose.swarm.yml exec postgres psql -U hotels_vendors -d hotels_vendors
+git log --oneline -5          # Find previous commit
+git checkout <commit-hash>    # Or revert via Docker rebuild
+docker compose -f docker-compose.swarm.yml up -d --build
 ```
 
-### Redis memory full
+### Health Check
 ```bash
-docker-compose -f docker-compose.swarm.yml exec redis redis-cli INFO memory
+curl https://www.hotelsvendors.com/api/health
 ```
+
+## SSL / HTTPS
+
+Certbot auto-renews via Docker volume. Verify:
+```bash
+docker compose -f docker-compose.swarm.yml exec certbot certbot renew --dry-run
+```
+
+---
+
+## Archived Strategies (Reference Only)
+
+> **Do not use these for new deployments.** They are preserved for historical context.
+
+### PM2 + Native (archived)
+- See `HOSTINGER-DEPLOY.md` — PM2 fork mode, bare-metal PostgreSQL/Redis
+- Drawback: No container isolation, manual dependency management, dev/prod drift
+
+### Hybrid Vercel + VPS (archived)
+- See `deploy/hybrid-config.md` — Vercel for frontend, VPS for API/LLM
+- Drawback: Auth token sharing complexity, CORS issues, split deployment surface
+
+### Docker Compose (dev only)
+- See `docker-compose.yml` — lightweight dev environment without swarm services
+- Use for local development only, not production

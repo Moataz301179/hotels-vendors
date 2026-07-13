@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { processInventorySync } from "@/lib/inventory/sync";
 import { success, error } from "@/lib/api-utils";
+import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 
 const InventoryWebhookSchema = z.object({
   tenantId: z.string().min(1),
@@ -24,6 +25,12 @@ const InventoryWebhookSchema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    // IP whitelisting — reject webhooks from untrusted sources
+    const clientIp = getClientIp(request);
+    if (!isWebhookIpAllowed(clientIp, "generic")) {
+      return error("Forbidden: untrusted webhook source", 403);
+    }
+
     const body = await request.json();
     const data = InventoryWebhookSchema.parse(body);
 

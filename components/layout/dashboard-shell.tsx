@@ -35,6 +35,8 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${
           desktopCollapsed ? "w-[72px]" : "w-[260px]"
         }`}
+        role="navigation"
+        aria-label="Dashboard navigation"
       >
         <PulseSidebar
           role={role}
@@ -50,7 +52,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="fixed left-0 top-0 z-50 h-full w-[280px] md:hidden">
+          <aside className="fixed left-0 top-0 z-50 h-full w-[280px] md:hidden" role="navigation" aria-label="Dashboard navigation">
             <PulseSidebar
               role={role}
               collapsed={false}
@@ -69,7 +71,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
             user={user}
             onMenuClick={() => setMobileOpen(true)}
           />
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <main id="main-content" className="flex-1 overflow-y-auto p-4 sm:p-6" role="main">
             {children}
           </main>
         </div>

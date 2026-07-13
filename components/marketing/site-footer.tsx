@@ -37,15 +37,15 @@ export function SiteFooter() {
               >
                 FRA
               </span>
-              <span
-                className="text-xs px-2 py-0.5 rounded-full border font-semibold"
-                style={{
-                  borderColor: "#c455ff44",
-                  color: "#c455ff",
-                }}
-              >
-                ISO 27001
-              </span>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full border font-semibold"
+              style={{
+                borderColor: "#c455ff44",
+                color: "#c455ff",
+              }}
+            >
+              AML/KYC
+            </span>
             </div>
           </div>
 
@@ -155,7 +155,7 @@ export function SiteFooter() {
               <ul className="flex flex-col gap-2">
                 <li>
                   <Link
-                    href="/about"
+                    href="/privacy"
                     className="text-white/45 hover:text-white transition-colors"
                   >
                     Privacy Policy
@@ -163,7 +163,7 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
-                    href="/about"
+                    href="/terms"
                     className="text-white/45 hover:text-white transition-colors"
                   >
                     Terms of Service
@@ -218,7 +218,7 @@ export function SiteFooter() {
             >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            ETA &middot; FRA &middot; ISO 27001 &middot; PCI DSS &middot; AML/KYC Compliant
+            ETA &middot; FRA &middot; AML/KYC Compliant &middot; Payments via PCI-DSS partners (Oliv, Paymob)
           </span>
         </div>
       </div>

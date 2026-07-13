@@ -253,7 +253,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3">
+      <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
         {navGroups.map((group) => (
           <div key={group.section} className="mb-5">
             <p className="px-3 mb-1.5 text-[10px] font-semibold text-white/20 uppercase tracking-[0.15em]">

@@ -69,6 +69,8 @@ function RegisterContent() {
     governorate: "",
     propertyType: "SINGLE" as PropertyType,
     numberOfProperties: "1",
+    marketingConsent: false,
+    termsAccepted: false,
   });
 
   const updateForm = (field: string, value: string) => {
@@ -96,6 +98,11 @@ function RegisterContent() {
       setLoading(false);
       return;
     }
+    if (!form.termsAccepted) {
+      setError("You must accept the Terms of Service and Privacy Policy");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/v1/auth/register", {
@@ -110,6 +117,8 @@ function RegisterContent() {
           city: form.city,
           governorate: form.governorate,
           accountType: "business",
+          marketingConsent: form.marketingConsent,
+          termsAccepted: form.termsAccepted,
         }),
       });
       const data = await res.json();
@@ -394,6 +403,36 @@ function RegisterContent() {
               </p>
             </div>
           )}
+
+          {/* Consent Checkboxes */}
+          <div className="space-y-3 pt-2">
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={form.termsAccepted}
+                onChange={(e) => updateForm("termsAccepted", e.target.checked ? "true" : "")}
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
+              />
+              <span className="text-[12px] text-white/40 leading-relaxed">
+                I agree to the{" "}
+                <Link href="/terms" className="text-[#39ff7e] hover:opacity-80 underline underline-offset-2">Terms of Service</Link>
+                {" "}and{" "}
+                <Link href="/privacy" className="text-[#39ff7e] hover:opacity-80 underline underline-offset-2">Privacy Policy</Link>
+                <span className="text-red-400 ml-0.5">*</span>
+              </span>
+            </label>
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={form.marketingConsent}
+                onChange={(e) => updateForm("marketingConsent", e.target.checked ? "true" : "")}
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
+              />
+              <span className="text-[12px] text-white/40 leading-relaxed">
+                I agree to receive marketing communications about products, services, and promotions. You can withdraw consent at any time.
+              </span>
+            </label>
+          </div>
 
           {/* Submit */}
           <button

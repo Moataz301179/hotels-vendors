@@ -3,10 +3,14 @@ import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, passwordResetTemplate } from "@/lib/notifications/email";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
+}
+
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
 }
 
 export const POST = apiRoute(async (request: NextRequest) => {
@@ -32,19 +36,22 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return success({ message: "If an account exists, a password reset email has been sent." });
   }
 
-  // Delete any existing tokens for this email
-  await prisma.passwordResetToken.deleteMany({
-    where: { email: user.email },
-  });
-
   const token = generateToken();
-  await prisma.passwordResetToken.create({
-    data: {
-      email: user.email,
-      token,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    },
-  });
+  const tokenHash = hashToken(token);
+
+  // Wrap token deletion + creation in a transaction to prevent race conditions
+  await prisma.$transaction([
+    prisma.passwordResetToken.deleteMany({
+      where: { email: user.email },
+    }),
+    prisma.passwordResetToken.create({
+      data: {
+        email: user.email,
+        token: tokenHash,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    }),
+  ]);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hotels-vendors.com";
 

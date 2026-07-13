@@ -1,16 +1,20 @@
 /**
- * Paymob Payment Gateway Integration
+ * Paymob Payment Gateway — Canonical Adapter
  * Hotels Vendors Fintech Layer - Egyptian Market
  *
- * Paymob is Egypt's leading digital payment gateway.
- * This adapter handles payment frame initialization, status checks, and secure HMAC webhook signature verification.
+ * SINGLE source of truth for all Paymob integrations:
+ * - Authentication, order creation, payment key generation, iframe URL
+ * - HMAC-SHA512 webhook signature verification
+ * - Marketplace escrow deposit & dual-approver token release
+ * - Deposit payment creation (Smart Fix A)
+ *
+ * Consolidated from: lib/payments/paymob.ts, lib/payments/paymob-escrow.ts, lib/payments/paymob/index.ts
  *
  * Docs: https://docs.paymob.com/docs
- * Sandbox: https://accept.paymob.com
- * Production: https://accept.paymob.com
  */
 
 import * as crypto from "crypto";
+import { prisma } from "@/lib/prisma";
 
 // ============================================================================
 // 1. CONFIGURATION & ENVIRONMENT
@@ -150,7 +154,7 @@ export interface PaymobTransactionStatusResponse {
   is_refund: boolean;
   capture_method: string;
   owner: number;
-  parent_transaction: number;
+  parent_transaction: number | null;
   created_at: string;
   source_data: {
     type: string;
@@ -178,10 +182,15 @@ export interface PaymobWebhookPayload {
     is_standalone_payment: boolean;
     is_voided: boolean;
     is_refund: boolean;
+    is_3d_secure?: boolean;
     capture_method: string;
     owner: number;
-    parent_transaction: number;
+    parent_transaction: number | null;
     created_at: string;
+    currency?: string;
+    error_occured?: boolean;
+    has_parent_transaction?: boolean;
+    integration_id?: number;
     source_data: {
       type: string;
       pan: string;
@@ -484,8 +493,367 @@ function _simulateLatency(ms: number): Promise<void> {
 }
 
 // ============================================================================
+// 6B. DEPOSIT PAYMENT (Smart Fix A — 20% deposit collection)
+// ============================================================================
+
+export interface DepositRequest {
+  orderId: string;
+  amountCents: number;
+  customerEmail: string;
+  customerPhone?: string;
+  customerFirstName: string;
+  customerLastName: string;
+}
+
+export async function createDepositPayment(request: DepositRequest): Promise<{
+  paymentUrl: string;
+  paymobOrderId: number;
+}> {
+  const authToken = await authenticatePaymob();
+  const order = await createPaymobOrder(authToken, {
+    delivery_needed: false,
+    amount_cents: request.amountCents,
+    currency: "EGP",
+    merchant_order_id: request.orderId,
+    items: [],
+    shipping_data: {
+      first_name: request.customerFirstName,
+      last_name: request.customerLastName,
+      email: request.customerEmail,
+      phone_number: request.customerPhone || "NA",
+      apartment: "NA",
+      floor: "NA",
+      street: "NA",
+      building: "NA",
+      city: "Cairo",
+      country: "EG",
+      state: "Cairo",
+      postal_code: "NA",
+    },
+  });
+  const paymentKey = await requestPaymobPaymentKey(authToken, {
+    amount_cents: request.amountCents,
+    expiration: 3600,
+    order_id: order.id,
+    currency: "EGP",
+    billing_data: {
+      first_name: request.customerFirstName,
+      last_name: request.customerLastName,
+      email: request.customerEmail,
+      phone_number: request.customerPhone || "NA",
+      apartment: "NA",
+      floor: "NA",
+      street: "NA",
+      building: "NA",
+      city: "Cairo",
+      country: "EG",
+      state: "Cairo",
+      postal_code: "NA",
+    },
+    lock_order_when_paid: true,
+  });
+  const paymentUrl = getPaymobIframeUrl(paymentKey);
+  return { paymentUrl, paymobOrderId: order.id };
+}
+
+// ============================================================================
+// 6C. MARKETPLACE ESCROW (Dual-approver token release)
+// ============================================================================
+
+/** Backward-compatible alias — maps to authenticatePaymob */
+export const getAuthToken = authenticatePaymob;
+
+/** Backward-compatible alias — maps to requestPaymobPaymentKey */
+export const generatePaymentKey = requestPaymobPaymentKey;
+
+export interface EscrowInvoice {
+  invoiceId: string;
+  invoiceNumber: string;
+  amount: number;
+  hotelId: string;
+  supplierId: string;
+  hotelName: string;
+  supplierName: string;
+  dueDate?: Date | null;
+  etaUuid?: string | null;
+  tenantId: string;
+}
+
+export interface EscrowCreateResult {
+  paymobOrderId: number;
+  paymentUrl: string;
+  escrowReference: string;
+}
+
+export async function createEscrowDeposit(invoice: EscrowInvoice): Promise<EscrowCreateResult> {
+  const authToken = await authenticatePaymob();
+  const amountCents = Math.round(invoice.amount * 100);
+
+  const order = await createPaymobOrder(authToken, {
+    delivery_needed: false,
+    amount_cents: amountCents,
+    currency: "EGP",
+    merchant_order_id: `ESCROW-${invoice.invoiceId}-${Date.now()}`,
+    items: [
+      {
+        name: `Invoice ${invoice.invoiceNumber}`,
+        amount_cents: amountCents,
+        quantity: 1,
+        description: `HotelsVendors escrow: ${invoice.hotelName} → ${invoice.supplierName}`,
+      },
+    ],
+    shipping_data: {
+      first_name: invoice.hotelName,
+      last_name: "HotelsVendors",
+      email: "escrow@hotelsvendors.com",
+      phone_number: "NA",
+      apartment: "NA",
+      floor: "NA",
+      street: "NA",
+      building: "NA",
+      city: "Cairo",
+      country: "EG",
+      state: "Cairo",
+      postal_code: "NA",
+    },
+  });
+
+  const escrowReference = `HV-ESC-${invoice.invoiceId}-${order.id}`;
+
+  await prisma.payment.create({
+    data: {
+      paymentNumber: `PAY-${Date.now()}`,
+      amount: invoice.amount,
+      currency: "EGP",
+      method: "ESCROW",
+      status: "PENDING",
+      referenceCode: escrowReference,
+      invoiceId: invoice.invoiceId,
+      hotelId: invoice.hotelId,
+      tenantId: invoice.tenantId,
+      metadata: JSON.stringify({
+        paymobOrderId: order.id,
+        dueDate: invoice.dueDate?.toISOString(),
+        etaUuid: invoice.etaUuid,
+        supplierId: invoice.supplierId,
+        type: "ESCROW_DEPOSIT",
+      }),
+    },
+  });
+
+  const paymentKey = await requestPaymobPaymentKey(authToken, {
+    amount_cents: amountCents,
+    expiration: 86400 * 30,
+    order_id: order.id,
+    currency: "EGP",
+    billing_data: {
+      first_name: invoice.hotelName,
+      last_name: "HotelsVendors",
+      email: "escrow@hotelsvendors.com",
+      phone_number: "NA",
+      apartment: "NA",
+      floor: "NA",
+      street: "NA",
+      building: "NA",
+      city: "Cairo",
+      country: "EG",
+      state: "Cairo",
+      postal_code: "NA",
+    },
+    lock_order_when_paid: true,
+  });
+
+  const iframeBase = process.env.PAYMOB_IFRAME_BASE_URL || "https://accept.paymob.com";
+  const iframeId = PAYMOB_IFRAME_ID;
+  const paymentUrl = `${iframeBase}/api/acceptance/iframes/${iframeId}?payment_token=${paymentKey}`;
+
+  return { paymobOrderId: order.id, paymentUrl, escrowReference };
+}
+
+export interface TokenReleaseInput {
+  invoiceId: string;
+  releaseType: "DUE_DATE" | "EARLY_PAYMENT" | "MANUAL";
+  funderId?: string;
+  approverId: string;
+  coApproverId: string;
+}
+
+export async function releaseEscrowToken(input: TokenReleaseInput): Promise<{ released: boolean; message: string }> {
+  const payment = await prisma.payment.findFirst({
+    where: { invoiceId: input.invoiceId, method: "ESCROW", status: "PENDING" },
+  });
+
+  if (!payment) {
+    return { released: false, message: "No pending escrow payment found for this invoice" };
+  }
+
+  if (!input.approverId || !input.coApproverId) {
+    return { released: false, message: "Escrow release requires two distinct approvers" };
+  }
+
+  if (input.approverId === input.coApproverId) {
+    return { released: false, message: "Escrow release requires two distinct approvers — self-approval blocked" };
+  }
+
+  const [approver, coApprover] = await Promise.all([
+    prisma.user.findUnique({ where: { id: input.approverId }, select: { id: true, platformRole: true } }),
+    prisma.user.findUnique({ where: { id: input.coApproverId }, select: { id: true, platformRole: true } }),
+  ]);
+
+  if (!approver || !coApprover) {
+    return { released: false, message: "One or both approvers not found" };
+  }
+
+  const metadata = JSON.parse(payment.metadata || "{}");
+  const paymobOrderId = metadata.paymobOrderId;
+
+  if (input.releaseType === "DUE_DATE") {
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: input.invoiceId },
+      select: { dueDate: true },
+    });
+    if (invoice?.dueDate && new Date() < new Date(invoice.dueDate)) {
+      return {
+        released: false,
+        message: `Due date not yet reached. Invoice due: ${invoice.dueDate.toISOString().split("T")[0]}. Release available after maturity.`,
+      };
+    }
+  }
+
+  const authToken = await authenticatePaymob();
+
+  if (input.releaseType === "EARLY_PAYMENT" && input.funderId) {
+    await prisma.factoringRequest.create({
+      data: {
+        invoiceId: input.invoiceId,
+        factoringCompanyId: input.funderId,
+        requestedAmount: Number(payment.amount),
+        status: "DISBURSED",
+        disbursedAt: new Date(),
+        tenantId: payment.tenantId,
+      },
+    });
+  }
+
+  // Paymob payout instruction
+  const payoutRes = await paymobFetch<{ id: number; status: string; amount_cents: number; recipient: string }>(
+    "/api/acceptance/payouts",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        auth_token: authToken,
+        amount_cents: Math.round(Number(payment.amount) * 100),
+        currency: "EGP",
+        order_id: paymobOrderId,
+        merchant_order_id: `RELEASE-${input.invoiceId}-${Date.now()}`,
+      }),
+    }
+  );
+
+  await prisma.payment.update({
+    where: { id: payment.id },
+    data: {
+      status: "PAID",
+      paidAt: new Date(),
+      metadata: JSON.stringify({
+        ...metadata,
+        releasedAt: new Date().toISOString(),
+        releaseType: input.releaseType,
+        funderId: input.funderId || null,
+        approvedBy: input.approverId,
+        coApprovedBy: input.coApproverId,
+        payoutId: payoutRes.id,
+      }),
+    },
+  });
+
+  await prisma.invoice.update({
+    where: { id: input.invoiceId },
+    data: { paidDate: new Date() },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      entityType: "PAYMENT",
+      entityId: payment.id,
+      action: "ESCROW_RELEASED",
+      tenantId: payment.tenantId,
+      actorId: input.approverId,
+      actorRole: "ADMIN",
+      afterState: JSON.stringify({
+        releaseType: input.releaseType,
+        funderId: input.funderId || null,
+        approverId: input.approverId,
+        coApproverId: input.coApproverId,
+      }),
+    },
+  });
+
+  return {
+    released: true,
+    message: `EGP ${Number(payment.amount).toLocaleString()} released from escrow to supplier`,
+  };
+}
+
+export async function getEscrowStatus(invoiceId: string): Promise<{
+  funded: boolean;
+  released: boolean;
+  amount: number;
+  paymentUrl?: string;
+}> {
+  const payment = await prisma.payment.findFirst({
+    where: { invoiceId, method: "ESCROW" },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (!payment) {
+    return { funded: false, released: false, amount: 0 };
+  }
+
+  return {
+    funded: payment.status !== "PENDING",
+    released: payment.status === "PAID",
+    amount: Number(payment.amount),
+  };
+}
+
+// ============================================================================
 // 7. EXPORTS
 // ============================================================================
+
+/**
+ * Backward-compatible alias for verifyPaymobWebhook.
+ * Used by legacy paymob-callback route.
+ */
+export function verifyPaymobCallback(payload: Record<string, unknown>): boolean {
+  const obj = (payload.obj || payload) as Record<string, unknown>;
+  const hmacPayload: PaymobWebhookPayload = {
+    obj: {
+      id: obj.id as number,
+      pending: obj.pending as boolean,
+      amount_cents: obj.amount_cents as number,
+      success: obj.success as boolean,
+      is_auth: obj.is_auth as boolean,
+      is_capture: obj.is_capture as boolean,
+      is_refunded: obj.is_refunded as boolean,
+      is_standalone_payment: obj.is_standalone_payment as boolean,
+      is_voided: obj.is_voided as boolean,
+      is_refund: obj.is_refund as boolean,
+      capture_method: obj.capture_method as string,
+      owner: obj.owner as number,
+      parent_transaction: obj.parent_transaction as number,
+      created_at: obj.created_at as string,
+      source_data: obj.source_data as { type: string; pan: string; sub_type: string },
+      order: obj.order as { id: number; merchant_order_id: string },
+      refunded_amount_cents: obj.refunded_amount_cents as number,
+      captured_amount_cents: obj.captured_amount_cents as number,
+      data: (obj.data as Record<string, unknown>) || {},
+    },
+    type: "TRANSACTION",
+    hmac: (payload.hmac as string) || "",
+  };
+  return verifyPaymobWebhook(hmacPayload);
+}
 
 export const paymobAdapter = {
   authenticate: authenticatePaymob,
@@ -494,19 +862,9 @@ export const paymobAdapter = {
   getIframeUrl: getPaymobIframeUrl,
   getTransactionStatus: getPaymobTransactionStatus,
   initializePayment: initializePaymobPayment,
+  createDepositPayment,
+  createEscrowDeposit,
+  releaseEscrowToken,
+  getEscrowStatus,
   verifyWebhook: verifyPaymobWebhook,
-};
-
-export type {
-  PaymobAuthResponse,
-  PaymobOrderRequest,
-  PaymobOrderResponse,
-  PaymobPaymentKeyRequest,
-  PaymobPaymentKeyResponse,
-  PaymobIframeUrl,
-  PaymobTransactionStatusResponse,
-  PaymobWebhookPayload,
-  PaymobOrderItem,
-  PaymobShippingData,
-  PaymobBillingData,
 };

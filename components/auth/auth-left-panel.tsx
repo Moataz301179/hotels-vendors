@@ -22,7 +22,7 @@ export function AuthLeftPanel() {
           financing — backed by Egyptian fintech rails.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          {["PCI DSS", "ETA Compliant", "SOC 2"].map((badge) => (
+          {["PCI-DSS Partners", "ETA Compliant", "AML/KYC"].map((badge) => (
             <span
               key={badge}
               className="text-[11px] font-medium px-3 py-1.5 rounded-full border"

@@ -5,12 +5,29 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { createHash } from "crypto";
 import { verifySession, getSessionToken } from "@/lib/session";
 import { initSentry, captureException } from "./sentry";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
 import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } from "@/lib/redis";
 import { rateLimitResponse, type RateLimitTier } from "@/lib/security/rate-limiter";
 import { logAuthFailure, logRateLimit } from "@/lib/security/security-logger";
+
+/**
+ * Hash an IP address with a daily-rotating salt for audit log privacy.
+ * Returns the last octet for IPv4 (e.g., "192.168.1.xxx") or a truncated hash.
+ */
+function hashIpAddress(ip: string | null): string | null {
+  if (!ip || ip === "unknown") return null;
+  const salt = new Date().toISOString().slice(0, 10); // Daily rotation
+  const hash = createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 16);
+  // For IPv4, mask last octet
+  const parts = ip.split(".");
+  if (parts.length === 4) {
+    return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`;
+  }
+  return `hashed:${hash}`;
+}
 
 // ─────────────────────────────────────────
 // 1. TENANT ISOLATION
@@ -168,7 +185,10 @@ export async function audit(
   }
 ): Promise<void> {
   try {
-    await appendAuditEntry(params);
+    await appendAuditEntry({
+      ...params,
+      ipAddress: hashIpAddress(params.ipAddress ?? null),
+    });
   } catch {
     // Audit failure should not break the request, but log it somewhere
      

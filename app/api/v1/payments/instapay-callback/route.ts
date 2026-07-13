@@ -54,20 +54,19 @@ export const POST = apiRoute(async (request: NextRequest) => {
     }
   }
 
-  await prisma.auditLog.create({
-    data: {
-      tenantId: tx.tenantId,
-      entityType: "PaymentTransaction",
-      entityId: tx.id,
-      action: isCompleted ? "INSTAPAY_TRANSFER_COMPLETED" : "INSTAPAY_TRANSFER_FAILED",
-      actorId: "instapay",
-      actorRole: "SYSTEM",
-      afterState: JSON.stringify({
-        transactionId,
-        eventType,
-        amount,
-        status: newStatus,
-      }),
+  const { appendAuditEntry: appendAuditEntryInstapay } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntryInstapay({
+    tenantId: tx.tenantId,
+    entityType: "PaymentTransaction",
+    entityId: tx.id,
+    action: isCompleted ? "INSTAPAY_TRANSFER_COMPLETED" : "INSTAPAY_TRANSFER_FAILED",
+    actorId: "instapay",
+    actorRole: "SYSTEM",
+    afterState: {
+      transactionId,
+      eventType,
+      amount,
+      status: newStatus,
     },
   });
 

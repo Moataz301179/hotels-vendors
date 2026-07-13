@@ -111,13 +111,50 @@ body {
   font-weight: 400;
 }
 ::selection { background: var(--accent-muted); color: #fff; }
+
+/* ── Focus Visible — Consistent keyboard focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--accent-base);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-base);
+  outline-offset: 2px;
+}
+
+/* ── Screen-reader only (visually hidden, accessible to SR) ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-on-scroll { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .neon-card:hover { transform: none !important; }
+  .surface-card:hover { transform: none !important; }
+  .hover-lift:hover { transform: none !important; }
+  .marquee-content { animation: none !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════════

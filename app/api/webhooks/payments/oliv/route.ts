@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, error, success, audit } from "@/lib/api-utils";
 import { handleOlivWebhook } from "@/lib/payments/oliv";
+import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 
 /**
  * Oliv Webhook Receiver — Phase 2 Placeholder
@@ -14,6 +15,12 @@ import { handleOlivWebhook } from "@/lib/payments/oliv";
  */
 
 export const POST = apiRoute(async (request: NextRequest) => {
+  // IP whitelisting — reject webhooks from untrusted sources
+  const clientIp = getClientIp(request);
+  if (!isWebhookIpAllowed(clientIp, "oliv")) {
+    return error("Forbidden: untrusted webhook source", 403);
+  }
+
   const body = await request.json();
 
   // Phase 2: Verify Oliv webhook signature
@@ -24,11 +31,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const { type, orderId, status, amount } = body;
 
-  // Log webhook for audit
+  // Log webhook for audit (external webhooks have no tenant context)
   await audit({
     entityType: "WEBHOOK",
     entityId: orderId || "unknown",
     action: `OLIV_${type?.toUpperCase() || "UNKNOWN"}`,
+    tenantId: "system",
     afterState: body,
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),

@@ -148,17 +148,16 @@ export function createEtaWorker(): Worker {
         },
       });
 
-      // Audit
-      await prisma.auditLog.create({
-        data: {
-          tenantId,
-          entityType: "INVOICE",
-          entityId: invoiceId,
-          action: "ETA_SUBMIT",
-          actorId: userId,
-          actorRole: platformRole,
-          afterState: JSON.stringify({ etaUuid: result.uuid, status: "ACCEPTED" }),
-        },
+      // Audit (tamper-proof chain)
+      const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+      await appendAuditEntry({
+        tenantId,
+        entityType: "INVOICE",
+        entityId: invoiceId,
+        action: "ETA_SUBMIT",
+        actorId: userId,
+        actorRole: platformRole,
+        afterState: { etaUuid: result.uuid, status: "ACCEPTED" },
       });
 
       await recordSwarmEvent("eta_submitted", "INFO", {
@@ -199,15 +198,15 @@ export function createEtaDeadLetterWorker(): Worker {
         data: { etaStatus: "MANUAL_RESOLUTION" },
       });
 
-      await prisma.auditLog.create({
-        data: {
-          tenantId,
-          entityType: "INVOICE",
-          entityId: invoiceId,
-          action: "ETA_SUBMIT_DLQ",
-          actorId: "system",
-          afterState: JSON.stringify({ error: job.failedReason, attempts: job.attemptsMade }),
-        },
+      const { appendAuditEntry: appendAuditEntryDlq } = await import("@/lib/audit/tamper-proof");
+      await appendAuditEntryDlq({
+        tenantId,
+        entityType: "INVOICE",
+        entityId: invoiceId,
+        action: "ETA_SUBMIT_DLQ",
+        actorId: "system",
+        actorRole: "SYSTEM",
+        afterState: { error: job.failedReason, attempts: job.attemptsMade },
       });
 
       await recordSwarmEvent("eta_dlq", "ERROR", {

@@ -237,11 +237,19 @@ export const SupplierAuditCreateSchema = z.object({
 
 export const SupplierAuditUpdateSchema = SupplierAuditCreateSchema.partial();
 
+/* ── Password Strength ── */
+const passwordStrength = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least 1 number");
+
 /* ── Auth Schemas ── */
 export const RegisterSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Valid email is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: passwordStrength,
   hotelId: z.string().cuid().optional(),
   role: z.nativeEnum(UserRole).optional(),
 });
@@ -250,7 +258,7 @@ export const BusinessRegisterSchema = z.object({
   type: z.enum(["hotel", "supplier", "factoring", "shipping"]),
   name: z.string().min(2),
   email: z.string().email(),
-  password: z.string().min(6),
+  password: passwordStrength,
   phone: z.string().optional(),
   city: z.string().optional(),
   governorate: z.string().optional(),
@@ -260,6 +268,8 @@ export const BusinessRegisterSchema = z.object({
   crDocumentUrl: z.string().optional(),
   taxDocumentUrl: z.string().optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
+  marketingConsent: z.boolean().default(false),
+  termsAccepted: z.literal(true, { error_map: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
 }).superRefine((data, ctx) => {
   if (data.accountType === "business") {
     if (!data.taxId) {

@@ -9,11 +9,25 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { csrfMiddleware } from "@/lib/security/csrf";
 
 const SESSION_COOKIE = "hv_session";
+const CSRF_COOKIE = "hv_csrf";
+
+const _sessionSecret = process.env.SESSION_SECRET;
+if (!_sessionSecret) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "FATAL: SESSION_SECRET environment variable is required in production. " +
+      "Generate one with: openssl rand -hex 32"
+    );
+  }
+  console.warn("[Auth] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
+}
 const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || (process.env.NODE_ENV === "production" ? "" : "dev-secret-change-in-production")
+  _sessionSecret || "dev-secret-change-in-production"
 );
+console.log(`[Auth] Startup validation: SESSION_SECRET ${_sessionSecret ? "loaded" : "using FALLBACK (dev only)"}`);
 
 /* ── Route Configuration ── */
 
@@ -205,6 +219,15 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-tenant-id", session.tenantId);
     requestHeaders.set("x-platform-role", session.platformRole);
     requestHeaders.set("x-session-token", token);
+
+    // CSRF protection for state-changing API routes (skip auth endpoints and webhooks)
+    const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
+    const isExemptPath = pathname.startsWith("/api/v1/auth/") || pathname.startsWith("/api/webhooks");
+    if (isStateChanging && !isExemptPath) {
+      const csrfResult = csrfMiddleware(request);
+      if (csrfResult) return addSecurityHeaders(csrfResult);
+    }
+
     return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
   }
 
@@ -270,7 +293,21 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
+  const response = addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
+
+  // Set CSRF cookie for page routes (non-API) so frontend JS can read it
+  if (!isApiPath(pathname) && !request.cookies.get(CSRF_COOKIE)?.value) {
+    const { generateCsrfToken } = await import("@/lib/security/csrf");
+    response.cookies.set(CSRF_COOKIE, generateCsrfToken(), {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60,
+    });
+  }
+
+  return response;
 }
 
 /* ── Matcher ── */

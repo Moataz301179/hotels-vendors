@@ -13,6 +13,11 @@ import { sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { ref } from "@/lib/utils";
 
+/**
+ * ⚠️  DEVELOPMENT ONLY — All data below is obviously fake test data.
+ *     Do NOT use in production. Do NOT commit real PII.
+ */
+
 export async function isSeeded() {
   const rows = await db.select({ n: sql<number>`count(*)::int` }).from(users);
   return (rows[0]?.n ?? 0) > 0;
@@ -30,48 +35,48 @@ export async function seedDatabase() {
   const [nileRitz, steigen, marsaHotel] = await db
     .insert(organizations)
     .values([
-      { name: "Nile Ritz Collection", type: "hotel", city: "Cairo", description: "5-star luxury property on the Nile Corniche.", creditLimit: 500000000, creditUsed: 310000000, walletBalance: 42000000, rating: "4.9" },
-      { name: "Steigen Resort Sahl Hasheesh", type: "hotel", city: "Hurghada", description: "Red Sea beachfront resort, 420 keys.", creditLimit: 350000000, creditUsed: 120000000, walletBalance: 18500000, rating: "4.7" },
-      { name: "Marsa Boutique Hotels", type: "hotel", city: "El Gouna", description: "Design-led boutique group, 6 properties.", creditLimit: 200000000, creditUsed: 55000000, walletBalance: 9800000, rating: "4.6" },
+      { name: "Hotel Test Alpha (Dev)", type: "hotel", city: "Cairo", description: "Test hotel for development.", creditLimit: 500000000, creditUsed: 310000000, walletBalance: 42000000, rating: "4.9" },
+      { name: "Hotel Test Beta (Dev)", type: "hotel", city: "Hurghada", description: "Test hotel for development.", creditLimit: 350000000, creditUsed: 120000000, walletBalance: 18500000, rating: "4.7" },
+      { name: "Hotel Test Gamma (Dev)", type: "hotel", city: "El Gouna", description: "Test hotel for development.", creditLimit: 200000000, creditUsed: 55000000, walletBalance: 9800000, rating: "4.6" },
     ])
     .returning();
 
   const [freshFields, linenCo, aquaPure, chefSupply, cleanPro, amenityWorld, engiParts, frontDesk] = await db
     .insert(organizations)
     .values([
-      { name: "FreshFields Produce", type: "supplier", city: "Giza", description: "Farm-direct fruit, vegetables & dairy.", walletBalance: 61000000, rating: "4.8" },
-      { name: "Cairo Linen House", type: "supplier", city: "Cairo", description: "Hospitality linens, towels & uniforms.", walletBalance: 33000000, rating: "4.7" },
-      { name: "AquaPure Beverages", type: "supplier", city: "Alexandria", description: "Bottled water, juices & minibar.", walletBalance: 27000000, rating: "4.6" },
-      { name: "Chef's Equipment Egypt", type: "supplier", city: "6th of October", description: "Commercial kitchen & MRO equipment.", walletBalance: 44000000, rating: "4.9" },
-      { name: "CleanPro Chemicals", type: "supplier", city: "Cairo", description: "Housekeeping, sanitation and laundry chemicals.", walletBalance: 18000000, rating: "4.7" },
-      { name: "Amenity World Egypt", type: "supplier", city: "Cairo", description: "Guest room amenities, toiletries, slippers.", walletBalance: 22000000, rating: "4.5" },
-      { name: "MRO Engineering Supply", type: "supplier", city: "Cairo", description: "Engineering, HVAC, lighting and maintenance parts.", walletBalance: 19000000, rating: "4.6" },
-      { name: "Front Office Pro", type: "supplier", city: "Cairo", description: "Front desk consumables, printing and guest stationery.", walletBalance: 12000000, rating: "4.5" },
+      { name: "Supplier Test A (Dev)", type: "supplier", city: "Giza", description: "Test supplier for development.", walletBalance: 61000000, rating: "4.8" },
+      { name: "Supplier Test B (Dev)", type: "supplier", city: "Cairo", description: "Test supplier for development.", walletBalance: 33000000, rating: "4.7" },
+      { name: "Supplier Test C (Dev)", type: "supplier", city: "Alexandria", description: "Test supplier for development.", walletBalance: 27000000, rating: "4.6" },
+      { name: "Supplier Test D (Dev)", type: "supplier", city: "6th of October", description: "Test supplier for development.", walletBalance: 44000000, rating: "4.9" },
+      { name: "Supplier Test E (Dev)", type: "supplier", city: "Cairo", description: "Test supplier for development.", walletBalance: 18000000, rating: "4.7" },
+      { name: "Supplier Test F (Dev)", type: "supplier", city: "Cairo", description: "Test supplier for development.", walletBalance: 22000000, rating: "4.5" },
+      { name: "Supplier Test G (Dev)", type: "supplier", city: "Cairo", description: "Test supplier for development.", walletBalance: 19000000, rating: "4.6" },
+      { name: "Supplier Test H (Dev)", type: "supplier", city: "Cairo", description: "Test supplier for development.", walletBalance: 12000000, rating: "4.5" },
     ])
     .returning();
 
   const [deltaCap, sarwaFund] = await db
     .insert(organizations)
     .values([
-      { name: "Delta Capital Partners", type: "funder", city: "Cairo", description: "Private credit fund, EGP 1.2B AUM.", walletBalance: 1200000000, rating: "5.0" },
-      { name: "Sarwa Receivables Fund", type: "funder", city: "Cairo", description: "Specialist SME receivables financing.", walletBalance: 640000000, rating: "4.9" },
+      { name: "Funder Test A (Dev)", type: "funder", city: "Cairo", description: "Test funder for development.", walletBalance: 1200000000, rating: "5.0" },
+      { name: "Funder Test B (Dev)", type: "funder", city: "Cairo", description: "Test funder for development.", walletBalance: 640000000, rating: "4.9" },
     ])
     .returning();
 
   const [swiftLog] = await db
     .insert(organizations)
     .values([
-      { name: "SwiftLog Distribution", type: "carrier", city: "Cairo", description: "Temperature-controlled B2B logistics.", walletBalance: 14000000, rating: "4.7" },
+      { name: "Carrier Test A (Dev)", type: "carrier", city: "Cairo", description: "Test carrier for development.", walletBalance: 14000000, rating: "4.7" },
     ])
     .returning();
 
   await db.insert(organizations).values([{ name: "HotelsVendors", type: "platform", city: "Cairo", walletBalance: 0 }]);
 
   await db.insert(users).values([
-    { orgId: nileRitz.id, name: "Layla Hassan", email: "hotel@hotelsvendors.demo", passwordHash: pw, role: "admin" },
-    { orgId: freshFields.id, name: "Omar Farid", email: "supplier@hotelsvendors.demo", passwordHash: pw, role: "admin" },
-    { orgId: deltaCap.id, name: "Nour El-Din", email: "funder@hotelsvendors.demo", passwordHash: pw, role: "admin" },
-    { orgId: swiftLog.id, name: "Karim Adel", email: "carrier@hotelsvendors.demo", passwordHash: pw, role: "admin" },
+    { orgId: nileRitz.id, name: "Hotel Test User", email: "hotel-test@test.hotelsvendors.demo", passwordHash: pw, role: "admin" },
+    { orgId: freshFields.id, name: "Supplier Test User", email: "supplier-test@test.hotelsvendors.demo", passwordHash: pw, role: "admin" },
+    { orgId: deltaCap.id, name: "Factoring Test User", email: "funder-test@test.hotelsvendors.demo", passwordHash: pw, role: "admin" },
+    { orgId: swiftLog.id, name: "Logistics Test User", email: "carrier-test@test.hotelsvendors.demo", passwordHash: pw, role: "admin" },
   ]);
 
   // Realistic Egyptian hospitality procurement catalog. Prices in piastres (EGP * 100)

@@ -211,7 +211,7 @@ export default function MarketingPage() {
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#39ff7e33", boxShadow: "0 0 40px 2px #39ff7e18" }}>
-                <img src="https://images.unsplash.com/photo-1646645409452-866ad2fb64e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="HotelsVendors" className="w-full h-72 object-cover opacity-70" width={1080} height={400} />
+                <img src="https://images.unsplash.com/photo-1646645409452-866ad2fb64e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Hotel procurement dashboard showing AI-powered spend forecasting and vendor management" className="w-full h-72 object-cover opacity-70" width={1080} height={400} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-[#12121a]/40 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "#39ff7e44", background: "rgba(7,9,15,0.75)" }}>
                   <div className="text-xs font-semibold mb-1" style={{ color: "#39ff7e" }}>app.hotelsvendors.com/hotel/dashboard</div>
@@ -241,7 +241,7 @@ export default function MarketingPage() {
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#ff7e1a33", boxShadow: "0 0 40px 2px #ff7e1a18" }}>
-                <img src="https://images.unsplash.com/photo-1690935986319-c11e6cae84f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="INVO" className="w-full h-72 object-cover opacity-70" width={1080} height={400} />
+                <img src="https://images.unsplash.com/photo-1690935986319-c11e6cae84f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="INVO vendor marketplace showing supplier catalog aggregation and hotel buyer ordering" className="w-full h-72 object-cover opacity-70" width={1080} height={400} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-[#12121a]/40 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "#ff7e1a44", background: "rgba(7,9,15,0.75)" }}>
                   <div className="text-xs font-semibold mb-1" style={{ color: "#ff7e1a" }}>app.hotelsvendors.com/invo/marketplace</div>
@@ -574,7 +574,7 @@ export default function MarketingPage() {
               { color: "#39ff7e", label: "ETA Compliant" },
               { color: "#ff7e1a", label: "FRA Registered" },
               { color: "#c455ff", label: "ISO 27001" },
-              { color: "#39ff7e", label: "PCI DSS" },
+              { color: "#39ff7e", label: "PCI-DSS Partners" },
               { color: "#ff7e1a", label: "AML / KYC" },
               { color: "#c455ff", label: "GDPR Aligned" },
             ].map((b) => (

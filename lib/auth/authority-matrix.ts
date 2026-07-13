@@ -239,10 +239,14 @@ export async function evaluateAuthority(
   // 2. Re-evaluate hotel risk (fresh assessment)
   const riskAssessment = await assessRisk(order.hotelId, ctx.tenantId);
 
-  // 3. Load active rules (global + tenant-specific)
+  // 3. Load active rules (tenant-specific + global where tenantId is null)
   const dbRules = await prisma.authorityRule.findMany({
     where: {
       isActive: true,
+      OR: [
+        { tenantId: ctx.tenantId },
+        { tenantId: null },
+      ],
       minValue: { lte: order.total },
       maxValue: { gte: order.total },
     },
@@ -426,16 +430,15 @@ export async function recordApproval(
     data: { status: newStatus },
   });
 
-  // Audit log
-  await prisma.auditLog.create({
-    data: {
-      entityType: "ORDER",
-      entityId: orderId,
-      action: `ORDER_${action}`,
-      tenantId,
-      actorId: approverId,
-      afterState: JSON.stringify({ status: newStatus, action }),
-    },
+  // Audit log (tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    entityType: "ORDER",
+    entityId: orderId,
+    action: `ORDER_${action}`,
+    tenantId,
+    actorId: approverId,
+    afterState: { status: newStatus, action },
   });
 }
 
@@ -606,20 +609,19 @@ export async function setPaymentGuarantee(
     },
   });
 
-  // Audit log
-  await prisma.auditLog.create({
-    data: {
-      entityType: "ORDER",
-      entityId: input.orderId,
-      action: "PAYMENT_GUARANTEE_SET",
-      tenantId: input.tenantId,
-      actorId: input.verifiedBy,
-      afterState: JSON.stringify({
-        method: input.method,
-        etaValidated: input.etaValidated,
-        etaUuid: input.etaUuid,
-        factoringRequestId: input.factoringRequestId,
-      }),
+  // Audit log (tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    entityType: "ORDER",
+    entityId: input.orderId,
+    action: "PAYMENT_GUARANTEE_SET",
+    tenantId: input.tenantId,
+    actorId: input.verifiedBy,
+    afterState: {
+      method: input.method,
+      etaValidated: input.etaValidated,
+      etaUuid: input.etaUuid,
+      factoringRequestId: input.factoringRequestId,
     },
   });
 }

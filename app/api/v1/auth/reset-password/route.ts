@@ -1,9 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
-import { createSession } from "@/lib/session";
+import { createSession, revokeToken } from "@/lib/session";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { sendEmail, passwordResetConfirmationTemplate } from "@/lib/notifications/email";
+import { createHash } from "crypto";
+
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
@@ -13,12 +18,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Reset token is required", 400);
   }
 
-  if (!password || typeof password !== "string" || password.length < 6) {
-    return error("Password must be at least 6 characters", 400);
+  if (!password || typeof password !== "string" || password.length < 8) {
+    return error("Password must be at least 8 characters", 400);
   }
 
+  // Hash the incoming token to match stored hash
+  const tokenHash = hashToken(token);
+
   const resetToken = await prisma.passwordResetToken.findUnique({
-    where: { token },
+    where: { token: tokenHash },
   });
 
   if (!resetToken) {
@@ -40,12 +48,17 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const passwordHash = await hashPassword(password);
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { passwordHash },
-  });
+  // Wrap password update + token deletion in a transaction
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    }),
+    prisma.passwordResetToken.delete({ where: { id: resetToken.id } }),
+  ]);
 
-  await prisma.passwordResetToken.delete({ where: { id: resetToken.id } });
+  // Revoke all existing sessions for this user (force re-login everywhere)
+  await revokeToken(`user:${user.id}:all`);
 
   // Send confirmation email
   try {
@@ -66,7 +79,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   return success({
     message: "Password reset successfully",
-    token: sessionToken,
     user: { id: user.id, email: user.email, name: user.name, platformRole: user.platformRole },
   });
 });

@@ -1,11 +1,16 @@
 /**
  * Simplified LLM Wrapper — Extracted from lib/swarm/model-router.ts
  * Provides executeLLM for critical path modules without swarm dependency.
- * 
+ *
  * NOTE: This is a reduced version. The full swarm model-router with
  * circuit breaker, health tracking, and multi-provider orchestration
  * is archived in archive/swarm/ for future reference.
+ *
+ * AI Governance: PII is scrubbed before sending to external providers (Groq, xAI).
+ * Ollama (local) does NOT require PII scrubbing.
  */
+
+import { scrubMessages } from "@/lib/ai/pii-scrubber";
 
 export interface LLMMessage {
   role: "system" | "user" | "assistant";
@@ -63,6 +68,12 @@ export async function executeLLM(
   const groqKey = process.env.GROQ_API_KEY;
   const xaiKey = process.env.XAI_API_KEY;
 
+  // Scrub PII before sending to external providers
+  const { messages: scrubbedMessages, piiFound, warning } = scrubMessages(messages);
+  if (piiFound) {
+    console.warn("[PII-GOVERNANCE]", warning);
+  }
+
   // Try Groq first (free tier, fast)
   if (groqKey) {
     try {
@@ -74,7 +85,7 @@ export async function executeLLM(
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
-          messages,
+          messages: scrubbedMessages,
           temperature,
           max_tokens: maxTokens,
           response_format: jsonMode ? { type: "json_object" } : undefined,
@@ -106,7 +117,7 @@ export async function executeLLM(
         },
         body: JSON.stringify({
           model: "grok-4-1-fast",
-          messages,
+          messages: scrubbedMessages,
           temperature,
           max_tokens: maxTokens,
           response_format: jsonMode ? { type: "json_object" } : undefined,

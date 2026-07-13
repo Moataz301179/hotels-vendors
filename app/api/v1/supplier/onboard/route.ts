@@ -117,20 +117,19 @@ export async function POST(request: NextRequest) {
       return newSupplier;
     });
 
-    // Create an audit log entry (outside transaction — non-critical)
-    await prisma.auditLog.create({
-      data: {
-        action: "SUPPLIER_ONBOARDING_SUBMITTED",
-        entityType: "Supplier",
-        entityId: supplier.id,
-        actorId: "system",
-        tenantId: tenant.id,
-        afterState: JSON.stringify({
-          supplierName: supplier.name,
-          email: supplier.email,
-          taxId: supplier.taxId,
-          city: supplier.city,
-        }),
+    // Create an audit log entry (tamper-proof chain, outside transaction — non-critical)
+    const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+    await appendAuditEntry({
+      action: "SUPPLIER_ONBOARDING_SUBMITTED",
+      entityType: "Supplier",
+      entityId: supplier.id,
+      actorId: "system",
+      tenantId: tenant.id,
+      afterState: {
+        supplierName: supplier.name,
+        email: supplier.email,
+        taxId: supplier.taxId,
+        city: supplier.city,
       },
     });
 

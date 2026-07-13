@@ -65,21 +65,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
     }
   }
 
-  // 5. Audit log
-  await prisma.auditLog.create({
-    data: {
-      tenantId: tx.tenantId,
-      entityType: "PaymentTransaction",
-      entityId: tx.id,
-      action: isPaid ? "FAWRY_PAYMENT_CONFIRMED" : "FAWRY_PAYMENT_FAILED",
-      actorId: "fawry",
-      actorRole: "SYSTEM",
-      afterState: JSON.stringify({
-        referenceNumber,
-        merchantRefNumber,
-        orderStatus: payload.orderStatus,
-        amount: payload.paymentAmount,
-      }),
+  // 5. Audit log (tamper-proof chain)
+  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+  await appendAuditEntry({
+    tenantId: tx.tenantId,
+    entityType: "PaymentTransaction",
+    entityId: tx.id,
+    action: isPaid ? "FAWRY_PAYMENT_CONFIRMED" : "FAWRY_PAYMENT_FAILED",
+    actorId: "fawry",
+    actorRole: "SYSTEM",
+    afterState: {
+      referenceNumber,
+      merchantRefNumber,
+      orderStatus: payload.orderStatus,
+      amount: payload.paymentAmount,
     },
   });
 

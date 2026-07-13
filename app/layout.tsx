@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
 import { LanguageProvider } from "@/lib/i18n/language-context";
+import { SkipLink } from "@/components/shared/skip-link";
+import { CookieConsentBanner } from "@/components/shared/cookie-consent-banner";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -205,11 +207,13 @@ export default function RootLayout({
           background: "var(--bg-canvas)",
         }}
       >
+        <SkipLink />
         <LanguageProvider>
           <NotificationProvider>
             <ThemeProvider>{children}</ThemeProvider>
           </NotificationProvider>
         </LanguageProvider>
+        <CookieConsentBanner />
       </body>
     </html>
   );

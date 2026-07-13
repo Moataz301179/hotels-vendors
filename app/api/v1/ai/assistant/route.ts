@@ -14,6 +14,7 @@ import { buildSystemPrompt, type AssistantRole } from "@/components/ai-assistant
 import { verifyTenantOwnership } from "@/lib/tenant/scope";
 import { z } from "zod";
 import { executeLLM } from "@/lib/swarm/model-router";
+import { sanitizeUserInput, sanitizeMessages } from "@/lib/ai/sanitization";
 
 const AskSchema = z.object({
   messages: z
@@ -154,15 +155,26 @@ export async function POST(request: NextRequest) {
       conversationId = await createConversation(auth.userId, auth.tenantId, role, title);
     }
 
-    // ── 6. Save user message ──
+    // ── 6. Sanitize user input (prompt injection defense) ──
+    const sanitization = sanitizeUserInput(question);
+    if (sanitization.injectionDetected) {
+      console.warn(
+        `[SECURITY] Prompt injection attempt detected from user ${auth.userId}:`,
+        sanitization.injectionPatterns
+      );
+    }
+    const safeQuestion = sanitization.sanitized;
+
+    // ── 7. Save user message (original, unsanitized for audit) ──
     await prisma.chatMessage.create({
       data: { conversationId, role: "user", content: question },
     });
 
-    // ── 7. Get history ──
-    const history = await getConversationHistory(conversationId);
+    // ── 8. Get history and sanitize ──
+    const rawHistory = await getConversationHistory(conversationId);
+    const { messages: history } = sanitizeMessages(rawHistory);
 
-    // ── 8. Try Ollama streaming ──
+    // ── 9. Try Ollama streaming ──
     const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
     const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
 
@@ -172,7 +184,7 @@ export async function POST(request: NextRequest) {
       const result = await streamText({
         model: ollama(ollamaModel),
         system: systemPrompt,
-        messages: [...history, { role: "user" as const, content: question }],
+        messages: [...history, { role: "user" as const, content: safeQuestion }],
         temperature: 0.4,
         maxTokens: 800,
         onFinish: async ({ text, usage }) => {
@@ -194,7 +206,7 @@ export async function POST(request: NextRequest) {
       console.error("[Workspace AI] Ollama streaming failed:", err);
 
       // ── Fallback: non-streaming ──
-      const fallbackResult = await executeLLM(systemPrompt, question, {
+      const fallbackResult = await executeLLM(systemPrompt, safeQuestion, {
         maxTokens: 800,
         temperature: 0.4,
         preferredModel: "xai",

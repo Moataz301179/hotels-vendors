@@ -77,6 +77,11 @@ model Tenant {
   invoSubscriptions   InvoSubscription[]
   documentProcessings DocumentProcessing[]
 
+  // ── [NEW] KYC/AML Compliance (Tenant-level) ──
+  kycLevel      Int       @default(0)
+  kycStatus     String    @default("NOT_STARTED")
+  kycVerifiedAt DateTime?
+
   // ── [NEW] Tenant isolation for AgentRun + SwarmJob ──
   agentRuns           AgentRun[]
   swarmJobs           SwarmJob[]
@@ -292,11 +297,22 @@ model User {
   accountType     AccountType @default(BUSINESS)
   emailVerifiedAt DateTime?
 
+  // Consent & Privacy (PDPL Art. 5, 6, 13)
+  marketingConsent    Boolean  @default(false)
+  termsAcceptedAt     DateTime?
+  privacyPolicyVersion String?
+
+  // ── [NEW] KYC/AML Compliance ──
+  kycLevel       Int       @default(0) // 0=not started, 1,2,3 = verified level
+  kycStatus      String    @default("NOT_STARTED") // NOT_STARTED, LEVEL_1_PENDING, LEVEL_1_VERIFIED, etc.
+  kycVerifiedAt  DateTime?
+
   conversations  Conversation[]
   aiUsage        AiUsage?
   addresses      UserAddress[]
   reviews        ProductReview[]
   sampleRequests SampleRequest[]
+  refreshTokens  RefreshToken[]
 
   @@index([sector])
 }
@@ -2060,6 +2076,28 @@ model PasswordResetToken {
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+// 24b. REFRESH TOKEN ROTATION — family tracking for reuse detection
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  family    String   // Token family — all tokens from the same initial grant
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  replacedBy String?  // ID of the token that replaced this one (rotation chain)
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([family])
+  @@index([tokenHash])
 }
 
 // ─────────────────────────────────────────
