@@ -1,92 +1,97 @@
 /**
  * CSRF Protection — Double-Submit Cookie Pattern
  *
- * How it works:
- * 1. On GET requests, set a random CSRF token in a cookie (not httpOnly)
- * 2. Client reads the cookie and sends the token in a header (X-CSRF-Token)
- * 3. On state-changing requests, server compares cookie value vs header value
- * 4. Since attacker-controlled subdomains can't read cookies from different origins,
- *    they can't set the matching header — CSRF is blocked.
+ * Edge Runtime compatible — uses Web Crypto API only.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHash, randomBytes } from "crypto";
 
 const CSRF_COOKIE = "hv_csrf";
 const CSRF_HEADER = "x-csrf-token";
-const CSRF_SECRET = process.env.CSRF_SECRET || process.env.SESSION_SECRET || "";
 
-/**
- * Generate a CSRF token signed with HMAC.
- */
-export function generateCsrfToken(): string {
-  const payload = randomBytes(16).toString("hex");
-  const signature = createHash("sha256")
-    .update(`${payload}:${CSRF_SECRET}`)
-    .digest("hex")
-    .slice(0, 16);
-  return `${payload}.${signature}`;
+function getSecret(): string {
+  return process.env.CSRF_SECRET || process.env.SESSION_SECRET || "";
 }
 
-/**
- * Validate a CSRF token against the cookie value.
- */
-export function validateCsrfToken(cookieValue: string, headerValue: string): boolean {
-  if (!cookieValue || !headerValue) return false;
-  if (cookieValue !== headerValue) return false;
-
-  // Verify HMAC signature
-  const [payload, signature] = cookieValue.split(".");
-  if (!payload || !signature) return false;
-
-  const expectedSig = createHash("sha256")
-    .update(`${payload}:${CSRF_SECRET}`)
-    .digest("hex")
+async function hmacSign(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
+  return Array.from(new Uint8Array(sig))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
     .slice(0, 16);
+}
 
-  // Timing-safe comparison
-  if (signature.length !== expectedSig.length) return false;
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
   let diff = 0;
-  for (let i = 0; i < signature.length; i++) {
-    diff |= signature.charCodeAt(i) ^ expectedSig.charCodeAt(i);
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return diff === 0;
 }
 
-/**
- * Middleware helper: set CSRF cookie on GET, validate on POST/PUT/DELETE/PATCH.
- */
-export function csrfMiddleware(request: NextRequest): NextResponse | null {
+export async function generateCsrfToken(): Promise<string> {
+  const payload = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  const signature = await hmacSign(`${payload}:${getSecret()}`, getSecret());
+  return `${payload}.${signature}`;
+}
+
+export async function validateCsrfToken(
+  cookieValue: string,
+  headerValue: string
+): Promise<boolean> {
+  if (!cookieValue || !headerValue) return false;
+  if (cookieValue !== headerValue) return false;
+
+  const [payload, signature] = cookieValue.split(".");
+  if (!payload || !signature) return false;
+
+  const expectedSig = await hmacSign(`${payload}:${getSecret()}`, getSecret());
+  return timingSafeEqual(signature, expectedSig);
+}
+
+export async function csrfMiddleware(
+  request: NextRequest
+): Promise<NextResponse | null> {
   const method = request.method.toUpperCase();
   const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(method);
 
   if (!isStateChanging) {
-    // GET/HEAD/OPTIONS — set CSRF cookie if not present
     const existingToken = request.cookies.get(CSRF_COOKIE)?.value;
     if (!existingToken) {
       const response = NextResponse.next();
-      response.cookies.set(CSRF_COOKIE, generateCsrfToken(), {
-        httpOnly: false, // Client must be able to read this
+      const token = await generateCsrfToken();
+      response.cookies.set(CSRF_COOKIE, token, {
+        httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         path: "/",
-        maxAge: 60 * 60, // 1 hour
+        maxAge: 60 * 60,
       });
       return response;
     }
-    return null; // No response modification needed
+    return null;
   }
 
-  // State-changing request — validate CSRF
   const cookieToken = request.cookies.get(CSRF_COOKIE)?.value;
   const headerToken = request.headers.get(CSRF_HEADER);
 
-  if (!validateCsrfToken(cookieToken || "", headerToken || "")) {
+  if (!(await validateCsrfToken(cookieToken || "", headerToken || ""))) {
     return NextResponse.json(
       { success: false, error: "CSRF token validation failed" },
       { status: 403 }
     );
   }
 
-  return null; // Validation passed
+  return null;
 }
