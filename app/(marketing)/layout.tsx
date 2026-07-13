@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SiteNav } from "@/components/marketing/site-nav";
 import { SiteFooter } from "@/components/marketing/site-footer";
+import { SupplierOnboardingBot } from "@/components/ai-assistant/supplier-onboarding-chatbot";
 
 export const metadata: Metadata = {
   title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
@@ -108,6 +109,7 @@ export default function MarketingLayout({
       <SiteNav />
       <main>{children}</main>
       <SiteFooter />
+      <SupplierOnboardingBot />
     </ThemeProvider>
   );
 }

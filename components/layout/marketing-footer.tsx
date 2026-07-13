@@ -45,7 +45,7 @@ export function MarketingFooter() {
             <ul className="space-y-2.5">
               {[
                 { label: "Hotels", href: "/hotels" },
-                { label: "Suppliers", href: "/become-supplier" },
+                { label: "Suppliers", href: "/suppliers" },
                 { label: "Pricing", href: "/pricing" },
               ].map((item) => (
                 <li key={item.label}>
@@ -63,6 +63,7 @@ export function MarketingFooter() {
             <ul className="space-y-2.5">
               {[
                 { label: "About", href: "/about" },
+                { label: "Contact", href: "/contact" },
                 { label: "Sign In", href: "/login" },
                 { label: "Get Started", href: "/register" },
               ].map((item) => (

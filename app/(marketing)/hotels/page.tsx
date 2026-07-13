@@ -1,31 +1,67 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Building2, MapPin, CheckCircle2, TrendingUp, ShieldCheck, Clock, Banknote, BrainCircuit, FileCheck, Users } from "lucide-react";
+import { ArrowRight, CheckCircle2, Shield, Zap, Building2, CreditCard, FileText, Users, TrendingUp, Package, Truck, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
-  description: "AI-automated procurement OS for Egyptian hotels. 14-day demand forecasting, budget blockades, ETA e-invoicing compliance, and net-60 factoring. Built for Sharm El-Sheikh and Hurghada resorts.",
-  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
+  title: "Hotels — B2B Procurement Platform | HotelsVendors",
+  description: "Streamline hotel procurement. Access 500+ suppliers, fixed pricing, ETA-compliant invoicing, and Oliv factoring. Built for Egyptian hospitality.",
   openGraph: {
-    title: "Hotel Procurement Platform Egypt | AI Demand Forecasting for Resorts | HotelsVendors",
-    description: "AI-automated procurement OS for Egyptian hotels. 14-day demand forecasting, budget blockades, ETA compliance, and net-60 factoring.",
+    title: "Hotels — B2B Procurement Platform | HotelsVendors",
+    description: "Streamline hotel procurement. Access 500+ suppliers, fixed pricing, and ETA-compliant invoicing.",
     type: "website",
   },
 };
 
-const features = [
-  { icon: BrainCircuit, title: "AI Demand Forecasting", desc: "14-day forward predictions from occupancy curves, events, and seasonality. Auto-generates POs against your budget ceilings — no more emergency orders at premium prices." },
-  { icon: ShieldCheck, title: "Budget Blockades", desc: "Pre-occurrence spending limits at property, branch, and department level. No PO without available budget. Finance stays in control without slowing operations." },
-  { icon: Building2, title: "Multi-Property Control", desc: "Manage procurement across your entire portfolio from one dashboard. Per-property catalogs, approval hierarchies, and consolidated reporting." },
-  { icon: Banknote, title: "Net-60+ Embedded Factoring", desc: "Stretch working capital without balance-sheet debt. Suppliers paid in 24 hours via competitive bidding among 4+ licensed grantors." },
-  { icon: Clock, title: "48-Hour Coastal Delivery", desc: "Shared-route logistics to Sharm, Hurghada, and 4 additional governorates. Cold-chain capable. Real-time GPS tracking from dock to receiving." },
-  { icon: TrendingUp, title: "Cost Analytics & Anomaly Detection", desc: "Real-time spend analysis across properties, departments, and vendors. AI flags pricing deviations and recommends savings before they compound." },
+const HOTEL_FEATURES = [
+  {
+    icon: Package,
+    title: "Fixed-Price Catalog",
+    desc: "Browse 10,000+ hospitality products with transparent, fixed pricing. No bidding wars. No hidden fees.",
+    color: "#39ff7e",
+  },
+  {
+    icon: FileText,
+    title: "ETA-Compliant Invoicing",
+    desc: "Every invoice is automatically submitted to the Egyptian Tax Authority. Zero manual work.",
+    color: "#c455ff",
+  },
+  {
+    icon: CreditCard,
+    title: "Net-60 Payment Terms",
+    desc: "Oliv finances your purchases. You get Net-60 terms while suppliers get paid in 48 hours.",
+    color: "#ff7e1a",
+  },
+  {
+    icon: Truck,
+    title: "Shared-Route Logistics",
+    desc: "Consolidate deliveries across properties. Cut logistics costs by up to 40%.",
+    color: "#64b5f6",
+  },
+  {
+    icon: Shield,
+    title: "Authority Matrix",
+    desc: "Multi-level approval chains based on order value, hotel hierarchy, and supplier tiers.",
+    color: "#39ff7e",
+  },
+  {
+    icon: Users,
+    title: "Multi-Property Management",
+    desc: "Manage procurement across all your properties from a single dashboard.",
+    color: "#c455ff",
+  },
 ];
 
-const trustBadges = [
-  { icon: FileCheck, label: "ETA Phase 1 & 2", desc: "Cryptographic e-invoicing" },
-  { icon: ShieldCheck, label: "FRA Aligned", desc: "Anti-fraud compliance" },
-  { icon: CheckCircle2, label: "SOC 2 Roadmap", desc: "Enterprise-grade security" },
+const STATS = [
+  { value: "500+", label: "Verified Suppliers", color: "#39ff7e" },
+  { value: "10,000+", label: "Products Available", color: "#ff7e1a" },
+  { value: "48h", label: "Supplier Payment", color: "#4A7C59" },
+  { value: "40%", label: "Cost Savings", color: "#c455ff" },
+];
+
+const HOW_IT_WORKS = [
+  { step: "1", title: "Browse & Order", desc: "Search the catalog, compare prices, and place purchase orders directly from your dashboard.", color: "#39ff7e" },
+  { step: "2", title: "Track & Receive", desc: "Monitor order status in real-time. Confirm delivery and verify invoices automatically.", color: "#ff7e1a" },
+  { step: "3", title: "Pay Later", desc: "Oliv finances the invoice. You pay in 60 days. Suppliers get paid in 48 hours.", color: "#4A7C59" },
 ];
 
 export default function HotelsPage() {
@@ -33,94 +69,86 @@ export default function HotelsPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">For Hotels</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Stop Chasing Suppliers.<br /><span className="text-gradient-lime">Start Commanding<br />Your Supply Chain.</span>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.06) 0%, transparent 70%)" }} />
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#39ff7e22", backgroundColor: "#39ff7e08" }}>
+            <Building2 size={12} style={{ color: "#39ff7e" }} />
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#39ff7e" }}>
+              For Hotels & Property Groups
+            </span>
+          </div>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
+            Procurement That<br />
+            <span style={{ color: "#39ff7e" }}>Pays for Itself</span>
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            From Sharm El-Sheikh to Alexandria, Egyptian hotel groups use HotelsVendors to automate procurement, enforce budgets, and stretch working capital — all from one platform built for coastal hospitality.
+          <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
+            Access 500+ verified suppliers, fixed pricing, and Net-60 payment terms.
+            Every invoice is ETA-compliant. Every delivery is tracked. Every dollar is optimized.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
-              Register Your Property <ArrowRight size={14} />
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link href="/register?type=hotel" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.25)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+              Start Procuring <ArrowRight size={14} />
             </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Explore Platform
+            <Link href="/marketplace" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Browse Marketplace
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Badges */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {trustBadges.map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#39ff7e" }} />
-                <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">What You Get</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {features.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-4" style={{ color: "#39ff7e" }} />
-                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-16" style={{ backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto text-center">
-            {[
-              { value: "40%", label: "Average Procurement Cost Reduction" },
-              { value: "24h", label: "Supplier Settlement via Factoring" },
-              { value: "6", label: "Governorates with Logistics Coverage" },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-[32px] font-medium mb-1" style={{ color: "#39ff7e" }}>{s.value}</p>
-                <p className="text-[11px] text-white/30">{s.label}</p>
+      <section className="py-12 border-y" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {STATS.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-[28px] font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
+                <div className="text-[12px] text-white/40">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Coverage */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Where We Operate</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { region: "Sharm El-Sheikh", props: "120+ properties", icon: MapPin },
-              { region: "Hurghada / Red Sea", props: "95+ properties", icon: MapPin },
-              { region: "Cairo / Giza", props: "200+ properties", icon: MapPin },
-              { region: "Alexandria / North Coast", props: "65+ properties", icon: MapPin },
-            ].map((r) => (
-              <div key={r.region} className="rounded-xl p-5 flex items-center gap-3 transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <r.icon size={16} style={{ color: "#39ff7e" }} />
-                <div>
-                  <p className="text-[13px] font-medium text-white">{r.region}</p>
-                  <p className="text-[11px] text-white/30">{r.props}</p>
+      {/* Features */}
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>Why Hotels Choose Us</span>
+            <h2 className="text-2xl md:text-3xl font-semibold text-white">Built for Egyptian Hospitality</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {HOTEL_FEATURES.map((f) => {
+              const Icon = f.icon;
+              return (
+                <div key={f.title} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all group">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: `${f.color}12`, border: `1px solid ${f.color}22` }}>
+                    <Icon size={18} style={{ color: f.color }} />
+                  </div>
+                  <h3 className="text-[14px] font-semibold text-white mb-2">{f.title}</h3>
+                  <p className="text-[13px] text-white/40 leading-relaxed">{f.desc}</p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 border-y" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>How It Works</span>
+            <h2 className="text-2xl md:text-3xl font-semibold text-white">From Order to Payment in 3 Steps</h2>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {HOW_IT_WORKS.map((s) => (
+              <div key={s.step} className="relative rounded-2xl border bg-[#12121a] p-6" style={{ borderColor: `${s.color}22` }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 text-[18px] font-bold" style={{ backgroundColor: `${s.color}15`, border: `1px solid ${s.color}33`, color: s.color }}>
+                  {s.step}
+                </div>
+                <h3 className="text-[15px] font-semibold text-white mb-2">{s.title}</h3>
+                <p className="text-[13px] text-white/40 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -128,14 +156,21 @@ export default function HotelsPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#39ff7e" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Transform Your Procurement?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Quick onboarding. No credit card required. Start with a demo property.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
-            Get Started Free <ArrowRight size={14} />
-          </Link>
+      <section className="py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Ready to Transform Your Procurement?</h2>
+          <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
+            Join hotels already saving 40% on procurement costs. List your properties today,
+            start ordering tomorrow.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link href="/register?type=hotel" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.25)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+              Start Procuring <ArrowRight size={14} />
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Talk to Sales
+            </Link>
+          </div>
         </div>
       </section>
     </main>
