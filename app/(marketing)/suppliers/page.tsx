@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Shield, Zap, Store, CreditCard, Clock, Factory, Truck, Users, TrendingUp, Landmark, RefreshCw, ExternalLink } from "lucide-react";
-import { OlivLogo } from "@/components/partners/oliv-logo";
 
 export const metadata: Metadata = {
   title: "Suppliers — Sell to Hotels | HotelsVendors",
@@ -81,7 +80,7 @@ export default function SuppliersPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
-            <OlivLogo size="xs" variant="green" />
+            <span className="text-[13px] font-semibold" style={{ color: "#4A7C59" }}>oliv</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>
               Oliv Partnership Active
             </span>
