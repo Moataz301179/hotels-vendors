@@ -87,6 +87,9 @@ model Tenant {
   swarmJobs           SwarmJob[]
   paymentTransactions PaymentTransaction[]
   etaCredential       EtaCredential?
+
+  // ── [NEW] Refresh Token Rotation ──
+  refreshTokens RefreshToken[]
 }
 
 enum TenantType {
