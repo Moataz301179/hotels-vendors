@@ -14,8 +14,10 @@ import {
   Plus,
   Trash2,
   AlertCircle,
+  Landmark,
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
+import { generateOlivCheckoutUrl } from "@/lib/payments/oliv";
 
 interface Address {
   label?: string;
@@ -308,8 +310,8 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-2 gap-3">
                     {[
                       { id: "bank_transfer", label: "Bank Transfer" },
+                      { id: "oliv_checkout", label: "Pay via Oliv", desc: "Net-60 terms", icon: Landmark },
                       { id: "invoice", label: "Invoice (Net 30)" },
-                      { id: "factoring", label: "Non-Recourse Factoring" },
                       { id: "credit_terms", label: "Credit Terms" },
                     ].map((pm) => (
                       <button
@@ -317,11 +319,19 @@ export default function CheckoutPage() {
                         onClick={() => setPaymentMethod(pm.id)}
                         className={`p-3 rounded-xl border-2 text-sm font-medium transition-colors ${
                           paymentMethod === pm.id
-                            ? "border-accent-base bg-accent-base/5 text-accent-base"
+                            ? pm.id === "oliv_checkout"
+                              ? "border-[#4A7C59] bg-[#4A7C59]/5 text-[#4A7C59]"
+                              : "border-accent-base bg-accent-base/5 text-accent-base"
                             : "border-gray-200 text-gray-600 hover:border-gray-300"
                         }`}
                       >
-                        {pm.label}
+                        <div className="flex items-center gap-2">
+                          {pm.icon && <pm.icon size={14} />}
+                          <span>{pm.label}</span>
+                        </div>
+                        {pm.desc && (
+                          <p className="text-xs text-gray-400 mt-1">{pm.desc}</p>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -346,11 +356,30 @@ export default function CheckoutPage() {
                     Back
                   </button>
                   <button
-                    onClick={handlePlaceOrder}
+                    onClick={() => {
+                      if (paymentMethod === "oliv_checkout") {
+                        // Redirect to Oliv for payment
+                        const checkoutUrl = generateOlivCheckoutUrl({
+                          hotelId: "current-user", // Will be replaced with actual user ID
+                          hotelName: "Current Hotel",
+                          orderId: `order-${Date.now()}`,
+                          amount: grandTotal,
+                          currency: "EGP",
+                          items: items.map((i) => ({
+                            name: i.name,
+                            quantity: i.quantity,
+                            price: i.price,
+                          })),
+                        });
+                        window.open(checkoutUrl, "_blank");
+                      } else {
+                        handlePlaceOrder();
+                      }
+                    }}
                     disabled={loading}
                     className="flex-1 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-[#6B0512] disabled:opacity-50 transition-colors"
                   >
-                    {loading ? "Placing Order..." : `Place Order · EGP ${grandTotal.toFixed(2)}`}
+                    {loading ? "Placing Order..." : paymentMethod === "oliv_checkout" ? `Pay via Oliv · EGP ${grandTotal.toFixed(2)}` : `Place Order · EGP ${grandTotal.toFixed(2)}`}
                   </button>
                 </div>
               </motion.div>

@@ -18,9 +18,12 @@ import {
   CheckCircle2,
   MapPin,
   Building2,
+  Home,
+  Building,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
+type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "#39ff7e" },
@@ -63,6 +66,8 @@ function RegisterContent() {
     taxId: "",
     city: "",
     governorate: "",
+    propertyType: "SINGLE" as PropertyType,
+    numberOfProperties: "1",
   });
 
   const updateForm = (field: string, value: string) => {
@@ -141,14 +146,18 @@ function RegisterContent() {
       {/* Header */}
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#39ff7e]/[0.08] border border-[#39ff7e]/15 text-[#39ff7e] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
-          <Store size={11} />
-          Account Registration
+          {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
+          {form.role === "HOTEL" ? "Hotel Registration" : form.role === "SUPPLIER" ? "Supplier Registration" : form.role === "FACTORING" ? "Factoring Registration" : "Logistics Registration"}
         </div>
         <h1 className="text-[28px] font-semibold text-white tracking-[-0.02em]">
           Create Account
         </h1>
         <p className="mt-2 text-[14px] text-white/40">
-          Join Egypt&apos;s leading B2B hospitality procurement platform.
+          {form.role === "HOTEL" 
+            ? "Join Egypt's leading B2B hospitality procurement platform. Net-60 terms via Oliv."
+            : form.role === "SUPPLIER"
+            ? "List your products, reach 480+ hotels, get paid in 48 hours via Oliv."
+            : "Join Egypt's leading B2B hospitality procurement platform."}
         </p>
       </div>
 
@@ -307,11 +316,93 @@ function RegisterContent() {
             </div>
           </div>
 
+          {/* Hotel-Specific Fields */}
+          {form.role === "HOTEL" && (
+            <>
+              {/* Property Type */}
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-white/50">
+                  Property Type <span className="text-red-400">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { value: "SINGLE", label: "Single Property", icon: Home, color: "#39ff7e" },
+                    { value: "CHAIN", label: "Hotel Chain", icon: Building, color: "#4A7C59" },
+                    { value: "MANAGEMENT", label: "Management Co.", icon: Users, color: "#c455ff" },
+                  ].map((pt) => {
+                    const Icon = pt.icon;
+                    const isSelected = form.propertyType === pt.value;
+                    return (
+                      <button
+                        key={pt.value}
+                        type="button"
+                        onClick={() => updateForm("propertyType", pt.value)}
+                        className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border text-[11px] font-medium transition-all ${
+                          isSelected
+                            ? "text-[#07090f] border-transparent"
+                            : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                        }`}
+                        style={isSelected ? { backgroundColor: pt.color, borderColor: pt.color } : {}}
+                      >
+                        <Icon size={16} />
+                        {pt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Number of Properties */}
+              {(form.propertyType === "CHAIN" || form.propertyType === "MANAGEMENT") && (
+                <div className="space-y-2">
+                  <label className="block text-[13px] font-medium text-white/50">
+                    Number of Properties <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                    <select
+                      value={form.numberOfProperties}
+                      onChange={(e) => updateForm("numberOfProperties", e.target.value)}
+                      required
+                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all appearance-none"
+                    >
+                      <option value="1" className="bg-[#12121a] text-white">1 property</option>
+                      <option value="2-5" className="bg-[#12121a] text-white">2-5 properties</option>
+                      <option value="6-10" className="bg-[#12121a] text-white">6-10 properties</option>
+                      <option value="11-20" className="bg-[#12121a] text-white">11-20 properties</option>
+                      <option value="20+" className="bg-[#12121a] text-white">20+ properties</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {/* Hotel Info Box */}
+              <div className="rounded-xl p-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
+                <p className="text-[12px] text-white/40 leading-relaxed">
+                  <strong style={{ color: "#4A7C59" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then set up Oliv financing for Net-60 payment terms. Suppliers get paid instantly.
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* Supplier Info Box */}
+          {form.role === "SUPPLIER" && (
+            <div className="rounded-xl p-4" style={{ backgroundColor: "#ff7e1a08", border: "1px solid #ff7e1a22" }}>
+              <p className="text-[12px] text-white/40 leading-relaxed">
+                <strong style={{ color: "#ff7e1a" }}>After registration:</strong> Complete your profile, list products, and start receiving orders. Apply for Oliv financing to get paid in 48 hours.
+              </p>
+            </div>
+          )}
+
           {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] text-[13px] font-semibold hover:bg-[#39ff7e]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]"
+            style={{
+              backgroundColor: form.role === "HOTEL" ? "#4A7C59" : form.role === "SUPPLIER" ? "#ff7e1a" : form.role === "FACTORING" ? "#c455ff" : "#64b5f6",
+              color: "#ffffff",
+            }}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
