@@ -12,7 +12,7 @@ import { jwtVerify } from "jose";
 
 const SESSION_COOKIE = "hv_session";
 const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
+  process.env.SESSION_SECRET || (process.env.NODE_ENV === "production" ? "" : "dev-secret-change-in-production")
 );
 
 /* ── Route Configuration ── */

@@ -23,7 +23,8 @@ import type {
 
 function log(method: string, path: string, body?: unknown, response?: unknown) {
   if (INVO_CONFIG.ENV === "development") {
-    console.log(`[INVO] ${method} ${path}`, body ? { body } : "", response ? { response } : "");
+    // eslint-disable-next-line no-console
+  console.log(`[INVO] ${method} ${path}`, body ? { body } : "", response ? { response } : "");
   }
 }
 

@@ -9,11 +9,6 @@ import {
   Mail,
   Lock,
   ArrowRight,
-  Hotel,
-  UserCog,
-  Store,
-  Landmark,
-  Truck,
   Loader2,
 } from "lucide-react";
 

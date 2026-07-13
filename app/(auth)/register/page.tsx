@@ -20,6 +20,7 @@ import {
   Building2,
   Home,
   Building,
+  Users,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
@@ -35,9 +36,9 @@ const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; c
 const GOVERNORATES = [
   "Cairo", "Alexandria", "Giza", "Sharm El-Sheikh", "Hurghada", "Luxor", "Aswan",
   "Port Said", "Suez", "Ismailia", "Dakahlia", "Sharqia", "Qalyubia", "Gharbia",
-  "Monufia", "Beheira", "Kafr El Sheikh", "Damietta", "Port Said", "North Sinai",
+  "Monufia", "Beheira", "Kafr El Sheikh", "Damietta", "North Sinai",
   "South Sinai", "Red Sea", "New Valley", "Matruh", "Fayoum", "Beni Suef",
-  "Minya", "Assiut", "Sohag", "Qena", "Aswan", "Red Sea",
+  "Minya", "Assiut", "Sohag", "Qena",
 ];
 
 export default function RegisterPage() {

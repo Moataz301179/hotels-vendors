@@ -20,7 +20,8 @@ export class FourEyesGovernanceGuard {
    * 3. Must hold separate authorizations (e.g. Originator/Clerk vs Verifier/Manager).
    */
   public static async validateAttestation(packageId: string, tenantId: string): Promise<boolean> {
-    console.log(`[Governance Guard] Evaluating Attestation state for package: ${packageId}`);
+    // eslint-disable-next-line no-console
+  console.log(`[Governance Guard] Evaluating Attestation state for package: ${packageId}`);
 
     // Query append-only AuditLog table for all attestation transactions on this package
     const logs = await prisma.auditLog.findMany({
@@ -80,11 +81,13 @@ export class FourEyesGovernanceGuard {
     const secondRole = secondSigner.actorRole || "VERIFIER";
 
     if (firstRole === secondRole) {
+      // eslint-disable-next-line no-console
       console.warn(
         `[Governance Warning] Package ${packageId} signed by distinct users with same authorization level (${firstRole}). Checking structural compliance.`
       );
     }
 
+    // eslint-disable-next-line no-console
     console.log(
       `[Governance Guard] Dual attestation verified. Originator: ${firstSigner.actorId} (${firstRole}), Verifier: ${secondSigner.actorId} (${secondRole}).`
     );

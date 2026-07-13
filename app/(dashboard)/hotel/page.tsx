@@ -8,29 +8,20 @@ export default function HotelDashboardPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="space-y-6">
       {/* Page Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      <div className="flex items-start justify-between">
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 600, color: "#1a1f36", margin: 0 }}>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
             Hotel Procurement Portal
           </h1>
-          <p style={{ fontSize: 13, color: "#8898aa", margin: "4px 0 0 0" }}>
+          <p className="text-sm text-white/40 mt-1">
             Track spend, manage orders, and monitor inventory across all properties
           </p>
         </div>
         <button
           onClick={() => setCheckoutOpen(true)}
-          style={{
-            fontSize: 13,
-            fontWeight: 500,
-            padding: "10px 20px",
-            backgroundColor: "#635bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: 6,
-            cursor: "pointer",
-          }}
+          className="px-5 py-2.5 rounded-xl bg-[#39ff7e] text-[#07090f] text-sm font-medium hover:bg-[#39ff7e]/90 transition-colors"
         >
           Immediate Checkout
         </button>

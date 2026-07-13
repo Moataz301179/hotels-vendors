@@ -210,8 +210,6 @@ export async function POST(request: NextRequest) {
     }
 
     const prismaCategory = toPrismaCategory(data.category);
-  // eslint-disable-next-line no-console
-  console.log(`[Products API] Creating product with category: ${data.category} → ${prismaCategory}`);
 
     const product = await prisma.product.create({
       data: {
