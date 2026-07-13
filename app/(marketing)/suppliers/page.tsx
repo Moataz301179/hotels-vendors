@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Shield, Zap, Store, CreditCard, Clock, Factory, Truck, Users, TrendingUp, Landmark, RefreshCw, ExternalLink } from "lucide-react";
+import { ArrowRight, CheckCircle2, Shield, Zap, Store, CreditCard, Clock, Factory, Truck, Users, TrendingUp, Landmark, RefreshCw, ExternalLink, Package } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Suppliers — Sell to Hotels | HotelsVendors",
