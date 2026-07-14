@@ -51,9 +51,9 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const totalTrips = completedTrips.length;
   const totalStops = completedTrips.reduce((sum, t) => sum + t._count.stops, 0);
 
-  // Earnings estimation: EGP 500 base per trip + EGP 150 per stop
-  const BASE_PER_TRIP = 500;
-  const PER_STOP = 150;
+  // Earnings estimation: EGP 3000 base per trip + EGP 1500 per stop
+  const BASE_PER_TRIP = 3000;
+  const PER_STOP = 1500;
   const totalEarnings = totalTrips * BASE_PER_TRIP + totalStops * PER_STOP;
 
   // Daily breakdown

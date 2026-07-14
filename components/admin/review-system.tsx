@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -29,117 +29,23 @@ interface Review {
   tags: string[];
 }
 
-const MOCK_REVIEWS: Review[] = [
-  {
-    id: "r1",
-    hotel: "Four Seasons Cairo at Nile Plaza",
-    supplier: "Juhayna Food Industries",
-    hotelRating: 5,
-    supplierRating: 5,
-    comment: "Excellent quality and on-time delivery. The UHT milk packaging was perfect for our high-volume F&B operation.",
-    date: "2026-05-06",
-    orderValue: 48500,
-    status: "published",
-    helpful: 12,
-    tags: ["quality", "delivery"],
-  },
-  {
-    id: "r2",
-    hotel: "Rixos Sharm El Sheikh",
-    supplier: "National Co. for Fisheries & Aquaculture",
-    hotelRating: 4,
-    supplierRating: 5,
-    comment: "Prawns were fresh and well-packaged. Slight delay due to Red Sea logistics but supplier communicated proactively.",
-    date: "2026-05-05",
-    orderValue: 185000,
-    status: "published",
-    helpful: 8,
-    tags: ["freshness", "communication"],
-  },
-  {
-    id: "r3",
-    hotel: "Marriott Mena House",
-    supplier: "Oriental Weavers",
-    hotelRating: 5,
-    supplierRating: 4,
-    comment: "Carpet quality exceeded expectations. Installation team was professional. One dye lot variance on the hallway runner.",
-    date: "2026-05-04",
-    orderValue: 220000,
-    status: "published",
-    helpful: 5,
-    tags: ["quality", "installation"],
-  },
-  {
-    id: "r4",
-    hotel: "Hilton Cairo Heliopolis",
-    supplier: "Cairo Poultry Company",
-    hotelRating: 3,
-    supplierRating: 3,
-    comment: "Two deliveries had temperature excursions. Cold chain needs improvement. Supplier is working on new refrigerated trucks.",
-    date: "2026-05-03",
-    orderValue: 58000,
-    status: "flagged",
-    helpful: 15,
-    tags: ["cold-chain", "issue"],
-  },
-  {
-    id: "r5",
-    hotel: "Jaz Aquamarine Hurghada",
-    supplier: "Hurghada Resort Supplies",
-    hotelRating: 5,
-    supplierRating: 5,
-    comment: "Local supplier with exceptional service. Same-day delivery for emergency housekeeping equipment. Highly recommended.",
-    date: "2026-05-02",
-    orderValue: 185000,
-    status: "published",
-    helpful: 22,
-    tags: ["local", "emergency", "service"],
-  },
-  {
-    id: "r6",
-    hotel: "Fairmont Nile City",
-    supplier: "Cleopatra Ceramics Group",
-    hotelRating: 4,
-    supplierRating: 4,
-    comment: "Fine china quality is comparable to European imports at 40% lower cost. Minor glaze inconsistency on 2% of plates.",
-    date: "2026-05-01",
-    orderValue: 145000,
-    status: "published",
-    helpful: 9,
-    tags: ["value", "quality"],
-  },
-  {
-    id: "r7",
-    hotel: "Steigenberger Al Dau Beach Hotel",
-    supplier: "Red Sea Fish Farms",
-    hotelRating: 5,
-    supplierRating: 5,
-    comment: "Outstanding seafood. The mullet was caught same-day and delivered within 6 hours. guests loved it.",
-    date: "2026-04-30",
-    orderValue: 125000,
-    status: "published",
-    helpful: 18,
-    tags: ["freshness", "speed"],
-  },
-  {
-    id: "r8",
-    hotel: "Baron Resort Sharm El Sheikh",
-    supplier: "Sharm Amenities Factory",
-    hotelRating: 4,
-    supplierRating: 3,
-    comment: "Amenities are good but packaging design feels dated. Requested custom branding — supplier quoted 3-week turnaround.",
-    date: "2026-04-29",
-    orderValue: 78000,
-    status: "pending",
-    helpful: 3,
-    tags: ["branding", "design"],
-  },
-];
-
 export function ReviewSystem() {
-  const [reviews, setReviews] = useState(MOCK_REVIEWS);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "published" | "pending" | "flagged">("all");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetch("/api/v1/admin/reviews?limit=50")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.reviews) {
+          setReviews(json.data.reviews);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = reviews.filter((r) => {
     if (filter !== "all" && r.status !== filter) return false;

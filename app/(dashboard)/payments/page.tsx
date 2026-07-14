@@ -7,6 +7,7 @@ import {
   ArrowUpRight, ArrowDownRight, Search, Download, TrendingUp,
 } from "lucide-react";
 import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
+import { useApi } from "@/lib/hooks/use-api";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -18,29 +19,24 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const PAYMENT_STATS = [
-  { label: "Total Processed", value: "EGP 24.8M", change: "+18% this month", up: true, icon: Wallet },
-  { label: "Pending", value: "EGP 1.2M", change: "47 invoices", up: true, icon: Clock },
-  { label: "Completed", value: "EGP 23.6M", change: "95.2% success", up: true, icon: CheckCircle2 },
-  { label: "Failed", value: "EGP 0.04M", change: "0.8% error rate", up: true, icon: AlertTriangle },
-];
+interface Transaction {
+  id: string;
+  orderId: string;
+  amount: number;
+  method: string;
+  status: string;
+  createdAt: string;
+  hotel: { name: string } | null;
+  supplier: { name: string } | null;
+}
 
-const TRANSACTIONS = [
-  { id: "TXN-2026-0089", orderId: "ORD-2026-0156", hotel: "Pickalbatros Palace", supplier: "El Araby Group", amount: "EGP 67,500", method: "Factoring", status: "COMPLETED", date: "2026-05-08" },
-  { id: "TXN-2026-0088", orderId: "ORD-2026-0155", hotel: "Hilton Cairo", supplier: "Cairo Kitchen Supply", amount: "EGP 34,200", method: "Credit", status: "PENDING", date: "2026-05-08" },
-  { id: "TXN-2026-0087", orderId: "ORD-2026-0154", hotel: "Marriott Mena", supplier: "Delta Textiles", amount: "EGP 128,000", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-07" },
-  { id: "TXN-2026-0086", orderId: "ORD-2026-0153", hotel: "Four Seasons", supplier: "Nile Fresh", amount: "EGP 52,400", method: "Factoring", status: "PENDING", date: "2026-05-07" },
-  { id: "TXN-2026-0085", orderId: "ORD-2026-0152", hotel: "Steigenberger", supplier: "Alexandria Imports", amount: "EGP 89,700", method: "Factoring", status: "COMPLETED", date: "2026-05-06" },
-  { id: "TXN-2026-0084", orderId: "ORD-2026-0151", hotel: "InterContinental", supplier: "El Araby Group", amount: "EGP 41,300", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-06" },
-  { id: "TXN-2026-0083", orderId: "ORD-2026-0150", hotel: "Sunrise Alex", supplier: "Red Sea Logistics", amount: "EGP 23,800", method: "Credit", status: "FAILED", date: "2026-05-05" },
-  { id: "TXN-2026-0082", orderId: "ORD-2026-0149", hotel: "Sofitel Cairo", supplier: "Cairo Kitchen Supply", amount: "EGP 56,100", method: "Bank Transfer", status: "COMPLETED", date: "2026-05-05" },
-];
-
-const METHOD_COLORS: Record<string, string> = {
-  Factoring: "bg-accent-base/10 text-accent-base",
-  Credit: "bg-amber-500/10 text-amber-400",
-  "Bank Transfer": "bg-blue-500/10 text-blue-400",
-};
+interface PaymentSummary {
+  totalProcessed: number;
+  pending: number;
+  completed: number;
+  failed: number;
+  transactionCount: number;
+}
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
@@ -57,16 +53,38 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+const METHOD_COLORS: Record<string, string> = {
+  factoring: "bg-accent-base/10 text-accent-base",
+  credit: "bg-amber-500/10 text-amber-400",
+  bank_transfer: "bg-blue-500/10 text-blue-400",
+  oliv: "bg-purple-500/10 text-purple-400",
+};
+
 export default function PaymentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const filteredTxns = TRANSACTIONS.filter(
+  const { data: paymentsData, loading } = useApi<{ transactions: Transaction[]; summary: PaymentSummary }>(
+    "/api/v1/payments?page=1&limit=50"
+  );
+
+  const transactions = paymentsData?.transactions ?? [];
+  const summary = paymentsData?.summary ?? { totalProcessed: 0, pending: 0, completed: 0, failed: 0, transactionCount: 0 };
+
+  const filteredTxns = transactions.filter(
     (t) =>
       (filterStatus === "all" || t.status === filterStatus) &&
-      (t.hotel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (!searchQuery ||
+        t.hotel?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.id.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const stats = [
+    { label: "Total Processed", value: `EGP ${(summary.totalProcessed / 1000).toFixed(1)}K`, change: `${summary.transactionCount} transactions`, up: true, icon: Wallet },
+    { label: "Pending", value: `EGP ${(summary.pending / 1000).toFixed(1)}K`, change: "Awaiting settlement", up: true, icon: Clock },
+    { label: "Completed", value: `EGP ${(summary.completed / 1000).toFixed(1)}K`, change: summary.completed > 0 ? `${Math.round((summary.completed / summary.totalProcessed) * 100)}% success` : "No data", up: true, icon: CheckCircle2 },
+    { label: "Failed", value: `EGP ${(summary.failed / 1000).toFixed(1)}K`, change: summary.failed > 0 ? "Requires attention" : "No failures", up: summary.failed === 0, icon: AlertTriangle },
+  ];
 
   return (
     <motion.div
@@ -75,7 +93,6 @@ export default function PaymentsPage() {
       initial="hidden"
       animate="visible"
     >
-      {/* Header */}
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Payments & Transactions</h1>
@@ -89,7 +106,7 @@ export default function PaymentsPage() {
 
       {/* Stats */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {PAYMENT_STATS.map((s) => (
+        {stats.map((s) => (
           <motion.div
             key={s.label}
             variants={fadeInUp}
@@ -113,32 +130,6 @@ export default function PaymentsPage() {
       {/* Oliv Referral Banner */}
       <motion.div variants={fadeInUp}>
         <OlivReferralCTA variant="banner" />
-      </motion.div>
-
-      {/* Volume Chart Placeholder */}
-      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-            <TrendingUp size={14} className="text-white/40" />
-            Payment Volume
-          </h3>
-          <span className="text-[10px] text-white/20">Last 30 days</span>
-        </div>
-        <div className="flex items-end gap-2 h-32">
-          {[45, 62, 38, 55, 78, 42, 68, 85, 50, 72, 90, 65].map((h, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <div
-                className="w-full rounded-t-md bg-accent-base/30 hover:bg-accent-base/50 transition-colors"
-                style={{ height: `${h}%` }}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-between mt-2 px-1">
-          {["May 1", "May 5", "May 10", "May 15", "May 20", "May 25", "May 30"].map((d, i) => (
-            <span key={i} className="text-[9px] text-white/15">{d}</span>
-          ))}
-        </div>
       </motion.div>
 
       {/* Search + Table */}
@@ -167,48 +158,65 @@ export default function PaymentsPage() {
         </div>
 
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
-          <table className="w-full min-w-[640px]">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Transaction ID</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Method</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTxns.map((t) => (
-                <tr key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-mono text-white/60">{t.id}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-white">{t.hotel}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{t.supplier}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-semibold text-white">{t.amount}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.method] || "bg-white/10 text-white/40"}`}>
-                      {t.method}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={t.status} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{t.date}</span>
-                  </td>
+          {loading ? (
+            <div className="p-8 text-center">
+              <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
+              <p className="text-xs text-white/30 mt-3">Loading transactions...</p>
+            </div>
+          ) : filteredTxns.length === 0 ? (
+            <div className="p-8 text-center">
+              <CreditCard size={32} className="text-white/10 mx-auto mb-3" />
+              <p className="text-sm text-white/30">
+                {searchQuery || filterStatus !== "all" ? "No matching transactions." : "No transactions yet."}
+              </p>
+              <p className="text-xs text-white/20 mt-1">Transactions will appear here once payments are processed.</p>
+            </div>
+          ) : (
+            <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Transaction ID</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Method</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredTxns.map((t) => (
+                  <tr key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-mono text-white/60">{t.id.slice(0, 12)}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs text-white">{t.hotel?.name || "—"}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-[11px] text-white/40">{t.supplier?.name || "—"}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-semibold text-white">EGP {t.amount.toLocaleString()}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.method] || "bg-white/10 text-white/40"}`}>
+                        {t.method}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={t.status} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-[11px] text-white/30">
+                        {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </motion.div>
     </motion.div>

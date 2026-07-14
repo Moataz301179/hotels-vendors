@@ -201,12 +201,13 @@ export default function SettingsPage() {
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Team Members</h3>
               <div className="space-y-3">
-                {[
-                  { name: "Ahmed Hassan", email: "ahmed@hotelsvendors.com", role: "Admin", status: "active" },
-                  { name: "Sara Mohamed", email: "sara@hotelsvendors.com", role: "Manager", status: "active" },
-                  { name: "Khaled Ali", email: "khaled@hotelsvendors.com", role: "Analyst", status: "active" },
-                  { name: "Laila Ibrahim", email: "laila@hotelsvendors.com", role: "Viewer", status: "pending" },
-                ].map((member, i) => (
+                {([] as { name: string; email: string; role: string; status: string }[]).length === 0 ? (
+                  <div className="py-6 text-center">
+                    <Users size={24} className="text-white/10 mx-auto mb-2" />
+                    <p className="text-xs text-white/30">No team members yet.</p>
+                    <p className="text-[10px] text-white/20 mt-1">Invite team members to collaborate.</p>
+                  </div>
+                ) : ([] as { name: string; email: string; role: string; status: string }[]).map((member, i) => (
                   <div key={i} className="flex items-center justify-between py-3 border-b border-white/[0.04]">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-[10px] text-white/40 font-medium">
@@ -239,28 +240,28 @@ export default function SettingsPage() {
               <SettingRow label="Company Name" description="Legal entity name">
                 <input
                   type="text"
-                  defaultValue="Hotels Vendors Egypt Ltd."
+                  placeholder="Enter company name"
                   className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Tax ID" description="Egyptian Tax Registration Number">
                 <input
                   type="text"
-                  defaultValue="123-456-789"
+                  placeholder="Enter tax ID"
                   className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Address" description="Registered business address">
                 <input
                   type="text"
-                  defaultValue="123 Nile Corniche, Cairo"
+                  placeholder="Enter address"
                   className="w-64 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>
               <SettingRow label="Phone" description="Primary contact number">
                 <input
                   type="text"
-                  defaultValue="+20 2 1234 5678"
+                  placeholder="Enter phone number"
                   className="w-48 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50"
                 />
               </SettingRow>

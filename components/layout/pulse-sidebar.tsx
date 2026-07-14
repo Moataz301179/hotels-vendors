@@ -158,6 +158,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       section: "LOGISTICS",
       items: [
         { icon: LayoutDashboard, label: "Dashboard", href: "/shipping" },
+        { icon: Truck, label: "Fleet", href: "/shipping" },
+        { icon: CreditCard, label: "Earnings", href: "/shipping" },
       ],
     },
     {
@@ -173,6 +175,13 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: Megaphone, label: "Campaigns", href: "/marketing/campaigns" },
         { icon: Users, label: "Leads", href: "/marketing/leads" },
         { icon: BarChart3, label: "Analytics", href: "/marketing/analytics" },
+      ],
+    },
+    {
+      section: "CONTENT",
+      items: [
+        { icon: Megaphone, label: "Social Media", href: "/marketing/social" },
+        { icon: Calendar, label: "Calendar", href: "/marketing/calendar" },
       ],
     },
     {

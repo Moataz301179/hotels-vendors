@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,6 +18,12 @@ import {
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
 import { generateOlivCheckoutUrl } from "@/lib/payments/oliv";
+
+interface UserData {
+  userId: string;
+  tenantId: string;
+  hotelName: string;
+}
 
 interface Address {
   label?: string;
@@ -41,6 +47,18 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);
   const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string }>>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/v1/auth/me")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setUserData(json.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [address, setAddress] = useState<Address>({
     address: "",
@@ -359,9 +377,9 @@ export default function CheckoutPage() {
                     onClick={() => {
                       if (paymentMethod === "oliv_checkout") {
                         const checkoutUrl = generateOlivCheckoutUrl({
-                          hotelId: "current-user",
-                          hotelName: "Current Hotel",
-                          orderId: `order-${Date.now()}`,
+                          hotelId: userData?.userId || "",
+                          hotelName: userData?.hotelName || "",
+                          orderId: "",
                           amount: grandTotal,
                           currency: "EGP",
                           items: items.map((i) => ({
