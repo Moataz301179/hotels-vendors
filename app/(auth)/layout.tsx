@@ -16,11 +16,11 @@ export default function AuthLayout({
         {/* Top: Logo */}
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-12">
-            <div className="w-9 h-9 rounded-lg bg-[#8B1A1A]/10 border border-[#8B1A1A]/20 flex items-center justify-center">
-              <span className="text-[#8B1A1A] font-bold text-sm font-serif">HV</span>
+            <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+              <span className="text-white font-semibold text-sm" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>HV</span>
             </div>
             <span className="text-[15px] font-semibold text-white tracking-tight uppercase">
-              <span className="font-serif font-bold tracking-[0.18em]">Hotels Vendors</span>
+              <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
             </span>
           </Link>
 

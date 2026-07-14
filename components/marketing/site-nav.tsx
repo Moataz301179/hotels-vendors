@@ -24,7 +24,7 @@ export function SiteNav() {
       <Link href="/" className="flex items-center gap-2.5">
         <BrandLogo variant="dark" size="sm" />
         <span className="tracking-[0.12em] font-semibold text-white text-[15px] uppercase">
-          <span className="font-serif font-bold tracking-[0.18em]">Hotels Vendors</span>
+          <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
         </span>
       </Link>
 

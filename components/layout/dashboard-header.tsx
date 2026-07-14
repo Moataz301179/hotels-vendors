@@ -66,7 +66,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <BrandLogo variant="dark" size="md" />
           <span className="text-sm font-semibold text-white uppercase tracking-[0.08em] hidden lg:block">
-            <span className="font-serif font-bold tracking-[0.18em]">Hotels Vendors</span>
+            <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">

@@ -13,7 +13,10 @@ export function LogoFull({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <BrandLogo variant="dark" size="sm" showText={false} />
-      <span className="tracking-[0.18em] font-serif font-bold text-white text-[15px] uppercase">
+      <span
+        className="font-semibold text-white text-[15px] uppercase whitespace-nowrap"
+        style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}
+      >
         Hotels Vendors
       </span>
     </div>
