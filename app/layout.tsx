@@ -6,6 +6,12 @@ import { NotificationProvider } from "@/components/notifications/notification-co
 import { LanguageProvider } from "@/lib/i18n/language-context";
 import { SkipLink } from "@/components/shared/skip-link";
 import { CookieConsentBanner } from "@/components/shared/cookie-consent-banner";
+import { initServer } from "@/lib/startup";
+
+// Register graceful shutdown handlers (runs once per server instance)
+if (typeof window === "undefined") {
+  initServer();
+}
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],

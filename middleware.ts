@@ -224,7 +224,7 @@ export async function middleware(request: NextRequest) {
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
     const isExemptPath = pathname.startsWith("/api/v1/auth/") || pathname.startsWith("/api/webhooks");
     if (isStateChanging && !isExemptPath) {
-      const csrfResult = csrfMiddleware(request);
+      const csrfResult = await csrfMiddleware(request);
       if (csrfResult) return addSecurityHeaders(csrfResult);
     }
 
