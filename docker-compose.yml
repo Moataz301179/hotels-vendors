@@ -6,7 +6,7 @@ services:
     container_name: hotels-vendors-db
     environment:
       POSTGRES_USER: hotels_vendors
-      POSTGRES_PASSWORD: hotels_vendors_dev
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hotels_vendors_dev}
       POSTGRES_DB: hotels_vendors
     ports:
       - "5433:5432"
