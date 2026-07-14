@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Clock, User, Activity, RefreshCw } from "lucide-react";
+import { Shield, RefreshCw } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 
 const fadeInUp = {

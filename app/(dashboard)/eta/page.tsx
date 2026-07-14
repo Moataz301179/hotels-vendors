@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  FileCheck, Send, Clock, CheckCircle2, AlertTriangle, Search,
-  ArrowUpRight, ArrowDownRight, ExternalLink, RefreshCw,
+  FileCheck, Send, Clock, CheckCircle2, AlertTriangle, RefreshCw,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 
@@ -48,13 +46,12 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export default function EtaInvoicingPage() {
+export default function EtaCenterPage() {
   const { data: invoicesData, loading, refetch } = useApi<{ invoices: Invoice[]; pagination: { total: number } }>(
     "/api/v1/invoices?page=1&limit=50"
   );
 
   const invoices = invoicesData?.invoices ?? [];
-
   const metrics = {
     total: invoices.length,
     submitted: invoices.filter((i) => i.etaStatus === "SUBMITTED" || i.etaStatus === "ACCEPTED").length,
@@ -83,13 +80,12 @@ export default function EtaInvoicingPage() {
         </button>
       </motion.div>
 
-      {/* Metrics */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: "Total Invoices", value: metrics.total.toString(), icon: FileCheck, change: "All time" },
-          { label: "Submitted to ETA", value: metrics.submitted.toString(), icon: Send, change: "Pending response" },
-          { label: "ETA Accepted", value: metrics.accepted.toString(), icon: CheckCircle2, change: "Compliant" },
-          { label: "ETA Rejected", value: metrics.rejected.toString(), icon: AlertTriangle, change: metrics.rejected > 0 ? "Action needed" : "None" },
+          { label: "Total Invoices", value: metrics.total.toString(), icon: FileCheck },
+          { label: "Submitted to ETA", value: metrics.submitted.toString(), icon: Send },
+          { label: "ETA Accepted", value: metrics.accepted.toString(), icon: CheckCircle2 },
+          { label: "ETA Rejected", value: metrics.rejected.toString(), icon: AlertTriangle },
         ].map((m) => (
           <motion.div key={m.label} variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <div className="flex items-start justify-between mb-3">
@@ -99,25 +95,10 @@ export default function EtaInvoicingPage() {
               </div>
             </div>
             <p className="text-xl font-bold text-white">{m.value}</p>
-            <p className="text-[11px] text-white/25 mt-1">{m.change}</p>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Info Banner */}
-      <motion.div variants={fadeInUp} className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
-        <div className="flex items-start gap-3">
-          <FileCheck size={16} className="text-blue-400 mt-0.5 shrink-0" />
-          <div>
-            <p className="text-xs font-medium text-blue-400">ETA Compliance Engine</p>
-            <p className="text-[11px] text-white/40 mt-1">
-              Invoices are automatically submitted to the Egyptian Tax Authority upon issuance. Each submission receives a UUID for audit trail. Failed submissions land in a dead-letter queue with automatic retry.
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Invoice Table */}
       <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
         {loading ? (
           <div className="p-8 text-center">

@@ -62,7 +62,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
     },
     {
       section: "COMPLIANCE",
-      items: [{ icon: Zap, label: "ETA Invoicing", href: "/vat-invoicing" }],
+      items: [{ icon: Zap, label: "ETA Invoicing", href: "/eta" }],
     },
     {
       section: "SUPPORT",
@@ -100,7 +100,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: ClipboardList, label: "Orders", href: "/orders" },
         { icon: Truck, label: "Shipping", href: "/shipping" },
-        { icon: FileCheck, label: "ETA Center", href: "/vat-invoicing" },
+        { icon: FileCheck, label: "ETA Center", href: "/eta" },
       ],
     },
     {
