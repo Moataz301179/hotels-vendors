@@ -11,16 +11,16 @@ export default function AuthLayout({
       {/* Left: Brand Sidebar (desktop) */}
       <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] flex-col justify-between p-10 border-r border-white/[0.06] relative overflow-hidden">
         {/* Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#39ff7e]/[0.03] blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#8B1A1A]/[0.06] blur-[120px] pointer-events-none" />
 
         {/* Top: Logo */}
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-12">
-            <div className="w-9 h-9 rounded-lg bg-[#39ff7e]/10 border border-[#39ff7e]/20 flex items-center justify-center">
-              <span className="text-[#39ff7e] font-bold text-sm">HV</span>
+            <div className="w-9 h-9 rounded-lg bg-[#8B1A1A]/10 border border-[#8B1A1A]/20 flex items-center justify-center">
+              <span className="text-[#8B1A1A] font-bold text-sm font-serif">HV</span>
             </div>
-            <span className="text-[15px] font-semibold text-white tracking-tight uppercase tracking-[0.08em]">
-              Hotels<span className="text-[#ed1c24]">Vendors</span>
+            <span className="text-[15px] font-semibold text-white tracking-tight uppercase">
+              <span className="font-serif font-bold tracking-[0.18em]">Hotels Vendors</span>
             </span>
           </Link>
 

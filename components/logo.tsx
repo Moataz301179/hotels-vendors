@@ -13,8 +13,8 @@ export function LogoFull({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <BrandLogo variant="dark" size="sm" showText={false} />
-      <span className="tracking-[0.12em] font-bold text-white text-[15px] uppercase">
-        Hotels<span className="text-[#ed1c24]">Vendors</span>
+      <span className="tracking-[0.18em] font-serif font-bold text-white text-[15px] uppercase">
+        Hotels Vendors
       </span>
     </div>
   );

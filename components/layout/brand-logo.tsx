@@ -7,69 +7,97 @@ interface BrandLogoProps {
   variant?: "dark" | "light";
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   showText?: boolean;
+  showTagline?: boolean;
   forceColor?: "bw" | string;
 }
 
 const SIZE_MAP = {
-  xs: { icon: 18, text: 10 },
-  sm: { icon: 22, text: 12 },
-  md: { icon: 28, text: 14 },
-  lg: { icon: 38, text: 18 },
-  xl: { icon: 48, text: 22 },
+  xs: { icon: 20, text: 9, tagline: 7 },
+  sm: { icon: 26, text: 11, tagline: 8 },
+  md: { icon: 34, text: 14, tagline: 10 },
+  lg: { icon: 46, text: 18, tagline: 13 },
+  xl: { icon: 60, text: 24, tagline: 16 },
 };
 
+// Brand colors
+const BRAND_RED = "#8B1A1A";
+const BRAND_DARK_RED = "#6B0F0F";
+
 /**
- * Hotels Vendors brand logo — red geometric arrow/chevron mark with text.
- * Matches the official logo in public/assets/logo.svg.
+ * Hotels Vendors brand logo — intertwined H+V monogram with diagonal stripes.
+ * Matches the official logo from logo-transparent.png / logo-banner.png.
  */
 export function BrandLogo({
   className,
   variant = "light",
   size = "md",
   showText = true,
+  showTagline = false,
   forceColor,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
   const isDark = variant === "dark";
 
-  // Colors from the official logo
-  const red = "#ed1c24";
-  const darkText = isDark ? "#ffffff" : "#333132";
-  const greyText = isDark ? "rgba(255,255,255,0.6)" : "#6d6e71";
+  const iconColor = forceColor && forceColor !== "bw" ? forceColor : "#ffffff";
+  const textColor = isDark ? "#ffffff" : BRAND_RED;
+  const taglineColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(107,15,15,0.7)";
 
   return (
-    <div className={cn("inline-flex items-center gap-2 shrink-0", className)}>
-      {/* Geometric arrow/chevron mark */}
+    <div className={cn("inline-flex flex-col items-center gap-1 shrink-0", className)}>
+      {/* H+V Monogram Icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 42.26 14.2"
+        viewBox="0 0 100 100"
         width={dims.icon}
-        height={dims.icon * 0.335}
+        height={dims.icon}
         className="shrink-0"
         aria-label="Hotels Vendors"
       >
-        {/* Red arrow/chevron */}
+        {/* Shield / monogram outer shape */}
         <path
-          d="M35.6,0s-3.13.52-5.04,2.76-1.61,5.04-1.61,5.04l5.75,5.76-1.16,1.16-4.59-4.57v2.5l8.41,8.48h2.62l-5.15-5.13,1.16-1.16,6.27,6.29v-2.62L30.79,7.06s.07-1.91,1.46-3.44c1.38-1.53,3.7-1.64,3.7-1.64h4.56l1.76-1.98h-6.66Z"
-          fill={forceColor && forceColor !== "bw" ? forceColor : red}
+          d="M50 5 
+             C72 5, 90 15, 92 35 
+             L92 55 
+             C92 72, 78 88, 62 95 
+             L50 98 
+             L38 95 
+             C22 88, 8 72, 8 55 
+             L8 35 
+             C8 15, 28 5, 50 5Z"
+          fill={iconColor}
         />
-        {/* Red diagonal accent */}
-        <polygon
-          points="40.5,11.73 35.94,7.1 33.33,7.1 40.5,14.2 42.26,12.55 42.26,1.98 40.5,1.98 40.5,11.73"
-          fill={forceColor && forceColor !== "bw" ? forceColor : red}
-        />
-        <polygon
-          points="28.96,17.67 32.39,21.15 35.01,21.15 28.96,15.13 28.96,17.67"
-          fill={forceColor && forceColor !== "bw" ? forceColor : red}
-        />
+        {/* Inner cutout to form the H shape — left vertical */}
+        <rect x="22" y="20" width="10" height="58" rx="2" fill={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} />
+        {/* Inner cutout — right vertical */}
+        <rect x="68" y="20" width="10" height="58" rx="2" fill={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} />
+        {/* Inner cutout — center horizontal bar */}
+        <rect x="32" y="42" width="36" height="8" rx="1" fill={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} />
+        {/* Diagonal stripe 1 — top */}
+        <line x1="12" y1="30" x2="88" y2="65" stroke={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} strokeWidth="4" strokeLinecap="round" />
+        {/* Diagonal stripe 2 — middle */}
+        <line x1="12" y1="50" x2="88" y2="85" stroke={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} strokeWidth="4" strokeLinecap="round" />
+        {/* Diagonal stripe 3 — bottom */}
+        <line x1="15" y1="70" x2="75" y2="95" stroke={forceColor && forceColor !== "bw" ? forceColor : BRAND_RED} strokeWidth="3" strokeLinecap="round" />
       </svg>
 
       {/* Text */}
       {showText && (
-        <span className="leading-none tracking-[0.08em] font-bold" style={{ fontSize: dims.text }}>
-          <span style={{ color: darkText }}>Hotels</span>
-          <span style={{ color: forceColor && forceColor !== "bw" ? forceColor : red }}>Vendors</span>
-        </span>
+        <div className="flex flex-col items-center gap-0.5">
+          <span
+            className="tracking-[0.22em] font-serif font-bold uppercase"
+            style={{ fontSize: dims.text, color: textColor }}
+          >
+            Hotels Vendors
+          </span>
+          {showTagline && (
+            <span
+              className="tracking-[0.12em] font-serif italic"
+              style={{ fontSize: dims.tagline, color: taglineColor }}
+            >
+              Smarter Together
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

@@ -11,7 +11,7 @@ export function SiteFooter() {
             <div className="flex items-center gap-2.5 mb-3">
               <BrandLogo variant="dark" size="sm" />
               <span className="font-semibold text-[15px] tracking-[0.12em] text-white uppercase">
-                Hotels<span className="text-[#ed1c24]">Vendors</span>
+                <span className="font-serif font-bold tracking-[0.18em]">Hotels Vendors</span>
               </span>
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">

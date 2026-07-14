@@ -695,11 +695,11 @@ export default function MarketingPage() {
 
       {/* ═══════════ CTA ═══════════ */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(to right, #39ff7e 1px, transparent 1px), linear-gradient(to bottom, #39ff7e 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(to right, #8B1A1A 1px, transparent 1px), linear-gradient(to bottom, #8B1A1A 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" /></div>
+          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" showText={false} /></div>
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-white">
-            The Future of Hotel<br /><span style={{ color: "#39ff7e" }}>Procurement is Here.</span>
+            The Future of Hotel<br /><span style={{ color: "#8B1A1A" }}>Procurement is Here.</span>
           </h2>
           <p className="text-white/45 text-lg mb-4 max-w-xl mx-auto">Start free today. Explore the sandbox. Let our AI agents guide your onboarding. No commitment, no subscription — just results.</p>
           <p className="text-sm mb-10" style={{ color: "#ff7e1a" }}>First B2B AI-driven procurement platform for the hospitality sector in Egypt and the region.</p>
