@@ -64,9 +64,9 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
           <Menu size={20} />
         </button>
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="md" />
-          <span className="text-sm font-semibold text-white uppercase tracking-[0.08em] hidden lg:block">
-            <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
+          <BrandLogo variant="dark" size="md" showText={false} />
+          <span className="text-sm font-semibold text-white uppercase hidden lg:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+            Hotels Vendors
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">

@@ -9,9 +9,9 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5 mb-3">
-              <BrandLogo variant="dark" size="sm" />
-              <span className="font-semibold text-[15px] tracking-[0.12em] text-white uppercase">
-                <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
+              <BrandLogo variant="dark" size="sm" showText={false} />
+              <span className="font-semibold text-[15px] text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+                Hotels Vendors
               </span>
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">

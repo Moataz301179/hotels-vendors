@@ -8,7 +8,7 @@ export function AuthLeftPanel() {
       style={{ background: "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)" }}
     >
       <div className="relative z-10">
-        <BrandLogo variant="dark" size="md" />
+        <BrandLogo variant="dark" size="md" showText={false} />
       </div>
 
       <div className="relative z-10 space-y-6">

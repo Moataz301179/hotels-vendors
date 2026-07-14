@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Sparkles, ArrowRight, Loader2 } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 const SUPPLIER_PRESETS = [
   "How do I register as a supplier?",
