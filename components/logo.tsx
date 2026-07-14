@@ -12,9 +12,9 @@ export function Logo({ className = "h-8 w-8" }: { className?: string }) {
 export function LogoFull({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      <BrandLogo variant="dark" size="sm" />
-      <span className="tracking-[0.12em] font-semibold text-white text-[15px] uppercase">
-        Hotels<span className="text-[#39ff7e]">Vendors</span>
+      <BrandLogo variant="dark" size="sm" showText={false} />
+      <span className="tracking-[0.12em] font-bold text-white text-[15px] uppercase">
+        Hotels<span className="text-[#ed1c24]">Vendors</span>
       </span>
     </div>
   );

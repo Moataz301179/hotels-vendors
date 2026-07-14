@@ -66,7 +66,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <BrandLogo variant="dark" size="md" />
           <span className="text-sm font-semibold text-white uppercase tracking-[0.08em] hidden lg:block">
-            Hotels<span className="text-[#39ff7e]">Vendors</span>
+            Hotels<span className="text-[#ed1c24]">Vendors</span>
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">

@@ -24,7 +24,7 @@ export function SiteNav() {
       <Link href="/" className="flex items-center gap-2.5">
         <BrandLogo variant="dark" size="sm" />
         <span className="tracking-[0.12em] font-semibold text-white text-[15px] uppercase">
-          Hotels<span className="text-[#39ff7e]">Vendors</span>
+          Hotels<span className="text-[#ed1c24]">Vendors</span>
         </span>
       </Link>
 

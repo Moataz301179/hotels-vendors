@@ -240,7 +240,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
         <Link href="/" className="flex items-center gap-2.5 group">
           <BrandLogo variant="dark" size="md" />
           <span className="text-sm font-semibold text-white uppercase tracking-[0.08em]">
-            Hotels<span className="text-[#39ff7e]">Vendors</span>
+            Hotels<span className="text-[#ed1c24]">Vendors</span>
           </span>
         </Link>
         <button

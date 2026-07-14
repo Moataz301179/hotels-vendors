@@ -20,7 +20,7 @@ export default function AuthLayout({
               <span className="text-[#39ff7e] font-bold text-sm">HV</span>
             </div>
             <span className="text-[15px] font-semibold text-white tracking-tight uppercase tracking-[0.08em]">
-              Hotels<span className="text-[#39ff7e]">Vendors</span>
+              Hotels<span className="text-[#ed1c24]">Vendors</span>
             </span>
           </Link>
 
