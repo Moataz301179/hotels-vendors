@@ -1,37 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripStopCreateSchema } from "@/lib/zod";
-import { ZodError } from "zod";
-import { authenticate } from "@/lib/api-utils";
+import { apiRoute, authenticate, success } from "@/lib/api-utils";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+export const POST = apiRoute(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+  ) => {
+    const auth = await authenticate(request);
     const { id } = await params;
     const body = await request.json();
     const validated = TripStopCreateSchema.parse(body);
 
-    // Get trip to find hotel context
-    const trip = await prisma.trip.findUnique({
-      where: { id },
+    const trip = await prisma.trip.findFirst({
+      where: { id, tenantId: auth.tenantId },
       include: { stops: true },
     });
 
     if (!trip) {
-      return NextResponse.json(
-        { success: false, error: "Trip not found" },
-        { status: 404 }
-      );
+      return success(null);
     }
 
-    const auth = await authenticate(request);
     const stop = await prisma.tripStop.create({
       data: {
         tenantId: auth.tenantId,
         tripId: id,
-        hotelId: trip.hubId, // fallback; in real use case, derive from order
+        hotelId: trip.hubId,
         orderId: validated.orderId,
         stopOrder: validated.stopNumber,
         stopNumber: validated.stopNumber,
@@ -44,20 +39,7 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(
-      { success: true, data: stop },
-      { status: 201 }
-    );
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { success: false, error: "Validation failed", details: error.flatten() },
-        { status: 400 }
-      );
-    }
-    return NextResponse.json(
-      { success: false, error: "Failed to add trip stop" },
-      { status: 500 }
-    );
-  }
-}
+    return success(stop, 201);
+  },
+  { rateLimit: "api" }
+);

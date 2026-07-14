@@ -1,19 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripStatus } from "@prisma/client";
+import { apiRoute, authenticate, success } from "@/lib/api-utils";
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+export const GET = apiRoute(
+  async (
+    _request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+  ) => {
+    const auth = await authenticate(_request);
     const { id } = await params;
-    const hub = await prisma.logisticsHub.findUnique({
-      where: { id },
+    const hub = await prisma.logisticsHub.findFirst({
+      where: { id, tenantId: auth.tenantId },
       include: {
         trips: {
           where: {
-            status: { in: [TripStatus.SCHEDULED, TripStatus.LOADING, TripStatus.IN_TRANSIT] },
+            status: {
+              in: [TripStatus.SCHEDULED, TripStatus.LOADING, TripStatus.IN_TRANSIT],
+            },
           },
           orderBy: { scheduledDate: "asc" },
           include: {
@@ -28,17 +32,9 @@ export async function GET(
     });
 
     if (!hub) {
-      return NextResponse.json(
-        { success: false, error: "Hub not found" },
-        { status: 404 }
-      );
+      return success(null);
     }
 
-    return NextResponse.json({ success: true, data: hub });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch logistics hub" },
-      { status: 500 }
-    );
+    return success(hub);
   }
-}
+);

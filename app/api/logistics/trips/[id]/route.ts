@@ -1,16 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TripUpdateSchema } from "@/lib/zod";
-import { ZodError } from "zod";
+import { apiRoute, authenticate, success } from "@/lib/api-utils";
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+export const GET = apiRoute(
+  async (
+    _request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+  ) => {
+    const auth = await authenticate(_request);
     const { id } = await params;
-    const trip = await prisma.trip.findUnique({
-      where: { id },
+    const trip = await prisma.trip.findFirst({
+      where: { id, tenantId: auth.tenantId },
       include: {
         hub: { select: { id: true, name: true, city: true } },
         stops: {
@@ -22,26 +23,19 @@ export async function GET(
     });
 
     if (!trip) {
-      return NextResponse.json(
-        { success: false, error: "Trip not found" },
-        { status: 404 }
-      );
+      return success(null);
     }
 
-    return NextResponse.json({ success: true, data: trip });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch trip" },
-      { status: 500 }
-    );
+    return success(trip);
   }
-}
+);
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+export const PATCH = apiRoute(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+  ) => {
+    const auth = await authenticate(request);
     const { id } = await params;
     const body = await request.json();
     const validated = TripUpdateSchema.parse(body);
@@ -55,7 +49,7 @@ export async function PATCH(
     }
 
     const trip = await prisma.trip.update({
-      where: { id },
+      where: { id, tenantId: auth.tenantId },
       data,
       include: {
         hub: { select: { id: true, name: true, city: true } },
@@ -67,17 +61,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json({ success: true, data: trip });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { success: false, error: "Validation failed", details: error.flatten() },
-        { status: 400 }
-      );
-    }
-    return NextResponse.json(
-      { success: false, error: "Failed to update trip" },
-      { status: 500 }
-    );
-  }
-}
+    return success(trip);
+  },
+  { rateLimit: "api" }
+);

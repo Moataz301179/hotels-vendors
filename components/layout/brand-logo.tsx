@@ -41,60 +41,62 @@ export function BrandLogo({
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
-      {/* H+V Monogram Icon */}
+      {/* H+V Monogram Icon — accurate to brand CDN source */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 110"
+        viewBox="0 0 200 220"
         width={dims.icon}
         height={dims.icon * 1.1}
         className="shrink-0"
         aria-label="Hotels Vendors"
       >
-        {/* Outer shield shape — rounded top-left, pointed bottom-right, tilted */}
+        {/* Shield shape — rounded top-left, angled bottom-right */}
         <path
           d={`
-            M 30 8
-            C 30 4, 34 2, 38 2
-            L 72 2
-            C 76 2, 78 4, 80 8
-            L 88 55
-            C 90 62, 85 70, 78 74
-            L 50 95
-            C 44 98, 36 95, 32 88
-            L 14 50
-            C 10 42, 12 32, 16 24
+            M 55 8
+            C 55 4, 58 2, 62 2
+            L 148 2
+            C 152 2, 155 4, 158 8
+            L 178 110
+            C 180 118, 174 130, 164 136
+            L 104 190
+            C 96 195, 84 190, 78 180
+            L 28 100
+            C 22 88, 26 72, 32 60
             Z
           `}
           fill={iconColor}
         />
-        {/* Left vertical notch — creates the H left bar */}
+        {/* Inner cutout — creates H left vertical bar + V diagonal intersection */}
         <path
           d={`
-            M 24 20
-            L 34 20
-            L 38 28
-            L 38 72
-            L 34 80
-            L 24 80
-            L 20 72
-            L 20 28
+            M 44 40
+            L 68 40
+            L 76 54
+            L 82 40
+            L 106 40
+            L 106 148
+            L 86 148
+            L 64 82
+            L 64 148
+            L 44 148
             Z
           `}
           fill={bgColor}
         />
-        {/* Diagonal stripe 1 — top */}
+        {/* Diagonal stripe 1 — upper */}
         <path
-          d="M 18 32 L 78 68 L 74 72 L 14 36 Z"
+          d="M 32 64 L 164 122 L 158 128 L 26 70 Z"
           fill={bgColor}
         />
         {/* Diagonal stripe 2 — middle */}
         <path
-          d="M 16 50 L 76 86 L 72 90 L 12 54 Z"
+          d="M 28 88 L 160 146 L 154 152 L 22 94 Z"
           fill={bgColor}
         />
-        {/* Diagonal stripe 3 — bottom */}
+        {/* Diagonal stripe 3 — lower */}
         <path
-          d="M 20 66 L 68 96 L 64 100 L 16 70 Z"
+          d="M 34 108 L 132 170 L 126 176 L 28 114 Z"
           fill={bgColor}
         />
       </svg>

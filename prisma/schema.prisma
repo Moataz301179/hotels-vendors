@@ -1180,10 +1180,15 @@ enum HubType {
 
 enum TripStatus {
   SCHEDULED
+  PICKED_UP
   LOADING
   IN_TRANSIT
-  COMPLETED
+  ARRIVED
+  DELIVERED
+  DELAYED
+  RETURNING
   CANCELLED
+  COMPLETED
 }
 
 enum StopStatus {
@@ -1191,6 +1196,7 @@ enum StopStatus {
   ARRIVED
   DELIVERED
   FAILED
+  POD_CAPTURED
 }
 
 // ─────────────────────────────────────────
