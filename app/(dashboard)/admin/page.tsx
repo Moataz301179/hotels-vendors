@@ -27,6 +27,7 @@ const MODULES = [
       { label: "Finance & Liquidity", desc: "Credit facilities, factoring pipeline & PO-ETA reconciliation", icon: Wallet, to: "/factoring", color: "#f59e0b" },
       { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
       { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
+      { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "#39ff7e" },
     ],
   },
   {
@@ -35,6 +36,16 @@ const MODULES = [
       { label: "Data Explorer", desc: "Cross-tenant search across users, suppliers, hotels, orders & products", icon: Search, to: "/admin/explorer", color: "#6366f1" },
       { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#14b8a6" },
       { label: "Reports", desc: "Platform-wide analytics, GMV tracking & KPI dashboards", icon: PieChart, to: "/admin/reports", color: "#8b5cf6" },
+      { label: "Analytics & Insights", desc: "User metrics, order analytics, revenue trends & growth KPIs", icon: BarChart3, to: "/admin/analytics", color: "#c455ff" },
+    ],
+  },
+  {
+    group: "Platform Management",
+    items: [
+      { label: "Credentials & Secrets", desc: "API keys, webhook secrets, .env config & Oliv/ETA credentials", icon: ShieldCheck, to: "/admin/credentials", color: "#f59e0b" },
+      { label: "AI Assistant", desc: "Generative suggestions for improvements, growth & enhancements", icon: Brain, to: "/admin/ai-assistant", color: "#c455ff" },
+      { label: "User Management", desc: "Users, roles, permissions & tenant administration", icon: Users, to: "/admin/users", color: "#3b82f6" },
+      { label: "Logs & Audit", desc: "System logs, security events & compliance audit trail", icon: Activity, to: "/admin/logs", color: "#ef4444" },
     ],
   },
   {
