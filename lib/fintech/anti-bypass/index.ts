@@ -13,7 +13,7 @@
  */
 
 import { generateReferralToken } from "./layer1-referral-token";
-import { buildOlivKYCPrefillPayload } from "./layer3-crm-attribution";
+import { buildOlivKYCPrefill } from "./layer3-crm-attribution";
 
 export interface FactoringRequest {
   etaUuid: string;
@@ -96,4 +96,4 @@ export function initiateFactoring(request: FactoringRequest) {
   };
 }
 
-export { buildOlivKYCPrefillPayload };
+export { buildOlivKYCPrefill };

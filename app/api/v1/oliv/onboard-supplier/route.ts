@@ -11,7 +11,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
-import { buildOlivKYCPrefillPayload } from "@/lib/fintech/anti-bypass/layer3-crm-attribution";
+import { buildOlivKYCPrefill } from "@/lib/fintech/anti-bypass/layer3-crm-attribution";
 
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Build pre-fill payload (Layer 3)
-    const prefillPayload = buildOlivKYCPrefillPayload({
+    const prefillPayload = buildOlivKYCPrefill({
       company: {
         legalName: company.legalName,
         tradeName: company.tradeName,
