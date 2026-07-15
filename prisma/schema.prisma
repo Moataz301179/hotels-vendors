@@ -427,9 +427,6 @@ model Supplier {
   olivSyncAt     DateTime?         // Last Oliv sync timestamp
   olivStatus     String?           // Oliv onboarding: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
 
-  // ── Consent Records ──
-  consentRecords ConsentRecord[]
-
   // ── Oliv Credit Facility ──
   olivCreditFacilities OlivCreditFacility[]
 
