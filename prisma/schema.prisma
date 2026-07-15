@@ -2891,3 +2891,64 @@ model OlivOnboardingAudit {
   @@index([olivStatus])
   @@index([partnerId])
 }
+
+// ═══════════════════════════════════════════════════════════════
+// AI SUBSCRIPTIONS & CREDITS
+// ═══════════════════════════════════════════════════════════════
+
+model AISubscription {
+  id String @id @default(cuid())
+
+  userId String
+  tenantId String
+
+  // Subscription details
+  tier String @default("FREE")  // FREE, BASIC, PRO, ENTERPRISE
+  status String @default("ACTIVE")  // ACTIVE, CANCELLED, EXPIRED
+
+  // Credits
+  monthlyCredits Int
+  monthlyPrice Int  // in EGP (smallest unit)
+
+  // Billing period
+  startedAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Payment
+  paymentReference String?
+
+  // Audit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, tenantId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model AITokenUsage {
+  id String @id @default(cuid())
+
+  userId String
+  tenantId String
+
+  // What feature was used
+  feature String  // "ai_assistant", "smart_suggestions", "auto_categorize", etc.
+
+  // Cost
+  creditsCost Int
+
+  // Token counts (for billing transparency)
+  tokensInput Int @default(0)
+  tokensOutput Int @default(0)
+
+  // Task complexity
+  taskComplexity String @default("simple")  // simple, medium, complex
+
+  // Audit
+  createdAt DateTime @default(now())
+
+  @@index([userId, tenantId])
+  @@index([feature])
+  @@index([createdAt])
+}

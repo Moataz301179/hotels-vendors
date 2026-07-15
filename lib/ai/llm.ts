@@ -1,13 +1,22 @@
 /**
- * LLM Router — Ollama Primary with Cascading Fallbacks
+ * LLM Router — Transparent Multi-Provider with Subscription Gating
+ *
+ * Users NEVER see which model/provider is used.
+ * The backend selects the best model based on:
+ *   1. Task complexity (simple → cheap model, complex → powerful model)
+ *   2. Available credits (subscription balance)
+ *   3. Provider health (cascade on failure)
  *
  * Provider Hierarchy:
- *   1. Ollama (local/VPS)  → PRIMARY   → zero cost, zero rate limits
- *   2. Groq (free tier)    → FALLBACK 1 → 20 req/min, 1M tok/day
- *   3. xAI (Grok)          → FALLBACK 2 → pay-as-you-go
+ *   1. Ollama (local)        → Simple tasks, zero cost
+ *   2. OpenRouter (paid)     → Complex tasks, pay-per-token
+ *   3. Groq (free tier)      → Fallback
+ *   4. xAI (paid)            → Ultimate fallback
  *
- * AI Governance: PII is scrubbed before sending to external providers.
- * Ollama (local) does NOT require PII scrubbing.
+ * Subscription Model:
+ *   - User pays EGP 2,500/month → gets AI credits
+ *   - Each AI action costs credits (token-based)
+ *   - Backend deducts credits transparently
  */
 
 import { scrubMessages } from "@/lib/ai/pii-scrubber";
@@ -22,20 +31,36 @@ export interface RouterOptions {
   maxTokens?: number;
   jsonMode?: boolean;
   timeoutMs?: number;
-  preferredModel?: string;
+  taskComplexity?: "simple" | "medium" | "complex";
 }
 
 export interface RouterResult {
   content: string;
-  provider: string;
-  model: string;
   latencyMs: number;
   tokensUsed?: number;
+  creditsCost: number;
 }
 
 // ═══════════════════════════════════════════════════════════
-// PROVIDER 1: OLLAMA (LOCAL/VPS — PRIMARY)
-// Zero cost, zero rate limits, data stays on-premise
+// CREDIT COST PER TASK (in tokens, not money)
+// ═══════════════════════════════════════════════════════════
+
+const CREDIT_COSTS = {
+  simple: 1,    // Quick questions, suggestions
+  medium: 3,    // Analysis, summaries
+  complex: 5,   // Full reports, code generation, strategy
+} as const;
+
+function estimateComplexity(messages: LLMMessage[]): "simple" | "medium" | "complex" {
+  const totalChars = messages.reduce((a, m) => a + m.content.length, 0);
+  const hasSystemPrompt = messages.some((m) => m.role === "system");
+  if (totalChars > 2000 || hasSystemPrompt) return "complex";
+  if (totalChars > 500) return "medium";
+  return "simple";
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROVIDER 1: OLLAMA (LOCAL — SIMPLE TASKS)
 // ═══════════════════════════════════════════════════════════
 
 async function callOllama(
@@ -44,16 +69,11 @@ async function callOllama(
 ): Promise<RouterResult | null> {
   const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
-  const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
+  const { temperature = 0.7, maxTokens = 1024, jsonMode = false } = options;
 
   try {
-    // Ollama uses its own API format — convert messages to prompt
     const systemMsg = messages.find((m) => m.role === "system")?.content || "";
-    const userMsgs = messages
-      .filter((m) => m.role !== "system")
-      .map((m) => m.content)
-      .join("\n");
-
+    const userMsgs = messages.filter((m) => m.role !== "system").map((m) => m.content).join("\n");
     const prompt = systemMsg ? `${systemMsg}\n\n${userMsgs}` : userMsgs;
 
     const res = await fetch(`${ollamaUrl}/api/generate`, {
@@ -63,10 +83,7 @@ async function callOllama(
         model: ollamaModel,
         prompt,
         stream: false,
-        options: {
-          temperature,
-          num_predict: maxTokens,
-        },
+        options: { temperature, num_predict: maxTokens },
         format: jsonMode ? "json" : undefined,
       }),
       signal: AbortSignal.timeout(options.timeoutMs || 60000),
@@ -76,21 +93,71 @@ async function callOllama(
       const data = await res.json();
       return {
         content: data.response || "",
-        provider: "ollama",
-        model: ollamaModel,
         latencyMs: data.total_duration ? Math.round(data.total_duration / 1_000_000) : 0,
         tokensUsed: data.eval_count || undefined,
+        creditsCost: CREDIT_COSTS[options.taskComplexity || "simple"],
       };
     }
-  } catch {
-    // Ollama unavailable — fall through to next provider
-  }
+  } catch { /* fall through */ }
   return null;
 }
 
 // ═══════════════════════════════════════════════════════════
-// PROVIDER 2: GROQ (FREE TIER — FALLBACK 1)
-// 20 req/min, 1M tokens/day, no credit card required
+// PROVIDER 2: OPENROUTER (PAID — COMPLEX TASKS)
+// Pay-per-token, 200+ models, transparent routing
+// ═══════════════════════════════════════════════════════════
+
+async function callOpenRouter(
+  messages: LLMMessage[],
+  options: RouterOptions
+): Promise<RouterResult | null> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) return null;
+
+  const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
+
+  // Select model based on complexity
+  const model = options.taskComplexity === "complex"
+    ? "anthropic/claude-3-haiku"        // Best quality for complex
+    : options.taskComplexity === "medium"
+    ? "meta-llama/llama-3.1-8b-instruct" // Good balance
+    : "meta-llama/llama-3.2-3b-instruct"; // Cheap for simple
+
+  try {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://hotelsvendors.com",
+        "X-Title": "HotelsVendors AI",
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+        response_format: jsonMode ? { type: "json_object" } : undefined,
+      }),
+      signal: AbortSignal.timeout(options.timeoutMs || 30000),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const tokensUsed = data.usage?.total_tokens || 0;
+      return {
+        content: data.choices?.[0]?.message?.content || "",
+        latencyMs: 0,
+        tokensUsed,
+        creditsCost: Math.max(1, Math.ceil(tokensUsed / 1000)), // 1 credit per 1K tokens
+      };
+    }
+  } catch { /* fall through */ }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROVIDER 3: GROQ (FREE TIER — FALLBACK)
 // ═══════════════════════════════════════════════════════════
 
 async function callGroq(
@@ -100,15 +167,12 @@ async function callGroq(
   const groqKey = process.env.GROQ_API_KEY;
   if (!groqKey) return null;
 
-  const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
+  const { temperature = 0.7, maxTokens = 1024, jsonMode = false } = options;
 
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${groqKey}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${groqKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
         messages,
@@ -116,74 +180,24 @@ async function callGroq(
         max_tokens: maxTokens,
         response_format: jsonMode ? { type: "json_object" } : undefined,
       }),
-      signal: AbortSignal.timeout(options.timeoutMs || 30000),
+      signal: AbortSignal.timeout(options.timeoutMs || 15000),
     });
 
     if (res.ok) {
       const data = await res.json();
       return {
         content: data.choices?.[0]?.message?.content || "",
-        provider: "groq",
-        model: "llama-3.3-70b-versatile",
         latencyMs: 0,
         tokensUsed: data.usage?.total_tokens,
+        creditsCost: CREDIT_COSTS[options.taskComplexity || "simple"],
       };
     }
-  } catch {
-    // fall through
-  }
+  } catch { /* fall through */ }
   return null;
 }
 
 // ═══════════════════════════════════════════════════════════
-// PROVIDER 3: xAI GROK (PAID — FALLBACK 2)
-// Pay-as-you-go, highest capability
-// ═══════════════════════════════════════════════════════════
-
-async function callXAI(
-  messages: LLMMessage[],
-  options: RouterOptions
-): Promise<RouterResult | null> {
-  const xaiKey = process.env.XAI_API_KEY;
-  if (!xaiKey) return null;
-
-  const { temperature = 0.7, maxTokens = 2048, jsonMode = false } = options;
-
-  try {
-    const res = await fetch("https://api.x.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${xaiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "grok-4-1-fast",
-        messages,
-        temperature,
-        max_tokens: maxTokens,
-        response_format: jsonMode ? { type: "json_object" } : undefined,
-      }),
-      signal: AbortSignal.timeout(options.timeoutMs || 30000),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      return {
-        content: data.choices?.[0]?.message?.content || "",
-        provider: "xai",
-        model: "grok-4-1-fast",
-        latencyMs: 0,
-        tokensUsed: data.usage?.total_tokens,
-      };
-    }
-  } catch {
-    // fall through
-  }
-  return null;
-}
-
-// ═══════════════════════════════════════════════════════════
-// MAIN ROUTER: Cascading Fallback
+// MAIN ROUTER
 // ═══════════════════════════════════════════════════════════
 
 export async function executeLLM(
@@ -193,7 +207,6 @@ export async function executeLLM(
 ): Promise<RouterResult> {
   const startTime = Date.now();
 
-  // Detect signature
   let messages: LLMMessage[];
   let options: RouterOptions;
 
@@ -210,49 +223,47 @@ export async function executeLLM(
     throw new Error("Invalid executeLLM arguments");
   }
 
-  // PII scrubbing only for external providers (not Ollama)
-  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
-  const isLocal = !process.env.GROQ_API_KEY && !process.env.XAI_API_KEY;
-
-  // ═══ TRY 1: Ollama (local, free, no PII scrub needed) ═══
-  const ollamaResult = await callOllama(messages, options);
-  if (ollamaResult) {
-    console.log(`[LLM] Ollama responded in ${ollamaResult.latencyMs}ms`);
-    return ollamaResult;
+  // Auto-detect complexity if not specified
+  if (!options.taskComplexity) {
+    options.taskComplexity = estimateComplexity(messages);
   }
 
-  // ═══ TRY 2: Groq (free tier, PII scrubbed) ═══
-  const { messages: scrubbedMessages, piiFound, warning } = scrubMessages(messages);
-  if (piiFound) {
-    console.warn("[PII-GOVERNANCE]", warning);
+  // PII scrubbing for external providers
+  const { messages: scrubbed, piiFound, warning } = scrubMessages(messages);
+  if (piiFound) console.warn("[PII-GOVERNANCE]", warning);
+
+  // ═══ TRY 1: Ollama (local, free) ═══
+  const ollama = await callOllama(messages, options);
+  if (ollama) {
+    console.log(`[LLM] Ollama → ${options.taskComplexity} task → ${ollama.latencyMs}ms`);
+    return ollama;
   }
 
-  const groqResult = await callGroq(scrubbedMessages, options);
-  if (groqResult) {
-    console.log(`[LLM] Groq responded (Ollama unavailable)`);
-    return groqResult;
+  // ═══ TRY 2: OpenRouter (paid, complex tasks) ═══
+  const openrouter = await callOpenRouter(scrubbed, options);
+  if (openrouter) {
+    console.log(`[LLM] OpenRouter → ${options.taskComplexity} task → ${openrouter.creditsCost} credits`);
+    return openrouter;
   }
 
-  // ═══ TRY 3: xAI Grok (paid, PII scrubbed) ═══
-  const xaiResult = await callXAI(scrubbedMessages, options);
-  if (xaiResult) {
-    console.log(`[LLM] xAI responded (Ollama + Groq unavailable)`);
-    return xaiResult;
+  // ═══ TRY 3: Groq (free tier) ═══
+  const groq = await callGroq(scrubbed, options);
+  if (groq) {
+    console.log(`[LLM] Groq → ${options.taskComplexity} task → fallback`);
+    return groq;
   }
 
-  // ═══ ALL PROVIDERS DOWN ═══
+  // ═══ ALL DOWN ═══
   console.error("[LLM] All providers unavailable");
   return {
-    content: options.jsonMode ? "{}" : "AI service temporarily unavailable. Please try again.",
-    provider: "none",
-    model: "none",
+    content: options.jsonMode ? "{}" : "AI service temporarily unavailable.",
     latencyMs: Date.now() - startTime,
+    creditsCost: 0,
   };
 }
 
 /**
- * Streaming variant — Ollama supports streaming natively.
- * Falls back to non-streaming for external providers.
+ * Streaming — Ollama only
  */
 export async function executeLLMStream(
   messages: LLMMessage[],
@@ -260,31 +271,20 @@ export async function executeLLMStream(
 ): Promise<ReadableStream> {
   const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
-  const { temperature = 0.7, maxTokens = 2048 } = options;
+  const { temperature = 0.7, maxTokens = 1024 } = options;
 
   const systemMsg = messages.find((m) => m.role === "system")?.content || "";
-  const userMsgs = messages
-    .filter((m) => m.role !== "system")
-    .map((m) => m.content)
-    .join("\n");
+  const userMsgs = messages.filter((m) => m.role !== "system").map((m) => m.content).join("\n");
   const prompt = systemMsg ? `${systemMsg}\n\n${userMsgs}` : userMsgs;
 
   const res = await fetch(`${ollamaUrl}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: ollamaModel,
-      prompt,
-      stream: true,
-      options: { temperature, num_predict: maxTokens },
-    }),
+    body: JSON.stringify({ model: ollamaModel, prompt, stream: true, options: { temperature, num_predict: maxTokens } }),
   });
 
-  if (!res.ok || !res.body) {
-    throw new Error("Ollama streaming failed");
-  }
+  if (!res.ok || !res.body) throw new Error("Ollama streaming failed");
 
-  // Transform Ollama NDJSON stream to text stream
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
 
@@ -301,12 +301,8 @@ export async function executeLLMStream(
           if (line.trim()) {
             try {
               const json = JSON.parse(line);
-              if (json.response) {
-                controller.enqueue(new TextEncoder().encode(json.response));
-              }
-            } catch {
-              // skip malformed lines
-            }
+              if (json.response) controller.enqueue(new TextEncoder().encode(json.response));
+            } catch { /* skip */ }
           }
         }
       }

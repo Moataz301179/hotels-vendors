@@ -1,40 +1,75 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeLLM } from "@/lib/ai/llm";
+import { hasEnoughCredits, deductAICredits, getAICreditsBalance } from "@/lib/ai/credits";
 
 export async function POST(request: NextRequest) {
   try {
     const { message, context } = await request.json();
 
-    const systemPrompt = `You are the AI Assistant for HotelsVendors — a Digital Procurement Hub for Egyptian hospitality.
+    // Extract user info from session (middleware already verified)
+    const userId = request.headers.get("x-user-id") || "anonymous";
+    const tenantId = request.headers.get("x-tenant-id") || "default";
 
-Your role is to help the admin improve the platform by suggesting actionable improvements.
+    // Check AI credits
+    const { allowed, balance, requiredCredits } = await hasEnoughCredits(userId, tenantId, "ai_assistant");
+
+    if (!allowed) {
+      return NextResponse.json({
+        success: false,
+        error: "AI credits exhausted",
+        message: `You've used ${balance.usedCredits}/${balance.totalCredits} AI credits this month. Upgrade your plan for more.`,
+        credits: {
+          used: balance.usedCredits,
+          total: balance.totalCredits,
+          available: balance.availableCredits,
+          tier: balance.subscriptionTier,
+        },
+        upgradeUrl: "/settings/subscription",
+      }, { status: 402 });
+    }
+
+    // System prompt — no provider info exposed
+    const systemPrompt = `You are an AI assistant for HotelsVendors — a Digital Procurement Hub for Egyptian hospitality.
+
+You help admins improve the platform with actionable suggestions.
 
 Current Platform Metrics:
 - Total Users: ${context?.currentMetrics?.totalUsers || 0}
 - Total Orders: ${context?.currentMetrics?.totalOrders || 0}
-- Platform Fees (2%): EGP ${context?.currentMetrics?.platformFees || 0}
-- Factoring Volume: EGP ${context?.currentMetrics?.factoringVolume || 0}
+- Platform Fees (2%): EGP ${context?.currentMetrics?.platformFees?.toLocaleString() || 0}
+- Factoring Volume: EGP ${context?.currentMetrics?.factoringVolume?.toLocaleString() || 0}
 
-You are running on Ollama (local LLM) — you are free, private, and data stays on-premise.
+Respond concisely with bullet points and markdown. Always provide actionable next steps.`;
 
-Respond in a helpful, concise manner. Use bullet points and markdown formatting.
-Always provide actionable next steps.
-Always respond in English.`;
-
+    // Execute LLM (provider hidden from user)
     const result = await executeLLM(
       [
         { role: "system", content: systemPrompt },
         { role: "user", content: message },
       ],
-      { temperature: 0.7, maxTokens: 1024 }
+      { temperature: 0.7, maxTokens: 1024, taskComplexity: "medium" }
     );
 
+    // Deduct credits
+    const deduction = await deductAICredits({
+      userId,
+      tenantId,
+      feature: "ai_assistant",
+      tokensInput: message.length,
+      tokensOutput: result.content.length,
+      taskComplexity: "medium",
+    });
+
+    // Return response — NO provider/model info exposed
     return NextResponse.json({
       success: true,
       response: result.content,
-      provider: result.provider,
-      model: result.model,
-      latencyMs: result.latencyMs,
+      credits: {
+        used: balance.usedCredits + result.creditsCost,
+        total: balance.totalCredits,
+        available: deduction.remainingCredits,
+        costThisQuery: result.creditsCost,
+      },
       suggestions: generateFollowUpSuggestions(message),
     });
   } catch (error) {
