@@ -12,6 +12,7 @@ interface UserData {
   role: string;
   platformRole: string;
   tenantName?: string;
+  createdAt?: string;
 }
 
 interface DashboardShellProps {

@@ -56,6 +56,7 @@ export default async function DashboardLayout({
           role: user.role,
           platformRole: user.platformRole,
           tenantName: user.tenant?.name,
+          createdAt: user.createdAt.toISOString(),
         };
       }
     } catch {

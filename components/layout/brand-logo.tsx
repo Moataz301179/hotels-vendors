@@ -9,14 +9,12 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  xs: { icon: 20, text: 9, tagline: 6 },
-  sm: { icon: 26, text: 11, tagline: 7 },
-  md: { icon: 34, text: 14, tagline: 9 },
-  lg: { icon: 46, text: 18, tagline: 11 },
-  xl: { icon: 60, text: 24, tagline: 14 },
+  xs: { icon: 22, text: 9, tagline: 6 },
+  sm: { icon: 28, text: 11, tagline: 7 },
+  md: { icon: 36, text: 14, tagline: 9 },
+  lg: { icon: 48, text: 18, tagline: 11 },
+  xl: { icon: 64, text: 24, tagline: 14 },
 };
-
-const LOGO_CDN = "https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x";
 
 export function BrandLogo({
   className,
@@ -26,13 +24,13 @@ export function BrandLogo({
   showTagline = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const textColor = variant === "dark" ? "#ffffff" : "#ffffff";
-  const taglineColor = variant === "dark" ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.5)";
+  const textColor = "#ffffff";
+  const taglineColor = "rgba(255,255,255,0.5)";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
       <img
-        src={LOGO_CDN}
+        src="/logo.svg"
         alt="HotelsVendors"
         width={dims.icon}
         height={dims.icon}

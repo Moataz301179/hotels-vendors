@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon } from "lucide-react";
+import { Search, Settings, SlidersHorizontal, Menu, ShoppingCart, HeartPulse, ScrollText, Sun, Moon, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { getTrialStatus } from "@/lib/fintech/trial";
 
 interface UserData {
   id: string;
@@ -15,6 +16,7 @@ interface UserData {
   role: string;
   platformRole: string;
   tenantName?: string;
+  createdAt?: string;
 }
 
 interface DashboardHeaderProps {
@@ -97,6 +99,17 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]">
           <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
           <span className="text-xs font-medium text-white/50">{config.label}</span>
+          {role === "supplier" && user?.createdAt && (() => {
+            const trial = getTrialStatus(user.createdAt);
+            if (trial.isExpired) return null;
+            return (
+              <span className="flex items-center gap-1 ml-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider"
+                style={{ backgroundColor: "#ff7e1a18", color: "#ff7e1a" }}>
+                <Clock size={10} />
+                Trial {trial.daysRemaining}d
+              </span>
+            );
+          })()}
         </div>
 
         {role === "admin" && (

@@ -399,7 +399,7 @@ function RegisterContent() {
           {form.role === "SUPPLIER" && (
             <div className="rounded-xl p-4" style={{ backgroundColor: "#ff7e1a08", border: "1px solid #ff7e1a22" }}>
               <p className="text-[12px] text-white/40 leading-relaxed">
-                <strong style={{ color: "#ff7e1a" }}>After registration:</strong> Complete your profile, list products, and start receiving orders. Apply for Oliv financing to get paid in 48 hours.
+                <strong style={{ color: "#ff7e1a" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for Oliv financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
               </p>
             </div>
           )}
