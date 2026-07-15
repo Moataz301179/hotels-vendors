@@ -2,10 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { User, Building2, CreditCard, Bell, Shield, ChevronRight } from "lucide-react";
-
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
+import { getJwtSecret } from "@/lib/session";
 
 async function getUserProfile() {
   const cookieStore = await cookies();
@@ -13,7 +10,7 @@ async function getUserProfile() {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
+    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
     const userId = payload.userId as string;
 
     const user = await prisma.user.findUnique({

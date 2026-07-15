@@ -191,12 +191,12 @@ const BUILT_IN_RULES: AuthorityRule[] = [
   },
   {
     id: "rule_default",
-    name: "Default Approval",
+    name: "Default Approval (G10 Enforced)",
     priority: 500,
     minValue: 0,
     maxValue: 999_999_999,
-    requiresPaymentGuarantee: false,
-    requiresEtaValidation: false,
+    requiresPaymentGuarantee: true,
+    requiresEtaValidation: true,
     requiresDualSignOff: false,
     action: "APPROVE",
     isActive: true,
@@ -254,11 +254,13 @@ export async function evaluateAuthority(
   });
 
   // Merge DB rules with built-in rules (DB overrides built-in if same priority)
+  // G10 ENFORCED: requiresPaymentGuarantee and requiresEtaValidation are ALWAYS true
+  // even if DB rules try to set them to false. This is a non-negotiable governance rule.
   const allRules = mergeRules(BUILT_IN_RULES, dbRules.map(r => ({
     ...r,
-    requiresPaymentGuarantee: false,
-    requiresEtaValidation: false,
-    requiresDualSignOff: false,
+    requiresPaymentGuarantee: true,
+    requiresEtaValidation: true,
+    requiresDualSignOff: r.requiresDualSignOff ?? false,
   })) as AuthorityRule[]);
 
   // 4. Evaluate each rule in priority order

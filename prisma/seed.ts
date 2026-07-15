@@ -82,6 +82,16 @@ async function main() {
     // Factoring
     { code: "factoring:inquire", name: "Inquire Factoring", description: "Request factoring quotes" },
     { code: "factoring:fund", name: "Fund Invoices", description: "Fund factored invoices" },
+    { code: "factoring:manage", name: "Manage Factoring", description: "Manage factoring facilities and partners" },
+    // Platform Admin
+    { code: "admin:manage_platform", name: "Manage Platform", description: "Full platform administration access" },
+    // Disputes
+    { code: "disputes:create", name: "Create Disputes", description: "Raise order disputes" },
+    { code: "disputes:read", name: "View Disputes", description: "View dispute details" },
+    { code: "disputes:resolve", name: "Resolve Disputes", description: "Resolve and close disputes" },
+    // Compliance / KYC
+    { code: "compliance:kyc:read", name: "View KYC", description: "View KYC compliance status" },
+    { code: "compliance:kyc:submit", name: "Submit KYC", description: "Submit KYC documents for verification" },
   ];
 
   for (const p of permissionCodes) {
@@ -98,8 +108,8 @@ async function main() {
   // ─────────────────────────────────────────
 
   const roleDefs = [
-    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
-    { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund"] },
+    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:manage_platform", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "factoring:manage", "disputes:create", "disputes:read", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
+    { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "disputes:create", "disputes:read", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
     { name: "Hotel Manager", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "product:read", "invoice:read", "invoice:submit_eta", "user:read", "user:update", "report:read", "shipping:read", "factoring:inquire"] },
     { name: "Department Head", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "product:read", "invoice:read", "user:read"] },
     { name: "Clerk", isGlobal: false, permissions: ["order:create", "order:read", "product:read", "invoice:read"] },

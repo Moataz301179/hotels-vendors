@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     await prisma.creditLineApplication.update({
-      where: { id },
+      where: { id, tenantId: auth.tenantId },
       data: {
         status: "REJECTED",
         rejectedReason: body.reason,

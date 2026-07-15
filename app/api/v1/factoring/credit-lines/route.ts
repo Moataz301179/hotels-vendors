@@ -89,13 +89,18 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
 
     // Trigger AI analysis asynchronously with internal service authentication.
-    fetch(`${process.env.APP_URL || "http://localhost:3000"}/api/v1/factoring/credit-lines/${application.id}/analyze`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.INVO_SERVICE_KEY || "dev-key-insecure"}`,
-      },
-    }).catch(() => {});
+    const serviceKey = process.env.INVO_SERVICE_KEY;
+    if (!serviceKey) {
+      console.error("[Credit Line] INVO_SERVICE_KEY not configured — skipping AI analysis");
+    } else {
+      fetch(`${process.env.APP_URL || "http://localhost:3000"}/api/v1/factoring/credit-lines/${application.id}/analyze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${serviceKey}`,
+        },
+      }).catch(() => {});
+    }
 
     return success({ id: application.id, status: application.status });
   } catch (err) {
@@ -110,6 +115,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
   try {
     const applications = await prisma.creditLineApplication.findMany({
+      where: { tenantId: auth.tenantId },
       orderBy: { createdAt: "desc" },
       take: 50,
     });

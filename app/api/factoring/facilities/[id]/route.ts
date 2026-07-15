@@ -1,14 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CreditFacilityUpdateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { apiRoute, authenticate, requirePermission, enforceTenantOwnership, success, error } from "@/lib/api-utils";
 
-export async function PATCH(
+export const PATCH = apiRoute(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:manage");
+
   try {
     const { id } = await params;
+
+    // Verify tenant ownership before update
+    await enforceTenantOwnership(auth, "creditFacility", id);
+
     const body = await request.json();
     const validated = CreditFacilityUpdateSchema.parse(body);
 
@@ -21,7 +29,7 @@ export async function PATCH(
     }
 
     const facility = await prisma.creditFacility.update({
-      where: { id },
+      where: { id, tenantId: auth.tenantId },
       data,
       include: {
         hotel: { select: { id: true, name: true } },
@@ -29,17 +37,12 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json({ success: true, data: facility });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { success: false, error: "Validation failed", details: error.flatten() },
-        { status: 400 }
-      );
+    return success(facility);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return error("Validation failed", 400, err.flatten());
     }
-    return NextResponse.json(
-      { success: false, error: "Failed to update credit facility" },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : "Failed to update credit facility";
+    return error(message, 500);
   }
-}
+});

@@ -4,11 +4,9 @@ import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { prisma } from "@/lib/prisma";
+import { getJwtSecret } from "@/lib/session";
 
 const SESSION_COOKIE = "hv_session";
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
 
 export const metadata: Metadata = {
   title: {
@@ -32,7 +30,7 @@ export default async function DashboardLayout({
   let role: string | null = null;
   let userId: string | null = null;
   try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
+    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
     role = (payload.platformRole as string)?.toLowerCase() || null;
     userId = payload.userId as string || null;
   } catch {

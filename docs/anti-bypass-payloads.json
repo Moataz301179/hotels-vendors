@@ -1,0 +1,123 @@
+{
+  "anti_bypass_architecture": {
+    "description": "HotelsVendors Anti-Bypass & Lock-In Technical Architecture",
+    "version": "1.0",
+    "layers": ["LAYER_1_IMMUTABLE_HASHING", "LAYER_2_STATE_SYNC_BLOCKING", "LAYER_3_CRM_ATTRIBUTION"]
+  },
+
+  "layer1_referral_token": {
+    "description": "HMAC-SHA256 referral token generated when supplier clicks 'Factor via Oliv'",
+    "how_it_prevents_bypass": "Oliv MUST echo this token back on every callback. Missing/invalid token = blocked reconciliation.",
+    "mock_payload": {
+      "signature": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
+      "payload": "eyJldGFVdWlkIjoiZXRhLXV1aWQxMjM0NTYiLCJzdXBwbGllclRheElkIjoiTVMtMTIzNDUtNjc4OTAiLCJob3RlbFRheElkIjoiSE9URUwtOTg3NjU0MzIxIiwiaW52b2ljZVRvdGFsIjo1MDAwMCwiY3VycmVuY3kiOiJFR1AiLCJwYXJ0bmVySWQiOiJIT1RFTFNWRU5ET1JTX0dMT0JBTF8wMDEiLCJhdHRyaWJ1dGlvblR5cGUiOiJwZXJtYW5lbnRfb3JpZ2luX2FjY291bnQiLCJ0b2tlblZlcnNpb24iOiIxLjAiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDctMTVUMTA6MDA6MDBaIiwiZXhwaXJlc0F0IjoiMjAyNy0wNy0xNVQxMDowMDowMFoifQ",
+      "partnerId": "HOTELSVENDORS_GLOBAL_001",
+      "tokenVersion": "1.0",
+      "generatedAt": "2026-07-15T10:00:00Z",
+      "expiresAt": "2027-07-15T10:00:00Z"
+    }
+  },
+
+  "layer2_oliv_callback": {
+    "description": "Oliv MUST ping this endpoint when payout status changes",
+    "endpoint": "POST /api/v1/oliv/payout-callback",
+    "required_headers": {
+      "x-oliv-signature": "HMAC-SHA256(timestamp.body) — Oliv signs the payload",
+      "x-oliv-timestamp": "2026-07-15T12:00:00Z",
+      "x-idempotency-key": "oliv-txn-123456"
+    },
+    "mock_callback_payload": {
+      "olivTransactionId": "OLIV-TXN-2026-0715-001",
+      "olivReferenceNumber": "REF-OLIV-789012",
+      "referralToken": {
+        "signature": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
+        "payload": "eyJldGFVdWlkIjoiZXRhLXV1aWQxMjM0NTYiLCJzdXBwbGllclRheElkIjoiTVMtMTIzNDUtNjc4OTAiLCJob3RlbFRheElkIjoiSE9URUwtOTg3NjU0MzIxIiwiaW52b2ljZVRvdGFsIjo1MDAwMCwiY3VycmVuY3kiOiJFR1AiLCJwYXJ0bmVySWQiOiJIT1RFTFNWRU5ET1JTX0dMT0JBTF8wMDEiLCJhdHRyaWJ1dGlvblR5cGUiOiJwZXJtYW5lbnRfb3JpZ2luX2FjY291bnQiLCJ0b2tlblZlcnNpb24iOiIxLjAiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDctMTVUMTA6MDA6MDBaIiwiZXhwaXJlc0F0IjoiMjAyNy0wNy0xNVQxMDowMDowMFoifQ",
+        "partnerId": "HOTELSVENDORS_GLOBAL_001",
+        "tokenVersion": "1.0",
+        "generatedAt": "2026-07-15T10:00:00Z",
+        "expiresAt": "2027-07-15T10:00:00Z"
+      },
+      "etaUuid": "eta-uuid-123456",
+      "supplierTaxId": "MS-12345-67890",
+      "payoutStatus": "DISBURSED",
+      "disbursedAmount": 42500,
+      "factoringFee": 1062.5,
+      "advanceRate": 0.85,
+      "disbursementDate": "2026-07-15T12:00:00Z",
+      "expectedSettlementDate": "2026-10-13T12:00:00Z"
+    },
+    "blocking_logic": {
+      "missing_token": "403 Forbidden — Unauthorized Reconciliation",
+      "invalid_token": "403 Forbidden — Invalid signature",
+      "expired_token": "403 Forbidden — Token expired",
+      "uuid_mismatch": "403 Forbidden — ETA UUID mismatch",
+      "valid_token": "200 OK — Reconciliation accepted"
+    }
+  },
+
+  "layer3_onboarding_prefill": {
+    "description": "Oliv KYC pre-fill payload sent during supplier signup",
+    "endpoint": "POST /api/v1/oliv/onboard-supplier",
+    "mandatory_crm_fields": ["partner_id", "attribution_type", "attribution_source"],
+    "mock_prefill_payload": {
+      "partner_id": "HOTELSVENDORS_GLOBAL_001",
+      "attribution_type": "permanent_origin_account",
+      "attribution_source": "HOTELSVENDORS_PLUGIN_V1",
+      "attribution_timestamp": "2026-07-15T10:00:00Z",
+      "commission_agreement_id": "HV-COMM-HOTELSVENDORS_GLOBAL_001-1721030400000",
+      "company": {
+        "legal_name": "ABC Cleaning Supplies LLC",
+        "trade_name": "ABC Cleaning",
+        "commercial_register_number": "CR-12345",
+        "tax_registration_number": "MS-12345-67890",
+        "company_type": "LLC",
+        "address": {
+          "street": "15 Main Street",
+          "building": "Floor 3",
+          "city": "6th of October City",
+          "governorate": "Giza",
+          "country": "EGYPT"
+        },
+        "phone": "+20-2-12345678",
+        "email": "supplier@example.com"
+      },
+      "signatory": {
+        "full_name": "Ahmed Mohamed Ali",
+        "national_id": "29001011234567",
+        "position": "Managing Director",
+        "phone": "+20-100-1234567",
+        "email": "ahmed@example.com"
+      },
+      "financial": {
+        "estimated_monthly_revenue_egp": 500000,
+        "years_in_business": 3,
+        "eta_platform_user": true
+      },
+      "reference": {
+        "platform_user_id": "usr-supplier-123",
+        "registration_date": "2026-07-15T10:00:00Z",
+        "subscription_tier": "BASIC",
+        "total_transactions_on_platform": 0,
+        "average_order_value_egp": 0
+      }
+    }
+  },
+
+  "layer3_onboarding_headers": {
+    "Content-Type": "application/json",
+    "X-Partner-ID": "HOTELSVENDORS_GLOBAL_001",
+    "X-Attribution-Type": "permanent_origin_account",
+    "X-Attribution-Source": "HOTELSVENDORS_PLUGIN_V1",
+    "X-Idempotency-Key": "onboard-MS-12345-67890-1721030400000",
+    "X-Required-CRM-Fields": "partner_id,attribution_type,attribution_source"
+  },
+
+  "anti_bypass_guarantee": {
+    "technical": "Oliv cannot forge HMAC-SHA256 without HotelsVendors' secret key",
+    "legal": "Contractual obligation to store partner_id in CRM/ERP",
+    "audit": "Every factoring transaction logs referral token signature in immutable ledger",
+    "commission": "2% platform fee deducted BEFORE disbursement at API level",
+    "blocking": "Oliv cannot reconcile payout without valid referral token",
+    "attribution": "permanent_origin_account flag ensures future manual entries trigger commission"
+  }
+}

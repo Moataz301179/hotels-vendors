@@ -8,10 +8,7 @@ import {
   Download,
   Banknote,
 } from "lucide-react";
-
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
+import { getJwtSecret } from "@/lib/session";
 
 async function getInvoices() {
   const cookieStore = await cookies();
@@ -19,7 +16,7 @@ async function getInvoices() {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
+    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
     const tenantId = payload.tenantId as string;
 
     const invoices = await prisma.invoice.findMany({

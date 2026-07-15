@@ -4,16 +4,25 @@ import { getRedis } from "./redis";
 
 const SESSION_COOKIE = "hv_session";
 
-const sessionSecret = process.env.SESSION_SECRET;
-if (!sessionSecret && process.env.NODE_ENV === "production") {
-  throw new Error(
-    "FATAL: SESSION_SECRET environment variable is required in production. " +
-    "Generate one with: openssl rand -hex 32"
-  );
+/**
+ * Returns the JWT signing secret. Throws in production if missing.
+ * ALL session/auth code must import from here — never inline a fallback.
+ */
+export function getJwtSecret(): Uint8Array {
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "FATAL: SESSION_SECRET environment variable is required in production. " +
+        "Generate one with: openssl rand -hex 32"
+      );
+    }
+    console.warn("[Auth] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
+  }
+  return new TextEncoder().encode(sessionSecret || "dev-secret-do-not-use-in-production");
 }
-const SECRET = new TextEncoder().encode(
-  sessionSecret || "dev-secret-do-not-use-in-production"
-);
+
+const SECRET = getJwtSecret();
 
 // ── Token Blacklist ──
 const memoryBlacklist = new Set<string>();

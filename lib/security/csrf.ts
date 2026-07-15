@@ -10,7 +10,11 @@ const CSRF_COOKIE = "hv_csrf";
 const CSRF_HEADER = "x-csrf-token";
 
 function getSecret(): string {
-  return process.env.CSRF_SECRET || process.env.SESSION_SECRET || "";
+  const secret = process.env.CSRF_SECRET || process.env.SESSION_SECRET;
+  if (!secret) {
+    throw new Error("FATAL: CSRF_SECRET or SESSION_SECRET must be set. CSRF protection is disabled without a secret.");
+  }
+  return secret;
 }
 
 async function hmacSign(data: string, secret: string): Promise<string> {

@@ -413,6 +413,18 @@ model Supplier {
   // Document processing records
   documentProcessings DocumentProcessing[]
 
+  // ── Oliv Finance Integration ──
+  olivUserId     String?           // Oliv's user ID for this supplier
+  olivFacilityId String?           // Link to OlivCreditFacility
+  olivSyncAt     DateTime?         // Last Oliv sync timestamp
+  olivStatus     String?           // Oliv onboarding: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
+
+  // ── Consent Records ──
+  consentRecords ConsentRecord[]
+
+  // ── Oliv Credit Facility ──
+  olivCreditFacilities OlivCreditFacility[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -501,6 +513,12 @@ model Product {
   updatedAt DateTime        @updatedAt
   cartItems CartItem[]
   reviews   ProductReview[]
+
+  @@index([tenantId])
+  @@index([supplierId])
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum ProductCategory {
@@ -580,6 +598,12 @@ model Order {
   updatedAt          DateTime            @updatedAt
   creditTransactions CreditTransaction[]
   tripStops          TripStop[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {
@@ -720,6 +744,14 @@ model Invoice {
   updatedAt          DateTime            @updatedAt
   payments           Payment[]
   creditTransactions CreditTransaction[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([orderId])
+  @@index([status])
+  @@index([factoringStatus])
+  @@index([createdAt])
 }
 
 enum EtaStatus {
@@ -2550,4 +2582,307 @@ model LeadCapture {
   @@index([sector])
   @@index([email])
   @@index([status])
+}
+
+// ─────────────────────────────────────────
+// 37. OLIV INTEGRATION — Consent, Credit Facility, Sync
+// ─────────────────────────────────────────
+
+/// PDPL-compliant consent record for data sharing with Oliv Finance.
+/// Every data share event must have a corresponding consent record.
+model ConsentRecord {
+  id String @id @default(cuid())
+
+  userId String
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  /// What consent was given: "OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT", etc.
+  consentType String
+
+  /// Which partner data is shared with: "oliv_finance"
+  partnerId String
+
+  /// Version of the consent text the user agreed to
+  consentVersion String
+
+  /// What data categories were consented: ["business_registration", "eta_invoices", "bank_details"]
+  dataCategories String
+
+  /// IP address at time of consent
+  ipAddress String?
+
+  /// User agent at time of consent
+  userAgent String?
+
+  /// Consent status: GRANTED, WITHDRAWN, EXPIRED
+  status ConsentStatus @default(GRANTED)
+
+  /// When consent was withdrawn (if applicable)
+  withdrawnAt DateTime?
+
+  /// Reason for withdrawal (if provided)
+  withdrawalReason String?
+
+  /// Audit hash for tamper-proofing
+  hash String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, consentType, partnerId])
+  @@index([userId, status])
+  @@index([partnerId, status])
+  @@index([tenantId])
+}
+
+enum ConsentStatus {
+  GRANTED
+  WITHDRAWN
+  EXPIRED
+}
+
+/// Oliv credit facility — synced from Oliv via webhooks.
+/// HotelsVendors stores the credit line limit, balance, and payment schedule
+/// so the supplier can see everything on their dashboard without leaving the platform.
+model OlivCreditFacility {
+  id String @id @default(cuid())
+
+  /// Supplier who owns this credit facility
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  /// Oliv's internal credit facility ID
+  olivFacilityId String @unique
+
+  /// Credit limit in EGP
+  creditLimitEgp Float
+
+  /// Currently utilized amount in EGP
+  utilizedEgp Float @default(0)
+
+  /// Available balance in EGP (creditLimit - utilized)
+  availableEgp Float @default(0)
+
+  /// Interest rate (as decimal, e.g., 0.025 = 2.5%)
+  interestRate Float @default(0)
+
+  /// Advance rate (as decimal, e.g., 0.88 = 88% of invoice value)
+  advanceRate Float @default(0.88)
+
+  /// Discount rate (as decimal, e.g., 0.025 = 2.5% partner fee)
+  discountRate Float @default(0.025)
+
+  /// Settlement terms in days
+  settlementDays Int @default(90)
+
+  /// Facility status
+  status OlivFacilityStatus @default(ACTIVE)
+
+  /// When Oliv approved the facility
+  approvedAt DateTime?
+
+  /// When the facility expires
+  expiresAt DateTime?
+
+  /// Last sync timestamp from Oliv
+  lastSyncedAt DateTime?
+
+  /// Oliv's risk assessment for this supplier
+  olivRiskScore Int?
+  olivRiskTier  String?
+
+  /// Payment schedule as JSON string: [{ dueDate, amountEgp, status }]
+  paymentSchedule String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([supplierId, status])
+  @@index([tenantId])
+}
+
+enum OlivFacilityStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  DEFAULTED
+}
+
+/// Oliv sync log — tracks every data exchange between HotelsVendors and Oliv.
+model OlivSyncLog {
+  id String @id @default(cuid())
+
+  /// Direction: INBOUND (Oliv → HotelsVendors) or OUTBOUND (HotelsVendors → Oliv)
+  direction SyncDirection
+
+  /// Event type: "REGISTRATION_PRE_FILL", "CREDIT_STATUS_UPDATE", "DISBURSEMENT", etc.
+  eventType String
+
+  /// Entity type: "Supplier", "OlivCreditFacility", "FactoringRequest"
+  entityType String
+  entityId   String
+
+  /// Payload sent or received (encrypted at rest)
+  payload String?
+
+  /// Oliv's response or error
+  response String?
+
+  /// HTTP status code (if applicable)
+  httpStatus Int?
+
+  /// Whether the sync was successful
+  success Boolean @default(true)
+
+  /// Error message (if failed)
+  error String?
+
+  /// Idempotency key for deduplication
+  idempotencyKey String? @unique
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([direction, eventType])
+  @@index([entityType, entityId])
+  @@index([tenantId])
+  @@index([success])
+}
+
+enum SyncDirection {
+  INBOUND
+  OUTBOUND
+}
+
+/// Extend Supplier model with Oliv fields
+/// (Added via migration, not inline — Prisma doesn't support mixed relations well)
+/// These fields will be added to the Supplier model:
+/// - olivUserId String?      — Oliv's user ID for this supplier
+/// - olivFacilityId String?  — Link to OlivCreditFacility
+/// - olivSyncAt DateTime?    — Last Oliv sync timestamp
+/// - olivStatus String?      — Oliv onboarding status: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
+
+// ═══════════════════════════════════════════════════════════════
+// ANTI-BYPASS: Factoring Transaction (Immutable Referral Ledger)
+// ═══════════════════════════════════════════════════════════════
+// This table stores every factoring transaction initiated through HotelsVendors.
+// The referral_token_signature is the cryptographic proof of origin.
+// Oliv CANNOT reconcile without this signature — Layer 2 enforcement.
+// ═══════════════════════════════════════════════════════════════
+
+model FactoringTransaction {
+  id String @id @default(cuid())
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // ═══ INVOICE IDENTIFIERS ═══
+  etaUuid        String
+  supplierTaxId  String
+  hotelTaxId     String
+
+  // ═══ LAYER 1: REFERRAL TOKEN (Immutable Record) ═══
+  // The HMAC-SHA256 signature proving this transaction originated from HotelsVendors
+  referralTokenSignature  String
+  referralTokenPayload    String  // base64url-encoded JSON
+  referralTokenGeneratedAt DateTime
+  referralTokenExpiresAt    DateTime
+
+  // ═══ OLIV TRANSACTION DATA ═══
+  olivTransactionId    String @unique
+  olivReferenceNumber  String?
+  payoutStatus         String  // APPROVED, DISBURSED, SETTLED, REJECTED, DEFAULTED
+  disbursedAmount      Float
+  factoringFee         Float
+  advanceRate          Float
+  disbursementDate     DateTime
+  expectedSettlementDate DateTime
+
+  // ═══ HOTELSVENDORS PLATFORM FEE ═══
+  // 2% deducted BEFORE disbursement (per business rules)
+  platformFeeRate    Float @default(0.02)
+  platformFeeAmount  Float
+  netDisbursement    Float  // disbursedAmount - platformFeeAmount
+
+  // ═══ AUDIT ═══
+  processedAt       DateTime
+  callbackTimestamp DateTime
+  rawCallback       Json?  // Full Oliv callback payload
+
+  // ═══ COMMISSION TRACKING ═══
+  // Layer 3: CRM attribution — proves this transaction was referred by HotelsVendors
+  commissionRate    Float?  // e.g., 0.02 = 2%
+  commissionAmount  Float?  // platformFeeAmount (synonym for clarity)
+  commissionStatus  String? @default("PENDING")  // PENDING, PAID, DISPUTED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([etaUuid])
+  @@index([supplierTaxId])
+  @@index([olivTransactionId])
+  @@index([payoutStatus])
+  @@index([referralTokenSignature])
+  @@index([createdAt])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ANTI-BYPASS: Oliv Onboarding Audit Trail
+// ═══════════════════════════════════════════════════════════════
+// Tracks every supplier that completed Oliv KYC through HotelsVendors.
+// This is the proof that Oliv's customer base was built through our platform.
+// Any future "manual" Oliv agent entry of a Tax ID here is flagged.
+// ═══════════════════════════════════════════════════════════════
+
+model OlivOnboardingAudit {
+  id String @id @default(cuid())
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Supplier identifiers
+  supplierId       String
+  supplierTaxId    String
+  companyName      String
+
+  // Attribution metadata (Layer 3)
+  partnerId          String @default("HOTELSVENDORS_GLOBAL_001")
+  attributionType    String @default("permanent_origin_account")
+  attributionSource  String @default("HOTELSVENDORS_PLUGIN_V1")
+  commissionAgreementId String
+
+  // Oliv onboarding status
+  olivUserId         String?
+  olivStatus         String  @default("PENDING")  // PENDING, KYC_SUBMITTED, KYC_APPROVED, CREDIT_APPROVED
+  olivKycSubmittedAt DateTime?
+  olivKycApprovedAt  DateTime?
+  olivCreditApprovedAt DateTime?
+
+  // Pre-fill data sent to Oliv (encrypted at rest)
+  prefillDataHash String?  // SHA-256 hash of the pre-fill payload
+  prefillDataSize Int?     // Number of fields sent
+
+  // Olive's acknowledgment
+  olivAcknowledgedAt    DateTime?
+  olivAcknowledgedVia   String?  // "API", "MANUAL", "WEBHOOK"
+  olivAcknowledgmentRef String?
+
+  // Audit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([supplierTaxId])  // Each supplier can only be onbaulogged once
+  @@index([tenantId])
+  @@index([olivStatus])
+  @@index([partnerId])
 }

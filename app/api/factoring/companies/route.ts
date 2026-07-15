@@ -1,18 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 import { FactoringCompanyStatus } from "@prisma/client";
 
-export async function GET(_request: NextRequest) {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:inquire");
+
   try {
     const companies = await prisma.factoringCompany.findMany({
-      where: { status: FactoringCompanyStatus.ACTIVE },
+      where: {
+        status: FactoringCompanyStatus.ACTIVE,
+        tenantId: auth.tenantId,
+      },
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json({ success: true, data: companies });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch factoring companies" },
-      { status: 500 }
-    );
+    return success(companies);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch factoring companies";
+    return error(message, 500);
   }
-}
+});

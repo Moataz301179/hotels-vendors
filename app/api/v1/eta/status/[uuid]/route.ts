@@ -11,14 +11,12 @@ export const GET = apiRoute(async (request: NextRequest, { params }: { params?: 
 
   const invoice = await prisma.invoice.findUnique({
     where: { etaUuid: uuid },
-    select: { id: true, hotelId: true, supplierId: true },
+    select: { id: true, tenantId: true, hotelId: true, supplierId: true },
   });
 
   if (invoice) {
-    if (auth.platformRole === "HOTEL" && invoice.hotelId !== auth.tenantId) {
-      return error("Forbidden", 403);
-    }
-    if (auth.platformRole === "SUPPLIER" && invoice.supplierId !== auth.tenantId) {
+    // TENANT ISOLATION: Invoice must belong to the requester's tenant
+    if (invoice.tenantId !== auth.tenantId) {
       return error("Forbidden", 403);
     }
   }

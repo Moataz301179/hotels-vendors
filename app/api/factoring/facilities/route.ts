@@ -1,16 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CreditFacilityCreateSchema } from "@/lib/zod";
 import { ZodError } from "zod";
-import { authenticate } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
-export async function GET(request: NextRequest) {
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:inquire");
+
   try {
     const { searchParams } = new URL(request.url);
     const hotelId = searchParams.get("hotelId") || undefined;
     const status = searchParams.get("status") || undefined;
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { tenantId: auth.tenantId };
     if (hotelId) where.hotelId = hotelId;
     if (status) where.status = status;
 
@@ -23,21 +26,21 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, data: facilities });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch credit facilities" },
-      { status: 500 }
-    );
+    return success(facilities);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch credit facilities";
+    return error(message, 500);
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "factoring:manage");
+
   try {
     const body = await request.json();
     const validated = CreditFacilityCreateSchema.parse(body);
 
-    const auth = await authenticate(request);
     const facility = await prisma.creditFacility.create({
       data: {
         tenantId: auth.tenantId,
@@ -51,20 +54,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(
-      { success: true, data: facility },
-      { status: 201 }
-    );
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { success: false, error: "Validation failed", details: error.flatten() },
-        { status: 400 }
-      );
+    return success(facility, 201);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return error("Validation failed", 400, err.flatten());
     }
-    return NextResponse.json(
-      { success: false, error: "Failed to create credit facility" },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : "Failed to create credit facility";
+    return error(message, 500);
   }
-}
+});

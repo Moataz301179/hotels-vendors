@@ -27,7 +27,6 @@ if (!_sessionSecret) {
 const SECRET = new TextEncoder().encode(
   _sessionSecret || "dev-secret-change-in-production"
 );
-console.log(`[Auth] Startup validation: SESSION_SECRET ${_sessionSecret ? "loaded" : "using FALLBACK (dev only)"}`);
 
 /* ── Route Configuration ── */
 

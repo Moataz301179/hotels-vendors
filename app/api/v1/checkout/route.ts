@@ -61,10 +61,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = CheckoutSchema.parse(body);
 
-  // Get product details with supplier info
+  // Get product details with supplier info — TENANT SCOPED
   const productIds = data.items.map((i) => i.productId);
   const products = await prisma.product.findMany({
-    where: { id: { in: productIds } },
+    where: { id: { in: productIds }, tenantId: auth.tenantId },
     include: { supplier: { select: { id: true, name: true } } },
   });
 

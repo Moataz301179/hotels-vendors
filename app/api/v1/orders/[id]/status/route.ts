@@ -56,6 +56,17 @@ export const PATCH = apiRoute(async (request: NextRequest) => {
     return error(transition.reason || "Invalid status transition", 400);
   }
 
+  // G10 ENFORCED: Payment Guarantee Gate
+  // No order may transition to CONFIRMED, IN_TRANSIT, or DELIVERED without paymentGuaranteed = true
+  const REQUIRES_PAYMENT_GUARANTEE: OrderStatus[] = ["CONFIRMED", "IN_TRANSIT", "DELIVERED"];
+  if (REQUIRES_PAYMENT_GUARANTEE.includes(newStatus) && !order.paymentGuaranteed) {
+    return error(
+      "G10 VIOLATION: Cannot transition to " + newStatus + " without payment guarantee. " +
+      "Order must have paymentGuaranteed = true before confirmation.",
+      403
+    );
+  }
+
   // Update order
   const updated = await prisma.order.update({
     where: { id },

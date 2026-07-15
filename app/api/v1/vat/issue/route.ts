@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { ok, error } from "@/lib/api-response"
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils"
 import crypto from "crypto"
 
 const VAT_RATE = 0.14
@@ -26,7 +26,10 @@ function generateInvoiceRef(): string {
   return `${prefix}-${ts}-${rand}`
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiRoute(async (req: NextRequest) => {
+  const auth = await authenticate(req);
+  await requirePermission(auth, "invoice:create");
+
   try {
     const body = await req.json()
     const {
@@ -44,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!companyTaxId || !buyerName || !buyerTaxId || !items?.length) {
-      return error("Missing required fields: companyTaxId, buyerName, buyerTaxId, items")
+      return error("Missing required fields: companyTaxId, buyerName, buyerTaxId, items", 400)
     }
 
     // Calculate amounts
@@ -86,7 +89,7 @@ export async function POST(req: NextRequest) {
         orderId: "VAT-STANDALONE",
         hotelId: "VAT-STANDALONE",
         supplierId: "VAT-STANDALONE",
-        tenantId: "VAT-STANDALONE",
+        tenantId: auth.tenantId,
         issueDate: new Date(),
         updatedAt: new Date(),
         submissionLog: JSON.stringify({
@@ -99,8 +102,7 @@ export async function POST(req: NextRequest) {
 
     const etaResponse = invoice.submissionLog ? JSON.parse(invoice.submissionLog) as Record<string, unknown> : null
 
-    return ok({
-      success: true,
+    return success({
       etaUuid,
       invoiceRef,
       subtotal,
@@ -112,6 +114,6 @@ export async function POST(req: NextRequest) {
     })
   } catch (e) {
     console.error("Invoice issue error:", e)
-    return error("Internal server error")
+    return error("Internal server error", 500)
   }
-}
+})

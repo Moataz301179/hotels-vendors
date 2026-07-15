@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { validateTaxId } from "@/lib/tax-id"
-import { ok, error } from "@/lib/api-response"
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils"
 
 const VALID_VAT_RATES = [14, 5, 0, 10, 8]
 const HIGH_AMOUNT_THRESHOLD = 100_000
@@ -13,7 +13,10 @@ type CheckItem = {
   vatRate: number
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiRoute(async (req: NextRequest) => {
+  const auth = await authenticate(req);
+  await requirePermission(auth, "invoice:create");
+
   try {
     const body = await req.json()
     const {
@@ -33,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!companyTaxId || !companyName || invoiceAmount === undefined || !items) {
-      return error("Missing required fields: companyTaxId, companyName, invoiceAmount, items")
+      return error("Missing required fields: companyTaxId, companyName, invoiceAmount, items", 400)
     }
 
     const issues: string[] = []
@@ -45,9 +48,9 @@ export async function POST(req: NextRequest) {
       issues.push(taxIdCheck.message || "Invalid Tax ID format")
     }
 
-    // 2. VAT registration status (mock - query Prisma for existing user, else mock valid)
+    // 2. VAT registration status — scoped to tenant
     const existingSupplier = await prisma.supplier.findFirst({
-      where: { taxId: companyTaxId },
+      where: { taxId: companyTaxId, tenantId: auth.tenantId },
     })
     if (!existingSupplier) {
       issues.push("Company not found in our system. VAT registration could not be verified automatically.")
@@ -98,7 +101,7 @@ export async function POST(req: NextRequest) {
       issues.length === 0 ||
       (issues.length === 1 && issues[0].includes("additional approval required"))
 
-    return ok({
+    return success({
       compliant: issues.length === 0,
       issues,
       maxAllowed,
@@ -107,6 +110,6 @@ export async function POST(req: NextRequest) {
     })
   } catch (e) {
     console.error("Compliance check error:", e)
-    return error("Internal server error")
+    return error("Internal server error", 500)
   }
-}
+})

@@ -35,6 +35,7 @@ import {
   FileEdit,
   Search,
   Brain,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -58,6 +59,14 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: FileText, label: "Invoices", href: "/hotel/invoices" },
         { icon: Calculator, label: "Accounting", href: "/hotel/accounting" },
         { icon: ShoppingBag, label: "Checkout", href: "/hotel/checkout" },
+      ],
+    },
+    {
+      section: "FINANCE",
+      items: [
+        { icon: CreditCard, label: "Cashflow", href: "/hotel/cashflow" },
+        { icon: Wallet, label: "Credit Facility", href: "/hotel/credit" },
+        { icon: FileText, label: "Upload Invoice", href: "/hotel/financing" },
       ],
     },
     {
@@ -108,6 +117,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
       items: [
         { icon: Landmark, label: "Factoring", href: "/factoring" },
         { icon: CreditCard, label: "Payments", href: "/payments" },
+        { icon: Settings, label: "Integration Config", href: "/admin/integration-config" },
       ],
     },
     {
@@ -132,6 +142,14 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: FileEdit, label: "New Product", href: "/supplier/products/new" },
         { icon: ClipboardList, label: "Orders", href: "/supplier/orders" },
         { icon: BarChart3, label: "Analytics", href: "/supplier/analytics" },
+      ],
+    },
+    {
+      section: "FINANCE",
+      items: [
+        { icon: CreditCard, label: "Cashflow", href: "/supplier/cashflow" },
+        { icon: Wallet, label: "Credit Facility", href: "/supplier/credit" },
+        { icon: FileText, label: "Upload Invoice", href: "/supplier/financing" },
       ],
     },
     {

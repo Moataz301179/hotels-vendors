@@ -1,11 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { AgentOrchestrator } from "@/lib/agents/orchestrator";
 import { WORKFLOWS } from "@/lib/agents/agents";
 import { AgentId } from "@/lib/agents/types";
+import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
 
 const orchestrator = new AgentOrchestrator();
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:manage_platform");
+
   try {
     const body = await request.json();
     const { workflow, customPrompt, task } = body;
@@ -15,12 +19,9 @@ export async function POST(request: NextRequest) {
       const results = await orchestrator.runWorkflow(
         workflow as keyof typeof WORKFLOWS,
         customPrompt,
-        "system"
+        auth.tenantId
       );
-      return NextResponse.json({
-        success: true,
-        data: { workflow, results },
-      });
+      return success({ workflow, results });
     }
 
     // Run a single custom task
@@ -31,24 +32,15 @@ export async function POST(request: NextRequest) {
         title: task.title,
         prompt: task.prompt,
         agentId: task.agentId as AgentId,
-        tenantId: "system",
+        tenantId: auth.tenantId,
         context: task.context,
       });
-      return NextResponse.json({
-        success: true,
-        data: { task: result },
-      });
+      return success({ task: result });
     }
 
-    return NextResponse.json(
-      { success: false, error: "Missing workflow or task" },
-      { status: 400 }
-    );
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      { success: false, error: msg },
-      { status: 500 }
-    );
+    return error("Missing workflow or task", 400);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return error(message, 500);
   }
-}
+});

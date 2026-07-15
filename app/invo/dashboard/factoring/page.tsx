@@ -10,10 +10,7 @@ import {
   ShieldCheck,
   TrendingUp,
 } from "lucide-react";
-
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
+import { getJwtSecret } from "@/lib/session";
 
 async function getFactoringData() {
   const cookieStore = await cookies();
@@ -21,7 +18,7 @@ async function getFactoringData() {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
+    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
     const tenantId = payload.tenantId as string;
 
     const [requests, factorableInvoices] = await Promise.all([

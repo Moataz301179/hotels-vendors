@@ -3,11 +3,9 @@ import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { InvoDashboardShell } from "./_components/invo-dashboard-shell";
+import { getJwtSecret } from "@/lib/session";
 
 const SESSION_COOKIE = "hv_session";
-const SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "dev-secret-change-in-production"
-);
 
 export interface UserData {
   id: string;
@@ -24,7 +22,7 @@ async function getUserData(): Promise<UserData | null> {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET, { clockTolerance: 60 });
+    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
     const userId = payload.userId as string;
     if (!userId) return null;
 

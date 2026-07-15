@@ -1,21 +1,21 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, audit } from "@/lib/api-utils";
-import { olivFinanceAdapter } from "@/lib/fintech/oliv-bridge";
 import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 import { checkWebhookReplay, markWebhookProcessed, olivEventId } from "@/lib/security/webhook-idempotency";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Oliv Finance Webhook Callback
+ * Oliv Finance Webhook Callback (Enhanced)
  *
  * Receives async events from Oliv Finance:
- * - funding.disbursed
- * - funding.settled
- * - funding.defaulted
- * - funding.disputed
- * - hotel.payment_received
+ * - funding.disbursed → Update FactoringRequest + CreditFacility balance
+ * - funding.settled → Update FactoringRequest + CreditFacility balance
+ * - funding.defaulted → Update FactoringRequest + CreditFacility status
+ * - hotel.payment_received → Update settlement status
+ * - credit_facility.approved → Create/update OlivCreditFacility
+ * - credit_facility.updated → Update credit limit/balance
  *
  * Oliv sends a Bearer token in Authorization header for authentication.
  */
@@ -47,23 +47,48 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return success({ duplicate: true, message: "Webhook already processed" });
   }
 
-  // 2. Normalize payload through Oliv adapter
-  const result = await olivFinanceAdapter.handleWebhook(payload);
-  if (!result.processed) {
-    return error("Webhook processing failed", 400);
-  }
+  const eventType = payload.event_type || payload.event || "unknown";
 
-  const olivFundingId = result.partnerFundingId;
+  // 2. Route to handler based on event type
+  switch (eventType) {
+    case "funding.disbursed":
+    case "funding.settled":
+    case "funding.defaulted":
+    case "funding.disputed":
+    case "hotel.payment_received":
+      return await handleFundingEvent(payload, eventType, eventId);
+
+    case "credit_facility.approved":
+    case "credit_facility.updated":
+    case "credit_facility.suspended":
+      return await handleCreditFacilityEvent(payload, eventType, eventId);
+
+    default:
+      console.warn("[Oliv Callback] Unknown event type:", eventType);
+      await markWebhookProcessed("oliv", eventId, `unknown:${eventType}`);
+      return success({ acknowledged: true, eventType });
+  }
+});
+
+/**
+ * Handle funding events (disbursed, settled, defaulted, disputed)
+ */
+async function handleFundingEvent(
+  payload: Record<string, unknown>,
+  eventType: string,
+  eventId: string
+) {
+  const data = (payload.data || payload) as Record<string, unknown>;
+  const olivFundingId = data.funding_id || data.factoringRequestId || data.instruction_id;
+
   if (!olivFundingId) {
     console.warn("[Oliv Callback] Missing funding_id in payload");
     return success({ acknowledged: true, matched: false, reason: "missing_funding_id" });
   }
 
-  // 3. Find FactoringRequest by Oliv funding_id stored in partnerResponse
+  // Find FactoringRequest by Oliv funding_id stored in partnerResponse
   const factoringRequests = await prisma.factoringRequest.findMany({
-    where: {
-      factoringCompanyId: "oliv_finance",
-    },
+    where: { factoringCompanyId: "oliv_finance" },
     orderBy: { createdAt: "desc" },
     take: 100,
   });
@@ -71,7 +96,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const matchedRequest = factoringRequests.find((fr) => {
     try {
       const parsed = JSON.parse(fr.partnerResponse || "{}");
-      return parsed.factoringRequestId === olivFundingId;
+      return parsed.factoringRequestId === olivFundingId || parsed.fundingId === olivFundingId;
     } catch {
       return false;
     }
@@ -82,11 +107,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return success({ acknowledged: true, matched: false, reason: "unmatched_funding_id" });
   }
 
-  // 4. Map Oliv event to FactoringRequestStatus
+  // Map Oliv event to FactoringRequestStatus
   let newStatus: "DISBURSED" | "SETTLED" | "DEFAULTED" | "UNDER_REVIEW" = matchedRequest.status as "DISBURSED" | "SETTLED" | "DEFAULTED" | "UNDER_REVIEW";
   let actionLabel = "OLIV_STATUS_UPDATE";
 
-  switch (result.eventType) {
+  switch (eventType) {
     case "funding.disbursed":
       newStatus = "DISBURSED";
       actionLabel = "OLIV_DISBURSED";
@@ -100,38 +125,25 @@ export const POST = apiRoute(async (request: NextRequest) => {
       actionLabel = "OLIV_DEFAULTED";
       break;
     case "hotel.payment_received":
-      // Hotel paid Oliv — update settled if not already
       if (matchedRequest.status !== "SETTLED") {
         newStatus = "SETTLED";
         actionLabel = "OLIV_HOTEL_PAID";
       }
       break;
-    default:
-      actionLabel = `OLIV_${result.eventType}`;
   }
 
-  // 5. Update FactoringRequest
+  // Update FactoringRequest
   const updateData: Record<string, unknown> = { status: newStatus };
-
-  if (result.updates.disbursedAt) {
-    updateData.disbursedAt = new Date(result.updates.disbursedAt as string);
-  }
-  if (result.updates.settledAt) {
-    updateData.settledAt = new Date(result.updates.settledAt as string);
-  }
-  if (result.updates.defaultedAt) {
-    updateData.status = "DEFAULTED";
-  }
-  if (result.updates.hotelPaidAt) {
-    updateData.hotelPaidAt = new Date(result.updates.hotelPaidAt as string);
-  }
+  if (data.disbursed_at) updateData.disbursedAt = new Date(data.disbursed_at as string);
+  if (data.settled_at) updateData.settledAt = new Date(data.settled_at as string);
+  if (data.maturity_date) updateData.maturityDate = new Date(data.maturity_date as string);
 
   await prisma.factoringRequest.update({
     where: { id: matchedRequest.id },
     data: updateData,
   });
 
-  // 6. Update linked Invoice if settled
+  // Update linked Invoice if settled
   if (newStatus === "SETTLED" && matchedRequest.invoiceId) {
     await prisma.invoice.update({
       where: { id: matchedRequest.invoiceId },
@@ -143,7 +155,41 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
   }
 
-  // 7. Audit log
+  // Update OlivCreditFacility balance
+  const facility = await prisma.olivCreditFacility.findFirst({
+    where: {
+      tenantId: matchedRequest.tenantId,
+      status: "ACTIVE",
+    },
+  });
+
+  if (facility) {
+    const amount = (data.amount || data.disbursedAmount || data.grossAmount || 0) as number;
+    let utilizedDelta = 0;
+
+    switch (eventType) {
+      case "funding.disbursed":
+        utilizedDelta = amount; // Credit utilized
+        break;
+      case "funding.settled":
+        utilizedDelta = -amount; // Credit freed up
+        break;
+    }
+
+    if (utilizedDelta !== 0) {
+      const newUtilized = Math.max(0, facility.utilizedEgp + utilizedDelta);
+      await prisma.olivCreditFacility.update({
+        where: { id: facility.id },
+        data: {
+          utilizedEgp: newUtilized,
+          availableEgp: facility.creditLimitEgp - newUtilized,
+          lastSyncedAt: new Date(),
+        },
+      });
+    }
+  }
+
+  // Audit log
   await audit({
     entityType: "FactoringRequest",
     entityId: matchedRequest.id,
@@ -153,20 +199,163 @@ export const POST = apiRoute(async (request: NextRequest) => {
     actorRole: "SYSTEM",
     afterState: {
       olivFundingId,
-      eventType: result.eventType,
+      eventType,
       status: newStatus,
-      updates: result.updates,
     },
   });
 
-  // Mark webhook as processed (replay protection)
-  await markWebhookProcessed("oliv", eventId, `${actionLabel}:${matchedRequest.id}`);
+  // Log sync event
+  await prisma.olivSyncLog.create({
+    data: {
+      direction: "INBOUND",
+      eventType,
+      entityType: "FactoringRequest",
+      entityId: matchedRequest.id,
+      payload: JSON.stringify(data),
+      success: true,
+      idempotencyKey: eventId,
+      tenantId: matchedRequest.tenantId,
+    },
+  });
+
+  await markWebhookProcessed("oliv", eventId, `${eventType}:${matchedRequest.id}`);
 
   return success({
     acknowledged: true,
     matched: true,
     factoringRequestId: matchedRequest.id,
     newStatus,
-    eventType: result.eventType,
+    eventType,
   });
-});
+}
+
+/**
+ * Handle credit facility events (approved, updated, suspended)
+ */
+async function handleCreditFacilityEvent(
+  payload: Record<string, unknown>,
+  eventType: string,
+  eventId: string
+) {
+  const data = (payload.data || payload) as Record<string, unknown>;
+  const supplierId = data.supplier_id || data.supplierId;
+  const olivFacilityId = data.facility_id || data.creditFacilityId;
+
+  if (!supplierId) {
+    console.warn("[Oliv Callback] Missing supplier_id in credit facility event");
+    return success({ acknowledged: true, matched: false, reason: "missing_supplier_id" });
+  }
+
+  // Find supplier
+  const supplier = await prisma.supplier.findFirst({
+    where: {
+      olivUserId: supplierId as string,
+    },
+  });
+
+  if (!supplier) {
+    console.warn("[Oliv Callback] Unmatched supplier_id:", supplierId);
+    return success({ acknowledged: true, matched: false, reason: "unmatched_supplier" });
+  }
+
+  // Update or create OlivCreditFacility
+  const facilityData = {
+    creditLimitEgp: (data.credit_limit || data.creditLimit || 0) as number,
+    utilizedEgp: (data.utilized || data.utilizedAmount || 0) as number,
+    availableEgp: (data.available || data.availableAmount || 0) as number,
+    interestRate: (data.interest_rate || data.interestRate || 0) as number,
+    advanceRate: (data.advance_rate || data.advanceRate || 0.88) as number,
+    discountRate: (data.discount_rate || data.discountRate || 0.025) as number,
+    settlementDays: (data.settlement_days || data.settlementDays || 90) as number,
+    olivRiskScore: data.risk_score as number | undefined,
+    olivRiskTier: data.risk_tier as string | undefined,
+    lastSyncedAt: new Date(),
+  };
+
+  if (eventType === "credit_facility.approved") {
+    // Create new facility
+    await prisma.olivCreditFacility.create({
+      data: {
+        supplierId: supplier.id,
+        tenantId: supplier.tenantId,
+        olivFacilityId: olivFacilityId as string || `OLIV-${Date.now()}`,
+        ...facilityData,
+        status: "ACTIVE",
+        approvedAt: new Date(),
+      },
+    });
+
+    // Update supplier's Oliv status
+    await prisma.supplier.update({
+      where: { id: supplier.id },
+      data: {
+        olivStatus: "APPROVED",
+        olivSyncAt: new Date(),
+      },
+    });
+  } else if (eventType === "credit_facility.updated") {
+    // Update existing facility
+    const existing = await prisma.olivCreditFacility.findFirst({
+      where: {
+        supplierId: supplier.id,
+        status: "ACTIVE",
+      },
+    });
+
+    if (existing) {
+      await prisma.olivCreditFacility.update({
+        where: { id: existing.id },
+        data: facilityData,
+      });
+    }
+  } else if (eventType === "credit_facility.suspended") {
+    // Suspend facility
+    const existing = await prisma.olivCreditFacility.findFirst({
+      where: {
+        supplierId: supplier.id,
+        status: "ACTIVE",
+      },
+    });
+
+    if (existing) {
+      await prisma.olivCreditFacility.update({
+        where: { id: existing.id },
+        data: { status: "SUSPENDED", lastSyncedAt: new Date() },
+      });
+    }
+  }
+
+  // Audit log
+  await audit({
+    entityType: "OlivCreditFacility",
+    entityId: supplier.id,
+    action: `OLIV_${eventType.toUpperCase().replace(".", "_")}`,
+    tenantId: supplier.tenantId,
+    actorId: "oliv",
+    actorRole: "SYSTEM",
+    afterState: facilityData,
+  });
+
+  // Log sync event
+  await prisma.olivSyncLog.create({
+    data: {
+      direction: "INBOUND",
+      eventType,
+      entityType: "OlivCreditFacility",
+      entityId: supplier.id,
+      payload: JSON.stringify(data),
+      success: true,
+      idempotencyKey: eventId,
+      tenantId: supplier.tenantId,
+    },
+  });
+
+  await markWebhookProcessed("oliv", eventId, `${eventType}:${supplier.id}`);
+
+  return success({
+    acknowledged: true,
+    matched: true,
+    supplierId: supplier.id,
+    eventType,
+  });
+}
