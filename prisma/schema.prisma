@@ -90,6 +90,13 @@ model Tenant {
 
   // ── [NEW] Refresh Token Rotation ──
   refreshTokens RefreshToken[]
+
+  // ── [NEW] Oliv Finance Integration ──
+  consentRecords       ConsentRecord[]
+  olivCreditFacilities OlivCreditFacility[]
+  olivSyncLogs         OlivSyncLog[]
+  factoringTransactions FactoringTransaction[]
+  olivOnboardingAudits OlivOnboardingAudit[]
 }
 
 enum TenantType {
@@ -316,6 +323,7 @@ model User {
   reviews        ProductReview[]
   sampleRequests SampleRequest[]
   refreshTokens  RefreshToken[]
+  consentRecords ConsentRecord[]
 
   @@index([sector])
 }
