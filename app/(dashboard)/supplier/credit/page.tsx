@@ -1,4 +1,4 @@
-import OlivCreditFacilityDashboard from './credit-facility/page';
+import OlivCreditFacilityDashboard from '../credit-facility/page';
 
 export default function SupplierCreditPage() {
   return <OlivCreditFacilityDashboard />;
