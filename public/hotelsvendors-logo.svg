@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 438 414" role="img" aria-labelledby="title desc">
+  <title id="title">HotelsVendors</title>
+  <desc id="desc">HotelsVendors geometric HV mark with wordmark</desc>
+  <rect width="438" height="414" fill="transparent"/>
+  <g fill="#ffffff">
+    <path d="M250 134h-31c-28 0-51 23-51 51v18l91 91h24v-33l-78-78c1-11 7-20 16-26 8-5 17-8 29-8h40z"/>
+    <path d="M280 134h28l-28 28z" opacity="0.96"/>
+    <path d="M279 171h28v31l-28-28z"/>
+    <path d="M187 217l77 77h-27l-50-50z" opacity="0.94"/>
+    <path d="M187 251l43 43h-27l-16-16z" opacity="0.9"/>
+    <path d="M187 286l8 8h-8z" opacity="0.86"/>
+  </g>
+</svg>
