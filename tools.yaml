@@ -1,9 +1,0 @@
-sources:
-  my-vps-db:
-    kind: postgres
-    host: localhost
-    port: 5433
-    user: root
-    password: ${POSTGRES_PASSWORD}
-    database: postgres
-tools: {}

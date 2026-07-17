@@ -96,7 +96,7 @@ export function CompareDrawer() {
                           </button>
                         </div>
                         <Link
-                          href={`/hotel/catalog/${item.id}`}
+                          href={`/marketplace/${item.id}`}
                           className="text-sm font-medium text-white/90 hover:text-[#ff7a33] transition-colors line-clamp-2 min-h-[2.5rem]"
                         >
                           {item.name}

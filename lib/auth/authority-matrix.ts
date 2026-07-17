@@ -14,8 +14,16 @@ import { validateForFactoring } from "@/lib/eta/validator";
 import { assessRisk, generateSmartFixes, type RiskTier, type SmartFix } from "@/lib/fintech/risk-engine";
 import type { HotelTier, SupplierTier, UserRole, OrderStatus } from "@prisma/client";
 
+async function getOrderRequesterRole(requesterId: string): Promise<string | null> {
+  const user = await prisma.user.findUnique({
+    where: { id: requesterId },
+    select: { role: true },
+  });
+  return user?.role ?? null;
+}
+
 // ─────────────────────────────────────────
-// 1. TYPES
+// TYPES
 // ─────────────────────────────────────────
 
 export type AuthorityAction =
@@ -269,7 +277,7 @@ export async function evaluateAuthority(
       total: order.total,
       hotel: { tier: order.hotel.tier, riskTier: order.hotel.riskTier },
       supplier: { tier: order.supplier.tier },
-      requesterRole: order.requesterId ? ctx.userRole : null,
+      requesterRole: order.requesterId ? (await getOrderRequesterRole(order.requesterId)) : null,
     }, riskAssessment.riskTier, ctx.userRole);
     if (!match) continue;
 

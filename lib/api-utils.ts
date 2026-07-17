@@ -80,12 +80,6 @@ export async function authenticate(request: NextRequest): Promise<AuthContext> {
   // Primary: read from session cookie
   let token = await getSessionToken();
 
-  // Fallback: read from middleware-injected header (edge-verified)
-  if (!token) {
-    const headerToken = request.headers.get("x-session-token");
-    if (headerToken) token = headerToken;
-  }
-
   if (!token) {
     throw new ApiError("Unauthorized", 401);
   }
@@ -162,8 +156,8 @@ export async function requireIdempotencyKey(
   return key;
 }
 
-export function completeIdempotency(key: string, result: string): void {
-  completeRedisIdempotency(key, "global", result);
+export async function completeIdempotency(key: string, result: string): Promise<void> {
+  await completeRedisIdempotency(key, "global", result);
 }
 
 // ─────────────────────────────────────────

@@ -1,64 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { writeFile, readFile } from "fs/promises";
-import { join } from "path";
+import { authenticate, requirePermission, audit } from "@/lib/api-utils";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const credentials = await prisma.auditLog.findMany({
-      where: { action: "CREDENTIAL_ACCESS" },
-      orderBy: { createdAt: "desc" },
-      take: 50,
+    const auth = await authenticate(request);
+    await requirePermission(auth, "admin:manage_credentials");
+
+    await audit({
+      entityType: "system",
+      entityId: "credentials",
+      action: "CREDENTIAL_ACCESS",
+      tenantId: auth.tenantId,
+      actorId: auth.userId,
+      actorRole: auth.platformRole,
     });
 
+    // Return masked credential metadata — never expose actual keys
     return NextResponse.json({
       success: true,
-      data: credentials.map((c) => ({
-        id: c.id,
-        name: (c.details as Record<string, string>)?.name || "Unknown",
-        key: (c.details as Record<string, string>)?.key || "",
-        type: (c.details as Record<string, string>)?.type || "api_key",
-        service: (c.details as Record<string, string>)?.service || "unknown",
-        lastRotated: c.createdAt.toISOString(),
-        status: "active",
-      })),
+      data: [
+        { name: "SESSION_SECRET", type: "secret", service: "auth", status: process.env.SESSION_SECRET ? "configured" : "missing" },
+        { name: "DATABASE_URL", type: "secret", service: "database", status: process.env.DATABASE_URL ? "configured" : "missing" },
+        { name: "REDIS_URL", type: "secret", service: "cache", status: process.env.REDIS_URL ? "configured" : "missing" },
+        { name: "SMTP_HOST", type: "secret", service: "email", status: process.env.SMTP_HOST ? "configured" : "missing" },
+      ],
     });
-  } catch {
-    return NextResponse.json({ success: true, data: [] });
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { content } = body;
-    const password = request.headers.get("x-admin-password");
-
-    if (password !== "panda3011") {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
-    }
-
-    // Write .env file
-    const envPath = join(process.cwd(), ".env");
-    await writeFile(envPath, content, "utf-8");
-
-    // Log the action
-    await prisma.auditLog.create({
-      data: {
-        tenantId: "SYSTEM",
-        actorId: "ADMIN",
-        action: "ENV_UPDATED",
-        resource: "system",
-        resourceId: null,
-        details: {
-          updatedBy: "admin",
-          timestamp: new Date().toISOString(),
-        },
-      },
-    });
-
-    return NextResponse.json({ success: true, message: "Environment updated successfully" });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to update environment" }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch credentials";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

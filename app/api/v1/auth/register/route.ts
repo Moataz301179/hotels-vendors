@@ -6,10 +6,14 @@ import { BusinessRegisterSchema } from "@/lib/zod";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, welcomeTemplate, emailVerificationTemplate } from "@/lib/notifications/email";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
+}
+
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
 }
 
 export const POST = apiRoute(async (request: NextRequest) => {
@@ -145,12 +149,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
     throw new Error("User creation failed");
   }
 
-  // Generate email verification token
+  // Generate email verification token (hash before storage)
   const verifyToken = generateToken();
+  const verifyTokenHash = hashToken(verifyToken);
   await prisma.emailVerificationToken.create({
     data: {
       email: data.email,
-      token: verifyToken,
+      token: verifyTokenHash,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     },
   });

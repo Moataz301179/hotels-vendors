@@ -6,7 +6,7 @@
  * Email backup for recovery. SMS only as last resort.
  */
 
-import { createHmac } from "crypto";
+import { createHmac, randomBytes } from "crypto";
 
 // ─────────────────────────────────────────
 // 1. TOTP IMPLEMENTATION
@@ -18,9 +18,10 @@ import { createHmac } from "crypto";
  */
 export function generateTOTPSecret(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  const bytes = randomBytes(32);
   let secret = "";
   for (let i = 0; i < 32; i++) {
-    secret += chars.charAt(Math.floor(Math.random() * chars.length));
+    secret += chars.charAt(bytes[i] % chars.length);
   }
   return secret;
 }
@@ -112,9 +113,13 @@ function base32Decode(input: string): Buffer {
  */
 export function generateBackupCodes(): string[] {
   const codes: string[] = [];
+  const bytes = randomBytes(40); // 10 codes × 4 bytes each
   for (let i = 0; i < 10; i++) {
-    const part1 = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const part2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const offset = i * 4;
+    const part1 = bytes[offset].toString(36).padStart(2, "0").toUpperCase() +
+                  bytes[offset + 1].toString(36).padStart(2, "0").toUpperCase();
+    const part2 = bytes[offset + 2].toString(36).padStart(2, "0").toUpperCase() +
+                  bytes[offset + 3].toString(36).padStart(2, "0").toUpperCase();
     codes.push(`${part1}-${part2}`);
   }
   return codes;

@@ -19,6 +19,7 @@ interface CartContextType {
   items: CartItem[]
   totalItems: number
   totalPrice: number
+  subtotal: number
   isOpen: boolean
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void
   removeItem: (id: string) => void
@@ -26,6 +27,7 @@ interface CartContextType {
   clearCart: () => void
   openCart: () => void
   closeCart: () => void
+  toggleCart: () => void
 }
 
 const CartContext = createContext<CartContextType | null>(null)
@@ -51,6 +53,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  const subtotal = totalPrice
 
   const addItem = useCallback((item: Omit<CartItem, "quantity">, qty = 1) => {
     setItems(prev => {
@@ -72,9 +75,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = useCallback(() => setItems([]), [])
   const openCart = useCallback(() => setIsOpen(true), [])
   const closeCart = useCallback(() => setIsOpen(false), [])
+  const toggleCart = useCallback(() => setIsOpen((prev) => !prev), [])
 
   return (
-    <CartContext.Provider value={{ items, totalItems, totalPrice, isOpen, addItem, removeItem, updateQuantity, clearCart, openCart, closeCart }}>
+    <CartContext.Provider value={{ items, totalItems, totalPrice, subtotal, isOpen, addItem, removeItem, updateQuantity, clearCart, openCart, closeCart, toggleCart }}>
       {children}
     </CartContext.Provider>
   )

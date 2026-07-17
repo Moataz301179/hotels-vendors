@@ -1,6 +1,11 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
+import { createHash } from "crypto";
+
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
@@ -10,8 +15,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Verification token is required", 400);
   }
 
+  // Hash the incoming token to match stored hash
+  const tokenHash = hashToken(token);
+
   const verification = await prisma.emailVerificationToken.findUnique({
-    where: { token },
+    where: { token: tokenHash },
   });
 
   if (!verification) {

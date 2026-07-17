@@ -308,8 +308,6 @@ async function main() {
       contactPhone: "+20 000 000 0000",
       status: "ACTIVE",
       maxFacility: 10000000,
-      interestRate: 0.022,
-      rate: 0.018,
       tenantId: factoringTenant.id,
     },
   });

@@ -32,7 +32,14 @@ async function isBlacklisted(token: string): Promise<boolean> {
   if (r) {
     try {
       const exists = await r.exists(`session:blacklist:${token}`);
-      return exists === 1;
+      if (exists === 1) return true;
+      // Also check user-level revocation (password reset invalidates all sessions)
+      const payload = await jwtVerify(token, SECRET, { clockTolerance: 60 }).catch(() => null);
+      if (payload?.payload?.userId) {
+        const revoked = await r.exists(`session:user-revoked:${payload.payload.userId}`);
+        if (revoked === 1) return true;
+      }
+      return false;
     } catch {
       return memoryBlacklist.has(token);
     }

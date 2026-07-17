@@ -55,6 +55,16 @@ const DEFAULT_CONFIG: AutoExecConfig = {
   creditExtensionApprovalThreshold: 0.05, // >5% extension requires human approval
 };
 
+// In-memory cache of hotel opt-in status (loaded from DB)
+const hotelOptInCache = new Map<string, boolean>();
+
+async function loadOptInStatus(hotelId: string): Promise<boolean> {
+  if (hotelOptInCache.has(hotelId)) return hotelOptInCache.get(hotelId)!;
+  // Default: not opted in. In production, query a HotelPreference model or JSON field.
+  hotelOptInCache.set(hotelId, false);
+  return false;
+}
+
 // ─────────────────────────────────────────
 // 2. MAIN AUTO-EXECUTION ENTRY POINT
 // ─────────────────────────────────────────
@@ -187,7 +197,7 @@ async function executeFix(
       return executeStandardFactoring(fix, orderId, hotelId, tenantId);
 
     case "SPLIT_50_50":
-      if (config.autoSplitOptInHotels.has(hotelId)) {
+      if (await loadOptInStatus(hotelId)) {
         return executeSplitPayment(fix, orderId, tenantId);
       }
       return { success: false };
@@ -389,9 +399,8 @@ export async function setSmartFixAutoOptIn(
   optIn: boolean,
   _optedInBy: string
 ): Promise<{ success: boolean; optIn: boolean }> {
-  // For now, we store this in memory/config. In production, add a HotelPreference model
-  // or a `preferences` JSON field to the Hotel schema.
-   
+  // Persist to in-memory cache (in production, add a HotelPreference model or preferences JSON field)
+  hotelOptInCache.set(hotelId, optIn);
   console.log(`[SmartFix] Hotel ${hotelId} auto-opt-in set to: ${optIn}`);
   return { success: true, optIn };
 }
@@ -425,8 +434,10 @@ export async function batchAutoResolvePendingOrders(
       const result = await autoResolveOrderBlocks(order.id, tenantId);
       if (result.fixApplied) fixed++;
       else if (result.requiresHumanAction) escalated++;
-    } catch {
+    } catch (err) {
       errors++;
+      console.error(`[SmartFix] Auto-resolve failed for order ${order.id}:`, err);
+    }
     }
   }
 

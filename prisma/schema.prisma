@@ -97,6 +97,14 @@ model Tenant {
   olivSyncLogs         OlivSyncLog[]
   factoringTransactions FactoringTransaction[]
   olivOnboardingAudits OlivOnboardingAudit[]
+
+  // ── [NEW] Ledger ──
+  ledgerEntries LedgerEntry[]
+
+  // ── [NEW] Agent Memory & Leads ──
+  swarmMemories  SwarmMemory[]
+  leads          Lead[]
+  aiSubscriptions AISubscription[]
 }
 
 enum TenantType {
@@ -200,6 +208,10 @@ model Hotel {
   creditFacilities   CreditFacility[]
   tripStops          TripStop[]
   payments           Payment[]
+
+  @@index([tenantId])
+  @@index([city])
+  @@index([status])
 }
 
 model Property {
@@ -326,6 +338,12 @@ model User {
   consentRecords ConsentRecord[]
 
   @@index([sector])
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([roleId])
+  @@index([status])
+  @@index([platformRole])
 }
 
 enum UserRole {
@@ -432,6 +450,11 @@ model Supplier {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([city])
+  @@index([status])
+  @@index([tier])
 }
 
 model DeliveryZone {
@@ -1885,6 +1908,7 @@ model SwarmMemory {
   accessCount Int       @default(0)
 
   tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1947,6 +1971,7 @@ model Lead {
   outreachLogs OutreachLog[]
 
   tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2901,6 +2926,7 @@ model AISubscription {
 
   userId String
   tenantId String
+  tenant  Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Subscription details
   tier String @default("FREE")  // FREE, BASIC, PRO, ENTERPRISE
@@ -2952,3 +2978,36 @@ model AITokenUsage {
   @@index([feature])
   @@index([createdAt])
 }
+
+// ─────────────────────────────────────────
+// LEDGER — Double-Entry Accounting
+// ─────────────────────────────────────────
+
+model LedgerEntry {
+  id String @id @default(cuid())
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  entityType String   // "ORDER", "INVOICE", "FACTORING", "PAYMENT"
+  entityId   String   // Reference to the source entity
+  entryType  String   // "DEBIT", "CREDIT"
+  account    String   // e.g., "platform_revenue", "factoring_receivable"
+  amount     Float
+  currency   String   @default("EGP")
+  reference  String?  // External reference (ETA UUID, payment ID, etc.)
+
+  metadata   String?  // JSON string for additional context
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, entityType, entityId])
+  @@index([account])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────
+// INDEXES — Performance-critical query paths
+// ─────────────────────────────────────────
+
+// Note: Prisma supports @@index on models. Additional indexes added below:

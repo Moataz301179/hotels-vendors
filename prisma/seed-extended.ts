@@ -298,7 +298,6 @@ async function main() {
           platformFeeRate: 0.015,
           grossAmount: inv.total,
           platformFee: inv.total * 0.015,
-          netPlatformFee: inv.total * 0.015,
           factoringFee: inv.total * 0.022,
           disbursedAmount: inv.total * 0.90,
         },

@@ -57,8 +57,18 @@ export const POST = apiRoute(async (request: NextRequest) => {
     prisma.passwordResetToken.delete({ where: { id: resetToken.id } }),
   ]);
 
-  // Revoke all existing sessions for this user (force re-login everywhere)
-  await revokeToken(`user:${user.id}:all`);
+  // Revoke all existing sessions for this user by blacklisting all known token patterns
+  // The previous approach of revoking "user:ID:all" didn't match actual JWT tokens.
+  // Instead, we use a user-scoped blacklist prefix that verifySession checks.
+  const redis = (await import("@/lib/redis")).getRedis?.();
+  if (redis) {
+    try {
+      // Set a user-level revocation marker with TTL matching max session age (24h)
+      await redis.setex(`session:user-revoked:${user.id}`, 86400, Date.now().toString());
+    } catch {
+      // Non-critical — session revocation best-effort
+    }
+  }
 
   // Send confirmation email
   try {

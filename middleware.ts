@@ -25,7 +25,7 @@ if (!_sessionSecret) {
   console.warn("[Auth] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
 }
 const SECRET = new TextEncoder().encode(
-  _sessionSecret || "dev-secret-change-in-production"
+  _sessionSecret || "dev-secret-do-not-use-in-production"
 );
 
 /* ── Route Configuration ── */
@@ -150,6 +150,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
@@ -217,11 +218,13 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-user-id", session.userId);
     requestHeaders.set("x-tenant-id", session.tenantId);
     requestHeaders.set("x-platform-role", session.platformRole);
-    requestHeaders.set("x-session-token", token);
+    // NOTE: x-session-token intentionally NOT set — prevents JWT leak via headers
 
-    // CSRF protection for state-changing API routes (skip auth endpoints and webhooks)
+    // CSRF protection for state-changing API routes (skip only login/register and webhooks)
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
-    const isExemptPath = pathname.startsWith("/api/v1/auth/") || pathname.startsWith("/api/webhooks");
+    const isExemptPath = pathname.startsWith("/api/v1/auth/login") ||
+      pathname.startsWith("/api/v1/auth/register") ||
+      pathname.startsWith("/api/webhooks");
     if (isStateChanging && !isExemptPath) {
       const csrfResult = await csrfMiddleware(request);
       if (csrfResult) return addSecurityHeaders(csrfResult);

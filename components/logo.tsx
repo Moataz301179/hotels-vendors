@@ -11,6 +11,8 @@ export function Logo({ className = "h-8 w-8" }: { className?: string }) {
 
 export function LogoFull({ className = "" }: { className?: string }) {
   return (
-    <BrandLogo variant="dark" size="sm" showText={false} />
+    <span className={className}>
+      <BrandLogo variant="dark" size="sm" showText={false} />
+    </span>
   );
 }

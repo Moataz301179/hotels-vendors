@@ -3,10 +3,14 @@ import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, emailVerificationTemplate } from "@/lib/notifications/email";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
+}
+
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
 }
 
 export const POST = apiRoute(async (request: NextRequest) => {
@@ -42,10 +46,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   const token = generateToken();
+  const tokenHash = hashToken(token);
   await prisma.emailVerificationToken.create({
     data: {
       email: user.email,
-      token,
+      token: tokenHash,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     },
   });

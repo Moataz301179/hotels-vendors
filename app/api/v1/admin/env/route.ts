@@ -1,34 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { writeFile } from "fs/promises";
-import { join } from "path";
+import { authenticate, requirePermission, audit } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { content } = body;
-    const password = request.headers.get("x-admin-password");
+    const auth = await authenticate(request);
+    await requirePermission(auth, "admin:manage_env");
 
-    if (password !== "panda3011") {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+    const body = await request.json();
+    const { key, value } = body;
+
+    if (!key || typeof key !== "string") {
+      return NextResponse.json({ error: "Missing or invalid key" }, { status: 400 });
     }
 
-    const envPath = join(process.cwd(), ".env");
-    await writeFile(envPath, content, "utf-8");
+    // Only allow whitelisted env keys to be modified
+    const allowedKeys = ["NEXT_PUBLIC_FINTECH_SANDBOX"];
+    if (!allowedKeys.includes(key)) {
+      return NextResponse.json({ error: "Environment key not allowed for modification" }, { status: 403 });
+    }
 
-    await prisma.auditLog.create({
-      data: {
-        tenantId: "SYSTEM",
-        actorId: "ADMIN",
-        action: "ENV_UPDATED",
-        resource: "system",
-        resourceId: null,
-        details: { timestamp: new Date().toISOString() },
-      },
+    await audit({
+      entityType: "system",
+      entityId: "env",
+      action: "ENV_UPDATED",
+      tenantId: auth.tenantId,
+      actorId: auth.userId,
+      actorRole: auth.platformRole,
+      afterState: { key, timestamp: new Date().toISOString() },
     });
 
-    return NextResponse.json({ success: true, message: "Environment saved" });
-  } catch {
-    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    return NextResponse.json({ success: true, message: "Environment update logged. Use Vercel dashboard for production env changes." });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to update environment";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

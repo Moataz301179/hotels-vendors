@@ -16,6 +16,7 @@
  */
 
 import type { RiskTier } from "./risk-engine";
+import { prisma } from "@/lib/prisma";
 
 // ─────────────────────────────────────────
 // TRANSPARENCY TYPES
@@ -238,8 +239,15 @@ export interface HubRevenueResult {
 }
 
 export async function calculateHubRevenue(params: HubRevenueParams): Promise<HubRevenueResult> {
-  const { partnerDiscountRate, advanceRate } = params;
-  const grossAmount = 100_000; // Placeholder — in production, fetch from invoice
+  const { invoiceId, partnerDiscountRate, advanceRate } = params;
+
+  // Fetch actual invoice amount from database
+  const invoice = await prisma.invoice.findUnique({
+    where: { id: invoiceId },
+    select: { total: true },
+  });
+  const grossAmount = invoice?.total ?? 0;
+
   const platformFeeRate = 0.025;
   const factoringFee = grossAmount * partnerDiscountRate;
   const netPlatformFee = grossAmount * platformFeeRate;

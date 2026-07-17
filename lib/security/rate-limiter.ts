@@ -111,8 +111,8 @@ export async function checkRateLimit(
         retryAfter: Math.round(rlRejected.msBeforeNext / 1000),
       };
     }
-    // Unknown error — fail closed (allow)
-    return { allowed: true };
+    // Unknown error — fail closed (deny)
+    return { allowed: false, retryAfter: 60 };
   }
 }
 
