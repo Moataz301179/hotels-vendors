@@ -53,12 +53,14 @@ const PUBLIC_PATHS = [
   "/help",
   "/flow",
   "/financing/oliv",
+  "/oliv/referral",
   "/factoring-service",
   "/api/v1/auth/login",
   "/api/v1/auth/register",
   "/api/v1/auth/refresh",
   "/api/v1/auth/verify",
   "/api/v1/supplier/onboard",
+  "/api/v1/oliv/referral",
   "/api/v1/cms/content",
   "/api/v1/ai/public",
   "/api/health",
@@ -267,7 +269,6 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set("x-user-id", userId);
   requestHeaders.set("x-tenant-id", tenantId);
   requestHeaders.set("x-platform-role", platformRole);
-  requestHeaders.set("x-session-token", token);
 
   // Redirect /dashboard (non-existent) to role-specific dashboard
   if (pathname === "/dashboard") {

@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "referral-leads.json");
+import { prisma } from "@/lib/prisma";
 
 interface ReferralLead {
   id: string;
@@ -13,19 +10,6 @@ interface ReferralLead {
   role: "SUPPLIER" | "HOTEL";
   source: string;
   createdAt: string;
-}
-
-async function readLeads(): Promise<ReferralLead[]> {
-  try {
-    const raw = await fs.readFile(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function writeLeads(leads: ReferralLead[]) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(leads, null, 2), "utf-8");
 }
 
 export async function POST(request: NextRequest) {
@@ -47,27 +31,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const leads = await readLeads();
-
     const id = "HV-OLIV-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
 
-    const lead: ReferralLead = {
-      id,
-      name,
-      email,
-      phone: phone || "",
-      company: company || "",
-      role,
-      source: "OLIV_REFERRAL_PAGE",
-      createdAt: new Date().toISOString(),
-    };
-
-    leads.push(lead);
-    await writeLeads(leads);
+    const lead = await prisma.leadCapture.create({
+      data: {
+        companyName: company || `${name} (Oliv Referral)`,
+        email,
+        sector: "HOSPITALITY",
+        role,
+        message: phone || undefined,
+        source: "OLIV_REFERRAL_PAGE",
+        status: "new",
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      data: { id, message: "Referral lead captured successfully" },
+      data: { id: lead.id, message: "Referral lead captured successfully" },
     });
   } catch (error) {
     console.error("Referral lead error:", error);
@@ -79,6 +59,18 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  const leads = await readLeads();
-  return NextResponse.json({ success: true, data: leads });
+  try {
+    const leads = await prisma.leadCapture.findMany({
+      where: { source: "OLIV_REFERRAL_PAGE" },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
+    return NextResponse.json({ success: true, data: leads });
+  } catch (error) {
+    console.error("Fetch referral leads error:", error);
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }

@@ -105,16 +105,4 @@ export async function verifySession(
   }
 }
 
-export async function clearSession(): Promise<void> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (token) {
-    await revokeToken(token);
-  }
-  cookieStore.delete(SESSION_COOKIE);
-}
-
-export async function getSessionToken(): Promise<string | undefined> {
-  const cookieStore = await cookies();
-  return cookieStore.get(SESSION_COOKIE)?.value;
-}
+export async f

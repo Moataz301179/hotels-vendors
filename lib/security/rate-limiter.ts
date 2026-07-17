@@ -140,5 +140,4 @@ export async function rateLimitResponse(
       }
     );
   }
-  return null;
-}
+ 

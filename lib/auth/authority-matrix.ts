@@ -624,14 +624,4 @@ export async function setPaymentGuarantee(
   await appendAuditEntry({
     entityType: "ORDER",
     entityId: input.orderId,
-    action: "PAYMENT_GUARANTEE_SET",
-    tenantId: input.tenantId,
-    actorId: input.verifiedBy,
-    afterState: {
-      method: input.method,
-      etaValidated: input.etaValidated,
-      etaUuid: input.etaUuid,
-      factoringRequestId: input.factoringRequestId,
-    },
-  });
-}
+    action: "PAYMENT

@@ -2,8 +2,10 @@
  * Email Notifications — Hotels Vendors
  * Authority Matrix alerts, order updates, factoring events
  *
- * Uses Resend (free 3,000 emails/month) with SMTP fallback
+ * Uses Resend (free 3,000 emails/month) with SMTP fallback via nodemailer
  */
+
+import nodemailer from "nodemailer";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@hotelsvendors.com";
@@ -13,6 +15,19 @@ interface EmailPayload {
   subject: string;
   html: string;
   text?: string;
+}
+
+function getSmtpTransport() {
+  if (!process.env.SMTP_HOST) return null;
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 465,
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
 }
 
 async function sendViaResend(payload: EmailPayload): Promise<{ id: string }> {
@@ -38,13 +53,31 @@ async function sendViaResend(payload: EmailPayload): Promise<{ id: string }> {
   return res.json();
 }
 
+async function sendViaSmtp(payload: EmailPayload): Promise<{ id: string }> {
+  const transport = getSmtpTransport();
+  if (!transport) throw new Error("No email transport configured");
+
+  const info = await transport.sendMail({
+    from: FROM_EMAIL,
+    to: payload.to.join(", "),
+    subject: payload.subject,
+    html: payload.html,
+    text: payload.text,
+  });
+
+  return { id: info.messageId };
+}
+
 export async function sendEmail(payload: EmailPayload): Promise<{ id: string }> {
   if (RESEND_API_KEY) {
     return sendViaResend(payload);
   }
-  // Fallback: log to console in dev
-  console.log("[Email] Would send:", payload.subject, "to", payload.to.join(", "));
-  return { id: "dev-fallback" };
+  const smtp = getSmtpTransport();
+  if (smtp) {
+    return sendViaSmtp(payload);
+  }
+  console.warn("[Email] No transport configured (set RESEND_API_KEY or SMTP_HOST). Email not sent:", payload.subject);
+  return { id: "no-transport" };
 }
 
 // ── Template: Approval Required ──
