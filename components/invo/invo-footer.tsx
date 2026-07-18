@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function InvoFooter() {
   return (
@@ -8,14 +8,11 @@ export function InvoFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-md bg-[#D4A843] flex items-center justify-center">
-                <Zap className="w-4 h-4 text-black" />
-              </div>
-              <span className="text-[16px] font-medium text-white">INVO</span>
+              <BrandLogo variant="dark" size="sm" showText={false} />
               <span className="text-[11px] text-white/30">by HotelsVendors</span>
             </div>
             <p className="text-[14px] text-white/40 max-w-sm leading-relaxed">
-              The financial layer for suppliers on Egypt's largest hospitality
+              The financial layer for suppliers on Egypt&apos;s largest hospitality
               procurement network. Subscribe. List. Get paid.
             </p>
           </div>

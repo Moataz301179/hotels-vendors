@@ -32,11 +32,8 @@ export function GlobalHeader() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 relative z-10">
+        <Link href="/" className="flex items-center relative z-10">
           <BrandLogo variant="dark" size="sm" showText={false} />
-          <span className="font-semibold text-[15px] text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-            Hotels Vendors
-          </span>
         </Link>
 
         {/* Desktop Nav */}

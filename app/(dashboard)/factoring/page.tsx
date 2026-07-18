@@ -58,6 +58,13 @@ interface Invoice {
   supplier: { name: string };
 }
 
+interface FactoringOffer {
+  companyName?: string;
+  factoringCompanyId: string;
+  advanceRate: number;
+  discountRate: number;
+}
+
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     ACTIVE: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Active" },
@@ -86,8 +93,8 @@ export default function FinanceDashboardPage() {
   const [newModalOpen, setNewModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<"select" | "offers" | "confirm" | "success">("select");
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [offers, setOffers] = useState<any[]>([]);
-  const [selectedOffer, setSelectedOffer] = useState<any>(null);
+  const [offers, setOffers] = useState<FactoringOffer[]>([]);
+  const [selectedOffer, setSelectedOffer] = useState<FactoringOffer | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState("");
 
@@ -481,9 +488,9 @@ function NewFactoringModal({
   setStep: (s: "select" | "offers" | "confirm" | "success") => void;
   selectedInvoice: Invoice | null;
   setSelectedInvoice: (i: Invoice | null) => void;
-  offers: any[];
-  selectedOffer: any;
-  setSelectedOffer: (o: any) => void;
+  offers: FactoringOffer[];
+  selectedOffer: FactoringOffer | null;
+  setSelectedOffer: (o: FactoringOffer | null) => void;
   loading: boolean;
   error: string;
   onFetchOffers: (invoice: Invoice) => void;
@@ -585,7 +592,7 @@ function NewFactoringModal({
                   <EmptyState title="No offers available" description="No factoring partners returned offers for this invoice." />
                 ) : (
                   <div className="space-y-3">
-                    {offers.map((offer: any, i: number) => (
+                    {offers.map((offer: FactoringOffer, i: number) => (
                       <button
                         key={i}
                         onClick={() => setSelectedOffer(offer)}

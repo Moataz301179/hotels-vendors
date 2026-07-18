@@ -60,30 +60,31 @@ export default function OlivCreditFacilityDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchFacilityData();
-  }, []);
+    let cancelled = false;
+    async function load() {
+      try {
+        const facilityRes = await fetch('/api/v1/fintech/oliv-facility');
+        if (!facilityRes.ok) throw new Error('Failed to fetch facility');
+        const facilityData = await facilityRes.json();
+        if (cancelled) return;
+        setFacility(facilityData.data);
 
-  const fetchFacilityData = async () => {
-    try {
-      setLoading(true);
-      const facilityRes = await fetch('/api/v1/fintech/oliv-facility');
-      if (!facilityRes.ok) throw new Error('Failed to fetch facility');
-      const facilityData = await facilityRes.json();
-      setFacility(facilityData.data);
-
-      if (facilityData.data?.hasFacility) {
-        const scheduleRes = await fetch('/api/v1/fintech/oliv-facility/schedule');
-        if (scheduleRes.ok) {
-          const scheduleData = await scheduleRes.json();
-          setSchedule(scheduleData.data);
+        if (facilityData.data?.hasFacility) {
+          const scheduleRes = await fetch('/api/v1/fintech/oliv-facility/schedule');
+          if (scheduleRes.ok) {
+            const scheduleData = await scheduleRes.json();
+            if (!cancelled) setSchedule(scheduleData.data);
+          }
         }
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load data');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-    } finally {
-      setLoading(false);
     }
-  };
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const formatEgp = (amount: number) => {
     return new Intl.NumberFormat('ar-EG', {
@@ -134,7 +135,7 @@ export default function OlivCreditFacilityDashboard() {
     );
   }
 
-  if (!facility?.hasFacility) {
+  if (!facility?.hasFacility || !facility.facility) {
     return (
       <Card className="bg-[#12121a] border-white/10">
         <CardContent className="p-8 text-center">
@@ -150,7 +151,7 @@ export default function OlivCreditFacilityDashboard() {
     );
   }
 
-  const { facility: data } = facility;
+  const data = facility.facility;
   const upcomingPayments = data.paymentSchedule
     ?.filter(p => p.status === 'PENDING' && new Date(p.dueDate) > new Date())
     .slice(0, 5) || [];

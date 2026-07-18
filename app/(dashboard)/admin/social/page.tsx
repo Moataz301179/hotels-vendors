@@ -73,7 +73,7 @@ export default function SocialAdminPage() {
           const data = await waitingRes.json();
           const byRole: Record<string, number> = {};
           const byStatus: Record<string, number> = {};
-          data.counts?.forEach((c: any) => {
+          data.counts?.forEach((c: { role: string; status: string; _count: { id: number } }) => {
             byRole[c.role] = (byRole[c.role] || 0) + c._count.id;
             byStatus[c.status] = (byStatus[c.status] || 0) + c._count.id;
           });

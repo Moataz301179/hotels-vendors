@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,6 +15,7 @@ import {
   Receipt,
   ArrowRight,
 } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 interface InvoSidebarProps {
   collapsed: boolean;
@@ -113,10 +113,7 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(212,168,67,0.06)]">
         <Link href="/invo/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[#D4A843] flex items-center justify-center">
-            <Zap className="w-5 h-5 text-black" />
-          </div>
-          <span className="text-sm font-medium text-white tracking-tight">INVO</span>
+          <BrandLogo variant="dark" size="sm" showText={false} />
           <span className="hidden sm:inline text-[10px] font-medium text-white/20 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
             by HV
           </span>
@@ -169,8 +166,7 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
           href="/"
           className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/30 hover:text-white/60 hover:bg-white/[0.03] transition-all w-full"
         >
-          <ArrowRight size={17} className="rotate-180" />
-          <span>HotelsVendors</span>
+          <BrandLogo variant="dark" size="xs" showText={false} />
         </Link>
       </div>
     </div>

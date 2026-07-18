@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Shield, Lock, Globe } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function AuthLayout({
   children,
@@ -15,13 +16,8 @@ export default function AuthLayout({
 
         {/* Top: Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2.5 mb-12">
-            <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-              <span className="text-white font-semibold text-sm" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>HV</span>
-            </div>
-            <span className="text-[15px] font-semibold text-white tracking-tight uppercase">
-              <span className="font-semibold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>Hotels Vendors</span>
-            </span>
+          <Link href="/" className="inline-flex items-center mb-12">
+            <BrandLogo variant="dark" size="lg" showText={false} />
           </Link>
 
           <h2 className="text-[28px] xl:text-[34px] font-semibold text-white leading-[1.15] tracking-[-0.02em] max-w-sm">

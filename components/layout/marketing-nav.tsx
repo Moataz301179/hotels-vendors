@@ -32,11 +32,8 @@ export function MarketingNav() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 relative z-10">
+        <Link href="/" className="flex items-center relative z-10">
           <BrandLogo variant="dark" size="sm" showText={false} />
-          <span className="font-semibold text-[15px] text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-            Hotels Vendors
-          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">

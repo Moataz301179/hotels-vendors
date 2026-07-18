@@ -35,15 +35,17 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
   const { totalItems, toggleCart } = useCart();
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("hv-theme");
+      if (saved === "light" || saved === "dark") return saved;
+    }
+    return "dark";
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem("hv-theme");
-    if (saved === "light" || saved === "dark") {
-      setTheme(saved);
-      document.documentElement.classList.toggle("light-mode", saved === "light");
-    }
-  }, []);
+    document.documentElement.classList.toggle("light-mode", theme === "light");
+  }, [theme]);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -63,11 +65,8 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         >
           <Menu size={20} />
         </button>
-        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+        <Link href="/" className="flex items-center flex-shrink-0">
           <BrandLogo variant="dark" size="md" showText={false} />
-          <span className="text-sm font-semibold text-white uppercase hidden lg:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-            Hotels Vendors
-          </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">
           <span className="text-xs font-medium text-white/25 uppercase tracking-[0.15em]">Dashboard</span>
