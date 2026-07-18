@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 /**
  * Input Primitive
  */
@@ -6,20 +5,13 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
         type={type}
         className={cn(
-          "flex h-9 w-full rounded-lg border border-[var(--border-default)] bg-[var(--surface)] px-3 py-1 text-sm text-[var(--foreground)] shadow-sm transition-colors",
-          "placeholder:text-[var(--foreground-muted)]",
-          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-600)] focus-visible:border-[var(--accent-600)]",
-          "disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         ref={ref}

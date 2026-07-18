@@ -1,4 +1,4 @@
-// @ts-nocheck — TODO: Pre-existing type errors need schema migration; tracked in docs/audit-log.md
+// @ts-nocheck — TODO: Pre-existing type errors; tracked in docs/audit-log.md
 /**
  * Workspace AI Endpoint — Streaming
  * Authenticated users only. Quota-enforced. Persistent conversations.
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
       const result = await streamText({
         model: ollama(ollamaModel),
         system: systemPrompt,
-        messages: [...history as Array<{ role: "user" | "assistant" | "system"; content: string }>, { role: "user" as const, content: safeQuestion }],
+        messages: [...history, { role: "user" as const, content: safeQuestion }],
         temperature: 0.4,
         maxTokens: 800,
         onFinish: async ({ text, usage }) => {
@@ -210,8 +210,7 @@ export async function POST(request: NextRequest) {
       const fallbackResult = await executeLLM(systemPrompt, safeQuestion, {
         maxTokens: 800,
         temperature: 0.4,
-        preferredModel: "xai" } as any,
-
+        preferredModel: "xai",
       });
 
       await prisma.chatMessage.create({
@@ -219,16 +218,16 @@ export async function POST(request: NextRequest) {
           conversationId,
           role: "assistant",
           content: fallbackResult.content,
-          model: (fallbackResult as any).model,
-          tokensUsed: (fallbackResult as any).tokensUsed,
+          model: fallbackResult.model,
+          tokensUsed: fallbackResult.tokensUsed,
         },
       });
-      await incrementUsage(auth.userId, (fallbackResult as any).tokensUsed || 0);
+      await incrementUsage(auth.userId, fallbackResult.tokensUsed || 0);
 
       return success({
         answer: fallbackResult.content,
-        model: (fallbackResult as any).model,
-        provider: (fallbackResult as any).provider,
+        model: fallbackResult.model,
+        provider: fallbackResult.provider,
         fallback: true,
         conversationId,
       });
