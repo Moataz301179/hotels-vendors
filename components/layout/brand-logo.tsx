@@ -16,7 +16,7 @@ const SIZE_MAP = {
   xl: { icon: 60, text: 24, tagline: 14 },
 };
 
-const LOGO_CDN = "https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x";
+const LOGO_CDN = "/hotelsvendors-logo.svg";
 
 export function BrandLogo({
   className,

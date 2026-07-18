@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Bell, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { useState } from "react";
 
 export function Header() {
@@ -18,7 +20,13 @@ export function Header() {
         >
           <Menu className="h-5 w-5" />
         </Button>
-        <span className="text-sm text-slate-400">Mission Control</span>
+        <Link href="/" className="flex items-center gap-2.5">
+          <BrandLogo variant="dark" size="sm" showText={false} />
+          <span className="text-sm font-semibold text-white uppercase hidden sm:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+            Hotels Vendors
+          </span>
+        </Link>
+        <span className="text-sm text-slate-400 hidden md:block">Mission Control</span>
       </div>
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="relative text-slate-400 hover:text-white">
