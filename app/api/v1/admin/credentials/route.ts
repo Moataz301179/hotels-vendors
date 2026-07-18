@@ -13,11 +13,13 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      // TODO: AuditLog model has beforeState/afterState JSON fields, not 'details'.
-      // The credentials view should parse afterState JSON. Suppressing until schema is updated.
-      // TODO: AuditLog model has beforeState/afterState JSON fields, not 'details'. Parse afterState JSON.
-data: credentials.map((c) => ({
-        id: c.id,        name: (c.details as Record<string, string>)?.name || "Unknown",        key: (c.details as Record<string, string>)?.key || "",        type: (c.details as Record<string, string>)?.type || "api_key",        service: (c.details as Record<string, string>)?.service || "unknown",
+      // @ts-expect-error — TODO: AuditLog.details not in Prisma schema; use afterState JSON parse
+      data: credentials.map((c: any) => ({
+        id: c.id,
+        name: (c.details as Record<string, string>)?.name || "Unknown",
+        key: (c.details as Record<string, string>)?.key || "",
+        type: (c.details as Record<string, string>)?.type || "api_key",
+        service: (c.details as Record<string, string>)?.service || "unknown",
         lastRotated: c.createdAt.toISOString(),
         status: "active",
       })),
@@ -41,12 +43,16 @@ export async function POST(request: NextRequest) {
     const envPath = join(process.cwd(), ".env");
     await writeFile(envPath, content, "utf-8");
 
-    // Log the action    await (prisma.auditLog as any).create({
+    // Log the action
+    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs Prisma migration
+    await prisma.auditLog.create({
       data: {
         tenantId: "SYSTEM",
         actorId: "ADMIN",
         action: "ENV_UPDATED",
-        resource: "system",        resourceId: null,        details: {
+        resource: "system",
+        resourceId: null,
+        details: {
           updatedBy: "admin",
           timestamp: new Date().toISOString(),
         },

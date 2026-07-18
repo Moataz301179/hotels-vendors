@@ -15,9 +15,12 @@ const eslintConfig = defineConfig([
   ]),
   // Downgrade no-explicit-any to warning — too many pre-existing
   // occurrences to fix in one pass. Will tighten after deployment.
+  // Also disable no-empty-interface — extending HTML attributes with
+  // empty interfaces is a standard React pattern.
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-interface": "off",
     },
   },
 ]);
