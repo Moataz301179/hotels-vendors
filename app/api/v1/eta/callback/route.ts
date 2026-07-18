@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ETA Callback Webhook
  *

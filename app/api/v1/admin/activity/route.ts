@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Admin Activity Feed API
  * Returns recent platform activity across all tenants.

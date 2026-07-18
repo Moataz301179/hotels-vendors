@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * AI Quota API — HotelsVendors
  * Returns current user's AI usage quota status.

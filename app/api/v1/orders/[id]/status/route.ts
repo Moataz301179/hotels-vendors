@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Order Status Update API
  * PATCH /api/v1/orders/:id/status

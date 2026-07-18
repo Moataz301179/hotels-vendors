@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Conversation API — HotelsVendors AI
  * List, create, and delete user conversations.

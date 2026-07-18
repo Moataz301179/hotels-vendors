@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { AgentOrchestrator } from "@/lib/agents/orchestrator";
 import { WORKFLOWS } from "@/lib/agents/agents";

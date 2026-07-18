@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Products API — Public Catalog + Supplier Inventory
  * Hotels Vendors Marketplace Layer

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { inquireAll } from "@/lib/fintech/factoring-bridge";

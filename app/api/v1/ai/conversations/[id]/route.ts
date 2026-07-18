@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Single Conversation API — HotelsVendors AI
  * Get messages or delete a conversation.

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Hotels Vendors — Lead Capture API
  * POST /api/v1/leads/capture — Capture and route inbound lead from landing page

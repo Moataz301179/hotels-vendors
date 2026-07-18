@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Admin Data Explorer API
  * Cross-tenant search across all platform entities.

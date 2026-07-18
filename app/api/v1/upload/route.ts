@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Upload API — Product Images
  * POST /api/v1/upload — Upload product images

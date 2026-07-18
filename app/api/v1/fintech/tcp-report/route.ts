@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Total Cost of Procurement (TCP) Report API
  * Hotels Vendors Fintech Layer

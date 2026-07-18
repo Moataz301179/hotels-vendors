@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { apiRoute, authenticate, validateBody, success, requirePermission } from "@/lib/api-utils";

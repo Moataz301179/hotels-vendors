@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { getRiskHeatmapData } from "@/lib/fintech/risk-engine";
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";

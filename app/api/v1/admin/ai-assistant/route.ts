@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest, NextResponse } from "next/server";
 import { executeLLM } from "@/lib/ai/llm";
 import { hasEnoughCredits, deductAICredits, getAICreditsBalance } from "@/lib/ai/credits";

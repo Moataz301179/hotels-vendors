@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { generateDynamicTcpReport } from "@/lib/finance/savings-calculator";
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";

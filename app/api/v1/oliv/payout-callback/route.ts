@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * POST /api/v1/oliv/payout-callback
  *

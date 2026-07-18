@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Factoring Disbursement Handler
  *

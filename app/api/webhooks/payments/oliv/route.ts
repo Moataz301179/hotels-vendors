@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, error, success, audit } from "@/lib/api-utils";

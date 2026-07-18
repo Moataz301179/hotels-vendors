@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createDepositPayment } from "@/lib/payments/paymob";

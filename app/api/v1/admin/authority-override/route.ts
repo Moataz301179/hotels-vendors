@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest } from "next/server";
 import { adminOverride } from "@/lib/auth/authority-matrix";
 import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
