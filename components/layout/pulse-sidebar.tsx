@@ -264,11 +264,8 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
     <div className="h-full flex flex-col border-r border-white/[0.06] bg-[#12121a]">
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-white/[0.04]">
-        <Link href="/" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center group">
           <BrandLogo variant="dark" size="md" showText={false} />
-          <span className="text-sm font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-            Hotels Vendors
-          </span>
         </Link>
         <button
           onClick={onToggle}
