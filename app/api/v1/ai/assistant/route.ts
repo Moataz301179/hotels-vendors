@@ -217,16 +217,16 @@ export async function POST(request: NextRequest) {
           conversationId,
           role: "assistant",
           content: fallbackResult.content,
-          model: fallbackResult.model,
-          tokensUsed: fallbackResult.tokensUsed,
+          model: (fallbackResult as any).model,
+          tokensUsed: (fallbackResult as any).tokensUsed,
         },
       });
-      await incrementUsage(auth.userId, fallbackResult.tokensUsed || 0);
+      await incrementUsage(auth.userId, (fallbackResult as any).tokensUsed || 0);
 
       return success({
         answer: fallbackResult.content,
-        model: fallbackResult.model,
-        provider: fallbackResult.provider,
+        model: (fallbackResult as any).model,
+        provider: (fallbackResult as any).provider,
         fallback: true,
         conversationId,
       });

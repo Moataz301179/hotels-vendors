@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         answer: result.content,
-        model: result.model,
-        provider: result.provider,
+        model: (result as any).model,
+        provider: (result as any).provider,
         remainingQuestions: rateLimit.remaining,
       },
     });

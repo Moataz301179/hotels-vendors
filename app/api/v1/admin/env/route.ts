@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
     await writeFile(envPath, content, "utf-8");
 
     // Log the action
-    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details; needs Prisma migration
     await prisma.auditLog.create({
       data: {
         tenantId: "SYSTEM",
