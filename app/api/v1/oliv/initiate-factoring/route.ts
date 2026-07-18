@@ -14,6 +14,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateReferralToken } from "@/lib/fintech/anti-bypass/layer1-referral-token";
 
+// Factoring initiation endpoint — must never be statically evaluated at build time.
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

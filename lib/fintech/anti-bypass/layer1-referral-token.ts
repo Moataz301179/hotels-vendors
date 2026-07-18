@@ -11,12 +11,27 @@
 
 import crypto from "crypto";
 
-const HMAC_SECRET = process.env.HOTELSVENDORS_HMAC_SECRET || "";
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 const ATTRIBUTION_TYPE = "permanent_origin_account";
 
-if (!HMAC_SECRET || HMAC_SECRET.length < 32) {
-  throw new Error("HOTELSVENDORS_HMAC_SECRET must be >= 32 characters");
+/**
+ * Resolve the HMAC secret lazily at call time.
+ *
+ * NOTE: This must NOT be evaluated at module top-level. Next.js collects
+ * page data by evaluating route modules at build time, and these routes
+ * import this module. A top-level throw here breaks the entire production
+ * build (observed: "Failed to collect page data for /api/v1/oliv/payout-callback").
+ * The security guarantee is preserved — the functions below fail loudly at
+ * runtime if the secret is missing or too short.
+ */
+function getHmacSecret(): string {
+  const secret = process.env.HOTELSVENDORS_HMAC_SECRET || "";
+  if (!secret || secret.length < 32) {
+    throw new Error(
+      "HOTELSVENDORS_HMAC_SECRET must be >= 32 characters (configured at runtime, not build time)"
+    );
+  }
+  return secret;
 }
 
 export interface ReferralTokenPayload {
@@ -77,7 +92,7 @@ export function generateReferralToken(params: {
     .replace(/=/g, "");
 
   const signature = crypto
-    .createHmac("sha256", HMAC_SECRET)
+    .createHmac("sha256", getHmacSecret())
     .update(payloadBase64)
     .digest("base64url");
 
@@ -105,7 +120,7 @@ export function verifyReferralToken(token: ReferralToken): {
   }
 
   const expectedSignature = crypto
-    .createHmac("sha256", HMAC_SECRET)
+    .createHmac("sha256", getHmacSecret())
     .update(token.payload)
     .digest("base64url");
 

@@ -14,6 +14,10 @@ import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { buildOlivKYCPrefill } from "@/lib/fintech/anti-bypass/layer3-crm-attribution";
 
+// Oliv onboarding endpoint — must never be statically evaluated at build time.
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
 export async function POST(request: NextRequest) {

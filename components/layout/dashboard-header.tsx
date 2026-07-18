@@ -34,7 +34,7 @@ const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
 
 export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProps) {
   const config = ROLE_CONFIG[role] || ROLE_CONFIG.hotel;
-  const { totalItems, toggleCart } = useCart();
+  const { totalItems, isOpen, openCart, closeCart } = useCart();
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("hv-theme");
@@ -122,7 +122,7 @@ export function DashboardHeader({ role, user, onMenuClick }: DashboardHeaderProp
         </button>
 
         <button
-          onClick={toggleCart}
+          onClick={() => (isOpen ? closeCart() : openCart())}
           className="relative p-2 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all"
         >
           <ShoppingCart size={18} />

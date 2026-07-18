@@ -16,6 +16,10 @@ import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { verifyReferralToken } from "@/lib/fintech/anti-bypass/layer1-referral-token";
 
+// Webhook receiver — must never be statically evaluated at build time.
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const WEBHOOK_SECRET = process.env.OLIV_WEBHOOK_SECRET || "";
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
