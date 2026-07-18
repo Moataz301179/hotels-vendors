@@ -123,7 +123,7 @@ export default function SupplierOrdersPage() {
         refetch();
       }
     } catch (err: unknown) {
-      setUpdateError(err.message || "Network error");
+      setUpdateError(err instanceof Error ? err.message : "Network error");
     } finally {
       setUpdating(false);
     }

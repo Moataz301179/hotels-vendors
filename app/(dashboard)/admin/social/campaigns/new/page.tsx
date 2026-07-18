@@ -63,9 +63,9 @@ export default function NewCampaignPage() {
     startDate: "",
     endDate: "",
     themes: ["Beta launch"],
-    tone: "professional" as const,
+    tone: "professional",
     hashtags: "#HotelsVendors #EgyptHospitality",
-    postingFrequency: "3x_week" as const,
+    postingFrequency: "3x_week",
     postCount: 5,
   });
 

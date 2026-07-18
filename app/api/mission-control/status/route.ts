@@ -5,7 +5,13 @@ import { authenticate, error as apiError, success } from "@/lib/api-utils";
 
 const STATE_FILE = "/tmp/mission-control-state.json";
 
-function readState(): Record<string, unknown> {
+interface MissionControlState {
+  agents?: Array<{ id: string; name: string; status: string; lastActive?: string }>;
+  lastSync?: string;
+  [key: string]: unknown;
+}
+
+function readState(): MissionControlState {
   try {
     return JSON.parse(readFileSync(STATE_FILE, "utf-8"));
   } catch {
@@ -34,7 +40,7 @@ export async function GET(request: NextRequest) {
     const { tenantId } = auth;
 
     // ── BullMQ Queues ──
-    let queues: any[] = [];
+    let queues: unknown[] = [];
     try {
       const { redis } = await import("@/lib/redis");
       if (redis) {
@@ -72,7 +78,7 @@ export async function GET(request: NextRequest) {
       recentActivity,
       syncTime: new Date().toISOString(),
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Mission Control status error:", err);
     return apiError(err.message, 500);
   }
