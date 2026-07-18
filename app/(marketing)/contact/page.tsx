@@ -52,7 +52,7 @@ export default function ContactPage() {
   return (
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      <section className="pt-12 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.06) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#39ff7e22", backgroundColor: "#39ff7e08" }}>

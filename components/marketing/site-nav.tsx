@@ -123,7 +123,7 @@ export function SiteNav() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[var(--header-height)] px-6 md:px-12 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl"
       onMouseLeave={scheduleClose}
     >
       <Link href="/" className="flex items-center">

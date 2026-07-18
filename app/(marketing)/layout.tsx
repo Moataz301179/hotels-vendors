@@ -107,7 +107,9 @@ export default function MarketingLayout({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
       />
       <SiteNav />
-      <main id="main-content">{children}</main>
+      <main id="main-content" style={{ paddingTop: "var(--header-height)" }}>
+        {children}
+      </main>
       <SiteFooter />
       <SupplierOnboardingBot />
     </ThemeProvider>

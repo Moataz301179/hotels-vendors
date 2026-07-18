@@ -33,7 +33,7 @@ export default function FactoringServicePage() {
   return (
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      <section className="pt-12 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,126,26,0.04) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Factoring</span>

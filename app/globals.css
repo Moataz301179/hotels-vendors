@@ -72,9 +72,17 @@
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   /* ── Layout ── */
-  --header-height: 64px;
+  --header-height: 72px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ── Anchor offset — keep scroll targets clear of the fixed nav ── */
+:target,
+section[id],
+[id="invo"],
+[id="main-content"] {
+  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 @theme inline {

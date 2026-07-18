@@ -66,6 +66,9 @@ crew/
 # ad-hoc SQL dumps — real migrations live in prisma/migrations/
 /schema-v6-*.sql
 
+# ZCode agent session artifacts (local only)
+.zcode/
+
 # macOS
 .DS_Store
 **/.DS_Store

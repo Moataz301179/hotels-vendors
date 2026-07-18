@@ -132,7 +132,7 @@ export default function SandboxPage() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#0c0c12", color: "#ffffff" }}>
 
-      <section className="pt-28 pb-20 relative overflow-hidden">
+      <section className="pt-12 pb-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-5xl px-6">

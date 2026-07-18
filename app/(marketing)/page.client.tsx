@@ -63,7 +63,7 @@ export default function MarketingPage() {
     <main className="min-h-screen bg-[#0c0c12] text-white font-sans">
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Glow orbs */}
         <div className="absolute top-1/3 left-1/4 w-80 h-80 rounded-full blur-[160px] pointer-events-none" style={{ background: "#39ff7e", opacity: 0.06 }} />
         <div className="absolute bottom-1/4 right-[20%] w-60 h-60 rounded-full blur-[130px] pointer-events-none" style={{ background: "#c455ff", opacity: 0.05 }} />

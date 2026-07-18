@@ -156,7 +156,7 @@ export default function FlowPage() {
   return (
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
+      <section className="pt-12 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>

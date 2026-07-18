@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
-import { MarketingNav } from "@/components/layout/marketing-nav";
+import { SiteNav } from "@/components/marketing/site-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
@@ -91,7 +91,7 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <MarketingNav />
+      <SiteNav />
 
       {/* Breadcrumb + Actions */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-4 pb-2">

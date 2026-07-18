@@ -24,7 +24,7 @@ import {
 import { useCart } from "@/components/cart/cart-context";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
-import { MarketingNav } from "@/components/layout/marketing-nav";
+import { SiteNav } from "@/components/marketing/site-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
@@ -218,10 +218,10 @@ export default function MarketplacePage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <MarketingNav />
+      <SiteNav />
 
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
+      <div className="sticky top-[var(--header-height)] z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
           <div className="flex-1 max-w-2xl">
             <div className="relative flex items-center">

@@ -25,8 +25,8 @@ export function BrandLogo({
   showTagline = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const textColor = variant === "dark" ? "#ffffff" : "#ffffff";
-  const taglineColor = variant === "dark" ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.5)";
+  const textColor = variant === "dark" ? "#ffffff" : "#1a1a1a";
+  const taglineColor = variant === "dark" ? "rgba(255,255,255,0.6)" : "rgba(26,26,26,0.55)";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
