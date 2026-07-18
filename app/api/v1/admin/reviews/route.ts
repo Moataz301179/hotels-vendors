@@ -15,12 +15,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const where: Record<string, unknown> = { tenantId: auth.tenantId };
   if (status && status !== "all") where.status = status.toUpperCase();
 
-  const [reviews, total] = await Promise.all([
-    // TODO: 'review' model missing from Prisma schema — needs migration
-    // @ts-expect-error — Prisma schema mismatch; review model not yet migrated
-    // @ts-expect-error — TODO: review model missing from Prisma schema; needs migration
-    prisma.review.findMany({
-      where,
+  const [reviews, total] = await Promise.all([      where,
       take: limit,
       skip: offset,
       orderBy: { createdAt: "desc" },
@@ -28,9 +23,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
         hotel: { select: { id: true, name: true } },
         supplier: { select: { id: true, name: true } },
       },
-    }),
-    // @ts-expect-error — Prisma schema mismatch; review model not yet migrated
-    prisma.review.count({ where }),
+    }),    prisma.review.count({ where }),
   ]);
 
   return success({
@@ -49,7 +42,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       hotelRating: r.rating,
       supplierRating: r.rating,
       comment: r.comment || "",
-      date: (r.createdAt as Date)?.toISOString?.() ?? String(r.createdAt ?? '') || "",
+      date: ((r.createdAt as Date)?.toISOString?.() ?? String(r.createdAt ?? '')) || "",
       orderValue: 0,
       status: r.status?.toLowerCase() || "published",
       helpful: 0,

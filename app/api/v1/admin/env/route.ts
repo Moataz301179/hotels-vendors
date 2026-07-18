@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     await writeFile(envPath, content, "utf-8");
 
     // Log the action
-    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs Prisma migration
+    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details; needs Prisma migration
     await prisma.auditLog.create({
       data: {
         tenantId: "SYSTEM",
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
         resource: "system",
         resourceId: null,
         details: { timestamp: new Date().toISOString() },
-      },
+      } as any,
     });
 
     return NextResponse.json({ success: true, message: "Environment saved" });

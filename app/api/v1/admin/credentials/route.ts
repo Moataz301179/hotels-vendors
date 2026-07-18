@@ -13,8 +13,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      // @ts-expect-error — TODO: AuditLog.details not in Prisma schema; use afterState JSON parse
-      data: credentials.map((c: any) => ({
+      data: (credentials as any[]).map((c: any) => ({
         id: c.id,
         name: (c.details as Record<string, string>)?.name || "Unknown",
         key: (c.details as Record<string, string>)?.key || "",
@@ -44,7 +43,7 @@ export async function POST(request: NextRequest) {
     await writeFile(envPath, content, "utf-8");
 
     // Log the action
-    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs Prisma migration
+    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details; needs Prisma migration
     await prisma.auditLog.create({
       data: {
         tenantId: "SYSTEM",
@@ -56,7 +55,7 @@ export async function POST(request: NextRequest) {
           updatedBy: "admin",
           timestamp: new Date().toISOString(),
         },
-      },
+      } as any,
     });
 
     return NextResponse.json({ success: true, message: "Environment updated successfully" });
