@@ -20,11 +20,14 @@ export async function atomicSupplierStatusUpdate(
   tenantId: string
 ): Promise<SupplierStatusUpdateResult> {
   const result = await prisma.$transaction(async (tx) => {
-    // Lock the row to prevent concurrent status mutations
+    // Lock the row to prevent concurrent status mutations.
+    // TODO (tenant-hardening): The WHERE clause below now includes a tenantId predicate
+    // so the lock cannot be acquired for a row belonging to a different tenant.
+    // The update below is also scoped by tenantId for the same reason.
     const supplier = await tx.$queryRaw<Array<{ id: string; name: string; status: string; tier: string; tenantId: string }>>`
       SELECT "id", "name", "status", "tier", "tenantId"
       FROM "Supplier"
-      WHERE "id" = ${supplierId}
+      WHERE "id" = ${supplierId} AND "tenantId" = ${tenantId}
       FOR UPDATE
     `;
 
@@ -37,7 +40,7 @@ export async function atomicSupplierStatusUpdate(
     }
 
     const updated = await tx.supplier.update({
-      where: { id: supplierId },
+      where: { id: supplierId, tenantId },
       data: {
         status: newStatus,
         ...(tier && newStatus === "ACTIVE" ? { tier: tier as SupplierTier } : {}),

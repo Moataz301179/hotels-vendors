@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function InvoNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,13 +31,11 @@ export function InvoNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/invo" className="flex items-center gap-2.5 relative z-10">
-          <div className="w-8 h-8 rounded-lg bg-[#D4A843] flex items-center justify-center">
-            <Zap className="w-5 h-5 text-black" />
-          </div>
+          <BrandLogo variant="dark" size="sm" showText={false} />
           <span className="text-[17px] font-medium tracking-tight text-white">
             INVO
           </span>
-          <span className="hidden sm:inline text-[11px] font-medium text-white/30 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+          <span className="hidden sm:inline text-[11px] font-medium text-[#D4A843] px-1.5 py-0.5 rounded border border-[#D4A843]/30 tracking-wider">
             by HotelsVendors
           </span>
         </Link>

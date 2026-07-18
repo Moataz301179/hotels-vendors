@@ -1,26 +1,76 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
+
+interface NavGroup {
+  label: string;
+  href?: string;
+  items?: { href: string; label: string }[];
+}
+
+const navGroups: NavGroup[] = [
+  {
+    label: "Platform",
+    items: [
+      { href: "/solutions", label: "Overview" },
+      { href: "/marketplace", label: "Marketplace" },
+      { href: "/invo", label: "INVO — Financial Layer" },
+    ],
+  },
+  {
+    label: "Solutions",
+    items: [
+      { href: "/hotels/join", label: "For Hotels" },
+      { href: "/become-supplier", label: "For Suppliers" },
+    ],
+  },
+  { label: "Pricing", href: "/pricing" },
+];
+
+function DropdownMenu({ group, onClose }: { group: NavGroup; onClose: () => void }) {
+  if (!group.items) return null;
+  return (
+    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 rounded-xl border border-white/[0.07] bg-[#0B0F1A]/98 backdrop-blur-xl shadow-2xl overflow-hidden z-50">
+      {group.items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          onClick={onClose}
+          className="block px-4 py-2.5 text-[13px] font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+        >
+          {item.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function GlobalHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeGroup, setActiveGroup] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
   }, []);
 
-  const navItems = [
-    { label: "Platform", href: "/solutions" },
-    { label: "For Hotels", href: "/hotels" },
-    { label: "For Suppliers", href: "/become-supplier" },
-    { label: "Pricing", href: "/pricing" },
-  ];
+  const handleGroupEnter = (label: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActiveGroup(label);
+  };
+
+  const handleGroupLeave = () => {
+    closeTimer.current = setTimeout(() => setActiveGroup(null), 120);
+  };
 
   return (
     <header
@@ -41,15 +91,39 @@ export function GlobalHeader() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="px-4 py-2 text-[14px] font-medium text-gray-400 hover:text-white rounded-lg transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navGroups.map((group) =>
+            group.href ? (
+              <Link
+                key={group.label}
+                href={group.href}
+                className="px-4 py-2 text-[14px] font-medium text-gray-400 hover:text-white rounded-lg transition-colors"
+              >
+                {group.label}
+              </Link>
+            ) : (
+              <div
+                key={group.label}
+                className="relative"
+                onMouseEnter={() => handleGroupEnter(group.label)}
+                onMouseLeave={handleGroupLeave}
+              >
+                <button
+                  className="flex items-center gap-1 px-4 py-2 text-[14px] font-medium text-gray-400 hover:text-white rounded-lg transition-colors bg-transparent border-0 cursor-pointer"
+                  onClick={() => setActiveGroup(activeGroup === group.label ? null : group.label)}
+                  aria-expanded={activeGroup === group.label}
+                >
+                  {group.label}
+                  <ChevronDown
+                    size={13}
+                    className={`transition-transform duration-150 ${activeGroup === group.label ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {activeGroup === group.label && (
+                  <DropdownMenu group={group} onClose={() => setActiveGroup(null)} />
+                )}
+              </div>
+            )
+          )}
         </nav>
 
         {/* Right */}
@@ -81,16 +155,45 @@ export function GlobalHeader() {
       {mobileOpen && (
         <div className="lg:hidden bg-[#0B0F1A]/98 border-t border-white/5 backdrop-blur-md">
           <nav className="px-6 py-5 space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="block py-2.5 text-[14px] font-medium text-gray-400 hover:text-white transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navGroups.map((group) =>
+              group.href ? (
+                <Link
+                  key={group.label}
+                  href={group.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-2.5 text-[14px] font-medium text-gray-400 hover:text-white transition-colors"
+                >
+                  {group.label}
+                </Link>
+              ) : (
+                <div key={group.label}>
+                  <button
+                    className="w-full flex items-center justify-between py-2.5 text-[14px] font-medium text-gray-400 hover:text-white transition-colors bg-transparent border-0 cursor-pointer"
+                    onClick={() => setActiveGroup(activeGroup === group.label ? null : group.label)}
+                  >
+                    {group.label}
+                    <ChevronDown
+                      size={13}
+                      className={`transition-transform duration-150 ${activeGroup === group.label ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {activeGroup === group.label && group.items && (
+                    <div className="pl-4 flex flex-col gap-1 mb-2">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => { setMobileOpen(false); setActiveGroup(null); }}
+                          className="py-1.5 text-[13px] text-gray-500 hover:text-white transition-colors"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            )}
             <div className="pt-4 flex gap-3">
               <Link
                 href="/login"

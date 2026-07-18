@@ -4,7 +4,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 export function Logo({ className = "h-8 w-8" }: { className?: string }) {
   return (
     <span className={`relative inline-flex shrink-0 ${className}`}>
-      <Image src="/assets/logo.svg" alt="HotelsVendors" fill className="object-contain" priority />
+      <Image src="/logo-icon-white.png" alt="HotelsVendors" fill className="object-contain" priority />
     </span>
   );
 }

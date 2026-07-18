@@ -26,6 +26,10 @@ async function getUserData(): Promise<UserData | null> {
     const userId = payload.userId as string;
     if (!userId) return null;
 
+    // TODO (tenant-hardening): userId comes from the verified JWT so the lookup is safe
+    // in practice. Per G1 all Prisma queries should be tenant-scoped. Once the User model
+    // has a guaranteed tenantId FK, scope this to `where: { id: userId, tenantId }` where
+    // tenantId is extracted from the JWT payload. Track with #tenant-scope.
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { tenant: { select: { name: true } } },

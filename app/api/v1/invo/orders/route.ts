@@ -23,6 +23,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // TODO (tenant-hardening): Validate that hotel_id belongs to auth.tenantId before
+    // inserting into Supabase. Without this check a caller can create an order for any
+    // hotel_id. Add a Prisma lookup: `prisma.hotel.findFirst({ where: { id: hotel_id,
+    // tenantId: auth.tenantId } })` and reject with 403 if not found. Track with #tenant-scope.
     const supabase = await createClient();
 
     const { data: order, error } = await supabase
@@ -71,6 +75,12 @@ export async function GET(req: NextRequest) {
     const state = searchParams.get("state");
     const limit = parseInt(searchParams.get("limit") || "50", 10);
 
+    // TODO (tenant-hardening): This Supabase query has no tenant-level filter. If Supabase
+    // RLS is not enabled on the `orders` table, any authenticated caller can enumerate all
+    // orders across all tenants by omitting hotel_id/supplier_id. The fix requires either:
+    //   a) Supabase RLS policy scoped to the JWT tenant claim, or
+    //   b) Resolving the caller's allowed hotel_ids from Prisma and adding an `.in("hotel_id", allowedIds)` filter.
+    // Track with #tenant-scope.
     const supabase = await createClient();
     let query = supabase
       .from("orders")

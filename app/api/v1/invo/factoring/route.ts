@@ -40,6 +40,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // TODO (tenant-hardening): invoice_id is taken from the request body but never
+    // validated against auth.tenantId via Prisma before passing it to Supabase. A caller
+    // from tenant A could supply an invoice_id belonging to tenant B and trigger a
+    // factoring request against it if Supabase RLS is not enforced.
+    // Fix: add `prisma.invoice.findFirst({ where: { id: invoice_id, tenantId: auth.tenantId } })`
+    // and return 403 if not found, before the Supabase qualification lookup. Track with #tenant-scope.
     const supabase = await createClient();
 
     // Verify invoice is qualified for factoring

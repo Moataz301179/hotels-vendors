@@ -77,9 +77,9 @@ export const metadata: Metadata = {
       "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance. Purpose-built for Egyptian coastal hotel chains.",
     images: [
       {
-        url: "/assets/logo.svg",
-        width: 1200,
-        height: 630,
+        url: "/logo-icon-white.png",
+        width: 512,
+        height: 512,
         alt: "HotelsVendors — The Market Changer",
       },
     ],
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     title: "HotelsVendors — B2B Procurement & Fintech",
     description:
       "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
-    images: ["/assets/logo.svg"],
+    images: ["/logo-icon-white.png"],
     creator: "@hotelsvendors",
   },
   alternates: {
@@ -185,7 +185,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "HotelsVendors",
               url: "https://www.hotelsvendors.com",
-              logo: "https://www.hotelsvendors.com/assets/logo.svg",
+              logo: "https://www.hotelsvendors.com/logo-icon-white.png",
               description:
                 "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
               sameAs: [

@@ -44,6 +44,12 @@ export default async function DashboardLayout({
   let userData = null;
   if (userId) {
     try {
+      // TODO (tenant-hardening): userId comes from the verified JWT so the lookup
+      // is safe in practice — a user cannot forge their own userId. However, per G1,
+      // all Prisma queries should be tenant-scoped. The ideal form is:
+      //   prisma.user.findUnique({ where: { id: userId, tenantId } })
+      // where tenantId is also extracted from the JWT. Add this once `User` schema
+      // has a direct tenantId FK that is always populated. Track with #tenant-scope.
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: { tenant: { select: { name: true } } },

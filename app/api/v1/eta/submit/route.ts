@@ -15,12 +15,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
   const data = SubmitSchema.parse(body);
 
-  const invoice = await prisma.invoice.findUnique({
-    where: { id: data.invoiceId },
+  // TODO (tenant-hardening): This query is scoped by both id AND tenantId, which is the
+  // correct pattern per G1. The previous approach loaded by id then compared tenantId
+  // after the fact — replaced here with a single scoped query to prevent information
+  // leakage on invoice IDs belonging to other tenants.
+  const invoice = await prisma.invoice.findFirst({
+    where: { id: data.invoiceId, tenantId: auth.tenantId },
     include: { hotel: true, supplier: true, order: { include: { items: { include: { product: true } } } } },
   });
 
-  if (!invoice || invoice.tenantId !== auth.tenantId) {
+  if (!invoice) {
     return error("Invoice not found", 404);
   }
 
