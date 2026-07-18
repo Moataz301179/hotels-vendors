@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
       const result = await streamText({
         model: ollama(ollamaModel),
         system: systemPrompt,
-        messages: [...history, { role: "user" as const, content: safeQuestion }],
+        messages: [...history as Array<{ role: "user" | "assistant" | "system"; content: string }>, { role: "user" as const, content: safeQuestion }],
         temperature: 0.4,
         maxTokens: 800,
         onFinish: async ({ text, usage }) => {

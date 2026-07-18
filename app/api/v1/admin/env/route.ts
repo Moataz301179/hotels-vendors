@@ -21,7 +21,6 @@ export async function POST(request: NextRequest) {
         tenantId: "SYSTEM",
         actorId: "ADMIN",
         action: "ENV_UPDATED",
-        // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs migration
         resource: "system",
         // @ts-expect-error — TODO: see above
         resourceId: null,
