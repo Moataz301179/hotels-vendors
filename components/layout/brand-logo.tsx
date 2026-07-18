@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -30,13 +29,17 @@ export function BrandLogo({
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
-      <Image
+      {/* Plain <img> for the SVG logo: next/image refuses to optimize SVGs
+          without dangerouslyAllowSVG, which breaks the logo. A logo is a static
+          asset and should not be routed through the image optimizer. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src="/assets/logo.svg"
         alt="HotelsVendors"
         width={dims.width}
         height={Math.round(dims.width * 0.54)}
         className="object-contain shrink-0 h-auto"
-        priority
+        fetchPriority="high"
       />
       {showText && (
         <div className="flex flex-col items-center gap-1 mt-2">
