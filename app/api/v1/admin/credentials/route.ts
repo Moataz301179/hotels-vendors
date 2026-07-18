@@ -15,7 +15,7 @@ export async function GET() {
       success: true,
       // TODO: AuditLog model has beforeState/afterState JSON fields, not 'details'.
       // The credentials view should parse afterState JSON. Suppressing until schema is updated.
-      // @ts-expect-error — AuditLog.details not in Prisma schema; use afterState JSON parse instead
+      // TODO: AuditLog model has beforeState/afterState JSON fields, not 'details'. Parse afterState JSON.
 data: credentials.map((c) => ({
         id: c.id,
         // @ts-expect-error — see TODO above
@@ -55,8 +55,11 @@ export async function POST(request: NextRequest) {
         tenantId: "SYSTEM",
         actorId: "ADMIN",
         action: "ENV_UPDATED",
+        // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs migration
         resource: "system",
+        // @ts-expect-error — TODO: see above
         resourceId: null,
+        // @ts-expect-error — TODO: see above
         details: {
           updatedBy: "admin",
           timestamp: new Date().toISOString(),

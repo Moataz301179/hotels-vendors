@@ -6,8 +6,13 @@ import { authenticate, error as apiError, success } from "@/lib/api-utils";
 const STATE_FILE = "/tmp/mission-control-state.json";
 
 interface MissionControlState {
-  agents?: Array<{ id: string; name: string; status: string; lastActive?: string }>;
-  lastSync?: string;
+  kimi?: {
+    agents?: Array<{ id: string; name: string; status: string; lastActive?: string }>;
+  };
+  hermes?: {
+    agents?: Array<{ id: string; name: string; status: string; lastActive?: string }>;
+    lastSync?: string;
+  };
   [key: string]: unknown;
 }
 
@@ -80,7 +85,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (err: unknown) {
     console.error("Mission Control status error:", err);
-    return apiError(err.message, 500);
+    return apiError(err instanceof Error ? err.message : "Unknown error", 500);
   }
 }
 

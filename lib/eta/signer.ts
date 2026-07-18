@@ -137,6 +137,7 @@ export async function signEtaDocument(
   let nodePkcs11: any = null;
   try {
     // Attempt to dynamically require PKCS11 drivers if installed
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     nodePkcs11 = require("node-pkcs11");
   } catch (e) {
     if (process.env.NODE_ENV === "development") {

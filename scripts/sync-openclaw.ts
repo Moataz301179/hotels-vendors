@@ -190,6 +190,7 @@ function main() {
   }
 
   // Interactive mode
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const readline = require("readline");
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 

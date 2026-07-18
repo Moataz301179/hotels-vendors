@@ -14,7 +14,7 @@ interface CatalogItem {
   updatedAt: string;
 }
 
-let catalog: CatalogItem[] = [
+const catalog: CatalogItem[] = [
   { id: "cat_1", sku: "HV-FB-001", name: "Extra Virgin Olive Oil 5L", category: "F&B", price: 12500, quantity: 500, supplierId: "sup_1", unit: "bottle", createdAt: "2026-06-01T00:00:00Z", updatedAt: "2026-06-01T00:00:00Z" },
   { id: "cat_2", sku: "HV-HK-002", name: "Premium Bath Amenities Set", category: "Housekeeping", price: 8500, quantity: 200, supplierId: "sup_2", unit: "set", createdAt: "2026-06-01T00:00:00Z", updatedAt: "2026-06-01T00:00:00Z" },
   { id: "cat_3", sku: "HV-ENG-003", name: "LED Panel Light 24W", category: "Engineering", price: 3200, quantity: 100, supplierId: "sup_3", unit: "piece", createdAt: "2026-06-01T00:00:00Z", updatedAt: "2026-06-01T00:00:00Z" },
