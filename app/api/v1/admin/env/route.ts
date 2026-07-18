@@ -1,36 +1,75 @@
-// @ts-nocheck — TODO: Pre-existing type errors; tracked in docs/audit-log.md
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+/**
+ * Admin Environment Editor — write the server .env file.
+ *
+ * SECURITY (architecture-review-2026-07.md, S1):
+ * Previously gated by a hardcoded "panda3011" password read from a client
+ * header (no authenticate, no RBAC). Now requires an authenticated session
+ * with `admin:manage_platform` permission. The .env write itself is preserved
+ * as-is (functionality unchanged) — only the auth gate was hardened.
+ *
+ * NOTE: Writing .env over HTTP is still risky; the long-term fix is to remove
+ * this route entirely and use Vercel env vars / a secrets vault (AGENTS.md §
+ * "Data Handling"). This patch closes the unauthenticated-access hole only.
+ */
+import { NextRequest } from "next/server";
 import { writeFile } from "fs/promises";
 import { join } from "path";
+import { z } from "zod";
+import {
+  apiRoute,
+  authenticate,
+  requirePermission,
+  success,
+  error,
+  audit,
+} from "@/lib/api-utils";
 
-export async function POST(request: NextRequest) {
+const EnvWriteSchema = z.object({
+  content: z.string().max(256 * 1024),
+});
+
+export const POST = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:manage_platform");
+
+  const body = await request.json().catch(() => null);
+  const parsed = EnvWriteSchema.safeParse(body);
+  if (!parsed.success) {
+    return error("Invalid body: expects { content: string }", 400);
+  }
+
+  const envPath = join(process.cwd(), ".env");
+  const before = await readFileSafe(envPath);
+
   try {
-    const body = await request.json();
-    const { content } = body;
-    const password = request.headers.get("x-admin-password");
+    await writeFile(envPath, parsed.data.content, "utf-8");
+  } catch (err) {
+    console.error("[admin/env] write failed:", err);
+    return error("Failed to save environment file", 500);
+  }
 
-    if (password !== "panda3011") {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
-    }
+  await audit({
+    entityType: "system",
+    entityId: "env",
+    action: "ENV_UPDATED",
+    tenantId: auth.tenantId,
+    actorId: auth.userId,
+    actorRole: auth.platformRole,
+    beforeState: { bytes: before.length },
+    afterState: { bytes: parsed.data.content.length },
+    ipAddress: request.headers.get("x-forwarded-for") || null,
+    userAgent: request.headers.get("user-agent"),
+  });
 
-    const envPath = join(process.cwd(), ".env");
-    await writeFile(envPath, content, "utf-8");
+  return success({ message: "Environment saved" });
+});
 
-    // Log the action
-    await prisma.auditLog.create({
-      data: {
-        tenantId: "SYSTEM",
-        actorId: "ADMIN",
-        action: "ENV_UPDATED",
-        resource: "system",
-        resourceId: null,
-        details: { timestamp: new Date().toISOString() },
-      } as any,
-    });
-
-    return NextResponse.json({ success: true, message: "Environment saved" });
+async function readFileSafe(path: string): Promise<{ length: number }> {
+  try {
+    const { readFile } = await import("fs/promises");
+    const data = await readFile(path, "utf-8");
+    return { length: data.length };
   } catch {
-    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    return { length: 0 };
   }
 }

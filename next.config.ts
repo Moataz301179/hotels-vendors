@@ -2,6 +2,19 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
+  // ⚠ TODO(architecture-review-2026-07.md, Phase 0): `ignoreBuildErrors` is
+  // carried over from the deleted next.config.mjs to preserve current build
+  // behavior. Removing it requires a dedicated type-error-fixing pass first
+  // (many routes carry @ts-nocheck). Do NOT flip to false until that pass lands.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  turbopack: {
+    root: process.cwd(),
+  },
+
   images: {
     // Local, trusted SVG assets (e.g. /assets/logo.svg) are served via next/image.
     // next/image refuses to optimize SVG unless this is enabled.

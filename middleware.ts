@@ -10,23 +10,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { csrfMiddleware } from "@/lib/security/csrf";
+import { getJwtSecret } from "@/lib/auth/jwt-secret";
 
 const SESSION_COOKIE = "hv_session";
 const CSRF_COOKIE = "hv_csrf";
 
-const _sessionSecret = process.env.SESSION_SECRET;
-if (!_sessionSecret) {
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(
-      "FATAL: SESSION_SECRET environment variable is required in production. " +
-      "Generate one with: openssl rand -hex 32"
-    );
-  }
-  console.warn("[Auth] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
-}
-const SECRET = new TextEncoder().encode(
-  _sessionSecret || "dev-secret-change-in-production"
-);
+// SECURITY (architecture-review-2026-07.md, S11): single source of truth for
+// the JWT secret, shared with lib/session.ts. Previously middleware inlined a
+// DIFFERENT dev fallback string, which could cause edge/Node secret mismatch.
+const SECRET = getJwtSecret();
 
 /* ── Route Configuration ── */
 

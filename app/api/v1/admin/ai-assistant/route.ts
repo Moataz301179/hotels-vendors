@@ -1,21 +1,40 @@
-// @ts-nocheck
-import { NextRequest, NextResponse } from "next/server";
+/**
+ * Admin AI Assistant — platform-strategy chat for admins.
+ *
+ * SECURITY (architecture-review-2026-07.md, S4):
+ * Previously read `userId`/`tenantId` from `x-user-id`/`x-tenant-id` client
+ * headers with `"anonymous"`/`"default"` fallbacks — allowing tenant
+ * impersonation and AI-credit drain with no auth. Now derives identity from
+ * the authenticated session via `authenticate(request)`, and requires
+ * `admin:manage_platform`. LLM call, credit accounting, and response shape are
+ * unchanged.
+ */
+import { NextRequest } from "next/server";
 import { executeLLM } from "@/lib/ai/llm";
-import { hasEnoughCredits, deductAICredits, getAICreditsBalance } from "@/lib/ai/credits";
+import { hasEnoughCredits, deductAICredits } from "@/lib/ai/credits";
+import {
+  apiRoute,
+  authenticate,
+  requirePermission,
+} from "@/lib/api-utils";
 
-export async function POST(request: NextRequest) {
-  try {
-    const { message, context } = await request.json();
+export const POST = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "admin:manage_platform");
 
-    // Extract user info from session (middleware already verified)
-    const userId = request.headers.get("x-user-id") || "anonymous";
-    const tenantId = request.headers.get("x-tenant-id") || "default";
+  const { message, context } = await request.json();
+  const { userId, tenantId } = auth;
 
-    // Check AI credits
-    const { allowed, balance, requiredCredits } = await hasEnoughCredits(userId, tenantId, "ai_assistant");
+  // Check AI credits
+  const { allowed, balance } = await hasEnoughCredits(
+    userId,
+    tenantId,
+    "ai_assistant"
+  );
 
-    if (!allowed) {
-      return NextResponse.json({
+  if (!allowed) {
+    return Response.json(
+      {
         success: false,
         error: "AI credits exhausted",
         message: `You've used ${balance.usedCredits}/${balance.totalCredits} AI credits this month. Upgrade your plan for more.`,
@@ -26,11 +45,13 @@ export async function POST(request: NextRequest) {
           tier: balance.subscriptionTier,
         },
         upgradeUrl: "/settings/subscription",
-      }, { status: 402 });
-    }
+      },
+      { status: 402 }
+    );
+  }
 
-    // System prompt — no provider info exposed
-    const systemPrompt = `You are an AI assistant for HotelsVendors — a Digital Procurement Hub for Egyptian hospitality.
+  // System prompt — no provider info exposed
+  const systemPrompt = `You are an AI assistant for HotelsVendors — a Digital Procurement Hub for Egyptian hospitality.
 
 You help admins improve the platform with actionable suggestions.
 
@@ -42,42 +63,38 @@ Current Platform Metrics:
 
 Respond concisely with bullet points and markdown. Always provide actionable next steps.`;
 
-    // Execute LLM (provider hidden from user)
-    const result = await executeLLM(
-      [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: message },
-      ],
-      { temperature: 0.7, maxTokens: 1024, taskComplexity: "medium" }
-    );
+  // Execute LLM (provider hidden from user)
+  const result = await executeLLM(
+    [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: message },
+    ],
+    { temperature: 0.7, maxTokens: 1024, taskComplexity: "medium" }
+  );
 
-    // Deduct credits
-    const deduction = await deductAICredits({
-      userId,
-      tenantId,
-      feature: "ai_assistant",
-      tokensInput: message.length,
-      tokensOutput: result.content.length,
-      taskComplexity: "medium",
-    });
+  // Deduct credits
+  const deduction = await deductAICredits({
+    userId,
+    tenantId,
+    feature: "ai_assistant",
+    tokensInput: message.length,
+    tokensOutput: result.content.length,
+    taskComplexity: "medium",
+  });
 
-    // Return response — NO provider/model info exposed
-    return NextResponse.json({
-      success: true,
-      response: result.content,
-      credits: {
-        used: balance.usedCredits + result.creditsCost,
-        total: balance.totalCredits,
-        available: deduction.remainingCredits,
-        costThisQuery: result.creditsCost,
-      },
-      suggestions: generateFollowUpSuggestions(message),
-    });
-  } catch (error) {
-    console.error("[AI-Assistant]", error);
-    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
-  }
-}
+  // Return response — NO provider/model info exposed
+  return Response.json({
+    success: true,
+    response: result.content,
+    credits: {
+      used: balance.usedCredits + result.creditsCost,
+      total: balance.totalCredits,
+      available: deduction.remainingCredits,
+      costThisQuery: result.creditsCost,
+    },
+    suggestions: generateFollowUpSuggestions(message),
+  });
+});
 
 function generateFollowUpSuggestions(message: string): string[] {
   const lower = message.toLowerCase();

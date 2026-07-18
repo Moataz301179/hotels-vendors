@@ -111,8 +111,11 @@ export async function checkRateLimit(
         retryAfter: Math.round(rlRejected.msBeforeNext / 1000),
       };
     }
-    // Unknown error — fail closed (allow)
-    return { allowed: true };
+    // Unknown error (e.g. Redis down, serialization failure) — fail CLOSED.
+    // A Redis outage must not silently disable rate limiting across the API.
+    // Log to stderr for observability; rateLimitResponse will emit a 429.
+    console.error("[rate-limiter] consume() threw non-RateLimiterRes error:", rlRejected);
+    return { allowed: false, retryAfter: 60 };
   }
 }
 
