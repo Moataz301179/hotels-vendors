@@ -10,11 +10,11 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  xs: { icon: 20, text: 9, tagline: 6 },
-  sm: { icon: 26, text: 11, tagline: 7 },
-  md: { icon: 34, text: 14, tagline: 9 },
-  lg: { icon: 46, text: 18, tagline: 11 },
-  xl: { icon: 60, text: 24, tagline: 14 },
+  xs: { width: 88, text: 9, tagline: 6 },
+  sm: { width: 112, text: 11, tagline: 7 },
+  md: { width: 144, text: 14, tagline: 9 },
+  lg: { width: 184, text: 18, tagline: 11 },
+  xl: { width: 240, text: 24, tagline: 14 },
 };
 
 export function BrandLogo({
@@ -31,11 +31,11 @@ export function BrandLogo({
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
       <Image
-        src="/logo-icon-white.png"
+        src="/assets/logo.svg"
         alt="HotelsVendors"
-        width={dims.icon}
-        height={dims.icon}
-        className="object-contain shrink-0"
+        width={dims.width}
+        height={Math.round(dims.width * 0.54)}
+        className="object-contain shrink-0 h-auto"
         priority
       />
       {showText && (
