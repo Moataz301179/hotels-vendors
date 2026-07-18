@@ -18,6 +18,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const [reviews, total] = await Promise.all([
     // TODO: 'review' model missing from Prisma schema — needs migration
     // @ts-expect-error — Prisma schema mismatch; review model not yet migrated
+    // @ts-expect-error — TODO: review model missing from Prisma schema; needs migration
     prisma.review.findMany({
       where,
       take: limit,
@@ -33,7 +34,15 @@ export const GET = apiRoute(async (request: NextRequest) => {
   ]);
 
   return success({
-    reviews: reviews.map((r: Record<string, unknown>) => ({
+    reviews: reviews.map((r: {
+      id: string;
+      rating?: number;
+      comment?: string;
+      createdAt?: Date | string;
+      hotel?: { name?: string } | null;
+      supplier?: { name?: string } | null;
+      status?: string;
+    }) => ({
       id: r.id,
       hotel: r.hotel?.name || "Unknown Hotel",
       supplier: r.supplier?.name || "Unknown Supplier",
