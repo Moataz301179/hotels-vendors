@@ -323,7 +323,7 @@ export default function NewCampaignPage() {
                 {TONES.map((t) => (
                   <button
                     key={t.value}
-                    onClick={() => setForm((f) => ({ ...f, tone: t.value as any }))}
+                    onClick={() => setForm((f) => ({ ...f, tone: t.value }))}
                     className={`px-4 py-2.5 rounded-lg border text-[13px] font-medium transition-colors ${
                       form.tone === t.value
                         ? "bg-accent-base/10 border-accent-base/40 text-accent-base"
@@ -368,7 +368,7 @@ export default function NewCampaignPage() {
                 <label className="block text-[12px] font-medium text-white/60 mb-2">Posting Frequency</label>
                 <select
                   value={form.postingFrequency}
-                  onChange={(e) => setForm((f) => ({ ...f, postingFrequency: e.target.value as any }))}
+                  onChange={(e) => setForm((f) => ({ ...f, postingFrequency: e.target.value }))}
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-[14px] focus:outline-none focus:border-accent-base/50 transition-colors appearance-none"
                 >
                   {FREQUENCIES.map((f) => (

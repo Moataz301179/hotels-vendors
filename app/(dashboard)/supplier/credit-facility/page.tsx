@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -59,32 +59,36 @@ export default function OlivCreditFacilityDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const facilityRes = await fetch('/api/v1/fintech/oliv-facility');
-        if (!facilityRes.ok) throw new Error('Failed to fetch facility');
-        const facilityData = await facilityRes.json();
-        if (cancelled) return;
-        setFacility(facilityData.data);
+  const fetchFacilityData = useCallback(async () => {
+    try {
+      const facilityRes = await fetch('/api/v1/fintech/oliv-facility');
+      if (!facilityRes.ok) throw new Error('Failed to fetch facility');
+      const facilityData = await facilityRes.json();
+      setFacility(facilityData.data);
 
-        if (facilityData.data?.hasFacility) {
-          const scheduleRes = await fetch('/api/v1/fintech/oliv-facility/schedule');
-          if (scheduleRes.ok) {
-            const scheduleData = await scheduleRes.json();
-            if (!cancelled) setSchedule(scheduleData.data);
-          }
+      if (facilityData.data?.hasFacility) {
+        const scheduleRes = await fetch('/api/v1/fintech/oliv-facility/schedule');
+        if (scheduleRes.ok) {
+          const scheduleData = await scheduleRes.json();
+          setSchedule(scheduleData.data);
         }
-      } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load data');
-      } finally {
-        if (!cancelled) setLoading(false);
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
+    } finally {
+      setLoading(false);
     }
-    load();
-    return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    fetchFacilityData();
+  }, [fetchFacilityData]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setError(null);
+    fetchFacilityData();
+  };
 
   const formatEgp = (amount: number) => {
     return new Intl.NumberFormat('ar-EG', {
@@ -129,7 +133,7 @@ export default function OlivCreditFacilityDashboard() {
       <Card className="bg-[#12121a] border-white/10">
         <CardContent className="p-8 text-center">
           <p className="text-red-400 mb-4">{error}</p>
-          <Button onClick={fetchFacilityData} variant="outline">Retry</Button>
+          <Button onClick={handleRetry} variant="outline">Retry</Button>
         </CardContent>
       </Card>
     );

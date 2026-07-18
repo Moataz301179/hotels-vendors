@@ -122,7 +122,7 @@ export default function SupplierOrdersPage() {
         setUpdateOrder(null);
         refetch();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setUpdateError(err.message || "Network error");
     } finally {
       setUpdating(false);

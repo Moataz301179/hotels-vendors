@@ -189,7 +189,7 @@ export default function OlivConsentScreen() {
 
           {/* Terms notice */}
           <p className="text-xs text-gray-500 text-center">
-            By activating, you agree to Oliv Finance's{' '}
+            By activating, you agree to Oliv Finance&apos;s{' '}
             <a href="https://olivfinance.com/terms" target="_blank" rel="noopener noreferrer" className="text-[#64b5f6] hover:underline">
               Terms of Service
             </a>{' '}
@@ -242,7 +242,7 @@ export default function OlivConsentScreen() {
               <p className="font-medium text-white mb-1">What happens next?</p>
               <ol className="list-decimal list-inside space-y-1">
                 <li>Your data will be securely shared with Oliv Finance</li>
-                <li>You'll be redirected to complete Oliv's KYC process</li>
+                <li>You&apos;ll be redirected to complete Oliv&apos;s KYC process</li>
                 <li>Oliv will run a credit assessment (typically 24-48 hours)</li>
                 <li>Once approved, your credit facility will appear in your dashboard</li>
               </ol>

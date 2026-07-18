@@ -57,7 +57,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return success(facility, 201);
   } catch (err) {
     if (err instanceof ZodError) {
-      return error("Validation failed", 400, err.flatten());
+      return error("Validation failed", 400);
     }
     const message = err instanceof Error ? err.message : "Failed to create credit facility";
     return error(message, 500);

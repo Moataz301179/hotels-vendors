@@ -5,7 +5,7 @@ import { authenticate, error as apiError, success } from "@/lib/api-utils";
 
 const STATE_FILE = "/tmp/mission-control-state.json";
 
-function readState(): any {
+function readState(): Record<string, unknown> {
   try {
     return JSON.parse(readFileSync(STATE_FILE, "utf-8"));
   } catch {

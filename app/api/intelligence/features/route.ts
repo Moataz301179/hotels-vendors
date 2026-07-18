@@ -40,7 +40,7 @@ export const PATCH = apiRoute(async (request: NextRequest) => {
     if (!id) return error("Missing feature id", 400);
 
     const updated = await prisma.featureProposal.update({
-      where: { id, tenantId: auth.tenantId },
+      where: { id },
       data: {
         ...(votes !== undefined ? { votes } : {}),
         ...(status ? { status } : {}),

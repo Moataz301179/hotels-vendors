@@ -40,7 +40,7 @@ export const PATCH = apiRoute(async (
     return success(facility);
   } catch (err) {
     if (err instanceof ZodError) {
-      return error("Validation failed", 400, err.flatten());
+      return error("Validation failed", 400);
     }
     const message = err instanceof Error ? err.message : "Failed to update credit facility";
     return error(message, 500);

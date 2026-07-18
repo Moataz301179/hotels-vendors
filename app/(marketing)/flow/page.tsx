@@ -167,7 +167,7 @@ export default function FlowPage() {
             From Order to Cash in <span style={{ color: "#4A7C59" }}>48 Hours</span>
           </h1>
           <p className="text-[16px] text-white/40 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Place an order. Get ETA-compliant invoice. Click "Get Financed." Supplier paid in 48h. Hotel pays at net-60. <br />Zero paperwork. Unlimited invoice volume. Up to EGP 10M pre-approval.
+            Place an order. Get ETA-compliant invoice. Click &quot;Get Financed.&quot; Supplier paid in 48h. Hotel pays at net-60. <br />Zero paperwork. Unlimited invoice volume. Up to EGP 10M pre-approval.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>

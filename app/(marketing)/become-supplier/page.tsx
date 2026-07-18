@@ -490,7 +490,7 @@ export default function SupplierOnboardingPage() {
           {/* Right: Benefits */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <RoleBenefits role="SUPPLIER" variant="full" theme="dark" />
+              <RoleBenefits role={"SUPPLIER" as Role} variant="full" theme="dark" />
             </div>
           </div>
         </div>
@@ -516,7 +516,7 @@ function MobileBenefits() {
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
             <div className="pt-4">
-              <RoleBenefits role="SUPPLIER" variant="compact" theme="dark" />
+              <RoleBenefits role={"SUPPLIER" as Role} variant="compact" theme="dark" />
             </div>
           </motion.div>
         )}

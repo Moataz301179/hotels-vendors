@@ -46,7 +46,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);
-  const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string }>>([]);
+  const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string; orderNumber?: string; supplier?: string }>>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
