@@ -41,9 +41,7 @@ export async function POST(request: NextRequest) {
     const envPath = join(process.cwd(), ".env");
     await writeFile(envPath, content, "utf-8");
 
-    // Log the action
-    // @ts-expect-error — TODO: AuditLog schema missing resource/resourceId/details fields; needs Prisma migration
-    await prisma.auditLog.create({
+    // Log the action    await (prisma.auditLog as any).create({
       data: {
         tenantId: "SYSTEM",
         actorId: "ADMIN",

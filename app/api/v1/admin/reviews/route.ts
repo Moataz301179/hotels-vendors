@@ -49,7 +49,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       hotelRating: r.rating,
       supplierRating: r.rating,
       comment: r.comment || "",
-      date: r.createdAt?.toISOString() || "",
+      date: (r.createdAt as Date)?.toISOString?.() ?? String(r.createdAt ?? '') || "",
       orderValue: 0,
       status: r.status?.toLowerCase() || "published",
       helpful: 0,
