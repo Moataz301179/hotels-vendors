@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -16,8 +17,6 @@ const SIZE_MAP = {
   xl: { icon: 60, text: 24, tagline: 14 },
 };
 
-const LOGO_CDN = "https://hercules-cdn.com/file_aF80ESBQpC48CEcCDJlkwg2x";
-
 export function BrandLogo({
   className,
   variant = "light",
@@ -31,13 +30,13 @@ export function BrandLogo({
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
-      <img
-        src={LOGO_CDN}
+      <Image
+        src="/logo-icon-white.png"
         alt="HotelsVendors"
         width={dims.icon}
         height={dims.icon}
         className="object-contain shrink-0"
-        style={{ width: dims.icon, height: dims.icon }}
+        priority
       />
       {showText && (
         <div className="flex flex-col items-center gap-1 mt-2">
