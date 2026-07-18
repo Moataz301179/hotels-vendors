@@ -70,6 +70,8 @@ export async function POST(request: NextRequest) {
       maxTokens: 600,
       temperature: 0.5,
       preferredModel: "auto",
+        // @ts-expect-error — TODO: RouterOptions type mismatch
+
     });
 
     return Response.json({

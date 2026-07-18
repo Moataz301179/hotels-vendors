@@ -15,7 +15,6 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const where: Record<string, unknown> = { tenantId: auth.tenantId };
   if (status && status !== "all") where.status = status.toUpperCase();
 
-  // @ts-expect-error — TODO: 'review' model missing from Prisma schema; needs migration
   const [reviews, total] = await Promise.all([
     // @ts-expect-error — TODO: see above
     prisma.review.findMany({

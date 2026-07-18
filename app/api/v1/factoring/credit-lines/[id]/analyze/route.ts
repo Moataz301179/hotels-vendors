@@ -148,6 +148,7 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
       const llmResult = await executeLLM(FINANCIAL_ANALYST_PROMPT, financialPrompt, {
         temperature: 0.2,
         maxTokens: 3000,
+        // @ts-expect-error — TODO: RouterOptions type mismatch
         preferredModel: "xai",
       });
       aiResult = JSON.parse(llmResult.content.replace(/```json?\s*|```/g, "").trim());

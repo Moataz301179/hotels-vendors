@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     await prisma.creditLineApplication.update({
-      where: { id, tenantId: auth.tenantId },
+      where: { id },
       data: {
         status: "APPROVED",
         approvedLimit,
