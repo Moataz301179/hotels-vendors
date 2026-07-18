@@ -18,6 +18,7 @@ import {
   Target,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Settings,
   HelpCircle,
   X,
@@ -213,6 +214,28 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   const pathname = usePathname();
   const navGroups = ROLE_NAV[role] || ROLE_NAV.hotel;
 
+  // Default-expand the section that contains the active route; collapse the rest.
+  // Admin has ~15 items across 7 sections, so collapsing inactive ones keeps it scannable.
+  const initialExpanded = () => {
+    const activeSection = navGroups.find((g) =>
+      g.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))
+    );
+    return new Set<string>(activeSection ? [activeSection.section] : [navGroups[0]?.section]);
+  };
+  const [expanded, setExpanded] = useState<Set<string>>(initialExpanded);
+
+  const toggleSection = (section: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(section)) {
+        next.delete(section);
+      } else {
+        next.add(section);
+      }
+      return next;
+    });
+  };
+
   if (collapsed) {
     return (
       <div className="h-full flex flex-col items-center py-4 border-r border-white/[0.06] bg-[#12121a]">
@@ -278,35 +301,59 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
-        {navGroups.map((group) => (
-          <div key={group.section} className="mb-5">
-            <p className="px-3 mb-1.5 text-[10px] font-semibold text-white/20 uppercase tracking-[0.15em]">
-              {group.section}
-            </p>
-            <div className="flex flex-col gap-0.5">
-              {group.items.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
-                      isActive
-                        ? "bg-[#39ff7e]/10 text-white font-medium"
-                        : "text-white/40 hover:text-white hover:bg-white/[0.03]"
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#39ff7e] rounded-r-full shadow-[0_0_8px_rgba(57,255,126,0.3)]" />
-                    )}
-                    <item.icon size={17} className={isActive ? "text-[#39ff7e]" : ""} />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
+        {navGroups.map((group) => {
+          const isExpanded = expanded.has(group.section);
+          const hasActive = group.items.some(
+            (item) => pathname === item.href || pathname.startsWith(item.href + "/")
+          );
+          return (
+            <div key={group.section} className="mb-2">
+              <button
+                onClick={() => toggleSection(group.section)}
+                className="flex items-center justify-between w-full px-3 py-1.5 rounded-md hover:bg-white/[0.03] transition-colors group"
+                aria-expanded={isExpanded}
+              >
+                <span className="flex items-center gap-2 text-[10px] font-semibold text-white/25 uppercase tracking-[0.15em] group-hover:text-white/40">
+                  {group.section}
+                  {hasActive && (
+                    <span className="w-1 h-1 rounded-full bg-[#39ff7e]" aria-hidden />
+                  )}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-white/20">{group.items.length}</span>
+                  <ChevronDown
+                    size={12}
+                    className={`text-white/25 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                  />
+                </span>
+              </button>
+              {isExpanded && (
+                <div className="flex flex-col gap-0.5 mt-1">
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
+                          isActive
+                            ? "bg-[#39ff7e]/10 text-white font-medium"
+                            : "text-white/40 hover:text-white hover:bg-white/[0.03]"
+                        }`}
+                      >
+                        {isActive && (
+                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#39ff7e] rounded-r-full shadow-[0_0_8px_rgba(57,255,126,0.3)]" />
+                        )}
+                        <item.icon size={17} className={isActive ? "text-[#39ff7e]" : ""} />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Footer */}
