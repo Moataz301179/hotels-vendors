@@ -21,11 +21,8 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl">
-      <Link href="/" className="flex items-center gap-2.5">
+      <Link href="/" className="flex items-center">
         <BrandLogo variant="dark" size="sm" showText={false} />
-        <span className="font-semibold text-white text-[15px] uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-          Hotels Vendors
-        </span>
       </Link>
 
       {/* Desktop nav */}
