@@ -1,4 +1,4 @@
-// @ts-nocheck — TODO: Pre-existing type errors need schema migration; tracked in docs/audit-log.md
+// @ts-nocheck — TODO: Pre-existing type errors; tracked in docs/audit-log.md
 /**
  * Public AI Endpoint — HotelsVendors
  * No auth required. Rate-limited by IP (5 messages/hour via Redis).

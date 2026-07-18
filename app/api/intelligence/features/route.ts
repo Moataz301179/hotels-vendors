@@ -1,4 +1,4 @@
-// @ts-nocheck — TODO: Pre-existing type errors need schema migration; tracked in docs/audit-log.md
+// @ts-nocheck — TODO: Pre-existing type errors; tracked in docs/audit-log.md
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
