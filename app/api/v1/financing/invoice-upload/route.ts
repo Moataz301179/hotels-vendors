@@ -134,13 +134,21 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
   }
 
-  // Create a minimal Order record (for audit trail + linking)
+  // Create a minimal Order record (for audit trail + linking).
+  //
+  // G10 (architecture-review-2026-07.md, S3): the order is created as DRAFT —
+  // NEVER CONFIRMED. No order may be in CONFIRMED/IN_TRANSIT/DELIVERED without
+  // paymentGuaranteed = true. This route uploads a paper invoice for financing
+  // review; the payment guarantee is established later (by Oliv approval /
+  // deposit / factoring). The Order here is an audit-trail linker, not a
+  // fulfilled purchase. The invoice lifecycle (ISSUED → factoring) is
+  // independent of the Order status and is unaffected by this change.
   const orderNumber = `INV-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
   const order = await prisma.order.create({
     data: {
       orderNumber,
-      status: "CONFIRMED", // Immediately confirmed — invoice exists
+      status: "DRAFT",
       subtotal: data.amount,
       vatAmount: data.vatAmount || data.total - data.amount,
       total: data.total,
@@ -149,7 +157,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       supplierId: supplier.id,
       requesterId: auth.userId,
       tenantId: auth.tenantId,
-      paymentGuaranteed: false, // Will be set after Oliv approval
+      paymentGuaranteed: false, // Set later once Oliv approves / deposit received
       poNumber: data.invoiceNumber,
     },
   });
