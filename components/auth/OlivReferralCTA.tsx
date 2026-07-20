@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/session";
+import { useSession } from "@/lib/client/use-session";
 import { ChevronRight, CheckCircle2 } from "lucide-react";
 
 interface OlivReferralCTAProps {

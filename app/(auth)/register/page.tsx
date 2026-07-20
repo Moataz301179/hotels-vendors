@@ -20,7 +20,7 @@ import {
   Building,
   Users,
 } from "lucide-react";
-import { OlivReferralCTA } from "@/components/auth/OlivReferralCTA";
+import OlivReferralCTA from "@/components/auth/OlivReferralCTA";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";

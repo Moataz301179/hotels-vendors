@@ -21,8 +21,13 @@ import {
   BarChart3,
   Shield,
   ChevronRight,
+  Sparkles,
+  Clock,
 } from "lucide-react";
-import { OlivReferralCTA } from "@/components/auth/OlivReferralCTA";
+import useSWR, { mutate } from "swr";
+import OlivReferralCTA from "@/components/auth/OlivReferralCTA";
+import { transformManyToMarketplace, type MarketplaceProduct } from "@/lib/marketplace/category-mapper";
+import { z } from "zod";
 
 export const metadata: Metadata = {
   title: "B2B Hospitality Marketplace Egypt | 680+ Verified Hotel Suppliers | HotelsVendors",
@@ -35,65 +40,29 @@ export const metadata: Metadata = {
   },
 };
 
-// Reuse your existing data structures
+// API response schema for type safety
+const MarketplaceResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    products: z.array(z.any()),
+    pagination: z.object({
+      page: z.number(),
+      limit: z.number(),
+      total: z.number(),
+      totalPages: z.number(),
+    }),
+  }),
+});
+
+type MarketplaceApiResponse = z.infer<typeof MarketplaceResponseSchema>;
+
+// Category mapping for filters
 const categories = [
   { name: "F&B", desc: "Food, beverages, kitchen equipment", count: "2,400+ SKUs", color: "#39ff7e" },
   { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", count: "1,800+ SKUs", color: "#39ff7e" },
   { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", count: "950+ SKUs", color: "#64b5f6" },
   { name: "FF&E", desc: "Furniture, fixtures, capital equipment", count: "620+ SKUs", color: "#ff7e1a" },
   { name: "Services", desc: "Maintenance, pest control, laundry, security", count: "340+ vendors", color: "#c455ff" },
-];
-
-// Mock product data - in real implementation, this would come from API
-const mockProducts = [
-  {
-    id: "1",
-    name: "Luxury Egyptian Cotton Bed Sheets - 600 Thread Count",
-    description: "Premium 100% Egyptian cotton bed sheets with 600 thread count. Hypoallergenic, breathable, and durable for luxury hotel use.",
-    price: 450,
-    compareAtPrice: 600,
-    department: "Consumables",
-    category: "Linens",
-    stockStatus: "In Stock",
-    featured: true,
-    isNew: false,
-    rating: 4.9,
-    slug: "egyptian-cotton-bed-sheets-600tc",
-    images: ["https://images.unsplash.com/photo-1582722784781-2d3980b5d5c8?auto=format&fit=crop&w=400&q=60"],
-    tags: ["bedding", "linens", "egyptian-cotton", "luxury"]
-  },
-  {
-    id: "2",
-    name: "Stainless Steel Commercial Food Warmer",
-    description: "Heavy-duty stainless steel food warmer with precise temperature control for hotel buffet service.",
-    price: 1200,
-    compareAtPrice: 1500,
-    department: "F&B",
-    category": "Kitchen Equipment",
-    stockStatus: "Limited Stock",
-    featured: true,
-    isNew: true,
-    rating: 4.8,
-    slug: "stainless-steel-food-warmer-commercial",
-    images: ["https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=400&q=60"],
-    tags: ["food-warmer", "buffet", "stainless-steel", "commercial-kitchen"]
-  },
-  {
-    id: "3",
-    name: "Art Deco Hotel Lobby Chair Set",
-    description: "Elegant Art Deco inspired lobby chairs with premium velvet upholstery and polished brass accents.",
-    price: 850,
-    compareAtPrice: 1200,
-    department: "FF&E",
-    category": "Lobby Furniture",
-    stockStatus: "Made to Order",
-    featured: false,
-    isNew: false,
-    rating: 4.7,
-    slug: "art-deco-hotel-lobby-chair-set",
-    images: ["https://images.unsplash.com/photo-1586023492125-60b2a7e30c37?auto=format&fit=crop&w=400&q=60"],
-    tags: ["lobby", "furniture", "art-deco", "velvet", "brass"]
-  }
 ];
 
 const priceRanges = [
@@ -106,13 +75,13 @@ const priceRanges = [
 
 const availabilityOptions = [
   "All availability",
-  "In Stock",
-  "Limited allocation",
-  "Made to order",
-  "Ready in Egypt",
+  "ACTIVE",
+  "IN_STOCK",
+  "LOW_STOCK",
+  "OUT_OF_STOCK",
+  "MADE_TO_ORDER",
 ];
 
-// Mock hotel departments (reused from your existing data)
 const hotelDepartments = [
   { name: "Housekeeping", subtitle: "Linens, amenities, cleaning supplies", image: "https://images.unsplash.com/photo-1582719478250-896e44ac3c65?auto=format&fit=crop&w=400&q=60" },
   { name: "Food & Beverage", subtitle: "Restaurant equipment, tableware, kitchen tools", image: "https://images.unsplash.com/photo-1582719501478-3995cdbb0bf1?auto=format&fit=crop&w=400&q=60" },
@@ -120,6 +89,15 @@ const hotelDepartments = [
   { name: "Engineering", subtitle: "Maintenance supplies, tools, replacement parts", image: "https://images.unsplash.com/photo-1582719529407-2d2b7d6bfc33?auto=format&fit=crop&w=400&q=60" },
   { name: "Spa & Wellness", subtitle: "Spa equipment, pool supplies, fitness equipment", image: "https://images.unsplash.com/photo-1582719545047-314f1cb0e2ef?auto=format&fit=crop&w=400&q=60" },
 ];
+
+// Prisma category to department mapping
+const PRISMA_TO_DEPARTMENT: Record<string, string> = {
+  F_AND_B: "Food & Beverage",
+  CONSUMABLES: "Housekeeping",
+  GUEST_SUPPLIES: "Front Office",
+  FFE: "Front Office",
+  SERVICES: "Engineering",
+};
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "rating" | "newest";
 type PriceRange = {
@@ -129,6 +107,68 @@ type PriceRange = {
   max: number;
 };
 
+// Cart context (simple implementation)
+interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+interface CartContextValue {
+  items: CartItem[];
+  addItem: (productId: string, quantity?: number) => void;
+  removeItem: (productId: string) => void;
+  clearCart: () => void;
+  itemCount: number;
+}
+
+const useCart = (): CartContextValue => {
+  const [items, setItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("hotelsvendors_cart");
+    if (stored) {
+      try {
+        setItems(JSON.parse(stored));
+      } catch {
+        setItems([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("hotelsvendors_cart", JSON.stringify(items));
+  }, [items]);
+
+  const addItem = (productId: string, quantity = 1) => {
+    setItems((prev) => {
+      const existing = prev.find((i) => i.productId === productId);
+      if (existing) {
+        return prev.map((i) =>
+          i.productId === productId ? { ...i, quantity: i.quantity + quantity } : i
+        );
+      }
+      return [...prev, { productId, quantity }];
+    });
+  };
+
+  const removeItem = (productId: string) => {
+    setItems((prev) => prev.filter((i) => i.productId !== productId));
+  };
+
+  const clearCart = () => setItems([]);
+
+  return {
+    items,
+    addItem,
+    removeItem,
+    clearCart,
+    itemCount: items.reduce((sum, i) => sum + i.quantity, 0),
+  };
+};
+
+// Fetcher function for SWR
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function MarketplacePage() {
   const [department, setDepartment] = useState("All departments");
   const [category, setCategory] = useState("All categories");
@@ -136,6 +176,34 @@ export default function MarketplacePage() {
   const [priceRange, setPriceRange] = useState("all");
   const [sort, setSort] = useState<SortOption>("featured");
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+
+  const { data, error, isLoading, mutate: mutateProducts } = useSWR<MarketplaceApiResponse>(
+    `/api/v1/products?status=ACTIVE&limit=100&page=${page}`,
+    fetcher
+  );
+
+  // Transform API data to marketplace products
+  const marketplaceProducts = useMemo(() => {
+    if (!data?.data?.products) return [];
+    return transformManyToMarketplace(
+      data.data.products.map((p) => ({
+        ...p,
+        images: p.images ? JSON.parse(p.images) : null,
+      }))
+    );
+  }, [data]);
+
+  // Add isFeatured and isNew flags based on status or other criteria
+  const productsWithFlags = useMemo(() => {
+    return marketplaceProducts.map((p) => ({
+      ...p,
+      isFeatured: p.status === "ACTIVE" && p.supplierRating >= 4.5,
+      isNew: false, // Could be derived from createdAt date
+    }));
+  }, [marketplaceProducts]);
+
+  const cart = useCart();
 
   // Filter products based on selections
   const filteredProducts = useMemo(() => {
@@ -143,75 +211,97 @@ export default function MarketplacePage() {
       priceRanges.find((range) => range.value === priceRange) ?? priceRanges[0];
     const normalizedQuery = query.trim().toLowerCase();
 
-    return mockProducts
+    return productsWithFlags
       .filter((product) => {
+        const productDepartment = PRISMA_TO_DEPARTMENT[product.prismaCategory] || "Housekeeping";
         const matchesDepartment =
-          department === "All departments" || product.department === department;
+          department === "All departments" || productDepartment === department;
         const matchesCategory =
           category === "All categories" || product.category === category;
         const matchesAvailability =
-          availability === "All availability" || product.stockStatus === availability;
+          availability === "All availability" || product.status === availability;
         const matchesPrice =
-          product.price >= activePriceRange.min && product.price <= activePriceRange.max;
+          product.unitPrice >= activePriceRange.min && product.unitPrice <= activePriceRange.max;
         const matchesQuery =
           normalizedQuery.length === 0 ||
           [
             product.name,
-            product.description,
-            product.department,
+            product.description || "",
+            productDepartment,
             product.category,
             product.sku || "",
-            ...(product.tags || []),
           ]
             .join(" ")
             .toLowerCase()
             .includes(normalizedQuery);
 
-        return (
-          matchesDepartment &&
-          matchesCategory &&
-          matchesAvailability &&
-          matchesPrice &&
-          matchesQuery
-        );
+        return matchesDepartment && matchesCategory && matchesAvailability && matchesPrice && matchesQuery;
       })
       .sort((a, b) => {
         if (sort === "price-asc") {
-          return a.price - b.price;
+          return a.unitPrice - b.unitPrice;
         }
         if (sort === "price-desc") {
-          return b.price - a.price;
+          return b.unitPrice - a.unitPrice;
         }
         if (sort === "rating") {
-          return b.rating - a.rating;
+          return b.supplierRating - a.supplierRating;
         }
         if (sort === "newest") {
-          return Number(Boolean(b.isNew)) - Number(Boolean(a.isNew));
+          return 0; // Would need createdAt for proper sorting
         }
-
-        return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+        return Number(Boolean(b.isFeatured)) - Number(Boolean(a.isFeatured));
       });
-  }, [availability, category, department, priceRange, query, sort]);
+  }, [availability, category, department, priceRanges, priceRange, productsWithFlags, query, sort]);
 
-  // Featured products for hero section
   const featuredProducts = useMemo(
-    () => mockProducts.filter((p) => p.featured).slice(0, 3),
-    []
+    () => productsWithFlags.filter((p) => p.isFeatured).slice(0, 3),
+    [productsWithFlags]
   );
+
+  const totalProducts = data?.data?.pagination?.total ?? 0;
 
   const scrollToCatalog = () => {
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleAddToCart = (productId: string) => {
-    // In real implementation, this would call your cart API
-    console.log(`Adding product ${productId} to cart`);
-    alert("Product added to cart! (Connect to your cart API)");
+    cart.addItem(productId);
+    mutateProducts(); // Refresh cart count if needed
   };
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#0c0c12]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#39ff7e] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-white/60">Loading products...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !data?.success) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#0c0c12]">
+        <div className="text-center p-6">
+          <Shield className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Failed to load products</h2>
+          <p className="text-white/40 mb-4">{(error as any)?.message || "Please try again later"}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-[#39ff7e] text-black rounded-lg font-medium hover:bg-[#32cd32] transition"
+          >
+            Retry
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero Section - Adapted from storefront with HotelsVendors branding */}
+      {/* Hero Section */}
       <section className="relative min-h-[92vh] overflow-hidden bg-stone-950 px-4 py-16 text-white sm:px-6 lg:px-8">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(245,245,240,0.22),transparent_32%),linear-gradient(120deg,rgba(12,10,9,0.94),rgba(12,10,9,0.56)_45%,rgba(146,64,14,0.5))]" />
@@ -224,19 +314,14 @@ export default function MarketplacePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {/* Your HotelsVendors logo instead of BrandLogo */}
             <div className="text-center mb-4">
-              <img
-                src="/images/logo-hotels-vendors.png"
-                alt="Hotels Vendors"
-                className="h-10"
-              />
+              <img src="/images/logo-hotels-vendors.png" alt="Hotels Vendors" className="h-10" />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-[#39ff7e] backdrop-blur">
               <Sparkles size={15} /> Premium Hotel Procurement
             </div>
             <h1 className="mt-4 max-w-3xl font-serif text-4xl leading-[0.95] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Egypt's Premier B2B Hospitality Marketplace
+              Egypt&apos;s Premier B2B Hospitality Marketplace
             </h1>
             <p className="mt-4 max-w-2xl text-lg leading-8 text-stone-200 md:text-xl">
               Fixed-price catalogs • ETA-compliant invoicing • 24-hour payments via embedded factoring
@@ -287,7 +372,7 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* Product Filtering Section - Adapted from storefront */}
+      {/* Product Catalog Section */}
       <section id="catalog" className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -296,15 +381,18 @@ export default function MarketplacePage() {
                 Live Product Catalog
               </p>
               <h2 className="mt-2 font-serif text-3xl text-stone-950 md:text-4xl">
-                {filteredProducts.length} products found
+                {filteredProducts.length.toLocaleString()} products found
               </h2>
+              <p className="mt-1 text-sm text-stone-500">
+                Showing {Math.min((page - 1) * 24 + 1, totalProducts)}–{Math.min(page * 24, totalProducts)} of {totalProducts.toLocaleString()} products
+              </p>
             </div>
             <div className="rounded-3xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-600">
               <span className="font-bold text-stone-950">{categories.length}</span> procurement categories
             </div>
           </div>
 
-          {/* Filters - Adapted from storefront */}
+          {/* Filters */}
           <div className="mb-6 rounded-[2rem] border border-stone-200 bg-stone-50 p-4 shadow-sm">
             <div className="grid gap-3 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
               <label className="relative block">
@@ -312,7 +400,7 @@ export default function MarketplacePage() {
                 <input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search products, SKU, or tag"
+                  placeholder="Search products, SKU, or description"
                   className="h-12 w-full rounded-2xl border border-stone-200 bg-white pl-11 pr-4 text-sm outline-none transition focus:border-[#39ff7e]/30 focus:ring-2 focus:ring-[#39ff7e]/10"
                 />
               </label>
@@ -325,7 +413,7 @@ export default function MarketplacePage() {
               >
                 <option>All departments</option>
                 {hotelDepartments.map((item) => (
-                  <option key={item.name}>{item.name}</option>
+                  <option key={item.name} value={item.name}>{item.name}</option>
                 ))}
               </select>
 
@@ -335,12 +423,16 @@ export default function MarketplacePage() {
                 className="h-12 rounded-2xl border border-stone-200 bg-white px-4 text-sm outline-none transition focus:border-[#39ff7e]/30 focus:ring-2 focus:ring-[#39ff7e]/10"
                 aria-label="Filter by category"
               >
-                <option>All categories</option>
-                {/* In real implementation, this would come from API based on selected department */}
-                <option>All categories</option>
-                <option>Linens</option>
-                <option>Kitchen Equipment</option>
-                <option>Lobby Furniture</option>
+                <option value="All categories">All categories</option>
+                <option value="fb">F&B</option>
+                <option value="hk">Housekeeping</option>
+                <option value="gra">Guest Supplies</option>
+                <option value="ffe">FF&E</option>
+                <option value="eng">Services</option>
+                <option value="lin">Linens</option>
+                <option value="spa">Spa</option>
+                <option value="it">IT</option>
+                <option value="sec">Security</option>
               </select>
 
               <select
@@ -350,7 +442,7 @@ export default function MarketplacePage() {
                 aria-label="Filter by availability"
               >
                 {availabilityOptions.map((item) => (
-                  <option key={item}>{item}</option>
+                  <option key={item} value={item}>{item.replace("_", " ")}</option>
                 ))}
               </select>
 
@@ -391,15 +483,40 @@ export default function MarketplacePage() {
 
           {/* Product Grid */}
           {filteredProducts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <ProductCardArena 
-                  key={product.id} 
-                  product={product} 
-                  onAddToCart={handleAddToCart} 
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCardArena
+                    key={product.id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {data?.data?.pagination?.totalPages > 1 && (
+                <div className="mt-8 flex justify-center gap-2">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="px-4 py-2 rounded-lg border border-stone-200 bg-white text-stone-600 disabled:opacity-50 disabled:cursor-not-allowed hover:border-stone-950"
+                  >
+                    Previous
+                  </button>
+                  <span className="px-4 py-2 text-stone-600">
+                    Page {page} of {data.data.pagination.totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage((p) => Math.min(data.data.pagination.totalPages, p + 1))}
+                    disabled={page === data.data.pagination.totalPages}
+                    className="px-4 py-2 rounded-lg border border-stone-200 bg-white text-stone-600 disabled:opacity-50 disabled:cursor-not-allowed hover:border-stone-950"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="rounded-[2rem] border border-dashed border-stone-300 bg-stone-50 p-12 text-center">
               <h3 className="font-serif text-3xl text-stone-950">No products match these filters.</h3>
@@ -424,7 +541,6 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* Your existing supplier sections - kept for brand consistency */}
       {/* Trust Bar */}
       <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
@@ -446,7 +562,7 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* Product Categories (your existing design) */}
+      {/* Product Categories */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Shop By Department</h2>
@@ -461,7 +577,6 @@ export default function MarketplacePage() {
                 transition={{ delay: hotelDepartments.indexOf(dept) * 0.03, duration: 0.5 }}
                 onClick={() => {
                   setDepartment(dept.name);
-                  // Scroll to catalog after department change
                   setTimeout(scrollToCatalog, 300);
                 }}
                 className="group relative min-h-64 overflow-hidden rounded-[2rem] bg-stone-900 text-left shadow-xl shadow-stone-900/10"
@@ -487,7 +602,7 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* Oliv Referral CTA - Integrated throughout */}
+      {/* Oliv Referral CTA */}
       <section className="py-12" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
@@ -496,18 +611,10 @@ export default function MarketplacePage() {
             </h3>
             <div className="flex items-center gap-4 mb-4">
               <div className="text-center">
-                <img
-                  src="/images/logo-hotels-vendors.png"
-                  alt="Hotels Vendors"
-                  className="h-8"
-                />
+                <img src="/images/logo-hotels-vendors.png" alt="Hotels Vendors" className="h-8" />
               </div>
               <div className="text-center">
-                <img
-                  src="https://oliv.finance/logo.svg"
-                  alt="Oliv Finance"
-                  className="h-8"
-                />
+                <img src="https://oliv.finance/logo.svg" alt="Oliv Finance" className="h-8" />
               </div>
             </div>
             <div className="bg-[#39ff7e]/10 px-4 py-2 rounded-md text-sm text-white/80 mb-3">
@@ -515,7 +622,6 @@ export default function MarketplacePage() {
             </div>
             <button
               onClick={() => {
-                // This would trigger the Oliv referral flow
                 window.open(
                   `https://oliv.finance/onboard?ref=CHV000&user_id=marketplace_visitor&redirect_uri=${encodeURIComponent(
                     window.location.origin
@@ -553,34 +659,36 @@ export default function MarketplacePage() {
       </section>
 
       {/* Oliv Referral CTA at bottom */}
-      <OlivReferralCTA 
-        userId="marketplace-footer-visitor" 
-        userType="BOTH"
-        onOlivComplete={() => window.location.href = '/dashboard'}
+      <OlivReferralCTA
+        userId="marketplace-footer-visitor"
+        userType="SUPPLIER"
+        onOlivComplete={() => (window.location.href = '/dashboard')}
       />
     </main>
   );
 }
 
-// Reused ProductCard from storefront with HotelsVendors integration
-function ProductCardArena({ product, onAddToCart }: { 
-  product: any; 
+// Product Card Arena - Updated to use real MarketplaceProduct fields
+function ProductCardArena({ product, onAddToCart }: {
+  product: MarketplaceProduct & { isFeatured?: boolean; isNew?: boolean };
   onAddToCart: (id: string) => void;
 }) {
+  const department = PRISMA_TO_DEPARTMENT[product.prismaCategory] || "Housekeeping";
+
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm transition duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10">
       <Link
-        href={`/products/${product.slug}`}
+        href={`/products/${product.id}`}
         className="relative block h-72 overflow-hidden bg-stone-100"
       >
         <img
-          src={product.images[0]}
+          src={product.images?.[0] || "https://images.unsplash.com/photo-1592928309764-2c087a0f6f5b?auto=format&fit=crop&w=400&q=60"}
           alt={product.name}
           className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950/55 via-transparent to-transparent opacity-70" />
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          {product.featured ? (
+          {product.isFeatured ? (
             <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-stone-950 backdrop-blur">
               Featured
             </span>
@@ -592,29 +700,29 @@ function ProductCardArena({ product, onAddToCart }: {
           ) : null}
         </div>
         <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-white/90 px-3 py-1 text-xs font-semibold text-stone-700 backdrop-blur">
-          {product.stockStatus}
+          {product.stockQuantity > 0 ? "In Stock" : "Out of Stock"}
         </span>
       </Link>
 
       <div className="p-6">
         <div className="flex items-center justify-between gap-4">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-700">
-            {product.department}
+            {department}
           </p>
           <span className="inline-flex items-center gap-1 text-sm font-semibold text-stone-600">
             <Star size={14} className="fill-amber-500 text-amber-500" />
-            {product.rating}
+            {product.supplierRating.toFixed(1)}
           </span>
         </div>
 
         <Link
-          href={`/products/${product.slug}`}
+          href={`/products/${product.id}`}
           className="mt-3 block font-serif text-2xl leading-tight text-stone-950 transition hover:text-amber-700"
         >
           {product.name}
         </Link>
         <p className="mt-3 line-clamp-2 text-sm leading-6 text-stone-500">
-          {product.description}
+          {product.description || `Supplier: ${product.supplierName}`}
         </p>
 
         <div className="mt-5 flex items-end justify-between gap-4">
@@ -622,13 +730,11 @@ function ProductCardArena({ product, onAddToCart }: {
             <p className="text-xs text-stone-400">From</p>
             <div className="flex items-baseline gap-2">
               <p className="text-xl font-bold text-stone-950">
-                {product.price.toLocaleString('en-EG')} EGP
+                {product.unitPrice.toLocaleString('en-EG')} EGP
               </p>
-              {product.compareAtPrice ? (
-                <p className="text-sm text-stone-400 line-through">
-                  {product.compareAtPrice.toLocaleString('en-EG')} EGP
-                </p>
-              ) : null}
+              {product.minOrderQty > 1 && (
+                <p className="text-xs text-stone-500">MOQ: {product.minOrderQty}</p>
+              )}
             </div>
           </div>
           <button
@@ -642,7 +748,7 @@ function ProductCardArena({ product, onAddToCart }: {
         </div>
 
         <Link
-          href={`/products/${product.slug}`}
+          href={`/products/${product.id}`}
           className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-stone-950 transition hover:gap-3 hover:text-amber-700"
         >
           View details <ArrowRight size={15} />
