@@ -20,6 +20,7 @@ import {
   Building,
   Users,
 } from "lucide-react";
+import { OlivReferralCTA } from "@/components/auth/OlivReferralCTA";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
@@ -142,6 +143,14 @@ function RegisterContent() {
           <p className="text-white/40 text-[14px]">
             Your account has been created. Redirecting you to sign in...
           </p>
+          <OlivReferralCTA 
+            userId={form.name} 
+            userType={form.role as "HOTEL" | "SUPPLIER"}
+            onOlivComplete={() => {
+              // Optional: Refresh or redirect after Oliv onboarding
+              router.refresh();
+            }}
+          />
         </div>
       </div>
     );
@@ -152,8 +161,8 @@ function RegisterContent() {
       {/* Header */}
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#39ff7e]/[0.08] border border-[#39ff7e]/15 text-[#39ff7e] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
-          {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
-          {form.role === "HOTEL" ? "Hotel Registration" : form.role === "SUPPLIER" ? "Supplier Registration" : form.role === "FACTORING" ? "Factoring Registration" : "Logistics Registration"}
+          {form.role === "HOTEL" ? <Hotel size={11} /> : <Store size={11} />}
+          {form.role === "HOTEL" ? "Hotel Registration" : "Supplier Registration"}
         </div>
         <h1 className="text-[28px] font-semibold text-white tracking-[-0.02em]">
           Create Account
