@@ -114,7 +114,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
       const orders: Array<{
         id: string;
         orderNumber: string;
+        supplierId: string;
         supplier: { name: string };
+        subtotal: number;
+        vatAmount: number;
         total: number;
         status: string;
       }> = [];
@@ -179,6 +182,39 @@ export const POST = apiRoute(async (request: NextRequest) => {
         orders.push(order);
         orderIndex++;
       }
+
+      // ── AUTO-GENERATE INVOICES (marketplace loop closure) ──
+      // One invoice per order, created in the same transaction so a failure
+      // rolls back orders + cart together. Invoices start as DRAFT /
+      // NOT_FACTORABLE — they become financiable after delivery + ETA validation.
+      // This is the real invoice a referred hotel brings to Oliv.
+      //
+      // PERF: fire all invoice creates in parallel within the transaction
+      // (Prisma interactive transactions support concurrent operations on the
+      // same tx client). This cuts N sequential round-trips to 1.
+      const issueDate = new Date();
+      await Promise.all(
+        orders.map((order) =>
+          tx.invoice.create({
+            data: {
+              tenantId: auth.tenantId,
+              invoiceNumber: order.orderNumber.replace(/^HV-/, "INV-"),
+              orderId: order.id,
+              hotelId,
+              supplierId: order.supplierId,
+              subtotal: order.subtotal,
+              vatRate: 14,
+              vatAmount: order.vatAmount,
+              total: order.total,
+              issueDate,
+              status: "DRAFT",
+              paymentStatus: "UNPAID",
+              etaStatus: "PENDING",
+              factoringStatus: "NOT_FACTORABLE",
+            },
+          }),
+        ),
+      );
 
       // ── CLEAR CART ATOMICALLY ──
       // Delete all cart items for this user in the same transaction.

@@ -7,6 +7,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import { platformFeeRate as resolvePlatformFeeRate } from "@/lib/fees/registry";
 
 // ─────────────────────────────────────────
 // 1. MARKET CONDITIONS (2026 Egypt)
@@ -169,15 +170,15 @@ export async function generateDynamicTcpReport(orderId: string): Promise<Dynamic
     explanation: `Offline orders lack digital audit trails. ~${(market.disputeLossRate * 100).toFixed(0)}% of offline orders result in unresolved disputes (wrong quantity, damaged goods, missing items). Our platform captures every step with photos, signatures, and timestamps.`,
   });
 
-  // 7. Platform Fee (on platform side only)
-  const platformFeeRate = 0.025;
-  const platformFee = orderTotal * platformFeeRate;
+  // 7. Platform Fee (on platform side only) — sourced from the unified fee registry
+  const feeRate = await resolvePlatformFeeRate();
+  const platformFee = orderTotal * feeRate;
   lineItems.push({
     label: "Platform Service Fee",
     offlineCost: 0,
     platformCost: platformFee,
     savings: -platformFee,
-    explanation: `Our platform fee is ${(platformFeeRate * 100).toFixed(1)}% of order value. This covers ETA compliance, factoring facilitation, logistics optimization, and AI insights.`,
+    explanation: `Our platform fee is ${(feeRate * 100).toFixed(1)}% of order value. This covers ETA compliance, factoring facilitation, logistics optimization, and AI insights.`,
   });
 
   // 8. Factoring Fee (on platform side only, if applicable)
@@ -200,7 +201,7 @@ export async function generateDynamicTcpReport(orderId: string): Promise<Dynamic
   // Narratives
   const executiveSummary = `For Order ${order.orderNumber} (${orderTotal.toLocaleString()} EGP), the TRUE offline cost is ${totalOfflineCost.toLocaleString()} EGP — ${savingsPercentage.toFixed(1)}% more expensive than the quoted price. Our platform reduces the total cost to ${totalPlatformCost.toLocaleString()} EGP, saving ${totalSavings.toLocaleString()} EGP (${savingsPercentage.toFixed(1)}%).`;
 
-  const cfoNarrative = `Dear CFO,\n\nYour procurement team received a quote of ${orderTotal.toLocaleString()} EGP from ${order.supplier.name}. On paper, this seems competitive.\n\nHowever, when we account for the hidden costs of offline procurement in Egypt (2026):\n- Cost of Capital: ${costOfCapital.toFixed(0)} EGP (90-day payment delay)\n- ETA Compliance Risk: ${etaPenalty.toFixed(0)} EGP\n- Logistics Fragmentation: ${logisticsCost.toFixed(0)} EGP\n- Storage Waste: ${storageWaste.toFixed(0)} EGP\n- Dispute Losses: ${disputeLoss.toFixed(0)} EGP\n\nTotal hidden costs: ${(costOfCapital + etaPenalty + logisticsCost + storageWaste + disputeLoss).toFixed(0)} EGP\n\nWith Hotels Vendors, you pay a ${(platformFeeRate * 100).toFixed(1)}% platform fee (${platformFee.toFixed(0)} EGP) and a ${(factoringFeeRate * 100).toFixed(1)}% factoring fee (${factoringFee.toFixed(0)} EGP).\n\nNet savings: ${totalSavings.toLocaleString()} EGP (${savingsPercentage.toFixed(1)}%)\n\nThis is not marketing. This is arithmetic.`;
+  const cfoNarrative = `Dear CFO,\n\nYour procurement team received a quote of ${orderTotal.toLocaleString()} EGP from ${order.supplier.name}. On paper, this seems competitive.\n\nHowever, when we account for the hidden costs of offline procurement in Egypt (2026):\n- Cost of Capital: ${costOfCapital.toFixed(0)} EGP (90-day payment delay)\n- ETA Compliance Risk: ${etaPenalty.toFixed(0)} EGP\n- Logistics Fragmentation: ${logisticsCost.toFixed(0)} EGP\n- Storage Waste: ${storageWaste.toFixed(0)} EGP\n- Dispute Losses: ${disputeLoss.toFixed(0)} EGP\n\nTotal hidden costs: ${(costOfCapital + etaPenalty + logisticsCost + storageWaste + disputeLoss).toFixed(0)} EGP\n\nWith Hotels Vendors, you pay a ${(feeRate * 100).toFixed(1)}% platform fee (${platformFee.toFixed(0)} EGP) and a ${(factoringFeeRate * 100).toFixed(1)}% factoring fee (${factoringFee.toFixed(0)} EGP).\n\nNet savings: ${totalSavings.toLocaleString()} EGP (${savingsPercentage.toFixed(1)}%)\n\nThis is not marketing. This is arithmetic.`;
 
   const supplierNarrative = `Dear Supplier,\n\nBy offering your hotel customer factoring through Hotels Vendors, you get paid within 48 hours instead of 90 days.\n\nYour cost of capital at ${(market.smeCostOfCapitalAnnual * 100).toFixed(0)}% annual rate means waiting 90 days costs you ${costOfCapital.toFixed(0)} EGP on this order.\n\nThe factoring fee of ${factoringFee.toFixed(0)} EGP is LESS than your cost of capital (${costOfCapital.toFixed(0)} EGP). You are PROFITABLE on factoring.\n\nPlus, you eliminate collection risk, disputes, and administrative overhead.`;
 

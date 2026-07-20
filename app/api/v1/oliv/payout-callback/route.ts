@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { verifyReferralToken } from "@/lib/fintech/anti-bypass/layer1-referral-token";
+import { platformFeeRate } from "@/lib/fees/registry";
 
 // Webhook receiver — must never be statically evaluated at build time.
 export const dynamic = "force-dynamic";
@@ -133,8 +134,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Process payout
-    const platformFee = Math.round(body.disbursedAmount * 0.02 * 100) / 100;
+    // Process payout — platform fee sourced from the unified fee registry
+    const feeRate = await platformFeeRate();
+    const platformFee = Math.round(body.disbursedAmount * feeRate * 100) / 100;
     const netDisbursement = Math.round((body.disbursedAmount - platformFee) * 100) / 100;
 
     const factoringTx = await prisma.factoringTransaction.create({
@@ -155,13 +157,13 @@ export async function POST(request: NextRequest) {
         advanceRate: body.advanceRate,
         disbursementDate: new Date(body.disbursementDate),
         expectedSettlementDate: new Date(body.expectedSettlementDate),
-        platformFeeRate: 0.02,
+        platformFeeRate: feeRate,
         platformFeeAmount: platformFee,
         netDisbursement: netDisbursement,
         processedAt: new Date(),
         callbackTimestamp: new Date(),
         rawCallback: body,
-        commissionRate: 0.02,
+        commissionRate: feeRate,
         commissionAmount: platformFee,
         commissionStatus: "PENDING",
       },

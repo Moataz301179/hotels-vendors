@@ -66,6 +66,7 @@ model Tenant {
   consolidatedOrders   ConsolidatedOrder[]
   consolidatedInvoices ConsolidatedInvoice[]
   hotelSuppliers       HotelSupplier[]
+  referrals            Referral[]
 
   // ── [NEW] Growth Engine ──
   promoCodes PromoCode[]
@@ -2951,4 +2952,125 @@ model AITokenUsage {
   @@index([userId, tenantId])
   @@index([feature])
   @@index([createdAt])
+}
+
+// ─────────────────────────────────────────
+// OLIV REFERRAL PILOT — email handoff model
+// Phase: pilot referral (no technical loop with Oliv yet).
+// See /docs/oliv-referral-pilot.md for the phased plan.
+// ─────────────────────────────────────────
+
+enum ReferralEntityType {
+  HOTEL
+  SUPPLIER
+}
+
+enum ReferralStage {
+  SUBMITTED
+  ELIGIBLE
+  INELIGIBLE
+  ADMIN_REVIEW
+  APPROVED
+  REFERRED
+  CONVERTED
+  LOST
+}
+
+enum ReferralFinancingType {
+  FACTORING
+  REVERSE_FACTORING
+  CREDIT_LINE
+  BNPL
+}
+
+model Referral {
+  id            String               @id @default(cuid())
+  tenantId      String
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  entityType    ReferralEntityType
+  entityId      String               // Hotel.id or Supplier.id
+  entityName    String
+  entityEmail   String
+  entityTaxId   String?
+
+  stage         ReferralStage         @default(SUBMITTED)
+  financingType ReferralFinancingType @default(FACTORING)
+
+  // Eligibility verdict snapshot (denormalized for fast pipeline view)
+  eligible          Boolean?
+  grade             String?
+  score             Int?
+  riskLevel         String?
+  eligibilityFlags  Json?
+  recommendedFacility Json?
+  ineligibleReasons  String[]         @default([])
+  evaluatedAt       DateTime?
+
+  // Email handoff audit (pilot — no API)
+  handoffEmailTo      String?
+  handoffEmailSentAt  DateTime?
+  handoffMessageId    String?
+
+  // Outcome (admin marks after Oliv confirms offline)
+  convertedAt              DateTime?
+  convertedRevenueShareBps Int?
+
+  assignedAdminId String?
+  notes           String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([tenantId, stage])
+  @@index([entityType, stage])
+  @@unique([entityType, entityId, financingType])
+}
+
+// ─────────────────────────────────────────
+// FEE REGISTRY — single source of truth for platform fees.
+// Replaces the scattered 0.025 / 0.02 / 0.015 / 0.005 hardcoded rates.
+// Factoring partner discount/advance rates are NOT stored here —
+// those are partner-sourced (Oliv's offer), not platform-defined.
+// ─────────────────────────────────────────
+
+enum FeePolicyType {
+  MARKETPLACE_TRANSACTION
+  FACTORING_PLATFORM_DISCOUNT
+  ADVANCE_RATE
+}
+
+model FeePolicy {
+  id            String        @id @default(cuid())
+  type          FeePolicyType
+  bps           Int           // basis points: 200 = 2.00%
+  riskBand      String?       // AA+|AA-|A+|B+|B- for tiered factoring discount/advance
+  active        Boolean       @default(true)
+  effectiveFrom DateTime      @default(now())
+  effectiveTo   DateTime?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([type, active, riskBand])
+}
+
+// ─────────────────────────────────────────
+// REFERRAL ELIGIBILITY CONFIG — admin-tunable thresholds for pre-qualifying
+// hotels and suppliers before sending them to Oliv. Decoupled from code so
+// the COO can tighten/loosen filters without a deploy.
+// ─────────────────────────────────────────
+
+model ReferralEligibilityConfig {
+  id                  String            @id @default(cuid())
+  entityType          ReferralEntityType
+  minYearsOperating   Int               @default(2)
+  minTaxIdRegistered  Boolean           @default(true)
+  minMonthlyRevenueEgp Int              @default(150000)
+  minHotelScore       Int               @default(500)  // HotelScoreEngine BBB threshold
+  minSupplierScore    Int               @default(60)   // 0-100 supplier score
+  requiresEtaTaxId    Boolean           @default(true)
+  active              Boolean           @default(true)
+  updatedAt           DateTime          @updatedAt
+
+  @@unique([entityType, active])
 }

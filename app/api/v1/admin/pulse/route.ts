@@ -19,6 +19,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       totalProducts,
       recentOrders,
       monthlySpend,
+      pendingReferrals,
     ] = await Promise.all([
       // Pending approval orders
       prisma.order.count({ where: { status: "PENDING_APPROVAL" } }),
@@ -54,6 +55,10 @@ export const GET = apiRoute(async (request: NextRequest) => {
         },
         _sum: { total: true },
       }),
+      // Referrals awaiting admin action (ELIGIBLE or ADMIN_REVIEW)
+      prisma.referral.count({
+        where: { stage: { in: ["ELIGIBLE", "ADMIN_REVIEW"] } },
+      }),
     ]);
 
     return NextResponse.json({
@@ -69,6 +74,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
         totalProducts,
         recentOrders,
         monthlySpend: monthlySpend._sum.total || 0,
+        pendingReferrals,
       },
     });
   } catch (error) {

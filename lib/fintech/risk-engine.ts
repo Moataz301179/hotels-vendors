@@ -9,6 +9,7 @@
 import { prisma } from "@/lib/prisma";
 import { checkCreditLimit } from "@/lib/credit-gate";
 import { checkBiasInRiskAssessment } from "@/lib/ai/explainability";
+import { platformFeeRate } from "@/lib/fees/registry";
 
 // ─────────────────────────────────────────
 // 1. TYPES
@@ -266,6 +267,7 @@ export async function generateSmartFixes(
 ): Promise<SmartFix[]> {
   const assessment = await assessRisk(hotelId, tenantId);
   const credit = await checkCreditLimit(hotelId, orderTotal);
+  const feeRate = await platformFeeRate();
   const fixes: SmartFix[] = [];
 
   // Fix Priority 1: CRITICAL risk → Deposit required
@@ -385,7 +387,7 @@ export async function generateSmartFixes(
     fixes.push({
       type: "FACTORING_STANDARD",
       title: "Standard Factoring",
-      description: "Get 90% of invoice value within 24-48 hours. Platform fee: 1.5%. Factoring fee: 2%. You pay nothing upfront.",
+      description: `Get 90% of invoice value within 24-48 hours. Platform fee: ${(feeRate * 100).toFixed(1)}%. Factoring fee: 2%. You pay nothing upfront.`,
       action: "APPLY_FACTORING",
       orderId,
       hotelId,
@@ -393,7 +395,7 @@ export async function generateSmartFixes(
       payload: {
         advanceRate: 0.90,
         discountRate: 0.02,
-        estimatedDisbursement: orderTotal * 0.90 - orderTotal * 0.015 - orderTotal * 0.02,
+        estimatedDisbursement: orderTotal * 0.90 - orderTotal * feeRate - orderTotal * 0.02,
         explanation: "Non-recourse factoring: if hotel defaults, factoring partner absorbs loss.",
       } as StandardFactoringPayload,
       urgency: assessment.riskTier === "HIGH" ? "HIGH" : "LOW",
@@ -486,6 +488,7 @@ export async function getLiquidityMonitorData(): Promise<LiquidityMonitorData> {
   startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const feeRate = await platformFeeRate();
 
   // Note: Using existing schema fields. In production, add FactoringRequest model.
   // For now, we aggregate from invoices with an accepted factoring status
@@ -524,9 +527,9 @@ export async function getLiquidityMonitorData(): Promise<LiquidityMonitorData> {
     };
   });
 
-  // Platform revenue YTD (approximated from invoice totals * 1.5%)
+  // Platform revenue YTD (sourced from the unified fee registry)
   const ytdInvoices = factoredInvoices.filter((inv) => inv.createdAt >= startOfYear);
-  const platformRevenueYTD = ytdInvoices.reduce((s, inv) => s + inv.total * 0.015, 0);
+  const platformRevenueYTD = ytdInvoices.reduce((s, inv) => s + inv.total * feeRate, 0);
 
   // Velocity: last 7 days average per hour
   const last7Days = factoredInvoices.filter(

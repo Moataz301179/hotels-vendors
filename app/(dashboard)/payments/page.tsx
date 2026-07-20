@@ -129,7 +129,7 @@ export default function PaymentsPage() {
 
       {/* Oliv Referral Banner */}
       <motion.div variants={fadeInUp}>
-        <OlivReferralCTA variant="banner" />
+        <OlivReferralCTA entityType="HOTEL" financingType="BNPL" variant="banner" />
       </motion.div>
 
       {/* Search + Table */}

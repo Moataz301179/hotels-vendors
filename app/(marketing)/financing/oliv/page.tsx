@@ -129,12 +129,12 @@ export default function OlivFinancingPage() {
             HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
-              Apply on Oliv <ArrowRight size={14} />
-            </a>
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Start Selling on HotelsVendors
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+              Get Started <ArrowRight size={14} />
             </Link>
+            <a href="https://oliv.finance" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Learn more about Oliv
+            </a>
           </div>
         </div>
       </section>
@@ -240,13 +240,13 @@ export default function OlivFinancingPage() {
             Start transacting on HotelsVendors, then apply for Oliv financing. It&apos;s that simple.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
               <OlivLogo size="xs" variant="dark" />
-              Apply Now <ArrowRight size={14} />
-            </a>
-            <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Join HotelsVendors
+              Get Started <ArrowRight size={14} />
             </Link>
+            <a href="https://oliv.finance" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Learn more about Oliv
+            </a>
           </div>
           <p className="text-[11px] text-white/20 mt-6">
             Powered by Oliv Finance — Egypt&apos;s first FRA-licensed digital factoring platform.

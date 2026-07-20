@@ -247,7 +247,7 @@ export default function FinanceDashboardPage() {
 
       {/* Oliv Referral Banner */}
       <motion.div variants={fadeInUp}>
-        <OlivReferralCTA variant="banner" />
+        <OlivReferralCTA entityType="HOTEL" financingType="FACTORING" variant="banner" />
       </motion.div>
 
       {/* Main Grid */}

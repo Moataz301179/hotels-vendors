@@ -25,6 +25,7 @@ const MODULES = [
     group: "Finance & Compliance",
     items: [
       { label: "Finance & Liquidity", desc: "Credit facilities, factoring pipeline & PO-ETA reconciliation", icon: Wallet, to: "/factoring", color: "#f59e0b" },
+      { label: "Oliv Referral Pipeline", desc: "Review financing referrals, email handoff to Oliv & conversion tracking", icon: Landmark, to: "/admin/referrals/pipeline", color: "#4A7C59" },
       { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
       { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
       { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "#39ff7e" },
@@ -76,6 +77,7 @@ interface PulseData {
   totalProducts: number;
   recentOrders: number;
   monthlySpend: number;
+  pendingReferrals?: number;
 }
 
 interface ActivityItem {
@@ -125,6 +127,7 @@ export default function AdminDashboardPage() {
         { label: "Hotels", value: pulse.totalHotels, color: "#06b6d4", trend: null },
         { label: "Suppliers", value: pulse.totalSuppliers, color: "#f59e0b", trend: null },
         { label: "Products", value: pulse.totalProducts, color: "#10b981", trend: null },
+        { label: "Pending Referrals", value: pulse.pendingReferrals ?? 0, color: "#4A7C59", trend: null },
       ]
     : [];
 

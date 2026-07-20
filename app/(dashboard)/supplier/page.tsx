@@ -11,6 +11,7 @@ import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
 import { Modal } from "@/components/ui/modal";
+import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -285,6 +286,9 @@ export default function SupplierDashboardPage() {
           </div>
         </div>
       </motion.div>
+
+      {/* Oliv financing referral — pilot email handoff */}
+      <OlivReferralCTA entityType="SUPPLIER" financingType="FACTORING" variant="card" />
 
       {/* Order Detail Modal */}
       <Modal

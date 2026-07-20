@@ -2,14 +2,30 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getRedis } from "./redis";
 
-// Re-export the shared edge-safe secret so existing callers
-// (`import { getJwtSecret } from "@/lib/session"`) keep working.
-// See lib/auth/jwt-secret.ts for the single source of truth.
-export { getJwtSecret } from "@/lib/auth/jwt-secret";
+// Inline JWT secret — avoid Turbopack cross-module ESM hoisting issues
+// that caused "getJwtSecret is not defined" at module init.
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("FATAL: SESSION_SECRET required in production");
+    }
+  }
+  return new TextEncoder().encode(secret || "dev-secret-do-not-use-in-production");
+}
+
+// Keep the export for other modules that import it (middleware, layouts, etc.)
+export { getJwtSecret };
 
 const SESSION_COOKIE = "hv_session";
 
-const SECRET = getJwtSecret();
+// Lazy-initialized on first use — avoids Turbopack ESM hoisting issues
+// where the re-exported getJwtSecret isn't available at module load time.
+let _SECRET: Uint8Array | null = null;
+function SECRET(): Uint8Array {
+  if (!_SECRET) _SECRET = getJwtSecret();
+  return _SECRET;
+}
 
 // ── Token Blacklist ──
 const memoryBlacklist = new Set<string>();
@@ -49,7 +65,7 @@ export async function createSession(
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("24h")
-    .sign(SECRET);
+    .sign(SECRET());
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
@@ -72,7 +88,7 @@ export async function verifySession(
   }
 
   try {
-    const { payload } = await jwtVerify(token, SECRET, {
+    const { payload } = await jwtVerify(token, SECRET(), {
       clockTolerance: 60,
     });
     const userId = payload.userId as string;

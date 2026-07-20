@@ -454,6 +454,70 @@ async function main() {
   });
   console.log(`👤 Platform admin seeded: admin-test@test.hotelsvendors.com / ${defaultPassword}`);
 
+  // ── Fee Policy registry — single source of truth ──
+  // Active: 2.0% flat marketplace transaction fee (market-verified default).
+  // Inactive: COO-approved tiered schedule (2.5% / 2.0% / 1.5%) for future
+  // volume-discount activation. Factoring partner discount/advance are NOT
+  // seeded here — those are partner-sourced (Oliv's offer, not platform-defined).
+  await prisma.feePolicy.upsert({
+    where: { id: "fee-marketplace-transaction-default" },
+    update: {},
+    create: {
+      id: "fee-marketplace-transaction-default",
+      type: "MARKETPLACE_TRANSACTION",
+      bps: 200, // 2.00%
+      active: true,
+      notes: "Pilot default — market-verified vs MaxAB inferred margin, global BNPL 3-7%, FutureLog SaaS",
+    },
+  });
+  await prisma.feePolicy.upsert({
+    where: { id: "fee-marketplace-transaction-tier-high" },
+    update: {},
+    create: {
+      id: "fee-marketplace-transaction-tier-high",
+      type: "MARKETPLACE_TRANSACTION",
+      bps: 250, // 2.50%
+      active: false,
+      notes: "COO tiered schedule — high band (small GMV). Activate for volume discounts.",
+    },
+  });
+  await prisma.feePolicy.upsert({
+    where: { id: "fee-marketplace-transaction-tier-mid" },
+    update: {},
+    create: {
+      id: "fee-marketplace-transaction-tier-mid",
+      type: "MARKETPLACE_TRANSACTION",
+      bps: 200, // 2.00%
+      active: false,
+      notes: "COO tiered schedule — mid band",
+    },
+  });
+  await prisma.feePolicy.upsert({
+    where: { id: "fee-marketplace-transaction-tier-low" },
+    update: {},
+    create: {
+      id: "fee-marketplace-transaction-tier-low",
+      type: "MARKETPLACE_TRANSACTION",
+      bps: 150, // 1.50%
+      active: false,
+      notes: "COO tiered schedule — low band (large GMV). Activate for volume discounts.",
+    },
+  });
+  console.log("💲 FeePolicy registry seeded (2.0% active default, 2.5/2.0/1.5% inactive tiers)");
+
+  // ── Referral Eligibility Config — admin-tunable thresholds ──
+  await prisma.referralEligibilityConfig.upsert({
+    where: { entityType_active: { entityType: "HOTEL", active: true } },
+    update: {},
+    create: { entityType: "HOTEL", active: true },
+  });
+  await prisma.referralEligibilityConfig.upsert({
+    where: { entityType_active: { entityType: "SUPPLIER", active: true } },
+    update: {},
+    create: { entityType: "SUPPLIER", active: true },
+  });
+  console.log("🎯 ReferralEligibilityConfig seeded (HOTEL + SUPPLIER defaults)");
+
   console.log("\n✅ Seed complete!");
   console.log("\n⚠️  DEVELOPMENT ONLY — Do NOT use in production. Do NOT commit real PII.");
   console.log("\nLogin credentials (all use SEED_PASSWORD env var, default: change-me-immediately):");

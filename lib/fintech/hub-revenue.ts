@@ -16,6 +16,7 @@
  */
 
 import type { RiskTier } from "./risk-engine";
+import { platformFeeRate } from "@/lib/fees/registry";
 
 // ─────────────────────────────────────────
 // TRANSPARENCY TYPES
@@ -240,14 +241,14 @@ export interface HubRevenueResult {
 export async function calculateHubRevenue(params: HubRevenueParams): Promise<HubRevenueResult> {
   const { partnerDiscountRate, advanceRate } = params;
   const grossAmount = 100_000; // Placeholder — in production, fetch from invoice
-  const platformFeeRate = 0.025;
+  const feeRate = await platformFeeRate();
   const factoringFee = grossAmount * partnerDiscountRate;
-  const netPlatformFee = grossAmount * platformFeeRate;
+  const netPlatformFee = grossAmount * feeRate;
 
   const disbursementToSupplier = grossAmount * advanceRate - factoringFee;
   return {
     grossAmount,
-    platformFeeRate,
+    platformFeeRate: feeRate,
     netPlatformFee,
     platformFee: netPlatformFee,
     factoringFee,

@@ -12,8 +12,6 @@ import {
   ArrowRight,
   Hotel,
   Store,
-  Landmark,
-  Truck,
   Loader2,
   CheckCircle2,
   MapPin,
@@ -23,14 +21,12 @@ import {
   Users,
 } from "lucide-react";
 
-type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
+type StakeholderRole = "HOTEL" | "SUPPLIER";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "#39ff7e" },
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "#ff7e1a" },
-  { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "#c455ff" },
-  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "#64b5f6" },
 ];
 
 const GOVERNORATES = [

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CheckoutModal } from "@/components/dashboard/checkout-modal";
 import { FinancialDashboard } from "@/components/dashboard/financial-dashboard";
+import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
 
 export default function HotelDashboardPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -28,6 +29,8 @@ export default function HotelDashboardPage() {
       </div>
 
       <FinancialDashboard />
+
+      <OlivReferralCTA entityType="HOTEL" financingType="CREDIT_LINE" variant="card" />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>

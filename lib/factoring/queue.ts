@@ -17,6 +17,7 @@ import { assessRisk } from "@/lib/fintech/risk-engine";
 import { inquireAll, fundThroughPartner, getPartner } from "@/lib/fintech/factoring-bridge";
 import { addEmailJob } from "@/lib/notifications/queue";
 import { factoringDisbursedTemplate } from "@/lib/notifications/email";
+import { platformFeeRate } from "@/lib/fees/registry";
 
 // ── Queue ──
 export const factoringQueue = new Queue("factoring-disbursement", {
@@ -120,7 +121,7 @@ export function createFactoringWorker(): Worker {
             throw new Error(`Cannot fund request in status ${request.status}`);
           }
 
-          const platformFee = request.platformFee || invoice.total * 0.025;
+          const platformFee = request.platformFee || invoice.total * (await platformFeeRate());
           const partnerFee = request.factoringFee || 0;
           const netDisbursement = invoice.total - platformFee - partnerFee;
 

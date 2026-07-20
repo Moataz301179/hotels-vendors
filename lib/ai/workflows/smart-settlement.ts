@@ -5,6 +5,7 @@
  */
 
 import { executeSettlement } from "@/lib/invo/client";
+import { platformFeeRate } from "@/lib/fees/registry";
 
 export interface SettlementOrder {
   orderId: string;
@@ -30,7 +31,6 @@ export interface SettlementResult {
   error?: string;
 }
 
-const PLATFORM_FEE_RATE = 0.025; // 2.5%
 const FACTORING_FEE_RATE = 0.015; // 1.5% to factoring partner
 
 /**
@@ -40,11 +40,12 @@ export async function processSettlements(
   orders: SettlementOrder[]
 ): Promise<SettlementResult[]> {
   const results: SettlementResult[] = [];
+  const feeRate = await platformFeeRate();
 
   for (const order of orders) {
     try {
-      // Calculate fees
-      const platformFeeCents = Math.floor(order.amountCents * PLATFORM_FEE_RATE);
+      // Calculate fees — platform fee sourced from the unified fee registry
+      const platformFeeCents = Math.floor(order.amountCents * feeRate);
       const factoringFeeCents = order.factoringEligible
         ? Math.floor(order.amountCents * FACTORING_FEE_RATE)
         : 0;
@@ -93,7 +94,7 @@ export async function processSettlements(
       results.push({
         orderId: order.orderId,
         status: "failed",
-        platformFeeCents: Math.floor(order.amountCents * PLATFORM_FEE_RATE),
+        platformFeeCents: Math.floor(order.amountCents * feeRate),
         netAmountCents: 0,
         error: error.message,
       });

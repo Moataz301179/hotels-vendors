@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, authenticate, audit } from "@/lib/api-utils";
 import { validateForFactoring } from "@/lib/eta/validator";
+import { platformFeeRate } from "@/lib/fees/registry";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -203,8 +204,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
     });
   }
 
-  // Calculate platform fee (2% of total)
-  const platformFee = data.total * 0.02;
+  // Calculate platform fee (sourced from the unified fee registry)
+  const platformFee = data.total * (await platformFeeRate());
 
   // Calculate financing amount (advance rate - typically 88%)
   const advanceRate = 0.88;

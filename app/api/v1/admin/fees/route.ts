@@ -2,6 +2,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
+import { platformFeeRate as resolvePlatformFeeRate } from "@/lib/fees/registry";
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -18,7 +19,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
     prisma.supplier.count({ where: { tenantId: auth.tenantId, status: "ACTIVE" } }),
   ]);
 
-  const platformFeeRate = 0.025;
+  const feeRate = await resolvePlatformFeeRate();
   const monthlyGmv = monthlyInvoices.reduce((s, i) => s + i.total, 0);
   const yearlyGmv = yearlyInvoices.reduce((s, i) => s + i.total, 0);
 
@@ -26,9 +27,9 @@ export const GET = apiRoute(async (request: NextRequest) => {
     fees: {
       monthlyGmv,
       yearlyGmv,
-      monthlyPlatformFees: monthlyGmv * platformFeeRate,
-      yearlyPlatformFees: yearlyGmv * platformFeeRate,
-      platformFeeRate,
+      monthlyPlatformFees: monthlyGmv * feeRate,
+      yearlyPlatformFees: yearlyGmv * feeRate,
+      platformFeeRate: feeRate,
       totalOrders,
       activeHotels,
       activeSuppliers,
