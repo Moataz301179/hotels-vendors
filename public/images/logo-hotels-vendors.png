@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="62%">
+      <stop offset="0%" stop-color="#f6f5ef"/>
+      <stop offset="36%" stop-color="#c8c6bd"/>
+      <stop offset="70%" stop-color="#6d6b66"/>
+      <stop offset="100%" stop-color="#252525"/>
+    </radialGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="mark" x1="134" y1="88" x2="378" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#f5f3ec"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g filter="url(#glow)" opacity="0.96">
+    <path d="M166 398L236 398L160 322L160 262L301 403L371 403L177 209L177 177C177 115 226 80 289 80H371L338 113H292C246 113 211 137 211 178V197L398 384V430H353L243 320L218 344L164 290H137V348L166 398Z" fill="url(#mark)"/>
+    <path d="M137 219V190C137 103 204 70 289 70H398L354 116H292C253 116 222 140 222 178V192L300 270V145H333V339L210 216H137Z" fill="url(#mark)"/>
+    <path d="M318 390L249 321L224 346L281 403H318V390Z" fill="url(#mark)"/>
+  </g>
+  <g opacity="0.32">
+    <path d="M166 398L236 398L160 322L160 262L301 403L371 403L177 209L177 177C177 115 226 80 289 80H371L338 113H292C246 113 211 137 211 178V197L398 384V430H353L243 320L218 344L164 290H137V348L166 398Z" stroke="#424242" stroke-width="2"/>
+    <path d="M137 219V190C137 103 204 70 289 70H398L354 116H292C253 116 222 140 222 178V192L300 270V145H333V339L210 216H137Z" stroke="#424242" stroke-width="2"/>
+  </g>
+</svg>
