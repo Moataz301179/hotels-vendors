@@ -3,12 +3,18 @@ name: Deploy to Hostinger VPS
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'deploy' to confirm"
+        required: true
+        default: "deploy"
 
 jobs:
   deploy:
-    name: Build & Deploy to Hostinger (Docker Compose)
+    name: Build & Deploy to Hostinger (PM2 + SSH)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout code
@@ -23,46 +29,59 @@ jobs:
       - name: Add Hostinger to known hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
+          # Use the hostname (resolves to current VPS IP — no need to track IP changes)
+          ssh-keyscan -H hotelsvendors.com >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Deploy to VPS (Docker Compose)
+      - name: Deploy to VPS (PM2 — NO Docker)
         run: |
-          ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=accept-new root@hotelsvendors.com << 'EOF'
             set -e
             echo "═══════════════════════════════════════════"
             echo "  Hotels Vendors — Auto Deploy Started"
-            echo "  Commit: ${{ github.sha }}"
-            echo "  Method: Docker Compose"
+            echo "  Method: PM2 (native Next.js, NO Docker)"
+            echo "  Path:   /var/www/hotelsvendors-v2"
+            echo "  Port:   3003"
             echo "═══════════════════════════════════════════"
 
-            cd /var/www/hotelsvendors
+            cd /var/www/hotelsvendors-v2
 
-            echo "[1/5] Pulling latest code..."
+            echo "[1/6] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
 
-            echo "[2/5] Running Prisma migrations..."
-            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
+            echo "[2/6] Installing dependencies..."
+            npm ci --legacy-peer-deps --include=dev
 
-            echo "[3/5] Building all services..."
-            docker compose -f docker-compose.swarm.yml build --no-cache
+            echo "[3/6] Generating Prisma client..."
+            npx prisma generate
 
-            echo "[4/5] Starting full stack..."
-            docker compose -f docker-compose.swarm.yml up -d
+            echo "[4/6] Running migrations..."
+            npx prisma migrate deploy
 
-            echo "[5/5] Health checks..."
-            sleep 10
-            APP_STATUS=$(docker inspect --format='{{.State.Status}}' hv-app 2>/dev/null || echo "unknown")
-            WORKER_STATUS=$(docker inspect --format='{{.State.Status}}' hv-swarm-worker 2>/dev/null || echo "unknown")
-            echo "  App:     $APP_STATUS"
-            echo "  Worker:  $WORKER_STATUS"
+            echo "[5/6] Building (native Next.js, max-old-space 1536)..."
+            rm -rf .next
+            NODE_OPTIONS="--max-old-space-size=1536" node node_modules/next/dist/bin/next build
 
+            echo "[6/6] Restarting PM2 process 'hotels-vendors'..."
+            pm2 reload hotels-vendors 2>/dev/null || pm2 start "node node_modules/next/dist/bin/next start" --name hotels-vendors --env production -- --port 3003
+            pm2 save
+
+            sleep 4
             echo "═══════════════════════════════════════════"
-            echo "  Deploy Complete"
+            echo "  Health check..."
+            curl -sf http://127.0.0.1:3003/api/health | head -c 300 || echo "  WARN: health check failed"
+            echo ""
+            echo "  Deploy Complete — production commit:"
+            git log -1 --oneline
             echo "═══════════════════════════════════════════"
           EOF
 
-      - name: Verify deployment
+      - name: Verify public endpoint
         run: |
-          sleep 10
-          curl -sfI https://www.hotelsvendors.com/api/health || echo "Health check failed — check server logs"
+          sleep 5
+          echo "Public health check:"
+          curl -sfI https://www.hotelsvendors.com/api/health | head -3 || echo "WARN: public health check failed"
+          echo ""
+          echo "Production commit (should match ${{ github.sha }}):"
+          ssh -o StrictHostKeyChecking=accept-new root@hotelsvendors.com "cd /var/www/hotelsvendors-v2 && git log -1 --oneline" || echo "Could not verify commit"
