@@ -190,7 +190,21 @@ export async function middleware(request: NextRequest) {
 
   // Allow public paths without auth
   if (isPublicPath(pathname)) {
-    return addSecurityHeaders(NextResponse.next());
+    const response = addSecurityHeaders(NextResponse.next());
+    // Ensure CSRF cookie exists on public page routes so the frontend
+    // can read it before making state-changing API calls (e.g. register).
+    if (!isApiPath(pathname) && !request.cookies.get(CSRF_COOKIE)?.value) {
+      const { generateCsrfToken } = await import("@/lib/security/csrf");
+      const csrfToken = await generateCsrfToken();
+      response.cookies.set(CSRF_COOKIE, csrfToken, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+        maxAge: 60 * 60,
+      });
+    }
+    return response;
   }
 
   // Read session cookie
@@ -289,7 +303,8 @@ export async function middleware(request: NextRequest) {
   // Set CSRF cookie for page routes (non-API) so frontend JS can read it
   if (!isApiPath(pathname) && !request.cookies.get(CSRF_COOKIE)?.value) {
     const { generateCsrfToken } = await import("@/lib/security/csrf");
-    response.cookies.set(CSRF_COOKIE, generateCsrfToken(), {
+    const csrfToken = await generateCsrfToken();
+    response.cookies.set(CSRF_COOKIE, csrfToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

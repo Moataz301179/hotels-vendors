@@ -24,15 +24,20 @@ export async function hasPermission(
   ctx: TenantContext,
   permissionCode: string
 ): Promise<boolean> {
-  // Platform Admin bypass
+  // Platform Admin bypass — global access
   if (ctx.platformRole === "ADMIN") return true;
 
   const user = await prisma.user.findUnique({
     where: { id: ctx.userId },
-    select: { roleId: true },
+    select: { roleId: true, role: true },
   });
 
   if (!user) return false;
+
+  // Tenant Owner bypass — full access within their own tenant.
+  // The Owner role is created at registration; it is the highest role
+  // in a tenant and must not be blocked by missing RolePermission seeds.
+  if (user.role === "OWNER") return true;
 
   const rolePermission = await prisma.rolePermission.findFirst({
     where: {

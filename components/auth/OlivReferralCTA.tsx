@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/client/use-session";
+import { withCsrfHeaders } from "@/lib/client/csrf";
 import { ChevronRight, CheckCircle2 } from "lucide-react";
 
 interface OlivReferralCTAProps {
@@ -19,17 +20,23 @@ export default function OlivReferralCTA({
   const { data: session } = useSession();
 
   const handleOlivClick = async () => {
-    // 1. Notify backend of Oliv referral initiation
-    await fetch("/api/v1/referrals/initiate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId,
-        userType,
-        referralCode: "CHV000",
-        redirectUri: `${window.location.origin}/oliv/callback`,
-      }),
-    });
+    // 1. Notify backend of Oliv referral initiation (fire-and-forget —
+    //    the redirect must happen regardless of tracking success).
+    try {
+      await fetch("/api/v1/referrals/initiate", {
+        method: "POST",
+        credentials: "include",
+        headers: withCsrfHeaders("POST", { "Content-Type": "application/json" }),
+        body: JSON.stringify({
+          userId,
+          userType,
+          referralCode: "CHV000",
+          redirectUri: `${window.location.origin}/oliv/callback`,
+        }),
+      });
+    } catch {
+      // Non-blocking: we still redirect the user to Oliv.
+    }
 
     // 2. Redirect to Oliv Finance with hardened parameters
     const olivUrl = new URL("https://oliv.finance/onboard");

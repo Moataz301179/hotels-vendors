@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { withCsrfHeaders } from "@/lib/client/csrf";
 import {
   ArrowLeft,
   Package,
@@ -185,7 +186,7 @@ export default function NewProductPage() {
         try {
           const res = await fetch("/api/v1/products", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: withCsrfHeaders("POST", { "Content-Type": "application/json" }),
             body: JSON.stringify({
               ...product,
               images: imageUrls.length > 0 ? imageUrls : undefined,
@@ -257,7 +258,7 @@ export default function NewProductPage() {
     try {
       const res = await fetch("/api/v1/products", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: withCsrfHeaders("POST", { "Content-Type": "application/json" }),
         body: JSON.stringify({
           ...form,
           unitPrice: parseFloat(form.unitPrice),
