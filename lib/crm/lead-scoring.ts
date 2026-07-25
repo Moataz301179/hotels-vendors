@@ -5,7 +5,7 @@ interface LeadScoreInput {
   starRating: number | null;
   roomCount: number | null;
   city: string | null;
-  lastContactAt: Date | null;
+  lastContactAt: Date | string | null;
   contactCount: number;
   responseCount: number;
 }
