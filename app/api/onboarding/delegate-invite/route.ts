@@ -128,7 +128,7 @@ async function sendInviteWhatsApp(to: string, token: string, tenantName: string)
     }
 
     // Meta Cloud API — use template or fallback
-    return result.success;
+    return false;
   } catch (err) {
     console.error("[Delegate Invite] WhatsApp send failed:", err);
     return false;
