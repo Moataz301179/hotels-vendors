@@ -46,7 +46,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);
-  const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string }>>([]);
+  const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; supplier?: string; orderNumber?: string; total: number; status: string }>>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [creditInfo, setCreditInfo] = useState<{ creditLimit: number; creditUsed: number } | null>(null);
 
@@ -147,8 +147,8 @@ export default function CheckoutPage() {
             <div key={o.id} className="bg-white/[0.02] rounded-xl border border-white/[0.06] p-4 text-left">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm font-semibold text-white">{o.orderNumber}</p>
-                  <p className="text-xs text-white/40">{o.supplier}</p>
+                  <p className="text-sm font-semibold text-white">{o.orderNumber ?? o.id.slice(0, 8)}</p>
+                  <p className="text-xs text-white/40">{o.supplier ?? 'Supplier'}</p>
                 </div>
                 <span className="text-sm font-bold text-[#39ff7e]">EGP {o.total.toFixed(2)}</span>
               </div>
