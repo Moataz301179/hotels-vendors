@@ -198,8 +198,10 @@ export function success<T>(data: T, status = 200): NextResponse {
   return NextResponse.json({ success: true, data }, { status });
 }
 
-export function error(message: string, status = 500): NextResponse {
-  return NextResponse.json({ success: false, error: message }, { status });
+export function error(message: string, status = 500, details?: unknown): NextResponse {
+  const body: Record<string, unknown> = { success: false, error: message };
+  if (details !== undefined) body.details = details;
+  return NextResponse.json(body, { status });
 }
 
 // ─────────────────────────────────────────
