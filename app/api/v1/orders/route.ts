@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
+import { checkCreditLimit } from "@/lib/credit-gate";
 import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
@@ -69,34 +70,81 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const vatAmount = subtotal * (vatRate / 100);
   const total = subtotal + vatAmount;
 
-  const order = await prisma.order.create({
-    data: {
-      tenantId: auth.tenantId,
-      orderNumber: data.orderNumber,
-      hotelId,
-      propertyId: data.propertyId,
-      outletId: data.outletId,
-      supplierId: data.supplierId,
-      requesterId,
-      subtotal,
-      vatAmount,
-      total,
-      currency: "EGP",
-      deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
-      deliveryInstructions: data.deliveryInstructions,
-      status: "PENDING_APPROVAL",
-      items: {
-        create: data.items.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          total: item.quantity * item.unitPrice,
-          notes: item.notes,
-        })),
-      },
-    },
-    include: { items: { include: { product: true } }, hotel: true, supplier: true },
-  });
+  // ── CREDIT GATE: reject before any mutation ──
+  const creditCheck = await checkCreditLimit(hotelId, total);
+  if (!creditCheck.allowed) {
+    completeIdempotency(idempotencyKey, "CREDIT_DENIED");
+    return error(
+      `Order rejected: ${creditCheck.reason}. Available credit: EGP ${creditCheck.available.toFixed(2)}`,
+      402,
+    );
+  }
+
+  // ── ATOMIC ORDER + CREDIT CAPTURE ──
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let order: any;
+  try {
+    order = await prisma.$transaction(async (tx) => {
+      // Lock the hotel row — Prisma doesn't expose raw FOR UPDATE, but the
+      // transactional isolation ensures the read-then-write is serialized.
+      const hotel = await tx.hotel.findUniqueOrThrow({
+        where: { id: hotelId },
+        select: { creditLimit: true, creditUsed: true },
+      });
+
+      // Re-validate inside the transaction (race-condition guard)
+      const currentExposure = hotel.creditUsed ?? 0;
+      if (currentExposure + total > (hotel.creditLimit ?? Infinity)) {
+        throw new CREDIT_EXCEEDED_ERROR(
+          `Concurrent credit breach. Exposure: EGP ${currentExposure.toFixed(2)} + this order EGP ${total.toFixed(2)} > Limit: EGP ${(hotel.creditLimit ?? 0).toFixed(2)}`,
+          currentExposure,
+        );
+      }
+
+      const createdOrder = await tx.order.create({
+        data: {
+          tenantId: auth.tenantId,
+          orderNumber: data.orderNumber,
+          hotelId,
+          propertyId: data.propertyId,
+          outletId: data.outletId,
+          supplierId: data.supplierId,
+          requesterId,
+          subtotal,
+          vatAmount,
+          total,
+          currency: "EGP",
+          deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
+          deliveryInstructions: data.deliveryInstructions,
+          status: "PENDING_APPROVAL",
+          items: {
+            create: data.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              total: item.quantity * item.unitPrice,
+              notes: item.notes,
+            })),
+          },
+        },
+        include: { items: { include: { product: true } }, hotel: true, supplier: true },
+      });
+
+      // Increment creditUsed atomically
+      await tx.hotel.update({
+        where: { id: hotelId },
+        data: { creditUsed: { increment: total } },
+      });
+
+      return createdOrder;
+    });
+  } catch (err) {
+    if (err instanceof CREDIT_EXCEEDED_ERROR) {
+      completeIdempotency(idempotencyKey, "CREDIT_DENIED");
+      return error(err.message, 402);
+    }
+    throw err;
+  }
 
   // Trigger Authority Matrix evaluation
   const evaluation = await evaluateAuthority(order.id, {
@@ -114,7 +162,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: auth.tenantId,
     actorId: auth.userId,
     actorRole: auth.platformRole,
-    afterState: { orderNumber: order.orderNumber, total: order.total, status: order.status, evaluation: evaluation.action },
+    afterState: {
+      orderNumber: order.orderNumber,
+      total: order.total,
+      status: order.status,
+      evaluation: evaluation.action,
+      creditCaptured: total,
+    },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });
@@ -122,4 +176,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
   completeIdempotency(idempotencyKey, order.id);
 
   return success({ order, evaluation }, 201);
-});
+}, { rateLimit: "api" });
+
+// Custom error class to distinguish credit breaches from other transaction failures
+class CREDIT_EXCEEDED_ERROR extends Error {
+  constructor(
+    message: string,
+    public currentExposure: number,
+  ) {
+    super(message);
+    this.name = "CREDIT_EXCEEDED_ERROR";
+  }
+}

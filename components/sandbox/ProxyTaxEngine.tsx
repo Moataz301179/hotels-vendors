@@ -114,9 +114,10 @@ export function ProxyTaxEngine() {
           className="rounded-lg p-2.5 text-xs font-mono truncate"
           style={{ background: "#0f100e", border: "1px solid rgba(140,108,44,0.10)" }}
         >
-          <span className="text-[#9a9696] font-light">ETA UUID: </span>
+          <span className="text-[#9a9696] font-light">ETA UUID (DEMO): </span>
           <span className="text-[#8c6c2c] font-medium">{etaUuid}</span>
         </div>
+        <p className="text-[10px] text-[#9a9696] font-light mt-1">⚠️ Simulated — not a real ETA UUID</p>
       </div>
     </div>
   );

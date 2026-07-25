@@ -4,8 +4,14 @@
  */
 
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, authenticate, success, error } from "@/lib/api-utils";
+
+const CreateConversationSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  role: z.enum(["hotel", "supplier", "factoring", "shipping", "admin"]).default("hotel"),
+});
 
 // GET /api/v1/ai/conversations — List user's conversations
 export const GET = apiRoute(async (request: NextRequest) => {
@@ -40,7 +46,11 @@ export const GET = apiRoute(async (request: NextRequest) => {
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   const body = await request.json().catch(() => ({}));
-  const { title, role = "hotel" } = body;
+  const parsed = CreateConversationSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
+  }
+  const { title, role } = parsed.data;
 
   const conversation = await prisma.conversation.create({
     data: {

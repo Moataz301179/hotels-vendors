@@ -125,7 +125,7 @@ export default function AdminUsersPage() {
 
         {/* Table */}
         <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto table-scroll-wrapper">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-white/[0.06]">
@@ -158,19 +158,19 @@ export default function AdminUsersPage() {
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-base to-[#6B0000] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-base to-[#6B0000] flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
                           {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                         </div>
                         <div>
                           <p className="text-[13px] font-medium text-white">{user.name}</p>
-                          <p className="text-[11px] text-white/30 flex items-center gap-1">
+                          <p className="text-[13px] text-white/30 flex items-center gap-1">
                             <Mail className="w-3 h-3" /> {user.email}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${ROLE_COLORS[user.platformRole] || "bg-white/5 text-white/40 border-white/10"}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${ROLE_COLORS[user.platformRole] || "bg-white/5 text-white/40 border-white/10"}`}>
                         {user.platformRole === "HOTEL" && <Building2 className="w-3 h-3" />}
                         {user.platformRole === "SUPPLIER" && <Store className="w-3 h-3" />}
                         {user.platformRole === "ADMIN" && <ShieldCheck className="w-3 h-3" />}
@@ -178,20 +178,20 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <p className="text-[12px] text-white/60">{user.tenant?.name || "—"}</p>
+                      <p className="text-[13px] text-white/60">{user.tenant?.name || "—"}</p>
                     </td>
                     <td className="px-5 py-3.5">
-                      {user.hotel && <p className="text-[12px] text-white/60">{user.hotel.name}</p>}
-                      {user.supplier && <p className="text-[12px] text-white/60">{user.supplier.name}</p>}
-                      {!user.hotel && !user.supplier && <span className="text-[12px] text-white/20">—</span>}
+                      {user.hotel && <p className="text-[13px] text-white/60">{user.hotel.name}</p>}
+                      {user.supplier && <p className="text-[13px] text-white/60">{user.supplier.name}</p>}
+                      {!user.hotel && !user.supplier && <span className="text-[13px] text-white/20">—</span>}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${STATUS_COLORS[user.status] || "bg-white/5 text-white/40"}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase ${STATUS_COLORS[user.status] || "bg-white/5 text-white/40"}`}>
                         {user.status}
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-[11px] text-white/30 flex items-center gap-1">
+                      <span className="text-[13px] text-white/30 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {user.lastActive ? new Date(user.lastActive).toLocaleDateString() : "Never"}
                       </span>

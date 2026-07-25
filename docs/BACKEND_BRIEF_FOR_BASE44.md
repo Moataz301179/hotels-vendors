@@ -227,7 +227,7 @@ Python FastAPI service at `services/openclaw/main.py`
 
 ```bash
 # Database
-DATABASE_URL=postgresql://hotels_vendors:hv_secure_2024@postgres:5432/hotels_vendors
+DATABASE_URL=postgresql://hotels_vendors:YOUR_DB_PASSWORD_HERE@postgres:5432/hotels_vendors
 
 # Redis
 REDIS_URL=redis://redis:6379
@@ -282,7 +282,7 @@ docker compose -f docker-compose.swarm.yml logs -f app
 docker compose -f docker-compose.swarm.yml logs -f swarm-worker
 
 # Database
-docker exec -e PGPASSWORD=hv_secure_2024 hv-postgres psql -U hotels_vendors -d hotels_vendors
+docker exec -e PGPASSWORD=YOUR_DB_PASSWORD_HERE hv-postgres psql -U hotels_vendors -d hotels_vendors
 
 # Redis
 docker exec hv-redis redis-cli
@@ -340,7 +340,7 @@ docker exec hv-redis redis-cli
 | Domain | `hotelsvendors.com`, `www.hotelsvendors.com` |
 | GitHub | `https://github.com/Moataz301179/hotels-vendors` |
 | App Dir | `/var/www/hotelsvendors` |
-| Postgres | `hotels_vendors:hv_secure_2024@localhost:5432` |
+| Postgres | `hotels_vendors:YOUR_DB_PASSWORD_HERE@localhost:5432` |
 | Redis | `localhost:6379` |
 
 ---

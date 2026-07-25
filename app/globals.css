@@ -23,13 +23,13 @@
   /* ── Text Hierarchy ── */
   --text-primary: #ffffff;
   --text-secondary: #a0a0b0;
-  --text-tertiary: #666678;
-  --text-muted: #44445a;
+  --text-tertiary: #7a7a92;
+  --text-muted: #797994;
 
   --foreground: #ffffff;
   --foreground-secondary: #a0a0b0;
-  --foreground-tertiary: #666678;
-  --foreground-muted: #44445a;
+  --foreground-tertiary: #7a7a92;
+  --foreground-muted: #797994;
 
   /* ── Borders ── */
   --border-invisible: rgba(255, 255, 255, 0.03);
@@ -75,6 +75,13 @@
   --header-height: 64px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
+
+  /* ── Density Scale (comfortable = default) ── */
+  --density-scale: 1;
+}
+
+:root[data-density="compact"] {
+  --density-scale: 0.75;
 }
 
 @theme inline {
@@ -164,6 +171,10 @@ textarea:focus-visible {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -190,6 +201,7 @@ textarea:focus-visible {
 }
 
 .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+.animate-slide-in-right { animation: slide-in-right 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
 .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
 .animate-scale-in { animation: scale-in 0.4s ease-out forwards; }
 .animate-bounce { animation: bounce 2s infinite; }
@@ -337,7 +349,7 @@ textarea:focus-visible {
   gap: 0.375rem;
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -353,7 +365,7 @@ textarea:focus-visible {
   font-weight: 500;
 }
 .label-upper {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -446,4 +458,57 @@ textarea:focus-visible {
 @supports not (backdrop-filter: blur(12px)) {
   .backdrop-blur-xl { background-color: oklch(0.10 0.015 280 / 0.95); }
   .backdrop-blur-sm { background-color: oklch(0.14 0.015 280 / 0.9); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABLE SCROLL — mobile horizontal scroll with sticky first column
+   ═══════════════════════════════════════════════════════════════ */
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-scroll-wrapper table {
+  min-width: 640px;
+  width: 100%;
+}
+.table-scroll-wrapper thead th:first-child,
+.table-scroll-wrapper tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #0f0f0f;
+}
+.table-scroll-wrapper thead th:first-child {
+  z-index: 3;
+}
+.table-scroll-wrapper thead tr {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DENSITY SYSTEM — Compact / Comfortable toggle
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Table cell padding scales with density */
+.density-table td,
+.density-table th {
+  padding-top: calc(var(--density-scale) * 1rem);
+  padding-bottom: calc(var(--density-scale) * 1rem);
+}
+
+/* Card padding scales with density */
+.density-card {
+  padding: calc(var(--density-scale) * 1.25rem);
+}
+
+/* Generic gap utility for grid/flex containers */
+.density-gap {
+  gap: calc(var(--density-scale) * 1rem);
+}
+
+/* Sidebar nav item spacing */
+.density-nav > * + * {
+  margin-top: calc(var(--density-scale) * 0.25rem);
 }

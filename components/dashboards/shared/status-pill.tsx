@@ -20,7 +20,7 @@ export function StatusPill({ status }: StatusPillProps) {
   const key = status.toLowerCase().replace(/_/g, " ");
   const config = STATUS_MAP[key] || STATUS_MAP.pending;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide border ${config.bg}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide border ${config.bg}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
       {config.text}
     </span>

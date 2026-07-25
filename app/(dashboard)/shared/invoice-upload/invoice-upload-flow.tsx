@@ -204,6 +204,12 @@ export default function InvoiceUploadFlow() {
       />
 
       <div className="mx-auto max-w-xl px-4 py-8">
+        {/* DEMO MODE WARNING — Simulated ETA integration, not connected to Egyptian Tax Authority */}
+        <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+          <p className="text-xs font-semibold text-amber-400">⚠️ DEMO MODE — Simulated ETA Integration</p>
+          <p className="text-[11px] text-amber-400/60 mt-0.5">ETA UUID field is not connected to the Egyptian Tax Authority. This is a demo environment.</p>
+        </div>
+
         <StepIndicator currentStep={step} />
 
         {error && (
@@ -374,12 +380,12 @@ function DetailsStep({
             />
           </Field>
 
-          <Field label="ETA UUID">
+          <Field label="ETA UUID (DEMO)">
             <input
               type="text"
               value={form.etaUuid}
               onChange={(e) => onUpdate("etaUuid", e.target.value)}
-              placeholder="Optional — e-invoicing reference"
+              placeholder="Not connected to real ETA — demo only"
               className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
             />
           </Field>
@@ -520,7 +526,7 @@ function ConfirmStep({
           <SummaryRow label="Tax ID" value={form.supplierTaxId} />
           <SummaryRow label="Invoice Date" value={formatDate(form.invoiceDate)} />
           <SummaryRow label="Due Date" value={formatDate(form.dueDate)} />
-          <SummaryRow label="ETA UUID" value={form.etaUuid || "—"} />
+          <SummaryRow label="ETA UUID (DEMO)" value={form.etaUuid || "—"} />
         </SummarySection>
 
         <SummarySection title="Financing Breakdown">

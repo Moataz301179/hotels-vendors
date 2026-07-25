@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server"
+import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { validateTaxId } from "@/lib/tax-id"
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils"
@@ -6,12 +7,21 @@ import { apiRoute, authenticate, requirePermission, success, error } from "@/lib
 const VALID_VAT_RATES = [14, 5, 0, 10, 8]
 const HIGH_AMOUNT_THRESHOLD = 100_000
 
-type CheckItem = {
-  description: string
-  quantity: number
-  unitPrice: number
-  vatRate: number
-}
+const ComplianceCheckItemSchema = z.object({
+  description: z.string().min(1, "Item description is required"),
+  quantity: z.number().positive("Quantity must be positive"),
+  unitPrice: z.number().min(0, "Unit price must be non-negative"),
+  vatRate: z.number().refine((r) => VALID_VAT_RATES.includes(r), `Invalid VAT rate. Valid rates: ${VALID_VAT_RATES.join(", ")}%`),
+})
+
+const ComplianceCheckSchema = z.object({
+  companyTaxId: z.string().min(1, "Company Tax ID is required"),
+  companyName: z.string().min(1, "Company name is required"),
+  commercialRegister: z.string().optional(),
+  vatRegistration: z.string().optional(),
+  invoiceAmount: z.number().positive("Invoice amount must be positive"),
+  items: z.array(ComplianceCheckItemSchema).min(1, "At least one item is required"),
+})
 
 export const POST = apiRoute(async (req: NextRequest) => {
   const auth = await authenticate(req);
@@ -19,25 +29,11 @@ export const POST = apiRoute(async (req: NextRequest) => {
 
   try {
     const body = await req.json()
-    const {
-      companyTaxId,
-      companyName,
-      commercialRegister,
-      vatRegistration,
-      invoiceAmount,
-      items,
-    } = body as {
-      companyTaxId: string
-      companyName: string
-      commercialRegister?: string
-      vatRegistration?: string
-      invoiceAmount: number
-      items: CheckItem[]
+    const parsed = ComplianceCheckSchema.safeParse(body)
+    if (!parsed.success) {
+      return error(parsed.error.issues[0]?.message || "Invalid request body", 400)
     }
-
-    if (!companyTaxId || !companyName || invoiceAmount === undefined || !items) {
-      return error("Missing required fields: companyTaxId, companyName, invoiceAmount, items", 400)
-    }
+    const { companyTaxId, companyName, invoiceAmount, items } = parsed.data
 
     const issues: string[] = []
     let riskScore: "low" | "medium" | "high" = "low"
@@ -57,33 +53,17 @@ export const POST = apiRoute(async (req: NextRequest) => {
     }
 
     // 3. Amount threshold check
-    const amountNum = Number(invoiceAmount)
-    if (isNaN(amountNum) || amountNum <= 0) {
-      issues.push("Invoice amount must be a positive number")
-    } else if (amountNum > HIGH_AMOUNT_THRESHOLD) {
+    if (invoiceAmount > HIGH_AMOUNT_THRESHOLD) {
       issues.push(`Invoice exceeds EGP ${HIGH_AMOUNT_THRESHOLD.toLocaleString()} threshold — additional approval required`)
     }
 
-    // 4. Item-level VAT rate validation
-    if (!items || items.length === 0) {
-      issues.push("At least one line item is required")
-    } else {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i]
-        if (!VALID_VAT_RATES.includes(item.vatRate)) {
-          issues.push(
-            `Item #${i + 1} ("${item.description || "Unnamed"}") has invalid VAT rate ${item.vatRate}%. Valid rates: ${VALID_VAT_RATES.join(", ")}%`
-          )
-        }
-        if (!item.description?.trim()) {
-          issues.push(`Item #${i + 1} is missing a description`)
-        }
-        if (item.quantity <= 0) {
-          issues.push(`Item #${i + 1} has invalid quantity: ${item.quantity}`)
-        }
-        if (item.unitPrice < 0) {
-          issues.push(`Item #${i + 1} has negative unit price: ${item.unitPrice}`)
-        }
+    // 4. Item-level validation (quantity/description already validated by Zod)
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      if (!VALID_VAT_RATES.includes(item.vatRate)) {
+        issues.push(
+          `Item #${i + 1} ("${item.description}") has invalid VAT rate ${item.vatRate}%. Valid rates: ${VALID_VAT_RATES.join(", ")}%`
+        )
       }
     }
 
@@ -95,7 +75,7 @@ export const POST = apiRoute(async (req: NextRequest) => {
     }
 
     // Calculate max allowed (if amount exceeds threshold, max is threshold)
-    const maxAllowed = amountNum > HIGH_AMOUNT_THRESHOLD ? HIGH_AMOUNT_THRESHOLD : amountNum
+    const maxAllowed = invoiceAmount > HIGH_AMOUNT_THRESHOLD ? HIGH_AMOUNT_THRESHOLD : invoiceAmount
 
     const etaCompliant =
       issues.length === 0 ||

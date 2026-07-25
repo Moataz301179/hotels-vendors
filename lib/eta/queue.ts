@@ -2,6 +2,10 @@
  * ETA Submission Queue
  * Hotels Vendors Compliance Layer
  *
+ * ⚠️ COMPLIANCE WARNING: This queue processes SIMULATED ETA submissions.
+ * Submissions go to the ETA sandbox/preprod endpoint. UUIDs are fake.
+ * Do NOT treat queue results as proof of real ETA compliance.
+ *
  * Moves ETA e-invoicing submission out of HTTP handlers into
  * background workers with retry, DLQ, and audit logging.
  */

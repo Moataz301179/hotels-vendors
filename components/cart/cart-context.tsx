@@ -84,8 +84,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useCart(): CartContextType {
+function useCartHook(): CartContextType {
   const ctx = useContext(CartContext)
   if (!ctx) throw new Error("useCart must be used within a CartProvider")
   return ctx
 }
+
+export { useCartHook as useCart }

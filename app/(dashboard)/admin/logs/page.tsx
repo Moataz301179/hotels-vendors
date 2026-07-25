@@ -48,7 +48,7 @@ export default function AdminLogsPage() {
         </button>
       </motion.div>
 
-      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden table-scroll-wrapper">
         {loading ? (
           <div className="p-8 text-center">
             <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
@@ -64,36 +64,36 @@ export default function AdminLogsPage() {
           <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Timestamp</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Action</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Entity</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actor</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Role</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">IP</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Timestamp</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Action</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Entity</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Actor</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Role</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">IP</th>
               </tr>
             </thead>
             <tbody>
               {logs.map((log) => (
                 <tr key={log.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40 font-mono">
+                    <span className="text-[13px] text-white/40 font-mono">
                       {new Date(log.createdAt).toLocaleString()}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-medium text-white">{log.action}</span>
+                    <span className="text-[13px] font-medium text-white">{log.action}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{log.entityType}:{log.entityId.slice(0, 8)}</span>
+                    <span className="text-[13px] text-white/40">{log.entityType}:{log.entityId.slice(0, 8)}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{log.actorId?.slice(0, 8) || "system"}</span>
+                    <span className="text-[13px] text-white/40">{log.actorId?.slice(0, 8) || "system"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[10px] text-white/30">{log.actorRole || "—"}</span>
+                    <span className="text-[11px] text-white/30">{log.actorRole || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[10px] font-mono text-white/20">{log.ipAddress || "—"}</span>
+                    <span className="text-[11px] font-mono text-white/20">{log.ipAddress || "—"}</span>
                   </td>
                 </tr>
               ))}

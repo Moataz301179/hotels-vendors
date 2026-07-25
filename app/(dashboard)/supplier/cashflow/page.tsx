@@ -236,7 +236,7 @@ export default function CashflowDashboard() {
       {activeTab === 'overview' && (
         <Card className="bg-[#12121a] border-white/10">
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto table-scroll-wrapper">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/10 text-left">

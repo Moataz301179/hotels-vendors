@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { createSession, revokeToken } from "@/lib/session";
@@ -6,21 +7,27 @@ import { apiRoute, success, error } from "@/lib/api-utils";
 import { sendEmail, passwordResetConfirmationTemplate } from "@/lib/notifications/email";
 import { createHash } from "crypto";
 
+const ResetPasswordSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least 1 number"),
+});
+
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
-  const { token, password } = body;
-
-  if (!token || typeof token !== "string") {
-    return error("Reset token is required", 400);
+  const parsed = ResetPasswordSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
-
-  if (!password || typeof password !== "string" || password.length < 8) {
-    return error("Password must be at least 8 characters", 400);
-  }
+  const { token, password } = parsed.data;
 
   // Hash the incoming token to match stored hash
   const tokenHash = hashToken(token);

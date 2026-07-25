@@ -5,7 +5,7 @@ import {
   createPaymobOrder,
   generatePaymentKey,
 } from "@/lib/payments/paymob";
-import { apiRoute, authenticate, success, error, audit } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
 const CreateIntentSchema = z.object({
@@ -21,6 +21,7 @@ const CreateIntentSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  await requirePermission(auth, "payment:create");
   const body = await request.json();
   const data = CreateIntentSchema.parse(body);
 

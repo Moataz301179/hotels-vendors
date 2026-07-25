@@ -69,7 +69,7 @@ function StatusBadge({ status }: { status: string }) {
   };
   const c = config[status] || config.PENDING;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {c.label}
     </span>
@@ -277,16 +277,16 @@ export default function FinanceDashboardPage() {
               }
             />
           ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
               <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rate</th>
-                    <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                    <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Invoice</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Rate</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
+                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
                   </tr>
                 </thead>
                 <tbody>

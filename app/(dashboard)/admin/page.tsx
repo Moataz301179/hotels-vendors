@@ -174,7 +174,10 @@ export default function AdminDashboardPage() {
             <p className="text-[13px] text-white/40 mt-1">Enterprise admin dashboard — all portals, all data, AI-powered</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all">
+            <button
+              className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+              aria-label="Notifications"
+            >
               <Bell className="w-5 h-5" />
               {pulse && pulse.pendingApprovals > 0 && (
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent-base" />
@@ -182,7 +185,8 @@ export default function AdminDashboardPage() {
             </button>
             <Link
               href="/admin/settings"
-              className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+              aria-label="Settings"
             >
               <Settings className="w-5 h-5" />
             </Link>
@@ -192,7 +196,7 @@ export default function AdminDashboardPage() {
 
       {/* Portal Switcher */}
       <div className="mb-8">
-        <h2 className="text-[11px] font-semibold text-white/30 uppercase tracking-wider mb-3">Access Any Portal</h2>
+        <h2 className="text-[12px] font-semibold text-white/30 uppercase tracking-wider mb-3">Access Any Portal</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {PORTAL_SWITCHER.map((portal) => {
             const Icon = portal.icon;
@@ -207,7 +211,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{portal.label}</p>
-                  <p className="text-[11px] text-white/30">{portal.desc}</p>
+                  <p className="text-[12px] text-white/30">{portal.desc}</p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-white/10 group-hover:text-white/30 ml-auto transition-colors" />
               </Link>
@@ -240,7 +244,7 @@ export default function AdminDashboardPage() {
               <div className="text-[28px] font-bold" style={{ color: stat.color }}>
                 {stat.value.toLocaleString()}
               </div>
-              <div className="text-[11px] text-white/40 mt-1">{stat.label}</div>
+              <div className="text-[12px] text-white/40 mt-1">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -255,7 +259,7 @@ export default function AdminDashboardPage() {
               <Activity className="w-4 h-4 text-[#ff6b6b]" />
               <h2 className="text-sm font-semibold text-white/80">Live Activity Feed</h2>
             </div>
-            <Link href="/admin/explorer" className="text-[11px] text-white/30 hover:text-white/60 transition-colors">
+            <Link href="/admin/explorer" className="text-[12px] text-white/30 hover:text-white/60 transition-colors">
               View All →
             </Link>
           </div>
@@ -278,7 +282,7 @@ export default function AdminDashboardPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="text-sm font-medium text-white/70">{item.title}</span>
-                      <span className="text-[10px] text-white/20">{formatTimeAgo(item.timestamp)}</span>
+                      <span className="text-[11px] text-white/20">{formatTimeAgo(item.timestamp)}</span>
                     </div>
                     <p className="text-xs text-white/30">{item.description}</p>
                   </div>
@@ -287,7 +291,7 @@ export default function AdminDashboardPage() {
                       {item.amount.toLocaleString()} {item.currency || "EGP"}
                     </span>
                   )}
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded border ${statusColor(item.status)}`}>
+                  <span className={`text-[11px] px-1.5 py-0.5 rounded border ${statusColor(item.status)}`}>
                     {item.status}
                   </span>
                 </div>
@@ -301,7 +305,7 @@ export default function AdminDashboardPage() {
           {/* GMV Card */}
           {pulse && (
             <div className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
-              <p className="text-[11px] text-white/40 uppercase tracking-wider">Last 30 Days GMV</p>
+              <p className="text-[12px] text-white/40 uppercase tracking-wider">Last 30 Days GMV</p>
               <p className="text-[28px] font-bold text-white mt-2">
                 EGP {pulse.monthlySpend.toLocaleString()}
               </p>

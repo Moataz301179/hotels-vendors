@@ -21,7 +21,7 @@ const UpdateStatusSchema = z.object({
 
 export const PATCH = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
-  await requirePermission(auth, "order:approve");
+  await requirePermission(auth, "order:update");
   const id = request.nextUrl.pathname.split("/").pop();
   if (!id) return error("Order ID required", 400);
 

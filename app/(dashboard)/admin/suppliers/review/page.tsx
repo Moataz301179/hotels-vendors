@@ -212,7 +212,7 @@ export default function SupplierReviewPage() {
       </AnimatePresence>
 
       {/* Table */}
-      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
         <table className="w-full min-w-[640px]">
           <thead>
             <tr className="border-b border-white/[0.06]">

@@ -37,7 +37,7 @@ export default function AdminReportsPage() {
     { label: "Weekly GMV", value: data ? formatEgp(data.gmv.weekly) : "—", icon: TrendingUp, color: "#3b82f6" },
     { label: "Platform Fees", value: data ? formatEgp(data.factoring.totalPlatformFees) : "—", icon: BarChart3, color: "#f59e0b" },
     { label: "New Users (30d)", value: data ? String(data.userGrowth.newUsers30d) : "—", icon: Users, color: "#8b5cf6" },
-    { label: "ETA Compliant", value: data ? `${data.eta.filter((e) => ["ACCEPTED", "VALIDATED"].includes(e.status)).reduce((s, e) => s + e.count, 0)} invoices` : "—", icon: FileCheck, color: "#06b6d4" },
+    { label: "ETA Compliant (DEMO)", value: data ? `${data.eta.filter((e) => ["ACCEPTED", "VALIDATED"].includes(e.status)).reduce((s, e) => s + e.count, 0)} invoices` : "—", icon: FileCheck, color: "#06b6d4" },
   ];
 
   return (

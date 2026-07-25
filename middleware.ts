@@ -224,8 +224,8 @@ export async function middleware(request: NextRequest) {
 
     // CSRF protection for state-changing API routes (skip only login/register and webhooks)
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
-    const isExemptPath = pathname.startsWith("/api/v1/auth/login") ||
-      pathname.startsWith("/api/v1/auth/register") ||
+    const isExemptPath = pathname === "/api/v1/auth/login" ||
+      pathname === "/api/v1/auth/register" ||
       pathname.startsWith("/api/webhooks");
     if (isStateChanging && !isExemptPath) {
       const csrfResult = await csrfMiddleware(request);

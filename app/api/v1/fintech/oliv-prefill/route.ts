@@ -1,9 +1,16 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, authenticate } from "@/lib/api-utils";
 import { createHmac, randomBytes } from "crypto";
 
 export const dynamic = "force-dynamic";
+
+const OlivPrefillSchema = z.object({
+  supplierId: z.string().min(1, "Supplier ID is required"),
+  invoiceId: z.string().optional(),
+  etaUuid: z.string().optional(),
+});
 
 /**
  * Oliv Pre-fill Data Export API
@@ -27,22 +34,16 @@ export const dynamic = "force-dynamic";
 const OLIV_WEBHOOK_SECRET = process.env.OLIV_WEBHOOK_SECRET || "";
 const OLIV_APPLY_URL = process.env.OLIV_APPLY_URL || "https://oliv.finance/apply";
 
-interface OlivPrefillPayload {
-  supplierId: string;
-  invoiceId?: string; // Optional: for invoice-specific factoring
-  etaUuid?: string;   // Optional: Oliv can pull invoice data from ETA
-}
-
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   if (!auth) return error("Unauthorized", 401);
 
   const body = await request.json();
-  const { supplierId, invoiceId, etaUuid } = body as OlivPrefillPayload;
-
-  if (!supplierId) {
-    return error("Missing required field: supplierId", 400);
+  const parsed = OlivPrefillSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
+  const { supplierId, invoiceId, etaUuid } = parsed.data;
 
   // 1. Verify consent is granted
   const consent = await prisma.consentRecord.findUnique({

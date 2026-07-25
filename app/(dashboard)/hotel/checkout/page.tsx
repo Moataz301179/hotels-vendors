@@ -48,6 +48,7 @@ export default function CheckoutPage() {
   const [placed, setPlaced] = useState(false);
   const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; total: number; status: string }>>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [creditInfo, setCreditInfo] = useState<{ creditLimit: number; creditUsed: number } | null>(null);
 
   useEffect(() => {
     fetch("/api/v1/auth/me")
@@ -55,6 +56,20 @@ export default function CheckoutPage() {
       .then((json) => {
         if (json.success && json.data) {
           setUserData(json.data);
+          // Fetch credit info if hotel is linked
+          if (json.data.hotelId) {
+            fetch(`/api/v1/hotel/credit?hotelId=${json.data.hotelId}`)
+              .then((r) => r.json())
+              .then((cj) => {
+                if (cj.success && cj.data) {
+                  setCreditInfo({
+                    creditLimit: cj.data.creditLimit ?? 0,
+                    creditUsed: cj.data.creditUsed ?? 0,
+                  });
+                }
+              })
+              .catch(() => {});
+          }
         }
       })
       .catch(() => {});
@@ -476,6 +491,50 @@ export default function CheckoutPage() {
                 <span>EGP {grandTotal.toFixed(2)}</span>
               </div>
             </div>
+
+            {creditInfo && creditInfo.creditLimit > 0 && (() => {
+              const newExposure = creditInfo.creditUsed + grandTotal;
+              const remaining = creditInfo.creditLimit - newExposure;
+              const utilization = (newExposure / creditInfo.creditLimit) * 100;
+              const willExceed = remaining < 0;
+              return (
+                <div className={`mt-4 p-3 rounded-lg border flex items-start gap-2 ${
+                  willExceed
+                    ? "bg-red-500/10 border-red-500/20"
+                    : utilization > 80
+                      ? "bg-amber-500/10 border-amber-500/20"
+                      : "bg-white/[0.02] border-white/[0.06]"
+                }`}>
+                  <Landmark size={14} className={`shrink-0 mt-0.5 ${
+                    willExceed ? "text-red-400" : utilization > 80 ? "text-amber-400" : "text-white/40"
+                  }`} />
+                  <div className="text-xs space-y-1">
+                    <p className={`font-semibold ${willExceed ? "text-red-300" : utilization > 80 ? "text-amber-300/80" : "text-white/50"}`}>
+                      Credit Impact
+                    </p>
+                    <div className="space-y-0.5 text-white/40">
+                      <div className="flex justify-between">
+                        <span>Current usage</span>
+                        <span>EGP {creditInfo.creditUsed.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>+ This order</span>
+                        <span>EGP {grandTotal.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-white/[0.06] pt-0.5">
+                        <span>After checkout</span>
+                        <span>EGP {newExposure.toLocaleString()} / {creditInfo.creditLimit.toLocaleString()}</span>
+                      </div>
+                    </div>
+                    {willExceed && (
+                      <p className="text-red-300/80 font-medium">
+                        Exceeds limit by EGP {Math.abs(remaining).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {Object.keys(supplierGroups).length > 1 && (
               <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-start gap-2">

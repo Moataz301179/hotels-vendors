@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server"
+import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils"
 import crypto from "crypto"
@@ -6,12 +7,20 @@ import crypto from "crypto"
 const VAT_RATE = 0.14
 const SERVICE_FEE_RATE = 0.01
 
-type IssueItem = {
-  description: string
-  quantity: number
-  unitPrice: number
-  vatRate: number
-}
+const VATItemSchema = z.object({
+  description: z.string().min(1, "Item description is required"),
+  quantity: z.number().int().positive("Quantity must be positive"),
+  unitPrice: z.number().positive("Unit price must be positive"),
+  vatRate: z.number().refine((r) => [0, 5, 8, 10, 14].includes(r), "Invalid VAT rate"),
+})
+
+const VATIssueSchema = z.object({
+  companyTaxId: z.string().min(1, "Company Tax ID is required"),
+  buyerName: z.string().min(1, "Buyer name is required"),
+  buyerTaxId: z.string().min(1, "Buyer Tax ID is required"),
+  items: z.array(VATItemSchema).min(1, "At least one item is required"),
+  notes: z.string().max(500).optional(),
+})
 
 function generateEtaUuid(payload: object): string {
   const hash = crypto.createHash("sha256")
@@ -32,23 +41,11 @@ export const POST = apiRoute(async (req: NextRequest) => {
 
   try {
     const body = await req.json()
-    const {
-      companyTaxId,
-      buyerName,
-      buyerTaxId,
-      items,
-      notes,
-    } = body as {
-      companyTaxId: string
-      buyerName: string
-      buyerTaxId: string
-      items: IssueItem[]
-      notes?: string
+    const parsed = VATIssueSchema.safeParse(body)
+    if (!parsed.success) {
+      return error(parsed.error.issues[0]?.message || "Invalid request body", 400)
     }
-
-    if (!companyTaxId || !buyerName || !buyerTaxId || !items?.length) {
-      return error("Missing required fields: companyTaxId, buyerName, buyerTaxId, items", 400)
-    }
+    const { companyTaxId, buyerName, buyerTaxId, items, notes } = parsed.data
 
     // Calculate amounts
     const subtotal = items.reduce(

@@ -10,13 +10,33 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { generateReferralToken } from "@/lib/fintech/anti-bypass/layer1-referral-token";
+
+const InitiateFactoringSchema = z.object({
+  etaUuid: z.string().min(1, "ETA UUID is required"),
+  supplierTaxId: z.string().min(1, "Supplier Tax ID is required"),
+  supplierName: z.string().optional(),
+  hotelTaxId: z.string().min(1, "Hotel Tax ID is required"),
+  hotelName: z.string().optional(),
+  invoiceTotal: z.number().min(5000, "Minimum invoice amount is EGP 5,000"),
+  vatAmount: z.number().min(0).optional(),
+  invoiceIssueDate: z.string().optional(),
+  invoiceDueDate: z.string().optional(),
+  financingDays: z.number().int().min(1).max(365).default(30),
+});
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
+    const parsed = InitiateFactoringSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid request body" },
+        { status: 400 }
+      );
+    }
     const {
       etaUuid,
       supplierTaxId,
@@ -28,22 +48,7 @@ export async function POST(request: NextRequest) {
       invoiceIssueDate,
       invoiceDueDate,
       financingDays,
-    } = body;
-
-    // Validate required fields
-    if (!etaUuid || !supplierTaxId || !hotelTaxId || !invoiceTotal) {
-      return NextResponse.json(
-        { error: "Missing required fields: etaUuid, supplierTaxId, hotelTaxId, invoiceTotal" },
-        { status: 400 }
-      );
-    }
-
-    if (invoiceTotal < 5000) {
-      return NextResponse.json(
-        { error: "Minimum invoice amount is EGP 5,000" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     // 1. Generate referral token (Layer 1)
     const referralToken = generateReferralToken({

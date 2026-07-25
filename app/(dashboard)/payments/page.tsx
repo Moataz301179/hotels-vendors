@@ -46,7 +46,7 @@ function StatusBadge({ status }: { status: string }) {
   };
   const c = config[status] || config.PENDING;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {c.label}
     </span>
@@ -157,7 +157,7 @@ export default function PaymentsPage() {
           </select>
         </div>
 
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
           {loading ? (
             <div className="p-8 text-center">
               <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
@@ -175,13 +175,13 @@ export default function PaymentsPage() {
             <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Transaction ID</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Method</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Transaction ID</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Method</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
                 </tr>
               </thead>
               <tbody>

@@ -4,7 +4,7 @@ import { authenticate, requirePermission, tenantWhereClause } from "@/lib/api-ut
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await authenticate(request);
-  await requirePermission(auth, "factoring:manage");
+  await requirePermission(auth, "factoring:approve_credit");
 
   const { id } = await params;
   if (!id) {

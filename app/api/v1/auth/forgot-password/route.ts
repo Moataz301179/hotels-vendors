@@ -1,9 +1,14 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, passwordResetTemplate } from "@/lib/notifications/email";
 import { randomBytes, createHash } from "crypto";
+
+const ForgotPasswordSchema = z.object({
+  email: z.string().email("Valid email is required"),
+});
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
@@ -15,11 +20,11 @@ function hashToken(token: string): string {
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
-  const { email } = body;
-
-  if (!email || typeof email !== "string") {
-    return error("Email is required", 400);
+  const parsed = ForgotPasswordSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
+  const { email } = parsed.data;
 
   // Rate limit: 3 requests per hour per email
   const rateLimit = await checkRateLimit(`forgot-password:${email.toLowerCase()}`, 3600, 3);

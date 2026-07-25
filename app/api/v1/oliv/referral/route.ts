@@ -1,35 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
-interface ReferralLead {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  role: "SUPPLIER" | "HOTEL";
-  source: string;
-  createdAt: string;
-}
+const OlivReferralSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  role: z.enum(["SUPPLIER", "HOTEL"], { error_map: () => ({ message: "Role must be SUPPLIER or HOTEL" }) }),
+});
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, company, role } = body;
-
-    if (!name || !email) {
+    const parsed = OlivReferralSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Name and email are required" },
+        { success: false, error: parsed.error.issues[0]?.message || "Invalid request body" },
         { status: 400 }
       );
     }
-
-    if (!["SUPPLIER", "HOTEL"].includes(role)) {
-      return NextResponse.json(
-        { success: false, error: "Role must be SUPPLIER or HOTEL" },
-        { status: 400 }
-      );
-    }
+    const { name, email, phone, company, role } = parsed.data;
 
     const id = "HV-OLIV-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
 

@@ -3,17 +3,27 @@ import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { verifyInstaPayCallback } from "@/lib/payments/instapay";
 import type { InstaPayCallbackPayload } from "@/lib/payments/instapay";
+import { checkWebhookReplay, markWebhookProcessed } from "@/lib/security/webhook-idempotency";
 
 export const dynamic = "force-dynamic";
 
 export const POST = apiRoute(async (request: NextRequest) => {
-  const payload = (await request.json()) as InstaPayCallbackPayload;
+  const body = await request.text();
+  const payload = JSON.parse(body) as InstaPayCallbackPayload;
+
+  // Replay protection — reject duplicate webhook deliveries
+  const { transactionId } = payload;
+  const eventId = `${transactionId || Date.now()}`;
+  const { isReplay } = await checkWebhookReplay("instapay", eventId);
+  if (isReplay) {
+    return success({ duplicate: true, message: "Webhook already processed" });
+  }
 
   if (!verifyInstaPayCallback(payload)) {
     return error("Invalid callback signature", 400);
   }
 
-  const { transactionId, eventType, amount, status: callbackStatus } = payload;
+  const { eventType, amount, status: callbackStatus } = payload;
   const isCompleted = eventType === "transfer.completed";
   const isFailed = eventType === "transfer.failed";
 
@@ -69,6 +79,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       status: newStatus,
     },
   });
+
+  // Mark webhook as processed (replay protection)
+  await markWebhookProcessed("instapay", eventId, `${newStatus}:${tx.id}`);
 
   return success({ acknowledged: true, matched: true, status: newStatus });
 });

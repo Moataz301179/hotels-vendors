@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { recordApproval } from "@/lib/auth/authority-matrix";
-import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, error, audit, requirePermission, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
 import { z } from "zod";
 
 const ApproveSchema = z.object({
@@ -18,6 +18,12 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   const body = await request.json();
   const data = ApproveSchema.parse(body);
 
+  const idempotencyKey = await requireIdempotencyKey(request, {
+    userId: auth.userId,
+    action: `APPROVE_ORDER_${data.action}`,
+    amount: 0,
+  });
+
   const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
   if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
 
@@ -33,6 +39,8 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   }
 
   await recordApproval(id, auth.userId, auth.tenantId, data.action, data.reason);
+
+  completeIdempotency(idempotencyKey, `ORDER_${data.action}:${id}`);
 
   await audit({
     entityType: "ORDER",

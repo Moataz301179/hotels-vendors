@@ -85,6 +85,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         creditScore: data.creditScore,
         recommendedLimit: data.recommendedLimit,
         status: "PENDING_REVIEW",
+        tenantId: auth.tenantId,
       },
     });
 

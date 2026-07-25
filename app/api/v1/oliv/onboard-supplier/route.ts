@@ -9,24 +9,81 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { buildOlivKYCPrefill } from "@/lib/fintech/anti-bypass/layer3-crm-attribution";
 
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
+const AddressSchema = z.object({
+  street: z.string().min(1),
+  building: z.string().min(1),
+  city: z.string().min(1),
+  governorate: z.string().min(1),
+  postalCode: z.string().min(1),
+});
+
+const CompanyInfoSchema = z.object({
+  legalName: z.string().min(1, "Legal name is required"),
+  tradeName: z.string().optional(),
+  commercialRegisterNumber: z.string().min(1, "CR number is required"),
+  taxRegistrationNumber: z.string().min(1, "Tax registration number is required"),
+  crIssueDate: z.string().min(1),
+  crExpiryDate: z.string().min(1),
+  companyType: z.string().default("LLC"),
+  incorporationDate: z.string().optional(),
+  address: AddressSchema,
+  phone: z.string().min(1),
+  email: z.string().email(),
+  website: z.string().url().optional(),
+});
+
+const SignatorySchema = z.object({
+  fullName: z.string().min(1, "Signatory name is required"),
+  nationalId: z.string().min(1, "National ID is required"),
+  nationalIdExpiry: z.string().min(1),
+  position: z.string().default("Managing Director"),
+  phone: z.string().min(1),
+  email: z.string().email(),
+});
+
+const BankAccountSchema = z.object({
+  bankName: z.string().min(1),
+  branch: z.string().optional(),
+  accountNumber: z.string().min(1),
+  iban: z.string().min(1),
+});
+
+const OlivOnboardSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  tenantId: z.string().min(1, "Tenant ID is required"),
+  company: CompanyInfoSchema,
+  signatory: SignatorySchema,
+  bankAccount: BankAccountSchema.optional(),
+  shareholders: z.array(z.object({
+    fullName: z.string().min(1),
+    nationalId: z.string().min(1),
+    ownershipPercentage: z.number().min(0).max(100),
+  })).optional(),
+  financial: z.object({
+    estimatedMonthlyRevenueEGP: z.number().min(0).default(0),
+    yearsInBusiness: z.number().int().min(0).default(1),
+    numberOfEmployees: z.number().int().optional(),
+  }).optional(),
+});
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
-    const { userId, tenantId, company, signatory, bankAccount, shareholders, financial } = body;
-
-    if (!userId || !tenantId || !company || !signatory) {
+    const parsed = OlivOnboardSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: userId, tenantId, company, signatory" },
+        { error: parsed.error.issues[0]?.message || "Invalid request body" },
         { status: 400 }
       );
     }
+    const { userId, tenantId, company, signatory, bankAccount, shareholders, financial } = parsed.data;
 
     // 1. Check if already onboarded
     const existing = await prisma.olivOnboardingAudit.findUnique({

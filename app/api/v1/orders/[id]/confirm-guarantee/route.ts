@@ -15,7 +15,7 @@ const ConfirmGuaranteeSchema = z.object({
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params?: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
-  await requirePermission(auth, "order:approve");
+  await requirePermission(auth, "order:confirm");
   const resolved = await params;
   if (!resolved) return error("Missing parameter", 400);
   const { id } = resolved;

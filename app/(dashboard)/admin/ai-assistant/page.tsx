@@ -173,8 +173,8 @@ export default function AdminAIAssistantPage() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Icon className="w-4 h-4" style={{ color: insight.color }} />
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/30 uppercase">{insight.category}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded ml-auto ${
+                   <span className="text-[11px] px-1.5 py-0.5 rounded bg-white/5 text-white/30 uppercase">{insight.category}</span>
+                   <span className={`text-[11px] px-1.5 py-0.5 rounded ml-auto ${
                     insight.impact === "high" ? "bg-emerald-500/10 text-emerald-400" : insight.impact === "medium" ? "bg-amber-500/10 text-amber-400" : "bg-white/5 text-white/30"
                   }`}>
                     {insight.impact} impact
@@ -218,9 +218,18 @@ export default function AdminAIAssistantPage() {
                     </div>
                   )}
                   <div className="flex items-center gap-2 mt-2">
-                    <button className="p-1 rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"><ThumbsUp className="w-3 h-3" /></button>
-                    <button className="p-1 rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"><ThumbsDown className="w-3 h-3" /></button>
-                    <button className="p-1 rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"><Copy className="w-3 h-3" /></button>
+                    <button
+                      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"
+                      aria-label="Thumbs up"
+                    ><ThumbsUp className="w-3 h-3" /></button>
+                    <button
+                      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"
+                      aria-label="Thumbs down"
+                    ><ThumbsDown className="w-3 h-3" /></button>
+                    <button
+                      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/[0.05] text-white/20 hover:text-white/40"
+                      aria-label="Copy message"
+                    ><Copy className="w-3 h-3" /></button>
                   </div>
                 </div>
               </div>
@@ -252,7 +261,8 @@ export default function AdminAIAssistantPage() {
               <button
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim() || loading}
-                className="p-3 rounded-xl bg-[#c455ff] text-white hover:bg-[#c455ff]/90 transition-colors disabled:opacity-50"
+                className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-[#c455ff] text-white hover:bg-[#c455ff]/90 transition-colors disabled:opacity-50"
+                aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
               </button>

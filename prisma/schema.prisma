@@ -92,19 +92,34 @@ model Tenant {
   refreshTokens RefreshToken[]
 
   // ── [NEW] Oliv Finance Integration ──
-  consentRecords       ConsentRecord[]
-  olivCreditFacilities OlivCreditFacility[]
-  olivSyncLogs         OlivSyncLog[]
+  consentRecords        ConsentRecord[]
+  olivCreditFacilities  OlivCreditFacility[]
+  olivSyncLogs          OlivSyncLog[]
   factoringTransactions FactoringTransaction[]
-  olivOnboardingAudits OlivOnboardingAudit[]
+  olivOnboardingAudits  OlivOnboardingAudit[]
+
+  // ── [NEW] Forecast Accuracy ──
+  forecastAccuracies ForecastAccuracy[]
 
   // ── [NEW] Ledger ──
   ledgerEntries LedgerEntry[]
 
   // ── [NEW] Agent Memory & Leads ──
-  swarmMemories  SwarmMemory[]
-  leads          Lead[]
+  swarmMemories   SwarmMemory[]
+  leads           Lead[]
   aiSubscriptions AISubscription[]
+
+  // ── [NEW] Intelligence Layer (P0: tenant scoping) ──
+  competitors            Competitor[]
+  marketInsights         MarketInsight[]
+  featureProposals       FeatureProposal[]
+  creditLineApplications CreditLineApplication[]
+
+  // ── [NEW] ETA Dead-Letter Queue ──
+  etaDeadLetterJobs EtaDeadLetterJob[]
+
+  // ── [NEW] Seasonality (Forecast Engine D2-04) ──
+  productSeasonalities ProductSeasonality[]
 }
 
 enum TenantType {
@@ -320,14 +335,14 @@ model User {
   emailVerifiedAt DateTime?
 
   // Consent & Privacy (PDPL Art. 5, 6, 13)
-  marketingConsent    Boolean  @default(false)
-  termsAcceptedAt     DateTime?
+  marketingConsent     Boolean   @default(false)
+  termsAcceptedAt      DateTime?
   privacyPolicyVersion String?
 
   // ── [NEW] KYC/AML Compliance ──
-  kycLevel       Int       @default(0) // 0=not started, 1,2,3 = verified level
-  kycStatus      String    @default("NOT_STARTED") // NOT_STARTED, LEVEL_1_PENDING, LEVEL_1_VERIFIED, etc.
-  kycVerifiedAt  DateTime?
+  kycLevel      Int       @default(0) // 0=not started, 1,2,3 = verified level
+  kycStatus     String    @default("NOT_STARTED") // NOT_STARTED, LEVEL_1_PENDING, LEVEL_1_VERIFIED, etc.
+  kycVerifiedAt DateTime?
 
   conversations  Conversation[]
   aiUsage        AiUsage?
@@ -440,10 +455,10 @@ model Supplier {
   documentProcessings DocumentProcessing[]
 
   // ── Oliv Finance Integration ──
-  olivUserId     String?           // Oliv's user ID for this supplier
-  olivFacilityId String?           // Link to OlivCreditFacility
-  olivSyncAt     DateTime?         // Last Oliv sync timestamp
-  olivStatus     String?           // Oliv onboarding: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
+  olivUserId     String? // Oliv's user ID for this supplier
+  olivFacilityId String? // Link to OlivCreditFacility
+  olivSyncAt     DateTime? // Last Oliv sync timestamp
+  olivStatus     String? // Oliv onboarding: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
 
   // ── Oliv Credit Facility ──
   olivCreditFacilities OlivCreditFacility[]
@@ -536,6 +551,7 @@ model Product {
 
   orderItems         OrderItem[]
   inventorySnapshots InventorySnapshot[]
+  seasonalities      ProductSeasonality[]
 
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
@@ -562,6 +578,27 @@ enum ProductStatus {
   INACTIVE
   OUT_OF_STOCK
   DISCONTINUED
+}
+
+// ─────────────────────────────────────────
+// 4b. PRODUCT SEASONALITY (Forecast Engine)
+// ─────────────────────────────────────────
+
+model ProductSeasonality {
+  id         String  @id @default(cuid())
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  month      Int // 1-12
+  multiplier Float   @default(1.0) // 1.0 = normal, 1.5 = 50% above normal, 0.5 = half
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([productId, month, tenantId])
+  @@index([tenantId])
+  @@index([productId])
 }
 
 // ─────────────────────────────────────────
@@ -709,9 +746,9 @@ model Invoice {
   submissionLog    String?
 
   // ETA Dual-Language Fields (bilingual invoice line items per ETA V2 spec)
-  codeName    String? // Product/service code name (English)
-  codeNameAr  String? // Product/service code name (Arabic) — اسم الكود
-  description String? // Line item description (English)
+  codeName      String? // Product/service code name (English)
+  codeNameAr    String? // Product/service code name (Arabic) — اسم الكود
+  description   String? // Line item description (English)
   descriptionAr String? // Line item description (Arabic) — الوصف
 
   // Financial
@@ -773,6 +810,9 @@ model Invoice {
   payments           Payment[]
   creditTransactions CreditTransaction[]
 
+  // ── [NEW] ETA Dead-Letter Queue ──
+  etaDeadLetterJobs EtaDeadLetterJob[]
+
   @@index([tenantId])
   @@index([hotelId])
   @@index([supplierId])
@@ -803,6 +843,40 @@ model EtaCredential {
   lastUsedAt   DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+// ── [NEW] ETA Dead-Letter Queue (compliance retry, NOT financial) ──
+
+model EtaDeadLetterJob {
+  id String @id @default(cuid())
+
+  invoiceId     String
+  invoice       Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceNumber String
+
+  error        String
+  attemptCount Int      @default(0)
+  maxAttempts  Int      @default(4)
+  nextRetryAt  DateTime
+
+  status EtaDeadLetterStatus @default(PENDING)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([invoiceId])
+  @@index([status, nextRetryAt])
+}
+
+enum EtaDeadLetterStatus {
+  PENDING
+  RETRYING
+  RESOLVED
+  FAILED
 }
 
 enum InvoiceStatus {
@@ -1660,10 +1734,15 @@ model Competitor {
   totalRaised String?
   status      CompetitorStatus @default(ACTIVE)
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   insights MarketInsight[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
 model MarketInsight {
@@ -1687,7 +1766,12 @@ model MarketInsight {
   discoveredBy String
   verified     Boolean @default(false)
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
+
+  @@index([tenantId])
 }
 
 model FeatureProposal {
@@ -1717,8 +1801,13 @@ model FeatureProposal {
 
   relatedCompetitorIds String?
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
 model AgentRun {
@@ -2152,19 +2241,19 @@ model PasswordResetToken {
 // 24b. REFRESH TOKEN ROTATION — family tracking for reuse detection
 
 model RefreshToken {
-  id        String   @id @default(cuid())
-  tokenHash String   @unique
-  family    String   // Token family — all tokens from the same initial grant
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  revokedAt DateTime?
-  replacedBy String?  // ID of the token that replaced this one (rotation chain)
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  family     String // Token family — all tokens from the same initial grant
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId   String
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  replacedBy String? // ID of the token that replaced this one (rotation chain)
   ipAddress  String?
   userAgent  String?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
   @@index([userId])
   @@index([family])
@@ -2510,8 +2599,13 @@ model CreditLineApplication {
 
   documents String?
 
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
 // ─────────────────────────────────────────
@@ -2624,7 +2718,7 @@ model ConsentRecord {
   id String @id @default(cuid())
 
   userId String
-  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -2816,43 +2910,43 @@ model FactoringTransaction {
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // ═══ INVOICE IDENTIFIERS ═══
-  etaUuid        String
-  supplierTaxId  String
-  hotelTaxId     String
+  etaUuid       String
+  supplierTaxId String
+  hotelTaxId    String
 
   // ═══ LAYER 1: REFERRAL TOKEN (Immutable Record) ═══
   // The HMAC-SHA256 signature proving this transaction originated from HotelsVendors
-  referralTokenSignature  String
-  referralTokenPayload    String  // base64url-encoded JSON
+  referralTokenSignature   String
+  referralTokenPayload     String // base64url-encoded JSON
   referralTokenGeneratedAt DateTime
-  referralTokenExpiresAt    DateTime
+  referralTokenExpiresAt   DateTime
 
   // ═══ OLIV TRANSACTION DATA ═══
-  olivTransactionId    String @unique
-  olivReferenceNumber  String?
-  payoutStatus         String  // APPROVED, DISBURSED, SETTLED, REJECTED, DEFAULTED
-  disbursedAmount      Float
-  factoringFee         Float
-  advanceRate          Float
-  disbursementDate     DateTime
+  olivTransactionId      String   @unique
+  olivReferenceNumber    String?
+  payoutStatus           String // APPROVED, DISBURSED, SETTLED, REJECTED, DEFAULTED
+  disbursedAmount        Float
+  factoringFee           Float
+  advanceRate            Float
+  disbursementDate       DateTime
   expectedSettlementDate DateTime
 
   // ═══ HOTELSVENDORS PLATFORM FEE ═══
   // 2% deducted BEFORE disbursement (per business rules)
-  platformFeeRate    Float @default(0.02)
-  platformFeeAmount  Float
-  netDisbursement    Float  // disbursedAmount - platformFeeAmount
+  platformFeeRate   Float @default(0.02)
+  platformFeeAmount Float
+  netDisbursement   Float // disbursedAmount - platformFeeAmount
 
   // ═══ AUDIT ═══
   processedAt       DateTime
   callbackTimestamp DateTime
-  rawCallback       Json?  // Full Oliv callback payload
+  rawCallback       Json? // Full Oliv callback payload
 
   // ═══ COMMISSION TRACKING ═══
   // Layer 3: CRM attribution — proves this transaction was referred by HotelsVendors
-  commissionRate    Float?  // e.g., 0.02 = 2%
-  commissionAmount  Float?  // platformFeeAmount (synonym for clarity)
-  commissionStatus  String? @default("PENDING")  // PENDING, PAID, DISPUTED
+  commissionRate   Float? // e.g., 0.02 = 2%
+  commissionAmount Float? // platformFeeAmount (synonym for clarity)
+  commissionStatus String? @default("PENDING") // PENDING, PAID, DISPUTED
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2881,37 +2975,37 @@ model OlivOnboardingAudit {
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Supplier identifiers
-  supplierId       String
-  supplierTaxId    String
-  companyName      String
+  supplierId    String
+  supplierTaxId String
+  companyName   String
 
   // Attribution metadata (Layer 3)
-  partnerId          String @default("HOTELSVENDORS_GLOBAL_001")
-  attributionType    String @default("permanent_origin_account")
-  attributionSource  String @default("HOTELSVENDORS_PLUGIN_V1")
+  partnerId             String @default("HOTELSVENDORS_GLOBAL_001")
+  attributionType       String @default("permanent_origin_account")
+  attributionSource     String @default("HOTELSVENDORS_PLUGIN_V1")
   commissionAgreementId String
 
   // Oliv onboarding status
-  olivUserId         String?
-  olivStatus         String  @default("PENDING")  // PENDING, KYC_SUBMITTED, KYC_APPROVED, CREDIT_APPROVED
-  olivKycSubmittedAt DateTime?
-  olivKycApprovedAt  DateTime?
+  olivUserId           String?
+  olivStatus           String    @default("PENDING") // PENDING, KYC_SUBMITTED, KYC_APPROVED, CREDIT_APPROVED
+  olivKycSubmittedAt   DateTime?
+  olivKycApprovedAt    DateTime?
   olivCreditApprovedAt DateTime?
 
   // Pre-fill data sent to Oliv (encrypted at rest)
-  prefillDataHash String?  // SHA-256 hash of the pre-fill payload
-  prefillDataSize Int?     // Number of fields sent
+  prefillDataHash String? // SHA-256 hash of the pre-fill payload
+  prefillDataSize Int? // Number of fields sent
 
   // Olive's acknowledgment
   olivAcknowledgedAt    DateTime?
-  olivAcknowledgedVia   String?  // "API", "MANUAL", "WEBHOOK"
+  olivAcknowledgedVia   String? // "API", "MANUAL", "WEBHOOK"
   olivAcknowledgmentRef String?
 
   // Audit
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([supplierTaxId])  // Each supplier can only be onbaulogged once
+  @@unique([supplierTaxId]) // Each supplier can only be onbaulogged once
   @@index([tenantId])
   @@index([olivStatus])
   @@index([partnerId])
@@ -2924,21 +3018,111 @@ model OlivOnboardingAudit {
 model AISubscription {
   id String @id @default(cuid())
 
-  userId String
+  userId   String
   tenantId String
-  tenant  Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Subscription details
-  tier String @default("FREE")  // FREE, BASIC, PRO, ENTERPRISE
-  status String @default("ACTIVE")  // ACTIVE, CANCELLED, EXPIRED
+  tier   String @default("FREE") // FREE, BASIC, PRO, ENTERPRISE
+  status String @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED
 
   // Credits
   monthlyCredits Int
-  monthlyPrice Int  // in EGP (smallest unit)
+  monthlyPrice   Int // in EGP (smallest unit)
 
   // Billing period
   startedAt DateTime @default(now())
   expiresAt DateTime
 
   // Payment
-  paymentRef
+  paymentReference String?
+
+  // Audit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, tenantId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model AITokenUsage {
+  id String @id @default(cuid())
+
+  userId   String
+  tenantId String
+
+  // What feature was used
+  feature String // "ai_assistant", "smart_suggestions", "auto_categorize", etc.
+
+  // Cost
+  creditsCost Int
+
+  // Token counts (for billing transparency)
+  tokensInput  Int @default(0)
+  tokensOutput Int @default(0)
+
+  // Task complexity
+  taskComplexity String @default("simple") // simple, medium, complex
+
+  // Audit
+  createdAt DateTime @default(now())
+
+  @@index([userId, tenantId])
+  @@index([feature])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────
+// LEDGER — Double-Entry Accounting
+// ─────────────────────────────────────────
+
+model LedgerEntry {
+  id String @id @default(cuid())
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  entityType String // "ORDER", "INVOICE", "FACTORING", "PAYMENT"
+  entityId   String // Reference to the source entity
+  entryType  String // "DEBIT", "CREDIT"
+  account    String // e.g., "platform_revenue", "factoring_receivable"
+  amount     Float
+  currency   String  @default("EGP")
+  reference  String? // External reference (ETA UUID, payment ID, etc.)
+
+  metadata String? // JSON string for additional context
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, entityType, entityId])
+  @@index([account])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────
+// INDEXES — Performance-critical query paths
+// ─────────────────────────────────────────
+
+// Note: Prisma supports @@index on models. Additional indexes added below:
+
+// ─────────────────────────────────────────
+// FORECAST ACCURACY — Learning loop for demand predictions
+// ─────────────────────────────────────────
+
+model ForecastAccuracy {
+  id              String   @id @default(cuid())
+  productId       String
+  forecastDate    DateTime
+  predictedQty    Float
+  actualQty       Float?
+  accuracyPercent Float?
+  seasonPeak      Boolean  @default(false)
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([productId, forecastDate])
+}

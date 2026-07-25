@@ -32,7 +32,29 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // CORS for hybrid Vercel + VPS setup — AI streaming endpoints
+      // Global CORS for all /api/v1/ routes
+      {
+        source: "/api/v1/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: process.env.NEXT_PUBLIC_APP_URL || "",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization, X-Idempotency-Key",
+          },
+          {
+            key: "Access-Control-Max-Age",
+            value: "86400",
+          },
+        ],
+      },
+      // CORS for AI streaming endpoints — tighter origin (fail-closed)
       {
         source: "/api/v1/ai/:path*",
         headers: [
@@ -40,7 +62,7 @@ const nextConfig: NextConfig = {
             key: "Access-Control-Allow-Origin",
             value: process.env.VERCEL_URL
               ? `https://${process.env.VERCEL_URL}`
-              : process.env.NEXT_PUBLIC_APP_URL || "*",
+              : process.env.NEXT_PUBLIC_APP_URL ?? "",
           },
           {
             key: "Access-Control-Allow-Methods",

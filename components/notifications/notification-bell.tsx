@@ -101,16 +101,16 @@ function NotificationItem({
         {!notification.read && (
           <button
             onClick={() => onMarkAsRead(notification.id)}
-            className="p-1 rounded-md text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-colors"
-            title="Mark as read"
+            className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-colors"
+            aria-label="Mark as read"
           >
             <Check size={12} />
           </button>
         )}
         <button
           onClick={() => onDismiss(notification.id)}
-          className="p-1 rounded-md text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-colors"
-          title="Dismiss"
+          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-colors"
+          aria-label="Dismiss notification"
         >
           <X size={12} />
         </button>

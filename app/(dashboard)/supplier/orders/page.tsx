@@ -209,7 +209,7 @@ export default function SupplierOrdersPage() {
             icon="inbox"
           />
         ) : (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
             <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="border-b border-white/[0.06]">
@@ -217,9 +217,9 @@ export default function SupplierOrdersPage() {
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Items</th>
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actions</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
+                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>

@@ -83,7 +83,7 @@ export default function AdminOrdersPage() {
         </div>
 
         <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto table-scroll-wrapper">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-white/[0.06]">
@@ -104,21 +104,21 @@ export default function AdminOrdersPage() {
                       <p className="text-[13px] font-medium text-white">{o.orderNumber}</p>
                       <p className="text-[11px] text-white/30">{new Date(o.createdAt).toLocaleDateString()}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/60">{o.hotelName}</td>
-                    <td className="px-5 py-3.5 text-[12px] text-white/60">{o.supplierName}</td>
+                    <td className="px-5 py-3.5 text-[13px] text-white/60">{o.hotelName}</td>
+                    <td className="px-5 py-3.5 text-[13px] text-white/60">{o.supplierName}</td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase border ${STATUS_STYLES[o.status] || "bg-white/5 text-white/40 border-white/10"}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase border ${STATUS_STYLES[o.status] || "bg-white/5 text-white/40 border-white/10"}`}>
                         {o.status}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-[13px] font-medium text-white">EGP {(o.total / 1000).toFixed(1)}K</td>
                     <td className="px-5 py-3.5">
                       {o.paymentGuaranteed ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400">
+                        <span className="inline-flex items-center gap-1 text-[13px] text-emerald-400">
                           <ShieldCheck className="w-3 h-3" /> Guaranteed
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-amber-400">
+                        <span className="inline-flex items-center gap-1 text-[13px] text-amber-400">
                           <Clock className="w-3 h-3" /> Pending
                         </span>
                       )}
@@ -132,8 +132,8 @@ export default function AdminOrdersPage() {
             <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
               <span className="text-[11px] text-white/30">Page {page} of {pagination.totalPages}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
-                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/40 hover:text-white disabled:opacity-30" aria-label="Previous page"><ChevronLeft className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/40 hover:text-white disabled:opacity-30" aria-label="Next page"><ChevronRight className="w-4 h-4" /></button>
               </div>
             </div>
           )}

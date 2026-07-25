@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { authenticate, requirePermission } from "@/lib/api-utils";
+
+const InvoOrderCreateSchema = z.object({
+  hotel_id: z.string().min(1, "Hotel ID is required"),
+  supplier_id: z.string().min(1, "Supplier ID is required"),
+  total_value: z.number().positive("Total value must be positive"),
+  currency: z.string().default("EGP"),
+  maker_user_id: z.string().optional(),
+});
+
+const InvoOrderQuerySchema = z.object({
+  hotel_id: z.string().optional(),
+  supplier_id: z.string().optional(),
+  state: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(50),
+});
 
 /**
  * POST /api/v1/invo/orders
@@ -14,14 +30,14 @@ export async function POST(req: NextRequest) {
     await requirePermission(auth, "order:create");
 
     const body = await req.json();
-    const { hotel_id, supplier_id, total_value, currency = "EGP", maker_user_id } = body;
-
-    if (!hotel_id || !supplier_id || !total_value) {
+    const parsed = InvoOrderCreateSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: hotel_id, supplier_id, total_value" },
+        { error: parsed.error.issues[0]?.message || "Invalid request body" },
         { status: 400 }
       );
     }
+    const { hotel_id, supplier_id, total_value, currency, maker_user_id } = parsed.data;
 
     const supabase = await createClient();
 
@@ -66,10 +82,14 @@ export async function GET(req: NextRequest) {
     await requirePermission(auth, "order:read");
 
     const { searchParams } = new URL(req.url);
-    const hotel_id = searchParams.get("hotel_id");
-    const supplier_id = searchParams.get("supplier_id");
-    const state = searchParams.get("state");
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const parsed = InvoOrderQuerySchema.safeParse(Object.fromEntries(searchParams));
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid query parameters" },
+        { status: 400 }
+      );
+    }
+    const { hotel_id, supplier_id, state, limit } = parsed.data;
 
     const supabase = await createClient();
     let query = supabase

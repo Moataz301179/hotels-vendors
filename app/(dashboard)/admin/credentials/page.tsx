@@ -18,7 +18,7 @@ interface Credential {
 
 const SERVICES = [
   { id: "oliv", name: "Oliv Finance", color: "#4A7C59" },
-  { id: "eta", name: "Egyptian Tax Authority", color: "#3b82f6" },
+  { id: "eta", name: "Egyptian Tax Authority", color: "#3b82f6", demo: true },
   { id: "supabase", name: "Supabase", color: "#10b981" },
   { id: "sentry", name: "Sentry", color: "#8b5cf6" },
   { id: "groq", name: "Groq AI", color: "#f59e0b" },
@@ -85,7 +85,7 @@ export default function AdminCredentialsPage() {
       setCredentials([
         { id: "1", name: "Oliv API Key", key: "oliv_live_xxxxxxxxxxxx", type: "api_key", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
         { id: "2", name: "Oliv Webhook Secret", key: "whsec_xxxxxxxxxxxx", type: "webhook_secret", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
-        { id: "3", name: "ETA API Key", key: "eta_xxxxxxxxxxxx", type: "api_key", service: "eta", lastRotated: "2026-07-10T10:00:00Z", status: "active" },
+        { id: "3", name: "ETA API Key (DEMO — not real)", key: "eta_xxxxxxxxxxxx", type: "api_key", service: "eta", lastRotated: "2026-07-10T10:00:00Z", status: "active" },
         { id: "4", name: "HMAC Secret", key: "hmac_xxxxxxxxxxxx", type: "api_key", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
         { id: "5", name: "Groq API Key", key: "gsk_xxxxxxxxxxxx", type: "api_key", service: "groq", lastRotated: "2026-07-01T10:00:00Z", status: "active" },
         { id: "6", name: "Sentry DSN", key: "https://xxx@sentry.io/xxx", type: "api_key", service: "sentry", lastRotated: "2026-06-15T10:00:00Z", status: "active" },
@@ -182,7 +182,8 @@ export default function AdminCredentialsPage() {
                     <Globe className="w-4 h-4" style={{ color: service.color }} />
                   </div>
                   <h3 className="text-sm font-semibold text-white/80">{service.name}</h3>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-white/30">{serviceCreds.length} keys</span>
+                  {"demo" in service && service.demo && <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">DEMO — NOT LIVE</span>}
+                  <span className="text-[11px] px-2 py-0.5 rounded bg-white/5 text-white/30">{serviceCreds.length} keys</span>
                 </div>
                 <div className="divide-y divide-white/[0.04]">
                   {serviceCreds.map((cred) => (
@@ -194,12 +195,12 @@ export default function AdminCredentialsPage() {
                           {showKeys[cred.id] ? cred.key : maskKey(cred.key)}
                         </p>
                       </div>
-                      <span className={`text-[10px] px-2 py-0.5 rounded border ${
-                        cred.status === "active" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                      }`}>
-                        {cred.status}
-                      </span>
-                      <span className="text-[10px] text-white/20">
+                       <span className={`text-[11px] px-2 py-0.5 rounded border ${
+                         cred.status === "active" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                       }`}>
+                         {cred.status}
+                       </span>
+                       <span className="text-[11px] text-white/20">
                         Rotated: {new Date(cred.lastRotated).toLocaleDateString()}
                       </span>
                       <button onClick={() => toggleKey(cred.id)} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-white/30 hover:text-white/60 transition-colors">
@@ -290,7 +291,7 @@ export default function AdminCredentialsPage() {
                 <div className="flex items-center gap-2">
                   <Database className="w-4 h-4 text-green-400" />
                   <h3 className="text-sm font-semibold text-white/80">.env Configuration</h3>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">Unlocked</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">Unlocked</span>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => copyToClipboard(envContent)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white/50 text-[11px] hover:bg-white/[0.08] transition-colors">
@@ -321,7 +322,7 @@ export default function AdminCredentialsPage() {
               {[
                 { name: "Oliv Finance API", url: "https://api.olivfinance.com", auth: "Bearer Token", env: "OLIV_API_KEY", docs: "https://docs.olivfinance.com" },
                 { name: "Oliv Webhooks", url: "POST /api/v1/oliv/payout-callback", auth: "HMAC-SHA256", env: "OLIV_WEBHOOK_SECRET", docs: "Webhook must echo referral token" },
-                { name: "ETA E-Invoicing", url: "https://api.eta.gov.eg", auth: "API Key + Merchant ID", env: "ETA_API_KEY", docs: "https://eta.gov.eg/en/api-docs" },
+                { name: "ETA E-Invoicing (DEMO)", url: "https://api.preprod.invoicing.eta.gov.eg", auth: "API Key + Merchant ID", env: "ETA_API_KEY", docs: "https://eta.gov.eg/en/api-docs" },
                 { name: "Groq AI", url: "https://api.groq.com", auth: "API Key", env: "GROQ_API_KEY", docs: "https://console.groq.com/docs" },
               ].map((api) => (
                 <div key={api.name} className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">

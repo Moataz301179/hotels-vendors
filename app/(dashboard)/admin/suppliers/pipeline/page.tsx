@@ -261,7 +261,7 @@ export default function SupplierPipelinePage() {
           </select>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden overflow-x-auto">
+            <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-white/10 text-left text-sm text-gray-400">

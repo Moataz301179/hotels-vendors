@@ -45,7 +45,7 @@ interface Hotel {
 function PropertyTypeBadge({ type }: { type: string }) {
   const label = type.charAt(0) + type.slice(1).toLowerCase().replace(/_/g, " ");
   return (
-    <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/[0.04] text-white/40 border border-white/[0.06]">
+    <span className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/[0.04] text-white/40 border border-white/[0.06]">
       {label}
     </span>
   );
@@ -59,7 +59,7 @@ function PropertyStatusBadge({ status = "ACTIVE" }: { status?: string }) {
   };
   const c = config[status] || config.ACTIVE;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {status.charAt(0) + status.slice(1).toLowerCase()}
     </span>
@@ -185,17 +185,17 @@ export default function HotelPropertiesPage() {
           }
         />
       ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[720px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Property</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel Group</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Location</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Type</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Rooms</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Property</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel Group</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Location</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Type</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Rooms</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
+                <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
               </tr>
             </thead>
             <tbody>

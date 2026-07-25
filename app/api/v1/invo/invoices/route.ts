@@ -1,7 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { authenticate, requirePermission } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
+
+const InvoInvoiceCreateSchema = z.object({
+  order_id: z.string().min(1, "Order ID is required"),
+  hotel_id: z.string().min(1, "Hotel ID is required"),
+  supplier_id: z.string().min(1, "Supplier ID is required"),
+  face_value: z.number().positive("Face value must be positive"),
+  currency: z.string().default("EGP"),
+  issue_date: z.string().optional(),
+  due_date: z.string().optional(),
+});
+
+const InvoInvoiceQuerySchema = z.object({
+  hotel_id: z.string().optional(),
+  supplier_id: z.string().optional(),
+  qualification: z.string().optional(),
+  eta_status: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(50),
+});
 
 /**
  * POST /api/v1/invo/invoices
@@ -14,22 +33,22 @@ export async function POST(req: NextRequest) {
     await requirePermission(auth, "invoice:create");
 
     const body = await req.json();
+    const parsed = InvoInvoiceCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid request body" },
+        { status: 400 }
+      );
+    }
     const {
       order_id,
       hotel_id,
       supplier_id,
       face_value,
-      currency = "EGP",
+      currency,
       issue_date,
       due_date,
-    } = body;
-
-    if (!order_id || !hotel_id || !supplier_id || !face_value) {
-      return NextResponse.json(
-        { error: "Missing required fields: order_id, hotel_id, supplier_id, face_value" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     if (auth.platformRole !== "ADMIN") {
       if (hotel_id) {
@@ -109,11 +128,14 @@ export async function GET(req: NextRequest) {
     await requirePermission(auth, "invoice:read");
 
     const { searchParams } = new URL(req.url);
-    const hotel_id = searchParams.get("hotel_id");
-    const supplier_id = searchParams.get("supplier_id");
-    const qualification = searchParams.get("qualification");
-    const eta_status = searchParams.get("eta_status");
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const parsed = InvoInvoiceQuerySchema.safeParse(Object.fromEntries(searchParams));
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid query parameters" },
+        { status: 400 }
+      );
+    }
+    const { hotel_id, supplier_id, qualification, eta_status, limit } = parsed.data;
 
     if (auth.platformRole !== "ADMIN") {
       if (hotel_id) {

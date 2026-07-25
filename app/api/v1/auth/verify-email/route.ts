@@ -1,7 +1,12 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { createHash } from "crypto";
+
+const VerifyEmailSchema = z.object({
+  token: z.string().min(1, "Verification token is required"),
+});
 
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
@@ -9,11 +14,11 @@ function hashToken(token: string): string {
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
-  const { token } = body;
-
-  if (!token || typeof token !== "string") {
-    return error("Verification token is required", 400);
+  const parsed = VerifyEmailSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
+  const { token } = parsed.data;
 
   // Hash the incoming token to match stored hash
   const tokenHash = hashToken(token);

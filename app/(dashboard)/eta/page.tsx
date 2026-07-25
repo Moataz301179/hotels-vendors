@@ -30,16 +30,16 @@ interface Invoice {
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    ACCEPTED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Accepted" },
-    VALIDATED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Validated" },
-    PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
-    REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Rejected" },
-    SUBMITTED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Submitted" },
-    DRAFT: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+    ACCEPTED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "DEMO: Accepted" },
+    VALIDATED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "DEMO: Validated" },
+    PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "DEMO: Pending" },
+    REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "DEMO: Rejected" },
+    SUBMITTED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "DEMO: Submitted" },
+    DRAFT: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/40", label: "DEMO: Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {c.label}
     </span>
@@ -66,6 +66,19 @@ export default function EtaCenterPage() {
       initial="hidden"
       animate="visible"
     >
+      {/* DEMO MODE WARNING — This is a simulated ETA integration, NOT connected to the Egyptian Tax Authority */}
+      <motion.div variants={fadeInUp} className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle size={16} className="text-amber-400" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-amber-400">DEMO MODE — This is a simulated ETA integration. Not connected to the Egyptian Tax Authority.</p>
+            <p className="text-xs text-amber-400/60 mt-0.5">All ETA UUIDs, statuses, and submission responses are fake. Do not treat as real tax compliance.</p>
+          </div>
+        </div>
+      </motion.div>
+
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">ETA E-Invoicing Center</h1>
@@ -99,7 +112,7 @@ export default function EtaCenterPage() {
         ))}
       </motion.div>
 
-      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
         {loading ? (
           <div className="p-8 text-center">
             <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
@@ -115,13 +128,13 @@ export default function EtaCenterPage() {
           <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice #</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">ETA Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">ETA UUID</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Date</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Invoice #</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">ETA Status <span className="text-amber-400/60">(DEMO)</span></th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">ETA UUID <span className="text-amber-400/60">(DEMO)</span></th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody>

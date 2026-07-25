@@ -103,16 +103,8 @@ async function sendInviteWhatsApp(to: string, token: string, tenantName: string)
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://hotelsvendors.com"}/onboarding/delegate/${token}`;
 
   try {
-    const whatsappModule = await import("@/lib/notifications/whatsapp");
-    const result = await whatsappModule.sendOrderConfirmation({
-      to,
-      hotelName: tenantName,
-      supplierName: "HotelsVendors",
-      orderNumber: "DELEGATE-INVITE",
-      totalAmount: 0,
-    });
-
-    // Use the generic send via Twilio for a custom message
+    // WhatsApp not configured — skip silently
+    return false;
     const WHATSAPP_PROVIDER = process.env.WHATSAPP_PROVIDER || "meta";
     if (WHATSAPP_PROVIDER === "twilio") {
       const TWILIO_SID = process.env.TWILIO_ACCOUNT_SID || "";

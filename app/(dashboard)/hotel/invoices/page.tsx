@@ -11,6 +11,7 @@ import {
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
+import { InvoiceDetailPanel } from "@/components/shared/invoice-detail-panel";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -74,6 +75,7 @@ function formatCurrency(amount: number, currency = "EGP") {
 export default function HotelInvoicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<StatusTab>("ALL");
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   const { data: invoicesData, loading, error } = useApi<Invoice[]>("/api/v1/invoices?page=1&limit=50&sortOrder=desc");
 
@@ -170,7 +172,7 @@ export default function HotelInvoicesPage() {
           description={searchQuery || activeTab !== "ALL" ? "Try adjusting your filters." : "Invoices will appear here once created."}
         />
       ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[800px]">
             <thead>
               <tr className="border-b border-white/[0.06]">
@@ -215,10 +217,17 @@ export default function HotelInvoicesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                      <button
+                        onClick={() => setSelectedInvoice(invoice)}
+                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                        aria-label={`View invoice ${invoice.invoiceNumber}`}
+                      >
                         <Eye size={14} />
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                      <button
+                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                        aria-label="Download invoice"
+                      >
                         <Download size={14} />
                       </button>
                     </div>
@@ -229,6 +238,13 @@ export default function HotelInvoicesPage() {
           </table>
         </motion.div>
       )}
+
+      <InvoiceDetailPanel
+        invoice={selectedInvoice}
+        isOpen={!!selectedInvoice}
+        onClose={() => setSelectedInvoice(null)}
+        onViewFull={(inv) => window.open(`/invoices/${inv.id}`, "_self")}
+      />
     </motion.div>
   );
 }

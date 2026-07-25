@@ -49,7 +49,7 @@ export default function AdminProductsPage() {
         {error && <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">{error}</div>}
 
         <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto table-scroll-wrapper">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-white/[0.06]">
@@ -98,8 +98,8 @@ export default function AdminProductsPage() {
             <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
               <span className="text-[11px] text-white/30">Page {page} of {pagination.totalPages}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
-                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 rounded-lg text-white/40 hover:text-white disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/40 hover:text-white disabled:opacity-30" aria-label="Previous page"><ChevronLeft className="w-4 h-4" /></button>
+                <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/40 hover:text-white disabled:opacity-30" aria-label="Next page"><ChevronRight className="w-4 h-4" /></button>
               </div>
             </div>
           )}

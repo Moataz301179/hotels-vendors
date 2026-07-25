@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, authenticate } from "@/lib/api-utils";
 
@@ -13,20 +14,24 @@ export const dynamic = "force-dynamic";
  * Withdrawal does not affect lawful processing before withdrawal.
  */
 
+const WithdrawConsentSchema = z.object({
+  consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
+    error_map: () => ({ message: "Invalid consent type. Valid types: OLIV_DATA_SHARING, OLIV_CREDIT_ASSESSMENT" }),
+  }),
+  partnerId: z.string().min(1, "Partner ID is required"),
+  reason: z.string().max(500).optional(),
+});
+
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   if (!auth) return error("Unauthorized", 401);
 
   const body = await request.json();
-  const { consentType, partnerId, reason } = body as {
-    consentType: string;
-    partnerId: string;
-    reason?: string;
-  };
-
-  if (!consentType || !partnerId) {
-    return error("Missing required fields: consentType, partnerId", 400);
+  const parsed = WithdrawConsentSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
+  const { consentType, partnerId, reason } = parsed.data;
 
   // Find active consent
   const consent = await prisma.consentRecord.findUnique({

@@ -72,4 +72,4 @@ export const POST = apiRoute(async (request: NextRequest) => {
   completeIdempotency(idempotencyKey, invoice.id);
 
   return success({ invoice }, 201);
-});
+}, { rateLimit: "api" });

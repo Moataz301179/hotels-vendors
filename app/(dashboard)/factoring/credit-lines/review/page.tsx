@@ -173,7 +173,7 @@ export default function CreditLineReviewPage() {
                           <p className="text-[14px] font-bold text-white">EGP {(app.recommendedLimit / 1_000_000).toFixed(1)}M</p>
                         </div>
                       )}
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase ${st.bg} ${st.text}`}>
+                       <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase ${st.bg} ${st.text}`}>
                         {st.label}
                       </span>
                       <ChevronRight className="w-4 h-4 text-white/20" />

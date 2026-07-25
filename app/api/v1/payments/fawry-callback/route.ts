@@ -3,11 +3,20 @@ import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { verifyFawryCallback } from "@/lib/payments/fawry";
 import type { FawryCallbackPayload } from "@/lib/payments/fawry";
+import { checkWebhookReplay, markWebhookProcessed, fawryEventId } from "@/lib/security/webhook-idempotency";
 
 export const dynamic = "force-dynamic";
 
 export const POST = apiRoute(async (request: NextRequest) => {
-  const payload = (await request.json()) as FawryCallbackPayload;
+  const body = await request.text();
+  const payload = JSON.parse(body) as FawryCallbackPayload;
+
+  // 0. Replay protection — reject duplicate webhook deliveries
+  const eventId = fawryEventId(payload);
+  const { isReplay } = await checkWebhookReplay("fawry", eventId);
+  if (isReplay) {
+    return success({ duplicate: true, message: "Webhook already processed" });
+  }
 
   // 1. Verify HMAC signature
   if (!verifyFawryCallback(payload)) {
@@ -81,6 +90,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       amount: payload.paymentAmount,
     },
   });
+
+  // Mark webhook as processed (replay protection)
+  await markWebhookProcessed("fawry", eventId, `${newStatus}:${tx.id}`);
 
   return success({ acknowledged: true, matched: true, status: newStatus });
 });

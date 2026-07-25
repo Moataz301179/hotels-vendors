@@ -227,10 +227,10 @@ export default function SupplierProductsPage() {
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Product</th>
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">SKU</th>
                   <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Category</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Price</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Stock</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                  <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Price</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Stock</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
+                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
                 </tr>
               </thead>
               <tbody>

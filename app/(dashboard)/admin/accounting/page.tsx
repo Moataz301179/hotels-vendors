@@ -203,7 +203,7 @@ export default function AdminAccountingPage() {
                     <p className="text-[11px] text-white/30">{new Date(txn.date).toLocaleDateString()} · {txn.id}</p>
                   </div>
                   <span className="text-sm font-medium text-white/80">{formatEGP(txn.amount)}</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded border ${
+                  <span className={`text-[11px] px-2 py-0.5 rounded border ${
                     txn.status === "COMPLETED" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
                   }`}>
                     {txn.status}

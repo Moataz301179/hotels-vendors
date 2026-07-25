@@ -144,7 +144,7 @@ export async function seedDatabase() {
         reference: ref("ORD"), hotelId: nileRitz.id, supplierId: freshFields.id, carrierId: swiftLog.id,
         status: "financed", subtotal: 480000, platformFee: 12000, total: 492000, paymentTermDays: 60,
         items: [{ productId: prod[0].id, name: prod[0].name, qty: 8, price: prod[0].price }, { productId: prod[1].id, name: prod[1].name, qty: 4, price: prod[1].price }],
-        etaUuid: "ETA-77E59D11-667C-4B9B-89E3-0FFBDCE2841E",
+        etaUuid: "ETA-77E59D11-667C-4B9B-89E3-0FFBDCE2841E", // DEMO ONLY — fake UUID, not ETA-compliant
         etaStatus: "valid",
         grnStatus: "fully_received",
         grnVarianceBps: 0,
@@ -155,7 +155,7 @@ export async function seedDatabase() {
         reference: ref("ORD"), hotelId: steigen.id, supplierId: linenCo.id, carrierId: swiftLog.id,
         status: "in_transit", subtotal: 660000, platformFee: 16500, total: 676500, paymentTermDays: 90,
         items: [{ productId: prod[4].id, name: prod[4].name, qty: 5, price: prod[4].price }],
-        etaUuid: "ETA-20329348-EE4B-0E0B-6DBA-E90CDE340937",
+        etaUuid: "ETA-20329348-EE4B-0E0B-6DBA-E90CDE340937", // DEMO ONLY — fake UUID
         etaStatus: "submitted",
         grnStatus: "not_received",
         createdAt: new Date(now - 1 * 864e5),
@@ -164,7 +164,7 @@ export async function seedDatabase() {
         reference: ref("ORD"), hotelId: nileRitz.id, supplierId: chefSupply.id,
         status: "delivered", subtotal: 8900000, platformFee: 178000, total: 9078000, paymentTermDays: 90,
         items: [{ productId: prod[19].id, name: prod[19].name, qty: 1, price: prod[19].price }],
-        etaUuid: "ETA-08006112-1070-7B23-DA17-169E30007467",
+        etaUuid: "ETA-08006112-1070-7B23-DA17-169E30007467", // DEMO ONLY — fake UUID
         etaStatus: "valid",
         grnStatus: "partially_received",
         grnVarianceBps: 250,

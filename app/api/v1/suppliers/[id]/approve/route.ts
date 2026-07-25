@@ -1,14 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
+import { z } from "zod";
 import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
 import { atomicSupplierStatusUpdate } from "../shared";
+
+const ApproveSupplierSchema = z.object({
+  tier: z.enum(["CORE", "PREFERRED", "STRATEGIC"]).default("CORE"),
+  notes: z.string().max(500).default(""),
+});
 
 export const POST = apiRoute(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "admin:manage_platform");
   const { id } = await params;
   const body = await request.json().catch(() => ({}));
-  const { tier = "CORE", notes = "" } = body;
+  const parsed = ApproveSupplierSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
+  }
+  const { tier, notes } = parsed.data;
 
   const result = await atomicSupplierStatusUpdate(id, "ACTIVE", tier, auth.userId, auth.tenantId);
 

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { authenticate } from "@/lib/api-utils";
+import { requirePermission } from "@/lib/auth/rbac";
 
 export async function GET(request: NextRequest) {
   try {
+    const authCtx = await authenticate(request);
+    await requirePermission(authCtx, "admin:read");
+
     const period = request.nextUrl.searchParams.get("period") || "30d";
     const now = new Date();
     const startDate = new Date(now.getTime() - (period === "7d" ? 7 : period === "30d" ? 30 : period === "90d" ? 90 : 365) * 24 * 60 * 60 * 1000);
@@ -42,7 +47,10 @@ export async function GET(request: NextRequest) {
         ordersByStatus: [],
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.name === "ApiError" || error?.name === "PermissionDeniedError") {
+      return NextResponse.json({ error: error.message }, { status: error.statusCode || 403 });
+    }
     return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
   }
 }

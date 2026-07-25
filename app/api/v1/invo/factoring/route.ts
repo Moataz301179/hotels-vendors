@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { authenticate, requirePermission } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
+
+const InvoFactoringCreateSchema = z.object({
+  invoice_id: z.string().min(1, "Invoice ID is required"),
+  hotel_id: z.string().min(1, "Hotel ID is required"),
+  face_value: z.number().positive("Face value must be positive"),
+  creditor_name: z.string().optional(),
+  debtor_name: z.string().optional(),
+  maturity_date: z.string().optional(),
+});
+
+const InvoFactoringQuerySchema = z.object({
+  hotel_id: z.string().optional(),
+  status: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(50),
+});
 
 /**
  * POST /api/v1/invo/factoring
@@ -14,6 +30,13 @@ export async function POST(req: NextRequest) {
     await requirePermission(auth, "invoice:factor");
 
     const body = await req.json();
+    const parsed = InvoFactoringCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid request body" },
+        { status: 400 }
+      );
+    }
     const {
       invoice_id,
       hotel_id,
@@ -21,14 +44,7 @@ export async function POST(req: NextRequest) {
       creditor_name,
       debtor_name,
       maturity_date,
-    } = body;
-
-    if (!invoice_id || !hotel_id || !face_value) {
-      return NextResponse.json(
-        { error: "Missing required fields: invoice_id, hotel_id, face_value" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     if (auth.platformRole !== "ADMIN") {
       const hotel = await prisma.hotel.findFirst({
@@ -105,9 +121,14 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const hotel_id = searchParams.get("hotel_id");
-    const status = searchParams.get("status");
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const parsed = InvoFactoringQuerySchema.safeParse(Object.fromEntries(searchParams));
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid query parameters" },
+        { status: 400 }
+      );
+    }
+    const { hotel_id, status, limit } = parsed.data;
 
     const supabase = await createClient();
     let query = supabase

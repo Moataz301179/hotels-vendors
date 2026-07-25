@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, authenticate } from "@/lib/api-utils";
 import { createHash } from "crypto";
@@ -23,26 +24,25 @@ const CONSENT_TEXT: Record<string, string> = {
     "I consent to Oliv Finance conducting a credit check and assessing my creditworthiness using my business registration data, ETA e-invoicing history, and credit bureau data.",
 };
 
+const GrantConsentSchema = z.object({
+  consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
+    error_map: () => ({ message: `Invalid consent type. Valid types: ${Object.keys(CONSENT_TEXT).join(", ")}` }),
+  }),
+  partnerId: z.string().min(1, "Partner ID is required"),
+  dataCategories: z.array(z.string().min(1)).min(1, "At least one data category is required"),
+});
+
 // POST — Grant consent
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   if (!auth) return error("Unauthorized", 401);
 
   const body = await request.json();
-  const { consentType, partnerId, dataCategories } = body as {
-    consentType: string;
-    partnerId: string;
-    dataCategories: string[];
-  };
-
-  if (!consentType || !partnerId || !dataCategories?.length) {
-    return error("Missing required fields: consentType, partnerId, dataCategories", 400);
+  const parsed = GrantConsentSchema.safeParse(body);
+  if (!parsed.success) {
+    return error(parsed.error.issues[0]?.message || "Invalid request body", 400);
   }
-
-  // Validate consent type
-  if (!CONSENT_TEXT[consentType]) {
-    return error(`Invalid consent type: ${consentType}. Valid types: ${Object.keys(CONSENT_TEXT).join(", ")}`, 400);
-  }
+  const { consentType, partnerId, dataCategories } = parsed.data;
 
   // Check if consent already exists and is active
   const existing = await prisma.consentRecord.findUnique({
