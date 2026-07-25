@@ -14,6 +14,7 @@ export interface OlivCheckoutParams {
   currency: string;
   supplierId: string;
   hotelId: string;
+  hotelName?: string;
   returnUrl: string;
 }
 
