@@ -151,7 +151,8 @@ export default function OlivCreditFacilityDashboard() {
   }
 
   const { facility: data } = facility;
-  const upcomingPayments = data?.paymentSchedule
+  if (!data) return null;
+  const upcomingPayments = data.paymentSchedule
     ?.filter(p => p.status === 'PENDING' && new Date(p.dueDate) > new Date())
     .slice(0, 5) || [];
 
