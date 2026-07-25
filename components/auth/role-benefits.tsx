@@ -1,6 +1,6 @@
 "use client"
 
-type Role = "procurement" | "operations" | "finance"
+type Role = "procurement" | "operations" | "finance" | "SUPPLIER" | "HOTEL" | "FACTOR" | "LOGISTICS"
 
 const benefits: Record<Role, { title: string; desc: string }[]> = {
   procurement: [
@@ -15,9 +15,25 @@ const benefits: Record<Role, { title: string; desc: string }[]> = {
     { title: "Invoice Reconciliation", desc: "Auto-match POs to invoices" },
     { title: "Payment Scheduling", desc: "Optimize cash flow with smart scheduling" },
   ],
+  SUPPLIER: [
+    { title: "Marketplace Access", desc: "Reach 500+ hotels across Egypt" },
+    { title: "Fast Payments", desc: "Get paid in 7 days with factoring" },
+  ],
+  HOTEL: [
+    { title: "Smart Procurement", desc: "AI-powered sourcing and price comparison" },
+    { title: "Credit Terms", desc: "Net-30/60 payment terms available" },
+  ],
+  FACTOR: [
+    { title: "Deal Flow", desc: "Access verified hotel invoices" },
+    { title: "Risk Scoring", desc: "AI-powered credit risk assessment" },
+  ],
+  LOGISTICS: [
+    { title: "Route Optimization", desc: "AI-optimized coastal delivery routes" },
+    { title: "Consolidation", desc: "Shared logistics reduce costs 40%" },
+  ],
 }
 
-export function RoleBenefits({ role = "procurement" }: { role?: Role }) {
+export function RoleBenefits({ role = "procurement", variant, theme }: { role?: Role; variant?: string; theme?: string }) {
   const items = benefits[role] || benefits.procurement
 
   return (
