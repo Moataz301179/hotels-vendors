@@ -12,10 +12,11 @@ export interface OlivCheckoutParams {
   orderId: string;
   amount: number;
   currency: string;
-  supplierId: string;
+  supplierId?: string;
   hotelId: string;
   hotelName?: string;
-  returnUrl: string;
+  returnUrl?: string;
+  items?: Array<{ name: string; quantity: number; price: number }>;
 }
 
 export interface OlivCheckoutResult {

@@ -389,9 +389,9 @@ export default function CheckoutPage() {
                     Back
                   </button>
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       if (paymentMethod === "oliv_checkout") {
-                        const checkoutUrl = generateOlivCheckoutUrl({
+                        const result = await generateOlivCheckoutUrl({
                           hotelId: userData?.userId || "",
                           hotelName: userData?.hotelName || "",
                           orderId: "",
@@ -403,7 +403,7 @@ export default function CheckoutPage() {
                             price: i.price,
                           })),
                         });
-                        window.open(checkoutUrl, "_blank");
+                        window.open(result.checkoutUrl, "_blank");
                       } else {
                         handlePlaceOrder();
                       }
