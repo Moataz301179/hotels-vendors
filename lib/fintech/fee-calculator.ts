@@ -171,34 +171,37 @@ export async function applyPlatformFees(
     throw new Error(`Invoice ${invoiceId} not found`);
   }
 
+  const platformFee = Number(existing.platformFee);
+  const platformFeeRate = Number(existing.platformFeeRate ?? 0.025);
+  const invoiceTotal = Number(existing.total);
+
   // If platformFee already set and > 0, return existing breakdown
-  if (existing.platformFee && existing.platformFee > 0) {
-    const rate = existing.platformFeeRate ?? 0.025;
+  if (platformFee > 0) {
     return {
       transactionFee: {
         feeType: "TRANSACTION",
-        amount: existing.platformFee,
-        rate,
-        baseAmount: existing.total,
-        breakdown: `Already applied: EGP ${existing.platformFee.toLocaleString()}`,
+        amount: platformFee,
+        rate: platformFeeRate,
+        baseAmount: invoiceTotal,
+        breakdown: `Already applied: EGP ${platformFee.toLocaleString()}`,
         currency: "EGP",
       },
-      factoringReferralFee: calculatePlatformFee(existing.total, hotelTier, "FACTORING_REFERRAL"),
+      factoringReferralFee: calculatePlatformFee(invoiceTotal, hotelTier, "FACTORING_REFERRAL"),
       documentProcessingFee: {
         feeType: "DOCUMENT_PROCESSING",
         amount: DOCUMENT_PROCESSING_FEE * documentCount,
         rate: 0,
-        baseAmount: existing.total,
+        baseAmount: invoiceTotal,
         breakdown: `Document processing: EGP ${DOCUMENT_PROCESSING_FEE} × ${documentCount}`,
         currency: "EGP",
       },
-      totalPlatformFees: existing.platformFee,
+      totalPlatformFees: platformFee,
       alreadyApplied: true,
     };
   }
 
   // Calculate and persist
-  const breakdown = calculateFullFeeBreakdown(existing.total, hotelTier, documentCount);
+  const breakdown = calculateFullFeeBreakdown(invoiceTotal, hotelTier, documentCount);
 
   await prisma.invoice.update({
     where: { id: invoiceId },

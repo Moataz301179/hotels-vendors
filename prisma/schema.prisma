@@ -1,125 +1,2262 @@
-// Hotels Vendors — Digital Procurement Marketplace + Compliance Automation
-// PostgreSQL + Multi-tenant schema
-// Last updated: 2026-06-07
-//
-// ⚠️  LEGAL CONSTRAINT: This platform does NOT hold or transfer cash.
-// The platform operator holds a DIGITAL MARKETING license only.
-// All financial services (factoring, credit, payments) are operated by
-// licensed third-party partners. The platform only charges:
-//   1. SaaS subscription fees (supplier listing plans via INVO)
-//   2. Document processing fees (ETA invoice submission per-document)
-//   3. Marketplace commission on transactions (not financial spreads)
-// No factoring fees, no cash custody, no lending, no wallet balances.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://Moataz@localhost:5433/hotelsvendors_prod"
 }
 
-// ─────────────────────────────────────────
-// TENANT — Multi-tenant isolation root
-// ─────────────────────────────────────────
-
 model Tenant {
-  id           String       @id @default(cuid())
-  name         String
-  slug         String       @unique
-  type         TenantType   @default(HOTEL_GROUP)
-  status       TenantStatus @default(ACTIVE)
-  taxId        String?      @unique
-  logoUrl      String?
-  primaryColor String?
+  id                     String                  @id @default(cuid())
+  name                   String
+  slug                   String                  @unique
+  type                   TenantType              @default(HOTEL_GROUP)
+  status                 TenantStatus            @default(ACTIVE)
+  taxId                  String?                 @unique
+  logoUrl                String?
+  primaryColor           String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  kycLevel               Int                     @default(0)
+  kycStatus              String                  @default("NOT_STARTED")
+  kycVerifiedAt          DateTime?
+  parentTenantId         String?
+  relation               TenantRelation          @default(STANDALONE)
+  verificationStatus     VerificationStatus      @default(UNVERIFIED)
+  verifiedAt             DateTime?
+  verifiedBy             String?
+  legalName              String?
+  billingContactName     String?
+  billingContactEmail    String?
+  billingContactPhone    String?
+  uuid                   String?                 @unique(map: "Tenant_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt              DateTime?
+  aiSubscriptions        AISubscription[]
+  agentRuns              AgentRun[]
+  auditLogs              AuditLog[]
+  carts                  Cart[]
+  competitors            Competitor[]
+  consentRecords         ConsentRecord[]
+  consolidatedInvoices   ConsolidatedInvoice[]
+  consolidatedOrders     ConsolidatedOrder[]
+  creditFacilities       CreditFacility[]
+  creditLineApplications CreditLineApplication[]
+  creditTransactions     CreditTransaction[]
+  deliveryZones          DeliveryZone[]
+  disputes               Dispute[]
+  documents              Document[]
+  documentProcessings    DocumentProcessing[]
+  etaCredential          EtaCredential?
+  etaDeadLetterJobs      EtaDeadLetterJob[]
+  factoringCompanies     FactoringCompany[]
+  factoringRequests      FactoringRequest[]
+  factoringTransactions  FactoringTransaction[]
+  featureProposals       FeatureProposal[]
+  forecastAccuracies     ForecastAccuracy[]
+  hotels                 Hotel[]
+  hotelSuppliers         HotelSupplier[]
+  inventorySnapshots     InventorySnapshot[]
+  invoSubscriptions      InvoSubscription[]
+  invoices               Invoice[]
+  journalEntries         JournalEntry[]
+  leads                  Lead[]
+  ledgerEntries          LedgerEntry[]
+  logisticsHubs          LogisticsHub[]
+  marketInsights         MarketInsight[]
+  olivCreditFacilities   OlivCreditFacility[]
+  olivOnboardingAudits   OlivOnboardingAudit[]
+  olivSyncLogs           OlivSyncLog[]
+  orders                 Order[]
+  outlets                Outlet[]
+  payments               Payment[]
+  PaymentTerm            PaymentTerm[]
+  paymentTransactions    PaymentTransaction[]
+  products               Product[]
+  productSeasonalities   ProductSeasonality[]
+  promoCodes             PromoCode[]
+  properties             Property[]
+  refreshTokens          RefreshToken[]
+  roles                  Role[]
+  spendRecords           SpendRecord[]
+  suppliers              Supplier[]
+  supplierAudits         SupplierAudit[]
+  swarmJobs              SwarmJob[]
+  swarmMemories          SwarmMemory[]
+  Tenant                 Tenant?                 @relation("TenantToTenant", fields: [parentTenantId], references: [id], onUpdate: NoAction, map: "Tenant_parent_fkey")
+  other_Tenant           Tenant[]                @relation("TenantToTenant")
+  trips                  Trip[]
+  tripStops              TripStop[]
+  users                  User[]
+  Workspace              Workspace[]
 
-  // Relations
-  users          User[]
-  hotels         Hotel[]
-  suppliers      Supplier[]
-  products       Product[]
-  orders         Order[]
-  invoices       Invoice[]
-  auditLogs      AuditLog[]
-  documents      Document[]
-  carts          Cart[]
-  journalEntries JournalEntry[]
+  @@index([deletedAt], map: "Tenant_deleted_idx")
+  @@index([parentTenantId], map: "Tenant_parent_idx")
+  @@index([uuid])
+  @@index([verificationStatus], map: "Tenant_verification_idx")
+}
 
+model Role {
+  id              String           @id @default(cuid())
+  name            String
+  tenantId        String?
+  isGlobal        Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  uuid            String?          @unique(map: "Role_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  tenant          Tenant?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rolePermissions RolePermission[]
+  users           User[]
+  permissions     Permission[]     @relation("PermissionToRole")
+
+  @@unique([tenantId, name])
+  @@index([deletedAt], map: "Role_deleted_idx")
+}
+
+model Permission {
+  id              String           @id @default(cuid())
+  code            String           @unique
+  name            String
+  description     String?
+  createdAt       DateTime         @default(now())
+  uuid            String?          @unique(map: "Permission_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  rolePermissions RolePermission[]
+  roles           Role[]           @relation("PermissionToRole")
+
+  @@index([deletedAt], map: "Permission_deleted_idx")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime   @default(now())
+  uuid         String?    @unique(map: "RolePermission_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt    DateTime?
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([deletedAt], map: "RolePermission_deleted_idx")
+}
+
+model Hotel {
+  id                   String                @id @default(cuid())
+  tenantId             String
+  name                 String
+  legalName            String?
+  taxId                String                @unique
+  commercialReg        String?
+  address              String?
+  city                 String
+  governorate          String
+  phone                String?
+  email                String?
+  starRating           Int?
+  roomCount            Int?
+  tier                 HotelTier             @default(CORE)
+  status               HotelStatus           @default(ACTIVE)
+  riskScore            Int?                  @default(50)
+  riskTier             RiskTier?             @default(MEDIUM)
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
-  roles                Role[]
-  properties           Property[]
-  deliveryZones        DeliveryZone[]
-  spendRecords         SpendRecord[]
-  inventorySnapshots   InventorySnapshot[]
-  factoringCompanies   FactoringCompany[]
-  creditTransactions   CreditTransaction[]
-  factoringRequests    FactoringRequest[]
-  logisticsHubs        LogisticsHub[]
-  trips                Trip[]
-  tripStops            TripStop[]
-  outlets              Outlet[]
-  supplierAudits       SupplierAudit[]
-  payments             Payment[]
-  creditFacilities     CreditFacility[]
-  consolidatedOrders   ConsolidatedOrder[]
+  uuid                 String?               @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt            DateTime?
+  creditLimit          Decimal?              @db.Decimal(14, 2)
+  creditUsed           Decimal?              @db.Decimal(14, 2)
+  carts                Cart[]
   consolidatedInvoices ConsolidatedInvoice[]
-  hotelSuppliers       HotelSupplier[]
+  creditFacilities     CreditFacility[]
+  creditTransactions   CreditTransaction[]
+  tenant               Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  mandatedSuppliers    HotelSupplier[]
+  invoices             Invoice[]
+  journalEntries       JournalEntry[]
+  orders               Order[]
+  payments             Payment[]
+  properties           Property[]
+  spendRecords         SpendRecord[]
+  tripStops            TripStop[]
+  users                User[]
 
-  // ── [NEW] Growth Engine ──
-  promoCodes PromoCode[]
+  @@index([tenantId])
+  @@index([city])
+  @@index([status])
+  @@index([deletedAt], map: "Hotel_deleted_idx")
+}
 
-  // ── [NEW] Arbitration ──
-  disputes Dispute[]
+model Property {
+  id          String       @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  governorate String
+  roomCount   Int?
+  type        PropertyType @default(HOTEL)
+  hotelId     String
+  tenantId    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  uuid        String?      @unique(map: "Property_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  orders      Order[]
+  outlets     Outlet[]
+  hotel       Hotel        @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  // ── [NEW] INVO Subscriptions (SaaS, not financial) ──
-  invoSubscriptions   InvoSubscription[]
-  documentProcessings DocumentProcessing[]
+  @@index([deletedAt], map: "Property_deleted_idx")
+}
 
-  // ── [NEW] KYC/AML Compliance (Tenant-level) ──
-  kycLevel      Int       @default(0)
-  kycStatus     String    @default("NOT_STARTED")
-  kycVerifiedAt DateTime?
+model User {
+  id                     String                   @id @default(cuid())
+  email                  String                   @unique
+  name                   String
+  companyName            String?
+  phone                  String?
+  role                   UserRole                 @default(DEPARTMENT_HEAD)
+  status                 UserStatus               @default(ACTIVE)
+  sector                 UserSector?
+  passwordHash           String?
+  platformRole           PlatformRole             @default(HOTEL)
+  tenantId               String
+  roleId                 String
+  hotelId                String?
+  supplierId             String?
+  factoringCompanyId     String?
+  canOverride            Boolean                  @default(false)
+  inviteToken            String?                  @unique
+  inviteExpiresAt        DateTime?
+  invitedBy              String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  lastActive             DateTime?
+  accountType            AccountType              @default(BUSINESS)
+  emailVerifiedAt        DateTime?
+  marketingConsent       Boolean                  @default(false)
+  termsAcceptedAt        DateTime?
+  privacyPolicyVersion   String?
+  kycLevel               Int                      @default(0)
+  kycStatus              String                   @default("NOT_STARTED")
+  kycVerifiedAt          DateTime?
+  uuid                   String?                  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  totpSecret             String?
+  twoFactorEnabled       Boolean                  @default(false)
+  ownedTenantId          String?
+  transferToken          String?                  @unique(map: "User_transfer_token_uniq")
+  transferExpiresAt      DateTime?
+  deletedAt              DateTime?
+  aiUsage                AiUsage?
+  carts                  Cart?
+  consentRecords         ConsentRecord[]
+  conversations          Conversation[]
+  Notification           Notification[]
+  NotificationPreference NotificationPreference[]
+  orders                 Order[]
+  approvals              OrderApproval[]
+  reviews                ProductReview[]
+  refreshTokens          RefreshToken[]
+  sampleRequests         SampleRequest[]
+  factoringCompany       FactoringCompany?        @relation(fields: [factoringCompanyId], references: [id])
+  hotel                  Hotel?                   @relation(fields: [hotelId], references: [id])
+  assignedRole           Role                     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  supplier               Supplier?                @relation(fields: [supplierId], references: [id])
+  tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  addresses              UserAddress[]
 
-  // ── [NEW] Tenant isolation for AgentRun + SwarmJob ──
-  agentRuns           AgentRun[]
-  swarmJobs           SwarmJob[]
-  paymentTransactions PaymentTransaction[]
-  etaCredential       EtaCredential?
+  @@index([sector])
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([roleId])
+  @@index([status])
+  @@index([platformRole])
+  @@index([deletedAt], map: "User_deleted_idx")
+  @@index([uuid])
+}
 
-  // ── [NEW] Refresh Token Rotation ──
-  refreshTokens RefreshToken[]
+model Supplier {
+  id                   String               @id @default(cuid())
+  name                 String
+  legalName            String?
+  taxId                String               @unique
+  commercialReg        String?
+  address              String?
+  city                 String
+  governorate          String
+  phone                String?
+  email                String               @unique
+  website              String?
+  description          String?
+  logoUrl              String?
+  status               SupplierStatus       @default(PENDING)
+  tier                 SupplierTier         @default(CORE)
+  type                 SupplierType         @default(WHOLESALER)
+  isVerified           Boolean              @default(false)
+  returnPolicyDays     Int                  @default(14)
+  rating               Float?               @default(0)
+  reviewCount          Int                  @default(0)
+  certifications       String?
+  bankAccount          String?
+  bankName             String?
+  tenantId             String
+  olivUserId           String?
+  olivFacilityId       String?
+  olivSyncAt           DateTime?
+  olivStatus           String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  uuid                 String?              @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt            DateTime?
+  deliveryZones        DeliveryZone[]
+  documentProcessings  DocumentProcessing[]
+  hotelMandates        HotelSupplier[]
+  invoSubscription     InvoSubscription?
+  invoices             Invoice[]
+  olivCreditFacilities OlivCreditFacility[]
+  orders               Order[]
+  products             Product[]
+  tenant               Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  audits               SupplierAudit[]
+  users                User[]
 
-  // ── [NEW] Oliv Finance Integration ──
-  consentRecords        ConsentRecord[]
-  olivCreditFacilities  OlivCreditFacility[]
-  olivSyncLogs          OlivSyncLog[]
-  factoringTransactions FactoringTransaction[]
-  olivOnboardingAudits  OlivOnboardingAudit[]
+  @@index([tenantId])
+  @@index([city])
+  @@index([status])
+  @@index([tier])
+  @@index([deletedAt], map: "Supplier_deleted_idx")
+}
 
-  // ── [NEW] Forecast Accuracy ──
-  forecastAccuracies ForecastAccuracy[]
+model DeliveryZone {
+  id         String    @id @default(cuid())
+  zone       String
+  minDays    Int
+  maxDays    Int
+  supplierId String
+  tenantId   String
+  createdAt  DateTime  @default(now())
+  uuid       String?   @unique(map: "DeliveryZone_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  fee        Decimal?  @db.Decimal(12, 2)
+  supplier   Supplier  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  // ── [NEW] Ledger ──
-  ledgerEntries LedgerEntry[]
+  @@index([deletedAt], map: "DeliveryZone_deleted_idx")
+}
 
-  // ── [NEW] Agent Memory & Leads ──
-  swarmMemories   SwarmMemory[]
-  leads           Lead[]
-  aiSubscriptions AISubscription[]
+model Product {
+  id                 String               @id @default(cuid())
+  sku                String               @unique
+  name               String
+  description        String?
+  category           ProductCategory
+  subcategory        String?
+  currency           String               @default("EGP")
+  volumeTiers        String?
+  stockQuantity      Int                  @default(0)
+  minOrderQty        Int                  @default(1)
+  leadTimeDays       Int                  @default(1)
+  reorderPoint       Int                  @default(10)
+  reorderQty         Int                  @default(50)
+  avgDailyUsage      Float                @default(0)
+  lastCountedAt      DateTime?
+  aiForecast         String?
+  unitOfMeasure      String               @default("piece")
+  shelfLifeDays      Int?
+  temperatureReq     String?
+  images             String?
+  specs              String?
+  status             ProductStatus        @default(ACTIVE)
+  supplierId         String
+  tenantId           String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  uuid               String?              @unique(map: "Product_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  unitPrice          Decimal?             @db.Decimal(12, 2)
+  cartItems          CartItem[]
+  inventorySnapshots InventorySnapshot[]
+  orderItems         OrderItem[]
+  supplier           Supplier             @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant             Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reviews            ProductReview[]
+  seasonalities      ProductSeasonality[]
+  ProductTierPrice   ProductTierPrice[]
 
-  // ── [NEW] Intelligence Layer (P0: tenant scoping) ──
-  competitors            Competitor[]
-  marketInsights         MarketInsight[]
-  featureProposals       FeatureProposal[]
-  creditLineApplications CreditLineApplication[]
+  @@index([tenantId])
+  @@index([supplierId])
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
+  @@index([deletedAt], map: "Product_deleted_idx")
+}
 
-  // ── [NEW] ETA Dead-Letter Queue ──
-  etaDeadLetterJobs EtaDeadLetterJob[]
+model ProductSeasonality {
+  id         String    @id @default(cuid())
+  productId  String
+  month      Int
+  multiplier Float     @default(1.0)
+  tenantId   String
+  createdAt  DateTime  @default(now())
+  uuid       String?   @unique(map: "ProductSeasonality_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  // ── [NEW] Seasonality (Forecast Engine D2-04) ──
-  productSeasonalities ProductSeasonality[]
+  @@unique([productId, month, tenantId])
+  @@index([tenantId])
+  @@index([productId])
+  @@index([deletedAt], map: "ProductSeasonality_deleted_idx")
+}
+
+model Order {
+  id                     String              @id @default(cuid())
+  orderNumber            String              @unique
+  status                 OrderStatus         @default(DRAFT)
+  currency               String              @default("EGP")
+  deliveryDate           DateTime?
+  deliveryInstructions   String?
+  hotelId                String
+  propertyId             String?
+  outletId               String?
+  supplierId             String
+  requesterId            String
+  tenantId               String
+  etaSubmissionId        String?             @unique
+  paymentGuaranteed      Boolean             @default(false)
+  paymentGuaranteeMethod String?
+  paymentGuaranteeSetAt  DateTime?
+  checkoutGroupId        String?
+  shippingMethod         String?
+  estimatedDelivery      DateTime?
+  poNumber               String?
+  costCenter             String?
+  deliveryAddress        String?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  uuid                   String?             @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt              DateTime?
+  subtotal               Decimal?            @db.Decimal(12, 2)
+  vatAmount              Decimal?            @db.Decimal(12, 2)
+  total                  Decimal?            @db.Decimal(12, 2)
+  shippingCost           Decimal?            @db.Decimal(12, 2)
+  creditTransactions     CreditTransaction[]
+  disputes               Dispute[]
+  invoices               Invoice[]
+  hotel                  Hotel               @relation(fields: [hotelId], references: [id])
+  outlet                 Outlet?             @relation(fields: [outletId], references: [id])
+  property               Property?           @relation(fields: [propertyId], references: [id])
+  requester              User                @relation(fields: [requesterId], references: [id])
+  supplier               Supplier            @relation(fields: [supplierId], references: [id])
+  tenant                 Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  approvals              OrderApproval[]
+  items                  OrderItem[]
+  ReturnRequest          ReturnRequest[]
+  tripStops              TripStop[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([deletedAt], map: "Order_deleted_idx")
+}
+
+model OrderItem {
+  id               String    @id @default(cuid())
+  quantity         Int
+  receivedQuantity Int?
+  returnedQuantity Int?      @default(0)
+  returnReason     String?
+  orderId          String
+  productId        String
+  notes            String?
+  uuid             String?   @unique(map: "OrderItem_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  unitPrice        Decimal?  @db.Decimal(12, 2)
+  total            Decimal?  @db.Decimal(12, 2)
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product          Product   @relation(fields: [productId], references: [id])
+
+  @@index([deletedAt], map: "OrderItem_deleted_idx")
+}
+
+model OrderApproval {
+  id          String         @id @default(cuid())
+  orderId     String
+  approverId  String
+  action      ApprovalAction
+  reason      String?
+  beforeState String?
+  afterState  String?
+  createdAt   DateTime       @default(now())
+  uuid        String?        @unique(map: "OrderApproval_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  approver    User           @relation(fields: [approverId], references: [id])
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId, approverId])
+  @@index([deletedAt], map: "OrderApproval_deleted_idx")
+}
+
+model Invoice {
+  id                    String               @id @default(cuid())
+  invoiceNumber         String               @unique
+  etaUuid               String?              @unique
+  etaStatus             EtaStatus            @default(PENDING)
+  digitalSignature      String?
+  submissionLog         String?
+  codeName              String?
+  codeNameAr            String?
+  description           String?
+  descriptionAr         String?
+  currency              String               @default("EGP")
+  retentionReleaseDate  DateTime?
+  issueDate             DateTime
+  dueDate               DateTime?
+  paidDate              DateTime?
+  status                InvoiceStatus        @default(DRAFT)
+  paymentStatus         PaymentStatus        @default(UNPAID)
+  orderId               String
+  hotelId               String
+  supplierId            String
+  tenantId              String
+  consolidatedInvoiceId String?
+  factoringStatus       FactoringStatus      @default(NOT_FACTORABLE)
+  factoringCompanyId    String?
+  acceleratedCashRate   Decimal              @default(0)
+  supplierDiscountRate  Decimal              @default(0)
+  cashDiscountDelta     Decimal              @default(0)
+  platformFee           Decimal              @default(0)
+  platformFeeRate       Decimal              @default(0)
+  hotelAdminFeeRate     Decimal              @default(0)
+  hotelAdminFeeAmount   Decimal              @default(0)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  uuid                  String?              @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt             DateTime?
+  subtotal              Decimal?             @db.Decimal(12, 2)
+  vatRate               Decimal?             @db.Decimal(5, 4)
+  vatAmount             Decimal?             @db.Decimal(12, 2)
+  total                 Decimal?             @db.Decimal(12, 2)
+  returnedAmount        Decimal?             @db.Decimal(12, 2)
+  retentionRate         Decimal?             @db.Decimal(5, 4)
+  retentionAmount       Decimal?             @db.Decimal(12, 2)
+  netPayable            Decimal?             @db.Decimal(12, 2)
+  creditTransactions    CreditTransaction[]
+  documentProcessing    DocumentProcessing?
+  etaDeadLetterJobs     EtaDeadLetterJob[]
+  factoringRequests     FactoringRequest?
+  consolidatedInvoice   ConsolidatedInvoice? @relation(fields: [consolidatedInvoiceId], references: [id])
+  factoringCompany      FactoringCompany?    @relation(fields: [factoringCompanyId], references: [id])
+  hotel                 Hotel                @relation(fields: [hotelId], references: [id])
+  order                 Order                @relation(fields: [orderId], references: [id])
+  supplier              Supplier             @relation(fields: [supplierId], references: [id])
+  tenant                Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  payments              Payment[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([orderId])
+  @@index([status])
+  @@index([factoringStatus])
+  @@index([createdAt])
+  @@index([deletedAt], map: "Invoice_deleted_idx")
+}
+
+model EtaCredential {
+  id           String    @id @default(cuid())
+  tenantId     String    @unique
+  clientId     String
+  clientSecret String
+  taxId        String
+  environment  String    @default("preprod")
+  isActive     Boolean   @default(true)
+  lastUsedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  uuid         String?   @unique(map: "EtaCredential_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt    DateTime?
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "EtaCredential_deleted_idx")
+}
+
+model EtaDeadLetterJob {
+  id            String              @id @default(cuid())
+  invoiceId     String
+  invoiceNumber String
+  error         String
+  attemptCount  Int                 @default(0)
+  maxAttempts   Int                 @default(4)
+  nextRetryAt   DateTime
+  status        EtaDeadLetterStatus @default(PENDING)
+  tenantId      String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  uuid          String?             @unique(map: "EtaDeadLetterJob_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  invoice       Invoice             @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([invoiceId])
+  @@index([status, nextRetryAt])
+  @@index([deletedAt], map: "EtaDeadLetterJob_deleted_idx")
+}
+
+model AuthorityRule {
+  id                       String          @id @default(cuid())
+  role                     UserRole
+  category                 String?
+  supplierTier             String?
+  hotelRiskTier            HotelRiskTier?
+  hotelTier                HotelTier?
+  requesterRole            UserRole?
+  requiresPaymentGuarantee Boolean         @default(false)
+  requiresEtaValidation    Boolean         @default(false)
+  requiresDualSignOff      Boolean         @default(false)
+  action                   AuthorityAction
+  routeToRole              UserRole?
+  hotelId                  String?
+  tenantId                 String?
+  name                     String?
+  description              String?
+  priority                 Int             @default(0)
+  isActive                 Boolean         @default(true)
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+  uuid                     String?         @unique(map: "AuthorityRule_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt                DateTime?
+  minValue                 Decimal?        @db.Decimal(14, 2)
+  maxValue                 Decimal?        @db.Decimal(14, 2)
+
+  @@index([deletedAt], map: "AuthorityRule_deleted_idx")
+}
+
+model SpendRecord {
+  id         String          @id @default(cuid())
+  year       Int
+  month      Int
+  hotelId    String
+  tenantId   String
+  category   ProductCategory
+  orderCount Int
+  createdAt  DateTime        @default(now())
+  uuid       String?         @unique(map: "SpendRecord_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  amount     Decimal?        @db.Decimal(12, 2)
+  hotel      Hotel           @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "SpendRecord_deleted_idx")
+}
+
+model AuditLog {
+  id           String      @id @default(cuid())
+  entityId     String
+  actorId      String?
+  actorRole    String?
+  ipAddress    String?
+  userAgent    String?
+  previousHash String?
+  hash         String?
+  tenantId     String
+  createdAt    DateTime    @default(now())
+  uuid         String?     @unique(map: "AuditLog_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityName   EntityName?
+  entityUuid   String?
+  actionType   ActionType?
+  changes      Json?
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([actorId])
+  @@index([createdAt])
+  @@index([tenantId, entityName, entityId], map: "AuditLog_tenant_entity_idx")
+}
+
+model FactoringCompany {
+  id                String                 @id @default(cuid())
+  name              String
+  legalName         String?
+  taxId             String                 @unique
+  contactEmail      String?
+  contactPhone      String?
+  status            FactoringCompanyStatus @default(ACTIVE)
+  tenantId          String
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  referralCode      String?
+  maxFacility       Decimal?               @db.Decimal(14, 2)
+  creditFacilities  CreditFacility[]
+  creditTxns        CreditTransaction[]
+  tenant            Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  factoringRequests FactoringRequest[]
+  invoices          Invoice[]
+  users             User[]
+}
+
+model CreditTransaction {
+  id                 String            @id @default(cuid())
+  type               CreditTxnType
+  description        String?
+  hotelId            String
+  factoringCompanyId String?
+  orderId            String?
+  invoiceId          String?
+  tenantId           String
+  createdAt          DateTime          @default(now())
+  uuid               String?           @unique(map: "CreditTransaction_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  amount             Decimal?          @db.Decimal(12, 2)
+  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id])
+  hotel              Hotel             @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  invoice            Invoice?          @relation(fields: [invoiceId], references: [id])
+  order              Order?            @relation(fields: [orderId], references: [id])
+  tenant             Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+  @@index([factoringCompanyId])
+  @@index([deletedAt], map: "CreditTransaction_deleted_idx")
+}
+
+model FactoringRequest {
+  id                    String                 @id @default(cuid())
+  consolidatedInvoiceId String?                @unique
+  invoiceId             String?                @unique
+  requestedAt           DateTime               @default(now())
+  factoringCompanyId    String
+  status                FactoringRequestStatus @default(PENDING)
+  riskScore             Int?                   @default(50)
+  riskTier              RiskTier               @default(MEDIUM)
+  disbursedAt           DateTime?
+  settledAt             DateTime?
+  hotelPaidAt           DateTime?
+  isNonRecourse         Boolean                @default(true)
+  partnerResponse       String?
+  tenantId              String
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  uuid                  String?                @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt             DateTime?
+  requestedAmount       Decimal?               @db.Decimal(12, 2)
+  advanceRate           Decimal?               @db.Decimal(5, 4)
+  discountRate          Decimal?               @db.Decimal(5, 4)
+  membershipDiscount    Decimal?               @db.Decimal(5, 4)
+  grossAmount           Decimal?               @db.Decimal(12, 2)
+  factoringFee          Decimal?               @db.Decimal(12, 2)
+  disbursedAmount       Decimal?               @db.Decimal(12, 2)
+  platformFee           Decimal?               @db.Decimal(12, 2)
+  platformFeeRate       Decimal?               @db.Decimal(5, 4)
+  consolidatedInvoice   ConsolidatedInvoice?   @relation(fields: [consolidatedInvoiceId], references: [id], onDelete: Cascade)
+  factoringCompany      FactoringCompany       @relation(fields: [factoringCompanyId], references: [id])
+  invoice               Invoice?               @relation(fields: [invoiceId], references: [id])
+  tenant                Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "FactoringRequest_deleted_idx")
+}
+
+/// INVO subscription — Supplier pays flat monthly fee to be listed.
+/// This is a SaaS/marketing subscription, NOT a financial product.
+model InvoSubscription {
+  id            String                 @id @default(cuid())
+  supplierId    String                 @unique
+  tenantId      String
+  plan          InvoPlan               @default(STARTER)
+  status        InvoSubscriptionStatus @default(ACTIVE)
+  currency      String                 @default("EGP")
+  startedAt     DateTime               @default(now())
+  expiresAt     DateTime
+  cancelledAt   DateTime?
+  lastBilledAt  DateTime?
+  nextBillingAt DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  uuid          String?                @unique(map: "InvoSubscription_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  monthlyFee    Decimal?               @db.Decimal(12, 2)
+  supplier      Supplier               @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant        Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([status, expiresAt])
+  @@index([deletedAt], map: "InvoSubscription_deleted_idx")
+}
+
+/// Document processing — Tracks ETA invoice submissions per supplier.
+/// Fee is charged per document processed (flat rate), NOT as % of invoice value.
+/// This is a compliance document processing service, NOT factoring or lending.
+model DocumentProcessing {
+  id               String              @id @default(cuid())
+  invoiceNumber    String              @unique
+  supplierId       String
+  hotelInvoiceId   String?             @unique
+  tenantId         String
+  documentsCount   Int                 @default(1)
+  currency         String              @default("EGP")
+  status           DocProcessingStatus @default(PENDING)
+  processedAt      DateTime?
+  etaSubmissionRef String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  uuid             String?             @unique(map: "DocumentProcessing_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  processingFee    Decimal?            @db.Decimal(12, 2)
+  totalFee         Decimal?            @db.Decimal(12, 2)
+  hotelInvoice     Invoice?            @relation(fields: [hotelInvoiceId], references: [id])
+  supplier         Supplier            @relation(fields: [supplierId], references: [id])
+  tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
+  @@index([status])
+  @@index([deletedAt], map: "DocumentProcessing_deleted_idx")
+}
+
+model LogisticsHub {
+  id                 String              @id @default(cuid())
+  name               String
+  code               String?
+  city               String
+  governorate        String
+  address            String?
+  lat                Float?
+  lng                Float?
+  type               HubType             @default(CONSOLIDATION)
+  operatingHours     String?
+  contactPhone       String?
+  isActive           Boolean             @default(true)
+  tenantId           String
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  uuid               String?             @unique(map: "LogisticsHub_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  consolidatedOrders ConsolidatedOrder[]
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trips              Trip[]
+
+  @@index([deletedAt], map: "LogisticsHub_deleted_idx")
+}
+
+model Trip {
+  id                 String              @id @default(cuid())
+  tripNumber         String              @unique
+  hubId              String
+  driverName         String?
+  driverPhone        String?
+  vehiclePlate       String?
+  scheduledDate      DateTime?
+  departureDate      DateTime?
+  arrivalDate        DateTime?
+  completedAt        DateTime?
+  status             TripStatus          @default(SCHEDULED)
+  tenantId           String
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  uuid               String?             @unique(map: "Trip_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  consolidatedOrders ConsolidatedOrder[]
+  hub                LogisticsHub        @relation(fields: [hubId], references: [id])
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stops              TripStop[]
+
+  @@index([deletedAt], map: "Trip_deleted_idx")
+}
+
+model TripStop {
+  id               String     @id @default(cuid())
+  tripId           String
+  hotelId          String
+  orderId          String?
+  tenantId         String
+  stopOrder        Int
+  stopNumber       Int?
+  estimatedArrival DateTime?
+  eta              DateTime?
+  actualArrival    DateTime?
+  arrivedAt        DateTime?
+  status           StopStatus @default(PENDING)
+  podPhotoUrl      String?
+  signatureUrl     String?
+  notes            String?
+  createdAt        DateTime   @default(now())
+  uuid             String?    @unique(map: "TripStop_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  hotel            Hotel      @relation(fields: [hotelId], references: [id])
+  order            Order?     @relation(fields: [orderId], references: [id])
+  tenant           Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trip             Trip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "TripStop_deleted_idx")
+}
+
+model Outlet {
+  id             String     @id @default(cuid())
+  name           String
+  type           OutletType @default(KITCHEN)
+  propertyId     String
+  tenantId       String
+  managerName    String?
+  managerPhone   String?
+  operatingHours String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  uuid           String?    @unique(map: "Outlet_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+  orders         Order[]
+  property       Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tenant         Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "Outlet_deleted_idx")
+}
+
+model SupplierAudit {
+  id                 String      @id @default(cuid())
+  supplierId         String
+  tenantId           String
+  auditorName        String
+  auditDate          DateTime
+  score              Int?
+  status             AuditStatus @default(PENDING)
+  coldChainCompliant Boolean?
+  haccpCertified     Boolean?
+  onSiteVisited      Boolean?
+  labTested          Boolean?
+  reportUrl          String?
+  notes              String?
+  createdAt          DateTime    @default(now())
+  uuid               String?     @unique(map: "SupplierAudit_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  supplier           Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant             Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "SupplierAudit_deleted_idx")
+}
+
+model Document {
+  id         String      @id @default(cuid())
+  fileName   String
+  fileUrl    String
+  fileType   String
+  fileSize   Int
+  entityType String
+  entityId   String
+  category   DocCategory @default(OTHER)
+  uploadedBy String
+  tenantId   String
+  createdAt  DateTime    @default(now())
+  uuid       String?     @unique(map: "Document_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([entityType, entityId])
+  @@index([tenantId])
+  @@index([deletedAt], map: "Document_deleted_idx")
+}
+
+model Payment {
+  id            String               @id @default(cuid())
+  paymentNumber String               @unique
+  currency      String               @default("EGP")
+  method        PaymentMethod        @default(BANK_TRANSFER)
+  status        PaymentStatus        @default(PENDING)
+  invoiceId     String?
+  hotelId       String
+  paidAt        DateTime?
+  referenceCode String?
+  metadata      String?
+  tenantId      String
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  uuid          String?              @unique(map: "Payment_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  amount        Decimal?             @db.Decimal(12, 2)
+  hotel         Hotel                @relation(fields: [hotelId], references: [id])
+  invoice       Invoice?             @relation(fields: [invoiceId], references: [id])
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transactions  PaymentTransaction[]
+
+  @@index([deletedAt], map: "Payment_deleted_idx")
+}
+
+model PaymentTransaction {
+  id              String    @id @default(cuid())
+  paymentId       String?
+  gatewayRef      String    @unique
+  transactionType String?   @default("PAYOUT")
+  currency        String    @default("EGP")
+  status          String    @default("PENDING")
+  observedMethod  String?
+  metadata        String?
+  tenantId        String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  uuid            String?   @unique(map: "PaymentTransaction_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  amount          Decimal?  @db.Decimal(12, 2)
+  payment         Payment?  @relation(fields: [paymentId], references: [id])
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([gatewayRef])
+  @@index([tenantId])
+  @@index([deletedAt], map: "PaymentTransaction_deleted_idx")
+}
+
+model CreditFacility {
+  id                 String               @id @default(cuid())
+  hotelId            String
+  factoringCompanyId String
+  status             CreditFacilityStatus @default(PENDING)
+  approvedAt         DateTime?
+  expiresAt          DateTime?
+  tenantId           String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  uuid               String?              @unique(map: "CreditFacility_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt          DateTime?
+  limit              Decimal?             @db.Decimal(14, 2)
+  utilized           Decimal?             @db.Decimal(12, 2)
+  interestRate       Decimal?             @db.Decimal(5, 4)
+  factoringCompany   FactoringCompany     @relation(fields: [factoringCompanyId], references: [id], onDelete: Cascade)
+  hotel              Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenant             Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "CreditFacility_deleted_idx")
+}
+
+model ConsolidatedOrder {
+  id           String       @id @default(cuid())
+  hubId        String
+  tripId       String?
+  status       String       @default("PENDING")
+  deliveryDate DateTime?
+  tenantId     String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  uuid         String?      @unique(map: "ConsolidatedOrder_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt    DateTime?
+  totalValue   Decimal?     @db.Decimal(12, 2)
+  hub          LogisticsHub @relation(fields: [hubId], references: [id], onDelete: Cascade)
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trip         Trip?        @relation(fields: [tripId], references: [id])
+
+  @@index([deletedAt], map: "ConsolidatedOrder_deleted_idx")
+}
+
+model ConsolidatedInvoice {
+  id                  String             @id @default(cuid())
+  invoiceNumber       String             @unique
+  status              ConsolidatedStatus @default(DRAFT)
+  currency            String             @default("EGP")
+  issueDate           DateTime           @default(now())
+  dueDate             DateTime
+  paidDate            DateTime?
+  hotelId             String
+  tenantId            String
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  uuid                String?            @unique(map: "ConsolidatedInvoice_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt           DateTime?
+  subtotal            Decimal?           @db.Decimal(12, 2)
+  vatAmount           Decimal?           @db.Decimal(12, 2)
+  total               Decimal?           @db.Decimal(12, 2)
+  hotelAdminFeeAmount Decimal?           @db.Decimal(12, 2)
+  hotelAdminFeeRate   Decimal?           @db.Decimal(5, 4)
+  hotel               Hotel              @relation(fields: [hotelId], references: [id])
+  tenant              Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  factoringRequest    FactoringRequest?
+  invoices            Invoice[]
+
+  @@index([deletedAt], map: "ConsolidatedInvoice_deleted_idx")
+}
+
+model HotelSupplier {
+  id          String    @id @default(cuid())
+  hotelId     String
+  supplierId  String
+  isShell     Boolean   @default(true)
+  invitedAt   DateTime  @default(now())
+  activatedAt DateTime?
+  tenantId    String
+  uuid        String?   @unique(map: "HotelSupplier_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  hotel       Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  supplier    Supplier  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([hotelId, supplierId])
+  @@index([deletedAt], map: "HotelSupplier_deleted_idx")
+}
+
+model JournalEntry {
+  id          String        @id @default(cuid())
+  entryNumber String        @unique
+  date        DateTime
+  sourceType  String
+  sourceId    String
+  description String
+  lines       String
+  status      JournalStatus @default(POSTED)
+  hotelId     String?
+  tenantId    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  uuid        String?       @unique(map: "JournalEntry_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  totalDebit  Decimal?      @db.Decimal(14, 2)
+  totalCredit Decimal?      @db.Decimal(14, 2)
+  hotel       Hotel?        @relation(fields: [hotelId], references: [id])
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "JournalEntry_deleted_idx")
+}
+
+model InventorySnapshot {
+  id              String    @id @default(cuid())
+  productId       String
+  tenantId        String
+  stockLevel      Int
+  projectedDays   Float
+  aiSuggestion    String?
+  occupancyRate   Float?
+  consumptionRate Float?
+  createdAt       DateTime  @default(now())
+  uuid            String?   @unique(map: "InventorySnapshot_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "InventorySnapshot_deleted_idx")
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  hotelId   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  tenantId  String
+  uuid      String?    @unique(map: "Cart_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  hotel     Hotel      @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+
+  @@index([deletedAt], map: "Cart_deleted_idx")
+}
+
+model CartItem {
+  id        String    @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  uuid      String?   @unique(map: "CartItem_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  unitPrice Decimal?  @db.Decimal(12, 2)
+  total     Decimal?  @db.Decimal(12, 2)
+  cart      Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "CartItem_deleted_idx")
+}
+
+model Competitor {
+  id            String           @id @default(cuid())
+  name          String           @unique
+  legalName     String?
+  website       String?
+  logoUrl       String?
+  type          CompetitorType
+  marketFocus   String
+  vertical      String
+  model         String
+  pricing       String?
+  feeStructure  String?
+  merchantCount Int?
+  supplierCount Int?
+  geoCoverage   String?
+  features      String?
+  strengths     String?
+  weaknesses    String?
+  funding       String?
+  totalRaised   String?
+  status        CompetitorStatus @default(ACTIVE)
+  tenantId      String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  uuid          String?          @unique(map: "Competitor_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  tenant        Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  insights      MarketInsight[]
+
+  @@index([tenantId])
+  @@index([deletedAt], map: "Competitor_deleted_idx")
+}
+
+model MarketInsight {
+  id           String          @id @default(cuid())
+  title        String
+  category     InsightCategory
+  summary      String
+  detail       String?
+  sourceUrl    String?
+  sourceName   String?
+  publishedAt  DateTime?
+  confidence   Int             @default(80)
+  impactScore  Int             @default(50)
+  competitorId String?
+  discoveredBy String
+  verified     Boolean         @default(false)
+  tenantId     String
+  createdAt    DateTime        @default(now())
+  uuid         String?         @unique(map: "MarketInsight_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt    DateTime?
+  competitor   Competitor?     @relation(fields: [competitorId], references: [id])
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([deletedAt], map: "MarketInsight_deleted_idx")
+}
+
+model FeatureProposal {
+  id                   String          @id @default(cuid())
+  title                String
+  description          String
+  category             FeatureCategory
+  targetActor          String
+  problem              String
+  solution             String
+  complexity           Complexity      @default(MEDIUM)
+  impact               Impact          @default(MEDIUM)
+  effortWeeks          Float?
+  gapAddressed         String?
+  moatScore            Int             @default(50)
+  revenuePotential     String?
+  status               ProposalStatus  @default(PROPOSED)
+  proposedBy           String
+  votes                Int             @default(0)
+  relatedCompetitorIds String?
+  tenantId             String
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  uuid                 String?         @unique(map: "FeatureProposal_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt            DateTime?
+  tenant               Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([deletedAt], map: "FeatureProposal_deleted_idx")
+}
+
+model AgentRun {
+  id          String         @id @default(cuid())
+  taskType    String
+  taskName    String
+  prompt      String
+  agentName   String
+  status      AgentRunStatus @default(PENDING)
+  output      String?
+  findings    String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  durationMs  Int?
+  parentRunId String?
+  childRunIds String?
+  tenantId    String
+  createdAt   DateTime       @default(now())
+  uuid        String?        @unique(map: "AgentRun_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  tenant      Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status, tenantId])
+  @@index([deletedAt], map: "AgentRun_deleted_idx")
+}
+
+model SwarmJob {
+  id               String         @id @default(cuid())
+  queueName        String
+  jobType          String
+  jobName          String
+  payload          String
+  context          String?
+  status           SwarmJobStatus @default(PENDING)
+  priority         Int            @default(5)
+  assignedAgent    String?
+  squad            String
+  scheduledAt      DateTime?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  durationMs       Int?
+  output           String?
+  findings         String?
+  error            String?
+  requiresApproval Boolean        @default(false)
+  approvedAt       DateTime?
+  approvedBy       String?
+  approvalReason   String?
+  memoryRefs       String?
+  attempt          Int            @default(0)
+  maxAttempts      Int            @default(3)
+  parentJobId      String?
+  childJobIds      String?
+  tenantId         String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  uuid             String?        @unique(map: "SwarmJob_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  tenant           Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([status, squad])
+  @@index([queueName, status])
+  @@index([scheduledAt])
+  @@index([jobType])
+  @@index([tenantId])
+  @@index([status, tenantId])
+  @@index([deletedAt], map: "SwarmJob_deleted_idx")
+}
+
+model SwarmMemory {
+  id          String     @id @default(cuid())
+  memoryType  MemoryType
+  category    String
+  key         String
+  content     String
+  vector      String?
+  metadata    String?
+  agentId     String
+  agentName   String
+  jobId       String?
+  confidence  Float      @default(0.8)
+  expiresAt   DateTime?
+  accessCount Int        @default(0)
+  tenantId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  uuid        String?    @unique(map: "SwarmMemory_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([memoryType, key, tenantId])
+  @@index([memoryType, category])
+  @@index([tenantId, memoryType])
+  @@index([deletedAt], map: "SwarmMemory_deleted_idx")
+}
+
+model Lead {
+  id            String        @id @default(cuid())
+  entityType    LeadType
+  name          String
+  legalName     String?
+  website       String?
+  email         String?
+  phone         String?
+  city          String?
+  governorate   String?
+  address       String?
+  tier          LeadTier      @default(UNRATED)
+  starRating    Int?
+  roomCount     Int?
+  category      String?
+  source        String
+  sourceUrl     String?
+  discoveredBy  String
+  enrichment    String?
+  trustSignals  String?
+  status        LeadStatus    @default(DISCOVERED)
+  priority      Int           @default(5)
+  lastContactAt DateTime?
+  contactCount  Int           @default(0)
+  responseCount Int           @default(0)
+  convertedAt   DateTime?
+  convertedToId String?
+  tenantId      String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  uuid          String?       @unique(map: "Lead_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outreachLogs  OutreachLog[]
+
+  @@index([status, entityType])
+  @@index([priority, status])
+  @@index([city, entityType])
+  @@index([tenantId])
+  @@index([deletedAt], map: "Lead_deleted_idx")
+}
+
+model OutreachLog {
+  id               String         @id @default(cuid())
+  channel          String
+  messageType      String
+  subject          String?
+  body             String?
+  leadId           String?
+  leadName         String?
+  recipientEmail   String?
+  recipientPhone   String?
+  sentByAgent      String
+  agentName        String
+  jobId            String?
+  autoSent         Boolean        @default(false)
+  approvedBy       String?
+  approvedAt       DateTime?
+  status           OutreachStatus @default(DRAFT)
+  sentAt           DateTime?
+  deliveredAt      DateTime?
+  openedAt         DateTime?
+  clickedAt        DateTime?
+  respondedAt      DateTime?
+  bounceReason     String?
+  optInVerified    Boolean        @default(false)
+  unsubscribeToken String?
+  ipAddress        String?
+  createdAt        DateTime       @default(now())
+  uuid             String?        @unique(map: "OutreachLog_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  lead             Lead?          @relation(fields: [leadId], references: [id])
+
+  @@index([status, channel])
+  @@index([leadId])
+  @@index([sentAt])
+  @@index([deletedAt], map: "OutreachLog_deleted_idx")
+}
+
+model SwarmEvent {
+  id             String        @id @default(cuid())
+  eventType      String
+  severity       EventSeverity @default(INFO)
+  squad          String?
+  agentId        String?
+  jobId          String?
+  leadId         String?
+  message        String
+  payload        String?
+  alertSent      Boolean       @default(false)
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+  createdAt      DateTime      @default(now())
+  uuid           String?       @unique(map: "SwarmEvent_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+
+  @@index([eventType, severity])
+  @@index([createdAt])
+  @@index([alertSent])
+  @@index([deletedAt], map: "SwarmEvent_deleted_idx")
+}
+
+model ModelHealth {
+  id            String      @id @default(cuid())
+  provider      String
+  model         String
+  status        ModelStatus @default(HEALTHY)
+  failCount     Int         @default(0)
+  lastFailureAt DateTime?
+  lastSuccessAt DateTime?
+  totalCalls    Int         @default(0)
+  successRate   Float       @default(1.0)
+  isPrimary     Boolean     @default(false)
+  isFallback    Boolean     @default(false)
+  updatedAt     DateTime    @updatedAt
+  uuid          String?     @unique(map: "ModelHealth_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  avgLatencyMs  Decimal?    @db.Decimal(12, 2)
+
+  @@unique([provider, model])
+  @@index([deletedAt], map: "ModelHealth_deleted_idx")
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  email     String
+  token     String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  uuid      String?   @unique(map: "EmailVerificationToken_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+
+  @@index([deletedAt], map: "EmailVerificationToken_deleted_idx")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  email     String
+  token     String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  uuid      String?   @unique(map: "PasswordResetToken_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+
+  @@index([deletedAt], map: "PasswordResetToken_deleted_idx")
+}
+
+model RefreshToken {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  family     String
+  userId     String
+  tenantId   String
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  replacedBy String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  uuid       String?   @unique(map: "RefreshToken_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([family])
+  @@index([tokenHash])
+  @@index([deletedAt], map: "RefreshToken_deleted_idx")
+}
+
+model UserAddress {
+  id          String    @id @default(cuid())
+  userId      String
+  label       String
+  address     String
+  city        String
+  governorate String
+  lat         Float?
+  lng         Float?
+  isDefault   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  uuid        String?   @unique(map: "UserAddress_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deletedAt], map: "UserAddress_deleted_idx")
+}
+
+model Conversation {
+  id        String        @id @default(cuid())
+  userId    String
+  tenantId  String
+  role      String
+  title     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  uuid      String?       @unique(map: "Conversation_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  messages  ChatMessage[]
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt])
+  @@index([tenantId])
+  @@index([deletedAt], map: "Conversation_deleted_idx")
+}
+
+model ChatMessage {
+  id             String       @id @default(cuid())
+  conversationId String
+  role           String
+  content        String
+  model          String?
+  tokensUsed     Int?
+  latencyMs      Int?
+  createdAt      DateTime     @default(now())
+  uuid           String?      @unique(map: "ChatMessage_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([deletedAt], map: "ChatMessage_deleted_idx")
+}
+
+model AiUsage {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  messagesToday Int       @default(0)
+  tokensToday   Int       @default(0)
+  messagesTotal Int       @default(0)
+  tokensTotal   Int       @default(0)
+  quotaResetAt  DateTime  @default(now())
+  plan          AiPlan    @default(FREE)
+  updatedAt     DateTime  @updatedAt
+  uuid          String?   @unique(map: "AiUsage_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "AiUsage_deleted_idx")
+}
+
+model ProductReview {
+  id        String    @id @default(cuid())
+  productId String
+  userId    String
+  rating    Int
+  title     String?
+  comment   String?
+  images    String?
+  verified  Boolean   @default(false)
+  helpful   Int       @default(0)
+  createdAt DateTime  @default(now())
+  uuid      String?   @unique(map: "ProductReview_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId, createdAt])
+  @@index([deletedAt], map: "ProductReview_deleted_idx")
+}
+
+model SampleRequest {
+  id              String       @id @default(cuid())
+  productId       String
+  userId          String
+  hotelId         String?
+  status          SampleStatus @default(PENDING)
+  quantity        Int          @default(1)
+  notes           String?
+  deliveryAddress String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  uuid            String?      @unique(map: "SampleRequest_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "SampleRequest_deleted_idx")
+}
+
+model WaitingListEntry {
+  id          String            @id @default(cuid())
+  email       String
+  role        String
+  source      String            @default("beta-launch")
+  status      WaitingListStatus @default(PENDING)
+  referrer    String?
+  notes       String?
+  invitedAt   DateTime?
+  convertedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  uuid        String?           @unique(map: "WaitingListEntry_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+
+  @@unique([email, source])
+  @@index([status, role])
+  @@index([createdAt])
+  @@index([deletedAt], map: "WaitingListEntry_deleted_idx")
+}
+
+model SocialCampaign {
+  id              String            @id @default(cuid())
+  name            String
+  description     String?
+  objective       CampaignObjective
+  targetRoles     String[]
+  platforms       SocialPlatform[]
+  startDate       DateTime
+  endDate         DateTime?
+  status          CampaignStatus    @default(DRAFT)
+  contentStrategy String?
+  metrics         String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  uuid            String?           @unique(map: "SocialCampaign_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  budgetEgp       Decimal?          @db.Decimal(14, 2)
+  posts           SocialPost[]
+
+  @@index([status, objective])
+  @@index([startDate])
+  @@index([deletedAt], map: "SocialCampaign_deleted_idx")
+}
+
+model SocialPost {
+  id          String         @id @default(cuid())
+  campaignId  String
+  platform    SocialPlatform
+  content     String
+  mediaUrls   String?
+  hashtags    String?
+  scheduledAt DateTime
+  publishedAt DateTime?
+  status      PostStatus     @default(DRAFT)
+  engagement  String?
+  swarmJobId  String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  uuid        String?        @unique(map: "SocialPost_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  campaign    SocialCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledAt])
+  @@index([campaignId])
+  @@index([platform])
+  @@index([deletedAt], map: "SocialPost_deleted_idx")
+}
+
+model SocialAudience {
+  id             String           @id @default(cuid())
+  name           String
+  description    String?
+  platforms      SocialPlatform[]
+  roles          String[]
+  locations      String[]
+  interests      String[]
+  estimatedReach Int?
+  campaignIds    String[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  uuid           String?          @unique(map: "SocialAudience_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+
+  @@index([deletedAt], map: "SocialAudience_deleted_idx")
+}
+
+model CompassReading {
+  id                    String    @id @default(cuid())
+  date                  DateTime  @unique @default(now())
+  marketDirection       String    @default("STABLE")
+  confidence            Int       @default(60)
+  priceVelocity         String?
+  paymentDynamics       String?
+  macroIndicators       String?
+  platformMetrics       String?
+  alerts                String?
+  pricingAdjustments    String?
+  creditRecommendations String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  uuid                  String?   @unique(map: "CompassReading_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt             DateTime?
+
+  @@index([deletedAt], map: "CompassReading_deleted_idx")
+}
+
+model CreditLineApplication {
+  id                   String    @id @default(cuid())
+  status               String    @default("PENDING_REVIEW")
+  hotelName            String
+  brand                String?
+  properties           Int?
+  rooms                Int?
+  governorate          String?
+  address              String?
+  crNumber             String
+  taxId                String
+  tourismLicense       String?
+  gmName               String?
+  gmPhone              String?
+  gmEmail              String?
+  cfoName              String?
+  cfoPhone             String?
+  avgPaymentDays       Float?
+  propertyDeed         Boolean   @default(false)
+  bankGuarantee        Boolean   @default(false)
+  personalGuarantee    Boolean   @default(false)
+  equipmentCollateral  Boolean   @default(false)
+  creditScore          Int?
+  aiAnalysisReport     String?
+  aiRiskFlags          String?
+  factoringCompanyId   String?
+  approvedAt           DateTime?
+  rejectedReason       String?
+  documents            String?
+  tenantId             String
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  uuid                 String?   @unique(map: "CreditLineApplication_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt            DateTime?
+  annualRevenue        Decimal?  @db.Decimal(14, 2)
+  netProfit            Decimal?  @db.Decimal(14, 2)
+  totalAssets          Decimal?  @db.Decimal(14, 2)
+  currentAssets        Decimal?  @db.Decimal(14, 2)
+  totalLiabilities     Decimal?  @db.Decimal(14, 2)
+  currentLiabilities   Decimal?  @db.Decimal(14, 2)
+  bankBalance          Decimal?  @db.Decimal(14, 2)
+  monthlyPurchases     Decimal?  @db.Decimal(14, 2)
+  existingDebt         Decimal?  @db.Decimal(14, 2)
+  depositAmount        Decimal?  @db.Decimal(14, 2)
+  recommendedLimit     Decimal?  @db.Decimal(14, 2)
+  approvedLimit        Decimal?  @db.Decimal(14, 2)
+  approvedInterestRate Decimal?  @db.Decimal(5, 4)
+  tenant               Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([deletedAt], map: "CreditLineApplication_deleted_idx")
+}
+
+model PromoCode {
+  id           String    @id @default(cuid())
+  code         String    @unique
+  discountType PromoType
+  maxUses      Int?
+  usedCount    Int       @default(0)
+  validFrom    DateTime  @default(now())
+  validUntil   DateTime?
+  tenantId     String?
+  createdAt    DateTime  @default(now())
+  uuid         String?   @unique(map: "PromoCode_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt    DateTime?
+  value        Decimal?  @db.Decimal(12, 2)
+  tenant       Tenant?   @relation(fields: [tenantId], references: [id])
+
+  @@index([deletedAt], map: "PromoCode_deleted_idx")
+}
+
+model Dispute {
+  id             String               @id @default(cuid())
+  disputeNumber  String               @unique
+  orderId        String
+  reason         String
+  evidenceUrls   String?
+  status         DisputeStatus        @default(OPEN)
+  resolution     String?
+  liability      LiabilityAssignment?
+  tenantId       String
+  createdAt      DateTime             @default(now())
+  resolvedAt     DateTime?
+  uuid           String?              @unique(map: "Dispute_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+  amountDisputed Decimal?             @db.Decimal(12, 2)
+  order          Order                @relation(fields: [orderId], references: [id])
+  tenant         Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt], map: "Dispute_deleted_idx")
+}
+
+model LeadCapture {
+  id          String     @id @default(cuid())
+  companyName String
+  email       String
+  sector      UserSector
+  role        String?
+  message     String?
+  source      String?
+  status      String     @default("new")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  uuid        String?    @unique(map: "LeadCapture_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+
+  @@index([sector])
+  @@index([email])
+  @@index([status])
+  @@index([deletedAt], map: "LeadCapture_deleted_idx")
+}
+
+/// PDPL-compliant consent record for data sharing with Oliv Finance.
+/// Every data share event must have a corresponding consent record.
+model ConsentRecord {
+  id               String        @id @default(cuid())
+  userId           String
+  tenantId         String
+  /// What consent was given: "OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT", etc.
+  consentType      String
+  /// Which partner data is shared with: "oliv_finance"
+  partnerId        String
+  /// Version of the consent text the user agreed to
+  consentVersion   String
+  /// What data categories were consented: ["business_registration", "eta_invoices", "bank_details"]
+  dataCategories   String
+  /// IP address at time of consent
+  ipAddress        String?
+  /// User agent at time of consent
+  userAgent        String?
+  /// Consent status: GRANTED, WITHDRAWN, EXPIRED
+  status           ConsentStatus @default(GRANTED)
+  /// When consent was withdrawn (if applicable)
+  withdrawnAt      DateTime?
+  /// Reason for withdrawal (if provided)
+  withdrawalReason String?
+  /// Audit hash for tamper-proofing
+  hash             String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  uuid             String?       @unique(map: "ConsentRecord_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  tenant           Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, consentType, partnerId])
+  @@index([userId, status])
+  @@index([partnerId, status])
+  @@index([tenantId])
+  @@index([deletedAt], map: "ConsentRecord_deleted_idx")
+}
+
+/// Oliv credit facility — synced from Oliv via webhooks.
+/// HotelsVendors stores the credit line limit, balance, and payment schedule
+/// so the supplier can see everything on their dashboard without leaving the platform.
+model OlivCreditFacility {
+  id              String             @id @default(cuid())
+  /// Supplier who owns this credit facility
+  supplierId      String
+  tenantId        String
+  /// Oliv's internal credit facility ID
+  olivFacilityId  String             @unique
+  /// Settlement terms in days
+  settlementDays  Int                @default(90)
+  /// Facility status
+  status          OlivFacilityStatus @default(ACTIVE)
+  /// When Oliv approved the facility
+  approvedAt      DateTime?
+  /// When the facility expires
+  expiresAt       DateTime?
+  /// Last sync timestamp from Oliv
+  lastSyncedAt    DateTime?
+  /// Oliv's risk assessment for this supplier
+  olivRiskScore   Int?
+  olivRiskTier    String?
+  /// Payment schedule as JSON string: [{ dueDate, amountEgp, status }]
+  paymentSchedule String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  uuid            String?            @unique(map: "OlivCreditFacility_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  /// Credit limit in EGP
+  creditLimitEgp  Decimal?           @db.Decimal(14, 2)
+  /// Currently utilized amount in EGP
+  utilizedEgp     Decimal?           @db.Decimal(14, 2)
+  /// Available balance in EGP (creditLimit - utilized)
+  availableEgp    Decimal?           @db.Decimal(14, 2)
+  /// Interest rate (as decimal, e.g., 0.025 = 2.5%)
+  interestRate    Decimal?           @db.Decimal(5, 4)
+  /// Advance rate (as decimal, e.g., 0.88 = 88% of invoice value)
+  advanceRate     Decimal?           @db.Decimal(5, 4)
+  /// Discount rate (as decimal, e.g., 0.025 = 2.5% partner fee)
+  discountRate    Decimal?           @db.Decimal(5, 4)
+  supplier        Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tenant          Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId, status])
+  @@index([tenantId])
+  @@index([deletedAt], map: "OlivCreditFacility_deleted_idx")
+}
+
+/// Oliv sync log — tracks every data exchange between HotelsVendors and Oliv.
+model OlivSyncLog {
+  id             String        @id @default(cuid())
+  /// Direction: INBOUND (Oliv → HotelsVendors) or OUTBOUND (HotelsVendors → Oliv)
+  direction      SyncDirection
+  /// Event type: "REGISTRATION_PRE_FILL", "CREDIT_STATUS_UPDATE", "DISBURSEMENT", etc.
+  eventType      String
+  /// Entity type: "Supplier", "OlivCreditFacility", "FactoringRequest"
+  entityType     String
+  entityId       String
+  /// Payload sent or received (encrypted at rest)
+  payload        String?
+  /// Oliv's response or error
+  response       String?
+  /// HTTP status code (if applicable)
+  httpStatus     Int?
+  /// Whether the sync was successful
+  success        Boolean       @default(true)
+  /// Error message (if failed)
+  error          String?
+  /// Idempotency key for deduplication
+  idempotencyKey String?       @unique
+  tenantId       String
+  createdAt      DateTime      @default(now())
+  uuid           String?       @unique(map: "OlivSyncLog_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+  tenant         Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([direction, eventType])
+  @@index([entityType, entityId])
+  @@index([tenantId])
+  @@index([success])
+  @@index([deletedAt], map: "OlivSyncLog_deleted_idx")
+}
+
+model FactoringTransaction {
+  id                       String    @id @default(cuid())
+  tenantId                 String
+  etaUuid                  String
+  supplierTaxId            String
+  hotelTaxId               String
+  referralTokenSignature   String
+  referralTokenPayload     String
+  referralTokenGeneratedAt DateTime
+  referralTokenExpiresAt   DateTime
+  olivTransactionId        String    @unique
+  olivReferenceNumber      String?
+  payoutStatus             String
+  disbursementDate         DateTime
+  expectedSettlementDate   DateTime
+  processedAt              DateTime
+  callbackTimestamp        DateTime
+  rawCallback              Json?
+  commissionStatus         String?   @default("PENDING")
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  uuid                     String?   @unique(map: "FactoringTransaction_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt                DateTime?
+  disbursedAmount          Decimal?  @db.Decimal(12, 2)
+  factoringFee             Decimal?  @db.Decimal(12, 2)
+  advanceRate              Decimal?  @db.Decimal(5, 4)
+  platformFeeRate          Decimal?  @db.Decimal(5, 4)
+  platformFeeAmount        Decimal?  @db.Decimal(12, 2)
+  netDisbursement          Decimal?  @db.Decimal(12, 2)
+  commissionRate           Decimal?  @db.Decimal(5, 4)
+  commissionAmount         Decimal?  @db.Decimal(12, 2)
+  tenant                   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([etaUuid])
+  @@index([supplierTaxId])
+  @@index([olivTransactionId])
+  @@index([payoutStatus])
+  @@index([referralTokenSignature])
+  @@index([createdAt])
+  @@index([deletedAt], map: "FactoringTransaction_deleted_idx")
+}
+
+model OlivOnboardingAudit {
+  id                    String    @id @default(cuid())
+  tenantId              String
+  supplierId            String
+  supplierTaxId         String    @unique
+  companyName           String
+  partnerId             String    @default("HOTELSVENDORS_GLOBAL_001")
+  attributionType       String    @default("permanent_origin_account")
+  attributionSource     String    @default("HOTELSVENDORS_PLUGIN_V1")
+  commissionAgreementId String
+  olivUserId            String?
+  olivStatus            String    @default("PENDING")
+  olivKycSubmittedAt    DateTime?
+  olivKycApprovedAt     DateTime?
+  olivCreditApprovedAt  DateTime?
+  prefillDataHash       String?
+  prefillDataSize       Int?
+  olivAcknowledgedAt    DateTime?
+  olivAcknowledgedVia   String?
+  olivAcknowledgmentRef String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  uuid                  String?   @unique(map: "OlivOnboardingAudit_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt             DateTime?
+  tenant                Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([olivStatus])
+  @@index([partnerId])
+  @@index([deletedAt], map: "OlivOnboardingAudit_deleted_idx")
+}
+
+model AISubscription {
+  id               String    @id @default(cuid())
+  userId           String
+  tenantId         String
+  tier             String    @default("FREE")
+  status           String    @default("ACTIVE")
+  monthlyCredits   Int
+  monthlyPrice     Int
+  startedAt        DateTime  @default(now())
+  expiresAt        DateTime
+  paymentReference String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  uuid             String?   @unique(map: "AISubscription_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([userId, tenantId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([deletedAt], map: "AISubscription_deleted_idx")
+}
+
+model AITokenUsage {
+  id             String    @id @default(cuid())
+  userId         String
+  tenantId       String
+  feature        String
+  creditsCost    Int
+  tokensInput    Int       @default(0)
+  tokensOutput   Int       @default(0)
+  taskComplexity String    @default("simple")
+  createdAt      DateTime  @default(now())
+  uuid           String?   @unique(map: "AITokenUsage_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+
+  @@index([userId, tenantId])
+  @@index([feature])
+  @@index([createdAt])
+  @@index([deletedAt], map: "AITokenUsage_deleted_idx")
+}
+
+model LedgerEntry {
+  id         String    @id @default(cuid())
+  tenantId   String
+  entityType String
+  entityId   String
+  entryType  String
+  account    String
+  currency   String    @default("EGP")
+  reference  String?
+  metadata   String?
+  createdAt  DateTime  @default(now())
+  uuid       String?   @unique(map: "LedgerEntry_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  amount     Decimal?  @db.Decimal(12, 2)
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, entityType, entityId])
+  @@index([account])
+  @@index([createdAt])
+  @@index([deletedAt], map: "LedgerEntry_deleted_idx")
+}
+
+model ForecastAccuracy {
+  id              String    @id @default(cuid())
+  productId       String
+  forecastDate    DateTime
+  predictedQty    Float
+  actualQty       Float?
+  accuracyPercent Float?
+  seasonPeak      Boolean   @default(false)
+  tenantId        String
+  createdAt       DateTime  @default(now())
+  uuid            String?   @unique(map: "ForecastAccuracy_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([productId, forecastDate])
+  @@index([deletedAt], map: "ForecastAccuracy_deleted_idx")
+}
+
+model CreditNote {
+  id        String   @id
+  uuid      String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String
+  number    String   @unique
+  invoiceId String
+  returnId  String?
+  amount    Decimal  @db.Decimal(12, 2)
+  currency  String   @default("EGP")
+  reason    String?
+  status    String   @default("ISSUED")
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, invoiceId], map: "CreditNote_tenant_invoice_idx")
+}
+
+model Message {
+  id            String        @id
+  threadId      String
+  senderUserId  String?
+  senderRole    String?
+  body          String
+  attachments   String?
+  createdAt     DateTime      @default(now())
+  MessageThread MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Message_thread_fkey")
+
+  @@index([threadId])
+}
+
+model MessageThread {
+  id         String     @id
+  uuid       String     @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId   String
+  entityName EntityName
+  entityId   String
+  subject    String?
+  createdAt  DateTime   @default(now())
+  Message    Message[]
+
+  @@index([tenantId, entityName, entityId], map: "MessageThread_tenant_entity_idx")
+}
+
+model Notification {
+  id        String              @id
+  uuid      String              @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String
+  userId    String
+  type      NotificationType
+  channel   NotificationChannel
+  subject   String?
+  body      String?
+  readAt    DateTime?
+  sentAt    DateTime?
+  createdAt DateTime            @default(now())
+  User      User                @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Notification_user_fkey")
+
+  @@index([tenantId, type])
+  @@index([userId, readAt])
+}
+
+model NotificationPreference {
+  id       String              @id
+  tenantId String
+  userId   String
+  channel  NotificationChannel
+  type     NotificationType
+  enabled  Boolean             @default(true)
+  User     User                @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "NotifPref_user_fkey")
+
+  @@unique([userId, channel, type], map: "NotifPref_user_channel_type_key")
+  @@index([tenantId], map: "NotifPref_tenantId_idx")
+}
+
+model PaymentTerm {
+  id           String           @id
+  tenantId     String
+  code         PaymentTermsCode @default(NET_30)
+  label        String
+  days         Int              @default(30)
+  interestRate Decimal?         @db.Decimal(5, 4)
+  lateFeePct   Decimal?         @db.Decimal(5, 4)
+  graceDays    Int              @default(0)
+  Tenant       Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "PaymentTerm_tenant_fkey")
+
+  @@unique([tenantId, code], map: "PaymentTerm_tenant_code_key")
+  @@index([tenantId])
+}
+
+model ProductTierPrice {
+  id        String  @id
+  productId String
+  minQty    Int
+  unitPrice Decimal @db.Decimal(12, 2)
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ProductTierPrice_product_fkey")
+
+  @@unique([productId, minQty], map: "ProductTierPrice_product_minQty_key")
+  @@index([productId])
+}
+
+model ReturnRequest {
+  id           String       @id
+  uuid         String       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String
+  orderId      String
+  invoiceId    String?
+  reason       ReturnReason
+  status       ReturnStatus @default(REQUESTED)
+  requestedQty Int
+  approvedQty  Int?
+  amount       Decimal      @db.Decimal(12, 2)
+  createdAt    DateTime     @default(now())
+  resolvedAt   DateTime?
+  Order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ReturnRequest_order_fkey")
+
+  @@index([orderId])
+  @@index([tenantId, status], map: "ReturnRequest_tenant_status_idx")
+}
+
+model Workspace {
+  id        String    @id
+  uuid      String    @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String
+  name      String
+  slug      String
+  isDefault Boolean   @default(false)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  Tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Workspace_tenant_fkey")
+
+  @@unique([tenantId, slug], map: "Workspace_tenant_slug_key")
+  @@index([tenantId])
 }
 
 enum TenantType {
@@ -135,120 +2272,6 @@ enum TenantStatus {
   ACTIVE_DEMO
   INACTIVE
   SUSPENDED
-}
-
-// ─────────────────────────────────────────
-// ROLE & PERMISSION — Granular RBAC
-// ─────────────────────────────────────────
-
-model Role {
-  id              String           @id @default(cuid())
-  name            String
-  tenantId        String?
-  tenant          Tenant?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  isGlobal        Boolean          @default(false)
-  permissions     Permission[]
-  users           User[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  rolePermissions RolePermission[]
-
-  @@unique([tenantId, name])
-}
-
-model Permission {
-  id              String           @id @default(cuid())
-  code            String           @unique
-  name            String
-  description     String?
-  roles           Role[]
-  createdAt       DateTime         @default(now())
-  rolePermissions RolePermission[]
-}
-
-model RolePermission {
-  roleId       String
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permissionId String
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  assignedAt   DateTime   @default(now())
-
-  @@id([roleId, permissionId])
-}
-
-// ─────────────────────────────────────────
-// 1. HOTELS (Buyers)
-// ─────────────────────────────────────────
-
-model Hotel {
-  id            String  @id @default(cuid())
-  tenantId      String
-  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  name          String
-  legalName     String?
-  taxId         String  @unique // ETA Tax Registration Number
-  commercialReg String?
-  address       String?
-  city          String
-  governorate   String
-  phone         String?
-  email         String?
-  starRating    Int? // 3, 4, 5, etc.
-
-  roomCount   Int?
-  tier        HotelTier   @default(CORE)
-  status      HotelStatus @default(ACTIVE)
-  creditLimit Float?
-  creditUsed  Float?      @default(0)
-
-  // Risk scoring
-  riskScore Int?      @default(50) // 0-100, higher = riskier
-  riskTier  RiskTier? @default(MEDIUM)
-
-  // Relations
-  properties     Property[]
-  users          User[]
-  orders         Order[]
-  invoices       Invoice[]
-  spendRecords   SpendRecord[]
-  journalEntries JournalEntry[]
-  carts          Cart[]
-
-  consolidatedInvoices ConsolidatedInvoice[]
-  mandatedSuppliers    HotelSupplier[]
-
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  creditTransactions CreditTransaction[]
-  creditFacilities   CreditFacility[]
-  tripStops          TripStop[]
-  payments           Payment[]
-
-  @@index([tenantId])
-  @@index([city])
-  @@index([status])
-}
-
-model Property {
-  id          String       @id @default(cuid())
-  name        String
-  address     String
-  city        String
-  governorate String
-  roomCount   Int?
-  type        PropertyType @default(HOTEL)
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  outlets Outlet[]
-  orders  Order[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum HotelRiskTier {
@@ -276,89 +2299,6 @@ enum PropertyType {
   RESORT
   SERVICE_APARTMENT
   BOUTIQUE
-}
-
-// ─────────────────────────────────────────
-// 2. USERS (Authority Matrix Actors)
-// ─────────────────────────────────────────
-
-model User {
-  id          String      @id @default(cuid())
-  email       String      @unique
-  name        String
-  companyName String?
-  phone       String?
-  role        UserRole    @default(DEPARTMENT_HEAD)
-  status      UserStatus  @default(ACTIVE)
-  sector      UserSector?
-
-  // Auth
-  passwordHash String?
-
-  // Platform role
-  platformRole PlatformRole @default(HOTEL)
-
-  // Tenant & RBAC
-  tenantId     String
-  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  roleId       String
-  assignedRole Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  // Actor relations
-  hotelId String?
-  hotel   Hotel?  @relation(fields: [hotelId], references: [id], onDelete: SetNull)
-
-  supplierId String?
-  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
-
-  factoringCompanyId String?
-  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id], onDelete: SetNull)
-
-  // Authority Matrix
-  canOverride Boolean @default(false)
-
-  // Delegate invite
-  inviteToken     String?   @unique
-  inviteExpiresAt DateTime?
-  invitedBy       String?
-
-  // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  approvals  OrderApproval[]
-  carts      Cart[]
-  lastActive DateTime?
-  orders     Order[]
-
-  accountType     AccountType @default(BUSINESS)
-  emailVerifiedAt DateTime?
-
-  // Consent & Privacy (PDPL Art. 5, 6, 13)
-  marketingConsent     Boolean   @default(false)
-  termsAcceptedAt      DateTime?
-  privacyPolicyVersion String?
-
-  // ── [NEW] KYC/AML Compliance ──
-  kycLevel      Int       @default(0) // 0=not started, 1,2,3 = verified level
-  kycStatus     String    @default("NOT_STARTED") // NOT_STARTED, LEVEL_1_PENDING, LEVEL_1_VERIFIED, etc.
-  kycVerifiedAt DateTime?
-
-  conversations  Conversation[]
-  aiUsage        AiUsage?
-  addresses      UserAddress[]
-  reviews        ProductReview[]
-  sampleRequests SampleRequest[]
-  refreshTokens  RefreshToken[]
-  consentRecords ConsentRecord[]
-
-  @@index([sector])
-  @@index([tenantId])
-  @@index([hotelId])
-  @@index([supplierId])
-  @@index([roleId])
-  @@index([status])
-  @@index([platformRole])
 }
 
 enum UserRole {
@@ -402,92 +2342,6 @@ enum AccountType {
   BUSINESS
 }
 
-// ─────────────────────────────────────────
-// 3. SUPPLIERS (Sellers)
-// ─────────────────────────────────────────
-
-model Supplier {
-  id            String  @id @default(cuid())
-  name          String
-  legalName     String?
-  taxId         String  @unique
-  commercialReg String?
-  address       String?
-  city          String
-  governorate   String
-
-  phone   String?
-  email   String  @unique
-  website String?
-
-  description String?
-  logoUrl     String?
-
-  status           SupplierStatus @default(PENDING)
-  tier             SupplierTier   @default(CORE)
-  type             SupplierType   @default(WHOLESALER)
-  isVerified       Boolean        @default(false)
-  returnPolicyDays Int            @default(14)
-  rating           Float?         @default(0)
-  reviewCount      Int            @default(0)
-
-  certifications String?
-
-  bankAccount String?
-  bankName    String?
-
-  // ── INVO SaaS Subscription (replaces old saasSubscriptionPlan) ──
-  invoSubscription InvoSubscription?
-
-  products      Product[]
-  orders        Order[]
-  invoices      Invoice[]
-  audits        SupplierAudit[]
-  users         User[]
-  hotelMandates HotelSupplier[]
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  deliveryZones DeliveryZone[]
-
-  // Document processing records
-  documentProcessings DocumentProcessing[]
-
-  // ── Oliv Finance Integration ──
-  olivUserId     String? // Oliv's user ID for this supplier
-  olivFacilityId String? // Link to OlivCreditFacility
-  olivSyncAt     DateTime? // Last Oliv sync timestamp
-  olivStatus     String? // Oliv onboarding: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
-
-  // ── Oliv Credit Facility ──
-  olivCreditFacilities OlivCreditFacility[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId])
-  @@index([city])
-  @@index([status])
-  @@index([tier])
-}
-
-model DeliveryZone {
-  id      String @id @default(cuid())
-  zone    String
-  minDays Int
-  maxDays Int
-  fee     Float
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-}
-
 enum SupplierStatus {
   PENDING
   ACTIVE
@@ -508,63 +2362,6 @@ enum SupplierType {
   RETAILER
 }
 
-// ─────────────────────────────────────────
-// 4. PRODUCTS (Catalog)
-// ─────────────────────────────────────────
-
-model Product {
-  id          String          @id @default(cuid())
-  sku         String          @unique
-  name        String
-  description String?
-  category    ProductCategory
-  subcategory String?
-
-  unitPrice Float
-  currency  String @default("EGP")
-
-  volumeTiers String?
-
-  stockQuantity Int       @default(0)
-  minOrderQty   Int       @default(1)
-  leadTimeDays  Int       @default(1)
-  reorderPoint  Int       @default(10)
-  reorderQty    Int       @default(50)
-  avgDailyUsage Float     @default(0)
-  lastCountedAt DateTime?
-  aiForecast    String?
-
-  unitOfMeasure  String  @default("piece")
-  shelfLifeDays  Int?
-  temperatureReq String?
-
-  images String?
-  specs  String?
-
-  status ProductStatus @default(ACTIVE)
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  orderItems         OrderItem[]
-  inventorySnapshots InventorySnapshot[]
-  seasonalities      ProductSeasonality[]
-
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  cartItems CartItem[]
-  reviews   ProductReview[]
-
-  @@index([tenantId])
-  @@index([supplierId])
-  @@index([category])
-  @@index([status])
-  @@index([createdAt])
-}
-
 enum ProductCategory {
   F_AND_B
   CONSUMABLES
@@ -578,135 +2375,6 @@ enum ProductStatus {
   INACTIVE
   OUT_OF_STOCK
   DISCONTINUED
-}
-
-// ─────────────────────────────────────────
-// 4b. PRODUCT SEASONALITY (Forecast Engine)
-// ─────────────────────────────────────────
-
-model ProductSeasonality {
-  id         String  @id @default(cuid())
-  productId  String
-  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  month      Int // 1-12
-  multiplier Float   @default(1.0) // 1.0 = normal, 1.5 = 50% above normal, 0.5 = half
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@unique([productId, month, tenantId])
-  @@index([tenantId])
-  @@index([productId])
-}
-
-// ─────────────────────────────────────────
-// 5. ORDERS (Purchase Orders)
-// ─────────────────────────────────────────
-
-model Order {
-  id          String @id @default(cuid())
-  orderNumber String @unique
-
-  status OrderStatus @default(DRAFT)
-
-  subtotal  Float
-  vatAmount Float
-  total     Float
-  currency  String @default("EGP")
-
-  deliveryDate         DateTime?
-  deliveryInstructions String?
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  propertyId String?
-  property   Property? @relation(fields: [propertyId], references: [id])
-
-  outletId String?
-  outlet   Outlet? @relation(fields: [outletId], references: [id])
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-
-  requesterId String
-  requester   User   @relation(fields: [requesterId], references: [id])
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  items     OrderItem[]
-  approvals OrderApproval[]
-  invoices  Invoice[]
-
-  etaSubmissionId String? @unique
-
-  // Payment guarantee (operated by licensed third-party, not platform)
-  paymentGuaranteed      Boolean   @default(false)
-  paymentGuaranteeMethod String? // FACTORING_PARTNER, DIRECT, WAIVED
-  paymentGuaranteeSetAt  DateTime?
-
-  checkoutGroupId   String?
-  shippingMethod    String?
-  shippingCost      Float?    @default(0)
-  estimatedDelivery DateTime?
-
-  poNumber        String?
-  costCenter      String?
-  deliveryAddress String?
-
-  disputes Dispute[]
-
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  creditTransactions CreditTransaction[]
-  tripStops          TripStop[]
-
-  @@index([tenantId])
-  @@index([hotelId])
-  @@index([supplierId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model OrderItem {
-  id        String @id @default(cuid())
-  quantity  Int
-  unitPrice Float
-  total     Float
-
-  receivedQuantity Int?
-  returnedQuantity Int?    @default(0)
-  returnReason     String?
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-
-  notes String?
-}
-
-model OrderApproval {
-  id      String @id @default(cuid())
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  approverId String
-  approver   User   @relation(fields: [approverId], references: [id])
-
-  action ApprovalAction
-  reason String?
-
-  beforeState String?
-  afterState  String?
-
-  createdAt DateTime @default(now())
-
-  @@index([orderId, approverId])
 }
 
 enum OrderStatus {
@@ -731,97 +2399,6 @@ enum ApprovalAction {
   ADMIN_OVERRIDE
 }
 
-// ─────────────────────────────────────────
-// 6. INVOICES (ETA E-Invoicing)
-// ─────────────────────────────────────────
-
-model Invoice {
-  id            String @id @default(cuid())
-  invoiceNumber String @unique
-
-  // ETA Compliance
-  etaUuid          String?   @unique
-  etaStatus        EtaStatus @default(PENDING)
-  digitalSignature String?
-  submissionLog    String?
-
-  // ETA Dual-Language Fields (bilingual invoice line items per ETA V2 spec)
-  codeName      String? // Product/service code name (English)
-  codeNameAr    String? // Product/service code name (Arabic) — اسم الكود
-  description   String? // Line item description (English)
-  descriptionAr String? // Line item description (Arabic) — الوصف
-
-  // Financial
-  subtotal  Float
-  vatRate   Float  @default(14.00)
-  vatAmount Float
-  total     Float
-  currency  String @default("EGP")
-
-  returnedAmount       Float?    @default(0)
-  retentionRate        Float?    @default(0)
-  retentionAmount      Float?    @default(0)
-  netPayable           Float?
-  retentionReleaseDate DateTime?
-
-  issueDate DateTime
-  dueDate   DateTime?
-  paidDate  DateTime?
-
-  status        InvoiceStatus @default(DRAFT)
-  paymentStatus PaymentStatus @default(UNPAID)
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  consolidatedInvoiceId String?
-  consolidatedInvoice   ConsolidatedInvoice? @relation(fields: [consolidatedInvoiceId], references: [id], onDelete: SetNull)
-
-  // ── Document processing (platform service, NOT financial spread) ──
-  documentProcessing DocumentProcessing?
-
-  // Factoring — operated by licensed third-party partner only
-  // The platform does NOT hold cash or charge factoring fees
-  factoringStatus      FactoringStatus    @default(NOT_FACTORABLE)
-  factoringCompanyId   String?
-  factoringCompany     FactoringCompany?  @relation(fields: [factoringCompanyId], references: [id])
-  factoringRequests    FactoringRequest[]
-  acceleratedCashRate  Decimal            @default(0) // Early payment discount rate applied
-  supplierDiscountRate Decimal            @default(0) // Supplier's cash discount rate for early payment
-  cashDiscountDelta    Decimal            @default(0) // Delta between supplier discount and factoring fee
-
-  // Platform & admin fee fields
-  platformFee         Decimal @default(0) // Platform fee charged per invoice
-  platformFeeRate     Decimal @default(0) // Platform fee percentage rate
-  hotelAdminFeeRate   Decimal @default(0) // Hotel admin fee percentage
-  hotelAdminFeeAmount Decimal @default(0) // Calculated hotel admin fee amount
-
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  payments           Payment[]
-  creditTransactions CreditTransaction[]
-
-  // ── [NEW] ETA Dead-Letter Queue ──
-  etaDeadLetterJobs EtaDeadLetterJob[]
-
-  @@index([tenantId])
-  @@index([hotelId])
-  @@index([supplierId])
-  @@index([orderId])
-  @@index([status])
-  @@index([factoringStatus])
-  @@index([createdAt])
-}
-
 enum EtaStatus {
   PENDING
   SUBMITTING
@@ -829,47 +2406,6 @@ enum EtaStatus {
   REJECTED
   RETRYING
   MANUAL_RESOLUTION
-}
-
-model EtaCredential {
-  id           String    @id @default(cuid())
-  tenantId     String    @unique
-  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  clientId     String
-  clientSecret String // AES-256-GCM encrypted
-  taxId        String
-  environment  String    @default("preprod") // preprod | production
-  isActive     Boolean   @default(true)
-  lastUsedAt   DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-}
-
-// ── [NEW] ETA Dead-Letter Queue (compliance retry, NOT financial) ──
-
-model EtaDeadLetterJob {
-  id String @id @default(cuid())
-
-  invoiceId     String
-  invoice       Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  invoiceNumber String
-
-  error        String
-  attemptCount Int      @default(0)
-  maxAttempts  Int      @default(4)
-  nextRetryAt  DateTime
-
-  status EtaDeadLetterStatus @default(PENDING)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId, status])
-  @@index([invoiceId])
-  @@index([status, nextRetryAt])
 }
 
 enum EtaDeadLetterStatus {
@@ -894,7 +2430,7 @@ enum PaymentStatus {
   PARTIALLY_PAID
   PAID
   OVERDUE
-  FACTORED // Paid by licensed factoring partner, not platform
+  FACTORED
 }
 
 enum FactoringStatus {
@@ -906,44 +2442,6 @@ enum FactoringStatus {
   LOCKED_BY_MASTER
 }
 
-// ─────────────────────────────────────────
-// 7. AUTHORITY MATRIX (Governance)
-// ─────────────────────────────────────────
-
-model AuthorityRule {
-  id String @id @default(cuid())
-
-  role         UserRole
-  minValue     Float
-  maxValue     Float
-  category     String?
-  supplierTier String?
-
-  hotelRiskTier HotelRiskTier?
-  hotelTier     HotelTier?
-
-  requesterRole UserRole?
-
-  requiresPaymentGuarantee Boolean @default(false)
-  requiresEtaValidation    Boolean @default(false)
-  requiresDualSignOff      Boolean @default(false)
-
-  action AuthorityAction
-
-  routeToRole UserRole?
-
-  hotelId  String?
-  tenantId String?
-
-  name        String?
-  description String?
-  priority    Int     @default(0)
-  isActive    Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 enum AuthorityAction {
   AUTO_APPROVE
   ROUTE_TO_GM
@@ -952,116 +2450,6 @@ enum AuthorityAction {
   DUAL_SIGN_OFF
   REJECT
   REQUIRE_OWNER
-}
-
-// ─────────────────────────────────────────
-// 8. SPEND ANALYTICS
-// ─────────────────────────────────────────
-
-model SpendRecord {
-  id    String @id @default(cuid())
-  year  Int
-  month Int
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  category   ProductCategory
-  amount     Float
-  orderCount Int
-
-  createdAt DateTime @default(now())
-}
-
-// ─────────────────────────────────────────
-// 9. AUDIT LOG (Immutable)
-// ─────────────────────────────────────────
-
-model AuditLog {
-  id String @id @default(cuid())
-
-  entityType String
-  entityId   String
-  action     String
-
-  actorId   String?
-  actorRole String?
-
-  beforeState String?
-  afterState  String?
-
-  ipAddress String?
-  userAgent String?
-
-  previousHash String?
-  hash         String?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([entityType, entityId])
-  @@index([actorId])
-  @@index([createdAt])
-}
-
-// ─────────────────────────────────────────
-// 10. FACTORING — Licensed Third-Party Partners Only
-// ⚠️  The platform does NOT operate factoring. These models track
-//     partner-operated factoring services for reference only.
-// ─────────────────────────────────────────
-
-model FactoringCompany {
-  id           String                 @id @default(cuid())
-  name         String
-  legalName    String?
-  taxId        String                 @unique
-  contactEmail String?
-  contactPhone String?
-  status       FactoringCompanyStatus @default(ACTIVE)
-  maxFacility  Float?
-
-  invoices          Invoice[]
-  creditTxns        CreditTransaction[]
-  creditFacilities  CreditFacility[]
-  factoringRequests FactoringRequest[]
-  users             User[]
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model CreditTransaction {
-  id          String        @id @default(cuid())
-  type        CreditTxnType
-  amount      Float
-  description String?
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  factoringCompanyId String?
-  factoringCompany   FactoringCompany? @relation(fields: [factoringCompanyId], references: [id])
-
-  orderId   String?
-  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  invoiceId String?
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([hotelId])
-  @@index([factoringCompanyId])
 }
 
 enum FactoringCompanyStatus {
@@ -1076,50 +2464,6 @@ enum CreditTxnType {
   FACTORING_ADVANCE
   FACTORING_COLLECTION
   ADJUSTMENT
-}
-
-model FactoringRequest {
-  id String @id @default(cuid())
-
-  consolidatedInvoiceId String?              @unique
-  consolidatedInvoice   ConsolidatedInvoice? @relation(fields: [consolidatedInvoiceId], references: [id], onDelete: Cascade)
-
-  invoiceId String?  @unique
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
-
-  requestedAmount Float
-  requestedAt     DateTime @default(now())
-
-  factoringCompanyId String
-  factoringCompany   FactoringCompany @relation(fields: [factoringCompanyId], references: [id])
-
-  status    FactoringRequestStatus @default(PENDING)
-  riskScore Int?                   @default(50)
-  riskTier  RiskTier               @default(MEDIUM)
-
-  // Terms set by the factoring partner (not the platform)
-  advanceRate        Float @default(0.90)
-  discountRate       Float @default(0.02)
-  membershipDiscount Float @default(0)
-
-  grossAmount     Float?
-  factoringFee    Float? // Charged by factoring partner, not platform
-  disbursedAmount Float?
-  platformFee     Float? @default(0) // Platform referral fee (invoiced off-chain)
-  platformFeeRate Float? @default(0.005) // 0.5% default referral rate
-
-  disbursedAt DateTime?
-  settledAt   DateTime?
-  hotelPaidAt DateTime?
-
-  isNonRecourse   Boolean @default(true)
-  partnerResponse String?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum FactoringRequestStatus {
@@ -1137,70 +2481,6 @@ enum RiskTier {
   MEDIUM
   HIGH
   CRITICAL
-}
-
-// ─────────────────────────────────────────
-// 11. INVO — Supplier SaaS Subscriptions & Document Processing
-// ⚠️  SaaS marketplace model. NO cash custody, NO lending, NO factoring.
-// ─────────────────────────────────────────
-
-/// INVO subscription — Supplier pays flat monthly fee to be listed.
-/// This is a SaaS/marketing subscription, NOT a financial product.
-model InvoSubscription {
-  id         String   @id @default(cuid())
-  supplierId String   @unique
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  tenantId   String
-  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  plan   InvoPlan               @default(STARTER)
-  status InvoSubscriptionStatus @default(ACTIVE)
-
-  // Flat monthly SaaS fee
-  monthlyFee    Float     @default(500)
-  currency      String    @default("EGP")
-  startedAt     DateTime  @default(now())
-  expiresAt     DateTime
-  cancelledAt   DateTime?
-  lastBilledAt  DateTime?
-  nextBillingAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, expiresAt])
-}
-
-/// Document processing — Tracks ETA invoice submissions per supplier.
-/// Fee is charged per document processed (flat rate), NOT as % of invoice value.
-/// This is a compliance document processing service, NOT factoring or lending.
-model DocumentProcessing {
-  id            String   @id @default(cuid())
-  invoiceNumber String   @unique
-  supplierId    String
-  supplier      Supplier @relation(fields: [supplierId], references: [id])
-
-  // Link to the hotel invoice being processed
-  hotelInvoiceId String?  @unique
-  hotelInvoice   Invoice? @relation(fields: [hotelInvoiceId], references: [id])
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  // Flat processing fee per document (NOT a financial spread)
-  processingFee    Float               @default(5.00)
-  documentsCount   Int                 @default(1)
-  totalFee         Float               @default(5.00)
-  currency         String              @default("EGP")
-  status           DocProcessingStatus @default(PENDING)
-  processedAt      DateTime?
-  etaSubmissionRef String? // ETA UUID after successful submission
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([supplierId])
-  @@index([status])
 }
 
 enum InvoPlan {
@@ -1222,88 +2502,6 @@ enum DocProcessingStatus {
   ACCEPTED
   REJECTED
   PAID
-}
-
-// ─────────────────────────────────────────
-// 12. LOGISTICS — Shark-Breaker Coastal Hub
-// ─────────────────────────────────────────
-
-model LogisticsHub {
-  id             String  @id @default(cuid())
-  name           String
-  code           String?
-  city           String
-  governorate    String
-  address        String?
-  lat            Float?
-  lng            Float?
-  type           HubType @default(CONSOLIDATION)
-  operatingHours String?
-  contactPhone   String?
-  isActive       Boolean @default(true)
-
-  trips              Trip[]
-  consolidatedOrders ConsolidatedOrder[]
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Trip {
-  id         String       @id @default(cuid())
-  tripNumber String       @unique
-  hubId      String
-  hub        LogisticsHub @relation(fields: [hubId], references: [id])
-
-  driverName    String?
-  driverPhone   String?
-  vehiclePlate  String?
-  scheduledDate DateTime?
-  departureDate DateTime?
-  arrivalDate   DateTime?
-  completedAt   DateTime?
-  status        TripStatus @default(SCHEDULED)
-
-  stops              TripStop[]
-  consolidatedOrders ConsolidatedOrder[]
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model TripStop {
-  id     String @id @default(cuid())
-  tripId String
-  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  orderId String?
-  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  stopOrder        Int
-  stopNumber       Int?
-  estimatedArrival DateTime?
-  eta              DateTime?
-  actualArrival    DateTime?
-  arrivedAt        DateTime?
-  status           StopStatus @default(PENDING)
-
-  podPhotoUrl  String?
-  signatureUrl String?
-  notes        String?
-
-  createdAt DateTime @default(now())
 }
 
 enum HubType {
@@ -1333,30 +2531,6 @@ enum StopStatus {
   POD_CAPTURED
 }
 
-// ─────────────────────────────────────────
-// 13. OUTLET — Multi-kitchen / Multi-department
-// ─────────────────────────────────────────
-
-model Outlet {
-  id         String     @id @default(cuid())
-  name       String
-  type       OutletType @default(KITCHEN)
-  propertyId String
-  property   Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  managerName    String?
-  managerPhone   String?
-  operatingHours String?
-
-  orders Order[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 enum OutletType {
   KITCHEN
   POOL_BAR
@@ -1368,65 +2542,11 @@ enum OutletType {
   MAIN_RESTAURANT
 }
 
-// ─────────────────────────────────────────
-// 14. SUPPLIER AUDIT & VERIFICATION
-// ─────────────────────────────────────────
-
-model SupplierAudit {
-  id         String   @id @default(cuid())
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  auditorName String
-  auditDate   DateTime
-  score       Int?
-  status      AuditStatus @default(PENDING)
-
-  coldChainCompliant Boolean?
-  haccpCertified     Boolean?
-  onSiteVisited      Boolean?
-  labTested          Boolean?
-
-  reportUrl String?
-  notes     String?
-
-  createdAt DateTime @default(now())
-}
-
 enum AuditStatus {
   PENDING
   PASSED
   FAILED
   CONDITIONAL
-}
-
-// ─────────────────────────────────────────
-// 15. DOCUMENT / FILE UPLOAD
-// ─────────────────────────────────────────
-
-model Document {
-  id       String @id @default(cuid())
-  fileName String
-  fileUrl  String
-  fileType String
-  fileSize Int
-
-  entityType String
-  entityId   String
-
-  category   DocCategory @default(OTHER)
-  uploadedBy String
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([entityType, entityId])
-  @@index([tenantId])
 }
 
 enum DocCategory {
@@ -1441,57 +2561,6 @@ enum DocCategory {
   OTHER
 }
 
-// ─────────────────────────────────────────
-// 16. PAYMENT
-// ─────────────────────────────────────────
-
-model Payment {
-  id            String @id @default(cuid())
-  paymentNumber String @unique
-  amount        Float
-  currency      String @default("EGP")
-
-  method PaymentMethod @default(BANK_TRANSFER)
-  status PaymentStatus @default(PENDING)
-
-  invoiceId String?
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  paidAt        DateTime?
-  referenceCode String?
-  metadata      String?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  transactions PaymentTransaction[]
-}
-
-model PaymentTransaction {
-  id              String   @id @default(cuid())
-  paymentId       String?
-  payment         Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-  gatewayRef      String   @unique
-  transactionType String?  @default("PAYOUT")
-  amount          Float
-  currency        String   @default("EGP")
-  status          String   @default("PENDING")
-  observedMethod  String?
-  metadata        String?
-  tenantId        String
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@index([gatewayRef])
-  @@index([tenantId])
-}
-
 enum PaymentMethod {
   BANK_TRANSFER
   CASH
@@ -1501,85 +2570,11 @@ enum PaymentMethod {
   ESCROW
 }
 
-// ─────────────────────────────────────────
-// 17. CREDIT FACILITY (Partner-operated)
-// ─────────────────────────────────────────
-
 enum CreditFacilityStatus {
   PENDING
   ACTIVE
   REJECTED
   EXPIRED
-}
-
-model CreditFacility {
-  id                 String               @id @default(cuid())
-  hotelId            String
-  hotel              Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  factoringCompanyId String
-  factoringCompany   FactoringCompany     @relation(fields: [factoringCompanyId], references: [id], onDelete: Cascade)
-  limit              Float
-  utilized           Float                @default(0)
-  interestRate       Float
-  status             CreditFacilityStatus @default(PENDING)
-  approvedAt         DateTime?
-  expiresAt          DateTime?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model ConsolidatedOrder {
-  id           String       @id @default(cuid())
-  hubId        String
-  hub          LogisticsHub @relation(fields: [hubId], references: [id], onDelete: Cascade)
-  tripId       String?
-  trip         Trip?        @relation(fields: [tripId], references: [id])
-  status       String       @default("PENDING")
-  totalValue   Float        @default(0)
-  deliveryDate DateTime?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// ─────────────────────────────────────────
-// 18. CONSOLIDATED INVOICE (Reverse Factoring Aggregation)
-// ─────────────────────────────────────────
-
-model ConsolidatedInvoice {
-  id            String             @id @default(cuid())
-  invoiceNumber String             @unique
-  status        ConsolidatedStatus @default(DRAFT)
-
-  subtotal  Float
-  vatAmount Float
-  total     Float
-  currency  String @default("EGP")
-
-  issueDate DateTime  @default(now())
-  dueDate   DateTime
-  paidDate  DateTime?
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  invoices Invoice[]
-
-  factoringRequest FactoringRequest?
-
-  tenantId            String
-  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  hotelAdminFeeAmount Float?   @default(0) // Admin fee charged to hotel for consolidated invoice
-  hotelAdminFeeRate   Float?   @default(0.01) // 1% default admin fee rate
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
 }
 
 enum ConsolidatedStatus {
@@ -1592,252 +2587,10 @@ enum ConsolidatedStatus {
   DEFAULTED
 }
 
-// ─────────────────────────────────────────
-// 19. HOTEL SUPPLIER SHELL RELATIONS
-// ─────────────────────────────────────────
-
-model HotelSupplier {
-  id String @id @default(cuid())
-
-  hotelId String
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  isShell     Boolean   @default(true)
-  invitedAt   DateTime  @default(now())
-  activatedAt DateTime?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@unique([hotelId, supplierId])
-}
-
-// ─────────────────────────────────────────
-// 20. ACCOUNTING — General Ledger
-// ─────────────────────────────────────────
-
-model JournalEntry {
-  id          String   @id @default(cuid())
-  entryNumber String   @unique
-  date        DateTime
-
-  sourceType String
-  sourceId   String
-
-  description String
-
-  lines String
-
-  totalDebit  Float
-  totalCredit Float
-
-  status JournalStatus @default(POSTED)
-
-  hotelId String?
-  hotel   Hotel?  @relation(fields: [hotelId], references: [id])
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 enum JournalStatus {
   DRAFT
   POSTED
   REVERSED
-}
-
-model InventorySnapshot {
-  id        String  @id @default(cuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  stockLevel    Int
-  projectedDays Float
-  aiSuggestion  String?
-
-  occupancyRate   Float?
-  consumptionRate Float?
-
-  createdAt DateTime @default(now())
-}
-
-// ─────────────────────────────────────────
-// 21. SHOPPING CART
-// ─────────────────────────────────────────
-
-model Cart {
-  id        String     @id @default(cuid())
-  userId    String     @unique
-  hotelId   String
-  hotel     Hotel      @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  items     CartItem[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [userId], references: [id])
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-}
-
-model CartItem {
-  id        String   @id @default(cuid())
-  cartId    String
-  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int
-  unitPrice Float
-  total     Float
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// ─────────────────────────────────────────
-// 22. INTELLIGENCE LAYER (Agent Orchestration)
-// ─────────────────────────────────────────
-
-model Competitor {
-  id        String  @id @default(cuid())
-  name      String  @unique
-  legalName String?
-  website   String?
-  logoUrl   String?
-
-  type        CompetitorType
-  marketFocus String
-  vertical    String
-
-  model        String
-  pricing      String?
-  feeStructure String?
-
-  merchantCount Int?
-  supplierCount Int?
-  geoCoverage   String?
-
-  features String?
-
-  strengths  String?
-  weaknesses String?
-
-  funding     String?
-  totalRaised String?
-  status      CompetitorStatus @default(ACTIVE)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  insights MarketInsight[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId])
-}
-
-model MarketInsight {
-  id String @id @default(cuid())
-
-  title    String
-  category InsightCategory
-  summary  String
-  detail   String?
-
-  sourceUrl   String?
-  sourceName  String?
-  publishedAt DateTime?
-
-  confidence  Int @default(80)
-  impactScore Int @default(50)
-
-  competitorId String?
-  competitor   Competitor? @relation(fields: [competitorId], references: [id])
-
-  discoveredBy String
-  verified     Boolean @default(false)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([tenantId])
-}
-
-model FeatureProposal {
-  id String @id @default(cuid())
-
-  title       String
-  description String
-
-  category    FeatureCategory
-  targetActor String
-
-  problem  String
-  solution String
-
-  complexity  Complexity @default(MEDIUM)
-  impact      Impact     @default(MEDIUM)
-  effortWeeks Float?
-
-  gapAddressed     String?
-  moatScore        Int     @default(50)
-  revenuePotential String?
-
-  status ProposalStatus @default(PROPOSED)
-
-  proposedBy String
-  votes      Int    @default(0)
-
-  relatedCompetitorIds String?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId])
-}
-
-model AgentRun {
-  id String @id @default(cuid())
-
-  taskType String
-  taskName String
-  prompt   String
-
-  agentName String
-  status    AgentRunStatus @default(PENDING)
-
-  output   String?
-  findings String?
-
-  startedAt   DateTime?
-  completedAt DateTime?
-  durationMs  Int?
-
-  parentRunId String?
-  childRunIds String?
-
-  // ── Tenant isolation (required for cross-tenant security) ──
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([tenantId])
-  @@index([status, tenantId])
 }
 
 enum CompetitorType {
@@ -1910,62 +2663,6 @@ enum AgentRunStatus {
   CANCELLED
 }
 
-// ─────────────────────────────────────────
-// 23. SWARM AUTONOMOUS AGENT SYSTEM
-// ─────────────────────────────────────────
-
-model SwarmJob {
-  id        String @id @default(cuid())
-  queueName String
-  jobType   String
-  jobName   String
-
-  payload String
-  context String?
-
-  status   SwarmJobStatus @default(PENDING)
-  priority Int            @default(5)
-
-  assignedAgent String?
-  squad         String
-
-  scheduledAt DateTime?
-  startedAt   DateTime?
-  completedAt DateTime?
-  durationMs  Int?
-
-  output   String?
-  findings String?
-  error    String?
-
-  requiresApproval Boolean   @default(false)
-  approvedAt       DateTime?
-  approvedBy       String?
-  approvalReason   String?
-
-  memoryRefs String?
-
-  attempt     Int @default(0)
-  maxAttempts Int @default(3)
-
-  parentJobId String?
-  childJobIds String?
-
-  // ── Tenant isolation (required for cross-tenant security) ──
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, squad])
-  @@index([queueName, status])
-  @@index([scheduledAt])
-  @@index([jobType])
-  @@index([tenantId])
-  @@index([status, tenantId])
-}
-
 enum SwarmJobStatus {
   PENDING
   SCHEDULED
@@ -1975,36 +2672,6 @@ enum SwarmJobStatus {
   FAILED
   CANCELLED
   RETRYING
-}
-
-model SwarmMemory {
-  id String @id @default(cuid())
-
-  memoryType MemoryType
-  category   String
-  key        String
-
-  content  String
-  vector   String?
-  metadata String?
-
-  agentId   String
-  agentName String
-  jobId     String?
-
-  confidence  Float     @default(0.8)
-  expiresAt   DateTime?
-  accessCount Int       @default(0)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([memoryType, key, tenantId])
-  @@index([memoryType, category])
-  @@index([tenantId, memoryType])
 }
 
 enum MemoryType {
@@ -2019,56 +2686,6 @@ enum MemoryType {
   CONVERSATION
   ACTION_PLAN
   MISSION
-}
-
-model Lead {
-  id String @id @default(cuid())
-
-  entityType LeadType
-  name       String
-  legalName  String?
-  website    String?
-  email      String?
-  phone      String?
-
-  city        String?
-  governorate String?
-  address     String?
-
-  tier       LeadTier @default(UNRATED)
-  starRating Int?
-  roomCount  Int?
-  category   String?
-
-  source       String
-  sourceUrl    String?
-  discoveredBy String
-
-  enrichment   String?
-  trustSignals String?
-
-  status   LeadStatus @default(DISCOVERED)
-  priority Int        @default(5)
-
-  lastContactAt DateTime?
-  contactCount  Int       @default(0)
-  responseCount Int       @default(0)
-
-  convertedAt   DateTime?
-  convertedToId String?
-
-  outreachLogs OutreachLog[]
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, entityType])
-  @@index([priority, status])
-  @@index([city, entityType])
-  @@index([tenantId])
 }
 
 enum LeadType {
@@ -2100,47 +2717,6 @@ enum LeadStatus {
   PAUSED
 }
 
-model OutreachLog {
-  id String @id @default(cuid())
-
-  channel     String
-  messageType String
-  subject     String?
-  body        String?
-
-  leadId         String?
-  lead           Lead?   @relation(fields: [leadId], references: [id], onDelete: SetNull)
-  leadName       String?
-  recipientEmail String?
-  recipientPhone String?
-
-  sentByAgent String
-  agentName   String
-  jobId       String?
-
-  autoSent   Boolean   @default(false)
-  approvedBy String?
-  approvedAt DateTime?
-
-  status       OutreachStatus @default(DRAFT)
-  sentAt       DateTime?
-  deliveredAt  DateTime?
-  openedAt     DateTime?
-  clickedAt    DateTime?
-  respondedAt  DateTime?
-  bounceReason String?
-
-  optInVerified    Boolean @default(false)
-  unsubscribeToken String?
-  ipAddress        String?
-
-  createdAt DateTime @default(now())
-
-  @@index([status, channel])
-  @@index([leadId])
-  @@index([sentAt])
-}
-
 enum OutreachStatus {
   DRAFT
   PENDING_APPROVAL
@@ -2155,60 +2731,12 @@ enum OutreachStatus {
   UNSUBSCRIBED
 }
 
-model SwarmEvent {
-  id String @id @default(cuid())
-
-  eventType String
-  severity  EventSeverity @default(INFO)
-
-  squad   String?
-  agentId String?
-  jobId   String?
-  leadId  String?
-
-  message String
-  payload String?
-
-  alertSent      Boolean   @default(false)
-  acknowledgedAt DateTime?
-  acknowledgedBy String?
-
-  createdAt DateTime @default(now())
-
-  @@index([eventType, severity])
-  @@index([createdAt])
-  @@index([alertSent])
-}
-
 enum EventSeverity {
   DEBUG
   INFO
   WARNING
   ERROR
   CRITICAL
-}
-
-model ModelHealth {
-  id String @id @default(cuid())
-
-  provider String
-  model    String
-
-  status        ModelStatus @default(HEALTHY)
-  failCount     Int         @default(0)
-  lastFailureAt DateTime?
-  lastSuccessAt DateTime?
-
-  avgLatencyMs Float?
-  totalCalls   Int    @default(0)
-  successRate  Float  @default(1.0)
-
-  isPrimary  Boolean @default(false)
-  isFallback Boolean @default(false)
-
-  updatedAt DateTime @updatedAt
-
-  @@unique([provider, model])
 }
 
 enum ModelStatus {
@@ -2218,159 +2746,11 @@ enum ModelStatus {
   DISABLED
 }
 
-// ─────────────────────────────────────────
-// 24. AUTH TOKENS
-// ─────────────────────────────────────────
-
-model EmailVerificationToken {
-  id        String   @id @default(cuid())
-  email     String
-  token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-}
-
-model PasswordResetToken {
-  id        String   @id @default(cuid())
-  email     String
-  token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-}
-
-// 24b. REFRESH TOKEN ROTATION — family tracking for reuse detection
-
-model RefreshToken {
-  id         String    @id @default(cuid())
-  tokenHash  String    @unique
-  family     String // Token family — all tokens from the same initial grant
-  userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenantId   String
-  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  replacedBy String? // ID of the token that replaced this one (rotation chain)
-  ipAddress  String?
-  userAgent  String?
-  createdAt  DateTime  @default(now())
-
-  @@index([userId])
-  @@index([family])
-  @@index([tokenHash])
-}
-
-// ─────────────────────────────────────────
-// 25. USER ADDRESSES
-// ─────────────────────────────────────────
-
-model UserAddress {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  label       String
-  address     String
-  city        String
-  governorate String
-  lat         Float?
-  lng         Float?
-  isDefault   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  @@index([userId])
-}
-
-// ─────────────────────────────────────────
-// 26. AI CHAT
-// ─────────────────────────────────────────
-
-model Conversation {
-  id        String        @id @default(cuid())
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenantId  String
-  role      String
-  title     String?
-  messages  ChatMessage[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-
-  @@index([userId, updatedAt])
-  @@index([tenantId])
-}
-
-model ChatMessage {
-  id             String       @id @default(cuid())
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  role           String
-  content        String
-  model          String?
-  tokensUsed     Int?
-  latencyMs      Int?
-  createdAt      DateTime     @default(now())
-
-  @@index([conversationId, createdAt])
-}
-
-model AiUsage {
-  id            String   @id @default(cuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messagesToday Int      @default(0)
-  tokensToday   Int      @default(0)
-  messagesTotal Int      @default(0)
-  tokensTotal   Int      @default(0)
-  quotaResetAt  DateTime @default(now())
-  plan          AiPlan   @default(FREE)
-  updatedAt     DateTime @updatedAt
-}
-
 enum AiPlan {
   FREE
   BASIC
   PRO
   ENTERPRISE
-}
-
-// ─────────────────────────────────────────
-// 27. PRODUCT REVIEWS
-// ─────────────────────────────────────────
-
-model ProductReview {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rating    Int
-  title     String?
-  comment   String?
-  images    String?
-  verified  Boolean  @default(false)
-  helpful   Int      @default(0)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, productId])
-  @@index([productId, createdAt])
-}
-
-// ─────────────────────────────────────────
-// 28. SAMPLE REQUESTS
-// ─────────────────────────────────────────
-
-model SampleRequest {
-  id              String       @id @default(cuid())
-  productId       String
-  userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  hotelId         String?
-  status          SampleStatus @default(PENDING)
-  quantity        Int          @default(1)
-  notes           String?
-  deliveryAddress String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
 }
 
 enum SampleStatus {
@@ -2381,111 +2761,11 @@ enum SampleStatus {
   CANCELLED
 }
 
-// ─────────────────────────────────────────
-// 29. WAITING LIST
-// ─────────────────────────────────────────
-
-model WaitingListEntry {
-  id     String            @id @default(cuid())
-  email  String
-  role   String
-  source String            @default("beta-launch")
-  status WaitingListStatus @default(PENDING)
-
-  referrer String?
-  notes    String?
-
-  invitedAt   DateTime?
-  convertedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@unique([email, source])
-  @@index([status, role])
-  @@index([createdAt])
-}
-
 enum WaitingListStatus {
   PENDING
   INVITED
   CONVERTED
   DECLINED
-}
-
-// ─────────────────────────────────────────
-// 30. SOCIAL MEDIA CAMPAIGNS
-// ─────────────────────────────────────────
-
-model SocialCampaign {
-  id          String  @id @default(cuid())
-  name        String
-  description String?
-
-  objective   CampaignObjective
-  targetRoles String[]
-  platforms   SocialPlatform[]
-
-  budgetEgp Float?
-  startDate DateTime
-  endDate   DateTime?
-
-  status CampaignStatus @default(DRAFT)
-
-  contentStrategy String?
-  metrics         String?
-
-  posts SocialPost[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, objective])
-  @@index([startDate])
-}
-
-model SocialPost {
-  id         String         @id @default(cuid())
-  campaignId String
-  campaign   SocialCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-
-  platform  SocialPlatform
-  content   String
-  mediaUrls String?
-  hashtags  String?
-
-  scheduledAt DateTime
-  publishedAt DateTime?
-
-  status PostStatus @default(DRAFT)
-
-  engagement String?
-
-  swarmJobId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, scheduledAt])
-  @@index([campaignId])
-  @@index([platform])
-}
-
-model SocialAudience {
-  id          String  @id @default(cuid())
-  name        String
-  description String?
-
-  platforms SocialPlatform[]
-  roles     String[]
-  locations String[]
-  interests String[]
-
-  estimatedReach Int?
-
-  campaignIds String[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum CampaignObjective {
@@ -2522,144 +2802,11 @@ enum PostStatus {
   FAILED
 }
 
-// ─────────────────────────────────────────
-// 31. CASHFLOW COMPASS
-// ─────────────────────────────────────────
-
-model CompassReading {
-  id   String   @id @default(cuid())
-  date DateTime @unique @default(now())
-
-  marketDirection String @default("STABLE")
-  confidence      Int    @default(60)
-
-  priceVelocity         String?
-  paymentDynamics       String?
-  macroIndicators       String?
-  platformMetrics       String?
-  alerts                String?
-  pricingAdjustments    String?
-  creditRecommendations String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// ─────────────────────────────────────────
-// 32. CREDIT LINE APPLICATION
-// ─────────────────────────────────────────
-
-model CreditLineApplication {
-  id     String @id @default(cuid())
-  status String @default("PENDING_REVIEW")
-
-  hotelName      String
-  brand          String?
-  properties     Int?
-  rooms          Int?
-  governorate    String?
-  address        String?
-  crNumber       String
-  taxId          String
-  tourismLicense String?
-  gmName         String?
-  gmPhone        String?
-  gmEmail        String?
-  cfoName        String?
-  cfoPhone       String?
-
-  annualRevenue      Float?
-  netProfit          Float?
-  totalAssets        Float?
-  currentAssets      Float?
-  totalLiabilities   Float?
-  currentLiabilities Float?
-  bankBalance        Float?
-  monthlyPurchases   Float?
-  avgPaymentDays     Float?
-  existingDebt       Float?
-
-  propertyDeed        Boolean @default(false)
-  bankGuarantee       Boolean @default(false)
-  personalGuarantee   Boolean @default(false)
-  equipmentCollateral Boolean @default(false)
-  depositAmount       Float?
-
-  creditScore      Int?
-  recommendedLimit Float?
-  aiAnalysisReport String? @db.Text
-  aiRiskFlags      String?
-
-  factoringCompanyId   String?
-  approvedLimit        Float?
-  approvedInterestRate Float?
-  approvedAt           DateTime?
-
-  rejectedReason String?
-
-  documents String?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId])
-}
-
-// ─────────────────────────────────────────
-// 33. PROMO & REFERRAL ENGINE
-// ─────────────────────────────────────────
-
-model PromoCode {
-  id           String    @id @default(cuid())
-  code         String    @unique
-  discountType PromoType
-  value        Float
-  maxUses      Int?
-  usedCount    Int       @default(0)
-
-  validFrom  DateTime  @default(now())
-  validUntil DateTime?
-
-  tenantId String?
-  tenant   Tenant? @relation(fields: [tenantId], references: [id])
-
-  createdAt DateTime @default(now())
-}
-
 enum PromoType {
   PERCENTAGE
   FIXED
   FREE_SHIPPING
   SAAS_TRIAL
-}
-
-// ─────────────────────────────────────────
-// 34. DISPUTE & ARBITRATION ENGINE
-// ─────────────────────────────────────────
-
-model Dispute {
-  id            String @id @default(cuid())
-  disputeNumber String @unique
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
-
-  reason         String
-  evidenceUrls   String?
-  amountDisputed Float
-
-  status     DisputeStatus        @default(OPEN)
-  resolution String?
-  liability  LiabilityAssignment?
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt  DateTime  @default(now())
-  resolvedAt DateTime?
 }
 
 enum DisputeStatus {
@@ -2678,157 +2825,15 @@ enum LiabilityAssignment {
   SPLIT_LIABILITY
 }
 
-// ─────────────────────────────────────────
-// 35. SUBSCRIPTION TIERS (Legacy — replaced by InvoSubscription)
-// ─────────────────────────────────────────
-
 enum SubscriptionTier {
   STANDARD
   ENTERPRISE_COWORKER
-}
-
-// ─────────────────────────────────────────
-// 36. LEAD CAPTURE — Landing Page Sector Router
-// ─────────────────────────────────────────
-
-model LeadCapture {
-  id          String     @id @default(cuid())
-  companyName String
-  email       String
-  sector      UserSector
-  role        String? // optional: hotel, supplier, factoring, logistics
-  message     String?
-  source      String? // which page/form captured the lead
-  status      String     @default("new") // new, contacted, qualified, converted
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  @@index([sector])
-  @@index([email])
-  @@index([status])
-}
-
-// ─────────────────────────────────────────
-// 37. OLIV INTEGRATION — Consent, Credit Facility, Sync
-// ─────────────────────────────────────────
-
-/// PDPL-compliant consent record for data sharing with Oliv Finance.
-/// Every data share event must have a corresponding consent record.
-model ConsentRecord {
-  id String @id @default(cuid())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  /// What consent was given: "OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT", etc.
-  consentType String
-
-  /// Which partner data is shared with: "oliv_finance"
-  partnerId String
-
-  /// Version of the consent text the user agreed to
-  consentVersion String
-
-  /// What data categories were consented: ["business_registration", "eta_invoices", "bank_details"]
-  dataCategories String
-
-  /// IP address at time of consent
-  ipAddress String?
-
-  /// User agent at time of consent
-  userAgent String?
-
-  /// Consent status: GRANTED, WITHDRAWN, EXPIRED
-  status ConsentStatus @default(GRANTED)
-
-  /// When consent was withdrawn (if applicable)
-  withdrawnAt DateTime?
-
-  /// Reason for withdrawal (if provided)
-  withdrawalReason String?
-
-  /// Audit hash for tamper-proofing
-  hash String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, consentType, partnerId])
-  @@index([userId, status])
-  @@index([partnerId, status])
-  @@index([tenantId])
 }
 
 enum ConsentStatus {
   GRANTED
   WITHDRAWN
   EXPIRED
-}
-
-/// Oliv credit facility — synced from Oliv via webhooks.
-/// HotelsVendors stores the credit line limit, balance, and payment schedule
-/// so the supplier can see everything on their dashboard without leaving the platform.
-model OlivCreditFacility {
-  id String @id @default(cuid())
-
-  /// Supplier who owns this credit facility
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  /// Oliv's internal credit facility ID
-  olivFacilityId String @unique
-
-  /// Credit limit in EGP
-  creditLimitEgp Float
-
-  /// Currently utilized amount in EGP
-  utilizedEgp Float @default(0)
-
-  /// Available balance in EGP (creditLimit - utilized)
-  availableEgp Float @default(0)
-
-  /// Interest rate (as decimal, e.g., 0.025 = 2.5%)
-  interestRate Float @default(0)
-
-  /// Advance rate (as decimal, e.g., 0.88 = 88% of invoice value)
-  advanceRate Float @default(0.88)
-
-  /// Discount rate (as decimal, e.g., 0.025 = 2.5% partner fee)
-  discountRate Float @default(0.025)
-
-  /// Settlement terms in days
-  settlementDays Int @default(90)
-
-  /// Facility status
-  status OlivFacilityStatus @default(ACTIVE)
-
-  /// When Oliv approved the facility
-  approvedAt DateTime?
-
-  /// When the facility expires
-  expiresAt DateTime?
-
-  /// Last sync timestamp from Oliv
-  lastSyncedAt DateTime?
-
-  /// Oliv's risk assessment for this supplier
-  olivRiskScore Int?
-  olivRiskTier  String?
-
-  /// Payment schedule as JSON string: [{ dueDate, amountEgp, status }]
-  paymentSchedule String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([supplierId, status])
-  @@index([tenantId])
 }
 
 enum OlivFacilityStatus {
@@ -2839,290 +2844,107 @@ enum OlivFacilityStatus {
   DEFAULTED
 }
 
-/// Oliv sync log — tracks every data exchange between HotelsVendors and Oliv.
-model OlivSyncLog {
-  id String @id @default(cuid())
-
-  /// Direction: INBOUND (Oliv → HotelsVendors) or OUTBOUND (HotelsVendors → Oliv)
-  direction SyncDirection
-
-  /// Event type: "REGISTRATION_PRE_FILL", "CREDIT_STATUS_UPDATE", "DISBURSEMENT", etc.
-  eventType String
-
-  /// Entity type: "Supplier", "OlivCreditFacility", "FactoringRequest"
-  entityType String
-  entityId   String
-
-  /// Payload sent or received (encrypted at rest)
-  payload String?
-
-  /// Oliv's response or error
-  response String?
-
-  /// HTTP status code (if applicable)
-  httpStatus Int?
-
-  /// Whether the sync was successful
-  success Boolean @default(true)
-
-  /// Error message (if failed)
-  error String?
-
-  /// Idempotency key for deduplication
-  idempotencyKey String? @unique
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([direction, eventType])
-  @@index([entityType, entityId])
-  @@index([tenantId])
-  @@index([success])
-}
-
 enum SyncDirection {
   INBOUND
   OUTBOUND
 }
 
-/// Extend Supplier model with Oliv fields
-/// (Added via migration, not inline — Prisma doesn't support mixed relations well)
-/// These fields will be added to the Supplier model:
-/// - olivUserId String?      — Oliv's user ID for this supplier
-/// - olivFacilityId String?  — Link to OlivCreditFacility
-/// - olivSyncAt DateTime?    — Last Oliv sync timestamp
-/// - olivStatus String?      — Oliv onboarding status: NOT_STARTED, REGISTERED, VERIFIED, APPROVED
-
-// ═══════════════════════════════════════════════════════════════
-// ANTI-BYPASS: Factoring Transaction (Immutable Referral Ledger)
-// ═══════════════════════════════════════════════════════════════
-// This table stores every factoring transaction initiated through HotelsVendors.
-// The referral_token_signature is the cryptographic proof of origin.
-// Oliv CANNOT reconcile without this signature — Layer 2 enforcement.
-// ═══════════════════════════════════════════════════════════════
-
-model FactoringTransaction {
-  id String @id @default(cuid())
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  // ═══ INVOICE IDENTIFIERS ═══
-  etaUuid       String
-  supplierTaxId String
-  hotelTaxId    String
-
-  // ═══ LAYER 1: REFERRAL TOKEN (Immutable Record) ═══
-  // The HMAC-SHA256 signature proving this transaction originated from HotelsVendors
-  referralTokenSignature   String
-  referralTokenPayload     String // base64url-encoded JSON
-  referralTokenGeneratedAt DateTime
-  referralTokenExpiresAt   DateTime
-
-  // ═══ OLIV TRANSACTION DATA ═══
-  olivTransactionId      String   @unique
-  olivReferenceNumber    String?
-  payoutStatus           String // APPROVED, DISBURSED, SETTLED, REJECTED, DEFAULTED
-  disbursedAmount        Float
-  factoringFee           Float
-  advanceRate            Float
-  disbursementDate       DateTime
-  expectedSettlementDate DateTime
-
-  // ═══ HOTELSVENDORS PLATFORM FEE ═══
-  // 2% deducted BEFORE disbursement (per business rules)
-  platformFeeRate   Float @default(0.02)
-  platformFeeAmount Float
-  netDisbursement   Float // disbursedAmount - platformFeeAmount
-
-  // ═══ AUDIT ═══
-  processedAt       DateTime
-  callbackTimestamp DateTime
-  rawCallback       Json? // Full Oliv callback payload
-
-  // ═══ COMMISSION TRACKING ═══
-  // Layer 3: CRM attribution — proves this transaction was referred by HotelsVendors
-  commissionRate   Float? // e.g., 0.02 = 2%
-  commissionAmount Float? // platformFeeAmount (synonym for clarity)
-  commissionStatus String? @default("PENDING") // PENDING, PAID, DISPUTED
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tenantId])
-  @@index([etaUuid])
-  @@index([supplierTaxId])
-  @@index([olivTransactionId])
-  @@index([payoutStatus])
-  @@index([referralTokenSignature])
-  @@index([createdAt])
+enum ActionType {
+  CREATE
+  UPDATE
+  DELETE
+  ROLE_TRANSFER
+  LOGIN
+  LOGIN_FAILED
+  EXPORT
+  ARCHIVE
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ANTI-BYPASS: Oliv Onboarding Audit Trail
-// ═══════════════════════════════════════════════════════════════
-// Tracks every supplier that completed Oliv KYC through HotelsVendors.
-// This is the proof that Oliv's customer base was built through our platform.
-// Any future "manual" Oliv agent entry of a Tax ID here is flagged.
-// ═══════════════════════════════════════════════════════════════
-
-model OlivOnboardingAudit {
-  id String @id @default(cuid())
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  // Supplier identifiers
-  supplierId    String
-  supplierTaxId String
-  companyName   String
-
-  // Attribution metadata (Layer 3)
-  partnerId             String @default("HOTELSVENDORS_GLOBAL_001")
-  attributionType       String @default("permanent_origin_account")
-  attributionSource     String @default("HOTELSVENDORS_PLUGIN_V1")
-  commissionAgreementId String
-
-  // Oliv onboarding status
-  olivUserId           String?
-  olivStatus           String    @default("PENDING") // PENDING, KYC_SUBMITTED, KYC_APPROVED, CREDIT_APPROVED
-  olivKycSubmittedAt   DateTime?
-  olivKycApprovedAt    DateTime?
-  olivCreditApprovedAt DateTime?
-
-  // Pre-fill data sent to Oliv (encrypted at rest)
-  prefillDataHash String? // SHA-256 hash of the pre-fill payload
-  prefillDataSize Int? // Number of fields sent
-
-  // Olive's acknowledgment
-  olivAcknowledgedAt    DateTime?
-  olivAcknowledgedVia   String? // "API", "MANUAL", "WEBHOOK"
-  olivAcknowledgmentRef String?
-
-  // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([supplierTaxId]) // Each supplier can only be onbaulogged once
-  @@index([tenantId])
-  @@index([olivStatus])
-  @@index([partnerId])
+enum EntityName {
+  TENANT
+  WORKSPACE
+  USER
+  HOTEL
+  SUPPLIER
+  PRODUCT
+  ORDER
+  ORDER_ITEM
+  INVOICE
+  FACTORING_REQUEST
+  FACTORING_COMPANY
+  DISPUTE
+  RETURN_REQUEST
+  CREDIT_NOTE
+  PAYMENT_TERM
 }
 
-// ═══════════════════════════════════════════════════════════════
-// AI SUBSCRIPTIONS & CREDITS
-// ═══════════════════════════════════════════════════════════════
-
-model AISubscription {
-  id String @id @default(cuid())
-
-  userId   String
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  // Subscription details
-  tier   String @default("FREE") // FREE, BASIC, PRO, ENTERPRISE
-  status String @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED
-
-  // Credits
-  monthlyCredits Int
-  monthlyPrice   Int // in EGP (smallest unit)
-
-  // Billing period
-  startedAt DateTime @default(now())
-  expiresAt DateTime
-
-  // Payment
-  paymentReference String?
-
-  // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId, tenantId])
-  @@index([status])
-  @@index([expiresAt])
+enum NotificationChannel {
+  EMAIL
+  SMS
+  WHATSAPP
+  IN_APP
 }
 
-model AITokenUsage {
-  id String @id @default(cuid())
-
-  userId   String
-  tenantId String
-
-  // What feature was used
-  feature String // "ai_assistant", "smart_suggestions", "auto_categorize", etc.
-
-  // Cost
-  creditsCost Int
-
-  // Token counts (for billing transparency)
-  tokensInput  Int @default(0)
-  tokensOutput Int @default(0)
-
-  // Task complexity
-  taskComplexity String @default("simple") // simple, medium, complex
-
-  // Audit
-  createdAt DateTime @default(now())
-
-  @@index([userId, tenantId])
-  @@index([feature])
-  @@index([createdAt])
+enum NotificationType {
+  ORDER_UPDATE
+  INVOICE_ISSUED
+  PAYMENT_DUE
+  DISPUTE_OPEN
+  OLIV_STATUS
+  KYC_REQUIRED
+  SYSTEM
 }
 
-// ─────────────────────────────────────────
-// LEDGER — Double-Entry Accounting
-// ─────────────────────────────────────────
-
-model LedgerEntry {
-  id String @id @default(cuid())
-
-  tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  entityType String // "ORDER", "INVOICE", "FACTORING", "PAYMENT"
-  entityId   String // Reference to the source entity
-  entryType  String // "DEBIT", "CREDIT"
-  account    String // e.g., "platform_revenue", "factoring_receivable"
-  amount     Float
-  currency   String  @default("EGP")
-  reference  String? // External reference (ETA UUID, payment ID, etc.)
-
-  metadata String? // JSON string for additional context
-
-  createdAt DateTime @default(now())
-
-  @@index([tenantId, entityType, entityId])
-  @@index([account])
-  @@index([createdAt])
+enum PaymentTermsCode {
+  DUE_ON_RECEIPT
+  NET_7
+  NET_15
+  NET_30
+  NET_60
+  NET_90
+  COD
 }
 
-// ─────────────────────────────────────────
-// INDEXES — Performance-critical query paths
-// ─────────────────────────────────────────
+enum ReturnReason {
+  DAMAGED
+  WRONG_ITEM
+  PARTIAL_SHORT
+  EXPIRED
+  QUALITY_DISPUTE
+  OTHER
+}
 
-// Note: Prisma supports @@index on models. Additional indexes added below:
+enum ReturnStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  PICKED_UP
+  REFUNDED
+  CREDITED
+}
 
-// ─────────────────────────────────────────
-// FORECAST ACCURACY — Learning loop for demand predictions
-// ─────────────────────────────────────────
+enum TenantRelation {
+  STANDALONE
+  PARENT
+  SUBSIDIARY
+}
 
-model ForecastAccuracy {
-  id              String   @id @default(cuid())
-  productId       String
-  forecastDate    DateTime
-  predictedQty    Float
-  actualQty       Float?
-  accuracyPercent Float?
-  seasonPeak      Boolean  @default(false)
-  tenantId        String
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+enum UnitOfMeasure {
+  KG
+  PIECE
+  BOX
+  CASE
+  PALLET
+  LITER
+  METER
+  HOUR
+  BATCH
+}
 
-  createdAt DateTime @default(now())
-
-  @@index([tenantId])
-  @@index([productId, forecastDate])
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
 }

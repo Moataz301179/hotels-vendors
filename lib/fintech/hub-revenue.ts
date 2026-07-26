@@ -246,7 +246,7 @@ export async function calculateHubRevenue(params: HubRevenueParams): Promise<Hub
     where: { id: invoiceId },
     select: { total: true },
   });
-  const grossAmount = invoice?.total ?? 0;
+  const grossAmount = Number(invoice?.total ?? 0);
 
   const platformFeeRate = 0.025;
   const factoringFee = grossAmount * partnerDiscountRate;

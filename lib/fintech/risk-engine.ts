@@ -135,10 +135,10 @@ export async function assessRisk(hotelId: string, tenantId?: string): Promise<Ri
   const paymentHistoryScore = await calculatePaymentHistoryScore(hotel.invoices);
 
   // Factor 2: Credit Utilization (20%)
-  const creditLimit = hotel.creditLimit ?? 0;
-  const creditUsed = hotel.creditUsed ?? 0;
-  const facilityUtilized = hotel.creditFacilities.reduce((sum, f) => sum + f.utilized, 0);
-  const facilityLimit = hotel.creditFacilities.reduce((sum, f) => sum + f.limit, 0);
+  const creditLimit = Number(hotel.creditLimit ?? 0);
+  const creditUsed = Number(hotel.creditUsed ?? 0);
+  const facilityUtilized = hotel.creditFacilities.reduce((sum, f) => sum + Number(f.utilized ?? 0), 0);
+  const facilityLimit = hotel.creditFacilities.reduce((sum, f) => sum + Number(f.limit ?? 0), 0);
   const totalLimit = creditLimit + facilityLimit;
   const totalUtilized = creditUsed + facilityUtilized;
   const creditUtilizationScore = totalLimit > 0
@@ -498,9 +498,9 @@ export async function getLiquidityMonitorData(): Promise<LiquidityMonitorData> {
   const weekInvoices = factoredInvoices.filter((inv) => inv.paidDate && inv.paidDate >= startOfWeek);
   const monthInvoices = factoredInvoices.filter((inv) => inv.paidDate && inv.paidDate >= startOfMonth);
 
-  const totalDeployedToday = todayInvoices.reduce((s, inv) => s + inv.total, 0);
-  const totalDeployedThisWeek = weekInvoices.reduce((s, inv) => s + inv.total, 0);
-  const totalDeployedThisMonth = monthInvoices.reduce((s, inv) => s + inv.total, 0);
+  const totalDeployedToday = todayInvoices.reduce((s, inv) => s + Number(inv.total ?? 0), 0);
+  const totalDeployedThisWeek = weekInvoices.reduce((s, inv) => s + Number(inv.total ?? 0), 0);
+  const totalDeployedThisMonth = monthInvoices.reduce((s, inv) => s + Number(inv.total ?? 0), 0);
 
   // Active requests: invoices with OFFERED or ACCEPTED factoring status
   const activeRequests = await prisma.invoice.count({
@@ -511,7 +511,7 @@ export async function getLiquidityMonitorData(): Promise<LiquidityMonitorData> {
   const partners = await prisma.factoringCompany.findMany();
   const partnerBreakdown = partners.map((partner) => {
     const partnerInvoices = factoredInvoices.filter((inv) => inv.factoringCompanyId === partner.id);
-    const partnerTotal = partnerInvoices.reduce((s, inv) => s + inv.total, 0);
+    const partnerTotal = partnerInvoices.reduce((s, inv) => s + Number(inv.total ?? 0), 0);
     const defaults = partnerInvoices.filter((inv) => inv.paymentStatus === "OVERDUE").length;
     return {
       partnerId: partner.id,
@@ -526,13 +526,13 @@ export async function getLiquidityMonitorData(): Promise<LiquidityMonitorData> {
 
   // Platform revenue YTD (approximated from invoice totals * 1.5%)
   const ytdInvoices = factoredInvoices.filter((inv) => inv.createdAt >= startOfYear);
-  const platformRevenueYTD = ytdInvoices.reduce((s, inv) => s + inv.total * 0.015, 0);
+  const platformRevenueYTD = ytdInvoices.reduce((s, inv) => s + Number(inv.total ?? 0) * 0.015, 0);
 
   // Velocity: last 7 days average per hour
   const last7Days = factoredInvoices.filter(
     (inv) => inv.paidDate && inv.paidDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
   );
-  const velocityTotal = last7Days.reduce((s, inv) => s + inv.total, 0);
+  const velocityTotal = last7Days.reduce((s, inv) => s + Number(inv.total ?? 0), 0);
   const disbursementVelocity = velocityTotal / (7 * 24);
 
   // Default rate

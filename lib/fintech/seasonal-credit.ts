@@ -22,7 +22,7 @@ type SeasonKey = keyof typeof SEASONS;
 
 function getSeasonForMonth(month: number): { key: SeasonKey; config: (typeof SEASONS)[SeasonKey] } {
   for (const [key, config] of Object.entries(SEASONS) as [SeasonKey, (typeof SEASONS)[SeasonKey]][]) {
-    if (config.months.includes(month)) {
+    if ((config.months as readonly number[]).includes(month)) {
       return { key, config };
     }
   }
@@ -133,11 +133,12 @@ export async function getSeasonalCreditForHotel(
     _sum: { total: true },
   });
 
-  const historicalSpend = spendAggregation._sum.total ?? 0;
+  const historicalSpend = Number(spendAggregation._sum.total ?? 0);
   const currentMonth = new Date().getMonth() + 1;
 
+  const baseCredit = Number(hotel.creditLimit);
   const result = calculateSeasonalCredit(
-    hotel.creditLimit,
+    baseCredit,
     currentMonth,
     occupancyRate,
     historicalSpend
@@ -145,7 +146,7 @@ export async function getSeasonalCreditForHotel(
 
   return {
     hotelId,
-    baseCredit: hotel.creditLimit,
+    baseCredit,
     ...result,
     currentMonth,
     historicalSpend,
