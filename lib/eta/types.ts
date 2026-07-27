@@ -3,67 +3,66 @@
  * Hotels Vendors Compliance Layer
  */
 
-export interface EtaInvoicePayload {
-  invoiceNumber: string;
-  invoiceDate: string;
-  paymentTerms: number;
-  receiverId: string;
-  receiverName: string;
-  receiverTaxId: string;
-  lines: EtaInvoiceLine[];
-  totalDiscountAmount: number;
-  totalSalesAmount: number;
-  netAmount: number;
-  taxAmount: number;
-  totalAmount: number;
-  issuer?: {
-    type: string;
-    id: string;
-    name: string;
-    address: {
-      country: string;
-      governate: string;
-      regionCity: string;
-      street: string;
-      buildingNumber: string;
-    };
-  };
-  receiver?: {
-    type: string;
-    id: string;
-    name: string;
-    address: {
-      country: string;
-      governate: string;
-      regionCity: string;
-      street: string;
-      buildingNumber: string;
-    };
-  };
-}
-
-export interface EtaInvoiceLine {
-  productCode: string;
-  productName: string;
-  productDescription?: string;
-  unitOfMeasure: string;
-  quantity: number;
-  unitPrice: number;
-  discountRate: number;
-  discountAmount: number;
-  salesAmount: number;
-  taxRate: number;
-  taxAmount: number;
-  totalAmount: number;
+export interface EtaTaxAddress {
+  country: string;
+  governate: string;
+  regionCity: string;
+  street: string;
+  buildingNumber: string;
 }
 
 export interface EtaTaxpayer {
+  type: string;
   id: string;
   name: string;
-  taxId: string;
-  address?: string;
-  city?: string;
-  governorate?: string;
+  address: EtaTaxAddress;
+}
+
+export interface EtaInvoiceLine {
+  description: string;
+  descriptionAr?: string;
+  itemType: string;
+  itemCode: string;
+  codeName: string;
+  codeNameAr?: string;
+  unitType: string;
+  quantity: number;
+  internalCode?: string;
+  salesTotal: number;
+  total: number;
+  valueDifference: number;
+  totalTaxableFees: number;
+  netTotal: number;
+  itemsDiscount: number;
+  discount: { amount: number };
+  taxableItems: Array<{
+    taxType: string;
+    amount: number;
+    subType?: string;
+    rate?: number;
+  }>;
+}
+
+export interface EtaTaxTotal {
+  taxType: string;
+  amount: number;
+}
+
+export interface EtaInvoicePayload {
+  issuer: EtaTaxpayer;
+  receiver: EtaTaxpayer;
+  documentType: string;
+  documentTypeVersion: string;
+  dateIssued: string;
+  internalId: string;
+  purchaseOrderReference?: string;
+  payment?: { terms: string };
+  delivery?: { approach: string; terms: string };
+  invoiceLines: EtaInvoiceLine[];
+  totalSalesAmount: number;
+  netAmount: number;
+  taxTotals: EtaTaxTotal[];
+  totalAmount: number;
 }
 
 export enum EtaTaxType {

@@ -17,7 +17,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
-import { generateOlivCheckoutUrl } from "@/lib/payments/oliv";
+import { generateOlivCheckoutUrl } from "@/lib/payments/oliv-checkout";
 
 interface UserData {
   userId: string;
