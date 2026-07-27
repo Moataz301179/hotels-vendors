@@ -401,7 +401,7 @@ describe("Phase 1: Referral ID Creation", () => {
     const payload = makeReferralPayload();
     const result = await createOlivReferral(payload);
 
-    expect(result.id).toMatch(/^OLIV-\d+-[A-Za-z0-9]{4,}$/);
+    expect(result.id).toMatch(/^OLIV-[0-9a-f-]+$/);
     expect(result.status).toBe("PENDING");
     expect(result.orderId).toBe(payload.orderId);
     expect(result.supplierName).toBe(payload.supplierName);
@@ -412,7 +412,7 @@ describe("Phase 1: Referral ID Creation", () => {
     const payload = makeHotelReferralPayload();
     const result = await createOlivHotelReferral(payload);
 
-    expect(result.id).toMatch(/^OLIV-HTL-\d+-[A-Za-z0-9]{4,}$/);
+    expect(result.id).toMatch(/^OLIV-HTL-[0-9a-f-]+$/);
     expect(result.status).toBe("PENDING");
     expect(result.hotelName).toBe(payload.hotelName);
     expect(result.createdAt).toBeInstanceOf(Date);
