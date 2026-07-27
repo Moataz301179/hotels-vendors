@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3 } from "lucide-react";
+import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3, Star, Package } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "B2B Hospitality Marketplace Egypt | 680+ Verified Hotel Suppliers | HotelsVendors",
@@ -14,20 +14,29 @@ export const metadata: Metadata = {
 };
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", count: "2,400+ SKUs", color: "#39ff7e" },
-  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", count: "1,800+ SKUs", color: "#39ff7e" },
-  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", count: "950+ SKUs", color: "#64b5f6" },
-  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", count: "620+ SKUs", color: "#ff7e1a" },
-  { name: "Services", desc: "Maintenance, pest control, laundry, security", count: "340+ vendors", color: "#c455ff" },
+  { name: "F&B", desc: "Food, beverages, kitchen equipment", count: "2,400+ SKUs", color: "#39ff7e", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" },
+  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", count: "1,800+ SKUs", color: "#39ff7e", image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400&h=300&fit=crop" },
+  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", count: "950+ SKUs", color: "#64b5f6", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop" },
+  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", count: "620+ SKUs", color: "#ff7e1a", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" },
+  { name: "Services", desc: "Maintenance, pest control, laundry, security", count: "340+ vendors", color: "#c455ff", image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=300&fit=crop" },
 ];
 
 const suppliers = [
-  { name: "Nile Fresh Produce", category: "F&B", rating: 4.9, location: "Cairo", verified: true },
-  { name: "Red Sea Linen Co.", category: "Consumables", rating: 4.8, location: "Hurghada", verified: true },
-  { name: "Oasis Amenities", category: "Guest Supplies", rating: 4.7, location: "Sharm El-Sheikh", verified: true },
-  { name: "Egyptian Kitchen Supply", category: "FF&E", rating: 4.9, location: "Alexandria", verified: true },
-  { name: "Coastal Maintenance Group", category: "Services", rating: 4.6, location: "Hurghada", verified: true },
-  { name: "Pharaoh Chemicals", category: "Consumables", rating: 4.8, location: "Cairo", verified: true },
+  { name: "Nile Fresh Produce", category: "F&B", rating: 4.9, location: "Cairo", verified: true, avatar: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=80&h=80&fit=crop", products: ["https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=120&h=120&fit=crop"] },
+  { name: "Red Sea Linen Co.", category: "Consumables", rating: 4.8, location: "Hurghada", verified: true, avatar: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=80&h=80&fit=crop", products: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1629949009765-40fc74c9ec21?w=120&h=120&fit=crop"] },
+  { name: "Oasis Amenities", category: "Guest Supplies", rating: 4.7, location: "Sharm El-Sheikh", verified: true, avatar: "https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=80&h=80&fit=crop", products: ["https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=120&h=120&fit=crop"] },
+  { name: "Egyptian Kitchen Supply", category: "FF&E", rating: 4.9, location: "Alexandria", verified: true, avatar: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=80&h=80&fit=crop", products: ["https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=120&h=120&fit=crop"] },
+  { name: "Coastal Maintenance Group", category: "Services", rating: 4.6, location: "Hurghada", verified: true, avatar: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=80&h=80&fit=crop", products: [] },
+  { name: "Pharaoh Chemicals", category: "Consumables", rating: 4.8, location: "Cairo", verified: true, avatar: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=80&h=80&fit=crop", products: ["https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=120&h=120&fit=crop", "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=120&h=120&fit=crop"] },
+];
+
+const heroProducts = [
+  { name: "Premium Olive Oil 5L", supplier: "Nile Fresh Produce", price: "EGP 890", image: "https://images.unsplash.com/photo-1474979266404-7f28bfce8480?w=300&h=300&fit=crop", category: "F&B" },
+  { name: "Egyptian Cotton Towels", supplier: "Red Sea Linen Co.", price: "EGP 145/pc", image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=300&h=300&fit=crop", category: "Consumables" },
+  { name: "Shampoo Dispenser Set", supplier: "Oasis Amenities", price: "EGP 320", image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=300&h=300&fit=crop", category: "Guest Supplies" },
+  { name: "Commercial Blender Pro", supplier: "Egyptian Kitchen Supply", price: "EGP 12,400", image: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=300&h=300&fit=crop", category: "FF&E" },
+  { name: "Bulk Cleaning Solution", supplier: "Pharaoh Chemicals", price: "EGP 2,100", image: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=300&h=300&fit=crop", category: "Consumables" },
+  { name: "Artisan Coffee Beans 10kg", supplier: "Nile Fresh Produce", price: "EGP 3,600", image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=300&h=300&fit=crop", category: "F&B" },
 ];
 
 const supplierFeatures = [
@@ -92,19 +101,51 @@ export default function MarketplacePage() {
         </div>
       </section>
 
+      {/* Product Showcase — Visual Hero */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(57,255,126,0.04) 0%, transparent 60%)" }} />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2">Trending Products</h2>
+              <p className="text-[13px] text-white/40">Sample of what hotels are ordering this week</p>
+            </div>
+            <Link href="/register?sector=procurement" className="text-[12px] font-medium text-[#39ff7e] hover:underline flex items-center gap-1">View all catalog <ArrowRight size={12} /></Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {heroProducts.map((p) => (
+              <div key={p.name} className="group rounded-xl overflow-hidden border transition-all hover:border-white/20 hover:scale-[1.02] cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                <div className="relative h-32 overflow-hidden">
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
+                  <div className="absolute top-2 left-2">
+                    <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(57,255,126,0.15)", color: "#39ff7e" }}>{p.category}</span>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[11px] font-medium text-white mb-1 leading-tight">{p.name}</h4>
+                  <p className="text-[10px] text-white/30 mb-1.5">{p.supplier}</p>
+                  <p className="text-[12px] font-semibold text-[#39ff7e]">{p.price}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Product Categories */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Product Categories</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {categories.map((cat) => (
-              <div key={cat.name} className="rounded-xl p-5 cursor-pointer transition-all hover:scale-[1.02]" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: cat.color + "15" }}>
-                  <ShoppingCart size={16} style={{ color: cat.color }} />
+              <div key={cat.name} className="group relative rounded-xl overflow-hidden border cursor-pointer transition-all hover:scale-[1.02] hover:border-white/20" style={{ borderColor: `${cat.color}33` }}>
+                <img src={cat.image} alt={cat.name} className="w-full h-32 object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <h3 className="text-[13px] font-semibold mb-0.5" style={{ color: cat.color }}>{cat.name}</h3>
+                  <p className="text-[10px] text-white/30 leading-tight mb-1">{cat.desc}</p>
+                  <p className="text-[10px] font-medium" style={{ color: cat.color }}>{cat.count}</p>
                 </div>
-                <h3 className="text-[14px] font-medium text-white mb-1">{cat.name}</h3>
-                <p className="text-[11px] text-white/30 mb-2">{cat.desc}</p>
-                <p className="text-[10px] font-medium" style={{ color: cat.color }}>{cat.count}</p>
               </div>
             ))}
           </div>
@@ -117,20 +158,30 @@ export default function MarketplacePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Featured Suppliers</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {suppliers.map((s) => (
-              <div key={s.name} className="rounded-xl p-5 flex items-center justify-between transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(57,255,126,0.08)" }}>
-                    <span className="text-[12px] font-medium text-[#39ff7e]">{s.name.charAt(0)}</span>
+              <div key={s.name} className="group rounded-xl overflow-hidden transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                {s.products.length > 0 && (
+                  <div className="flex gap-0.5 h-16 overflow-hidden">
+                    {s.products.map((img, i) => (
+                      <img key={i} src={img} alt="" className="flex-1 h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
+                    ))}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-[13px] font-medium text-white">{s.name}</h3>
-                      {s.verified && <Shield size={12} style={{ color: "#39ff7e" }} />}
+                )}
+                <div className="p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img src={s.avatar} alt={s.name} className="w-10 h-10 rounded-lg object-cover" style={{ border: "1px solid rgba(255,255,255,0.1)" }} />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-[13px] font-medium text-white">{s.name}</h3>
+                        {s.verified && <Shield size={12} style={{ color: "#39ff7e" }} />}
+                      </div>
+                      <p className="text-[11px] text-white/30">{s.category} · {s.location}</p>
                     </div>
-                    <p className="text-[11px] text-white/30">{s.category} · {s.location}</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Star size={12} className="text-yellow-400 fill-yellow-400" />
+                    <p className="text-[13px] font-medium text-white/70">{s.rating}</p>
                   </div>
                 </div>
-                <p className="text-[13px] font-medium text-white/70">★ {s.rating}</p>
               </div>
             ))}
           </div>
