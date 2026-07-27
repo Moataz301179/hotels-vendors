@@ -30,7 +30,7 @@ export function BrandLogo({
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
       <img
-        src="/logo.svg"
+        src="/hotelsvendors-logo.svg"
         alt="HotelsVendors"
         width={dims.icon}
         height={dims.icon}
