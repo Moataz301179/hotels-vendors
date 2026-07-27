@@ -172,7 +172,8 @@ export async function POST(request: NextRequest) {
 
     // ── 8. Get history and sanitize ──
     const rawHistory = await getConversationHistory(conversationId);
-    const { messages: history } = sanitizeMessages(rawHistory);
+    const { messages: rawHistoryMessages } = sanitizeMessages(rawHistory);
+    const history = rawHistoryMessages as Array<{ role: "system" | "user" | "assistant"; content: string }>;
 
     // ── 9. Try Ollama streaming ──
     const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
@@ -209,7 +210,6 @@ export async function POST(request: NextRequest) {
       const fallbackResult = await executeLLM(systemPrompt, safeQuestion, {
         maxTokens: 800,
         temperature: 0.4,
-        preferredModel: "xai",
       });
 
       await prisma.chatMessage.create({
@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
           conversationId,
           role: "assistant",
           content: fallbackResult.content,
-          model: fallbackResult.model,
+          model: fallbackResult.model ?? "unknown",
           tokensUsed: fallbackResult.tokensUsed,
         },
       });
@@ -225,8 +225,8 @@ export async function POST(request: NextRequest) {
 
       return success({
         answer: fallbackResult.content,
-        model: fallbackResult.model,
-        provider: fallbackResult.provider,
+        model: fallbackResult.model ?? "unknown",
+        provider: fallbackResult.provider ?? "unknown",
         fallback: true,
         conversationId,
       });

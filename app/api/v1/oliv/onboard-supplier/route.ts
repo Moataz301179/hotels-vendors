@@ -136,9 +136,9 @@ export async function POST(request: NextRequest) {
           }
         : undefined,
       shareholders: shareholders?.map((s: Record<string, unknown>) => ({
-        fullName: s.fullName,
-        nationalId: s.nationalId,
-        ownershipPercentage: s.ownershipPercentage,
+        fullName: String(s.fullName ?? ""),
+        nationalId: String(s.nationalId ?? ""),
+        ownershipPercentage: Number(s.ownershipPercentage ?? 0),
       })),
       financial: {
         estimatedMonthlyRevenueEGP: financial?.estimatedMonthlyRevenueEGP || 0,

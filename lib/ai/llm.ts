@@ -39,6 +39,8 @@ export interface RouterResult {
   latencyMs: number;
   tokensUsed?: number;
   creditsCost: number;
+  model?: string;
+  provider?: string;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -229,7 +231,8 @@ export async function executeLLM(
   }
 
   // PII scrubbing for external providers
-  const { messages: scrubbed, piiFound, warning } = scrubMessages(messages);
+  const { messages: rawScrubbed, piiFound, warning } = scrubMessages(messages);
+  const scrubbed = rawScrubbed as LLMMessage[];
   if (piiFound) console.warn("[PII-GOVERNANCE]", warning);
 
   // ═══ TRY 1: Ollama (local, free) ═══

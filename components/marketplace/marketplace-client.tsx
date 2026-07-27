@@ -182,11 +182,13 @@ export default function MarketplacePage() {
   const handleAdd = (product: MarketplaceProduct) => {
     const resolved = getProductImage(product);
     addItem({
+      id: product.id,
       productId: product.id,
       name: product.name,
       sku: product.sku,
+      price: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
       unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
-      supplierId: product.supplierId, // FIXED: was product.id
+      supplierId: product.supplierId,
       supplierName: product.supplierName,
       image: resolved.type === "url" ? resolved.src : undefined,
     });

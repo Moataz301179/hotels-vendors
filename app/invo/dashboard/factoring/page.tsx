@@ -109,7 +109,7 @@ export default async function FactoringPage() {
                       {inv.invoiceNumber || inv.id.slice(0, 8)}
                     </span>
                     <span className="text-[14px] font-medium text-[#D4A843]">
-                      EGP {inv.total.toLocaleString()}
+                      EGP {Number(inv.total ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">

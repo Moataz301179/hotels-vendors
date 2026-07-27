@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         return Response.json({ error: "Order not found or unauthorized" }, { status: 404 });
       }
 
-      orderTotal = order.total;
+      orderTotal = Number(order.total ?? 0);
       hotelName = order.hotel.name;
       hotelId = order.hotelId;
       orderId = order.id;

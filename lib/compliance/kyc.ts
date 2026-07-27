@@ -135,18 +135,18 @@ export async function submitKycVerification(
 
   // Audit log the verification attempt
   await appendAuditEntry({
-    entityType: "KYC_VERIFICATION",
+    entityName: "TENANT",
     entityId: tenantId,
-    action: result.success ? `KYC_LEVEL_${level}_SUBMITTED` : `KYC_LEVEL_${level}_REJECTED`,
+    actionType: "UPDATE",
     tenantId,
     actorId: userId,
-    afterState: JSON.stringify({
+    changes: {
       level,
       success: result.success,
       message: result.message,
       verifiedFields: result.verifiedFields,
       rejectedFields: result.rejectedFields,
-    }),
+    },
   });
 
   return result;
@@ -170,7 +170,6 @@ export async function getKycStatus(tenantId: string): Promise<KycStatusResponse>
   // Query the most recent KYC audit entries to determine status
   const latestKycLog = await prisma.auditLog.findFirst({
     where: {
-      entityType: "KYC_VERIFICATION",
       entityId: tenantId,
     },
     orderBy: { createdAt: "desc" },
@@ -183,7 +182,7 @@ export async function getKycStatus(tenantId: string): Promise<KycStatusResponse>
   let level3CompletedAt: Date | null = null;
 
   if (latestKycLog) {
-    const state = latestKycLog.afterState ? JSON.parse(latestKycLog.afterState as string) : {};
+    const state = latestKycLog.changes && typeof latestKycLog.changes === "object" ? latestKycLog.changes as Record<string, unknown> : {};
     if (state.level === 1 && state.success) {
       status = "LEVEL_1_VERIFIED";
       level1CompletedAt = latestKycLog.createdAt;
@@ -198,7 +197,7 @@ export async function getKycStatus(tenantId: string): Promise<KycStatusResponse>
       currentLevel = 3;
     } else if (state.level && !state.success) {
       status = `LEVEL_${state.level}_PENDING` as KycStatus;
-      currentLevel = state.level;
+      currentLevel = state.level as KycLevel;
     }
   }
 

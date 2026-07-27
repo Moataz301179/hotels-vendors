@@ -242,6 +242,7 @@ const TASK_HANDLERS: Record<
           impactScore: gap.severity === "critical" ? 95 : gap.severity === "high" ? 80 : 60,
           confidence: 90,
           discoveredBy: "Data Harvester",
+          tenantId: _task.tenantId ?? "system",
         },
       });
     }
@@ -436,6 +437,7 @@ const TASK_HANDLERS: Record<
           solution: p.description,
           proposedBy: AGENTS[agentId]?.name || agentId,
           gapAddressed: gaps.find((g) => p.description.toLowerCase().includes(g.title.toLowerCase().slice(0, 15)))?.title || "General improvement",
+          tenantId: "system",
         },
       });
     }

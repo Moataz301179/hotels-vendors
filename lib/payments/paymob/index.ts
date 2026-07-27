@@ -774,18 +774,18 @@ export async function releaseEscrowToken(input: TokenReleaseInput): Promise<{ re
 
   await prisma.auditLog.create({
     data: {
-      entityType: "PAYMENT",
+      entityName: "INVOICE",
       entityId: payment.id,
-      action: "ESCROW_RELEASED",
+      actionType: "UPDATE",
       tenantId: payment.tenantId,
       actorId: input.approverId,
       actorRole: "ADMIN",
-      afterState: JSON.stringify({
+      changes: {
         releaseType: input.releaseType,
         funderId: input.funderId || null,
         approverId: input.approverId,
         coApproverId: input.coApproverId,
-      }),
+      },
     },
   });
 

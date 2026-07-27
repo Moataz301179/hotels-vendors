@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       prisma.hotel.count(),
       prisma.order.count({ where: { createdAt: { gte: startDate } } }),
       prisma.order.count({ where: { status: "DELIVERED", createdAt: { gte: startDate } } }),
-      prisma.order.count({ where: { status: "PENDING", createdAt: { gte: startDate } } }),
+      prisma.order.count({ where: { status: "PENDING_APPROVAL", createdAt: { gte: startDate } } }),
     ]);
 
     const activeUsers = await prisma.user.count({

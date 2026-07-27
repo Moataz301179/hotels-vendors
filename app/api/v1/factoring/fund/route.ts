@@ -63,7 +63,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const idempotencyKey = await requireIdempotencyKey(request, {
     userId: auth.userId,
     action: "FACTORING_INSTRUCTION",
-    amount: invoice.total,
+    amount: Number(invoice.total || 0),
   });
 
   // ── CREDIT FACILITY CHECK ──────────────────────────────────
@@ -85,11 +85,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }
 
   // Check available credit before submitting to partner
-  const availableCredit = facility.limit - facility.utilized;
-  if (availableCredit < invoice.total) {
+  const availableCredit = Number(facility.limit || 0) - Number(facility.utilized || 0);
+  if (availableCredit < Number(invoice.total || 0)) {
     return error(
       `Insufficient credit line. Available: EGP ${availableCredit.toLocaleString()}, ` +
-      `Required: EGP ${invoice.total.toLocaleString()}. ` +
+      `Required: EGP ${Number(invoice.total || 0).toLocaleString()}. ` +
       `The hotel may request a limit increase from the factoring partner.`,
       422
     );
@@ -100,7 +100,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     invoiceId: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
     etaUuid: invoice.etaUuid || "",
-    grossAmount: invoice.total,
+    grossAmount: Number(invoice.total || 0),
     currency: invoice.currency,
     supplier: {
       name: invoice.supplier.name,
@@ -142,16 +142,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
       const updatedFacility = await tx.creditFacility.update({
         where: { id: facility.id },
         data: {
-          utilized: { increment: invoice.total },
+          utilized: { increment: Number(invoice.total || 0) },
         },
       });
 
       // Guard: if increment pushed utilized over limit, throw to roll back
-      if (updatedFacility.utilized > updatedFacility.limit) {
+      if (Number(updatedFacility.utilized || 0) > Number(updatedFacility.limit || 0)) {
         throw new Error(
           `Credit facility limit exceeded after increment. ` +
-          `Limit: EGP ${updatedFacility.limit.toLocaleString()}, ` +
-          `Would be utilized: EGP ${updatedFacility.utilized.toLocaleString()}. ` +
+          `Limit: EGP ${Number(updatedFacility.limit || 0).toLocaleString()}, ` +
+          `Would be utilized: EGP ${Number(updatedFacility.utilized || 0).toLocaleString()}. ` +
           `Transaction rolled back.`
         );
       }
@@ -199,8 +199,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
       instructionId: result.instructionId,
       partnerFundingId: result.partnerFundingId,
       factoringRequestId: factoringRequest.id,
-      creditFacilityUtilized: facility.utilized + invoice.total,
-      creditFacilityLimit: facility.limit,
+          creditFacilityUtilized: Number(facility.utilized || 0) + Number(invoice.total || 0),
+          creditFacilityLimit: Number(facility.limit || 0),
       note: "Partner handles all fund transfers. Platform does not hold cash.",
     },
     ipAddress: request.headers.get("x-forwarded-for") || null,

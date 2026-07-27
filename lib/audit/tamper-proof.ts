@@ -20,13 +20,12 @@ import { prisma } from "@/lib/prisma";
  */
 export function computeEntryHash(entry: {
   id: string;
-  entityType: string;
+  entityName: string | null;
   entityId: string;
-  action: string;
+  actionType: string | null;
   actorId: string | null;
   actorRole: string | null;
-  beforeState: string | null;
-  afterState: string | null;
+  changes: string | null;
   ipAddress: string | null;
   userAgent: string | null;
   createdAt: Date;
@@ -34,13 +33,12 @@ export function computeEntryHash(entry: {
 }): string {
   const payload = JSON.stringify({
     id: entry.id,
-    entityType: entry.entityType,
+    entityName: entry.entityName,
     entityId: entry.entityId,
-    action: entry.action,
+    actionType: entry.actionType,
     actorId: entry.actorId,
     actorRole: entry.actorRole,
-    beforeState: entry.beforeState,
-    afterState: entry.afterState,
+    changes: entry.changes,
     ipAddress: entry.ipAddress,
     userAgent: entry.userAgent,
     createdAt: entry.createdAt.toISOString(),
@@ -59,26 +57,24 @@ export function computeEntryHash(entry: {
  * Automatically chains with previous entry.
  */
 export async function appendAuditEntry(params: {
-  entityType: string;
+  entityName?: string;
   entityId: string;
-  action: string;
+  actionType?: string;
   tenantId: string;
   actorId?: string | null;
   actorRole?: string | null;
-  beforeState?: Record<string, unknown> | null;
-  afterState?: Record<string, unknown> | null;
+  changes?: Record<string, unknown> | string | null;
   ipAddress?: string | null;
   userAgent?: string | null;
 }): Promise<string> {
   const {
-    entityType,
+    entityName,
     entityId,
-    action,
+    actionType,
     tenantId,
     actorId = null,
     actorRole = null,
-    beforeState = null,
-    afterState = null,
+    changes = null,
     ipAddress = null,
     userAgent = null,
   } = params;
@@ -94,14 +90,13 @@ export async function appendAuditEntry(params: {
   // Create entry
   const entry = await prisma.auditLog.create({
     data: {
-      entityType,
+      entityName: entityName as never,
       entityId,
-      action,
+      actionType: actionType as never,
       tenantId,
       actorId,
       actorRole,
-      beforeState: beforeState ? JSON.stringify(beforeState) : null,
-      afterState: afterState ? JSON.stringify(afterState) : null,
+      changes: typeof changes === "string" ? JSON.parse(changes) : changes,
       ipAddress,
       userAgent,
       previousHash,
@@ -112,13 +107,12 @@ export async function appendAuditEntry(params: {
   // Compute hash
   const hash = computeEntryHash({
     id: entry.id,
-    entityType: entry.entityType,
+    entityName: entry.entityName as string | null,
     entityId: entry.entityId,
-    action: entry.action,
+    actionType: entry.actionType as string | null,
     actorId: entry.actorId,
     actorRole: entry.actorRole,
-    beforeState: entry.beforeState,
-    afterState: entry.afterState,
+    changes: entry.changes ? JSON.stringify(entry.changes) : null,
     ipAddress: entry.ipAddress,
     userAgent: entry.userAgent,
     createdAt: entry.createdAt,
@@ -165,13 +159,12 @@ export async function verifyAuditChain(): Promise<VerificationResult> {
     const entry = entries[i];
     const expectedHash = computeEntryHash({
       id: entry.id,
-      entityType: entry.entityType,
+      entityName: entry.entityName as string | null,
       entityId: entry.entityId,
-      action: entry.action,
+      actionType: entry.actionType as string | null,
       actorId: entry.actorId,
       actorRole: entry.actorRole,
-      beforeState: entry.beforeState,
-      afterState: entry.afterState,
+      changes: entry.changes ? JSON.stringify(entry.changes) : null,
       ipAddress: entry.ipAddress,
       userAgent: entry.userAgent,
       createdAt: entry.createdAt,
@@ -205,10 +198,10 @@ export async function verifyAuditChain(): Promise<VerificationResult> {
 export async function exportAuditLog(params: {
   startDate?: Date;
   endDate?: Date;
-  entityType?: string;
+  entityName?: string;
   entityId?: string;
 }): Promise<{ entries: unknown[]; chainHash: string; verified: boolean }> {
-  const { startDate, endDate, entityType, entityId } = params;
+  const { startDate, endDate, entityName, entityId } = params;
 
   const where: Record<string, unknown> = {};
   if (startDate || endDate) {
@@ -216,7 +209,7 @@ export async function exportAuditLog(params: {
     if (startDate) (where.createdAt as Record<string, Date>).gte = startDate;
     if (endDate) (where.createdAt as Record<string, Date>).lte = endDate;
   }
-  if (entityType) where.entityType = entityType;
+  if (entityName) where.entityName = entityName;
   if (entityId) where.entityId = entityId;
 
   const entries = await prisma.auditLog.findMany({
@@ -236,8 +229,7 @@ export async function exportAuditLog(params: {
   return {
     entries: entries.map((e) => ({
       ...e,
-      beforeState: e.beforeState ? JSON.parse(e.beforeState) : null,
-      afterState: e.afterState ? JSON.parse(e.afterState) : null,
+      changes: e.changes,
     })),
     chainHash,
     verified: verification.valid,

@@ -177,12 +177,12 @@ async function handleFundingEvent(
     }
 
     if (utilizedDelta !== 0) {
-      const newUtilized = Math.max(0, facility.utilizedEgp + utilizedDelta);
+      const newUtilized = Math.max(0, Number(facility.utilizedEgp || 0) + utilizedDelta);
       await prisma.olivCreditFacility.update({
         where: { id: facility.id },
         data: {
           utilizedEgp: newUtilized,
-          availableEgp: facility.creditLimitEgp - newUtilized,
+          availableEgp: Number(facility.creditLimitEgp || 0) - newUtilized,
           lastSyncedAt: new Date(),
         },
       });

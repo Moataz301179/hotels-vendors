@@ -301,7 +301,8 @@ export async function middleware(request: NextRequest) {
   // Set CSRF cookie for page routes (non-API) so frontend JS can read it
   if (!isApiPath(pathname) && !request.cookies.get(CSRF_COOKIE)?.value) {
     const { generateCsrfToken } = await import("@/lib/security/csrf");
-    response.cookies.set(CSRF_COOKIE, generateCsrfToken(), {
+    const csrfToken = await generateCsrfToken();
+    response.cookies.set(CSRF_COOKIE, csrfToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

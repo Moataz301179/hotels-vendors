@@ -66,8 +66,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
   }
 
   // Calculate summary metrics
-  const utilizationRate = facility.creditLimitEgp > 0
-    ? (facility.utilizedEgp / facility.creditLimitEgp) * 100
+  const utilizationRate = Number(facility.creditLimitEgp || 0) > 0
+    ? (Number(facility.utilizedEgp || 0) / Number(facility.creditLimitEgp || 0)) * 100
     : 0;
 
   const upcomingPayments = paymentSchedule.filter(

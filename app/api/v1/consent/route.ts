@@ -26,7 +26,7 @@ const CONSENT_TEXT: Record<string, string> = {
 
 const GrantConsentSchema = z.object({
   consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
-    error_map: () => ({ message: `Invalid consent type. Valid types: ${Object.keys(CONSENT_TEXT).join(", ")}` }),
+    error: () => ({ message: `Invalid consent type. Valid types: ${Object.keys(CONSENT_TEXT).join(", ")}` }),
   }),
   partnerId: z.string().min(1, "Partner ID is required"),
   dataCategories: z.array(z.string().min(1)).min(1, "At least one data category is required"),

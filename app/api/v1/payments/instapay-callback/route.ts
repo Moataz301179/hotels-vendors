@@ -67,12 +67,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const { appendAuditEntry: appendAuditEntryInstapay } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntryInstapay({
     tenantId: tx.tenantId,
-    entityType: "PaymentTransaction",
+    entityName: "INVOICE",
     entityId: tx.id,
-    action: isCompleted ? "INSTAPAY_TRANSFER_COMPLETED" : "INSTAPAY_TRANSFER_FAILED",
+    actionType: isCompleted ? "UPDATE" : "UPDATE",
     actorId: "instapay",
     actorRole: "SYSTEM",
-    afterState: {
+    changes: {
       transactionId,
       eventType,
       amount,

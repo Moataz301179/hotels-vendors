@@ -80,7 +80,7 @@ export function createFactoringWorker(): Worker {
             hotelName: invoice.hotel.name,
             hotelRiskScore: risk.compositeScore,
             hotelRiskTier: risk.riskTier,
-            invoiceAmount: invoice.total,
+            invoiceAmount: Number(invoice.total ?? 0),
             invoiceCurrency: "EGP",
             invoiceDueDate: invoice.dueDate || new Date(Date.now() + 30 * 86400000),
             etaUuid: invoice.etaUuid || "",
@@ -120,9 +120,9 @@ export function createFactoringWorker(): Worker {
             throw new Error(`Cannot fund request in status ${request.status}`);
           }
 
-          const platformFee = request.platformFee || invoice.total * 0.025;
-          const partnerFee = request.factoringFee || 0;
-          const netDisbursement = invoice.total - platformFee - partnerFee;
+          const platformFee = Number(request.platformFee || Number(invoice.total) * 0.025);
+          const partnerFee = Number(request.factoringFee || 0);
+          const netDisbursement = Number(invoice.total) - platformFee - partnerFee;
 
           const partner = getPartner(request.factoringCompanyId || "");
           if (!partner) {
@@ -133,7 +133,7 @@ export function createFactoringWorker(): Worker {
             eligibilityResponseId: request.id,
             invoiceId: invoice.id,
             etaUuid: invoice.etaUuid || "",
-            grossAmount: invoice.total,
+            grossAmount: Number(invoice.total ?? 0),
             platformFee,
             netDisbursement,
             supplierBankAccount: invoice.supplier.bankAccount || "",
@@ -222,7 +222,7 @@ export function createFactoringWorker(): Worker {
           await prisma.creditFacility.updateMany({
             where: { hotelId: invoice.hotelId, status: "ACTIVE" },
             data: {
-              utilized: { increment: invoice.total },
+              utilized: { increment: Number(invoice.total ?? 0) },
             },
           });
 
@@ -252,7 +252,7 @@ export function createFactoringWorker(): Worker {
         }
 
         case "COLLECT_FEES": {
-          const platformFee = request.platformFee || 0;
+          const platformFee = Number(request.platformFee || 0);
 
           if (platformFee > 0) {
             await prisma.creditTransaction.create({

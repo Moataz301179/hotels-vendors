@@ -32,7 +32,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
           supplierName: order.supplierId, // simplified
         };
       }
-      productPrices[pid].prices.push(item.unitPrice);
+      productPrices[pid].prices.push(Number(item.unitPrice || 0));
       productPrices[pid].hotels.add(order.hotelId);
     }
   }

@@ -78,7 +78,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
 
   // Platform referral fee: 0.5% of invoice value
   const PLATFORM_REFERRAL_RATE = 0.005;
-  const platformFee = invoice.total * PLATFORM_REFERRAL_RATE;
+  const platformFee = Number(invoice.total || 0) * PLATFORM_REFERRAL_RATE;
 
   // Check if an offer already exists from this company for this invoice
   const existingRequest = await prisma.factoringRequest.findFirst({
@@ -103,7 +103,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
         platformFeeRate: PLATFORM_REFERRAL_RATE,
         requestedAmount: invoice.total,
         grossAmount: invoice.total,
-        factoringFee: invoice.total * data.discountRate,
+        factoringFee: Number(invoice.total || 0) * data.discountRate,
         status: "UNDER_REVIEW",
       },
     });
@@ -118,7 +118,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
         grossAmount: invoice.total,
         advanceRate: data.advanceRate,
         discountRate: data.discountRate,
-        factoringFee: invoice.total * data.discountRate,
+        factoringFee: Number(invoice.total || 0) * data.discountRate,
         platformFee,
         platformFeeRate: PLATFORM_REFERRAL_RATE,
         status: "UNDER_REVIEW",
@@ -162,7 +162,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
     invoiceTotal: invoice.total,
     advanceRate: data.advanceRate,
     discountRate: data.discountRate,
-    supplierReceives: invoice.total * data.advanceRate - invoice.total * data.discountRate,
+    supplierReceives: Number(invoice.total || 0) * data.advanceRate - Number(invoice.total || 0) * data.discountRate,
     platformFee,
     platformFeeRate: PLATFORM_REFERRAL_RATE,
   });

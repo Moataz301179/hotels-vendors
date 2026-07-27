@@ -148,13 +148,12 @@ export async function atomicStatusUpdate(
     // Write audit log
     await tx.auditLog.create({
       data: {
-        entityType: "ORDER",
+        entityName: "ORDER",
         entityId: orderId,
-        action: `STATUS_${requestedStatus}`,
+        actionType: "UPDATE",
         tenantId,
         actorId,
-        beforeState: JSON.stringify({ status: order.status }),
-        afterState: JSON.stringify({ status: requestedStatus }),
+        changes: { before: { status: order.status }, after: { status: requestedStatus } },
       },
     });
 

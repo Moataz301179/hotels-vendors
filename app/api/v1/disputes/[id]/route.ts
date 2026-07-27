@@ -77,16 +77,16 @@ export const PUT = apiRoute(async (request: NextRequest, ctx: { params: Promise<
     action: "DISPUTE_UPDATED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
-    beforeState: JSON.stringify({
+    beforeState: {
       status: existing.status,
       resolution: existing.resolution,
       liability: existing.liability,
-    }),
-    afterState: JSON.stringify({
+    },
+    afterState: {
       status: updated.status,
       resolution: updated.resolution,
       liability: updated.liability,
-    }),
+    },
   });
 
   return success(updated);

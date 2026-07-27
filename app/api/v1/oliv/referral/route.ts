@@ -7,7 +7,7 @@ const OlivReferralSchema = z.object({
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
   company: z.string().optional(),
-  role: z.enum(["SUPPLIER", "HOTEL"], { error_map: () => ({ message: "Role must be SUPPLIER or HOTEL" }) }),
+  role: z.enum(["SUPPLIER", "HOTEL"], { error: () => ({ message: "Role must be SUPPLIER or HOTEL" }) }),
 });
 
 export async function POST(request: NextRequest) {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       data: {
         companyName: company || `${name} (Oliv Referral)`,
         email,
-        sector: "HOSPITALITY",
+        sector: "HOTEL",
         role,
         message: phone || undefined,
         source: "OLIV_REFERRAL_PAGE",

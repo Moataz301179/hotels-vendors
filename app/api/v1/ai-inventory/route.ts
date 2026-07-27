@@ -226,13 +226,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }));
 
   const criticalCount = forecasts.filter(
-    (f) => f.reorderUrgency === "critical"
+    (f) => f.forecast.reorderUrgency === "critical"
   ).length;
   const urgentCount = forecasts.filter(
-    (f) => f.reorderUrgency === "urgent"
+    (f) => f.forecast.reorderUrgency === "urgent"
   ).length;
   const soonCount = forecasts.filter(
-    (f) => f.reorderUrgency === "soon"
+    (f) => f.forecast.reorderUrgency === "soon"
   ).length;
 
   return success({

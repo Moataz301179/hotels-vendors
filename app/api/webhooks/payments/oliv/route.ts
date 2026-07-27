@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiRoute, error, success, audit } from "@/lib/api-utils";
-import { handleOlivWebhook } from "@/lib/payments/oliv";
+import { handleOlivWebhook } from "@/lib/payments/oliv/index";
 import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 
 /**

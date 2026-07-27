@@ -120,12 +120,12 @@ export async function POST(request: NextRequest) {
     // Create an audit log entry (tamper-proof chain, outside transaction — non-critical)
     const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
     await appendAuditEntry({
-      action: "SUPPLIER_ONBOARDING_SUBMITTED",
-      entityType: "Supplier",
+      actionType: "CREATE",
+      entityName: "SUPPLIER",
       entityId: supplier.id,
       actorId: "system",
       tenantId: tenant.id,
-      afterState: {
+      changes: {
         supplierName: supplier.name,
         email: supplier.email,
         taxId: supplier.taxId,

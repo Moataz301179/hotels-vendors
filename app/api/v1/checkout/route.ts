@@ -161,8 +161,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
         where: { id: hotelId },
         select: { creditLimit: true, creditUsed: true },
       });
-      const currentExposure = hotel.creditUsed ?? 0;
-      if (currentExposure + grandTotal > (hotel.creditLimit ?? Infinity)) {
+      const currentExposure = Number(hotel.creditUsed ?? 0);
+      if (currentExposure + grandTotal > Number(hotel.creditLimit ?? Infinity)) {
         throw new Error(
           `Concurrent credit breach. Exposure: EGP ${currentExposure.toFixed(2)} + checkout EGP ${grandTotal.toFixed(2)} > Limit: EGP ${(hotel.creditLimit ?? 0).toFixed(2)}`,
         );
@@ -172,7 +172,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         id: string;
         orderNumber: string;
         supplier: { name: string };
-        total: number;
+        total: number | import("@prisma/client/runtime/library").Decimal | null;
         status: string;
       }> = [];
       let orderIndex = 0;
@@ -256,7 +256,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }
 
   // ── AUTHORITY MATRIX: evaluate each order ──
-  const evaluations = [];
+  const evaluations: Array<{ orderNumber: string; evaluation: string }> = [];
   for (const order of createdOrders) {
     const evaluation = await evaluateAuthority(order.id, {
       userId: auth.userId,

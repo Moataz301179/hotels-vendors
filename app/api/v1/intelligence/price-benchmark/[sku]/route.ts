@@ -20,7 +20,7 @@ export const GET = apiRoute(async (request: NextRequest, { params }: { params?: 
     return error("No products found for SKU", 404);
   }
 
-  const prices = products.map((p) => p.unitPrice);
+  const prices = products.map((p) => Number(p.unitPrice || 0));
   const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
   const min = Math.min(...prices);
   const max = Math.max(...prices);

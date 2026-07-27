@@ -81,7 +81,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
   const idempotencyKey = await requireIdempotencyKey(request, {
     userId: auth.userId,
     action: "FACTORING_ACCEPT",
-    amount: invoice.total,
+    amount: Number(invoice.total || 0),
   });
 
   // Fetch the factoring request being accepted
@@ -115,10 +115,10 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
     const updatedRequest = await tx.factoringRequest.update({
       where: { id: factoringRequest.id },
       data: {
-        status: "ACCEPTED",
-        grossAmount: invoice.total,
-        factoringFee: invoice.total * factoringRequest.discountRate,
-        disbursedAmount: invoice.total * factoringRequest.advanceRate - invoice.total * factoringRequest.discountRate,
+        status: "APPROVED",
+        grossAmount: Number(invoice.total || 0),
+        factoringFee: Number(invoice.total || 0) * Number(factoringRequest.discountRate || 0),
+        disbursedAmount: Number(invoice.total || 0) * Number(factoringRequest.advanceRate || 0) - Number(invoice.total || 0) * Number(factoringRequest.discountRate || 0),
       },
     });
 
@@ -128,8 +128,8 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
       data: {
         factoringStatus: "ACCEPTED",
         factoringCompanyId: factoringRequest.factoringCompanyId,
-        acceleratedCashRate: factoringRequest.advanceRate,
-        supplierDiscountRate: factoringRequest.discountRate,
+        acceleratedCashRate: Number(factoringRequest.advanceRate || 0),
+        supplierDiscountRate: Number(factoringRequest.discountRate || 0),
         platformFee: factoringRequest.platformFee ?? 0,
         platformFeeRate: factoringRequest.platformFeeRate ?? 0.005,
       },
