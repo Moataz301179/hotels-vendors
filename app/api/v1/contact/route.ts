@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
   const parsed = ContactSchema.safeParse(body);
   if (!parsed.success) {
-    const firstError = parsed.error.errors[0]?.message || "Validation failed";
+    const firstError = parsed.error.issues[0]?.message || "Validation failed";
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 

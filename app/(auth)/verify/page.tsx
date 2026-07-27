@@ -23,7 +23,11 @@ function VerifyContent() {
 
     const verify = async () => {
       try {
-        const res = await fetch(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}${email ? `&email=${encodeURIComponent(email)}` : ""}`)
+        const res = await fetch(`/api/v1/auth/verify-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        })
         const data = await res.json()
         if (res.ok) {
           setStatus("success")

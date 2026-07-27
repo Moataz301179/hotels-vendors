@@ -64,7 +64,6 @@ function RegisterContent() {
     email: "",
     password: "",
     role: initialRole as StakeholderRole,
-    taxId: "",
     city: "",
     governorate: "",
     propertyType: "SINGLE" as PropertyType,
@@ -93,8 +92,8 @@ function RegisterContent() {
       setLoading(false);
       return;
     }
-    if (!form.taxId || !form.city || !form.governorate) {
-      setError("Tax ID, City, and Governorate are required for business accounts");
+    if (!form.city || !form.governorate) {
+      setError("City and Governorate are required for logistics routing");
       setLoading(false);
       return;
     }
@@ -113,7 +112,6 @@ function RegisterContent() {
           name: form.name,
           email: form.email,
           password: form.password,
-          taxId: form.taxId,
           city: form.city,
           governorate: form.governorate,
           accountType: "business",
@@ -266,24 +264,6 @@ function RegisterContent() {
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
-            </div>
-          </div>
-
-          {/* Tax ID */}
-          <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
-              Tax ID <span className="text-red-400">*</span>
-            </label>
-            <div className="relative">
-              <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
-              <input
-                type="text"
-                value={form.taxId}
-                onChange={(e) => updateForm("taxId", e.target.value)}
-                placeholder="Egyptian Tax Identification Number"
-                required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
-              />
             </div>
           </div>
 
@@ -454,6 +434,13 @@ function RegisterContent() {
             )}
           </button>
         </form>
+      </div>
+
+      {/* Info Note */}
+      <div className="rounded-xl p-4 bg-white/[0.02] border border-white/[0.06]">
+        <p className="text-[12px] text-white/40 leading-relaxed">
+          Tax ID and Commercial Registry can be added after registration in your dashboard settings.
+        </p>
       </div>
 
       {/* Footer */}

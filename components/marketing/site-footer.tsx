@@ -142,7 +142,7 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
-                    href="/about"
+                    href="/contact"
                     className="text-white/45 hover:text-white transition-colors"
                   >
                     Contact
@@ -171,7 +171,7 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
-                    href="/about"
+                    href="/compliance"
                     className="text-white/45 hover:text-white transition-colors"
                   >
                     Security
@@ -203,7 +203,7 @@ export function SiteFooter() {
           className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-white/30"
           style={{ borderColor: "#39ff7e15" }}
         >
-          <span>&copy; {new Date().getFullYear()} HotelsVendors Inc. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} Restaurants for E-Marketing. All rights reserved.</span>
           <span className="flex items-center gap-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"

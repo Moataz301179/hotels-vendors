@@ -34,7 +34,7 @@ export default function SignupPage() {
       const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: platformRole, email, password, name, phone: phone || undefined, taxId: taxId || undefined }),
+        body: JSON.stringify({ type: platformRole, email, password, name, phone: phone || undefined, taxId: taxId || undefined, accountType: "individual" }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || "Signup failed"); return }

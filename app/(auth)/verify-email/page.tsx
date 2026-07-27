@@ -8,11 +8,13 @@ import { AlertTriangle, CheckCircle2, Loader2, MailCheck, ArrowRight } from "luc
 function VerifyEmailForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const emailParam = searchParams.get("email");
 
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("Verifying your email...");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState("");
+  const [email, setEmail] = useState(emailParam || "");
 
   useEffect(() => {
     if (!token) {
@@ -43,13 +45,14 @@ function VerifyEmailForm() {
   }, [token]);
 
   const handleResend = async () => {
+    if (!email) return;
     setResending(true);
     setResendMsg("");
     try {
       const res = await fetch("/api/v1/auth/resend-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "" }),
+        body: JSON.stringify({ email }),
       });
       const data = await res.json();
       setResendMsg(data.data?.message || "Verification email sent if account exists.");
@@ -106,7 +109,19 @@ function VerifyEmailForm() {
                 <p className="text-white/40 text-[14px] mt-1">{message}</p>
               </div>
               <div className="space-y-3">
-                <button onClick={handleResend} disabled={resending}
+                {!email && (
+                  <div>
+                    <label className="block text-[13px] font-medium text-white/50 mb-1.5">Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@company.com"
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
+                    />
+                  </div>
+                )}
+                <button onClick={handleResend} disabled={resending || !email}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.08] text-white text-[13px] font-medium hover:bg-white/[0.04] transition-colors disabled:opacity-50">
                   <MailCheck className="w-4 h-4" />
                   {resending ? "Sending..." : "Resend Verification Email"}
