@@ -101,6 +101,7 @@ describe("Auth Layer", () => {
         address: "123 Main St",
         commercialReg: "CR-001",
         phone: "+20123456789",
+        termsAccepted: true as const,
       };
       const result = BusinessRegisterSchema.safeParse(data);
       expect(result.success).toBe(true);
