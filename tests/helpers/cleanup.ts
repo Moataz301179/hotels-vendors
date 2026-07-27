@@ -23,7 +23,7 @@ export async function createTestTenant() {
     data: {
       id: `test-tenant-${Date.now()}`,
       name: "Test Hotel",
-      type: "HOTEL",
+      type: "HOTEL_GROUP",
       slug: `test-hotel-${Date.now()}`,
     },
   });
