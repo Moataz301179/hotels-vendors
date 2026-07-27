@@ -8,6 +8,7 @@ import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { DensityToggle } from "@/components/shared/density-toggle";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { getTrialStatus } from "@/lib/fintech/trial";
 import { CommandPaletteTrigger } from "@/components/shared/command-palette";
 
@@ -128,6 +129,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
         </button>
 
         <DensityToggle />
+        <LanguageSwitcher />
 
         <button
           onClick={toggleCart}

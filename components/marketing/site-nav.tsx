@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 interface DropdownItem {
   href: string;
@@ -107,6 +108,7 @@ export function SiteNav() {
 
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">
+        <LanguageSwitcher />
         <Link
           href="/login"
           className="text-sm px-4 py-2 text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent font-sans"
@@ -148,13 +150,16 @@ export function SiteNav() {
               ))}
             </div>
           ))}
-          <Link
-            href="/pricing"
-            onClick={() => setOpen(false)}
-            className="text-sm text-white/50 hover:text-white"
-          >
-            Pricing
-          </Link>
+          <div className="flex items-center gap-3 px-1">
+            <LanguageSwitcher />
+            <Link
+              href="/pricing"
+              onClick={() => setOpen(false)}
+              className="text-sm text-white/50 hover:text-white"
+            >
+              Pricing
+            </Link>
+          </div>
           <hr className="border-white/[0.06]" />
           <Link
             href="/login"

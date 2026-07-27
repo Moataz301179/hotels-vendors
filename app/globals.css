@@ -476,7 +476,7 @@ textarea:focus-visible {
   position: sticky;
   left: 0;
   z-index: 2;
-  background: #0f0f0f;
+  background: var(--bg-canvas);
 }
 .table-scroll-wrapper thead th:first-child {
   z-index: 3;
@@ -511,4 +511,70 @@ textarea:focus-visible {
 /* Sidebar nav item spacing */
 .density-nav > * + * {
   margin-top: calc(var(--density-scale) * 0.25rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RTL SUPPORT — Arabic / Right-to-Left
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Arabic font stack when RTL is active */
+[dir="rtl"] {
+  font-family: var(--font-arabic), var(--font-sans);
+}
+
+/* Logical property overrides for RTL */
+[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
+[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
+[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+[dir="rtl"] .pl-6 { padding-left: 0; padding-right: 1.5rem; }
+[dir="rtl"] .pr-6 { padding-right: 0; padding-left: 1.5rem; }
+[dir="rtl"] .pl-12 { padding-left: 0; padding-right: 3rem; }
+[dir="rtl"] .pr-12 { padding-right: 0; padding-left: 3rem; }
+
+/* Text alignment flip */
+[dir="rtl"] .text-left { text-align: right; }
+[dir="rtl"] .text-right { text-align: left; }
+
+/* Sidebar flip — move sidebar to right in RTL */
+[dir="rtl"] aside[role="navigation"] {
+  order: 2;
+}
+[dir="rtl"] aside[role="navigation"] + div,
+[dir="rtl"] aside[role="navigation"] ~ div {
+  order: 1;
+}
+
+/* Icon inside buttons — swap order for RTL */
+[dir="rtl"] .btn-accent,
+[dir="rtl"] .btn-ghost {
+  flex-direction: row-reverse;
+}
+
+/* Mobile menu slide-in direction */
+[dir="rtl"] .fixed.left-0 {
+  left: auto;
+  right: 0;
+}
+
+/* Table sticky column flip */
+[dir="rtl"] .table-scroll-wrapper thead th:first-child,
+[dir="rtl"] .table-scroll-wrapper tbody td:first-child {
+  left: auto;
+  right: 0;
+}
+
+/* Generic RTL utility class */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+.rtl * {
+  unicode-bidi: isolate;
 }
