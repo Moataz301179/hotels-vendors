@@ -302,7 +302,7 @@ export async function generateSmartFixes(
       hotelRiskTier: "HIGH",
       payload: {
         partnerTier: "HIGH_RISK",
-        eligiblePartners: ["contact_high_risk", "efg_sme_desk"],
+        eligiblePartners: [], // TODO: Register high-risk factoring partners in factoring-bridge before enabling
         adjustedDiscountRate: 0.03,
         advanceRate: 0.85,
         explanation: "High-risk hotels require specialized factoring partners who price risk into their discount rate.",
