@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeLLM } from "@/lib/ai/llm";
 import { hasEnoughCredits, deductAICredits, getAICreditsBalance } from "@/lib/ai/credits";
+import { sanitizeUserInput } from "@/lib/ai/sanitization";
+// PII scrubbing is handled internally by executeLLM for external providers (Ollama is local, no scrub needed)
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,6 +30,16 @@ export async function POST(request: NextRequest) {
       }, { status: 402 });
     }
 
+    // Sanitize user input (prompt injection defense)
+    const sanitization = sanitizeUserInput(message);
+    if (sanitization.injectionDetected) {
+      console.warn(
+        `[SECURITY] Prompt injection attempt detected from user ${userId}:`,
+        sanitization.injectionPatterns
+      );
+    }
+    const safeMessage = sanitization.sanitized;
+
     // System prompt — no provider info exposed
     const systemPrompt = `You are an AI assistant for HotelsVendors — a Digital Procurement Hub for Egyptian hospitality.
 
@@ -42,10 +54,11 @@ Current Platform Metrics:
 Respond concisely with bullet points and markdown. Always provide actionable next steps.`;
 
     // Execute LLM (provider hidden from user)
+    // Note: PII scrubbing happens inside executeLLM for external providers
     const result = await executeLLM(
       [
         { role: "system", content: systemPrompt },
-        { role: "user", content: message },
+        { role: "user", content: safeMessage },
       ],
       { temperature: 0.7, maxTokens: 1024, taskComplexity: "medium" }
     );

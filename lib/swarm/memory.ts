@@ -1,4 +1,4 @@
-// Stub — swarm memory was archived
+// STUB: Not implemented. See lib/ai/ for active AI infrastructure.
 
 export async function storeMemory(..._args: unknown[]): Promise<void> {
   // No-op

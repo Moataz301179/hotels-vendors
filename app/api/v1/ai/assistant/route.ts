@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { streamText } from "ai";
 import { createOllama } from "ollama-ai-provider";
 import { prisma } from "@/lib/prisma";
-import { authenticate, validateBody, success } from "@/lib/api-utils";
+import { authenticate, validateBody } from "@/lib/api-utils";
 import { enforceQuota, incrementUsage } from "@/lib/ai/quota";
 import { buildSystemPrompt, type AssistantRole } from "@/components/ai-assistant/prompts";
 import { verifyTenantOwnership } from "@/lib/tenant/scope";
@@ -223,12 +223,16 @@ export async function POST(request: NextRequest) {
       });
       await incrementUsage(auth.userId, fallbackResult.tokensUsed || 0);
 
-      return success({
-        answer: fallbackResult.content,
-        model: fallbackResult.model ?? "unknown",
-        provider: fallbackResult.provider ?? "unknown",
-        fallback: true,
-        conversationId,
+      // Wrap fallback result in a streaming response so the frontend always gets SSE
+      const fallbackStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(fallbackResult.content));
+          controller.close();
+        },
+      });
+      return new Response(fallbackStream, {
+        status: 200,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
       });
     }
   } catch (error) {
