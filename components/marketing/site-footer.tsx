@@ -51,9 +51,6 @@ export function SiteFooter() {
               <div className="font-semibold mb-3 text-white">{ar ? "الشركة" : "Company"}</div>
               <ul className="flex flex-col gap-2">
                 <li><Link href="/about" className="text-white/45 hover:text-white transition-colors">{ar ? "عنّا" : "About"}</Link></li>
-                <li><span className="text-white/45">{ar ? "المدونة" : "Blog"}</span></li>
-                <li><span className="text-white/45">{ar ? "الوظائف" : "Careers"}</span></li>
-                <li><span className="text-white/45">{ar ? "الصحافة" : "Press"}</span></li>
                 <li><Link href="/contact" className="text-white/45 hover:text-white transition-colors">{ar ? "تواصل معنا" : "Contact"}</Link></li>
               </ul>
             </div>
@@ -62,9 +59,7 @@ export function SiteFooter() {
               <ul className="flex flex-col gap-2">
                 <li><Link href="/privacy" className="text-white/45 hover:text-white transition-colors">{ar ? "سياسة الخصوصية" : "Privacy Policy"}</Link></li>
                 <li><Link href="/terms" className="text-white/45 hover:text-white transition-colors">{ar ? "شروط الخدمة" : "Terms of Service"}</Link></li>
-                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "الأمان" : "Security"}</Link></li>
-                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "امتثال الهيئة الضريبية" : "ETA Compliance"}</Link></li>
-                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "امتثال FRA" : "FRA Compliance"}</Link></li>
+                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "الامتثال" : "Compliance"}</Link></li>
               </ul>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { ThemeModeToggle } from "@/components/theme/mode-toggle";
 import { useLanguage } from "@/lib/i18n/language-context";
 
 interface DropdownItem {
@@ -116,6 +117,7 @@ export function SiteNav() {
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">
         <LanguageSwitcher />
+        <ThemeModeToggle variant="icon" />
         <Link
           href="/login"
           className="text-sm px-4 py-2 text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent font-sans"
@@ -159,6 +161,7 @@ export function SiteNav() {
           ))}
           <div className="flex items-center gap-3 px-1">
             <LanguageSwitcher />
+            <ThemeModeToggle variant="icon" />
             <Link
               href="/pricing"
               onClick={() => setOpen(false)}
