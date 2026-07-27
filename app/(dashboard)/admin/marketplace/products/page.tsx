@@ -4,6 +4,7 @@ import { Package, Search, Tag, Store, ChevronLeft, ChevronRight } from "lucide-r
 import { motion } from "framer-motion";
 import { useApi } from "@/lib/hooks/use-api";
 import { useState } from "react";
+import { getProductImage } from "@/lib/marketplace/product-images";
 
 interface ProductRecord {
   id: string;
@@ -21,6 +22,21 @@ interface ProductRecord {
 interface ProductsData {
   products: ProductRecord[];
   pagination: { page: number; limit: number; total: number; totalPages: number };
+}
+
+function ProductThumb({ name, category }: { name: string; category: string }) {
+  const resolved = getProductImage({ name, category });
+  if (resolved.type === "url") {
+    return <img src={resolved.src} alt={name} className="w-full h-full object-cover" loading="lazy" />;
+  }
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={{ background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)` }}
+    >
+      <span className="text-[10px] font-bold text-white/20">{resolved.initials}</span>
+    </div>
+  );
 }
 
 export default function AdminProductsPage() {
@@ -68,8 +84,8 @@ export default function AdminProductsPage() {
                   <motion.tr key={p.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                          <Package className="w-4 h-4 text-purple-400" />
+                        <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border border-white/[0.06]">
+                          <ProductThumb name={p.name} category={p.category} />
                         </div>
                         <p className="text-[13px] font-medium text-white">{p.name}</p>
                       </div>

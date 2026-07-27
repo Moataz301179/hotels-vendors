@@ -20,6 +20,7 @@ import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loadin
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
 import { StatusPill } from "@/components/dashboards/shared/status-pill";
 import { Modal } from "@/components/ui/modal";
+import { getProductImage } from "@/lib/marketplace/product-images";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 12 },
@@ -49,6 +50,28 @@ interface ProductsApiResponse {
 
 function formatCurrency(amount: number, currency = "EGP") {
   return `${currency} ${amount.toLocaleString("en-EG")}`;
+}
+
+function ProductThumb({ name, category, className = "" }: { name: string; category: string; className?: string }) {
+  const resolved = getProductImage({ name, category });
+  if (resolved.type === "url") {
+    return (
+      <img
+        src={resolved.src}
+        alt={name}
+        className={`object-cover ${className}`}
+        loading="lazy"
+      />
+    );
+  }
+  return (
+    <div
+      className={`flex items-center justify-center ${className}`}
+      style={{ background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)` }}
+    >
+      <span className="text-xs font-bold text-white/20">{resolved.initials}</span>
+    </div>
+  );
 }
 
 export default function SupplierProductsPage() {
@@ -202,19 +225,30 @@ export default function SupplierProductsPage() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:bg-white/[0.03] transition-colors"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-mono text-white/30">{product.sku}</span>
-                  <StatusPill status={product.status} />
+                <div className="relative h-36 overflow-hidden">
+                  <ProductThumb
+                    name={product.name}
+                    category={product.category}
+                    className="w-full h-full rounded-t-xl"
+                  />
+                  <div className="absolute top-2 right-2">
+                    <StatusPill status={product.status} />
+                  </div>
                 </div>
-                <h3 className="text-sm font-medium text-white mb-1">{product.name}</h3>
-                <p className="text-[11px] text-white/30 mb-3">{product.category}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-white">{formatCurrency(product.price, product.currency)}</span>
-                  <span className={`text-[11px] ${product.stockQuantity <= 10 ? "text-red-400" : "text-white/30"}`}>
-                    {product.stockQuantity} in stock
-                  </span>
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-[10px] font-mono text-white/30">{product.sku}</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-white mb-1 line-clamp-2 min-h-[2.5rem]">{product.name}</h3>
+                  <p className="text-[11px] text-white/30 mb-3">{product.category}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-white">{formatCurrency(product.price, product.currency)}</span>
+                    <span className={`text-[11px] ${product.stockQuantity <= 10 ? "text-red-400" : "text-white/30"}`}>
+                      {product.stockQuantity} in stock
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -237,7 +271,12 @@ export default function SupplierProductsPage() {
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
                     <td className="px-4 py-3">
-                      <span className="text-xs font-medium text-white">{product.name}</span>
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 border border-white/[0.06]">
+                          <ProductThumb name={product.name} category={product.category} className="w-full h-full" />
+                        </div>
+                        <span className="text-xs font-medium text-white">{product.name}</span>
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs font-mono text-white/40">{product.sku}</span>
@@ -282,6 +321,13 @@ export default function SupplierProductsPage() {
       >
         {selectedProduct && (
           <div className="space-y-4">
+            <div className="relative h-48 rounded-xl overflow-hidden border border-white/[0.06]">
+              <ProductThumb
+                name={selectedProduct.name}
+                category={selectedProduct.category}
+                className="w-full h-full"
+              />
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
                 <p className="text-[10px] text-white/20 uppercase">Price</p>
