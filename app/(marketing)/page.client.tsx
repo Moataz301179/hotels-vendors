@@ -67,6 +67,47 @@ export default function MarketingPage() {
         {/* Glow orbs */}
         <div className="absolute top-1/3 left-1/4 w-80 h-80 rounded-full blur-[160px] pointer-events-none" style={{ background: "#39ff7e", opacity: 0.06 }} />
         <div className="absolute bottom-1/4 right-[20%] w-60 h-60 rounded-full blur-[130px] pointer-events-none" style={{ background: "#c455ff", opacity: 0.05 }} />
+        <div className="absolute top-1/2 right-1/4 w-40 h-40 rounded-full blur-[100px] pointer-events-none" style={{ background: "#ff7e1a", opacity: 0.04 }} />
+
+        {/* CSS Grid Pattern Background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "linear-gradient(rgba(57,255,126,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,126,0.03) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%)",
+        }} />
+
+        {/* Floating product preview cards */}
+        <div className="absolute inset-0 pointer-events-none hidden lg:block" aria-hidden="true">
+          <div className="absolute top-[18%] left-[6%] w-44 rounded-xl border overflow-hidden animate-fade-in animation-delay-600" style={{ borderColor: "#39ff7e22", background: "#12121acc", backdropFilter: "blur(12px)" }}>
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=280&q=75&fm=webp" alt="Hotel premium linens" className="w-full h-20 object-cover opacity-80" width={280} height={80} loading="lazy" />
+            <div className="px-3 py-2">
+              <div className="text-[10px] text-white/40 uppercase tracking-wider">Premium Linens</div>
+              <div className="text-xs font-semibold" style={{ color: "#39ff7e" }}>EGP 12,400</div>
+            </div>
+          </div>
+          <div className="absolute top-[22%] right-[5%] w-44 rounded-xl border overflow-hidden animate-fade-in animation-delay-700" style={{ borderColor: "#ff7e1a22", background: "#12121acc", backdropFilter: "blur(12px)" }}>
+            <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=280&q=75&fm=webp" alt="Hotel bathroom amenities" className="w-full h-20 object-cover opacity-80" width={280} height={80} loading="lazy" />
+            <div className="px-3 py-2">
+              <div className="text-[10px] text-white/40 uppercase tracking-wider">Bathroom Amenities</div>
+              <div className="text-xs font-semibold" style={{ color: "#ff7e1a" }}>EGP 3,200</div>
+            </div>
+          </div>
+          <div className="absolute bottom-[24%] left-[8%] w-44 rounded-xl border overflow-hidden animate-fade-in animation-delay-800" style={{ borderColor: "#c455ff22", background: "#12121acc", backdropFilter: "blur(12px)" }}>
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=280&q=75&fm=webp" alt="Commercial kitchen equipment" className="w-full h-20 object-cover opacity-80" width={280} height={80} loading="lazy" />
+            <div className="px-3 py-2">
+              <div className="text-[10px] text-white/40 uppercase tracking-wider">Kitchen Equipment</div>
+              <div className="text-xs font-semibold" style={{ color: "#c455ff" }}>EGP 87,500</div>
+            </div>
+          </div>
+          <div className="absolute bottom-[20%] right-[7%] w-44 rounded-xl border overflow-hidden animate-fade-in animation-delay-900" style={{ borderColor: "#39ff7e22", background: "#12121acc", backdropFilter: "blur(12px)" }}>
+            <img src="https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=280&q=75&fm=webp" alt="Professional cleaning supplies" className="w-full h-20 object-cover opacity-80" width={280} height={80} loading="lazy" />
+            <div className="px-3 py-2">
+              <div className="text-[10px] text-white/40 uppercase tracking-wider">Cleaning Supplies</div>
+              <div className="text-xs font-semibold" style={{ color: "#39ff7e" }}>EGP 8,600</div>
+            </div>
+          </div>
+        </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "#c455ff55", background: "#c455ff12", color: "#c455ff" }}>
@@ -132,6 +173,43 @@ export default function MarketingPage() {
             <div className="text-2xl md:text-3xl mb-1 font-medium" style={{ color: "#39ff7e" }}>48h</div>
             <div className="text-xs text-white/40 leading-snug">Reverse Factoring Payout</div>
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════ PRODUCT SHOWCASE ═══════════ */}
+      <section className="py-20 max-w-6xl mx-auto px-6">
+        <div className="text-center mb-12 animate-on-scroll">
+          <span className="text-xs tracking-widest uppercase" style={{ color: "#ff7e1a" }}>What Hotels Procure</span>
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-medium">Every Category. One Platform.</h2>
+          <p className="text-white/45 text-base max-w-xl mx-auto text-balance">From premium linens to commercial kitchen equipment — source everything your property needs through verified suppliers.</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
+          {[
+            { img: "photo-1631049307264-da0ec9d70304", name: "Premium Linens", price: "From EGP 450/unit", color: "#39ff7e", icon: "M20.38 3.46 16 2 12 3.46 8 2 3.62 3.46a2 2 0 0 0-1.34 1.89v13.3a2 2 0 0 0 2.66 1.89L8 19l4-1.46L16 19l4.38-1.46a2 2 0 0 0 1.34-1.89V5.35a2 2 0 0 0-1.34-1.89z" },
+            { img: "photo-1584132967334-10e028bd69f7", name: "Bathroom Amenities", price: "From EGP 35/set", color: "#ff7e1a", icon: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" },
+            { img: "photo-1556909114-f6e7ad7d3136", name: "Kitchen Equipment", price: "From EGP 2,100", color: "#c455ff", icon: "M15 3v4a1 1 0 0 0 1 1h4" },
+            { img: "photo-1585421514284-efb74c2b69ba", name: "Cleaning Supplies", price: "From EGP 80/L", color: "#39ff7e", icon: "M12 22a8 8 0 0 0 8-8V8l-6-4-6 4v6a8 8 0 0 0 8 8z" },
+            { img: "photo-1596394516093-501ba68a0ba6", name: "Guest Room Furniture", price: "From EGP 3,500", color: "#ff7e1a", icon: "M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3" },
+            { img: "photo-1563453392212-326f5e854473", name: "HVAC & Engineering", price: "From EGP 15,000", color: "#c455ff", icon: "M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83" },
+            { img: "photo-1582719478250-c89cae4dc85b", name: "Hotel Bedding", price: "From EGP 1,200", color: "#39ff7e", icon: "M2 4v16" },
+            { img: "photo-1571896349842-33c89424de2d", name: "Pool & Spa Supplies", price: "From EGP 550", color: "#ff7e1a", icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" },
+          ].map((p) => (
+            <div key={p.name} className="animate-on-scroll group">
+              <div className="rounded-xl border overflow-hidden bg-[#12121a] transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${p.color}22` }}>
+                <div className="relative h-36 overflow-hidden">
+                  <img src={`https://images.unsplash.com/${p.img}?w=400&q=75&fm=webp`} alt={p.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300" width={400} height={144} loading="lazy" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-transparent to-transparent" />
+                  <div className="absolute top-3 right-3 w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${p.color}18`, border: `1px solid ${p.color}33` }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={p.icon} /></svg>
+                  </div>
+                </div>
+                <div className="px-4 py-3">
+                  <div className="text-sm font-semibold text-white mb-0.5">{p.name}</div>
+                  <div className="text-xs" style={{ color: `${p.color}cc` }}>{p.price}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
