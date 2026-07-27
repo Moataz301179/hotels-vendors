@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
-import { Mail, Phone, MapPin, Clock, MessageSquare, Building2, HelpCircle, Send } from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Contact Us — HotelsVendors",
-  description: "Get in touch with HotelsVendors. Support, sales, and partnership inquiries.",
-  openGraph: {
-    title: "Contact HotelsVendors",
-    description: "Get in touch with HotelsVendors. Support, sales, and partnership inquiries.",
-    type: "website",
-  },
-};
+import { useState } from "react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  MessageSquare,
+  Send,
+  CheckCircle,
+  AlertCircle,
+  Linkedin,
+  Loader2,
+} from "lucide-react";
 
 const CONTACT_METHODS = [
   {
@@ -22,177 +25,305 @@ const CONTACT_METHODS = [
   {
     icon: Phone,
     title: "Call Us",
-    desc: "Sunday–Thursday, 9AM–6PM Cairo time",
-    value: "+20 XXX XXX XXXX",
+    desc: "Sunday–Thursday, 9AM–5PM Cairo time",
+    value: "+20 100 XXX XXXX",
     color: "#ff7e1a",
   },
   {
     icon: MapPin,
-    title: "Visit Us",
-    desc: "Cairo, Egypt",
-    value: "6th of October City, Giza",
+    title: "Office",
+    desc: "Visits by appointment",
+    value: "6th of October City, Giza, Egypt",
     color: "#c455ff",
-  },
-  {
-    icon: Clock,
-    title: "Business Hours",
-    desc: "We respond within 24 hours",
-    value: "Sun–Thu: 9AM–6PM",
-    color: "#64b5f6",
   },
 ];
 
 const INQUIRY_TYPES = [
-  { value: "general", label: "General Inquiry", icon: HelpCircle },
-  { value: "support", label: "Technical Support", icon: MessageSquare },
-  { value: "marketing", label: "Sales & Partnerships", icon: Building2 },
-];
+  { value: "general", label: "General Inquiry" },
+  { value: "supplier", label: "Supplier Onboarding" },
+  { value: "hotel", label: "Hotel Partnership" },
+  { value: "support", label: "Technical Support" },
+] as const;
+
+type InquiryType = (typeof INQUIRY_TYPES)[number]["value"];
+
+interface FormData {
+  name: string;
+  email: string;
+  company: string;
+  phone: string;
+  type: InquiryType;
+  message: string;
+}
+
+const INITIAL_FORM: FormData = {
+  name: "",
+  email: "",
+  company: "",
+  phone: "",
+  type: "general",
+  message: "",
+};
 
 export default function ContactPage() {
+  const [form, setForm] = useState<FormData>(INITIAL_FORM);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  function updateField<K extends keyof FormData>(key: K, value: FormData[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/v1/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+
+      setStatus("success");
+      setForm(INITIAL_FORM);
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
+    }
+  }
+
   return (
-    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero */}
+    <main style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)", minHeight: "100vh" }}>
+      {/* ── Hero ── */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.06) 0%, transparent 70%)" }} />
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(57,255,126,0.06) 0%, transparent 70%)" }}
+        />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#39ff7e22", backgroundColor: "#39ff7e08" }}>
-            <MessageSquare size={12} style={{ color: "#39ff7e" }} />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#39ff7e" }}>
-              Get In Touch
-            </span>
-          </div>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
-            Let&apos;s Talk<br />
-            <span style={{ color: "#39ff7e" }}>Hospitality Procurement</span>
+          <span className="label-upper mb-4 block">Contact</span>
+          <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5 text-white">
+            Get in Touch
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[15px] max-w-xl mx-auto leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             Whether you&apos;re a hotel looking to streamline procurement, a supplier seeking faster payments,
             or a partner exploring integration — we&apos;re here to help.
           </p>
         </div>
       </section>
 
-      {/* Contact Methods */}
-      <section className="py-12 border-y" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+      {/* ── Contact Methods ── */}
+      <section className="py-12 border-y" style={{ borderColor: "var(--border-subtle)" }}>
         <div className="max-w-5xl mx-auto px-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {CONTACT_METHODS.map((m) => {
-              const Icon = m.icon;
-              return (
-                <div key={m.title} className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5 hover:border-white/[0.10] transition-all">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${m.color}12`, border: `1px solid ${m.color}22` }}>
-                    <Icon size={18} style={{ color: m.color }} />
-                  </div>
-                  <h3 className="text-[14px] font-semibold text-white mb-1">{m.title}</h3>
-                  <p className="text-[12px] text-white/40 mb-2">{m.desc}</p>
-                  <p className="text-[13px] font-medium" style={{ color: m.color }}>{m.value}</p>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {CONTACT_METHODS.map((m) => (
+              <div key={m.title} className="surface-card p-5 neon-card">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
+                  style={{ backgroundColor: `${m.color}12`, border: `1px solid ${m.color}22` }}
+                >
+                  <m.icon size={18} style={{ color: m.color }} />
                 </div>
-              );
-            })}
+                <h3 className="text-[14px] font-semibold text-white mb-1">{m.title}</h3>
+                <p className="text-[12px] mb-2" style={{ color: "var(--text-muted)" }}>{m.desc}</p>
+                <p className="text-[13px] font-medium" style={{ color: m.color }}>{m.value}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Form */}
+      {/* ── Contact Form ── */}
       <section className="py-20">
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-10">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>Send a Message</span>
+            <span className="label-upper mb-3 block" style={{ color: "var(--accent-base)" }}>Send a Message</span>
             <h2 className="text-2xl md:text-3xl font-semibold text-white">How Can We Help?</h2>
           </div>
 
-          <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 sm:p-8">
-            <form id="contact-form" className="space-y-5">
-              {/* Inquiry Type */}
-              <div className="space-y-2">
-                <label className="block text-[13px] font-medium text-white/50">Inquiry Type</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {INQUIRY_TYPES.map((t) => {
-                    const Icon = t.icon;
-                    return (
-                      <label key={t.value} className="flex items-center gap-2 px-4 py-3 rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/40 hover:text-white/60 hover:border-white/[0.10] transition-all cursor-pointer has-[:checked]:bg-[#39ff7e]/10 has-[:checked]:border-[#39ff7e]/30 has-[:checked]:text-[#39ff7e]">
-                        <input type="radio" name="inquiryType" value={t.value} defaultChecked={t.value === "general"} className="sr-only" />
-                        <Icon size={14} />
+          <div className="surface-card p-6 sm:p-8">
+            {status === "success" ? (
+              <div className="text-center py-12">
+                <CheckCircle size={40} className="mx-auto mb-4" style={{ color: "var(--accent-base)" }} />
+                <h3 className="text-[18px] font-semibold text-white mb-2">Message Sent</h3>
+                <p className="text-[14px] mb-6" style={{ color: "var(--text-secondary)" }}>
+                  We&apos;ll get back to you within 24 business hours.
+                </p>
+                <button onClick={() => setStatus("idle")} className="btn-ghost">
+                  Send Another Message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Inquiry Type */}
+                <div className="space-y-2">
+                  <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                    Inquiry Type
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {INQUIRY_TYPES.map((t) => (
+                      <label
+                        key={t.value}
+                        className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border text-center cursor-pointer transition-all"
+                        style={{
+                          borderColor: form.type === t.value ? "rgba(57,255,126,0.3)" : "var(--border-subtle)",
+                          backgroundColor: form.type === t.value ? "var(--accent-muted)" : "rgba(255,255,255,0.02)",
+                          color: form.type === t.value ? "var(--accent-base)" : "var(--text-muted)",
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name="inquiryType"
+                          value={t.value}
+                          checked={form.type === t.value}
+                          onChange={() => updateField("type", t.value)}
+                          className="sr-only"
+                        />
                         <span className="text-[12px] font-medium">{t.label}</span>
                       </label>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Name & Email */}
-              <div className="grid sm:grid-cols-2 gap-4">
+                {/* Name & Email */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                      Name <span style={{ color: "var(--error)" }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your full name"
+                      value={form.name}
+                      onChange={(e) => updateField("name", e.target.value)}
+                      className="surface-input w-full px-4 py-3 text-[14px]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                      Email <span style={{ color: "var(--error)" }}>*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="you@company.com"
+                      value={form.email}
+                      onChange={(e) => updateField("email", e.target.value)}
+                      className="surface-input w-full px-4 py-3 text-[14px]"
+                    />
+                  </div>
+                </div>
+
+                {/* Company & Phone */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Your company name"
+                      value={form.company}
+                      onChange={(e) => updateField("company", e.target.value)}
+                      className="surface-input w-full px-4 py-3 text-[14px]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                      Phone <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>(optional)</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="+20 100 XXX XXXX"
+                      value={form.phone}
+                      onChange={(e) => updateField("phone", e.target.value)}
+                      className="surface-input w-full px-4 py-3 text-[14px]"
+                    />
+                  </div>
+                </div>
+
+                {/* Message */}
                 <div className="space-y-2">
-                  <label className="block text-[13px] font-medium text-white/50">
-                    Name <span className="text-red-400">*</span>
+                  <label className="block text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                    Message <span style={{ color: "var(--error)" }}>*</span>
                   </label>
-                  <input
-                    type="text"
-                    name="name"
+                  <textarea
                     required
-                    placeholder="Your full name"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
+                    rows={5}
+                    placeholder="Tell us how we can help..."
+                    value={form.message}
+                    onChange={(e) => updateField("message", e.target.value)}
+                    className="surface-input w-full px-4 py-3 text-[14px] resize-none"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-[13px] font-medium text-white/50">
-                    Email <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="you@company.com"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
-                  />
-                </div>
-              </div>
 
-              {/* Company & Phone */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-[13px] font-medium text-white/50">Company</label>
-                  <input
-                    type="text"
-                    name="company"
-                    placeholder="Your company name"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-[13px] font-medium text-white/50">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="+20 XXX XXX XXXX"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
-                  />
-                </div>
-              </div>
+                {/* Error */}
+                {status === "error" && (
+                  <div className="flex items-center gap-2 text-[13px] px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(239,68,68,0.08)", color: "var(--error)" }}>
+                    <AlertCircle size={14} />
+                    {errorMsg}
+                  </div>
+                )}
 
-              {/* Message */}
-              <div className="space-y-2">
-                <label className="block text-[13px] font-medium text-white/50">
-                  Message <span className="text-red-400">*</span>
-                </label>
-                <textarea
-                  name="message"
-                  required
-                  rows={5}
-                  placeholder="Tell us how we can help..."
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all resize-none"
-                />
-              </div>
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="btn-accent w-full"
+                  style={{ opacity: status === "loading" ? 0.7 : 1 }}
+                >
+                  {status === "loading" ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={14} />
+                      Send Message
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] text-[13px] font-semibold hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]"
-              >
-                <Send size={14} />
-                Send Message
-              </button>
-            </form>
+      {/* ── Response Time + Business Hours + Social ── */}
+      <section className="py-12 border-t" style={{ borderColor: "var(--border-subtle)" }}>
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="grid sm:grid-cols-3 gap-6 text-center">
+            <div>
+              <Clock size={18} className="mx-auto mb-2" style={{ color: "var(--accent-base)" }} />
+              <p className="text-[13px] font-medium text-white mb-1">Response Time</p>
+              <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Within 24 business hours</p>
+            </div>
+            <div>
+              <Clock size={18} className="mx-auto mb-2" style={{ color: "var(--orange-base)" }} />
+              <p className="text-[13px] font-medium text-white mb-1">Business Hours</p>
+              <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Sun–Thu: 9AM–5PM Cairo Time</p>
+            </div>
+            <div>
+              <Linkedin size={18} className="mx-auto mb-2" style={{ color: "var(--purple-base)" }} />
+              <p className="text-[13px] font-medium text-white mb-1">Follow Us</p>
+              <div className="flex justify-center gap-4">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-[12px] transition-colors" style={{ color: "var(--text-muted)" }}>
+                  LinkedIn
+                </a>
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="text-[12px] transition-colors" style={{ color: "var(--text-muted)" }}>
+                  Twitter / X
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
