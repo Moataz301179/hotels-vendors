@@ -526,6 +526,11 @@ textarea:focus-visible {
   font-family: var(--font-arabic), var(--font-sans);
 }
 
+/* Explicit Cairo font utility */
+.font-cairo {
+  font-family: var(--font-arabic), var(--font-sans);
+}
+
 /* Logical property overrides for RTL */
 [dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
 [dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
@@ -533,6 +538,12 @@ textarea:focus-visible {
 [dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
 [dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
 [dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+[dir="rtl"] .ml-6 { margin-left: 0; margin-right: 1.5rem; }
+[dir="rtl"] .mr-6 { margin-right: 0; margin-left: 1.5rem; }
 [dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
 [dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
 [dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
@@ -541,10 +552,44 @@ textarea:focus-visible {
 [dir="rtl"] .pr-6 { padding-right: 0; padding-left: 1.5rem; }
 [dir="rtl"] .pl-12 { padding-left: 0; padding-right: 3rem; }
 [dir="rtl"] .pr-12 { padding-right: 0; padding-left: 3rem; }
+[dir="rtl"] .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+[dir="rtl"] .px-4 { padding-left: 1rem; padding-right: 1rem; }
+[dir="rtl"] .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+[dir="rtl"] .px-12 { padding-left: 3rem; padding-right: 3rem; }
 
 /* Text alignment flip */
 [dir="rtl"] .text-left { text-align: right; }
 [dir="rtl"] .text-right { text-align: left; }
+
+/* Left/Right positioning flip */
+[dir="rtl"] .left-0 { left: auto; }
+[dir="rtl"] .right-0 { right: auto; }
+[dir="rtl"] .left-3 { left: auto; }
+[dir="rtl"] .right-3 { right: auto; }
+
+/* Translate X flip for arrows and floating elements */
+[dir="rtl"] .-translate-x-1\/2 { transform: translateX(50%); }
+[dir="rtl"] .translate-x-0 { transform: translateX(0); }
+
+/* Flex direction reverse for RTL */
+[dir="rtl"] .flex-row-reverse { flex-direction: row; }
+
+/* Border direction flip */
+[dir="rtl"] .border-l { border-left: none; border-right-width: 1px; border-right-style: solid; }
+[dir="rtl"] .border-r { border-right: none; border-left-width: 1px; border-left-style: solid; }
+[dir="rtl"] .border-l-0 { border-left: none; }
+[dir="rtl"] .border-r-0 { border-right: none; }
+
+/* Border radius flip for asymmetric corners */
+[dir="rtl"] .rounded-tl-none { border-top-left-radius: 0; border-top-right-radius: 0; }
+[dir="rtl"] .rounded-tr-none { border-top-right-radius: 0; border-top-left-radius: 0; }
+[dir="rtl"] .rounded-bl-none { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+[dir="rtl"] .rounded-br-none { border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+
+/* Gap direction flip in row contexts */
+[dir="rtl"] .gap-1 { gap: 0.25rem; }
+[dir="rtl"] .gap-2 { gap: 0.5rem; }
+[dir="rtl"] .gap-3 { gap: 0.75rem; }
 
 /* Sidebar flip — move sidebar to right in RTL */
 [dir="rtl"] aside[role="navigation"] {
@@ -572,6 +617,18 @@ textarea:focus-visible {
 [dir="rtl"] .table-scroll-wrapper tbody td:first-child {
   left: auto;
   right: 0;
+}
+
+/* Nav dropdown positioning flip */
+[dir="rtl"] .absolute.left-1\/2 {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* Inverted translate for RTL floating elements */
+[dir="rtl"] .-translate-x-1\/2 {
+  transform: translateX(50%);
 }
 
 /* Generic RTL utility class */
