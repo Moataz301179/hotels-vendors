@@ -27,13 +27,6 @@ const firaCode = Fira_Code({
   weight: ["400", "500", "600", "700"],
 });
 
-const cairo = Cairo({
-  subsets: ["arabic", "latin"],
-  variable: "--font-arabic",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata: Metadata = {
   title: {
     default: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",

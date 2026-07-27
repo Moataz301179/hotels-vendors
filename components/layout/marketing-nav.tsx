@@ -61,7 +61,7 @@ export function MarketingNav() {
           <Link
             href="/register"
             className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-            style={{ backgroundColor: "#84cc16", color: "#000000" }}
+            style={{ backgroundColor: "#39ff7e", color: "#000000" }}
           >
             Get Started
           </Link>
@@ -98,7 +98,7 @@ export function MarketingNav() {
               <Link
                 href="/register"
                 className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
-                style={{ backgroundColor: "#84cc16", color: "#000000" }}
+                style={{ backgroundColor: "#39ff7e", color: "#000000" }}
               >
                 Get Started
               </Link>

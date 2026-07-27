@@ -30,7 +30,7 @@ export function InvoNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/invo" className="flex items-center gap-2.5 relative z-10">
-          <div className="w-8 h-8 rounded-lg bg-[#D4A843] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[#39ff7e] flex items-center justify-center">
             <Zap className="w-5 h-5 text-black" />
           </div>
           <span className="text-[17px] font-medium tracking-tight text-white">
@@ -62,7 +62,7 @@ export function InvoNav() {
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 bg-[#D4A843] text-black font-medium rounded-lg hover:bg-[#e0b856] transition-colors"
+            className="text-[13px] py-2 px-5 bg-[#39ff7e] text-black font-medium rounded-lg hover:bg-[#5fff9a] transition-colors"
           >
             Subscribe
           </Link>
@@ -98,7 +98,7 @@ export function InvoNav() {
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium bg-[#D4A843] text-black rounded-lg hover:bg-[#e0b856] transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium bg-[#39ff7e] text-black rounded-lg hover:bg-[#5fff9a] transition-colors"
               >
                 Subscribe
               </Link>
