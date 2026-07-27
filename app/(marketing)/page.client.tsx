@@ -80,9 +80,9 @@ export default function MarketingPage() {
           WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 70% 50%, black 10%, transparent 70%)",
         }} />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24 grid lg:grid-cols-2 gap-12 items-center w-full">
-          {/* Left: Copy */}
-          <div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24 w-full">
+          {/* Centered Copy */}
+          <div className="max-w-3xl mx-auto text-center">
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in ${ar ? "" : ""}`} style={{ borderColor: "#39ff7e44", background: "#39ff7e0a", color: "#39ff7e" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-[#39ff7e] animate-pulse" />
               {ar ? "مصر والشرق الأوسط — منصة مشتريات فندقية بالذكاء الاصطناعي" : "Egypt & MENA — AI-Native B2B Hotel Procurement"}
@@ -102,14 +102,14 @@ export default function MarketingPage() {
                 : "Hotels, suppliers, logistics, and capital — unified on one AI-governed, ETA-compliant platform."}
             </p>
 
-            <div className="flex flex-wrap gap-3 mb-10 animate-fade-in-up animation-delay-200">
+            <div className="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-200">
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "#39ff7e44", color: "#39ff7e", background: "#39ff7e0a" }}>ETA</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "#ff7e1a44", color: "#ff7e1a", background: "#ff7e1a0a" }}>FRA</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "#c455ff44", color: "#c455ff", background: "#c455ff0a" }}>ISO 27001</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "#39ff7e44", color: "#39ff7e", background: "#39ff7e0a" }}>{ar ? "مجاني للبدء" : "Free to Start"}</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up animation-delay-300">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-300">
               <Link href="/register" className={`text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-[#39ff7e] text-[#07090f] hover:bg-[#5fff9a] transition-colors ${ar ? "" : ""}`}>
                 {ar ? "ابدأ مجاناً" : "Start Free"}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
@@ -119,72 +119,84 @@ export default function MarketingPage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Right: Product UI Mockup */}
-          <div className="hidden lg:block animate-fade-in-up animation-delay-400">
-            <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl" style={{ boxShadow: "0 0 80px 2px rgba(57,255,126,0.06)" }}>
-              {/* Mac-style title bar */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-[#12121a] border-b border-white/[0.06]">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#39ff7e" }} />
-                <div className="flex-1 mx-3 bg-[#0c0c12]/60 rounded-md px-3 py-1 text-[11px] text-white/30 border border-white/[0.04] text-center font-mono">
-                  app.hotelsvendors.com
+      {/* ═══════════ PLATFORM OVERVIEW — Dashboard Mockup ═══════════ */}
+      <section className="relative py-20 bg-[#0a0a10]">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-12">
+            <h2 className={`text-3xl md:text-4xl font-bold text-white mb-4 ${ar ? "" : ""}`}>
+              {ar ? "منصة المشتريات بالكامل" : "The Procurement Platform, At a Glance"}
+            </h2>
+            <p className={`text-base text-white/50 max-w-2xl mx-auto ${ar ? "" : ""}`}>
+              {ar
+                ? "مراقبة فورية للطلبات والموردين والمالية — مدعومة بالذكاء الاصطناعي ومتوافقة مع الهيئة الضريبية المصرية."
+                : "Real-time oversight of orders, vendors, and finances — powered by AI and built for Egyptian tax compliance."}
+            </p>
+          </div>
+          <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl animate-on-scroll" style={{ boxShadow: "0 0 80px 2px rgba(57,255,126,0.06)" }}>
+            {/* Mac-style title bar */}
+            <div className="flex items-center gap-2 px-4 py-3 bg-[#12121a] border-b border-white/[0.06]">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#39ff7e" }} />
+              <div className="flex-1 mx-3 bg-[#0c0c12]/60 rounded-md px-3 py-1 text-[11px] text-white/30 border border-white/[0.04] text-center font-mono">
+                app.hotelsvendors.com
+              </div>
+            </div>
+
+            {/* Dashboard mockup */}
+            <div className="bg-[#0c0c12] p-5">
+              {/* Header row */}
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <div className="text-sm font-semibold text-white">Meridian Hotels</div>
+                  <div className="text-[11px] text-white/40">3 properties · AI Forecast: <span className="text-[#39ff7e]">↓ 8% savings</span></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-[#39ff7e] text-[#07090f]">AI Assist</div>
                 </div>
               </div>
 
-              {/* Dashboard mockup */}
-              <div className="bg-[#0c0c12] p-5">
-                {/* Header row */}
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="text-sm font-semibold text-white">Meridian Hotels</div>
-                    <div className="text-[11px] text-white/40">3 properties · AI Forecast: <span className="text-[#39ff7e]">↓ 8% savings</span></div>
+              {/* Stats grid */}
+              <div className="grid grid-cols-4 gap-3 mb-4">
+                {[
+                  { label: ar ? "الطلبات" : "Orders", value: "34", color: "#39ff7e", sub: "+8%" },
+                  { label: ar ? "المصروف" : "Spend", value: "$182K", color: "#ff7e1a", sub: ar ? "التوقع: $168K" : "Forecast: $168K" },
+                  { label: ar ? "الموردون" : "Vendors", value: "47", color: "#c455ff", sub: "INVO" },
+                  { label: ar ? "التمويل" : "Factoring", value: "6", color: "#39ff7e", sub: ar ? "48 ساعة" : "48h payout" },
+                ].map((c) => (
+                  <div key={c.label} className="rounded-lg border border-white/[0.04] bg-[#12121a]/60 p-3">
+                    <div className="text-[10px] text-white/35 mb-1">{c.label}</div>
+                    <div className="text-base font-semibold text-white">{c.value}</div>
+                    <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-[#39ff7e] text-[#07090f]">AI Assist</div>
-                  </div>
-                </div>
+                ))}
+              </div>
 
-                {/* Stats grid */}
-                <div className="grid grid-cols-4 gap-3 mb-4">
-                  {[
-                    { label: ar ? "الطلبات" : "Orders", value: "34", color: "#39ff7e", sub: "+8%" },
-                    { label: ar ? "المصروف" : "Spend", value: "$182K", color: "#ff7e1a", sub: ar ? "التوقع: $168K" : "Forecast: $168K" },
-                    { label: ar ? "الموردون" : "Vendors", value: "47", color: "#c455ff", sub: "INVO" },
-                    { label: ar ? "التمويل" : "Factoring", value: "6", color: "#39ff7e", sub: ar ? "48 ساعة" : "48h payout" },
-                  ].map((c) => (
-                    <div key={c.label} className="rounded-lg border border-white/[0.04] bg-[#12121a]/60 p-3">
-                      <div className="text-[10px] text-white/35 mb-1">{c.label}</div>
-                      <div className="text-base font-semibold text-white">{c.value}</div>
-                      <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
-                    </div>
-                  ))}
+              {/* Orders table */}
+              <div className="rounded-lg border border-white/[0.04] bg-[#12121a]/40 overflow-hidden">
+                <div className="px-3 py-2 border-b border-white/[0.04] flex items-center justify-between">
+                  <span className="text-[11px] font-medium text-white/60">{ar ? "الطلبات الأخيرة" : "Recent Orders"}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#39ff7e]/30 text-[#39ff7e]">{ar ? "متوافق" : "ETA Verified"}</span>
                 </div>
-
-                {/* Orders table */}
-                <div className="rounded-lg border border-white/[0.04] bg-[#12121a]/40 overflow-hidden">
-                  <div className="px-3 py-2 border-b border-white/[0.04] flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-white/60">{ar ? "الطلبات الأخيرة" : "Recent Orders"}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#39ff7e]/30 text-[#39ff7e]">{ar ? "متوافق" : "ETA Verified"}</span>
+                {[
+                  { vendor: "Luxe Linen Co.", item: ar ? "ملاءات قطن مصري × 200" : "Egyptian Cotton Sheets × 200", price: "$14,400", status: ar ? "تم التوصيل" : "Delivered", color: "#39ff7e" },
+                  { vendor: "ProClean Supplies", item: ar ? "حزم مرافق صديقة للبيئة × 500" : "Eco Amenity Kits × 500", price: "$3,250", status: ar ? "في الطريق" : "In Transit", color: "#ff7e1a" },
+                  { vendor: "GourmetSource", item: ar ? "قهوة مميزة × 50 كجم" : "Premium Coffee Blend × 50kg", price: "$2,100", status: ar ? "تمويل نشط" : "Factoring Active", color: "#c455ff" },
+                ].map((o, i) => (
+                  <div key={i} className={`flex items-center justify-between px-3 py-2.5 text-[11px] ${i < 2 ? "border-b border-white/[0.03]" : ""}`}>
+                    <div>
+                      <div className="font-medium text-white">{o.vendor}</div>
+                      <div className="text-white/35">{o.item}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium text-white">{o.price}</div>
+                      <div style={{ color: o.color }}>{o.status}</div>
+                    </div>
                   </div>
-                  {[
-                    { vendor: "Luxe Linen Co.", item: ar ? "ملاءات قطن مصري × 200" : "Egyptian Cotton Sheets × 200", price: "$14,400", status: ar ? "تم التوصيل" : "Delivered", color: "#39ff7e" },
-                    { vendor: "ProClean Supplies", item: ar ? "حزم مرافق صديقة للبيئة × 500" : "Eco Amenity Kits × 500", price: "$3,250", status: ar ? "في الطريق" : "In Transit", color: "#ff7e1a" },
-                    { vendor: "GourmetSource", item: ar ? "قهوة مميزة × 50 كجم" : "Premium Coffee Blend × 50kg", price: "$2,100", status: ar ? "تمويل نشط" : "Factoring Active", color: "#c455ff" },
-                  ].map((o, i) => (
-                    <div key={i} className={`flex items-center justify-between px-3 py-2.5 text-[11px] ${i < 2 ? "border-b border-white/[0.03]" : ""}`}>
-                      <div>
-                        <div className="font-medium text-white">{o.vendor}</div>
-                        <div className="text-white/35">{o.item}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium text-white">{o.price}</div>
-                        <div style={{ color: o.color }}>{o.status}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
           </div>
