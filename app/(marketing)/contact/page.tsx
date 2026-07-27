@@ -10,7 +10,7 @@ import {
   Send,
   CheckCircle,
   AlertCircle,
-  Linkedin,
+  ExternalLink,
   Loader2,
 } from "lucide-react";
 
@@ -313,7 +313,7 @@ export default function ContactPage() {
               <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Sun–Thu: 9AM–5PM Cairo Time</p>
             </div>
             <div>
-              <Linkedin size={18} className="mx-auto mb-2" style={{ color: "var(--purple-base)" }} />
+              <ExternalLink size={18} className="mx-auto mb-2" style={{ color: "var(--purple-base)" }} />
               <p className="text-[13px] font-medium text-white mb-1">Follow Us</p>
               <div className="flex justify-center gap-4">
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-[12px] transition-colors" style={{ color: "var(--text-muted)" }}>
