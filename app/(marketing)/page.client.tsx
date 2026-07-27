@@ -68,7 +68,7 @@ export default function MarketingPage() {
             width={1920}
             height={1080}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0c12] via-[#0c0c12]/85 to-[#0c0c12]/40" />
+          <div className={`absolute inset-0 ${ar ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-[#0c0c12] via-[#0c0c12]/85 to-[#0c0c12]/40`} />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-transparent to-[#0c0c12]/30" />
         </div>
 
@@ -76,8 +76,8 @@ export default function MarketingPage() {
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: "linear-gradient(rgba(57,255,126,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,126,0.02) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(ellipse 60% 50% at 70% 50%, black 10%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 70% 50%, black 10%, transparent 70%)",
+          maskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
+          WebkitMaskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
         }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24 w-full">
@@ -106,7 +106,7 @@ export default function MarketingPage() {
             <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-300">
               <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-[#39ff7e] text-[#07090f] hover:bg-[#5fff9a] transition-colors">
                 {t("hero.startFree")}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
               </Link>
               <Link href="/sandbox" className="text-sm px-8 py-3.5 font-semibold rounded-lg border inline-flex items-center justify-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
                 {t("hero.exploreSandbox")}
@@ -333,7 +333,7 @@ export default function MarketingPage() {
 
           {/* HotelsVendors Layer */}
           {layer === "hv" && (
-            <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div className="grid md:grid-cols-2 gap-10 items-center rtl-reverse">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "#39ff7e44", color: "#39ff7e", background: "#39ff7e10" }}>
                   {t("hv.badge")}
@@ -352,11 +352,11 @@ export default function MarketingPage() {
                     t("hv.feature4"),
                     t("hv.feature5"),
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-white"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
+                    <li key={item} className="flex items-start gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
                 <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-[#39ff7e] text-[#07090f] hover:bg-[#5fff9a] transition-colors">
-                  {t("hv.cta")} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                  {t("hv.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#39ff7e33", boxShadow: "0 0 40px 2px #39ff7e18" }}>
@@ -372,7 +372,7 @@ export default function MarketingPage() {
 
           {/* INVO Layer */}
           {layer === "invo" && (
-            <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div className="grid md:grid-cols-2 gap-10 items-center rtl-reverse">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "#ff7e1a44", color: "#ff7e1a", background: "#ff7e1a10" }}>
                   {t("invo.badge")}
@@ -391,11 +391,11 @@ export default function MarketingPage() {
                     t("invo.feature4"),
                     t("invo.feature5"),
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-white"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7e1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
+                    <li key={item} className="flex items-start gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7e1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
                 <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-[#ff7e1a] text-[#07090f] hover:bg-[#ff9640] transition-colors">
-                  {t("invo.cta")} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                  {t("invo.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#ff7e1a33", boxShadow: "0 0 40px 2px #ff7e1a18" }}>
@@ -611,27 +611,27 @@ export default function MarketingPage() {
                 </div>
                 <div className="flex-1 flex flex-col gap-4 overflow-auto mb-4">
                   <div className="flex justify-start">
-                    <div className={`max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-white ${ar ? "rounded-tr-none rounded-tl-2xl " : ""}`} style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.welcome")}
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <div className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
                       {t("chat.userMessage1")}
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className={`max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white ${ar ? "rounded-tr-none rounded-tl-2xl " : ""}`} style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.aiReply1")}
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <div className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
                       {t("chat.userMessage2")}
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className={`max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white ${ar ? "rounded-tr-none rounded-tl-2xl " : ""}`} style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.aiReply2")}
                     </div>
                   </div>
@@ -648,7 +648,7 @@ export default function MarketingPage() {
 
       {/* ═══════════ FACTORING ═══════════ */}
       <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center rtl-reverse">
           <div className="animate-on-scroll">
             <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#ff7e1a" }}>
               {t("factoring.badge")}
@@ -667,7 +667,7 @@ export default function MarketingPage() {
                 { color: "#39ff7e", text: t("factoring.step4") },
                 { color: "#ff7e1a", text: t("factoring.step5") },
               ].map((s) => (
-                <div key={s.text} className="flex items-center gap-3">
+                <div key={s.text} className="flex items-center gap-3" dir={ar ? "rtl" : "ltr"}>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center border shrink-0 text-xs font-semibold" style={{ borderColor: `${s.color}55`, color: s.color, background: `${s.color}10` }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                   </div>
@@ -675,7 +675,7 @@ export default function MarketingPage() {
                 </div>
               ))}
             </div>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: "#ff7e1a" }}>
+            <div className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: "#ff7e1a" }} dir={ar ? "rtl" : "ltr"}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
               {t("factoring.feeNote")}
             </div>
@@ -715,7 +715,7 @@ export default function MarketingPage() {
                   t("factoring.fraComplete"),
                   t("factoring.fundsDisbursed"),
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-white"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</div>
+                  <div key={item} className="flex items-center gap-2 text-xs text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</div>
                 ))}
               </div>
             </div>
@@ -779,7 +779,7 @@ export default function MarketingPage() {
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #39ff7e30, inset 0 0 20px 0px #39ff7e08"; e.currentTarget.style.borderColor = "#39ff7e88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#39ff7e33"; }}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "#39ff7e15", borderColor: "#39ff7e40", color: "#39ff7e" }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><line x1="10" x2="8" y1="9" y2="9" /></svg>
                 </div>
@@ -795,7 +795,7 @@ export default function MarketingPage() {
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #ff7e1a30, inset 0 0 20px 0px #ff7e1a08"; e.currentTarget.style.borderColor = "#ff7e1a88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#ff7e1a33"; }}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "#ff7e1a15", borderColor: "#ff7e1a40", color: "#ff7e1a" }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 </div>
@@ -873,7 +873,7 @@ export default function MarketingPage() {
                   onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${p.color}30, inset 0 0 20px 0px ${p.color}08`; e.currentTarget.style.borderColor = `${p.color}88`; }}
                   onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${p.color}33`; }}
                 >
-                  {p.highlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: "#ff7e1a", color: "#07090f" }}>{t("pricing.bank.highlight")}</div>}
+                  {p.highlight && <div className="absolute -top-3 left-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: "#ff7e1a", color: "#07090f", transform: ar ? "translateX(50%)" : "translateX(-50%)" }}>{t("pricing.bank.highlight")}</div>}
                   <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: p.color }}>{p.badge}</div>
                   <div className="text-2xl font-semibold mb-1 text-white">{p.title}</div>
                   <div className="flex items-end gap-1 mb-6">
@@ -882,7 +882,7 @@ export default function MarketingPage() {
                   </div>
                   <ul className="flex flex-col gap-2.5 flex-1 mb-7">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-white"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{f}</li>
+                      <li key={f} className="flex items-center gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{f}</li>
                     ))}
                   </ul>
                   <Link href="/register" className="w-full font-semibold cursor-pointer rounded-lg text-sm py-2.5 text-center block" style={{ background: p.color, color: "#07090f" }}>{t("pricing.cta")}</Link>
@@ -1079,10 +1079,10 @@ export function SandboxCarousel() {
 
           {/* Content */}
           <div className="bg-[#0c0c12] p-6 sm:p-8">
-            <div className="grid sm:grid-cols-[1fr_1.5fr] gap-6">
+            <div className="grid sm:grid-cols-[1fr_1.5fr] gap-6 rtl-reverse">
               {/* Left: step details */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
+                <div className="space-y-4">
+                <div className="flex items-center gap-3" dir={ar ? "rtl" : "ltr"}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${step.color}15`, border: `1px solid ${step.color}33` }}>
                     <step.icon size={20} style={{ color: step.color }} />
                   </div>
@@ -1095,7 +1095,7 @@ export function SandboxCarousel() {
                   {step.items.map((item, j) => {
                     const Icon = item.icon;
                     return (
-                      <div key={j} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                      <div key={j} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]" dir={ar ? "rtl" : "ltr"}>
                         <Icon size={14} style={{ color: step.color }} className="shrink-0" />
                         <span className="text-white/70 text-[13px]">{item.text}</span>
                       </div>
@@ -1129,10 +1129,10 @@ export function SandboxCarousel() {
 
           {/* Nav arrows */}
           <button onClick={() => go(-1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121a]/80 border border-white/[0.08] flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm">
-            <ChevronLeft size={16} />
+            {ar ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
           <button onClick={() => go(1)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121a]/80 border border-white/[0.08] flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm">
-            <ChevronRight size={16} />
+            {ar ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
           </button>
         </div>
 
