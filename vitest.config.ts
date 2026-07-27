@@ -11,13 +11,22 @@ export default defineConfig({
     include: ["tests/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "json", "html"],
+      reporter: ["text", "json", "html", "lcov"],
+      include: ["lib/**/*.ts"],
       exclude: [
+        "lib/validators/**",
+        "lib/i18n/**",
         "node_modules/",
         "tests/",
         "**/*.d.ts",
         "**/*.config.*",
       ],
+      thresholds: {
+        statements: 25,
+        branches: 20,
+        functions: 25,
+        lines: 25,
+      },
     },
   },
   resolve: {
