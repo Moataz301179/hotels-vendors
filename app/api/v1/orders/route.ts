@@ -116,7 +116,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
           currency: "EGP",
           deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
           deliveryInstructions: data.deliveryInstructions,
-          status: "PENDING_APPROVAL",
+          status: "DRAFT",
           items: {
             create: data.items.map((item) => ({
               productId: item.productId,
@@ -154,6 +154,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
     ipAddress: request.headers.get("x-forwarded-for") || undefined,
     userAgent: request.headers.get("user-agent") ?? undefined,
   });
+
+  // Set order status based on authority evaluation
+  let finalStatus: "APPROVED" | "PENDING_APPROVAL" = "PENDING_APPROVAL";
+  if (evaluation.action === "AUTO_APPROVE" && evaluation.canProceed) {
+    finalStatus = "APPROVED";
+  }
+
+  if (finalStatus !== order.status) {
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: finalStatus },
+    });
+    order.status = finalStatus;
+  }
 
   await audit({
     entityType: "ORDER",
