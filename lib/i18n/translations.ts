@@ -293,11 +293,11 @@ export const translations = {
       label: "يثق بنا كبار الفنادق",
     },
     // Categories
-    categories: {
-      title: "كل ما يحتاجه فندقك",
-      subtitle: "موردون موثوقون عبر ست فئات مشتريات أساسية.",
-      browse: "تصفح",
-    },
+      categories: {
+        title: "كل ما يحتاجه فندقك",
+        subtitle: "موردون موثوقون عبر ست فئات مشتريات أساسية.",
+        browse: "تسوّق",
+      },
     // Features
     features: {
       title: "القدرات",
@@ -328,7 +328,7 @@ export const translations = {
       hotels: "فندق مسجل",
       clusters: "تجمع ساحلي",
       delivery: "متوسط التوصيل",
-      savings: "تخفيض التكلفة",
+      savings: "توفير في التكاليف",
     },
     // Pricing
     pricing: {
@@ -347,7 +347,7 @@ export const translations = {
         period: "جنيه / شهر",
         desc: "للفنادق النامية الجاهزة للأتمتة",
         cta: "ابدأ تجربة 14 يوم",
-        badge: "الأكثر شعبية",
+        badge: "الأكثر اختياراً",
       },
       enterprise: {
         name: "مؤسسات",
@@ -376,7 +376,7 @@ export const translations = {
     // Catalog
     catalog: {
       title: "منصة مشتريات الفنادق الشاملة",
-      badge: "سوق عام — تصفح بدون تسجيل",
+      badge: "سوق مفتوح — تسوّق بدون تسجيل",
       searchPlaceholder: "ابحث في المنتجات والموردين والأكواد...",
       filters: "عوامل التصفية",
       sort: "ترتيب حسب",
@@ -384,9 +384,9 @@ export const translations = {
       viewList: "قائمة",
       results: "منتج موجود",
       noResults: "لا توجد منتجات تطابق بحثك.",
-      loginPrompt: "سجل الدخول لإضافة للسلة",
+      loginPrompt: "سجّل الدخول للإضافة إلى عربة التسوق",
       categories: {
-        fb: "الطعام والشراب",
+        fb: "الأطعمة والمشروبات",
         hk: "التدبير المنزلي",
         ffe: "الأثاث والتجهيزات",
         ose: "مستلزمات التشغيل",
@@ -415,7 +415,7 @@ export const translations = {
         settings: "الإعدادات",
         help: "المساعدة والدعم",
         logout: "تسجيل الخروج",
-        catalog: "الكتالوج",
+      catalog: "تسوّق",
         factoring: "التمويل",
         shipping: "الشحن واللوجستيات",
         compliance: "الامتثال",
