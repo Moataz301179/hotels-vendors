@@ -123,8 +123,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
     }
 
     // Update order status based on GRN
-    const totalOrdered = order.items.reduce((sum, i) => sum + i.quantity, 0);
-    const totalAccepted = data.lineItems.reduce((sum, li) => sum + li.acceptedQuantity, 0);
     const allItemsReceived = order.items.every((i) => {
       const grnAccepted = data.lineItems
         .filter((li) => li.orderItemId === i.id)
