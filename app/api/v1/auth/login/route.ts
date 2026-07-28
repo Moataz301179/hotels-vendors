@@ -33,6 +33,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Invalid email or password", 401);
   }
 
+  // Enforce email verification before allowing login
+  if (!user.emailVerifiedAt) {
+    return error("Please verify your email address before logging in. Check your inbox for the verification link.", 403);
+  }
+
   const token = await createSession(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
 
   await audit({

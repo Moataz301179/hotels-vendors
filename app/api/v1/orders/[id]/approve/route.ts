@@ -24,8 +24,13 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     amount: 0,
   });
 
-  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
+  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true, hotelId: true, createdBy: true } });
   if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
+
+  // Self-approval guard: requester cannot approve their own order
+  if (record.createdBy === auth.userId) {
+    return error("You cannot approve or reject your own order. Escalate to a superior.", 403);
+  }
 
   const user = await prisma.user.findUnique({ where: { id: auth.userId } });
   if (!user) {

@@ -420,16 +420,6 @@ export async function recordApproval(
   action: "APPROVED" | "REJECTED" | "ESCALATED" | "ADMIN_OVERRIDE",
   reason?: string
 ): Promise<void> {
-  await prisma.orderApproval.create({
-    data: {
-      orderId,
-      approverId,
-      action,
-      reason,
-    },
-  });
-
-  // Update order status
   const newStatus: OrderStatus =
     action === "APPROVED" ? "APPROVED" :
     action === "REJECTED" ? "REJECTED" :
@@ -437,20 +427,44 @@ export async function recordApproval(
     action === "ADMIN_OVERRIDE" ? "APPROVED" :
     "PENDING_APPROVAL";
 
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status: newStatus },
-  });
+  // Atomic update with row locking to prevent race conditions
+  await prisma.$transaction(async (tx) => {
+    // Lock the order row
+    const locked = await tx.$queryRaw<Array<{ id: string; status: string }>>`
+      SELECT "id", "status"
+      FROM "Order"
+      WHERE "id" = ${orderId}
+      FOR UPDATE
+    `;
 
-  // Audit log (tamper-proof chain)
-  const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
-  await appendAuditEntry({
-    entityName: "ORDER",
-    entityId: orderId,
-    actionType: "UPDATE",
-    tenantId,
-    actorId: approverId,
-    changes: { status: newStatus, action },
+    if (locked.length === 0) {
+      throw new Error("Order not found during approval");
+    }
+
+    await tx.orderApproval.create({
+      data: {
+        orderId,
+        approverId,
+        action,
+        reason,
+      },
+    });
+
+    await tx.order.update({
+      where: { id: orderId },
+      data: { status: newStatus },
+    });
+
+    // Audit log (tamper-proof chain)
+    const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
+    await appendAuditEntry({
+      entityName: "ORDER",
+      entityId: orderId,
+      actionType: "UPDATE",
+      tenantId,
+      actorId: approverId,
+      changes: { status: newStatus, action },
+    });
   });
 }
 

@@ -92,6 +92,22 @@ async function main() {
     // Compliance / KYC
     { code: "compliance:kyc:read", name: "View KYC", description: "View KYC compliance status" },
     { code: "compliance:kyc:submit", name: "Submit KYC", description: "Submit KYC documents for verification" },
+    // Order lifecycle (aliases for route compatibility)
+    { code: "order:update", name: "Update Orders", description: "Update order status" },
+    { code: "order:confirm", name: "Confirm Orders", description: "Confirm order payment guarantee" },
+    // CRM (aliases for lead:* codes)
+    { code: "crm:read", name: "View CRM", description: "View CRM leads and contacts" },
+    { code: "crm:write", name: "Manage CRM", description: "Create and update CRM leads" },
+    // Fintech
+    { code: "fintech:read", name: "View Fintech", description: "View fintech facilities" },
+    { code: "fintech:write", name: "Manage Fintech", description: "Manage fintech facilities and schedules" },
+    // Disputes (aliases)
+    { code: "disputes:update", name: "Update Disputes", description: "Update dispute status" },
+    { code: "disputes:list", name: "List Disputes", description: "List all disputes" },
+    // Factoring credit approval
+    { code: "factoring:approve_credit", name: "Approve Credit", description: "Approve factoring credit lines" },
+    // Invoice submission
+    { code: "invoice:submit", name: "Submit Invoices", description: "Submit invoices for processing" },
   ];
 
   for (const p of permissionCodes) {
@@ -108,8 +124,8 @@ async function main() {
   // ─────────────────────────────────────────
 
   const roleDefs = [
-    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:manage_platform", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "factoring:manage", "disputes:create", "disputes:read", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
-    { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "disputes:create", "disputes:read", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
+    { name: "Platform Admin", isGlobal: true, permissions: ["admin:read", "admin:manage_tenants", "admin:manage_platform", "admin:override_authority", "user:create", "user:read", "user:update", "user:delete", "report:read", "lead:read", "lead:create", "lead:update", "lead:delete", "lead:enrich", "lead:outreach", "lead:convert", "crm:read", "crm:write", "supplier:create", "supplier:read", "supplier:update", "supplier:delete", "order:create", "order:read", "order:approve", "order:reject", "order:cancel", "order:update", "order:confirm", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:submit", "invoice:factor", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "factoring:manage", "factoring:approve_credit", "fintech:read", "fintech:write", "disputes:create", "disputes:read", "disputes:update", "disputes:list", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
+    { name: "Owner", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "order:cancel", "order:update", "order:confirm", "product:create", "product:read", "product:update", "product:delete", "invoice:create", "invoice:read", "invoice:submit_eta", "invoice:submit", "invoice:factor", "user:create", "user:read", "user:update", "user:delete", "report:read", "shipping:create_trip", "shipping:read", "factoring:inquire", "factoring:fund", "factoring:approve_credit", "fintech:read", "fintech:write", "crm:read", "crm:write", "disputes:create", "disputes:read", "disputes:update", "disputes:list", "disputes:resolve", "compliance:kyc:read", "compliance:kyc:submit"] },
     { name: "Hotel Manager", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "order:reject", "product:read", "invoice:read", "invoice:submit_eta", "user:read", "user:update", "report:read", "shipping:read", "factoring:inquire"] },
     { name: "Department Head", isGlobal: false, permissions: ["order:create", "order:read", "order:approve", "product:read", "invoice:read", "user:read"] },
     { name: "Clerk", isGlobal: false, permissions: ["order:create", "order:read", "product:read", "invoice:read"] },

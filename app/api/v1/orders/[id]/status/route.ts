@@ -107,16 +107,39 @@ export const POST = apiRoute(
       userAgent: request.headers.get("user-agent") ?? undefined,
     });
 
-    // Update order status
-    const updatedOrder = await prisma.order.update({
-      where: { id },
-      data: { status: requestedStatus },
-      include: {
-        items: { include: { product: true } },
-        hotel: { select: { id: true, name: true } },
-        supplier: { select: { id: true, name: true } },
-        invoices: true,
-      },
+    // Atomic status update with row locking to prevent race conditions
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      // Lock the row to prevent concurrent updates
+      const locked = await tx.$queryRaw<Array<{ id: string; status: string; paymentGuaranteed: boolean }>>`
+        SELECT "id", "status", "paymentGuaranteed"
+        FROM "Order"
+        WHERE "id" = ${id}
+        FOR UPDATE
+      `;
+
+      if (locked.length === 0) {
+        throw new Error("Order not found during atomic update");
+      }
+
+      // Re-validate with locked state
+      const reTransition = validateStatusTransition(
+        locked[0].status as OrderStatus,
+        requestedStatus
+      );
+      if (!reTransition.valid) {
+        throw new Error(reTransition.reason || "Invalid status transition (concurrent modification)");
+      }
+
+      return tx.order.update({
+        where: { id },
+        data: { status: requestedStatus },
+        include: {
+          items: { include: { product: true } },
+          hotel: { select: { id: true, name: true } },
+          supplier: { select: { id: true, name: true } },
+          invoices: true,
+        },
+      });
     });
 
     // Audit log with before/after state
