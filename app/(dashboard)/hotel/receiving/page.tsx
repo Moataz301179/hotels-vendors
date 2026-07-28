@@ -80,7 +80,7 @@ export default function ReceivingPage() {
   const params = new URLSearchParams({ page: String(page), limit: "20" });
   if (search) params.set("search", search);
 
-  const { data, isLoading } = useApi<{ grns: Grn[]; pagination: { total: number; totalPages: number } }>(
+  const { data, loading: isLoading } = useApi<{ grns: Grn[]; pagination: { total: number; totalPages: number } }>(
     `/api/v1/grn?${params}`
   );
 
