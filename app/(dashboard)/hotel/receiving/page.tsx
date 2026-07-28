@@ -41,6 +41,7 @@ interface Grn {
   receivedAt: string;
   warehouseLocation: string | null;
   deliveryNoteRef: string | null;
+  vehiclePlate: string | null;
   notes: string | null;
   order: { orderNumber: string; total: number | null };
   hotel: { name: string };
