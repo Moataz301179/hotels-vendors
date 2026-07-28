@@ -35,6 +35,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.hotelsvendors.com"),
   title: {
     default: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
     template: "%s | HotelsVendors",

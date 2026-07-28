@@ -15,8 +15,7 @@ module.exports = {
   apps: [
     {
       name: "hotels-vendors",
-      script: "node_modules/.bin/next",
-      args: ["start"],
+      script: ".next/standalone/server.js",
       cwd: "/var/www/hotelsvendors-v2",
       instances: 1,
       exec_mode: "fork",
@@ -32,7 +31,7 @@ module.exports = {
       // Production environment
       env_production: {
         NODE_ENV: "production",
-        PORT: 3000,
+        PORT: 3003,
         NEXT_TELEMETRY_DISABLED: "1",
       },
 
