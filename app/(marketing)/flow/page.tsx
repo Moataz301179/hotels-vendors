@@ -242,7 +242,7 @@ export default function FlowPage() {
               <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>For Hotels</span>
               <h2 className="text-3xl md:text-4xl font-semibold text-white">Extend Terms. Strengthen Supply Chain.</h2>
             </div>
-            <BrandLogo variant="dark" size="lg" />
+            <BrandLogo variant="light" size="md" showText={false} />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {HOTEL_BENEFITS.map((b) => (

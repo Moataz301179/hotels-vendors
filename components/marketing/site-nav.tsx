@@ -94,10 +94,10 @@ export function SiteNav() {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
-      <Link href="/" className="flex items-center gap-2.5">
-        <BrandLogo variant="dark" size="sm" showText={false} />
-        <span className="font-semibold text-white text-[15px] uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-          Hotels Vendors
+      <Link href="/" className={`flex items-center ${ar ? "gap-1.5" : "gap-2.5"} shrink-0`}>
+        <BrandLogo variant="dark" size="md" showText={false} />
+        <span className={`font-semibold text-white uppercase ${ar ? "text-sm" : "text-[15px]"}`} style={{ letterSpacing: ar ? "0.05em" : "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+          {ar ? "هوتيلز فيندورز" : "Hotels Vendors"}
         </span>
       </Link>
 
