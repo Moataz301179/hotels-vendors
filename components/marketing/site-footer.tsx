@@ -14,10 +14,10 @@ export function SiteFooter() {
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
           {/* Brand */}
           <div className="max-w-xs">
-            <div className={`flex items-center ${ar ? "gap-1.5" : "gap-2.5"} mb-3`}>
+            <div className="flex items-center gap-2.5 mb-3" dir="ltr">
               <BrandLogo variant="dark" size="md" showText={false} />
-              <span className={`font-semibold text-white uppercase ${ar ? "text-sm" : "text-[15px]"}`} style={{ letterSpacing: ar ? "0.05em" : "0.2em" }}>
-                {ar ? "هوتيلز فيندورز" : "Hotels Vendors"}
+              <span className="font-semibold text-white uppercase text-[15px]" style={{ letterSpacing: "0.2em" }}>
+                Hotels Vendors
               </span>
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">
