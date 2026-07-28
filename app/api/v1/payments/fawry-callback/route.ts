@@ -63,7 +63,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (isPaid) {
     const payment = await prisma.payment.findFirst({
       where: { referenceCode: merchantRefNumber },
-      include: { order: { select: { hotelId: true, total: true } } },
     });
     if (payment) {
       await prisma.payment.update({
@@ -74,9 +73,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         },
       });
       // Release credit — payment received, free up hotel's credit limit
-      if (payment.order) {
-        await releaseCredit(payment.order.hotelId, Number(payment.order.total ?? 0));
-      }
+      await releaseCredit(payment.hotelId, Number(payment.amount ?? 0));
     }
   }
 
