@@ -4,6 +4,7 @@ import { verifyPaymobCallback } from "@/lib/payments/paymob";
 import { apiRoute, success, error } from "@/lib/api-utils";
 import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 import { checkWebhookReplay, markWebhookProcessed, paymobEventId } from "@/lib/security/webhook-idempotency";
+import { releaseCredit } from "@/lib/credit-gate";
 
 export const POST = apiRoute(async (request: NextRequest) => {
   // IP whitelisting — reject webhooks from untrusted sources
@@ -52,6 +53,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
       status: "CONFIRMED",
     },
   });
+
+  // Release credit — payment received, free up hotel's credit limit
+  await releaseCredit(order.hotelId, Number(order.total ?? 0));
 
   // Log to audit (tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");

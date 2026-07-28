@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { apiRoute, success, error, audit } from "@/lib/api-utils";
 import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 import { checkWebhookReplay, markWebhookProcessed, olivEventId } from "@/lib/security/webhook-idempotency";
+import { releaseCredit } from "@/lib/credit-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -145,6 +146,10 @@ async function handleFundingEvent(
 
   // Update linked Invoice if settled
   if (newStatus === "SETTLED" && matchedRequest.invoiceId) {
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: matchedRequest.invoiceId },
+      select: { hotelId: true, total: true },
+    });
     await prisma.invoice.update({
       where: { id: matchedRequest.invoiceId },
       data: {
@@ -153,6 +158,10 @@ async function handleFundingEvent(
         factoringStatus: "PAID",
       },
     });
+    // Release credit — factoring payment received, free up hotel's credit limit
+    if (invoice) {
+      await releaseCredit(invoice.hotelId, Number(invoice.total ?? 0));
+    }
   }
 
   // Update OlivCreditFacility balance

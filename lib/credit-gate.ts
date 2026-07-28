@@ -46,3 +46,46 @@ export async function checkCreditLimit(
 
   return { allowed: true, available };
 }
+
+/**
+ * Reserve credit when an order is confirmed (creditUsed += order total).
+ * Called when order transitions to CONFIRMED or APPROVED.
+ */
+export async function reserveCredit(
+  hotelId: string,
+  amount: number
+): Promise<void> {
+  await prisma.hotel.update({
+    where: { id: hotelId },
+    data: {
+      creditUsed: {
+        increment: amount,
+      },
+    },
+  });
+}
+
+/**
+ * Release credit when an invoice is paid.
+ * Called when invoice paymentStatus transitions to PAID.
+ */
+export async function releaseCredit(
+  hotelId: string,
+  amount: number
+): Promise<void> {
+  const hotel = await prisma.hotel.findUnique({
+    where: { id: hotelId },
+    select: { creditUsed: true },
+  });
+  if (!hotel) return;
+
+  const current = Number(hotel.creditUsed ?? 0);
+  const newAmount = Math.max(0, current - amount);
+
+  await prisma.hotel.update({
+    where: { id: hotelId },
+    data: {
+      creditUsed: newAmount,
+    },
+  });
+}

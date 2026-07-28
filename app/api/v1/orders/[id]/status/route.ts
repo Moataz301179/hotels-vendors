@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 import { validateStatusTransition, getTransitionGate } from "@/lib/auth/state-machine";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
+import { reserveCredit } from "@/lib/credit-gate";
 import {
   apiRoute,
   authenticate,
@@ -95,6 +96,9 @@ export const POST = apiRoute(
             paymentStatus: "UNPAID",
           },
         });
+
+        // Reserve credit: order drops out of uncaptured set, so creditUsed must absorb it
+        await reserveCredit(order.hotelId, Number(order.total ?? 0));
       }
     }
 

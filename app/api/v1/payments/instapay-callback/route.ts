@@ -4,6 +4,7 @@ import { apiRoute, success, error } from "@/lib/api-utils";
 import { verifyInstaPayCallback } from "@/lib/payments/instapay";
 import type { InstaPayCallbackPayload } from "@/lib/payments/instapay";
 import { checkWebhookReplay, markWebhookProcessed } from "@/lib/security/webhook-idempotency";
+import { releaseCredit } from "@/lib/credit-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -55,12 +56,17 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (isCompleted) {
     const payment = await prisma.payment.findFirst({
       where: { referenceCode: tx.gatewayRef },
+      include: { order: { select: { hotelId: true, total: true } } },
     });
     if (payment) {
       await prisma.payment.update({
         where: { id: payment.id },
         data: { status: "PAID", paidAt: new Date() },
       });
+      // Release credit — payment received, free up hotel's credit limit
+      if (payment.order) {
+        await releaseCredit(payment.order.hotelId, Number(payment.order.total ?? 0));
+      }
     }
   }
 

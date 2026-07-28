@@ -4,6 +4,7 @@ import { apiRoute, success, error } from "@/lib/api-utils";
 import { verifyFawryCallback } from "@/lib/payments/fawry";
 import type { FawryCallbackPayload } from "@/lib/payments/fawry";
 import { checkWebhookReplay, markWebhookProcessed, fawryEventId } from "@/lib/security/webhook-idempotency";
+import { releaseCredit } from "@/lib/credit-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -58,10 +59,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // 4. If confirmed, update linked Payment record
+  // 4. If confirmed, update linked Payment record and release credit
   if (isPaid) {
     const payment = await prisma.payment.findFirst({
       where: { referenceCode: merchantRefNumber },
+      include: { order: { select: { hotelId: true, total: true } } },
     });
     if (payment) {
       await prisma.payment.update({
@@ -71,6 +73,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
           paidAt: new Date(),
         },
       });
+      // Release credit — payment received, free up hotel's credit limit
+      if (payment.order) {
+        await releaseCredit(payment.order.hotelId, Number(payment.order.total ?? 0));
+      }
     }
   }
 
