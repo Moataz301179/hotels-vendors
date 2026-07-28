@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowRight, CheckCircle2, Building2, Users, Phone, Mail, User, Store, Loader2, ExternalLink, Shield, Zap, Clock } from "lucide-react"
 
-const OLIV_REFERRAL_URL = "https://oliv.finance/apply?ref=HOTELSVENDORS"
+const OLIV_REFERRAL_URL = "https://oliv.finance/apply?ref=CHV000&source=hotelsvendors"
 
 export default function OlivReferralPage() {
   const [step, setStep] = useState<"form" | "submitted">("form")

@@ -58,6 +58,36 @@ export default function MarketingPage() {
   return (
     <main className="min-h-screen bg-canvas text-foreground font-sans">
 
+      {/* ═══════════ OLIV FINANCE TICKER ═══════════ */}
+      <Link
+        href="/oliv/referral"
+        className="relative z-20 block w-full overflow-hidden border-b border-white/5 select-none"
+        style={{
+          background: "linear-gradient(90deg, rgba(57,255,126,0.06) 0%, rgba(12,12,18,0.95) 25%, rgba(12,12,18,0.95) 75%, rgba(57,255,126,0.06) 100%)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+        }}
+      >
+        <div className="flex items-center py-2.5 whitespace-nowrap w-max animate-marquee">
+          <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#39ff7e] font-semibold">EGP 10M</span> credit line</span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#39ff7e] font-semibold">ETA tax UUID</span></span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#39ff7e] font-semibold">48 hours</span></span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#39ff7e] font-semibold">Powered by Oliv Finance</span></span>
+          {/* ── duplicate for seamless loop ── */}
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#39ff7e] font-semibold">EGP 10M</span> credit line</span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#39ff7e] font-semibold">ETA tax UUID</span></span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#39ff7e] font-semibold">48 hours</span></span>
+          <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
+          <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#39ff7e] font-semibold">Powered by Oliv Finance</span></span>
+        </div>
+      </Link>
+
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         {/* Background: hotel room photo with dark overlay */}

@@ -3,12 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 const REFERRAL_CODE = "CHV000";
 
-function generateReferralId(): string {
-  const ts = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `HV-${REFERRAL_CODE}-${ts}-${rand}`;
-}
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -17,7 +11,7 @@ export async function GET(request: NextRequest) {
     const amount = searchParams.get("amount") || "";
     const supplierId = searchParams.get("supplierId") || "";
 
-    const referralId = generateReferralId();
+    const leadId = `OLIV-${Date.now().toString(36).toUpperCase()}`;
 
     const companyName = orderId
       ? `Order ${orderId} - Oliv CTA`
@@ -26,12 +20,12 @@ export async function GET(request: NextRequest) {
     await prisma.leadCapture.create({
       data: {
         companyName,
-        email: `${referralId}@track.hotelsvendors.com`,
+        email: `${leadId}@track.hotelsvendors.com`,
         sector: "HOTEL",
         role: "SUPPLIER",
         message: JSON.stringify({
           referralCode: REFERRAL_CODE,
-          referralId,
+          leadId,
           orderId,
           invoiceId,
           amount,
@@ -44,7 +38,7 @@ export async function GET(request: NextRequest) {
     });
 
     const olivParams = new URLSearchParams({
-      ref: referralId,
+      ref: REFERRAL_CODE,
       source: "hotelsvendors",
     });
     if (orderId) olivParams.set("order", orderId);
@@ -52,14 +46,11 @@ export async function GET(request: NextRequest) {
     if (invoiceId) olivParams.set("invoice", invoiceId);
     if (supplierId) olivParams.set("supplier", supplierId);
 
-    const olivUrl = orderId
-      ? `https://oliv.finance/apply?${olivParams.toString()}`
-      : `https://oliv.finance/#register?ref=${referralId}&source=hotelsvendors`;
+    const olivUrl = `https://oliv.finance/apply?${olivParams.toString()}`;
 
     return NextResponse.redirect(olivUrl, 302);
   } catch (error) {
     console.error("[Oliv Click] Error:", error);
-    const fallbackUrl = `https://oliv.finance/apply?ref=FALLBACK&source=hotelsvendors`;
-    return NextResponse.redirect(fallbackUrl, 302);
+    return NextResponse.redirect(`https://oliv.finance/apply?ref=${REFERRAL_CODE}&source=hotelsvendors`, 302);
   }
 }
