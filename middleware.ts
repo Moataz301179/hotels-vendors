@@ -165,7 +165,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
     "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net; " +
-    "connect-src 'self'; " +
+    "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self';"
@@ -226,6 +226,7 @@ export async function middleware(request: NextRequest) {
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
     const isExemptPath = pathname === "/api/v1/auth/login" ||
       pathname === "/api/v1/auth/register" ||
+      pathname === "/api/v1/oliv/webhook" ||
       pathname.startsWith("/api/webhooks");
     if (isStateChanging && !isExemptPath) {
       const csrfResult = await csrfMiddleware(request);

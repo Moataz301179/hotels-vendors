@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
+if (!process.env.SESSION_SECRET) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "FATAL: SESSION_SECRET environment variable is required in production. " +
+      "Generate one with: openssl rand -hex 32"
+    );
+  }
+  console.warn("[next.config] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
+}
+
 const nextConfig: NextConfig = {
   output: "standalone",
   typescript: {
