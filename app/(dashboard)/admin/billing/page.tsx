@@ -181,7 +181,7 @@ export default function AdminBillingPage() {
     let obj: Record<string, unknown> = next;
     for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]] as Record<string, unknown>;
     obj[keys[keys.length - 1]] = value;
-    setDraft(next as BillingSettings);
+    setDraft(next as unknown as BillingSettings);
   };
 
   const hasChanges = JSON.stringify(draft) !== JSON.stringify(settings);
