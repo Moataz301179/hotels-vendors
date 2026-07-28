@@ -28,6 +28,7 @@ const MODULES = [
       { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
       { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
       { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "#39ff7e" },
+      { label: "Billing & Payouts", desc: "Fee configuration, tier commissions, referral & payout schedules", icon: Wallet, to: "/admin/billing", color: "#06b6d4" },
     ],
   },
   {

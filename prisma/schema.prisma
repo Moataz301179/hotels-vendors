@@ -2259,6 +2259,39 @@ model Workspace {
   @@index([tenantId])
 }
 
+model PlatformSettings {
+  id                   String   @id @default(cuid())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  platformFeeRate      Decimal  @default(2.5) @db.Decimal(5, 2)
+  minOrderFee          Decimal  @default(0) @db.Decimal(12, 2)
+  maxOrderFee          Decimal  @default(0) @db.Decimal(12, 2)
+
+  supplierTierBRate    Decimal  @default(2.5) @db.Decimal(5, 2)
+  supplierTierARate    Decimal  @default(2.0) @db.Decimal(5, 2)
+  supplierTierSRate    Decimal  @default(1.5) @db.Decimal(5, 2)
+
+  referralEnabled      Boolean  @default(true)
+  refereeDiscountPct   Decimal  @default(5.0) @db.Decimal(5, 2)
+  referrerBonusEgp     Decimal  @default(500.00) @db.Decimal(12, 2)
+  maxReferralUses      Int      @default(50)
+
+  payoutDay            Int      @default(15)
+  payoutCurrency       String   @default("EGP")
+  autoPayoutEnabled    Boolean  @default(false)
+  minPayoutThreshold   Decimal  @default(1000.00) @db.Decimal(12, 2)
+
+  bankName             String?
+  bankAccountName      String?
+  bankAccountNumber    String?
+  bankIban             String?
+  bankSwiftCode        String?
+  bankBranch           String?
+
+  @@map("PlatformSettings")
+}
+
 enum TenantType {
   HOTEL_GROUP
   SUPPLIER
