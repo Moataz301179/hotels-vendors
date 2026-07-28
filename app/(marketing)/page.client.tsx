@@ -56,7 +56,7 @@ export default function MarketingPage() {
   const ar = locale === "ar";
 
   return (
-    <main className="min-h-screen bg-[#0c0c12] text-white font-sans">
+    <main className="min-h-screen bg-canvas text-foreground font-sans">
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -89,7 +89,7 @@ export default function MarketingPage() {
               {t("hero.badge")}
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.08] mb-6 animate-fade-in-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.08] mb-6 animate-fade-in-up">
               {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-[#39ff7e]">.</span>
             </h1>
 
@@ -118,33 +118,33 @@ export default function MarketingPage() {
       </section>
 
       {/* ═══════════ PLATFORM OVERVIEW — Dashboard Mockup ═══════════ */}
-      <section className="relative py-20 bg-[#0a0a10]">
+      <section className="relative py-20 bg-surface-2">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t("overview.title")}
             </h2>
             <p className="text-base text-white/50 max-w-2xl mx-auto">
               {t("overview.subtitle")}
             </p>
           </div>
-          <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl animate-on-scroll" style={{ boxShadow: "0 0 80px 2px rgba(57,255,126,0.06)" }}>
+          <div className="relative rounded-2xl overflow-hidden border border-border-subtle shadow-2xl animate-on-scroll" style={{ boxShadow: "0 0 80px 2px rgba(57,255,126,0.06)" }}>
             {/* Mac-style title bar */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-[#12121a] border-b border-white/[0.06]">
+            <div className="flex items-center gap-2 px-4 py-3 bg-surface-1 border-b border-border-subtle">
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#39ff7e" }} />
-              <div className="flex-1 mx-3 bg-[#0c0c12]/60 rounded-md px-3 py-1 text-[11px] text-white/30 border border-white/[0.04] text-center font-mono">
+              <div className="flex-1 mx-3 bg-canvas/60 rounded-md px-3 py-1 text-[11px] text-white/30 border border-white/[0.04] text-center font-mono">
                 app.hotelsvendors.com
               </div>
             </div>
 
             {/* Dashboard mockup */}
-            <div className="bg-[#0c0c12] p-5">
+            <div className="bg-canvas p-5">
               {/* Header row */}
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-sm font-semibold text-white">{t("overview.meridian")}</div>
+                  <div className="text-sm font-semibold text-foreground">{t("overview.meridian")}</div>
                   <div className="text-[11px] text-white/40">{t("overview.meridianSub")} <span className="text-[#39ff7e]">{t("overview.meridianSavings")}</span></div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -160,16 +160,16 @@ export default function MarketingPage() {
                   { label: t("overview.vendors"), value: "47", color: "#c455ff", sub: "INVO" },
                   { label: t("overview.factoring"), value: "6", color: "#39ff7e", sub: t("overview.payout") },
                 ].map((c) => (
-                  <div key={c.label} className="rounded-lg border border-white/[0.04] bg-[#12121a]/60 p-3">
+                  <div key={c.label} className="rounded-lg border border-white/[0.04] bg-surface-1/60 p-3">
                     <div className="text-[10px] text-white/35 mb-1">{c.label}</div>
-                    <div className="text-base font-semibold text-white">{c.value}</div>
+                     <div className="text-base font-semibold text-foreground">{c.value}</div>
                     <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
                   </div>
                 ))}
               </div>
 
               {/* Orders table */}
-              <div className="rounded-lg border border-white/[0.04] bg-[#12121a]/40 overflow-hidden">
+              <div className="rounded-lg border border-white/[0.04] bg-surface-1/40 overflow-hidden">
                 <div className="px-3 py-2 border-b border-white/[0.04] flex items-center justify-between">
                   <span className="text-[11px] font-medium text-white/60">{t("overview.recentOrders")}</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#39ff7e]/30 text-[#39ff7e]">{t("overview.etaVerified")}</span>
@@ -181,11 +181,11 @@ export default function MarketingPage() {
                 ].map((o, i) => (
                   <div key={i} className={`flex items-center justify-between px-3 py-2.5 text-[11px] ${i < 2 ? "border-b border-white/[0.03]" : ""}`}>
                     <div>
-                      <div className="font-medium text-white">{o.vendor}</div>
+                      <div className="font-medium text-foreground">{o.vendor}</div>
                       <div className="text-white/35">{o.item}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium text-white">{o.price}</div>
+                      <div className="font-medium text-foreground">{o.price}</div>
                       <div style={{ color: o.color }}>{o.status}</div>
                     </div>
                   </div>
@@ -197,7 +197,7 @@ export default function MarketingPage() {
       </section>
 
       {/* ═══════════ TRUST BAR — Client Logos ═══════════ */}
-      <section className="py-8 border-y border-white/[0.04] bg-[#0a0a10]">
+      <section className="py-8 border-y border-white/[0.04] bg-surface-2">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-center text-xs text-white/25 uppercase tracking-widest mb-6">
             {t("trust.label")}
@@ -233,7 +233,7 @@ export default function MarketingPage() {
           <span className="text-xs tracking-widest uppercase" style={{ color: "#ff7e1a" }}>
             {t("products.badge")}
           </span>
-          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-semibold">
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
             {t("products.title")}
           </h2>
           <p className="text-white/45 text-base max-w-xl mx-auto text-balance">
@@ -252,13 +252,13 @@ export default function MarketingPage() {
             { img: "photo-1571896349842-33c89424de2d", name: t("products.spa.name"), price: t("products.spa.price"), color: "#ff7e1a" },
           ].map((p) => (
             <div key={p.name} className="animate-on-scroll group">
-              <div className="rounded-xl border overflow-hidden bg-[#12121a] transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${p.color}22` }}>
+              <div className="rounded-xl border overflow-hidden bg-surface-1 transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${p.color}22` }}>
                 <div className="relative h-36 overflow-hidden">
                   <img src={`https://images.unsplash.com/${p.img}?w=400&q=75&fm=webp`} alt={p.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300" width={400} height={144} loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-transparent to-transparent" />
                 </div>
                 <div className="px-4 py-3">
-                  <div className="text-sm font-semibold text-white mb-0.5">{p.name}</div>
+                   <div className="text-sm font-semibold text-foreground mb-0.5">{p.name}</div>
                   <div className="text-xs" style={{ color: `${p.color}cc` }}>{p.price}</div>
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function MarketingPage() {
           <span className="text-xs tracking-widest uppercase" style={{ color: "#39ff7e" }}>
             {t("how.badge")}
           </span>
-          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-semibold">
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
             {t("how.title")}
           </h2>
           <p className="text-white/45 text-base max-w-2xl mx-auto text-balance">
@@ -289,7 +289,7 @@ export default function MarketingPage() {
           ].map((s) => (
             <div key={s.num} className="animate-on-scroll">
               <div
-                className="neon-card relative rounded-2xl border bg-[#12121a] p-5 h-full flex flex-col"
+                className="neon-card relative rounded-2xl border bg-surface-1 p-5 h-full flex flex-col"
                 style={{ borderColor: `${s.color}33` }}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${s.color}30, inset 0 0 20px 0px ${s.color}08`; e.currentTarget.style.borderColor = `${s.color}88`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${s.color}33`; }}
@@ -310,7 +310,7 @@ export default function MarketingPage() {
             <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#c455ff" }}>
               {t("dual.badge")}
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
               {t("dual.title")}
             </h2>
             <p className="text-white/45 text-lg max-w-2xl mx-auto text-balance">
@@ -320,7 +320,7 @@ export default function MarketingPage() {
 
           {/* Layer switcher */}
           <div className="flex justify-center mb-10">
-            <div className="inline-flex border rounded-xl p-1 gap-1 bg-[#0c0c12]" style={{ borderColor: "#39ff7e33" }}>
+            <div className="inline-flex border rounded-xl p-1 gap-1 bg-canvas" style={{ borderColor: "#39ff7e33" }}>
               <button onClick={() => setLayer("hv")} className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer" style={{ background: layer === "hv" ? "#39ff7e" : "transparent", color: layer === "hv" ? "#07090f" : "rgba(160,160,176,1)" }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /></svg>
                 HotelsVendors
@@ -339,7 +339,7 @@ export default function MarketingPage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "#39ff7e44", color: "#39ff7e", background: "#39ff7e10" }}>
                   {t("hv.badge")}
                 </div>
-                <h3 className="text-3xl font-extrabold mb-4 text-white">
+                <h3 className="text-3xl font-extrabold mb-4 text-foreground">
                   {t("hv.title")}
                 </h3>
                 <p className="text-white/45 leading-relaxed mb-6">
@@ -353,7 +353,7 @@ export default function MarketingPage() {
                     t("hv.feature4"),
                     t("hv.feature5"),
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
+                    <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
                 <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-[#39ff7e] text-[#07090f] hover:bg-[#5fff9a] transition-colors">
@@ -365,7 +365,7 @@ export default function MarketingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-[#12121a]/40 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "#39ff7e44", background: "rgba(7,9,15,0.75)" }}>
                   <div className="text-xs font-semibold mb-1" style={{ color: "#39ff7e" }}>app.hotelsvendors.com/hotel/dashboard</div>
-                  <div className="text-sm font-semibold text-white">{t("hv.cardTitle")}</div>
+                  <div className="text-sm font-semibold text-foreground">{t("hv.cardTitle")}</div>
                 </div>
               </div>
             </div>
@@ -378,7 +378,7 @@ export default function MarketingPage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "#ff7e1a44", color: "#ff7e1a", background: "#ff7e1a10" }}>
                   {t("invo.badge")}
                 </div>
-                <h3 className="text-3xl font-extrabold mb-4 text-white">
+                <h3 className="text-3xl font-extrabold mb-4 text-foreground">
                   {t("invo.title")}
                 </h3>
                 <p className="text-white/45 leading-relaxed mb-6">
@@ -392,7 +392,7 @@ export default function MarketingPage() {
                     t("invo.feature4"),
                     t("invo.feature5"),
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7e1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
+                    <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7e1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
                 <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-[#ff7e1a] text-[#07090f] hover:bg-[#ff9640] transition-colors">
@@ -404,7 +404,7 @@ export default function MarketingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-[#12121a]/40 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "#ff7e1a44", background: "rgba(7,9,15,0.75)" }}>
                   <div className="text-xs font-semibold mb-1" style={{ color: "#ff7e1a" }}>app.hotelsvendors.com/invo/marketplace</div>
-                  <div className="text-sm font-semibold text-white">{t("invo.cardTitle")}</div>
+                  <div className="text-sm font-semibold text-foreground">{t("invo.cardTitle")}</div>
                 </div>
               </div>
             </div>
@@ -418,7 +418,7 @@ export default function MarketingPage() {
           <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#ff7e1a" }}>
             {t("ai.badge")}
           </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-white">
+          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
             {t("ai.title")}
           </h2>
           <p className="text-white/45 text-lg max-w-2xl mx-auto text-balance">
@@ -436,7 +436,7 @@ export default function MarketingPage() {
           ].map((a) => (
             <div key={a.title} className="animate-on-scroll">
               <div
-                className="neon-card rounded-2xl border bg-[#12121a] p-5 h-full"
+                className="neon-card rounded-2xl border bg-surface-1 p-5 h-full"
                 style={{ borderColor: `${a.color}33` }}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${a.color}30, inset 0 0 20px 0px ${a.color}08`; e.currentTarget.style.borderColor = `${a.color}88`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${a.color}33`; }}
@@ -444,7 +444,7 @@ export default function MarketingPage() {
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 border" style={{ background: `${a.color}15`, borderColor: `${a.color}40`, color: a.color }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
                 </div>
-                <div className="font-semibold text-sm mb-2 text-white">{a.title}</div>
+                <div className="font-semibold text-sm mb-2 text-foreground">{a.title}</div>
                 <p className="text-white/45 text-xs leading-relaxed">{a.desc}</p>
               </div>
             </div>
@@ -459,7 +459,7 @@ export default function MarketingPage() {
             <span className="text-xs tracking-widest uppercase" style={{ color: "#39ff7e" }}>
               {t("sandbox.badge")}
             </span>
-            <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-semibold">
+            <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
               {t("sandbox.title")}
             </h2>
             <p className="text-white/45 text-sm max-w-xl mx-auto">
@@ -491,17 +491,17 @@ export default function MarketingPage() {
 
           {/* Hotel Dashboard Tab */}
           {tab === "hotel" && (
-            <div className="rounded-2xl border overflow-hidden bg-[#0c0c12]" style={{ borderColor: "#39ff7e44", boxShadow: "0 0 40px 2px #39ff7e14" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-[#12121a]/60">
+            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "#39ff7e44", boxShadow: "0 0 40px 2px #39ff7e14" }}>
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#39ff7e" }} />
-                <div className="flex-1 mx-4 bg-[#0c0c12]/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/hotels/dashboard</div>
+                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/hotels/dashboard</div>
               </div>
               <div className="p-6 min-h-[440px]">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="font-semibold text-lg text-white">{t("hotel.title")}</h3>
+                    <h3 className="font-semibold text-lg text-foreground">{t("hotel.title")}</h3>
                     <p className="text-white/45 text-sm">{t("hotel.subtitle")} <span style={{ color: "#39ff7e" }}>{t("hotel.savings")}</span></p>
                   </div>
                   <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md inline-flex items-center gap-1 bg-[#39ff7e] text-[#07090f]">{t("hotel.aiAssist")}</button>
@@ -513,16 +513,16 @@ export default function MarketingPage() {
                     { label: t("hotel.vendorNetwork"), value: "47", color: "#c455ff", sub: "via INVO" },
                     { label: t("hotel.factoringRequests"), value: "6", color: "#39ff7e", sub: t("hotel.factoringPending") },
                   ].map((c) => (
-                    <div key={c.label} className="rounded-xl border bg-[#12121a] p-4" style={{ borderColor: `${c.color}33` }}>
+                    <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
                       <div className="text-xs text-white/45 mb-1">{c.label}</div>
-                      <div className="text-2xl font-semibold text-white">{c.value}</div>
+                      <div className="text-2xl font-semibold text-foreground">{c.value}</div>
                       <div className="text-xs mt-1" style={{ color: c.color }}>{c.sub}</div>
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl border bg-[#12121a] overflow-hidden" style={{ borderColor: "#39ff7e22" }}>
-                  <div className="px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
-                    <span className="font-semibold text-sm text-white">{t("hotel.recentOrders")}</span>
+                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "#39ff7e22" }}>
+                  <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
+                    <span className="font-semibold text-sm text-foreground">{t("hotel.recentOrders")}</span>
                     <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "#39ff7e44", color: "#39ff7e" }}>{t("hotel.allVerified")}</span>
                   </div>
                   {[
@@ -531,8 +531,8 @@ export default function MarketingPage() {
                     { vendor: "GourmetSource", item: t("hotel.coffeeItem"), price: "$2,100", status: t("overview.factoringActive"), color: "#c455ff" },
                   ].map((o, i) => (
                     <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-white/[0.04]" : ""}`}>
-                      <div><div className="font-medium text-white">{o.vendor}</div><div className="text-white/45 text-xs">{o.item}</div></div>
-                      <div className="text-right"><div className="font-semibold text-white">{o.price}</div><div className="text-xs" style={{ color: o.color }}>{o.status}</div></div>
+                      <div><div className="font-medium text-foreground">{o.vendor}</div><div className="text-white/45 text-xs">{o.item}</div></div>
+                      <div className="text-right"><div className="font-semibold text-foreground">{o.price}</div><div className="text-xs" style={{ color: o.color }}>{o.status}</div></div>
                     </div>
                   ))}
                 </div>
@@ -542,17 +542,17 @@ export default function MarketingPage() {
 
           {/* Vendor Tab */}
           {tab === "vendor" && (
-            <div className="rounded-2xl border overflow-hidden bg-[#0c0c12]" style={{ borderColor: "#ff7e1a44", boxShadow: "0 0 40px 2px #ff7e1a14" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-[#12121a]/60">
+            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "#ff7e1a44", boxShadow: "0 0 40px 2px #ff7e1a14" }}>
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#39ff7e" }} />
-                <div className="flex-1 mx-4 bg-[#0c0c12]/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/invo/marketplace</div>
+                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/invo/marketplace</div>
               </div>
               <div className="p-6 min-h-[440px]">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="font-semibold text-lg text-white">{t("vendor.title")}</h3>
+                    <h3 className="font-semibold text-lg text-foreground">{t("vendor.title")}</h3>
                     <p className="text-white/45 text-sm">{t("vendor.aggregated")} · <span style={{ color: "#ff7e1a" }}>{t("vendor.buyers")}</span></p>
                   </div>
                   <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#ff7e1a] text-[#07090f]">{t("vendor.listProducts")}</button>
@@ -564,21 +564,21 @@ export default function MarketingPage() {
                     { label: t("vendor.avgOrder"), value: "$2.8K", color: "#c455ff" },
                     { label: t("vendor.reorderRate"), value: "74%", color: "#ff7e1a" },
                   ].map((c) => (
-                    <div key={c.label} className="rounded-xl border bg-[#12121a] p-4" style={{ borderColor: `${c.color}33` }}>
+                    <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
                       <div className="text-xs text-white/45 mb-1">{c.label}</div>
-                      <div className="text-2xl font-semibold text-white">{c.value}</div>
+                      <div className="text-2xl font-semibold text-foreground">{c.value}</div>
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl border bg-[#12121a] overflow-hidden" style={{ borderColor: "#ff7e1a22" }}>
-                  <div className="px-4 py-3 border-b border-white/[0.06] font-semibold text-sm text-white">{t("vendor.topProducts")}</div>
+                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "#ff7e1a22" }}>
+                  <div className="px-4 py-3 border-b border-border-subtle font-semibold text-sm text-foreground">{t("vendor.topProducts")}</div>
                   {[
                     { name: t("vendor.cottonSheet"), units: t("vendor.unitsSold"), revenue: "$120K", badge: true },
                     { name: t("vendor.duvetSet"), units: t("vendor.duvetSold"), revenue: "$74K", badge: false },
                     { name: t("vendor.poolTowel"), units: t("vendor.towelSold"), revenue: "$34K", badge: true },
                   ].map((p, i) => (
                     <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-white/[0.04]" : ""}`}>
-                      <div><div className="font-medium text-white">{p.name}</div><div className="text-white/45 text-xs">{p.units}</div></div>
+                      <div><div className="font-medium text-foreground">{p.name}</div><div className="text-white/45 text-xs">{p.units}</div></div>
                       <div className="flex items-center gap-3">
                         <span className="font-semibold" style={{ color: "#39ff7e" }}>{p.revenue}</span>
                         {p.badge && <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "#ff7e1a55", color: "#ff7e1a" }}>⚡ 48h</span>}
@@ -592,12 +592,12 @@ export default function MarketingPage() {
 
           {/* Chat Tab */}
           {tab === "chat" && (
-            <div className="rounded-2xl border overflow-hidden bg-[#0c0c12]" style={{ borderColor: "#c455ff44", boxShadow: "0 0 40px 2px #c455ff14" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-[#12121a]/60">
+            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "#c455ff44", boxShadow: "0 0 40px 2px #c455ff14" }}>
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#39ff7e" }} />
-                <div className="flex-1 mx-4 bg-[#0c0c12]/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/ai-agent</div>
+                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-white/45 border border-white/[0.06]/50 font-mono">app.hotelsvendors.com/ai-agent</div>
               </div>
               <div className="p-6 min-h-[440px] flex flex-col">
                 <div className="flex items-center gap-3 mb-6 p-3 rounded-xl border" style={{ borderColor: "#c455ff33", background: "#c455ff08" }}>
@@ -605,40 +605,40 @@ export default function MarketingPage() {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
                   </div>
                   <div>
-                    <div className="font-semibold text-sm text-white">{t("chat.agentTitle")}</div>
+                    <div className="font-semibold text-sm text-foreground">{t("chat.agentTitle")}</div>
                     <div className="text-xs text-white/45">{t("chat.agentSubtitle")}</div>
                   </div>
                   <div className="ml-auto w-2 h-2 rounded-full animate-pulse" style={{ background: "#39ff7e" }} />
                 </div>
                 <div className="flex-1 flex flex-col gap-4 overflow-auto mb-4">
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.welcome")}
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-surface-1 border border-border-subtle text-foreground">
                       {t("chat.userMessage1")}
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.aiReply1")}
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-[#12121a] border border-white/[0.06] text-white">
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-surface-1 border border-border-subtle text-foreground">
                       {t("chat.userMessage2")}
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-white" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
                       {t("chat.aiReply2")}
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <div className="flex-1 rounded-xl border border-white/[0.06] bg-[#12121a]/50 px-4 py-2.5 text-sm text-white/45">{t("chat.inputPlaceholder")}</div>
+                  <div className="flex-1 rounded-xl border border-border-subtle bg-surface-1/50 px-4 py-2.5 text-sm text-white/45">{t("chat.inputPlaceholder")}</div>
                   <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#c455ff] text-[#07090f]">{t("chat.send")}</button>
                 </div>
               </div>
@@ -654,7 +654,7 @@ export default function MarketingPage() {
             <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#ff7e1a" }}>
               {t("factoring.badge")}
             </span>
-            <h2 className="text-4xl font-extrabold mt-3 mb-4 text-balance text-white">
+            <h2 className="text-4xl font-extrabold mt-3 mb-4 text-balance text-foreground">
               {t("factoring.title")}
             </h2>
             <p className="text-white/45 text-lg leading-relaxed mb-8">
@@ -672,7 +672,7 @@ export default function MarketingPage() {
                   <div className="w-8 h-8 rounded-full flex items-center justify-center border shrink-0 text-xs font-semibold" style={{ borderColor: `${s.color}55`, color: s.color, background: `${s.color}10` }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                   </div>
-                  <div className="text-sm text-white">{s.text}</div>
+                  <div className="text-sm text-foreground">{s.text}</div>
                 </div>
               ))}
             </div>
@@ -683,7 +683,7 @@ export default function MarketingPage() {
           </div>
           <div className="flex flex-col gap-4 animate-on-scroll">
             <div
-              className="neon-card rounded-2xl border bg-[#12121a] p-5"
+              className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "#ff7e1a33" }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #ff7e1a30, inset 0 0 20px 0px #ff7e1a08"; e.currentTarget.style.borderColor = "#ff7e1a88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#ff7e1a33"; }}
@@ -691,20 +691,20 @@ export default function MarketingPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <div className="text-xs text-white/45 mb-1">{t("factoring.requestLabel")} #F-2847</div>
-                  <div className="font-semibold text-white">Luxe Linen Co.</div>
+                  <div className="font-semibold text-foreground">Luxe Linen Co.</div>
                 </div>
                 <span className="text-xs px-3 py-1 rounded-full font-semibold" style={{ background: "#39ff7e20", color: "#39ff7e" }}>{t("factoring.active")}</span>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4 text-center">
-                <div className="rounded-lg p-2 bg-[#0c0c12]/60">
+                <div className="rounded-lg p-2 bg-canvas/60">
                   <div className="text-xl font-semibold" style={{ color: "#ff7e1a" }}>$14.4K</div>
                   <div className="text-xs text-white/45">{t("factoring.invoiceValue")}</div>
                 </div>
-                <div className="rounded-lg p-2 bg-[#0c0c12]/60">
+                <div className="rounded-lg p-2 bg-canvas/60">
                   <div className="text-xl font-semibold" style={{ color: "#39ff7e" }}>$13.9K</div>
                   <div className="text-xs text-white/45">{t("factoring.disbursed")}</div>
                 </div>
-                <div className="rounded-lg p-2 bg-[#0c0c12]/60">
+                <div className="rounded-lg p-2 bg-canvas/60">
                   <div className="text-xl font-semibold" style={{ color: "#c455ff" }}>38h</div>
                   <div className="text-xs text-white/45">{t("factoring.timeToPay")}</div>
                 </div>
@@ -716,13 +716,13 @@ export default function MarketingPage() {
                   t("factoring.fraComplete"),
                   t("factoring.fundsDisbursed"),
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</div>
+                  <div key={item} className="flex items-center gap-2 text-xs text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#39ff7e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</div>
                 ))}
               </div>
             </div>
 
             <div
-              className="neon-card rounded-2xl border bg-[#12121a] p-5"
+              className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "#c455ff33" }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #c455ff30, inset 0 0 20px 0px #c455ff08"; e.currentTarget.style.borderColor = "#c455ff88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#c455ff33"; }}
@@ -751,7 +751,7 @@ export default function MarketingPage() {
             <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#c455ff" }}>
               {t("compliance.badge")}
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
               {t("compliance.title")}
             </h2>
             <p className="text-white/45 text-lg max-w-2xl mx-auto text-balance">
@@ -775,7 +775,7 @@ export default function MarketingPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             <div
-              className="neon-card rounded-2xl border bg-[#12121a] p-5"
+              className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "#39ff7e33" }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #39ff7e30, inset 0 0 20px 0px #39ff7e08"; e.currentTarget.style.borderColor = "#39ff7e88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#39ff7e33"; }}
@@ -784,14 +784,14 @@ export default function MarketingPage() {
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "#39ff7e15", borderColor: "#39ff7e40", color: "#39ff7e" }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><line x1="10" x2="8" y1="9" y2="9" /></svg>
                 </div>
-                <div className="font-semibold text-white">{t("compliance.etaTitle")}</div>
+                <div className="font-semibold text-foreground">{t("compliance.etaTitle")}</div>
               </div>
               <p className="text-sm text-white/45 leading-relaxed">
                 {t("compliance.etaDesc")}
               </p>
             </div>
             <div
-              className="neon-card rounded-2xl border bg-[#12121a] p-5"
+              className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "#ff7e1a33" }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #ff7e1a30, inset 0 0 20px 0px #ff7e1a08"; e.currentTarget.style.borderColor = "#ff7e1a88"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#ff7e1a33"; }}
@@ -800,7 +800,7 @@ export default function MarketingPage() {
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "#ff7e1a15", borderColor: "#ff7e1a40", color: "#ff7e1a" }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 </div>
-                <div className="font-semibold text-white">{t("compliance.fraTitle")}</div>
+                <div className="font-semibold text-foreground">{t("compliance.fraTitle")}</div>
               </div>
               <p className="text-sm text-white/45 leading-relaxed">
                 {t("compliance.fraDesc")}
@@ -816,7 +816,7 @@ export default function MarketingPage() {
           <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#39ff7e" }}>
             {t("testimonials.badge")}
           </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 text-white">
+          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 text-foreground">
             {t("testimonials.title")}
           </h2>
         </div>
@@ -828,7 +828,7 @@ export default function MarketingPage() {
           ].map((item) => (
             <div key={item.name} className="animate-on-scroll">
               <div
-                className="neon-card rounded-2xl border bg-[#12121a] p-5 h-full flex flex-col"
+                className="neon-card rounded-2xl border bg-surface-1 p-5 h-full flex flex-col"
                 style={{ borderColor: `${item.color}33` }}
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${item.color}30, inset 0 0 20px 0px ${item.color}08`; e.currentTarget.style.borderColor = `${item.color}88`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${item.color}33`; }}
@@ -841,7 +841,7 @@ export default function MarketingPage() {
                 <p className="text-sm text-white/45 leading-relaxed flex-1 mb-5">&quot;{item.quote}&quot;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold border" style={{ background: `${item.color}15`, borderColor: `${item.color}44`, color: item.color }}>{item.initials}</div>
-                  <div><div className="font-semibold text-sm text-white">{item.name}</div><div className="text-xs text-white/45">{item.role}</div></div>
+                   <div><div className="font-semibold text-sm text-foreground">{item.name}</div><div className="text-xs text-white/45">{item.role}</div></div>
                 </div>
               </div>
             </div>
@@ -856,7 +856,7 @@ export default function MarketingPage() {
             <span className="text-xs tracking-widest uppercase" style={{ color: "#39ff7e" }}>
               {t("pricing.badge")}
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
               {t("pricing.title")}
             </h2>
             <p className="text-white/45 text-lg">{t("pricing.subtitle")}</p>
@@ -869,21 +869,21 @@ export default function MarketingPage() {
             ].map((p) => (
               <div key={p.title} className="animate-on-scroll">
                 <div
-                  className="neon-card rounded-2xl border bg-[#12121a] p-5 flex flex-col h-full relative"
+                  className="neon-card rounded-2xl border bg-surface-1 p-5 flex flex-col h-full relative"
                   style={{ borderColor: `${p.color}33` }}
                   onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${p.color}30, inset 0 0 20px 0px ${p.color}08`; e.currentTarget.style.borderColor = `${p.color}88`; }}
                   onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${p.color}33`; }}
                 >
                   {p.highlight && <div className="absolute -top-3 left-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: "#ff7e1a", color: "#07090f", transform: ar ? "translateX(50%)" : "translateX(-50%)" }}>{t("pricing.bank.highlight")}</div>}
                   <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: p.color }}>{p.badge}</div>
-                  <div className="text-2xl font-semibold mb-1 text-white">{p.title}</div>
+                  <div className="text-2xl font-semibold mb-1 text-foreground">{p.title}</div>
                   <div className="flex items-end gap-1 mb-6">
-                    <span className="text-4xl font-extrabold text-white">{p.price}</span>
+                    <span className="text-4xl font-extrabold text-foreground">{p.price}</span>
                     <span className="text-white/45 pb-1 text-sm">{p.unit}</span>
                   </div>
                   <ul className="flex flex-col gap-2.5 flex-1 mb-7">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-white" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{f}</li>
+                      <li key={f} className="flex items-center gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{f}</li>
                     ))}
                   </ul>
                   <Link href="/register" className="w-full font-semibold cursor-pointer rounded-lg text-sm py-2.5 text-center block" style={{ background: p.color, color: "#07090f" }}>{t("pricing.cta")}</Link>
@@ -899,7 +899,7 @@ export default function MarketingPage() {
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(to right, #39ff7e 1px, transparent 1px), linear-gradient(to bottom, #39ff7e 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
           <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" showText={false} /></div>
-          <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-white">
+          <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-foreground">
             {t("cta.headline1")}<br /><span style={{ color: "#39ff7e" }}>{t("cta.headline2")}</span>
           </h2>
           <p className="text-white/45 text-lg mb-4 max-w-xl mx-auto">
