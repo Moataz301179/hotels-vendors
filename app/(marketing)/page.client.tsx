@@ -1015,7 +1015,8 @@ const STEPS = [
 export function SandboxCarousel() {
   const [active, setActive] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { ar } = useLanguage();
+  const { locale, isRTL } = useLanguage();
+  const ar = locale === "ar";
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
