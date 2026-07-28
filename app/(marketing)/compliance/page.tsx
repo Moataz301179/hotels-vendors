@@ -31,7 +31,7 @@ export default function CompliancePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Compliance</span>
           <h1 className="text-[clamp(28px,4vw,48px)] font-medium leading-[1.1] mb-5 text-white">
-            ETA Phase 1 & 2.<br />SHA-256 Audit Trails.<br />FRA Anti-Fraud.<br /><span className="text-gradient-lime">Your Compliance<br />Team Can Sleep.</span>
+            ETA Phase 1 & 2.<br />SHA-256 Audit Trails.<br />FRA Anti-Fraud.<br /><span className="text-white">Your Compliance<br />Team Can Sleep.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             Every transaction on HotelsVendors is cryptographically signed, UUID-tracked, and ETA-submitted in real-time. Three-way matching is automated. Audit trails are immutable. Your compliance team reviews exceptions, not every invoice.

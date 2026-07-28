@@ -57,7 +57,7 @@ export default function MarketplacePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            2,400+ SKUs. 680+ Verified<br />Suppliers. <span className="text-gradient-lime">Zero Collection Chases.</span>
+            2,400+ SKUs. 680+ Verified<br />Suppliers. <span className="text-white">Zero Collection Chases.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             Egypt&apos;s largest hospitality procurement catalog. Fixed-price listings, ETA-compliant invoicing, and 24-hour settlement via embedded factoring. Built for suppliers who are done waiting 90 days to get paid.

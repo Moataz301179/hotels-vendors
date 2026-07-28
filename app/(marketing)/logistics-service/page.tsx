@@ -40,7 +40,7 @@ export default function LogisticsServicePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Logistics</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Fill Your Trucks with<br />Consolidated Loads.<br /><span className="text-gradient-lime">Get Paid in 4 Hours.<br />Not 90 Days.</span>
+            Fill Your Trucks with<br />Consolidated Loads.<br /><span className="text-white">Get Paid in 4 Hours.<br />Not 90 Days.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS. Built for carriers who want guaranteed volume and fast settlement.

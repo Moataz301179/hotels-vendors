@@ -38,7 +38,7 @@ export default function FactoringServicePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Factoring</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-gradient-lime">Non-Recourse<br />by Design.</span>
+            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-white">Non-Recourse<br />by Design.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.

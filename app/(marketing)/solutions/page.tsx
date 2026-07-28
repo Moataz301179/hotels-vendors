@@ -61,7 +61,7 @@ export default function SolutionsPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            One Platform.<br /><span className="text-gradient-lime">Four Stakeholder Workflows.<br />Infinite Scale.</span>
+            One Platform.<br /><span className="text-white">Four Stakeholder Workflows.<br />Infinite Scale.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
             Whether you&apos;re a hotel procurement manager, a supplier, a funder, or a carrier — HotelsVendors has a tailored workflow for you. Every role. One operating system.

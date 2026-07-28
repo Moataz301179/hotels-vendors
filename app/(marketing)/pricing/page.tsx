@@ -79,7 +79,7 @@ export default function PricingPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Pricing</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            No Per-Transaction Fees.<br />No Hidden Spreads.<br /><span className="text-gradient-lime">Transparent Enterprise<br />Pricing.</span>
+            No Per-Transaction Fees.<br />No Hidden Spreads.<br /><span className="text-white">Transparent Enterprise<br />Pricing.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed">
             Start free. Scale when you&apos;re ready. No hidden fees, no long-term contracts, no surprises on your invoice.

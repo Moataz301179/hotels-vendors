@@ -168,13 +168,13 @@ export default function AboutPage() {
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="surface-card p-8 neon-card">
-              <span className="label-upper mb-3 block" style={{ color: "var(--accent-base)" }}>Our Mission</span>
+              <span className="label-upper mb-3 block text-foreground">Our Mission</span>
               <p className="text-[18px] font-medium text-white leading-snug">
                 Digitize procurement for every Egyptian hotel — from boutique inns to 500-room resorts — removing friction, reducing cost, and ensuring full regulatory compliance.
               </p>
             </div>
             <div className="surface-card p-8 neon-card">
-              <span className="label-upper mb-3 block" style={{ color: "var(--orange-base)" }}>Our Vision</span>
+              <span className="label-upper mb-3 block text-foreground">Our Vision</span>
               <p className="text-[18px] font-medium text-white leading-snug">
                 Become the Amazon of hospitality procurement in Egypt and the MENA region — the default operating system for how hotels buy, suppliers sell, and logistics delivers.
               </p>

@@ -57,7 +57,7 @@ export default function PlatformPage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Platform</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Four Engines.<br /><span className="text-gradient-lime">One Operating System.<br />Zero Manual Reconciliation.</span>
+            Four Engines.<br /><span className="text-white">One Operating System.<br />Zero Manual Reconciliation.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.

@@ -144,7 +144,7 @@ export default function ContactPage() {
       <section className="py-20">
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-10">
-            <span className="label-upper mb-3 block" style={{ color: "var(--accent-base)" }}>Send a Message</span>
+            <span className="label-upper mb-3 block text-foreground">Send a Message</span>
             <h2 className="text-2xl md:text-3xl font-semibold text-white">How Can We Help?</h2>
           </div>
 

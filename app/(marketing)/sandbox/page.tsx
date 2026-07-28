@@ -148,7 +148,7 @@ export default function SandboxPage() {
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(28px,4vw,44px)] font-bold tracking-tight text-white mb-4">
-              Try HotelsVendors.<br /><span className="text-gradient-lime">No Sign-Up Required.</span>
+              Try HotelsVendors.<br /><span className="text-white">No Sign-Up Required.</span>
             </h1>
             <p className="text-[14px] text-white/40 max-w-xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting, ETA compliance, and embedded factoring work together.
