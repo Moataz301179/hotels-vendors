@@ -152,7 +152,7 @@ export default function ReceivingPage() {
       {/* Table */}
       <motion.div variants={fadeInUp} className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
         {isLoading ? (
-          <LoadingTable rows={5} cols={6} />
+          <LoadingTable rows={5} />
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<Package className="h-8 w-8 text-white/20" />}
