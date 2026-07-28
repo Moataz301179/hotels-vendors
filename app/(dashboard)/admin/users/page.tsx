@@ -36,7 +36,7 @@ const ROLE_COLORS: Record<string, string> = {
 
 const STATUS_COLORS: Record<string, string> = {
   ACTIVE: "bg-emerald-500/10 text-emerald-400",
-  INACTIVE: "bg-white/5 text-white/40",
+  INACTIVE: "bg-surface-2 text-foreground-muted",
   SUSPENDED: "bg-red-500/10 text-red-400",
   PENDING: "bg-amber-500/10 text-amber-400",
 };
@@ -62,7 +62,7 @@ export default function AdminUsersPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-border-subtle">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-accent-base/15 flex items-center justify-center">
@@ -70,11 +70,11 @@ export default function AdminUsersPage() {
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-white">User Management</h1>
-              <p className="text-[13px] text-white/40">View, search, and manage all platform users</p>
+              <p className="text-[13px] text-foreground-muted">View, search, and manage all platform users</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] text-white/40">
+            <span className="text-[13px] text-foreground-muted">
               {pagination?.total ?? 0} total users
             </span>
           </div>
@@ -89,19 +89,19 @@ export default function AdminUsersPage() {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[240px] max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40 transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40 transition-all"
             />
           </div>
           <select
             value={roleFilter}
             onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Roles</option>
             <option value="ADMIN">Admin</option>
@@ -113,7 +113,7 @@ export default function AdminUsersPage() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Status</option>
             <option value="ACTIVE">Active</option>
@@ -124,28 +124,28 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
+        <div className="rounded-xl bg-surface-1 border border-border-subtle overflow-hidden">
           <div className="overflow-x-auto table-scroll-wrapper">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">User</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Role</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Tenant</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Entity</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Last Active</th>
+                <tr className="border-b border-border-subtle">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">User</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Role</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Tenant</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Entity</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Last Active</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.04]">
                 {loading && (
                   <tr>
-                    <td colSpan={6} className="px-5 py-12 text-center text-white/30 text-[13px]">Loading users...</td>
+                    <td colSpan={6} className="px-5 py-12 text-center text-foreground-muted text-[13px]">Loading users...</td>
                   </tr>
                 )}
                 {!loading && users.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-5 py-12 text-center text-white/30 text-[13px]">No users found</td>
+                    <td colSpan={6} className="px-5 py-12 text-center text-foreground-muted text-[13px]">No users found</td>
                   </tr>
                 )}
                 {users.map((user, i) => (
@@ -154,23 +154,23 @@ export default function AdminUsersPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.02 }}
-                    className="hover:bg-white/[0.02] transition-colors"
+                    className="hover:bg-surface-1 transition-colors"
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-base to-[#6B0000] flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-base to-red-900 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
                           {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                         </div>
                         <div>
                           <p className="text-[13px] font-medium text-white">{user.name}</p>
-                          <p className="text-[13px] text-white/30 flex items-center gap-1">
+                          <p className="text-[13px] text-foreground-muted flex items-center gap-1">
                             <Mail className="w-3 h-3" /> {user.email}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${ROLE_COLORS[user.platformRole] || "bg-white/5 text-white/40 border-white/10"}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${ROLE_COLORS[user.platformRole] || "bg-surface-2 text-foreground-muted border-border-subtle"}`}>
                         {user.platformRole === "HOTEL" && <Building2 className="w-3 h-3" />}
                         {user.platformRole === "SUPPLIER" && <Store className="w-3 h-3" />}
                         {user.platformRole === "ADMIN" && <ShieldCheck className="w-3 h-3" />}
@@ -178,20 +178,20 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <p className="text-[13px] text-white/60">{user.tenant?.name || "—"}</p>
+                      <p className="text-[13px] text-foreground-secondary">{user.tenant?.name || "—"}</p>
                     </td>
                     <td className="px-5 py-3.5">
-                      {user.hotel && <p className="text-[13px] text-white/60">{user.hotel.name}</p>}
-                      {user.supplier && <p className="text-[13px] text-white/60">{user.supplier.name}</p>}
-                      {!user.hotel && !user.supplier && <span className="text-[13px] text-white/20">—</span>}
+                      {user.hotel && <p className="text-[13px] text-foreground-secondary">{user.hotel.name}</p>}
+                      {user.supplier && <p className="text-[13px] text-foreground-secondary">{user.supplier.name}</p>}
+                      {!user.hotel && !user.supplier && <span className="text-[13px] text-foreground-muted">—</span>}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase ${STATUS_COLORS[user.status] || "bg-white/5 text-white/40"}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase ${STATUS_COLORS[user.status] || "bg-surface-2 text-foreground-muted"}`}>
                         {user.status}
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-[13px] text-white/30 flex items-center gap-1">
+                      <span className="text-[13px] text-foreground-muted flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {user.lastActive ? new Date(user.lastActive).toLocaleDateString() : "Never"}
                       </span>
@@ -204,25 +204,25 @@ export default function AdminUsersPage() {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-[11px] text-white/30">
+            <div className="px-5 py-3 border-t border-border-subtle flex items-center justify-between">
+              <span className="text-[11px] text-foreground-muted">
                 Showing {(page - 1) * pagination.limit + 1} - {Math.min(page * pagination.limit, pagination.total)} of {pagination.total}
               </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] disabled:opacity-30 transition-colors"
+                  className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-[12px] text-white/50 px-2">
+                <span className="text-[12px] text-foreground-tertiary px-2">
                   {page} / {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                   disabled={page >= pagination.totalPages}
-                  className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] disabled:opacity-30 transition-colors"
+                  className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

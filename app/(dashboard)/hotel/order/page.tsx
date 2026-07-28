@@ -107,7 +107,7 @@ export default function OrderBuilderPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => router.push("/hotel/catalog")}
-          className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-2 transition-colors"
         >
           <ArrowLeft size={20} className="text-foreground-muted" />
         </button>

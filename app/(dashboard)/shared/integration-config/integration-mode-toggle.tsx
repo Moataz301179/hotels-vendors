@@ -69,24 +69,24 @@ export default function IntegrationModeToggle() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardHeader>
           <CardTitle className="text-white text-lg">Oliv Integration Mode</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Phase 1 Toggle */}
-          <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-surface-2 rounded-xl">
             <div>
               <p className="text-white font-medium">Phase 1: Invoice Upload</p>
               <p className="text-sm text-gray-400 mt-1">
                 Hotels upload paper invoices for financing. Zero supplier integration needed.
               </p>
-              <p className="text-xs text-[#39ff7e] mt-2">Active — works immediately</p>
+              <p className="text-xs text-accent-base mt-2">Active — works immediately</p>
             </div>
             <button
               onClick={() => handleToggle('phase1')}
               className={`relative w-14 h-7 rounded-full transition-colors ${
-                config.phase1Enabled ? 'bg-[#39ff7e]' : 'bg-white/20'
+                config.phase1Enabled ? 'bg-accent-base' : 'bg-surface-2'
               }`}
             >
               <div
@@ -98,20 +98,20 @@ export default function IntegrationModeToggle() {
           </div>
 
           {/* Phase 2 Toggle */}
-          <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-surface-2 rounded-xl">
             <div>
               <p className="text-white font-medium">Phase 2: Supplier Plugin</p>
               <p className="text-sm text-gray-400 mt-1">
                 Drop-in checkout widget for supplier e-commerce platforms.
               </p>
-              <p className="text-xs text-[#c455ff] mt-2">
+              <p className="text-xs text-purple-base mt-2">
                 {config.phase2Enabled ? 'Enabled — plugin available' : 'Disabled — enable when suppliers are ready'}
               </p>
             </div>
             <button
               onClick={() => handleToggle('phase2')}
               className={`relative w-14 h-7 rounded-full transition-colors ${
-                config.phase2Enabled ? 'bg-[#39ff7e]' : 'bg-white/20'
+                config.phase2Enabled ? 'bg-accent-base' : 'bg-surface-2'
               }`}
             >
               <div
@@ -123,9 +123,9 @@ export default function IntegrationModeToggle() {
           </div>
 
           {/* Current Mode Display */}
-          <div className="p-4 bg-[#39ff7e]/5 border border-[#39ff7e]/20 rounded-xl">
+          <div className="p-4 bg-accent-base/5 border border-accent-base/20 rounded-xl">
             <p className="text-sm text-gray-400">Current Integration Mode</p>
-            <p className="text-lg font-bold text-[#39ff7e] mt-1">
+            <p className="text-lg font-bold text-accent-base mt-1">
               {config.olimIntegrationMode === 'upload' && 'Phase 1 Only — Invoice Upload'}
               {config.olimIntegrationMode === 'plugin' && 'Phase 2 Only — Supplier Plugin'}
               {config.olimIntegrationMode === 'both' && 'Both Phases Active'}
@@ -140,7 +140,7 @@ export default function IntegrationModeToggle() {
                 type="number"
                 value={config.minOrderAmount}
                 onChange={(e) => setConfig({ ...config, minOrderAmount: parseInt(e.target.value) })}
-                className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#39ff7e] focus:outline-none"
+                className="w-full bg-surface-2 border border-border-subtle rounded-lg px-3 py-2 text-white focus:border-accent-base focus:outline-none"
               />
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function IntegrationModeToggle() {
                 type="number"
                 value={config.platformFeeRate}
                 onChange={(e) => setConfig({ ...config, platformFeeRate: parseFloat(e.target.value) })}
-                className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#39ff7e] focus:outline-none"
+                className="w-full bg-surface-2 border border-border-subtle rounded-lg px-3 py-2 text-white focus:border-accent-base focus:outline-none"
                 step="0.1"
               />
             </div>
@@ -159,7 +159,7 @@ export default function IntegrationModeToggle() {
                 type="number"
                 value={config.advanceRate}
                 onChange={(e) => setConfig({ ...config, advanceRate: parseInt(e.target.value) })}
-                className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#39ff7e] focus:outline-none"
+                className="w-full bg-surface-2 border border-border-subtle rounded-lg px-3 py-2 text-white focus:border-accent-base focus:outline-none"
               />
             </div>
             <div>
@@ -168,7 +168,7 @@ export default function IntegrationModeToggle() {
                 type="text"
                 value={config.financingDays.join(', ')}
                 onChange={(e) => setConfig({ ...config, financingDays: e.target.value.split(',').map(Number) })}
-                className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#39ff7e] focus:outline-none"
+                className="w-full bg-surface-2 border border-border-subtle rounded-lg px-3 py-2 text-white focus:border-accent-base focus:outline-none"
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function IntegrationModeToggle() {
 
       {/* Plugin Code Snippet (Phase 2) */}
       {config.phase2Enabled && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
             <CardTitle className="text-white text-lg">Supplier Plugin Code</CardTitle>
           </CardHeader>
@@ -189,7 +189,7 @@ export default function IntegrationModeToggle() {
             <p className="text-sm text-gray-400 mb-3">
               Share this snippet with suppliers to add HotelsVendors financing to their checkout:
             </p>
-            <pre className="bg-black/40 rounded-lg p-4 text-sm text-[#39ff7e] overflow-x-auto">
+            <pre className="bg-black/40 rounded-lg p-4 text-sm text-accent-base overflow-x-auto">
               {`<script src="https://hotelsvendors.com/plugin.js"
   data-api-key="hv_SUPPLIER_API_KEY"
   data-supplier-id="SUPPLIER_ID">

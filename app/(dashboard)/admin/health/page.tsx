@@ -292,30 +292,30 @@ export default function HealthDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-surface-2 text-white">
       {/* Header */}
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-border-subtle">
         <div className="mx-auto max-w-7xl px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-[24px] font-bold tracking-tight">System Health</h1>
-              <p className="text-[13px] text-white/40 mt-1">
+              <p className="text-[13px] text-foreground-muted mt-1">
                 Real-time platform monitoring & service status
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-1 border border-border-subtle">
                 <Radio
                   size={14}
                   className={pulseConnected ? "text-emerald-400" : "text-amber-400"}
                 />
-                <span className="text-xs text-white/40">
+                <span className="text-xs text-foreground-muted">
                   {pulseConnected ? "Live" : "Reconnecting"}
                 </span>
               </div>
               <button
                 onClick={handleManualRefresh}
-                className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-2.5 rounded-xl bg-surface-2 border border-border-subtle text-foreground-tertiary hover:text-white hover:bg-surface-2 transition-all"
                 title="Refresh now"
               >
                 <RefreshCw size={18} />
@@ -341,7 +341,7 @@ export default function HealthDashboardPage() {
             action={
               <button
                 onClick={handleManualRefresh}
-                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-sm text-white/60 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="px-4 py-2 rounded-lg bg-surface-2 border border-border-subtle text-sm text-foreground-secondary hover:text-white hover:bg-surface-2 transition-all"
               >
                 Retry
               </button>
@@ -417,12 +417,12 @@ export default function HealthDashboardPage() {
         )}
 
         {/* Services Table */}
-        <div className="rounded-2xl bg-[#0f0f0f] border border-white/[0.06] p-6">
+        <div className="rounded-2xl bg-surface-1 border border-border-subtle p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[14px] font-semibold text-white/50 uppercase tracking-wider">
+            <h2 className="text-[14px] font-semibold text-foreground-tertiary uppercase tracking-wider">
               Service Health
             </h2>
-            <span className="text-[11px] text-white/25">
+            <span className="text-[11px] text-foreground-muted">
               {services.length} service{services.length !== 1 ? "s" : ""} monitored
             </span>
           </div>
@@ -452,15 +452,15 @@ export default function HealthDashboardPage() {
 
         {/* Pulse Events */}
         {pulseEvents.length > 0 && (
-          <div className="rounded-2xl bg-[#0f0f0f] border border-white/[0.06] p-6">
-            <h2 className="text-[14px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+          <div className="rounded-2xl bg-surface-1 border border-border-subtle p-6">
+            <h2 className="text-[14px] font-semibold text-foreground-tertiary uppercase tracking-wider mb-4">
               Live Pulse Events
             </h2>
             <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
               {pulseEvents.slice(-10).map((evt, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 text-sm text-white/60 py-2 border-b border-white/[0.04] last:border-0"
+                  className="flex items-center gap-3 text-sm text-foreground-secondary py-2 border-b border-border-invisible last:border-0"
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full shrink-0 ${
@@ -469,15 +469,15 @@ export default function HealthDashboardPage() {
                         : "bg-emerald-400"
                     }`}
                   />
-                  <span className="text-white/30 text-xs shrink-0 w-16">
+                  <span className="text-foreground-muted text-xs shrink-0 w-16">
                     {new Date(evt.timestamp).toLocaleTimeString()}
                   </span>
                   <span className="truncate">
                     {evt.data.metric ? (
                       <>
-                        <span className="text-white/80">{String(evt.data.metric)}</span>
+                        <span className="text-foreground-secondary">{String(evt.data.metric)}</span>
                         {" "}
-                        <span className="text-white/40">
+                        <span className="text-foreground-muted">
                           {String(evt.data.value ?? "—")} {String(evt.data.unit ?? "")}
                         </span>
                       </>

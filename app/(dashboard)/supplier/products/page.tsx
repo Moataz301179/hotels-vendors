@@ -69,7 +69,7 @@ function ProductThumb({ name, category, className = "" }: { name: string; catego
       className={`flex items-center justify-center ${className}`}
       style={{ background: `linear-gradient(135deg, ${resolved.colors[0]} 0%, ${resolved.colors[1]} 50%, ${resolved.colors[2]} 100%)` }}
     >
-      <span className="text-xs font-bold text-white/20">{resolved.initials}</span>
+      <span className="text-xs font-bold text-foreground-muted">{resolved.initials}</span>
     </div>
   );
 }
@@ -124,7 +124,7 @@ export default function SupplierProductsPage() {
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Product Catalog</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage your inventory and product listings</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Manage your inventory and product listings</p>
         </div>
         <Link
           href="/supplier/products/new"
@@ -143,12 +143,12 @@ export default function SupplierProductsPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
                 <p className="text-xl font-bold text-white">{s.value}</p>
@@ -159,40 +159,40 @@ export default function SupplierProductsPage() {
       {/* Filters */}
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search by name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-full"
+            className="pl-9 pr-4 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 w-full"
           />
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+            <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="pl-9 pr-8 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-accent-base/50 appearance-none cursor-pointer"
+              className="pl-9 pr-8 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white focus:outline-none focus:border-accent-base/50 appearance-none cursor-pointer"
             >
               {categories.map((c) => (
-                <option key={c} value={c} className="bg-[#121212]">
+                <option key={c} value={c} className="bg-surface-2">
                   {c === "all" ? "All Categories" : c}
                 </option>
               ))}
             </select>
           </div>
-          <div className="flex rounded-lg border border-white/[0.06] overflow-hidden">
+          <div className="flex rounded-lg border border-border-subtle overflow-hidden">
             <button
               onClick={() => setViewMode("list")}
-              className={`p-2 transition-colors ${viewMode === "list" ? "bg-white/[0.06] text-white" : "text-white/30 hover:text-white/60"}`}
+              className={`p-2 transition-colors ${viewMode === "list" ? "bg-surface-2 text-white" : "text-foreground-muted hover:text-foreground-secondary"}`}
             >
               <List size={14} />
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-2 transition-colors ${viewMode === "grid" ? "bg-white/[0.06] text-white" : "text-white/30 hover:text-white/60"}`}
+              className={`p-2 transition-colors ${viewMode === "grid" ? "bg-surface-2 text-white" : "text-foreground-muted hover:text-foreground-secondary"}`}
             >
               <Grid3X3 size={14} />
             </button>
@@ -225,7 +225,7 @@ export default function SupplierProductsPage() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden hover:bg-surface-1 transition-colors"
               >
                 <div className="relative h-36 overflow-hidden">
                   <ProductThumb
@@ -239,13 +239,13 @@ export default function SupplierProductsPage() {
                 </div>
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-2">
-                    <span className="text-[10px] font-mono text-white/30">{product.sku}</span>
+                    <span className="text-[10px] font-mono text-foreground-muted">{product.sku}</span>
                   </div>
                   <h3 className="text-sm font-medium text-white mb-1 line-clamp-2 min-h-[2.5rem]">{product.name}</h3>
-                  <p className="text-[11px] text-white/30 mb-3">{product.category}</p>
+                  <p className="text-[11px] text-foreground-muted mb-3">{product.category}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-white">{formatCurrency(product.price, product.currency)}</span>
-                    <span className={`text-[11px] ${product.stockQuantity <= 10 ? "text-red-400" : "text-white/30"}`}>
+                    <span className={`text-[11px] ${product.stockQuantity <= 10 ? "text-red-400" : "text-foreground-muted"}`}>
                       {product.stockQuantity} in stock
                     </span>
                   </div>
@@ -254,41 +254,41 @@ export default function SupplierProductsPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto">
+          <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto">
             <table className="w-full min-w-[720px]">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Product</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">SKU</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Category</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Price</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Stock</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
+                <tr className="border-b border-border-subtle">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Product</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">SKU</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Category</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Price</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Stock</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <tr key={product.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 border border-white/[0.06]">
+                        <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 border border-border-subtle">
                           <ProductThumb name={product.name} category={product.category} className="w-full h-full" />
                         </div>
                         <span className="text-xs font-medium text-white">{product.name}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-white/40">{product.sku}</span>
+                      <span className="text-xs font-mono text-foreground-muted">{product.sku}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-white/60">{product.category}</span>
+                      <span className="text-xs text-foreground-secondary">{product.category}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs font-semibold text-white">{formatCurrency(product.price, product.currency)}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs ${product.stockQuantity <= 10 ? "text-red-400 font-medium" : "text-white/40"}`}>
+                      <span className={`text-xs ${product.stockQuantity <= 10 ? "text-red-400 font-medium" : "text-foreground-muted"}`}>
                         {product.stockQuantity}
                       </span>
                     </td>
@@ -298,7 +298,7 @@ export default function SupplierProductsPage() {
                     <td className="px-4 py-3">
                       <button
                         onClick={() => setSelectedProduct(product)}
-                        className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors"
                       >
                         <Eye size={14} />
                       </button>
@@ -321,7 +321,7 @@ export default function SupplierProductsPage() {
       >
         {selectedProduct && (
           <div className="space-y-4">
-            <div className="relative h-48 rounded-xl overflow-hidden border border-white/[0.06]">
+            <div className="relative h-48 rounded-xl overflow-hidden border border-border-subtle">
               <ProductThumb
                 name={selectedProduct.name}
                 category={selectedProduct.category}
@@ -329,24 +329,24 @@ export default function SupplierProductsPage() {
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Price</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Price</p>
                 <p className="text-sm text-white mt-0.5">{formatCurrency(selectedProduct.price, selectedProduct.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Stock</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Stock</p>
                 <p className={`text-sm mt-0.5 ${selectedProduct.stockQuantity <= 10 ? "text-red-400" : "text-white"}`}>
                   {selectedProduct.stockQuantity} units
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Category</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Category</p>
                 <p className="text-sm text-white mt-0.5">{selectedProduct.category}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5">
                   <StatusPill status={selectedProduct.status} />
                 </div>

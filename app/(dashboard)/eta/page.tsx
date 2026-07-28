@@ -35,7 +35,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "DEMO: Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "DEMO: Rejected" },
     SUBMITTED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "DEMO: Submitted" },
-    DRAFT: { bg: "bg-white/5", text: "text-foreground-muted", dot: "bg-white/40", label: "DEMO: Draft" },
+    DRAFT: { bg: "bg-surface-2", text: "text-foreground-muted", dot: "bg-foreground-muted", label: "DEMO: Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -86,7 +86,7 @@ export default function EtaCenterPage() {
         </div>
         <button
           onClick={() => refetch()}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-surface-2 border border-border-subtle text-xs text-white/80 transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-2 hover:bg-surface-2 border border-border-subtle text-xs text-foreground-secondary transition-all"
         >
           <RefreshCw size={14} />
           Refresh
@@ -103,7 +103,7 @@ export default function EtaCenterPage() {
           <motion.div key={m.label} variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 p-4">
             <div className="flex items-start justify-between mb-3">
               <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{m.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
                 <m.icon size={15} className="text-foreground-muted" />
               </div>
             </div>
@@ -115,12 +115,12 @@ export default function EtaCenterPage() {
       <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
+            <div className="w-6 h-6 border-2 border-border-subtle border-t-accent-base rounded-full animate-spin mx-auto" />
             <p className="text-xs text-foreground-muted mt-3">Loading invoices...</p>
           </div>
         ) : invoices.length === 0 ? (
           <div className="p-8 text-center">
-            <FileCheck size={32} className="text-white/10 mx-auto mb-3" />
+            <FileCheck size={32} className="text-foreground-muted mx-auto mb-3" />
             <p className="text-sm text-foreground-muted">No invoices yet.</p>
             <p className="text-xs text-foreground-muted mt-1">Invoices will appear here once orders are placed.</p>
           </div>
@@ -139,7 +139,7 @@ export default function EtaCenterPage() {
             </thead>
             <tbody>
               {invoices.map((inv) => (
-                <tr key={inv.id} className="border-b border-border-invisible hover:bg-white/[0.015] transition-colors">
+                <tr key={inv.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-xs font-mono text-foreground-secondary">{inv.invoiceNumber}</span>
                   </td>

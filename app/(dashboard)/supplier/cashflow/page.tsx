@@ -107,19 +107,19 @@ export default function CashflowDashboard() {
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, string> = {
-      PAID: 'bg-[#39ff7e]/20 text-[#39ff7e]',
-      UNPAID: 'bg-[#ff7e1a]/20 text-[#ff7e1a]',
-      FACTORING: 'bg-[#c455ff]/20 text-[#c455ff]',
-      SETTLED: 'bg-[#39ff7e]/20 text-[#39ff7e]',
+      PAID: 'bg-accent-base/20 text-accent-base',
+      UNPAID: 'bg-orange-base/20 text-orange-base',
+      FACTORING: 'bg-purple-base/20 text-purple-base',
+      SETTLED: 'bg-accent-base/20 text-accent-base',
       OVERDUE: 'bg-red-500/20 text-red-400',
     };
-    return <Badge className={variants[status] || 'bg-white/10 text-white'}>{status}</Badge>;
+    return <Badge className={variants[status] || 'bg-surface-2 text-white'}>{status}</Badge>;
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#39ff7e]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-base" />
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function CashflowDashboard() {
             <Button
               key={p}
               variant={period === p ? 'default' : 'outline'}
-              className={period === p ? 'bg-[#39ff7e]/20 text-[#39ff7e]' : 'border-white/20 text-white'}
+              className={period === p ? 'bg-accent-base/20 text-accent-base' : 'border-border-subtle text-white'}
               onClick={() => setPeriod(p)}
             >
               {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -150,32 +150,32 @@ export default function CashflowDashboard() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-4">
             <p className="text-xs text-gray-400">Total Orders</p>
             <p className="text-xl font-bold text-white">{data.summary.orderCount}</p>
             <p className="text-xs text-gray-500">{formatEgp(data.summary.totalOrderValue)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-4">
             <p className="text-xs text-gray-400">Paid</p>
-            <p className="text-xl font-bold text-[#39ff7e]">{formatEgp(data.summary.totalPaid)}</p>
+            <p className="text-xl font-bold text-accent-base">{formatEgp(data.summary.totalPaid)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-4">
             <p className="text-xs text-gray-400">Pending</p>
-            <p className="text-xl font-bold text-[#ff7e1a]">{formatEgp(data.summary.totalPending)}</p>
+            <p className="text-xl font-bold text-orange-base">{formatEgp(data.summary.totalPending)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-4">
             <p className="text-xs text-gray-400">Factored</p>
-            <p className="text-xl font-bold text-[#c455ff]">{formatEgp(data.summary.totalFactored)}</p>
+            <p className="text-xl font-bold text-purple-base">{formatEgp(data.summary.totalFactored)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-4">
             <p className="text-xs text-gray-400">Platform Fees</p>
             <p className="text-xl font-bold text-[#64b5f6]">{formatEgp(data.summary.totalPlatformFees)}</p>
@@ -185,23 +185,23 @@ export default function CashflowDashboard() {
 
       {/* Credit Facility */}
       {data.creditFacility && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
             <CardTitle className="text-white text-lg">Credit Facility (Oliv)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white/5 rounded-xl p-4">
+              <div className="bg-surface-2 rounded-xl p-4">
                 <p className="text-xs text-gray-400">Credit Limit</p>
-                <p className="text-lg font-bold text-[#39ff7e]">{formatEgp(data.creditFacility.limit)}</p>
+                <p className="text-lg font-bold text-accent-base">{formatEgp(data.creditFacility.limit)}</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4">
+              <div className="bg-surface-2 rounded-xl p-4">
                 <p className="text-xs text-gray-400">Available</p>
                 <p className="text-lg font-bold text-[#64b5f6]">{formatEgp(data.creditFacility.available)}</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4">
+              <div className="bg-surface-2 rounded-xl p-4">
                 <p className="text-xs text-gray-400">Utilized</p>
-                <p className="text-lg font-bold text-[#c455ff]">{formatEgp(data.creditFacility.utilized)}</p>
+                <p className="text-lg font-bold text-purple-base">{formatEgp(data.creditFacility.utilized)}</p>
               </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-gray-400">
@@ -214,7 +214,7 @@ export default function CashflowDashboard() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-white/10 pb-2">
+      <div className="flex gap-2 border-b border-border-subtle pb-2">
         {[
           { id: 'overview', label: 'Payment Schedule' },
           { id: 'overdue', label: `Overdue (${data.overduePayments.length})` },
@@ -224,7 +224,7 @@ export default function CashflowDashboard() {
           <Button
             key={tab.id}
             variant="ghost"
-            className={activeTab === tab.id ? 'text-[#39ff7e] bg-[#39ff7e]/10' : 'text-gray-400'}
+            className={activeTab === tab.id ? 'text-accent-base bg-accent-base/10' : 'text-gray-400'}
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
           >
             {tab.label}
@@ -234,12 +234,12 @@ export default function CashflowDashboard() {
 
       {/* Payment Schedule */}
       {activeTab === 'overview' && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent className="p-0">
             <div className="overflow-x-auto table-scroll-wrapper">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 text-left">
+                  <tr className="border-b border-border-subtle text-left">
                     <th className="p-3 text-gray-400 font-medium">Order</th>
                     <th className="p-3 text-gray-400 font-medium">Supplier</th>
                     <th className="p-3 text-gray-400 font-medium">Hotel</th>
@@ -252,7 +252,7 @@ export default function CashflowDashboard() {
                 </thead>
                 <tbody>
                   {data.paymentSchedule.slice(0, 50).map((item, idx) => (
-                    <tr key={idx} className="border-b border-white/5 hover:bg-white/[0.02]">
+                    <tr key={idx} className="border-b border-border-subtle hover:bg-surface-1">
                       <td className="p-3 text-white font-medium">{item.orderNumber}</td>
                       <td className="p-3 text-gray-300">{item.supplierName}</td>
                       <td className="p-3 text-gray-300">{item.hotelName}</td>
@@ -272,7 +272,7 @@ export default function CashflowDashboard() {
 
       {/* Overdue */}
       {activeTab === 'overdue' && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardContent>
             {data.overduePayments.length === 0 ? (
               <p className="text-gray-400 text-center py-8">No overdue payments</p>
@@ -300,25 +300,25 @@ export default function CashflowDashboard() {
       {activeTab === 'factoring' && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="bg-[#12121a] border-white/10">
+            <Card className="bg-surface-1 border-border-subtle">
               <CardContent className="p-4">
                 <p className="text-xs text-gray-400">Total Factored</p>
-                <p className="text-lg font-bold text-[#c455ff]">{formatEgp(data.factoring.totalFactored)}</p>
+                <p className="text-lg font-bold text-purple-base">{formatEgp(data.factoring.totalFactored)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#12121a] border-white/10">
+            <Card className="bg-surface-1 border-border-subtle">
               <CardContent className="p-4">
                 <p className="text-xs text-gray-400">Factoring Fees</p>
-                <p className="text-lg font-bold text-[#ff7e1a]">{formatEgp(data.factoring.totalFactoringFee)}</p>
+                <p className="text-lg font-bold text-orange-base">{formatEgp(data.factoring.totalFactoringFee)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#12121a] border-white/10">
+            <Card className="bg-surface-1 border-border-subtle">
               <CardContent className="p-4">
                 <p className="text-xs text-gray-400">Hub Revenue (2%)</p>
-                <p className="text-lg font-bold text-[#39ff7e]">{formatEgp(data.factoring.totalHubRevenue)}</p>
+                <p className="text-lg font-bold text-accent-base">{formatEgp(data.factoring.totalHubRevenue)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#12121a] border-white/10">
+            <Card className="bg-surface-1 border-border-subtle">
               <CardContent className="p-4">
                 <p className="text-xs text-gray-400">Active / Settled</p>
                 <p className="text-lg font-bold text-white">{data.factoring.activeFactoring} / {data.factoring.settledFactoring}</p>
@@ -332,7 +332,7 @@ export default function CashflowDashboard() {
       {activeTab === 'savings' && (
         <div className="space-y-4">
           {data.costReductions.map((reduction, idx) => (
-            <Card key={idx} className="bg-[#12121a] border-white/10">
+            <Card key={idx} className="bg-surface-1 border-border-subtle">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -340,7 +340,7 @@ export default function CashflowDashboard() {
                     <p className="text-sm text-gray-400 mt-1">{reduction.description}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-[#39ff7e]">{formatEgp(reduction.potentialSavingsEgp)}</p>
+                    <p className="text-lg font-bold text-accent-base">{formatEgp(reduction.potentialSavingsEgp)}</p>
                     <p className="text-xs text-gray-400">{(reduction.confidence * 100).toFixed(0)}% confidence</p>
                   </div>
                 </div>

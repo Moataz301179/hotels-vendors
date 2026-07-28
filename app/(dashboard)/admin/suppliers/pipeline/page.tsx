@@ -184,7 +184,7 @@ export default function SupplierPipelinePage() {
               { label: "Converted", value: stats.converted, color: "text-red-400" },
               { label: "Lost", value: stats.lost, color: "text-gray-400" },
             ].map((s) => (
-              <div key={s.label} className="bg-white/5 border border-white/10 rounded-lg p-4">
+              <div key={s.label} className="bg-surface-2 border border-border-subtle rounded-lg p-4">
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
                 <div className="text-sm text-gray-400">{s.label}</div>
               </div>
@@ -192,7 +192,7 @@ export default function SupplierPipelinePage() {
           </div>
         )}
 
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6 mb-8">
+        <div className="bg-surface-2 border border-border-subtle rounded-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Launch Acquisition Run</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {sources.map((source) => (
@@ -201,7 +201,7 @@ export default function SupplierPipelinePage() {
                 className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${
                   selectedSources.includes(source.id)
                     ? "border-red-500 bg-red-500/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                    : "border-border-subtle bg-surface-2 hover:bg-surface-2"
                 }`}
               >
                 <input
@@ -243,12 +243,12 @@ export default function SupplierPipelinePage() {
             placeholder="Search leads..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
+            className="px-4 py-2 bg-surface-2 border border-border-subtle rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
           />
           <select
             value={filterStatus}
             onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-red-500"
+            className="px-4 py-2 bg-surface-2 border border-border-subtle rounded-lg text-white focus:outline-none focus:border-red-500"
           >
             <option value="">All Statuses</option>
             <option value="DISCOVERED">Discovered</option>
@@ -261,10 +261,10 @@ export default function SupplierPipelinePage() {
           </select>
         </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden overflow-x-auto table-scroll-wrapper">
+            <div className="bg-surface-2 border border-border-subtle rounded-lg overflow-hidden overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[640px]">
             <thead>
-              <tr className="border-b border-white/10 text-left text-sm text-gray-400">
+              <tr className="border-b border-border-subtle text-left text-sm text-gray-400">
                 <th className="p-4">Name</th>
                 <th className="p-4">City</th>
                 <th className="p-4">Category</th>
@@ -292,7 +292,7 @@ export default function SupplierPipelinePage() {
                 leads.map((lead) => (
                   <tr
                     key={lead.id}
-                    className="border-b border-white/5 hover:bg-white/5 transition"
+                    className="border-b border-border-subtle hover:bg-surface-2 transition"
                   >
                     <td className="p-4">
                       <div className="font-medium">{lead.name}</div>
@@ -307,7 +307,7 @@ export default function SupplierPipelinePage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-1">
-                        <div className="w-16 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="w-16 h-2 bg-surface-2 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-red-500 rounded-full"
                             style={{ width: `${lead.priority * 10}%` }}
@@ -354,7 +354,7 @@ export default function SupplierPipelinePage() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-surface-2 border border-border-subtle rounded-lg disabled:opacity-50"
             >
               Previous
             </button>
@@ -364,7 +364,7 @@ export default function SupplierPipelinePage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-surface-2 border border-border-subtle rounded-lg disabled:opacity-50"
             >
               Next
             </button>

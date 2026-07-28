@@ -15,13 +15,13 @@ export default function HotelDashboardPage() {
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Hotel Procurement Portal
           </h1>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="text-sm text-foreground-muted mt-1">
             Track spend, manage orders, and monitor inventory across all properties
           </p>
         </div>
         <button
           onClick={() => setCheckoutOpen(true)}
-          className="px-5 py-2.5 rounded-xl bg-[#39ff7e] text-[#07090f] text-sm font-medium hover:bg-[#39ff7e]/90 transition-colors"
+          className="px-5 py-2.5 rounded-xl bg-accent-base text-white text-sm font-medium hover:bg-accent-base/90 transition-colors"
         >
           Immediate Checkout
         </button>

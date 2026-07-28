@@ -51,25 +51,25 @@ interface SectionProps {
 function Section({ icon, title, subtitle, defaultOpen = true, children }: SectionProps) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] overflow-hidden">
+    <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full p-5 flex items-center gap-3 hover:bg-white/[0.01] transition-colors text-left"
+        className="w-full p-5 flex items-center gap-3 hover:bg-surface-1 transition-colors text-left"
       >
-        <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center shrink-0">
           {icon}
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-sm font-semibold text-white/80">{title}</h2>
-          <p className="text-[11px] text-white/30">{subtitle}</p>
+          <h2 className="text-sm font-semibold text-foreground-secondary">{title}</h2>
+          <p className="text-[11px] text-foreground-muted">{subtitle}</p>
         </div>
         {open ? (
-          <ChevronUp className="w-4 h-4 text-white/20" />
+          <ChevronUp className="w-4 h-4 text-foreground-muted" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-white/20" />
+          <ChevronDown className="w-4 h-4 text-foreground-muted" />
         )}
       </button>
-      {open && <div className="px-5 pb-5 border-t border-white/[0.04]">{children}</div>}
+      {open && <div className="px-5 pb-5 border-t border-border-invisible">{children}</div>}
     </div>
   );
 }
@@ -93,22 +93,22 @@ function Input({
 }) {
   return (
     <div>
-      {label && <label className="block text-[11px] text-white/40 mb-1.5">{label}</label>}
+      {label && <label className="block text-[11px] text-foreground-muted mb-1.5">{label}</label>}
       <div className="flex items-center">
         {prefix && (
-          <span className="text-[12px] text-white/30 pr-2 border-r border-white/[0.06] shrink-0">{prefix}</span>
+          <span className="text-[12px] text-foreground-muted pr-2 border-r border-border-subtle shrink-0">{prefix}</span>
         )}
         <input
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors"
+          className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
         />
         {suffix && (
-          <span className="text-[12px] text-white/30 pl-2 border-l border-white/[0.06] shrink-0">{suffix}</span>
+          <span className="text-[12px] text-foreground-muted pl-2 border-l border-border-subtle shrink-0">{suffix}</span>
         )}
       </div>
-      {hint && <p className="text-[10px] text-white/20 mt-1">{hint}</p>}
+      {hint && <p className="text-[10px] text-foreground-muted mt-1">{hint}</p>}
     </div>
   );
 }
@@ -127,19 +127,19 @@ function Toggle({
   return (
     <div className="flex items-center justify-between py-2">
       <div>
-        <p className="text-sm text-white/70">{label}</p>
-        {desc && <p className="text-[10px] text-white/25">{desc}</p>}
+        <p className="text-sm text-foreground-secondary">{label}</p>
+        {desc && <p className="text-[10px] text-foreground-muted">{desc}</p>}
       </div>
       <button
         type="button"
         onClick={() => onChange(!checked)}
         className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors shrink-0 ${
-          checked ? "bg-[#39ff7e]/20" : "bg-white/[0.06]"
+          checked ? "bg-accent-base/20" : "bg-surface-2"
         }`}
       >
         <div
           className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${
-            checked ? "right-0.5 bg-[#39ff7e]" : "left-0.5 bg-white/30"
+            checked ? "right-0.5 bg-accent-base" : "left-0.5 bg-surface-1"
           }`}
         />
       </button>
@@ -238,15 +238,15 @@ export default function AdminBillingPage() {
   if (loading) {
     return (
       <div className="min-h-screen">
-        <div className="border-b border-white/[0.06] mb-8">
+        <div className="border-b border-border-subtle mb-8">
           <div className="py-6">
-            <div className="h-7 w-48 bg-white/[0.04] rounded animate-pulse" />
-            <div className="h-3 w-64 bg-white/[0.03] rounded mt-2 animate-pulse" />
+            <div className="h-7 w-48 bg-surface-2 rounded animate-pulse" />
+            <div className="h-3 w-64 bg-surface-1 rounded mt-2 animate-pulse" />
           </div>
         </div>
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-32 rounded-xl bg-[#0f0f0f] border border-white/[0.06] animate-pulse" />
+            <div key={i} className="h-32 rounded-xl bg-surface-1 border border-border-subtle animate-pulse" />
           ))}
         </div>
       </div>
@@ -285,14 +285,14 @@ export default function AdminBillingPage() {
       )}
 
       {/* Header */}
-      <div className="border-b border-white/[0.06] mb-8">
+      <div className="border-b border-border-subtle mb-8">
         <div className="py-6 flex items-center justify-between">
           <div>
             <h1 className="text-[24px] font-bold tracking-tight text-white flex items-center gap-3">
-              <Wallet className="w-6 h-6 text-[#39ff7e]" />
+              <Wallet className="w-6 h-6 text-accent-base" />
               Billing & Payouts
             </h1>
-            <p className="text-[13px] text-white/40 mt-1">
+            <p className="text-[13px] text-foreground-muted mt-1">
               Configure platform fees, commissions, referral program, and payout schedules
             </p>
           </div>
@@ -300,7 +300,7 @@ export default function AdminBillingPage() {
             <button
               onClick={handleReset}
               disabled={!hasChanges}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 text-white/70 hover:bg-white/[0.03] hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <RotateCcw className="w-3 h-3" />
               Reset
@@ -321,7 +321,7 @@ export default function AdminBillingPage() {
       <div className="space-y-4 max-w-[900px]">
         {/* Platform Fees */}
         <Section
-          icon={<Percent className="w-4 h-4 text-[#39ff7e]" />}
+          icon={<Percent className="w-4 h-4 text-accent-base" />}
           title="Platform Fee"
           subtitle="Base transaction fee charged on every completed order"
         >
@@ -349,7 +349,7 @@ export default function AdminBillingPage() {
               hint="0 = no cap"
             />
           </div>
-          <p className="text-[10px] text-white/20 mt-3">
+          <p className="text-[10px] text-foreground-muted mt-3">
             Orders below min fee are not charged. Max fee caps the total platform fee per order.
           </p>
         </Section>
@@ -364,14 +364,14 @@ export default function AdminBillingPage() {
             {[
               { key: "tierB" as const, label: "Tier B (Standard)", desc: "New & small suppliers", color: "#f59e0b" },
               { key: "tierA" as const, label: "Tier A (Established)", desc: "Proven track record", color: "#3b82f6" },
-              { key: "tierS" as const, label: "Tier S (Premium)", desc: "Top-volume partners", color: "#39ff7e" },
+              { key: "tierS" as const, label: "Tier S (Premium)", desc: "Top-volume partners", color: "var(--accent-base)" },
             ].map((tier) => (
-              <div key={tier.key} className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div key={tier.key} className="p-4 rounded-lg bg-surface-1 border border-border-invisible">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tier.color }} />
                   <div>
-                    <p className="text-xs font-medium text-white/70">{tier.label}</p>
-                    <p className="text-[10px] text-white/25">{tier.desc}</p>
+                    <p className="text-xs font-medium text-foreground-secondary">{tier.label}</p>
+                    <p className="text-[10px] text-foreground-muted">{tier.desc}</p>
                   </div>
                 </div>
                 <Input
@@ -388,7 +388,7 @@ export default function AdminBillingPage() {
 
         {/* Referral Program */}
         <Section
-          icon={<Gift className="w-4 h-4 text-[#c455ff]" />}
+          icon={<Gift className="w-4 h-4 text-purple-base" />}
           title="Referral Program"
           subtitle="Discounts and bonuses for the supplier/hotel referral loop"
           defaultOpen={false}
@@ -447,11 +447,11 @@ export default function AdminBillingPage() {
                 onChange={(v) => update("payout.day", parseInt(v) || 1)}
               />
               <div>
-                <label className="block text-[11px] text-white/40 mb-1.5">Currency</label>
+                <label className="block text-[11px] text-foreground-muted mb-1.5">Currency</label>
                 <select
                   value={draft.payout.currency}
                   onChange={(e) => update("payout.currency", e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[#39ff7e]/50 transition-colors"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors"
                 >
                   <option value="EGP">EGP — Egyptian Pound</option>
                   <option value="USD">USD — US Dollar</option>
@@ -481,70 +481,70 @@ export default function AdminBillingPage() {
 
         {/* Bank Account */}
         <Section
-          icon={<Building2 className="w-4 h-4 text-white/40" />}
+          icon={<Building2 className="w-4 h-4 text-foreground-muted" />}
           title="Bank Account Details"
           subtitle="Platform receiving account for supplier payouts"
           defaultOpen={false}
         >
           <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Bank Name</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">Bank Name</label>
               <input
                 type="text"
                 value={draft.bank.name ?? ""}
                 onChange={(e) => update("bank.name", e.target.value || null)}
                 placeholder="e.g. National Bank of Egypt"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Account Name</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">Account Name</label>
               <input
                 type="text"
                 value={draft.bank.accountName ?? ""}
                 onChange={(e) => update("bank.accountName", e.target.value || null)}
                 placeholder="e.g. Hotels Vendors Ltd."
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Account Number</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">Account Number</label>
               <input
                 type="text"
                 value={draft.bank.accountNumber ?? ""}
                 onChange={(e) => update("bank.accountNumber", e.target.value || null)}
                 placeholder="Account number"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors font-mono"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">IBAN</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">IBAN</label>
               <input
                 type="text"
                 value={draft.bank.iban ?? ""}
                 onChange={(e) => update("bank.iban", e.target.value || null)}
                 placeholder="EG..."
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors font-mono"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">SWIFT Code</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">SWIFT Code</label>
               <input
                 type="text"
                 value={draft.bank.swiftCode ?? ""}
                 onChange={(e) => update("bank.swiftCode", e.target.value || null)}
                 placeholder="SWIFT/BIC"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors font-mono"
               />
             </div>
             <div>
-              <label className="block text-[11px] text-white/40 mb-1.5">Branch</label>
+              <label className="block text-[11px] text-foreground-muted mb-1.5">Branch</label>
               <input
                 type="text"
                 value={draft.bank.branch ?? ""}
                 onChange={(e) => update("bank.branch", e.target.value || null)}
                 placeholder="Branch name or code"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#39ff7e]/50 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
               />
             </div>
           </div>

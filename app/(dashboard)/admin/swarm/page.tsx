@@ -166,7 +166,7 @@ export default function SwarmDashboard() {
   if (loading && !data) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white/50 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-border-subtle border-t-foreground-secondary rounded-full animate-spin" />
       </div>
     );
   }
@@ -180,14 +180,14 @@ export default function SwarmDashboard() {
             <span>🐎</span>
             Swarm Command Center
           </h1>
-          <p className="text-sm text-white/50 mt-1">
+          <p className="text-sm text-foreground-tertiary mt-1">
             Autonomous agent orchestration & marketplace growth engine
           </p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={fetchData}
-            className="px-3 py-1.5 rounded-md border border-white/10 text-xs text-white/80 hover:bg-white/10 transition-colors"
+            className="px-3 py-1.5 rounded-md border border-border-subtle text-xs text-foreground-secondary hover:bg-surface-2 transition-colors"
           >
             ↻ Refresh
           </button>
@@ -208,7 +208,7 @@ export default function SwarmDashboard() {
       )}
 
       {/* Tabs */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-border-subtle">
         <div className="flex gap-1">
           {[
             { key: "orchestrate" as const, label: "🎯 Orchestrate" },
@@ -221,8 +221,8 @@ export default function SwarmDashboard() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
-                  ? "border-white/40 text-white"
-                  : "border-transparent text-white/40 hover:text-white/60"
+                  ? "border-border-subtle text-white"
+                  : "border-transparent text-foreground-muted hover:text-foreground-secondary"
               }`}
             >
               {tab.label}
@@ -236,9 +236,9 @@ export default function SwarmDashboard() {
         <div className="space-y-6">
           {activeTab === "orchestrate" && (
             <div className="space-y-6">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+              <div className="rounded-xl border border-border-subtle bg-surface-2 p-6">
                 <h2 className="text-lg font-semibold text-white mb-2">Multi-Agent Task Orchestrator</h2>
-                <p className="text-sm text-white/50 mb-4">
+                <p className="text-sm text-foreground-tertiary mb-4">
                   Describe a development task. The swarm will analyze it, assign the right specialists,
                   and dispatch them in parallel.
                 </p>
@@ -249,7 +249,7 @@ export default function SwarmDashboard() {
                     onChange={(e) => setTaskInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && runOrchestrator()}
                     placeholder="e.g., Build authentication flow with JWT, RBAC, and Authority Matrix..."
-                    className="flex-1 px-4 py-2.5 rounded-lg bg-black/30 border border-white/10 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-white/30"
+                    className="flex-1 px-4 py-2.5 rounded-lg bg-black/30 border border-border-subtle text-white placeholder:text-foreground-muted text-sm focus:outline-none focus:border-border-subtle"
                   />
                   <button
                     onClick={runOrchestrator}
@@ -271,17 +271,17 @@ export default function SwarmDashboard() {
                     {orchestrateResult.agents.map((agent) => (
                       <div
                         key={agent.id}
-                        className="rounded-lg border border-white/10 bg-white/5 p-3 flex items-center gap-3"
+                        className="rounded-lg border border-border-subtle bg-surface-2 p-3 flex items-center gap-3"
                       >
                         <span className="text-xl">{agent.avatar}</span>
                         <div>
                           <div className="text-white text-sm font-medium">{agent.name}</div>
-                          <div className="text-white/40 text-xs">{agent.role} • {agent.squad}</div>
+                          <div className="text-foreground-muted text-xs">{agent.role} • {agent.squad}</div>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <pre className="text-xs text-white/60 bg-black/30 rounded-lg p-3 overflow-x-auto">
+                  <pre className="text-xs text-foreground-secondary bg-black/30 rounded-lg p-3 overflow-x-auto">
                     {orchestrateResult.summary}
                   </pre>
                 </div>

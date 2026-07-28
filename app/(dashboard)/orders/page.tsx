@@ -44,7 +44,7 @@ function StatusBadge({ status }: { status: string }) {
     IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-    DRAFT: { bg: "bg-white/10", text: "text-foreground-muted", dot: "bg-white/40", label: "Draft" },
+    DRAFT: { bg: "bg-surface-2", text: "text-foreground-muted", dot: "bg-foreground-muted", label: "Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -230,7 +230,7 @@ export default function OrdersPage() {
       render: (o) => (
         <button
           onClick={(e) => { e.stopPropagation(); setSelectedOrder(o); }}
-          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-foreground-muted hover:text-foreground-secondary transition-colors"
+          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors"
           aria-label={`View order ${o.orderNumber}`}
         >
           <Eye size={14} />
@@ -266,7 +266,7 @@ export default function OrdersPage() {
               >
                 <div className="flex items-start justify-between mb-3">
                   <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
                     <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
@@ -296,13 +296,13 @@ export default function OrdersPage() {
           onChange={(e) => setFilterStatus(e.target.value)}
           className="px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-foreground-secondary focus:outline-none"
         >
-          <option value="all" className="bg-[#0a0a0a]">All Status</option>
-          <option value="PENDING_APPROVAL" className="bg-[#0a0a0a]">Pending</option>
-          <option value="APPROVED" className="bg-[#0a0a0a]">Approved</option>
-          <option value="CONFIRMED" className="bg-[#0a0a0a]">Confirmed</option>
-          <option value="IN_TRANSIT" className="bg-[#0a0a0a]">In Transit</option>
-          <option value="DELIVERED" className="bg-[#0a0a0a]">Delivered</option>
-          <option value="CANCELLED" className="bg-[#0a0a0a]">Cancelled</option>
+          <option value="all" className="bg-surface-2">All Status</option>
+          <option value="PENDING_APPROVAL" className="bg-surface-2">Pending</option>
+          <option value="APPROVED" className="bg-surface-2">Approved</option>
+          <option value="CONFIRMED" className="bg-surface-2">Confirmed</option>
+          <option value="IN_TRANSIT" className="bg-surface-2">In Transit</option>
+          <option value="DELIVERED" className="bg-surface-2">Delivered</option>
+          <option value="CANCELLED" className="bg-surface-2">Cancelled</option>
         </select>
       </motion.div>
 
@@ -330,7 +330,7 @@ export default function OrdersPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={exportCsv}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.04] border border-border-subtle text-foreground-secondary hover:text-white hover:bg-surface-2 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-2 border border-border-subtle text-foreground-secondary hover:text-white hover:bg-surface-2 transition-colors"
               >
                 <Download size={13} />
                 Export CSV
@@ -383,7 +383,7 @@ export default function OrdersPage() {
             action={
               <button
                 onClick={() => { setSearchQuery(""); setFilterStatus("all"); }}
-                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-border-subtle text-xs text-foreground-secondary hover:text-white transition-colors"
+                className="px-4 py-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-foreground-secondary hover:text-white transition-colors"
               >
                 Clear Filters
               </button>

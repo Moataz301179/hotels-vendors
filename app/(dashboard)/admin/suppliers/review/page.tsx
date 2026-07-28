@@ -142,7 +142,7 @@ export default function SupplierReviewPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white">Supplier Review</h1>
-          <p className="text-sm text-white/40 mt-0.5">
+          <p className="text-sm text-foreground-muted mt-0.5">
             Review and approve pending supplier applications
           </p>
         </div>
@@ -165,10 +165,10 @@ export default function SupplierReviewPage() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+            className="p-4 rounded-xl border border-border-subtle bg-surface-1"
           >
             <p className="text-2xl font-bold text-white">{stat.value}</p>
-            <p className="text-xs text-white/30 mt-0.5">{stat.label}</p>
+            <p className="text-xs text-foreground-muted mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -176,13 +176,13 @@ export default function SupplierReviewPage() {
       {/* Search */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, email, city, or tax ID..."
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/15 focus:border-accent-base/40 focus:outline-none transition-colors text-sm"
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-surface-2 border border-border-subtle text-white placeholder:text-foreground-muted focus:border-accent-base/40 focus:outline-none transition-colors text-sm"
           />
         </div>
       </div>
@@ -212,16 +212,16 @@ export default function SupplierReviewPage() {
       </AnimatePresence>
 
       {/* Table */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+            <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr className="border-b border-white/[0.06]">
-              <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Company</th>
-              <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Location</th>
-              <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Tax ID</th>
-              <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Applied</th>
-              <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-              <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Actions</th>
+            <tr className="border-b border-border-subtle">
+              <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Company</th>
+              <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Location</th>
+              <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Tax ID</th>
+              <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Applied</th>
+              <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+              <th className="text-right px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -233,21 +233,21 @@ export default function SupplierReviewPage() {
               <tr><td colSpan={6} className="px-4 py-8"><EmptyState title="No pending suppliers" description="All supplier applications have been reviewed." /></td></tr>
             ) : (
               filtered.map((supplier) => (
-                <tr key={supplier.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={supplier.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                   <td className="px-4 py-3">
                     <div>
                       <p className="text-xs font-medium text-white">{supplier.name}</p>
-                      <p className="text-[10px] text-white/25">{supplier.email}</p>
+                      <p className="text-[10px] text-foreground-muted">{supplier.email}</p>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{supplier.city}, {supplier.governorate}</span>
+                    <span className="text-xs text-foreground-secondary">{supplier.city}, {supplier.governorate}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-mono text-white/40">{supplier.taxId}</span>
+                    <span className="text-xs font-mono text-foreground-muted">{supplier.taxId}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/30">{new Date(supplier.createdAt).toLocaleDateString()}</span>
+                    <span className="text-xs text-foreground-muted">{new Date(supplier.createdAt).toLocaleDateString()}</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/15 text-[10px] font-medium text-amber-400">
@@ -258,7 +258,7 @@ export default function SupplierReviewPage() {
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => openDetail(supplier)}
-                        className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-white transition-colors"
                         title="View Details"
                       >
                         <Eye size={14} />
@@ -266,7 +266,7 @@ export default function SupplierReviewPage() {
                       <button
                         onClick={() => handleApprove(supplier.id)}
                         disabled={actionLoading === supplier.id}
-                        className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-white/30 hover:text-emerald-400 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-emerald-500/10 text-foreground-muted hover:text-emerald-400 transition-colors"
                         title="Approve"
                       >
                         {actionLoading === supplier.id ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
@@ -274,7 +274,7 @@ export default function SupplierReviewPage() {
                       <button
                         onClick={() => handleReject(supplier.id)}
                         disabled={actionLoading === supplier.id}
-                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/30 hover:text-red-400 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-foreground-muted hover:text-red-400 transition-colors"
                         title="Reject"
                       >
                         <XCircle size={14} />
@@ -297,8 +297,8 @@ export default function SupplierReviewPage() {
         {selectedSupplier && (
           <div className="space-y-5">
             {/* Company */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+              <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Building2 size={13} className="text-accent-base" /> Company
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -311,8 +311,8 @@ export default function SupplierReviewPage() {
             </div>
 
             {/* Contact */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+              <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
                 <MapPin size={13} className="text-accent-base" /> Contact
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -326,8 +326,8 @@ export default function SupplierReviewPage() {
             </div>
 
             {/* Banking */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+              <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Landmark size={13} className="text-accent-base" /> Banking
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -338,8 +338,8 @@ export default function SupplierReviewPage() {
 
             {/* Certifications */}
             {selectedSupplier.certifications && (
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+                <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
                   <ShieldCheck size={13} className="text-accent-base" /> Certifications
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -357,7 +357,7 @@ export default function SupplierReviewPage() {
               <button
                 onClick={() => handleReject(selectedSupplier.id)}
                 disabled={actionLoading === selectedSupplier.id}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white/60 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-colors text-sm font-medium"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-surface-1 border border-border-subtle text-foreground-secondary hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-colors text-sm font-medium"
               >
                 <XCircle size={16} /> Reject
               </button>
@@ -388,8 +388,8 @@ export default function SupplierReviewPage() {
 function DetailField({ label, value, colSpan = 1 }: { label: string; value: string; colSpan?: number }) {
   return (
     <div className={colSpan === 2 ? "col-span-2" : ""}>
-      <p className="text-[10px] text-white/25 uppercase tracking-wider">{label}</p>
-      <p className="text-xs text-white/70 mt-0.5">{value}</p>
+      <p className="text-[10px] text-foreground-muted uppercase tracking-wider">{label}</p>
+      <p className="text-xs text-foreground-secondary mt-0.5">{value}</p>
     </div>
   );
 }

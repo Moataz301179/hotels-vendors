@@ -103,14 +103,14 @@ export default function MarketingDashboardPage() {
         >
           {campaignsLoading ? (
             <div className="p-6 text-center">
-              <div className="w-5 h-5 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
-              <p className="text-xs text-white/30 mt-2">Loading campaigns...</p>
+              <div className="w-5 h-5 border-2 border-border-subtle border-t-accent-base rounded-full animate-spin mx-auto" />
+              <p className="text-xs text-foreground-muted mt-2">Loading campaigns...</p>
             </div>
           ) : campaigns.length === 0 ? (
             <div className="p-6 text-center">
-              <Megaphone size={24} className="text-white/10 mx-auto mb-2" />
-              <p className="text-xs text-white/30">No campaigns yet.</p>
-              <p className="text-[10px] text-white/20 mt-1">Create your first campaign to start tracking performance.</p>
+              <Megaphone size={24} className="text-foreground-muted mx-auto mb-2" />
+              <p className="text-xs text-foreground-muted">No campaigns yet.</p>
+              <p className="text-[10px] text-foreground-muted mt-1">Create your first campaign to start tracking performance.</p>
             </div>
           ) : (
             <Table>
@@ -147,14 +147,14 @@ export default function MarketingDashboardPage() {
         >
           {leadsLoading ? (
             <div className="p-6 text-center">
-              <div className="w-5 h-5 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
-              <p className="text-xs text-white/30 mt-2">Loading leads...</p>
+              <div className="w-5 h-5 border-2 border-border-subtle border-t-accent-base rounded-full animate-spin mx-auto" />
+              <p className="text-xs text-foreground-muted mt-2">Loading leads...</p>
             </div>
           ) : leads.length === 0 ? (
             <div className="p-6 text-center">
-              <Users size={24} className="text-white/10 mx-auto mb-2" />
-              <p className="text-xs text-white/30">No leads yet.</p>
-              <p className="text-[10px] text-white/20 mt-1">Leads will appear here from campaigns and sign-ups.</p>
+              <Users size={24} className="text-foreground-muted mx-auto mb-2" />
+              <p className="text-xs text-foreground-muted">No leads yet.</p>
+              <p className="text-[10px] text-foreground-muted mt-1">Leads will appear here from campaigns and sign-ups.</p>
             </div>
           ) : (
             <Table>

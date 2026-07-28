@@ -58,7 +58,7 @@ function MonthBar({ label, amount, max }: { label: string; amount: number; max: 
           title={`${label}: ${formatCurrency(amount)}`}
         />
       </div>
-      <span className="text-[9px] text-white/25 uppercase">{label}</span>
+      <span className="text-[9px] text-foreground-muted uppercase">{label}</span>
     </div>
   );
 }
@@ -135,7 +135,7 @@ export default function HotelAccountingPage() {
       {/* Header */}
       <motion.div variants={fadeInUp}>
         <h1 className="text-2xl font-bold tracking-tight text-white">Procurement Analytics</h1>
-        <p className="text-sm text-white/40 mt-0.5">Spending insights, trends, and savings analysis</p>
+        <p className="text-sm text-foreground-muted mt-0.5">Spending insights, trends, and savings analysis</p>
       </motion.div>
 
       {/* Stats */}
@@ -146,12 +146,12 @@ export default function HotelAccountingPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
                 <p className="text-xl font-bold text-white">{s.value}</p>
@@ -170,16 +170,16 @@ export default function HotelAccountingPage() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Monthly Trend */}
-        <motion.div variants={fadeInUp} className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <motion.div variants={fadeInUp} className="lg:col-span-2 rounded-xl border border-border-subtle bg-surface-1 p-5">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <TrendingUp size={14} className="text-white/40" />
+              <TrendingUp size={14} className="text-foreground-muted" />
               Monthly Spend Trend
             </h3>
             <Sparkline data={sparklineData} width={100} height={32} color="var(--accent-base)" />
           </div>
           {loading ? (
-            <div className="h-32 bg-white/[0.02] rounded-lg animate-pulse" />
+            <div className="h-32 bg-surface-1 rounded-lg animate-pulse" />
           ) : monthlyData.every((m) => m.amount === 0) ? (
             <EmptyState title="No data yet" description="Spend records will appear here." icon="inbox" />
           ) : (
@@ -192,15 +192,15 @@ export default function HotelAccountingPage() {
         </motion.div>
 
         {/* Category Breakdown */}
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Calculator size={14} className="text-white/40" />
+            <Calculator size={14} className="text-foreground-muted" />
             Spend by Category
           </h3>
           {loading ? (
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-10 bg-white/[0.02] rounded-lg animate-pulse" />
+                <div key={i} className="h-10 bg-surface-1 rounded-lg animate-pulse" />
               ))}
             </div>
           ) : categoryBreakdown.length === 0 ? (
@@ -210,10 +210,10 @@ export default function HotelAccountingPage() {
               {categoryBreakdown.map((cat) => (
                 <div key={cat.name}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-white/60">{cat.name}</span>
+                    <span className="text-xs text-foreground-secondary">{cat.name}</span>
                     <span className="text-xs font-medium text-white">{formatCurrency(cat.amount)}</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-accent-base/60"
                       style={{ width: `${cat.pct}%` }}
@@ -229,15 +229,15 @@ export default function HotelAccountingPage() {
       {/* Bottom Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Top Suppliers */}
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Users size={14} className="text-white/40" />
+            <Users size={14} className="text-foreground-muted" />
             Top Suppliers by Spend
           </h3>
           {loading ? (
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-12 bg-white/[0.02] rounded-lg animate-pulse" />
+                <div key={i} className="h-12 bg-surface-1 rounded-lg animate-pulse" />
               ))}
             </div>
           ) : topSuppliers.length === 0 ? (
@@ -247,17 +247,17 @@ export default function HotelAccountingPage() {
               {topSuppliers.map((s, i) => (
                 <div
                   key={s.name}
-                  className="flex items-center justify-between p-3 rounded-lg bg-white/[0.015] border border-white/[0.04] hover:bg-white/[0.025] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-1 border border-border-invisible hover:bg-surface-1 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-white/[0.04] flex items-center justify-center text-[10px] font-semibold text-white/30">
+                    <span className="w-5 h-5 rounded-full bg-surface-2 flex items-center justify-center text-[10px] font-semibold text-foreground-muted">
                       {i + 1}
                     </span>
                     <span className="text-xs text-white font-medium">{s.name}</span>
                   </div>
                   <div className="text-right">
                     <span className="text-xs font-semibold text-white">{formatCurrency(s.spend)}</span>
-                    <span className="text-[10px] text-white/25 ml-2">{s.pct.toFixed(1)}%</span>
+                    <span className="text-[10px] text-foreground-muted ml-2">{s.pct.toFixed(1)}%</span>
                   </div>
                 </div>
               ))}
@@ -266,21 +266,21 @@ export default function HotelAccountingPage() {
         </motion.div>
 
         {/* Savings vs Market */}
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
             <TrendingDown size={14} className="text-emerald-400/60" />
             Savings vs Market Price
           </h3>
           {loading ? (
-            <div className="h-40 bg-white/[0.02] rounded-lg animate-pulse" />
+            <div className="h-40 bg-surface-1 rounded-lg animate-pulse" />
           ) : !spendData ? (
             <EmptyState title="No savings data" description="Savings analysis will appear here." icon="inbox" />
           ) : (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                  <p className="text-[10px] text-white/20 uppercase tracking-wider mb-1">Market Price Total</p>
-                  <p className="text-lg font-bold text-white/40 line-through">
+                <div className="p-4 rounded-lg bg-surface-1 border border-border-invisible">
+                  <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Market Price Total</p>
+                  <p className="text-lg font-bold text-foreground-muted line-through">
                     {formatCurrency(Math.round((spendData.totalSpend || 0) * 1.12))}
                   </p>
                 </div>
@@ -291,17 +291,17 @@ export default function HotelAccountingPage() {
                   </p>
                 </div>
               </div>
-              <div className="p-4 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+              <div className="p-4 rounded-lg bg-surface-1 border border-border-invisible">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-white/60">Total Savings</span>
+                  <span className="text-xs text-foreground-secondary">Total Savings</span>
                   <span className="text-sm font-bold text-emerald-400">
                     {formatCurrency(Math.round((spendData.totalSpend || 0) * 0.12))}
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
+                <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
                   <div className="h-full rounded-full bg-emerald-500/40 w-[12%]" />
                 </div>
-                <p className="text-[10px] text-white/20 mt-2">Based on 12% average market discount</p>
+                <p className="text-[10px] text-foreground-muted mt-2">Based on 12% average market discount</p>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -309,9 +309,9 @@ export default function HotelAccountingPage() {
                   { label: "Platform Rebate", value: "4%" },
                   { label: "Seasonal Deals", value: "3%" },
                 ].map((item) => (
-                  <div key={item.label} className="text-center p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                  <div key={item.label} className="text-center p-2.5 rounded-lg bg-surface-1 border border-border-invisible">
                     <p className="text-xs font-semibold text-white">{item.value}</p>
-                    <p className="text-[9px] text-white/25 mt-0.5">{item.label}</p>
+                    <p className="text-[9px] text-foreground-muted mt-0.5">{item.label}</p>
                   </div>
                 ))}
               </div>

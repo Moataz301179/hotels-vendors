@@ -57,7 +57,7 @@ export default function SocialPage() {
       {/* Platform Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PLATFORMS.map((platform) => (
-          <div key={platform.name} className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
+          <div key={platform.name} className="p-5 rounded-xl bg-surface-1 border border-border-subtle">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${platform.color}22` }}>
@@ -69,28 +69,28 @@ export default function SocialPage() {
                     {platform.connected ? (
                       <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                     ) : (
-                      <XCircle className="w-3 h-3 text-white/20" />
+                      <XCircle className="w-3 h-3 text-foreground-muted" />
                     )}
-                    <span className={`text-[10px] ${platform.connected ? "text-emerald-400" : "text-white/30"}`}>
+                    <span className={`text-[10px] ${platform.connected ? "text-emerald-400" : "text-foreground-muted"}`}>
                       {platform.connected ? "Connected" : "Not Connected"}
                     </span>
                   </div>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-white/20" />
+              <ExternalLink className="w-4 h-4 text-foreground-muted" />
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="text-center">
                 <p className="text-[14px] font-bold text-white">{platform.followers.toLocaleString()}</p>
-                <p className="text-[9px] text-white/30 uppercase">Followers</p>
+                <p className="text-[9px] text-foreground-muted uppercase">Followers</p>
               </div>
               <div className="text-center">
                 <p className="text-[14px] font-bold text-white">{platform.postsThisMonth}</p>
-                <p className="text-[9px] text-white/30 uppercase">Posts/mo</p>
+                <p className="text-[9px] text-foreground-muted uppercase">Posts/mo</p>
               </div>
               <div className="text-center">
                 <p className="text-[14px] font-bold text-white">{platform.engagementRate}</p>
-                <p className="text-[9px] text-white/30 uppercase">Engagement</p>
+                <p className="text-[9px] text-foreground-muted uppercase">Engagement</p>
               </div>
             </div>
           </div>
@@ -103,27 +103,27 @@ export default function SocialPage() {
           {RECENT_POSTS.map((post) => {
             const Icon = PLATFORM_ICON_MAP[post.platform] || Share2;
             return (
-              <div key={post.id} className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div key={post.id} className="p-3.5 rounded-lg bg-surface-1 border border-border-invisible">
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-md bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Icon className="w-3.5 h-3.5 text-white/40" />
+                  <div className="w-7 h-7 rounded-md bg-surface-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Icon className="w-3.5 h-3.5 text-foreground-muted" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[12px] text-white/70 leading-relaxed">{post.content}</p>
+                    <p className="text-[12px] text-foreground-secondary leading-relaxed">{post.content}</p>
                     <div className="flex items-center gap-4 mt-2">
                       <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-white/25" />
-                        <span className="text-[11px] text-white/30">{post.likes}</span>
+                        <Heart className="w-3 h-3 text-foreground-muted" />
+                        <span className="text-[11px] text-foreground-muted">{post.likes}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <MessageCircle className="w-3 h-3 text-white/25" />
-                        <span className="text-[11px] text-white/30">{post.comments}</span>
+                        <MessageCircle className="w-3 h-3 text-foreground-muted" />
+                        <span className="text-[11px] text-foreground-muted">{post.comments}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Repeat2 className="w-3 h-3 text-white/25" />
-                        <span className="text-[11px] text-white/30">{post.shares}</span>
+                        <Repeat2 className="w-3 h-3 text-foreground-muted" />
+                        <span className="text-[11px] text-foreground-muted">{post.shares}</span>
                       </div>
-                      <span className="text-[10px] text-white/20 flex items-center gap-1">
+                      <span className="text-[10px] text-foreground-muted flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {post.publishedAt}
                       </span>

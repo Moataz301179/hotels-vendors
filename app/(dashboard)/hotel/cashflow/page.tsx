@@ -150,7 +150,7 @@ export default async function HotelCashflowPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Cashflow Overview</h1>
-        <p className="text-sm text-white/40 mt-1">
+        <p className="text-sm text-foreground-muted mt-1">
           Track spend, payments, and upcoming obligations
         </p>
       </div>
@@ -158,39 +158,39 @@ export default async function HotelCashflowPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <DollarSign size={14} />
             Total Spend (6mo)
           </div>
           <p className="text-2xl font-bold text-white metric-value">{formatEGP(totalSpend)}</p>
-          <p className="text-xs text-white/40">{orderCount} orders placed</p>
+          <p className="text-xs text-foreground-muted">{orderCount} orders placed</p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <Clock size={14} />
             Pending Payments
           </div>
           <p className="text-2xl font-bold text-amber-400 metric-value">{formatEGP(pendingTotal)}</p>
-          <p className="text-xs text-white/40">{pendingInvoices.length} invoices</p>
+          <p className="text-xs text-foreground-muted">{pendingInvoices.length} invoices</p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <AlertTriangle size={14} />
             Overdue
           </div>
           <p className="text-2xl font-bold text-red-400 metric-value">{formatEGP(overdueTotal)}</p>
-          <p className="text-xs text-white/40">{overdueInvoices.length} invoices</p>
+          <p className="text-xs text-foreground-muted">{overdueInvoices.length} invoices</p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <TrendingUp size={14} />
             Upcoming (30d)
           </div>
           <p className="text-2xl font-bold text-blue-400 metric-value">{formatEGP(upcomingTotal)}</p>
-          <p className="text-xs text-white/40">{upcomingPayments.length} invoices</p>
+          <p className="text-xs text-foreground-muted">{upcomingPayments.length} invoices</p>
         </div>
       </div>
 
@@ -202,7 +202,7 @@ export default async function HotelCashflowPage() {
             const height = maxMonthly > 0 ? (m.total / maxMonthly) * 100 : 0;
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                <span className="text-[10px] text-white/40 metric-value">
+                <span className="text-[10px] text-foreground-muted metric-value">
                   {m.total > 0 ? formatEGP(m.total) : "—"}
                 </span>
                 <div className="w-full relative" style={{ height: "120px" }}>
@@ -213,12 +213,12 @@ export default async function HotelCashflowPage() {
                       height: `${Math.max(height, 2)}%`,
                       background:
                         i === monthlyTrend.length - 1
-                          ? "linear-gradient(180deg, #39ff7e, rgba(57, 255, 126, 0.3))"
+                          ? "linear-gradient(180deg, var(--accent-base), rgba(57, 255, 126, 0.3))"
                           : "linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))",
                     }}
                   />
                 </div>
-                <span className="text-[10px] text-white/40">{m.month}</span>
+                <span className="text-[10px] text-foreground-muted">{m.month}</span>
               </div>
             );
           })}
@@ -229,11 +229,11 @@ export default async function HotelCashflowPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Pending Payments */}
         <div className="glass-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-white/[0.06]">
+          <div className="px-5 py-4 border-b border-border-subtle">
             <h3 className="font-semibold text-white">Pending Payments</h3>
           </div>
           {pendingInvoices.length === 0 ? (
-            <div className="px-5 py-12 text-center text-white/30">
+            <div className="px-5 py-12 text-center text-foreground-muted">
               <Clock size={32} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm">No pending payments</p>
             </div>
@@ -246,7 +246,7 @@ export default async function HotelCashflowPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-white">{inv.supplier?.name ?? "Unknown"}</p>
-                        <p className="text-xs text-white/40 mt-0.5">
+                        <p className="text-xs text-foreground-muted mt-0.5">
                           {inv.invoiceNumber} · {inv.order?.orderNumber ?? "—"}
                         </p>
                       </div>
@@ -254,7 +254,7 @@ export default async function HotelCashflowPage() {
                         <p className="text-sm font-semibold text-white metric-value">
                           {formatEGP(Number(inv.total ?? 0))}
                         </p>
-                        <p className={`text-xs ${isOverdue ? "text-red-400" : "text-white/40"}`}>
+                        <p className={`text-xs ${isOverdue ? "text-red-400" : "text-foreground-muted"}`}>
                           {inv.dueDate
                             ? `Due ${new Date(inv.dueDate).toLocaleDateString("en-EG", { month: "short", day: "numeric" })}`
                             : "No due date"}
@@ -270,11 +270,11 @@ export default async function HotelCashflowPage() {
 
         {/* Upcoming Payments */}
         <div className="glass-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-white/[0.06]">
+          <div className="px-5 py-4 border-b border-border-subtle">
             <h3 className="font-semibold text-white">Upcoming (30 Days)</h3>
           </div>
           {upcomingPayments.length === 0 ? (
-            <div className="px-5 py-12 text-center text-white/30">
+            <div className="px-5 py-12 text-center text-foreground-muted">
               <ArrowUpRight size={32} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm">No upcoming payments</p>
             </div>
@@ -285,7 +285,7 @@ export default async function HotelCashflowPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-white">{inv.supplier?.name ?? "Unknown"}</p>
-                      <p className="text-xs text-white/40 mt-0.5">{inv.invoiceNumber}</p>
+                      <p className="text-xs text-foreground-muted mt-0.5">{inv.invoiceNumber}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-white metric-value">

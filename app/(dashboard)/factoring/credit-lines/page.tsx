@@ -191,22 +191,22 @@ export default function CreditLineApplicationPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-canvas text-white flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
           </div>
           <h2 className="text-[24px] font-bold mb-3">Application Submitted</h2>
-          <p className="text-white/50 text-[14px] leading-relaxed mb-2">
+          <p className="text-foreground-tertiary text-[14px] leading-relaxed mb-2">
             Your credit line application is under review. Our AI auditor is analyzing your financial position.
           </p>
-          <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-xl p-4 mt-6 text-left">
+          <div className="bg-surface-1 border border-border-subtle rounded-xl p-4 mt-6 text-left">
             <div className="flex justify-between mb-2">
-              <span className="text-[12px] text-white/40">Credit Score</span>
+              <span className="text-[12px] text-foreground-muted">Credit Score</span>
               <span className="text-[14px] font-bold text-emerald-400">{calculateCreditScore()}/100</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[12px] text-white/40">Recommended Limit</span>
+              <span className="text-[12px] text-foreground-muted">Recommended Limit</span>
               <span className="text-[14px] font-bold text-white">
                 EGP {calculateRecommendedLimit().toLocaleString()}
               </span>
@@ -214,7 +214,7 @@ export default function CreditLineApplicationPage() {
           </div>
           <button
             onClick={() => router.push("/factoring")}
-            className="mt-8 px-6 py-2.5 bg-accent-base hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors"
+            className="mt-8 px-6 py-2.5 bg-accent-base hover:bg-red-900 text-white text-[13px] font-semibold rounded-lg transition-colors"
           >
             Back to Dashboard
           </button>
@@ -224,17 +224,17 @@ export default function CreditLineApplicationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-canvas text-white">
       {/* Header */}
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-border-subtle">
         <div className="mx-auto max-w-5xl px-6 py-6">
           <div className="flex items-center gap-3 mb-1">
-            <button onClick={() => router.push("/factoring")} className="text-white/40 hover:text-white transition-colors">
+            <button onClick={() => router.push("/factoring")} className="text-foreground-muted hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <h1 className="text-[22px] font-bold tracking-tight">Credit Line Application</h1>
           </div>
-          <p className="text-[13px] text-white/40 ml-8">
+          <p className="text-[13px] text-foreground-muted ml-8">
             Apply for a factoring facility. One entity. One invoice. One approval.
           </p>
         </div>
@@ -255,17 +255,17 @@ export default function CreditLineApplicationPage() {
                       ? "bg-accent-base border-accent-base text-white"
                       : step > s.id
                       ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                      : "bg-white/[0.03] border-white/[0.06] text-white/30"
+                      : "bg-surface-1 border-border-subtle text-foreground-muted"
                   }`}
                 >
                   {step > s.id ? <CheckCircle2 className="w-5 h-5" /> : <s.icon className="w-5 h-5" />}
                 </div>
-                <span className={`text-[11px] font-medium ${step >= s.id ? "text-white/70" : "text-white/30"}`}>
+                <span className={`text-[11px] font-medium ${step >= s.id ? "text-foreground-secondary" : "text-foreground-muted"}`}>
                   {s.label}
                 </span>
               </button>
               {i < STEPS.length - 1 && (
-                <div className={`flex-1 h-[1px] mx-3 ${step > s.id ? "bg-emerald-500/30" : "bg-white/[0.06]"}`} />
+                <div className={`flex-1 h-[1px] mx-3 ${step > s.id ? "bg-emerald-500/30" : "bg-surface-2"}`} />
               )}
             </div>
           ))}
@@ -283,16 +283,16 @@ export default function CreditLineApplicationPage() {
                   <Input label="Governorate" value={hotelInfo.governorate} onChange={(v) => setHotelInfo({ ...hotelInfo, governorate: v })} />
                   <Input label="Full Address" value={hotelInfo.address} onChange={(v) => setHotelInfo({ ...hotelInfo, address: v })} />
                 </div>
-                <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                  <p className="text-[12px] font-semibold text-white/60 uppercase tracking-wider mb-4">Legal Documents</p>
+                <div className="mt-6 pt-6 border-t border-border-subtle">
+                  <p className="text-[12px] font-semibold text-foreground-secondary uppercase tracking-wider mb-4">Legal Documents</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Input label="CR Number" value={hotelInfo.crNumber} onChange={(v) => setHotelInfo({ ...hotelInfo, crNumber: v })} />
                     <Input label="Tax ID" value={hotelInfo.taxId} onChange={(v) => setHotelInfo({ ...hotelInfo, taxId: v })} />
                     <Input label="Tourism License No." value={hotelInfo.tourismLicense} onChange={(v) => setHotelInfo({ ...hotelInfo, tourismLicense: v })} />
                   </div>
                 </div>
-                <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                  <p className="text-[12px] font-semibold text-white/60 uppercase tracking-wider mb-4">Key Contacts</p>
+                <div className="mt-6 pt-6 border-t border-border-subtle">
+                  <p className="text-[12px] font-semibold text-foreground-secondary uppercase tracking-wider mb-4">Key Contacts</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input label="GM Name" value={hotelInfo.gmName} onChange={(v) => setHotelInfo({ ...hotelInfo, gmName: v })} />
                     <Input label="GM Phone" value={hotelInfo.gmPhone} onChange={(v) => setHotelInfo({ ...hotelInfo, gmPhone: v })} />
@@ -322,14 +322,14 @@ export default function CreditLineApplicationPage() {
                 </div>
 
                 {/* Live Score Preview */}
-                <div className="mt-6 p-4 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
+                <div className="mt-6 p-4 rounded-xl bg-surface-1 border border-border-subtle">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[12px] text-white/40">Preliminary Credit Score</p>
+                      <p className="text-[12px] text-foreground-muted">Preliminary Credit Score</p>
                       <p className="text-[28px] font-bold text-emerald-400">{calculateCreditScore()}/100</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[12px] text-white/40">Recommended Limit</p>
+                      <p className="text-[12px] text-foreground-muted">Recommended Limit</p>
                       <p className="text-[28px] font-bold text-white">EGP {calculateRecommendedLimit().toLocaleString()}</p>
                     </div>
                   </div>
@@ -364,7 +364,7 @@ export default function CreditLineApplicationPage() {
                   <ToggleRow label="Personal Guarantee (Owner/GM)" checked={collateral.personalGuarantee} onChange={(v) => setCollateral({ ...collateral, personalGuarantee: v })} desc="Personal liability signed by the owner or general manager" />
                   <ToggleRow label="Equipment / Inventory Collateral" checked={collateral.equipmentCollateral} onChange={(v) => setCollateral({ ...collateral, equipmentCollateral: v })} desc="Kitchen, housekeeping, or engineering equipment as movable collateral" />
                 </div>
-                <div className="mt-6 pt-6 border-t border-white/[0.06]">
+                <div className="mt-6 pt-6 border-t border-border-subtle">
                   <NumberInput label="Cash Deposit (optional)" value={collateral.depositAmount} onChange={(v) => setCollateral({ ...collateral, depositAmount: v })} icon={<DollarSign className="w-4 h-4" />} desc="Upfront deposit to increase credit limit" />
                 </div>
               </SectionCard>
@@ -426,7 +426,7 @@ export default function CreditLineApplicationPage() {
           <button
             onClick={() => setStep((s) => Math.max(1, s - 1))}
             disabled={step === 1}
-            className="px-5 py-2.5 border border-white/[0.08] text-white/60 text-[13px] font-medium rounded-lg hover:bg-white/[0.03] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-5 py-2.5 border border-border-subtle text-foreground-secondary text-[13px] font-medium rounded-lg hover:bg-surface-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Previous
           </button>
@@ -434,7 +434,7 @@ export default function CreditLineApplicationPage() {
           {step < 5 ? (
             <button
               onClick={() => setStep((s) => s + 1)}
-              className="px-6 py-2.5 bg-accent-base hover:bg-[#6B0000] text-white text-[13px] font-semibold rounded-lg transition-colors flex items-center gap-2"
+              className="px-6 py-2.5 bg-accent-base hover:bg-red-900 text-white text-[13px] font-semibold rounded-lg transition-colors flex items-center gap-2"
             >
               Next <ChevronRight className="w-4 h-4" />
             </button>
@@ -457,9 +457,9 @@ export default function CreditLineApplicationPage() {
 
 function SectionCard({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="p-6 rounded-2xl bg-[#0f0f0f] border border-white/[0.06]">
+    <div className="p-6 rounded-2xl bg-surface-1 border border-border-subtle">
       <h3 className="text-[16px] font-semibold text-white">{title}</h3>
-      {subtitle && <p className="text-[12px] text-white/40 mt-1 mb-6">{subtitle}</p>}
+      {subtitle && <p className="text-[12px] text-foreground-muted mt-1 mb-6">{subtitle}</p>}
       {children}
     </div>
   );
@@ -468,12 +468,12 @@ function SectionCard({ title, subtitle, children }: { title: string; subtitle?: 
 function Input({ label, type = "text", value, onChange }: { label: string; type?: string; value: string; onChange: (v: string) => void }) {
   return (
     <div>
-      <label className="block text-[12px] font-medium text-white/50 mb-1.5">{label}</label>
+      <label className="block text-[12px] font-medium text-foreground-tertiary mb-1.5">{label}</label>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-[13px] text-white placeholder-white/20 focus:outline-none focus:border-white/20 transition-colors"
+        className="w-full px-3 py-2.5 bg-surface-1 border border-border-subtle rounded-lg text-[13px] text-white placeholder-foreground-muted focus:outline-none focus:border-border-subtle transition-colors"
       />
     </div>
   );
@@ -482,38 +482,38 @@ function Input({ label, type = "text", value, onChange }: { label: string; type?
 function NumberInput({ label, value, onChange, icon, desc }: { label: string; value: string; onChange: (v: string) => void; icon: React.ReactNode; desc?: string }) {
   return (
     <div>
-      <label className="block text-[12px] font-medium text-white/50 mb-1.5">{label}</label>
+      <label className="block text-[12px] font-medium text-foreground-tertiary mb-1.5">{label}</label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20">{icon}</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted">{icon}</span>
         <input
           type="number"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="0"
-          className="w-full pl-10 pr-3 py-2.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-[13px] text-white placeholder-white/20 focus:outline-none focus:border-white/20 transition-colors"
+          className="w-full pl-10 pr-3 py-2.5 bg-surface-1 border border-border-subtle rounded-lg text-[13px] text-white placeholder-foreground-muted focus:outline-none focus:border-border-subtle transition-colors"
         />
       </div>
-      {desc && <p className="text-[10px] text-white/20 mt-1">{desc}</p>}
+      {desc && <p className="text-[10px] text-foreground-muted mt-1">{desc}</p>}
     </div>
   );
 }
 
 function DocUpload({ label, file, onChange, required }: { label: string; file: File | null; onChange: (f: File | null) => void; required?: boolean }) {
   return (
-    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-colors">
+    <div className="p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-border-visible transition-colors">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[13px] text-white/70">{label} {required && <span className="text-accent-base">*</span>}</span>
+        <span className="text-[13px] text-foreground-secondary">{label} {required && <span className="text-accent-base">*</span>}</span>
         {file ? (
           <span className="text-[11px] text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" /> {file.name.length > 20 ? file.name.slice(0, 20) + "..." : file.name}
           </span>
         ) : (
-          <span className="text-[11px] text-white/20">Pending</span>
+          <span className="text-[11px] text-foreground-muted">Pending</span>
         )}
       </div>
-      <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-white/[0.03] border border-dashed border-white/[0.1] hover:border-white/[0.2] cursor-pointer transition-colors">
-        <Upload className="w-4 h-4 text-white/30" />
-        <span className="text-[12px] text-white/40">{file ? "Replace" : "Upload"}</span>
+      <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-surface-1 border border-dashed border-border-subtle hover:border-border-visible cursor-pointer transition-colors">
+        <Upload className="w-4 h-4 text-foreground-muted" />
+        <span className="text-[12px] text-foreground-muted">{file ? "Replace" : "Upload"}</span>
         <input type="file" className="hidden" onChange={(e) => onChange(e.target.files?.[0] || null)} />
       </label>
     </div>
@@ -522,14 +522,14 @@ function DocUpload({ label, file, onChange, required }: { label: string; file: F
 
 function ToggleRow({ label, checked, onChange, desc }: { label: string; checked: boolean; onChange: (v: boolean) => void; desc?: string }) {
   return (
-    <div className="flex items-start justify-between p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+    <div className="flex items-start justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle">
       <div>
-        <p className="text-[13px] text-white/80 font-medium">{label}</p>
-        {desc && <p className="text-[11px] text-white/30 mt-0.5">{desc}</p>}
+        <p className="text-[13px] text-foreground-secondary font-medium">{label}</p>
+        {desc && <p className="text-[11px] text-foreground-muted mt-0.5">{desc}</p>}
       </div>
       <button
         onClick={() => onChange(!checked)}
-        className={`relative w-11 h-6 rounded-full transition-colors ${checked ? "bg-emerald-500" : "bg-white/10"}`}
+        className={`relative w-11 h-6 rounded-full transition-colors ${checked ? "bg-emerald-500" : "bg-surface-2"}`}
       >
         <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "left-6" : "left-1"}`} />
       </button>
@@ -540,11 +540,11 @@ function ToggleRow({ label, checked, onChange, desc }: { label: string; checked:
 function ReviewSection({ title, items }: { title: string; items: { label: string; value: string }[] }) {
   return (
     <div>
-      <p className="text-[12px] font-semibold text-white/50 uppercase tracking-wider mb-3">{title}</p>
+      <p className="text-[12px] font-semibold text-foreground-tertiary uppercase tracking-wider mb-3">{title}</p>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {items.map((item) => (
-          <div key={item.label} className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-            <p className="text-[10px] text-white/30">{item.label}</p>
+          <div key={item.label} className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+            <p className="text-[10px] text-foreground-muted">{item.label}</p>
             <p className="text-[13px] text-white font-medium mt-0.5">{item.value}</p>
           </div>
         ))}

@@ -116,7 +116,7 @@ export default function OlivCreditFacilityDashboard() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#39ff7e] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-base mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading credit facility...</p>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default function OlivCreditFacilityDashboard() {
 
   if (error) {
     return (
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardContent className="p-8 text-center">
           <p className="text-red-400 mb-4">{error}</p>
           <Button onClick={fetchFacilityData} variant="outline">Retry</Button>
@@ -136,7 +136,7 @@ export default function OlivCreditFacilityDashboard() {
 
   if (!facility?.hasFacility) {
     return (
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardContent className="p-8 text-center">
           <h3 className="text-xl font-semibold text-white mb-2">No Oliv Credit Facility</h3>
           <p className="text-gray-400 mb-6">
@@ -159,7 +159,7 @@ export default function OlivCreditFacilityDashboard() {
   return (
     <div className="space-y-6">
       {/* Credit Overview */}
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-white text-lg">Oliv Credit Facility</CardTitle>
@@ -169,17 +169,17 @@ export default function OlivCreditFacilityDashboard() {
         <CardContent className="space-y-6">
           {/* Credit Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/5 rounded-xl p-4">
+            <div className="bg-surface-2 rounded-xl p-4">
               <p className="text-sm text-gray-400 mb-1">Credit Limit</p>
-              <p className="text-2xl font-bold text-[#39ff7e]">{formatEgp(data.creditLimitEgp)}</p>
+              <p className="text-2xl font-bold text-accent-base">{formatEgp(data.creditLimitEgp)}</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
+            <div className="bg-surface-2 rounded-xl p-4">
               <p className="text-sm text-gray-400 mb-1">Available Balance</p>
               <p className="text-2xl font-bold text-[#64b5f6]">{formatEgp(data.availableEgp)}</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
+            <div className="bg-surface-2 rounded-xl p-4">
               <p className="text-sm text-gray-400 mb-1">Utilized</p>
-              <p className="text-2xl font-bold text-[#c455ff]">{formatEgp(data.utilizedEgp)}</p>
+              <p className="text-2xl font-bold text-purple-base">{formatEgp(data.utilizedEgp)}</p>
             </div>
           </div>
 
@@ -191,13 +191,13 @@ export default function OlivCreditFacilityDashboard() {
             </div>
             <Progress
               value={data.utilizationRate}
-              className="h-2 bg-white/10"
-              indicatorClassName="bg-[#39ff7e]"
+              className="h-2 bg-surface-2"
+              indicatorClassName="bg-accent-base"
             />
           </div>
 
           {/* Terms Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-border-subtle">
             <div>
               <p className="text-xs text-gray-400">Interest Rate</p>
               <p className="text-sm font-medium text-white">{(data.interestRate * 100).toFixed(2)}%</p>
@@ -220,26 +220,26 @@ export default function OlivCreditFacilityDashboard() {
 
       {/* Payment Schedule */}
       {schedule && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
             <CardTitle className="text-white text-lg">Payment Schedule</CardTitle>
           </CardHeader>
           <CardContent>
             {/* Summary */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="text-center p-3 bg-white/5 rounded-lg">
+              <div className="text-center p-3 bg-surface-2 rounded-lg">
                 <p className="text-xs text-gray-400">Total</p>
                 <p className="text-lg font-bold text-white">{formatEgp(schedule.summary.totalEgp)}</p>
               </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
+              <div className="text-center p-3 bg-surface-2 rounded-lg">
                 <p className="text-xs text-gray-400">Paid</p>
-                <p className="text-lg font-bold text-[#39ff7e]">{formatEgp(schedule.summary.paidEgp)}</p>
+                <p className="text-lg font-bold text-accent-base">{formatEgp(schedule.summary.paidEgp)}</p>
               </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
+              <div className="text-center p-3 bg-surface-2 rounded-lg">
                 <p className="text-xs text-gray-400">Pending</p>
                 <p className="text-lg font-bold text-[#64b5f6]">{formatEgp(schedule.summary.pendingEgp)}</p>
               </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
+              <div className="text-center p-3 bg-surface-2 rounded-lg">
                 <p className="text-xs text-gray-400">Overdue</p>
                 <p className="text-lg font-bold text-red-400">{formatEgp(schedule.summary.overdueEgp)}</p>
               </div>
@@ -253,7 +253,7 @@ export default function OlivCreditFacilityDashboard() {
                   {upcomingPayments.map((payment, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-surface-2 rounded-lg"
                     >
                       <div>
                         <p className="text-sm text-white">
@@ -275,19 +275,19 @@ export default function OlivCreditFacilityDashboard() {
 
       {/* Risk Assessment */}
       {data.olivRiskScore && (
-        <Card className="bg-[#12121a] border-white/10">
+        <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
             <CardTitle className="text-white text-lg">Risk Assessment</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/5 rounded-xl p-4 text-center">
+              <div className="bg-surface-2 rounded-xl p-4 text-center">
                 <p className="text-sm text-gray-400 mb-1">Risk Score</p>
-                <p className="text-3xl font-bold text-[#39ff7e]">{data.olivRiskScore}</p>
+                <p className="text-3xl font-bold text-accent-base">{data.olivRiskScore}</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4 text-center">
+              <div className="bg-surface-2 rounded-xl p-4 text-center">
                 <p className="text-sm text-gray-400 mb-1">Risk Tier</p>
-                <p className="text-3xl font-bold text-[#c455ff]">{data.olivRiskTier || 'N/A'}</p>
+                <p className="text-3xl font-bold text-purple-base">{data.olivRiskTier || 'N/A'}</p>
               </div>
             </div>
           </CardContent>

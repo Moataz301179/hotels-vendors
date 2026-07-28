@@ -80,11 +80,11 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="p-4 rounded-xl bg-[#0f0f0f] border border-white/[0.06]"
+            className="p-4 rounded-xl bg-surface-1 border border-border-subtle"
           >
             <div className="flex items-center gap-2 mb-2">
               <kpi.icon className="w-4 h-4" style={{ color: kpi.color }} />
-              <span className="text-[10px] text-white/30 uppercase tracking-wider">{kpi.label}</span>
+              <span className="text-[10px] text-foreground-muted uppercase tracking-wider">{kpi.label}</span>
             </div>
             <div className="text-[18px] font-bold text-white">{loading ? "—" : kpi.value}</div>
             <div className="flex items-center gap-1 mt-1">
@@ -94,7 +94,7 @@ export default function AnalyticsPage() {
                 <ArrowDownRight className="w-3 h-3 text-emerald-400" />
               )}
               <span className="text-[11px] text-emerald-400">{kpi.change}</span>
-              <span className="text-[10px] text-white/20">vs last month</span>
+              <span className="text-[10px] text-foreground-muted">vs last month</span>
             </div>
           </motion.div>
         ))}
@@ -106,8 +106,8 @@ export default function AnalyticsPage() {
           <div className="space-y-3">
             {LEADS_BY_SOURCE.map((source) => (
               <div key={source.source} className="flex items-center gap-3">
-                <span className="text-[12px] text-white/60 w-32 truncate">{source.source}</span>
-                <div className="flex-1 h-6 rounded-lg bg-white/[0.04] overflow-hidden">
+                <span className="text-[12px] text-foreground-secondary w-32 truncate">{source.source}</span>
+                <div className="flex-1 h-6 rounded-lg bg-surface-2 overflow-hidden">
                   <div
                     className="h-full rounded-lg transition-all flex items-center justify-end pr-2"
                     style={{
@@ -116,7 +116,7 @@ export default function AnalyticsPage() {
                       borderLeft: `3px solid ${source.color}`,
                     }}
                   >
-                    <span className="text-[11px] font-medium text-white/80">{source.count}</span>
+                    <span className="text-[11px] font-medium text-foreground-secondary">{source.count}</span>
                   </div>
                 </div>
               </div>
@@ -130,11 +130,11 @@ export default function AnalyticsPage() {
             <div className="flex items-center gap-4 text-[11px]">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-sm bg-[var(--accent-500)]" />
-                <span className="text-white/40">Leads</span>
+                <span className="text-foreground-muted">Leads</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
-                <span className="text-white/40">Conversions</span>
+                <span className="text-foreground-muted">Conversions</span>
               </div>
             </div>
             <div className="flex items-end gap-2 h-32">
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
                       style={{ height: `${(m.conversions / 8) * 100}%` }}
                     />
                   </div>
-                  <span className="text-[10px] text-white/30">{m.month}</span>
+                  <span className="text-[10px] text-foreground-muted">{m.month}</span>
                 </div>
               ))}
             </div>
@@ -161,26 +161,26 @@ export default function AnalyticsPage() {
         <SectionCard title="Platform Revenue" description="Real-time accounting data">
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[10px] text-white/30 uppercase">Total Revenue</p>
+              <div className="p-3 rounded-lg bg-surface-1">
+                <p className="text-[10px] text-foreground-muted uppercase">Total Revenue</p>
                 <p className="text-[16px] font-bold text-white mt-1">
                   {loading ? "—" : formatEgp(data?.totalRevenue || 0)}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[10px] text-white/30 uppercase">Platform Fees (2.5%)</p>
+              <div className="p-3 rounded-lg bg-surface-1">
+                <p className="text-[10px] text-foreground-muted uppercase">Platform Fees (2.5%)</p>
                 <p className="text-[16px] font-bold text-emerald-400 mt-1">
                   {loading ? "—" : formatEgp(data?.platformFees || 0)}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[10px] text-white/30 uppercase">Outstanding Invoices</p>
+              <div className="p-3 rounded-lg bg-surface-1">
+                <p className="text-[10px] text-foreground-muted uppercase">Outstanding Invoices</p>
                 <p className="text-[16px] font-bold text-amber-400 mt-1">
                   {loading ? "—" : data?.outstandingInvoices?.count ?? 0}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[10px] text-white/30 uppercase">Total Orders</p>
+              <div className="p-3 rounded-lg bg-surface-1">
+                <p className="text-[10px] text-foreground-muted uppercase">Total Orders</p>
                 <p className="text-[16px] font-bold text-white mt-1">
                   {loading ? "—" : data?.orderCount ?? 0}
                 </p>
@@ -193,24 +193,24 @@ export default function AnalyticsPage() {
         <SectionCard title="Recent Transactions" description="Latest completed orders">
           <div className="space-y-2">
             {loading ? (
-              <p className="text-[12px] text-white/30 py-8 text-center">Loading...</p>
+              <p className="text-[12px] text-foreground-muted py-8 text-center">Loading...</p>
             ) : data?.recentTransactions?.length ? (
               data.recentTransactions.slice(0, 8).map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02]">
+                <div key={tx.id} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-1">
                   <div className="min-w-0">
                     <p className="text-[12px] font-medium text-white truncate">{tx.orderNumber}</p>
-                    <p className="text-[10px] text-white/30 truncate">
+                    <p className="text-[10px] text-foreground-muted truncate">
                       {tx.hotelName} → {tx.supplierName}
                     </p>
                   </div>
                   <div className="text-right ml-3">
                     <p className="text-[12px] font-semibold text-emerald-400">{formatEgp(tx.total)}</p>
-                    <p className="text-[10px] text-white/30">{tx.status}</p>
+                    <p className="text-[10px] text-foreground-muted">{tx.status}</p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-[12px] text-white/30 py-8 text-center">No transactions yet</p>
+              <p className="text-[12px] text-foreground-muted py-8 text-center">No transactions yet</p>
             )}
           </div>
         </SectionCard>

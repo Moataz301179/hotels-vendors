@@ -202,7 +202,7 @@ export default function FinanceDashboardPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Finance Dashboard</h1>
-          <p className="text-sm text-white/40 mt-0.5">Liquidity overview, factoring requests, and credit facilities</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Liquidity overview, factoring requests, and credit facilities</p>
         </div>
         <button
           onClick={() => { setNewModalOpen(true); setModalStep("select"); setModalError(""); }}
@@ -221,12 +221,12 @@ export default function FinanceDashboardPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
                 <p className="text-xl font-bold text-white">{s.value}</p>
@@ -249,17 +249,17 @@ export default function FinanceDashboardPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <FileCheck size={14} className="text-white/40" />
+              <FileCheck size={14} className="text-foreground-muted" />
               Factoring Requests
             </h3>
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type="text"
                 placeholder="Search requests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-56"
+                className="pl-9 pr-4 py-1.5 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 w-56"
               />
             </div>
           </div>
@@ -277,23 +277,23 @@ export default function FinanceDashboardPage() {
               }
             />
           ) : (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+            <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
               <table className="w-full min-w-[640px]">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Invoice</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Rate</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
+                  <tr className="border-b border-border-subtle">
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Invoice</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Rate</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredRequests.map((req) => (
-                    <tr key={req.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                    <tr key={req.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                       <td className="px-4 py-3">
-                        <span className="text-xs font-mono text-white/60">{req.invoice?.invoiceNumber || "—"}</span>
+                        <span className="text-xs font-mono text-foreground-secondary">{req.invoice?.invoiceNumber || "—"}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-xs text-white">{req.invoice?.hotel?.name || "—"}</span>
@@ -302,7 +302,7 @@ export default function FinanceDashboardPage() {
                         <span className="text-xs font-semibold text-white">{formatCurrency(req.amount, req.currency)}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-[11px] text-white/40">{(req.discountRate * 100).toFixed(1)}%</span>
+                        <span className="text-[11px] text-foreground-muted">{(req.discountRate * 100).toFixed(1)}%</span>
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={req.status} />
@@ -310,7 +310,7 @@ export default function FinanceDashboardPage() {
                       <td className="px-4 py-3">
                         <button
                           onClick={() => setSelectedRequest(req)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors"
                         >
                           <Eye size={14} />
                         </button>
@@ -326,9 +326,9 @@ export default function FinanceDashboardPage() {
         {/* Right Column */}
         <div className="space-y-4">
           {/* Credit Facilities */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-border-subtle bg-surface-1 p-4">
             <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Wallet size={14} className="text-white/40" />
+              <Wallet size={14} className="text-foreground-muted" />
               Credit Facilities
             </h3>
             {facilitiesLoading ? (
@@ -340,16 +340,16 @@ export default function FinanceDashboardPage() {
                 {facilities.map((facility) => {
                   const pct = facility.limit > 0 ? (facility.utilized / facility.limit) * 100 : 0;
                   return (
-                    <div key={facility.id} className="p-3 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                    <div key={facility.id} className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-xs text-white">{facility.hotel?.name}</span>
                         <StatusBadge status={facility.status} />
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-white/20 mb-1.5">
+                      <div className="flex items-center justify-between text-[10px] text-foreground-muted mb-1.5">
                         <span>{formatCurrency(facility.utilized, facility.currency)} used</span>
                         <span>{formatCurrency(facility.limit, facility.currency)}</span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                      <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
                         <div
                           className={`h-full rounded-full ${pct > 80 ? "bg-red-500" : pct > 50 ? "bg-amber-500" : "bg-emerald-500"}`}
                           style={{ width: `${Math.min(pct, 100)}%` }}
@@ -363,9 +363,9 @@ export default function FinanceDashboardPage() {
           </div>
 
           {/* Recent Invoices */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-border-subtle bg-surface-1 p-4">
             <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Receipt size={14} className="text-white/40" />
+              <Receipt size={14} className="text-foreground-muted" />
               Recent Invoices
             </h3>
             {invoicesLoading ? (
@@ -375,14 +375,14 @@ export default function FinanceDashboardPage() {
             ) : (
               <div className="space-y-2">
                 {invoices.slice(0, 5).map((inv) => (
-                  <div key={inv.id} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                  <div key={inv.id} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-1 border border-border-invisible">
                     <div>
                       <p className="text-xs text-white">{inv.invoiceNumber}</p>
-                      <p className="text-[10px] text-white/25">{inv.hotel?.name}</p>
+                      <p className="text-[10px] text-foreground-muted">{inv.hotel?.name}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
-                      <p className={`text-[9px] ${inv.factoringStatus === "FUNDED" ? "text-accent-base" : inv.factoringStatus === "PENDING" ? "text-amber-400" : "text-white/20"}`}>
+                      <p className={`text-[9px] ${inv.factoringStatus === "FUNDED" ? "text-accent-base" : inv.factoringStatus === "PENDING" ? "text-amber-400" : "text-foreground-muted"}`}>
                         {inv.factoringStatus || "Unfunded"}
                       </p>
                     </div>
@@ -403,35 +403,35 @@ export default function FinanceDashboardPage() {
         {selectedRequest && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Amount</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Amount</p>
                 <p className="text-sm text-white mt-0.5">{formatCurrency(selectedRequest.amount, selectedRequest.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Discount Rate</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Discount Rate</p>
                 <p className="text-sm text-white mt-0.5">{(selectedRequest.discountRate * 100).toFixed(1)}%</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5"><StatusBadge status={selectedRequest.status} /></div>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Factoring Company</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Factoring Company</p>
                 <p className="text-sm text-white mt-0.5">{selectedRequest.factoringCompany?.name || "—"}</p>
               </div>
             </div>
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-[10px] text-white/20 uppercase mb-1">Invoice Details</p>
+            <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+              <p className="text-[10px] text-foreground-muted uppercase mb-1">Invoice Details</p>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40">Hotel:</span>
+                <span className="text-foreground-muted">Hotel:</span>
                 <span className="text-white">{selectedRequest.invoice?.hotel?.name}</span>
               </div>
               <div className="flex items-center justify-between text-xs mt-1">
-                <span className="text-white/40">Supplier:</span>
+                <span className="text-foreground-muted">Supplier:</span>
                 <span className="text-white">{selectedRequest.invoice?.supplier?.name}</span>
               </div>
               <div className="flex items-center justify-between text-xs mt-1">
-                <span className="text-white/40">Invoice Total:</span>
+                <span className="text-foreground-muted">Invoice Total:</span>
                 <span className="text-white">{formatCurrency(selectedRequest.invoice?.total || 0, selectedRequest.currency)}</span>
               </div>
             </div>
@@ -510,11 +510,11 @@ function NewFactoringModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1a1a1a] shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-border-subtle bg-surface-2 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
           <div>
             <h3 className="text-lg font-semibold text-white">
               {step === "select" && "Select Invoice"}
@@ -522,14 +522,14 @@ function NewFactoringModal({
               {step === "confirm" && "Confirm Funding"}
               {step === "success" && "Funding Complete"}
             </h3>
-            <p className="text-xs text-white/30 mt-0.5">
+            <p className="text-xs text-foreground-muted mt-0.5">
               {step === "select" && "Choose an eligible invoice to factor"}
               {step === "offers" && "Review offers from factoring partners"}
               {step === "confirm" && "Review terms before executing"}
               {step === "success" && "Your factoring request has been processed"}
             </p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-white transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -551,21 +551,21 @@ function NewFactoringModal({
                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all text-left ${
                           selectedInvoice?.id === inv.id
                             ? "bg-accent-base/10 border-accent-base/30"
-                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                            : "bg-surface-1 border-border-subtle hover:border-border-visible"
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                            <Receipt size={16} className="text-white/30" />
+                          <div className="w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center">
+                            <Receipt size={16} className="text-foreground-muted" />
                           </div>
                           <div>
                             <p className="text-xs font-medium text-white">{inv.invoiceNumber}</p>
-                            <p className="text-[10px] text-white/25">{inv.hotel?.name} · {inv.supplier?.name}</p>
+                            <p className="text-[10px] text-foreground-muted">{inv.hotel?.name} · {inv.supplier?.name}</p>
                           </div>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-semibold text-white">{formatCurrency(inv.total, inv.currency)}</p>
-                          <ArrowRight size={14} className="text-white/20 inline-block mt-0.5" />
+                          <ArrowRight size={14} className="text-foreground-muted inline-block mt-0.5" />
                         </div>
                       </button>
                     ))}
@@ -579,7 +579,7 @@ function NewFactoringModal({
                 {loading ? (
                   <div className="py-12 flex flex-col items-center gap-3">
                     <Loader2 size={24} className="animate-spin text-accent-base" />
-                    <p className="text-sm text-white/40">Getting offers from partners...</p>
+                    <p className="text-sm text-foreground-muted">Getting offers from partners...</p>
                   </div>
                 ) : offers.length === 0 ? (
                   <EmptyState title="No offers available" description="No factoring partners returned offers for this invoice." />
@@ -592,7 +592,7 @@ function NewFactoringModal({
                         className={`w-full p-4 rounded-xl border text-left transition-all ${
                           selectedOffer === offer
                             ? "bg-accent-base/10 border-accent-base/30"
-                            : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
+                            : "bg-surface-1 border-border-subtle hover:border-border-visible"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -601,15 +601,15 @@ function NewFactoringModal({
                         </div>
                         <div className="grid grid-cols-3 gap-2 text-xs">
                           <div>
-                            <p className="text-white/20">Advance</p>
+                            <p className="text-foreground-muted">Advance</p>
                             <p className="text-white font-medium">{((offer.advanceRate || 0.9) * 100).toFixed(0)}%</p>
                           </div>
                           <div>
-                            <p className="text-white/20">Discount</p>
+                            <p className="text-foreground-muted">Discount</p>
                             <p className="text-white font-medium">{((offer.discountRate || 0.02) * 100).toFixed(1)}%</p>
                           </div>
                           <div>
-                            <p className="text-white/20">You Receive</p>
+                            <p className="text-foreground-muted">You Receive</p>
                             <p className="text-emerald-400 font-medium">
                               {formatCurrency(Math.round((selectedInvoice?.total || 0) * (offer.advanceRate || 0.9) * (1 - (offer.discountRate || 0.02))), selectedInvoice?.currency)}
                             </p>
@@ -618,7 +618,7 @@ function NewFactoringModal({
                       </button>
                     ))}
                     <div className="flex gap-3 pt-2">
-                      <button onClick={() => setStep("select")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
+                      <button onClick={() => setStep("select")} className="px-4 py-2 rounded-xl bg-surface-1 border border-border-subtle text-foreground-tertiary hover:text-white text-sm transition-colors">Back</button>
                       <button
                         onClick={() => setStep("confirm")}
                         disabled={!selectedOffer}
@@ -635,19 +635,19 @@ function NewFactoringModal({
             {step === "confirm" && selectedInvoice && selectedOffer && (
               <motion.div key="confirm" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                 <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Invoice</h4>
-                    <div className="flex justify-between text-sm"><span className="text-white/30">Number</span><span className="text-white">{selectedInvoice.invoiceNumber}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Amount</span><span className="text-white">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Hotel</span><span className="text-white">{selectedInvoice.hotel?.name}</span></div>
+                  <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+                    <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3">Invoice</h4>
+                    <div className="flex justify-between text-sm"><span className="text-foreground-muted">Number</span><span className="text-white">{selectedInvoice.invoiceNumber}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-foreground-muted">Amount</span><span className="text-white">{formatCurrency(selectedInvoice.total, selectedInvoice.currency)}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-foreground-muted">Hotel</span><span className="text-white">{selectedInvoice.hotel?.name}</span></div>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                    <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">Terms</h4>
-                    <div className="flex justify-between text-sm"><span className="text-white/30">Partner</span><span className="text-white">{selectedOffer.companyName || "Partner"}</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Advance Rate</span><span className="text-white">{((selectedOffer.advanceRate || 0.9) * 100).toFixed(0)}%</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Discount Rate</span><span className="text-white">{((selectedOffer.discountRate || 0.02) * 100).toFixed(1)}%</span></div>
-                    <div className="flex justify-between text-sm mt-1"><span className="text-white/30">Platform Fee</span><span className="text-white">1.5%</span></div>
-                    <div className="pt-2 mt-2 border-t border-white/[0.06] flex justify-between">
+                  <div className="p-4 rounded-xl bg-surface-1 border border-border-invisible">
+                    <h4 className="text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-3">Terms</h4>
+                    <div className="flex justify-between text-sm"><span className="text-foreground-muted">Partner</span><span className="text-white">{selectedOffer.companyName || "Partner"}</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-foreground-muted">Advance Rate</span><span className="text-white">{((selectedOffer.advanceRate || 0.9) * 100).toFixed(0)}%</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-foreground-muted">Discount Rate</span><span className="text-white">{((selectedOffer.discountRate || 0.02) * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between text-sm mt-1"><span className="text-foreground-muted">Platform Fee</span><span className="text-white">1.5%</span></div>
+                    <div className="pt-2 mt-2 border-t border-border-subtle flex justify-between">
                       <span className="text-sm font-medium text-white">Net Disbursement</span>
                       <span className="text-sm font-bold text-emerald-400">
                         {formatCurrency(Math.round(selectedInvoice.total * (selectedOffer.advanceRate || 0.9) * (1 - (selectedOffer.discountRate || 0.02) - 0.015)), selectedInvoice.currency)}
@@ -660,7 +660,7 @@ function NewFactoringModal({
                     </div>
                   )}
                   <div className="flex gap-3">
-                    <button onClick={() => setStep("offers")} className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white/50 hover:text-white text-sm transition-colors">Back</button>
+                    <button onClick={() => setStep("offers")} className="px-4 py-2 rounded-xl bg-surface-1 border border-border-subtle text-foreground-tertiary hover:text-white text-sm transition-colors">Back</button>
                     <button
                       onClick={onExecuteFunding}
                       disabled={loading}
@@ -681,7 +681,7 @@ function NewFactoringModal({
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-white">Funding Executed</h4>
-                  <p className="text-sm text-white/40 mt-1">The factoring request has been submitted and funds will be disbursed within 24 hours.</p>
+                  <p className="text-sm text-foreground-muted mt-1">The factoring request has been submitted and funds will be disbursed within 24 hours.</p>
                 </div>
                 <button onClick={onClose} className="px-5 py-2 rounded-xl bg-accent-base hover:bg-accent-base/80 text-white text-sm font-medium transition-colors">Done</button>
               </motion.div>

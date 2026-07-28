@@ -193,7 +193,7 @@ export default function InvoiceUploadFlow() {
   }, [form.photoPreview]);
 
   return (
-    <div className="min-h-screen bg-[#0c0c12] text-white">
+    <div className="min-h-screen bg-canvas text-white">
       <input
         ref={fileInputRef}
         type="file"
@@ -262,8 +262,8 @@ function StepIndicator({ currentStep }: { currentStep: string }) {
           <div
             className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
               i <= currentIdx
-                ? "bg-emerald-400 text-[#0c0c12]"
-                : "bg-white/5 text-white/50"
+                ? "bg-emerald-400 text-white"
+                : "bg-surface-2 text-foreground-tertiary"
             }`}
           >
             {i < currentIdx ? "✓" : i + 1}
@@ -271,7 +271,7 @@ function StepIndicator({ currentStep }: { currentStep: string }) {
           {i < steps.length - 1 && (
             <div
               className={`h-px w-8 ${
-                i < currentIdx ? "bg-emerald-400" : "bg-white/10"
+                i < currentIdx ? "bg-emerald-400" : "bg-surface-2"
               }`}
             />
           )}
@@ -289,22 +289,22 @@ function UploadStep({
   onEnterManually: () => void;
 }) {
   return (
-    <Card className="bg-[#12121a] border-white/10">
+    <Card className="bg-surface-1 border-border-subtle">
       <CardHeader>
         <CardTitle>Upload Invoice for Financing</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <button
           onClick={onOpenCamera}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-dashed border-white/10 bg-white/[0.03] p-8 text-center transition-colors hover:border-emerald-400/40"
+          className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border-subtle bg-surface-1 p-8 text-center transition-colors hover:border-emerald-400/40"
         >
-          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#39ff7e" strokeWidth="1.5">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="var(--accent-base)" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
           </svg>
           <div>
             <p className="font-medium text-white">Take Photo or Upload File</p>
-            <p className="mt-1 text-sm text-white/50">
+            <p className="mt-1 text-sm text-foreground-tertiary">
               JPG, PNG, or PDF — up to 10 MB
             </p>
           </div>
@@ -312,26 +312,26 @@ function UploadStep({
 
         <button
           onClick={onEnterManually}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 p-6 text-center transition-colors hover:bg-white/[0.05]"
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-border-subtle p-6 text-center transition-colors hover:bg-surface-2"
         >
           <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#64b5f6" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
           </svg>
           <div>
             <p className="font-medium text-white">Enter Details Manually</p>
-            <p className="mt-1 text-sm text-white/50">
+            <p className="mt-1 text-sm text-foreground-tertiary">
               Type invoice information directly
             </p>
           </div>
         </button>
 
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-white/10 p-6 text-center opacity-40 cursor-not-allowed">
-          <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#c455ff" strokeWidth="1.5">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-border-subtle p-6 text-center opacity-40 cursor-not-allowed">
+          <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="var(--purple-base)" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.156a4.5 4.5 0 00-6.364-6.364L4.757 8.25a4.5 4.5 0 006.364 6.364l4.5-4.5z" />
           </svg>
           <div>
             <p className="font-medium text-white">Supplier Plugin (Phase 2)</p>
-            <p className="mt-1 text-sm text-white/50">
+            <p className="mt-1 text-sm text-foreground-tertiary">
               Auto-sync from supplier integrations
             </p>
           </div>
@@ -358,13 +358,13 @@ function DetailsStep({
   onNext: () => void;
 }) {
   return (
-    <Card className="bg-[#12121a] border-white/10">
+    <Card className="bg-surface-1 border-border-subtle">
       <CardHeader>
         <CardTitle>Invoice Details</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {photoPreview && (
-          <div className="overflow-hidden rounded-lg border border-white/10">
+          <div className="overflow-hidden rounded-lg border border-border-subtle">
             <img src={photoPreview} alt="Invoice preview" className="h-40 w-full object-cover" />
           </div>
         )}
@@ -376,7 +376,7 @@ function DetailsStep({
               value={form.invoiceNumber}
               onChange={(e) => onUpdate("invoiceNumber", e.target.value)}
               placeholder="INV-2026-0001"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white placeholder-foreground-muted outline-none focus:border-emerald-400/50"
             />
           </Field>
 
@@ -386,7 +386,7 @@ function DetailsStep({
               value={form.etaUuid}
               onChange={(e) => onUpdate("etaUuid", e.target.value)}
               placeholder="Not connected to real ETA — demo only"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white placeholder-foreground-muted outline-none focus:border-emerald-400/50"
             />
           </Field>
 
@@ -396,7 +396,7 @@ function DetailsStep({
               value={form.supplierName}
               onChange={(e) => onUpdate("supplierName", e.target.value)}
               placeholder="Supplier legal name"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white placeholder-foreground-muted outline-none focus:border-emerald-400/50"
             />
           </Field>
 
@@ -406,7 +406,7 @@ function DetailsStep({
               value={form.supplierTaxId}
               onChange={(e) => onUpdate("supplierTaxId", e.target.value)}
               placeholder="Tax registration number"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white placeholder-foreground-muted outline-none focus:border-emerald-400/50"
             />
           </Field>
 
@@ -418,7 +418,7 @@ function DetailsStep({
               value={form.subtotalEgp || ""}
               onChange={(e) => onUpdate("subtotalEgp", parseFloat(e.target.value) || 0)}
               placeholder="0.00"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white placeholder-foreground-muted outline-none focus:border-emerald-400/50"
             />
           </Field>
 
@@ -427,7 +427,7 @@ function DetailsStep({
               type="text"
               readOnly
               value={formatEgp(form.vatEgp)}
-              className="w-full cursor-default rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/60"
+              className="w-full cursor-default rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-foreground-secondary"
             />
           </Field>
 
@@ -436,7 +436,7 @@ function DetailsStep({
               type="text"
               readOnly
               value={formatEgp(form.totalEgp)}
-              className="w-full cursor-default rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/60"
+              className="w-full cursor-default rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-foreground-secondary"
             />
           </Field>
 
@@ -446,7 +446,7 @@ function DetailsStep({
                 type="date"
                 value={form.invoiceDate}
                 onChange={(e) => onUpdate("invoiceDate", e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400/50"
+                className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400/50"
               />
             </Field>
             <Field label="Due Date">
@@ -454,7 +454,7 @@ function DetailsStep({
                 type="date"
                 value={form.dueDate}
                 readOnly
-                className="w-full cursor-default rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/60"
+                className="w-full cursor-default rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-foreground-secondary"
               />
             </Field>
           </div>
@@ -463,10 +463,10 @@ function DetailsStep({
             <select
               value={form.financingDays}
               onChange={(e) => onUpdate("financingDays", parseInt(e.target.value, 10))}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400/50"
+              className="w-full rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400/50"
             >
               {FINANCING_OPTIONS.map((d) => (
-                <option key={d} value={d} className="bg-[#12121a] text-white">
+                <option key={d} value={d} className="bg-surface-1 text-white">
                   {d} days
                 </option>
               ))}
@@ -488,7 +488,7 @@ function DetailsStep({
           >
             Back
           </Button>
-          <Button onClick={onNext} className="flex-1 bg-[#39ff7e] text-[#0c0c12] hover:bg-[#39ff7e]/90">
+          <Button onClick={onNext} className="flex-1 bg-accent-base text-white hover:bg-accent-base/90">
             Review & Confirm
           </Button>
         </div>
@@ -515,7 +515,7 @@ function ConfirmStep({
   const netPayout = form.totalEgp - platformFee;
 
   return (
-    <Card className="bg-[#12121a] border-white/10">
+    <Card className="bg-surface-1 border-border-subtle">
       <CardHeader>
         <CardTitle>Confirm & Submit</CardTitle>
       </CardHeader>
@@ -537,21 +537,21 @@ function ConfirmStep({
             value={formatEgp(form.totalEgp)}
             valueClassName="font-bold text-white"
           />
-          <div className="my-2 border-t border-white/10" />
+          <div className="my-2 border-t border-border-subtle" />
           <SummaryRow
             label={`${ADVANCE_RATE * 100}% Advance`}
             value={formatEgp(financingAmount)}
-            valueClassName="text-[#39ff7e]"
+            valueClassName="text-accent-base"
           />
           <SummaryRow
             label="Platform Fee (2%)"
             value={`− ${formatEgp(platformFee)}`}
-            valueClassName="text-[#ff7e1a]"
+            valueClassName="text-orange-base"
           />
           <SummaryRow
             label="Net Payout"
             value={formatEgp(netPayout)}
-            valueClassName="font-bold text-[#39ff7e]"
+            valueClassName="font-bold text-accent-base"
           />
           <SummaryRow label="Credit Period" value={`${form.financingDays} days`} />
         </SummarySection>
@@ -572,7 +572,7 @@ function ConfirmStep({
           </Button>
           <Button
             onClick={onSubmit}
-            className="flex-1 bg-[#39ff7e] text-[#0c0c12] hover:bg-[#39ff7e]/90"
+            className="flex-1 bg-accent-base text-white hover:bg-accent-base/90"
             disabled={loading}
           >
             {loading ? (
@@ -598,33 +598,33 @@ function ResultStep({
   onNewInvoice: () => void;
 }) {
   return (
-    <Card className="bg-[#12121a] border-white/10">
+    <Card className="bg-surface-1 border-border-subtle">
       <CardContent className="flex flex-col items-center space-y-6 py-8 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#39ff7e]/12">
-          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#39ff7e" strokeWidth="2">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-base/12">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="var(--accent-base)" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
 
         <div>
           <h2 className="text-xl font-bold text-white">Invoice Submitted</h2>
-          <p className="mt-1 text-sm text-white/50">
+          <p className="mt-1 text-sm text-foreground-tertiary">
             Your financing request is being processed
           </p>
         </div>
 
-        <div className="w-full space-y-2 rounded-lg border border-white/10 bg-white/[0.03] p-4">
+        <div className="w-full space-y-2 rounded-lg border border-border-subtle bg-surface-1 p-4">
           <SummaryRow label="Invoice #" value={result.invoiceNumber} />
           <SummaryRow label="Total" value={formatEgp(result.total)} />
           <SummaryRow
             label="Platform Fee"
             value={formatEgp(result.platformFee)}
-            valueClassName="text-[#ff7e1a]"
+            valueClassName="text-orange-base"
           />
           <SummaryRow
             label="Financing Amount"
             value={formatEgp(result.financingAmount)}
-            valueClassName="font-bold text-[#39ff7e]"
+            valueClassName="font-bold text-accent-base"
           />
         </div>
 
@@ -658,7 +658,7 @@ function Field({
     <div>
       <label className="mb-1 block text-sm font-medium text-white">
         {label}
-        {required && <span className="text-[#ff7e1a]"> *</span>}
+        {required && <span className="text-orange-base"> *</span>}
       </label>
       {children}
     </div>
@@ -667,8 +667,8 @@ function Field({
 
 function SummarySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-      <h3 className="mb-3 text-sm font-semibold text-white/50">
+    <div className="rounded-lg border border-border-subtle bg-surface-1 p-4">
+      <h3 className="mb-3 text-sm font-semibold text-foreground-tertiary">
         {title}
       </h3>
       {children}
@@ -687,7 +687,7 @@ function SummaryRow({
 }) {
   return (
     <div className="flex items-center justify-between py-1 text-sm">
-      <span className="text-white/50">{label}</span>
+      <span className="text-foreground-tertiary">{label}</span>
       <span className={valueClassName ?? "text-white"}>{value}</span>
     </div>
   );

@@ -45,7 +45,7 @@ interface Hotel {
 function PropertyTypeBadge({ type }: { type: string }) {
   const label = type.charAt(0) + type.slice(1).toLowerCase().replace(/_/g, " ");
   return (
-    <span className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/[0.04] text-white/40 border border-white/[0.06]">
+    <span className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-surface-2 text-foreground-muted border border-border-subtle">
       {label}
     </span>
   );
@@ -54,7 +54,7 @@ function PropertyTypeBadge({ type }: { type: string }) {
 function PropertyStatusBadge({ status = "ACTIVE" }: { status?: string }) {
   const config: Record<string, { bg: string; text: string; dot: string }> = {
     ACTIVE: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400" },
-    INACTIVE: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40" },
+    INACTIVE: { bg: "bg-surface-2", text: "text-foreground-muted", dot: "bg-foreground-muted" },
     MAINTENANCE: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400" },
   };
   const c = config[status] || config.ACTIVE;
@@ -122,7 +122,7 @@ export default function HotelPropertiesPage() {
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Property Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage all hotels and properties in your portfolio</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Manage all hotels and properties in your portfolio</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base hover:bg-accent-base/80 text-xs text-white font-medium transition-all self-start">
           <Plus size={14} />
@@ -138,12 +138,12 @@ export default function HotelPropertiesPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
+                    <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
                 <p className="text-xl font-bold text-white">{s.value}</p>
@@ -154,17 +154,17 @@ export default function HotelPropertiesPage() {
       {/* Search */}
       <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-          <Building2 size={14} className="text-white/40" />
+          <Building2 size={14} className="text-foreground-muted" />
           Properties
         </h3>
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search properties..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-56"
+            className="pl-9 pr-4 py-1.5 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50 w-56"
           />
         </div>
       </motion.div>
@@ -185,45 +185,45 @@ export default function HotelPropertiesPage() {
           }
         />
       ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+        <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[720px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Property</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel Group</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Location</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Type</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Rooms</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider"></th>
+              <tr className="border-b border-border-subtle">
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Property</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel Group</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Location</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Type</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Rooms</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                <th className="text-right px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider"></th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((property) => (
-                <tr key={property.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={property.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-xs font-medium text-white">{property.name}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{property.hotelName}</span>
+                    <span className="text-xs text-foreground-secondary">{property.hotelName}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-white/20" />
-                      <span className="text-xs text-white/50">{property.city}</span>
+                      <MapPin size={12} className="text-foreground-muted" />
+                      <span className="text-xs text-foreground-tertiary">{property.city}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <PropertyTypeBadge type={property.type} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{property.roomCount?.toLocaleString("en-EG") || "—"}</span>
+                    <span className="text-xs text-foreground-secondary">{property.roomCount?.toLocaleString("en-EG") || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
                     <PropertyStatusBadge status={property.status} />
                   </td>
                   <td className="px-4 py-3">
-                    <button className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors">
+                    <button className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors">
                       <Eye size={14} />
                     </button>
                   </td>

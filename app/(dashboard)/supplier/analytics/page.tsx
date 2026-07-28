@@ -68,8 +68,8 @@ function SimpleBarChart({ data }: { data: OrdersByStatus[] }) {
     <div className="space-y-3">
       {data.map((item) => (
         <div key={item.status} className="flex items-center gap-3">
-          <span className="text-[11px] text-white/40 w-20 truncate">{item.status}</span>
-          <div className="flex-1 h-5 bg-white/[0.02] rounded-md overflow-hidden">
+          <span className="text-[11px] text-foreground-muted w-20 truncate">{item.status}</span>
+          <div className="flex-1 h-5 bg-surface-1 rounded-md overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${(item.count / max) * 100}%` }}
@@ -94,7 +94,7 @@ function RevenueComparison({ current, previous, currency }: { current: number; p
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider">This Month</p>
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider">This Month</p>
           <p className="text-2xl font-bold text-white mt-1">{formatCurrency(current, currency)}</p>
         </div>
         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium ${isUp ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
@@ -104,11 +104,11 @@ function RevenueComparison({ current, previous, currency }: { current: number; p
       </div>
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider">Last Month</p>
-          <p className="text-lg font-semibold text-white/60 mt-1">{formatCurrency(previous, currency)}</p>
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Last Month</p>
+          <p className="text-lg font-semibold text-foreground-secondary mt-1">{formatCurrency(previous, currency)}</p>
         </div>
       </div>
-      <div className="h-2 bg-white/[0.02] rounded-full overflow-hidden">
+      <div className="h-2 bg-surface-1 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${Math.min((current / Math.max(previous, 1)) * 50, 100)}%` }}
@@ -174,7 +174,7 @@ export default function SupplierAnalyticsPage() {
       {/* Header */}
       <motion.div variants={fadeInUp}>
         <h1 className="text-2xl font-bold tracking-tight text-white">Analytics</h1>
-        <p className="text-sm text-white/40 mt-0.5">Performance insights and sales trends</p>
+        <p className="text-sm text-foreground-muted mt-0.5">Performance insights and sales trends</p>
       </motion.div>
 
       {/* Stats */}
@@ -193,13 +193,13 @@ export default function SupplierAnalyticsPage() {
       {/* Top Row */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Sales Trend */}
-        <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="lg:col-span-2 rounded-xl border border-border-subtle bg-surface-1 p-5">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <TrendingUp size={14} className="text-white/40" />
+              <TrendingUp size={14} className="text-foreground-muted" />
               Sales Trend
             </h3>
-            <span className="text-[10px] text-white/20 flex items-center gap-1">
+            <span className="text-[10px] text-foreground-muted flex items-center gap-1">
               <Calendar size={10} />
               Last 30 days
             </span>
@@ -215,9 +215,9 @@ export default function SupplierAnalyticsPage() {
                       initial={{ height: 0 }}
                       animate={{ height: `${height}%` }}
                       transition={{ duration: 0.5, delay: i * 0.02 }}
-                      className="w-full bg-white/[0.06] hover:bg-white/[0.12] rounded-t-sm transition-colors relative group"
+                      className="w-full bg-surface-2 hover:bg-surface-2 rounded-t-sm transition-colors relative group"
                     >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/[0.08] border border-white/[0.08] px-1.5 py-0.5 rounded text-[9px] text-white whitespace-nowrap">
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-2 border border-border-subtle px-1.5 py-0.5 rounded text-[9px] text-white whitespace-nowrap">
                         {formatCurrency(value, analytics.revenue?.currency)}
                       </div>
                     </motion.div>
@@ -231,9 +231,9 @@ export default function SupplierAnalyticsPage() {
         </div>
 
         {/* Revenue Comparison */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 size={14} className="text-white/40" />
+            <BarChart3 size={14} className="text-foreground-muted" />
             Revenue
           </h3>
           <RevenueComparison
@@ -247,9 +247,9 @@ export default function SupplierAnalyticsPage() {
       {/* Bottom Row */}
       <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Orders by Status */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 size={14} className="text-white/40" />
+            <BarChart3 size={14} className="text-foreground-muted" />
             Orders by Status
           </h3>
           {analytics.ordersByStatus.length > 0 ? (
@@ -260,25 +260,25 @@ export default function SupplierAnalyticsPage() {
         </div>
 
         {/* Top Products */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Package size={14} className="text-white/40" />
+            <Package size={14} className="text-foreground-muted" />
             Top Selling Products
           </h3>
           {analytics.topProducts.length > 0 ? (
             <div className="space-y-3">
               {analytics.topProducts.map((product, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-1 border border-border-invisible">
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono text-white/20 w-4">{i + 1}</span>
+                    <span className="text-[10px] font-mono text-foreground-muted w-4">{i + 1}</span>
                     <div>
                       <p className="text-xs text-white">{product.name}</p>
-                      {product.sku && <p className="text-[10px] text-white/25">{product.sku}</p>}
+                      {product.sku && <p className="text-[10px] text-foreground-muted">{product.sku}</p>}
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-semibold text-white">{formatCurrency(product.revenue, analytics.revenue?.currency)}</p>
-                    <p className="text-[10px] text-white/25">{product.sold} sold</p>
+                    <p className="text-[10px] text-foreground-muted">{product.sold} sold</p>
                   </div>
                 </div>
               ))}
@@ -289,20 +289,20 @@ export default function SupplierAnalyticsPage() {
         </div>
 
         {/* Customer Hotels */}
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border-subtle bg-surface-1 p-5">
           <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Hotel size={14} className="text-white/40" />
+            <Hotel size={14} className="text-foreground-muted" />
             Top Customer Hotels
           </h3>
           {analytics.customerHotels.length > 0 ? (
             <div className="space-y-3">
               {analytics.customerHotels.map((hotel, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.015] border border-white/[0.04]">
+                <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-1 border border-border-invisible">
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono text-white/20 w-4">{i + 1}</span>
+                    <span className="text-[10px] font-mono text-foreground-muted w-4">{i + 1}</span>
                     <div>
                       <p className="text-xs text-white">{hotel.name}</p>
-                      <p className="text-[10px] text-white/25">{hotel.orders} orders</p>
+                      <p className="text-[10px] text-foreground-muted">{hotel.orders} orders</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -313,7 +313,7 @@ export default function SupplierAnalyticsPage() {
                       color="rgba(255,255,255,0.3)"
                       fillColor="rgba(255,255,255,0.04)"
                     />
-                    <p className="text-[10px] text-white/30 mt-1">{formatCurrency(hotel.revenue, analytics.revenue?.currency)}</p>
+                    <p className="text-[10px] text-foreground-muted mt-1">{formatCurrency(hotel.revenue, analytics.revenue?.currency)}</p>
                   </div>
                 </div>
               ))}

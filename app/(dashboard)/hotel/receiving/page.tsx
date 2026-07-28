@@ -100,7 +100,7 @@ export default function ReceivingPage() {
     <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="space-y-6 p-6">
       <motion.div variants={fadeInUp}>
         <h1 className="text-2xl font-bold text-white">Goods Receipt Notes</h1>
-        <p className="mt-1 text-sm text-white/50">Track deliveries, inspect goods, and confirm receipts for your orders.</p>
+        <p className="mt-1 text-sm text-foreground-tertiary">Track deliveries, inspect goods, and confirm receipts for your orders.</p>
       </motion.div>
 
       {/* Stats */}
@@ -111,9 +111,9 @@ export default function ReceivingPage() {
           { label: "Accepted", value: stats.accepted, icon: CheckCircle2, color: "text-emerald-400" },
           { label: "Rejected", value: stats.rejected, icon: AlertTriangle, color: "text-red-400" },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div key={stat.label} className="rounded-xl border border-border-subtle bg-surface-2 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white/50">{stat.label}</span>
+              <span className="text-sm text-foreground-tertiary">{stat.label}</span>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </div>
             <p className={`mt-2 text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -124,24 +124,24 @@ export default function ReceivingPage() {
       {/* Search + Tabs */}
       <motion.div variants={fadeInUp} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search by GRN number..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-sm text-white placeholder-white/30 outline-none focus:border-[#39ff7e]/50"
+            className="w-full rounded-lg border border-border-subtle bg-surface-2 py-2 pl-10 pr-4 text-sm text-white placeholder-foreground-muted outline-none focus:border-accent-base/50"
           />
         </div>
-        <div className="flex gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+        <div className="flex gap-1 rounded-lg border border-border-subtle bg-surface-2 p-1">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => { setActiveTab(tab); setPage(1); }}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 activeTab === tab
-                  ? "bg-[#39ff7e]/20 text-[#39ff7e]"
-                  : "text-white/40 hover:text-white/70"
+                  ? "bg-accent-base/20 text-accent-base"
+                  : "text-foreground-muted hover:text-foreground-secondary"
               }`}
             >
               {tab.replace("_", " ")}
@@ -151,7 +151,7 @@ export default function ReceivingPage() {
       </motion.div>
 
       {/* Table */}
-      <motion.div variants={fadeInUp} className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+      <motion.div variants={fadeInUp} className="overflow-hidden rounded-xl border border-border-subtle bg-surface-2">
         {isLoading ? (
           <LoadingTable rows={5} />
         ) : filtered.length === 0 ? (
@@ -164,7 +164,7 @@ export default function ReceivingPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-xs text-white/40">
+                <tr className="border-b border-border-subtle text-xs text-foreground-muted">
                   <th className="px-4 py-3 font-medium">GRN #</th>
                   <th className="px-4 py-3 font-medium">Order</th>
                   <th className="px-4 py-3 font-medium">Supplier</th>
@@ -180,19 +180,19 @@ export default function ReceivingPage() {
                   const totalReceived = grn.lineItems.reduce((s, li) => s + li.receivedQuantity, 0);
                   const totalAccepted = grn.lineItems.reduce((s, li) => s + li.acceptedQuantity, 0);
                   return (
-                    <tr key={grn.id} className="hover:bg-white/5 transition">
-                      <td className="px-4 py-3 font-mono text-xs text-[#39ff7e]">{grn.grnNumber}</td>
-                      <td className="px-4 py-3 text-white/70">{grn.order.orderNumber}</td>
-                      <td className="px-4 py-3 text-white/70">{grn.supplier.name}</td>
-                      <td className="px-4 py-3 text-white/70">{grn.lineItems.length}</td>
-                      <td className="px-4 py-3 text-white/70">
+                    <tr key={grn.id} className="hover:bg-surface-2 transition">
+                      <td className="px-4 py-3 font-mono text-xs text-accent-base">{grn.grnNumber}</td>
+                      <td className="px-4 py-3 text-foreground-secondary">{grn.order.orderNumber}</td>
+                      <td className="px-4 py-3 text-foreground-secondary">{grn.supplier.name}</td>
+                      <td className="px-4 py-3 text-foreground-secondary">{grn.lineItems.length}</td>
+                      <td className="px-4 py-3 text-foreground-secondary">
                         <span className="text-emerald-400">{totalAccepted}</span>
-                        <span className="text-white/30"> / {totalReceived}</span>
+                        <span className="text-foreground-muted"> / {totalReceived}</span>
                       </td>
                       <td className="px-4 py-3"><GrnStatusBadge status={grn.status} /></td>
-                      <td className="px-4 py-3 text-white/50">{new Date(grn.receivedAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-foreground-tertiary">{new Date(grn.receivedAt).toLocaleDateString()}</td>
                       <td className="px-4 py-3">
-                        <button onClick={() => setSelectedGrn(grn)} className="text-white/40 hover:text-[#39ff7e] transition">
+                        <button onClick={() => setSelectedGrn(grn)} className="text-foreground-muted hover:text-accent-base transition">
                           <Eye className="h-4 w-4" />
                         </button>
                       </td>
@@ -211,15 +211,15 @@ export default function ReceivingPage() {
           <button
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/50 hover:bg-white/10 disabled:opacity-30"
+            className="rounded-lg border border-border-subtle bg-surface-2 px-3 py-1.5 text-xs text-foreground-tertiary hover:bg-surface-2 disabled:opacity-30"
           >
             Prev
           </button>
-          <span className="text-xs text-white/40">Page {page} of {pagination.totalPages}</span>
+          <span className="text-xs text-foreground-muted">Page {page} of {pagination.totalPages}</span>
           <button
             disabled={page >= pagination.totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/50 hover:bg-white/10 disabled:opacity-30"
+            className="rounded-lg border border-border-subtle bg-surface-2 px-3 py-1.5 text-xs text-foreground-tertiary hover:bg-surface-2 disabled:opacity-30"
           >
             Next
           </button>
@@ -229,26 +229,26 @@ export default function ReceivingPage() {
       {/* Detail Panel */}
       {selectedGrn && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setSelectedGrn(null)}>
-          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#12121a] p-6 space-y-4">
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl border border-border-subtle bg-surface-1 p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-white">{selectedGrn.grnNumber}</h2>
-              <button onClick={() => setSelectedGrn(null)} className="text-white/40 hover:text-white">✕</button>
+              <button onClick={() => setSelectedGrn(null)} className="text-foreground-muted hover:text-white">✕</button>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div><span className="text-white/40">Order:</span> <span className="text-white">{selectedGrn.order.orderNumber}</span></div>
-              <div><span className="text-white/40">Supplier:</span> <span className="text-white">{selectedGrn.supplier.name}</span></div>
-              <div><span className="text-white/40">Status:</span> <GrnStatusBadge status={selectedGrn.status} /></div>
-              <div><span className="text-white/40">Received:</span> <span className="text-white">{new Date(selectedGrn.receivedAt).toLocaleString()}</span></div>
-              {selectedGrn.warehouseLocation && <div><span className="text-white/40">Location:</span> <span className="text-white">{selectedGrn.warehouseLocation}</span></div>}
-              {selectedGrn.deliveryNoteRef && <div><span className="text-white/40">Delivery Note:</span> <span className="text-white">{selectedGrn.deliveryNoteRef}</span></div>}
-              {selectedGrn.vehiclePlate && <div><span className="text-white/40">Vehicle:</span> <span className="text-white">{selectedGrn.vehiclePlate}</span></div>}
+              <div><span className="text-foreground-muted">Order:</span> <span className="text-white">{selectedGrn.order.orderNumber}</span></div>
+              <div><span className="text-foreground-muted">Supplier:</span> <span className="text-white">{selectedGrn.supplier.name}</span></div>
+              <div><span className="text-foreground-muted">Status:</span> <GrnStatusBadge status={selectedGrn.status} /></div>
+              <div><span className="text-foreground-muted">Received:</span> <span className="text-white">{new Date(selectedGrn.receivedAt).toLocaleString()}</span></div>
+              {selectedGrn.warehouseLocation && <div><span className="text-foreground-muted">Location:</span> <span className="text-white">{selectedGrn.warehouseLocation}</span></div>}
+              {selectedGrn.deliveryNoteRef && <div><span className="text-foreground-muted">Delivery Note:</span> <span className="text-white">{selectedGrn.deliveryNoteRef}</span></div>}
+              {selectedGrn.vehiclePlate && <div><span className="text-foreground-muted">Vehicle:</span> <span className="text-white">{selectedGrn.vehiclePlate}</span></div>}
             </div>
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-white/60">Line Items</h3>
-              <div className="rounded-lg border border-white/10 overflow-hidden">
+              <h3 className="text-sm font-medium text-foreground-secondary">Line Items</h3>
+              <div className="rounded-lg border border-border-subtle overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-white/10 text-white/40">
+                    <tr className="border-b border-border-subtle text-foreground-muted">
                       <th className="px-3 py-2 text-left font-medium">Product</th>
                       <th className="px-3 py-2 text-right font-medium">Ordered</th>
                       <th className="px-3 py-2 text-right font-medium">Received</th>
@@ -258,13 +258,13 @@ export default function ReceivingPage() {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {selectedGrn.lineItems.map((li) => (
-                      <tr key={li.id} className="hover:bg-white/5">
-                        <td className="px-3 py-2 text-white/70">
+                      <tr key={li.id} className="hover:bg-surface-2">
+                        <td className="px-3 py-2 text-foreground-secondary">
                           {li.product.name}
-                          <span className="ml-1 text-white/30">({li.product.sku})</span>
+                          <span className="ml-1 text-foreground-muted">({li.product.sku})</span>
                         </td>
-                        <td className="px-3 py-2 text-right text-white/50">{li.orderedQuantity}</td>
-                        <td className="px-3 py-2 text-right text-white/70">{li.receivedQuantity}</td>
+                        <td className="px-3 py-2 text-right text-foreground-tertiary">{li.orderedQuantity}</td>
+                        <td className="px-3 py-2 text-right text-foreground-secondary">{li.receivedQuantity}</td>
                         <td className="px-3 py-2 text-right text-emerald-400">{li.acceptedQuantity}</td>
                         <td className="px-3 py-2 text-right text-red-400">{li.rejectedQuantity}</td>
                       </tr>
@@ -274,7 +274,7 @@ export default function ReceivingPage() {
               </div>
             </div>
             {selectedGrn.notes && (
-              <div className="text-sm"><span className="text-white/40">Notes:</span> <span className="text-white/70">{selectedGrn.notes}</span></div>
+              <div className="text-sm"><span className="text-foreground-muted">Notes:</span> <span className="text-foreground-secondary">{selectedGrn.notes}</span></div>
             )}
           </div>
         </div>

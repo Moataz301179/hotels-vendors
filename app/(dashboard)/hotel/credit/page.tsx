@@ -81,14 +81,14 @@ export default async function HotelCreditPage() {
       EXPIRED: { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/20" },
       SUSPENDED: { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/20" },
     };
-    return s[status] ?? { bg: "bg-white/5", text: "text-white/60", border: "border-white/10" };
+    return s[status] ?? { bg: "bg-surface-2", text: "text-foreground-secondary", border: "border-border-subtle" };
   };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Credit Management</h1>
-        <p className="text-sm text-white/40 mt-1">
+        <p className="text-sm text-foreground-muted mt-1">
           Monitor your credit limit, utilization, and facility status
         </p>
       </div>
@@ -96,41 +96,41 @@ export default async function HotelCreditPage() {
       {/* Credit Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <CreditCard size={14} />
             Credit Limit
           </div>
           <p className="text-2xl font-bold text-white metric-value">{formatEGP(creditLimit)}</p>
-          <p className="text-xs text-white/40">{hotel?.tier ?? "N/A"} tier</p>
+          <p className="text-xs text-foreground-muted">{hotel?.tier ?? "N/A"} tier</p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <TrendingUp size={14} />
             Credit Used
           </div>
           <p className="text-2xl font-bold text-orange-400 metric-value">{formatEGP(creditUsed)}</p>
-          <p className="text-xs text-white/40">{utilizationRate.toFixed(1)}% utilized</p>
+          <p className="text-xs text-foreground-muted">{utilizationRate.toFixed(1)}% utilized</p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <TrendingDown size={14} />
             Available Balance
           </div>
           <p className="text-2xl font-bold text-emerald-400 metric-value">{formatEGP(available)}</p>
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-foreground-muted">
             {utilizationRate > 80 ? "Low availability" : "Healthy balance"}
           </p>
         </div>
 
         <div className="glass-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-wider font-medium">
+          <div className="flex items-center gap-2 text-foreground-tertiary text-xs uppercase tracking-wider font-medium">
             <AlertCircle size={14} />
             Risk Tier
           </div>
           <p className="text-2xl font-bold text-white metric-value">{hotel?.riskTier ?? "N/A"}</p>
-          <p className="text-xs text-white/40">Based on payment history</p>
+          <p className="text-xs text-foreground-muted">Based on payment history</p>
         </div>
       </div>
 
@@ -138,9 +138,9 @@ export default async function HotelCreditPage() {
       <div className="glass-card p-5">
         <div className="flex justify-between items-center mb-3">
           <h3 className="font-semibold text-white">Credit Utilization</h3>
-          <span className="text-sm text-white/50">{utilizationRate.toFixed(1)}%</span>
+          <span className="text-sm text-foreground-tertiary">{utilizationRate.toFixed(1)}%</span>
         </div>
-        <div className="w-full h-3 rounded-full bg-white/5 overflow-hidden">
+        <div className="w-full h-3 rounded-full bg-surface-2 overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{
@@ -150,11 +150,11 @@ export default async function HotelCreditPage() {
                   ? "linear-gradient(90deg, #ef4444, #f97316)"
                   : utilizationRate > 50
                     ? "linear-gradient(90deg, #f97316, #eab308)"
-                    : "linear-gradient(90deg, #39ff7e, #22c55e)",
+                    : "linear-gradient(90deg, var(--accent-base), #22c55e)",
             }}
           />
         </div>
-        <div className="flex justify-between mt-2 text-xs text-white/40">
+        <div className="flex justify-between mt-2 text-xs text-foreground-muted">
           <span>{formatEGP(creditUsed)} used</span>
           <span>{formatEGP(creditLimit)} limit</span>
         </div>
@@ -168,13 +168,13 @@ export default async function HotelCreditPage() {
             {creditFacilities.map((f) => {
               const statusStyle = facilityStatusLabel(f.status);
               return (
-                <div key={f.id} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div key={f.id} className="p-4 rounded-xl bg-surface-1 border border-border-subtle">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm font-medium text-white">
                         {f.factoringCompany?.name ?? "Unknown Provider"}
                       </p>
-                      <p className="text-xs text-white/40 mt-1">
+                      <p className="text-xs text-foreground-muted mt-1">
                         Limit: {formatEGP(Number(f.limit ?? 0))} · Utilized: {formatEGP(Number(f.utilized ?? 0))}
                       </p>
                     </div>
@@ -183,7 +183,7 @@ export default async function HotelCreditPage() {
                     </span>
                   </div>
                   {f.interestRate && (
-                    <p className="text-xs text-white/40 mt-2">
+                    <p className="text-xs text-foreground-muted mt-2">
                       Interest Rate: {(Number(f.interestRate) * 100).toFixed(2)}%
                     </p>
                   )}
@@ -196,11 +196,11 @@ export default async function HotelCreditPage() {
 
       {/* Credit History */}
       <div className="glass-card overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/[0.06]">
+        <div className="px-5 py-4 border-b border-border-subtle">
           <h3 className="font-semibold text-white">Credit History</h3>
         </div>
         {recentTransactions.length === 0 ? (
-          <div className="px-5 py-12 text-center text-white/30">
+          <div className="px-5 py-12 text-center text-foreground-muted">
             <Clock size={32} className="mx-auto mb-3 opacity-50" />
             <p className="text-sm">No credit transactions yet</p>
           </div>
@@ -210,7 +210,7 @@ export default async function HotelCreditPage() {
               <div key={tx.id} className="flex items-center justify-between px-5 py-3">
                 <div>
                   <p className="text-sm text-white">{transactionTypeLabel(tx.type)}</p>
-                  <p className="text-xs text-white/40 mt-0.5">
+                  <p className="text-xs text-foreground-muted mt-0.5">
                     {tx.description ?? new Date(tx.createdAt).toLocaleDateString("en-EG")}
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export default async function HotelCreditPage() {
                   >
                     {tx.amount ? formatEGP(Math.abs(Number(tx.amount))) : "—"}
                   </p>
-                  <p className="text-xs text-white/30">
+                  <p className="text-xs text-foreground-muted">
                     {new Date(tx.createdAt).toLocaleDateString("en-EG", {
                       month: "short",
                       day: "numeric",

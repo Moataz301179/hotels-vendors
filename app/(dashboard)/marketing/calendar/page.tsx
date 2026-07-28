@@ -36,7 +36,7 @@ const EVENTS: CalendarEvent[] = [
 const STATUS_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
   published: { bg: "bg-emerald-500/15", text: "text-emerald-400", dot: "bg-emerald-400" },
   scheduled: { bg: "bg-blue-500/15", text: "text-blue-400", dot: "bg-blue-400" },
-  draft: { bg: "bg-white/[0.06]", text: "text-white/40", dot: "bg-white/30" },
+  draft: { bg: "bg-surface-2", text: "text-foreground-muted", dot: "bg-surface-1" },
 };
 
 export default function CalendarPage() {
@@ -71,8 +71,8 @@ export default function CalendarPage() {
         ].map((s) => (
           <div key={s.label} className="flex items-center gap-1.5">
             <div className={`w-2 h-2 rounded-full ${s.style.dot}`} />
-            <span className="text-white/40">
-              {s.label}: <span className="text-white/70 font-medium">{s.count}</span>
+            <span className="text-foreground-muted">
+              {s.label}: <span className="text-foreground-secondary font-medium">{s.count}</span>
             </span>
           </div>
         ))}
@@ -82,11 +82,11 @@ export default function CalendarPage() {
         {/* Calendar Grid */}
         <SectionCard title={MONTH_NAME}>
           <div className="flex items-center justify-between mb-4">
-            <button className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors">
+            <button className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-white transition-colors">
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="text-[13px] font-semibold text-white">{MONTH_NAME}</span>
-            <button className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors">
+            <button className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-white transition-colors">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -94,7 +94,7 @@ export default function CalendarPage() {
           {/* Day Headers */}
           <div className="grid grid-cols-7 gap-1 mb-1">
             {DAY_LABELS.map((d) => (
-              <div key={d} className="text-center text-[10px] text-white/30 uppercase py-1">
+              <div key={d} className="text-center text-[10px] text-foreground-muted uppercase py-1">
                 {d}
               </div>
             ))}
@@ -122,11 +122,11 @@ export default function CalendarPage() {
                     isSelected
                       ? "bg-[var(--accent-500)]/20 border border-[var(--accent-500)]/40"
                       : isToday
-                        ? "bg-white/[0.06] border border-white/[0.1]"
-                        : "hover:bg-white/[0.04] border border-transparent"
+                        ? "bg-surface-2 border border-border-subtle"
+                        : "hover:bg-surface-2 border border-transparent"
                   }`}
                 >
-                  <span className={`text-[11px] font-medium ${isToday ? "text-[var(--accent-400)]" : "text-white/50"}`}>
+                  <span className={`text-[11px] font-medium ${isToday ? "text-[var(--accent-400)]" : "text-foreground-tertiary"}`}>
                     {day}
                   </span>
                   <div className="flex gap-0.5 flex-wrap justify-center">
@@ -147,11 +147,11 @@ export default function CalendarPage() {
               {selectedEvents.map((event) => {
                 const style = STATUS_STYLES[event.status];
                 return (
-                  <div key={event.id} className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.04]">
+                  <div key={event.id} className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="text-[13px] font-medium text-white">{event.title}</p>
-                        <p className="text-[11px] text-white/30 mt-0.5">{event.channel}</p>
+                        <p className="text-[11px] text-foreground-muted mt-0.5">{event.channel}</p>
                       </div>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium flex-shrink-0 ${style.bg} ${style.text}`}>
                         {event.status}
@@ -163,16 +163,16 @@ export default function CalendarPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <CalendarDays className="w-8 h-8 text-white/10 mb-3" />
-              <p className="text-[12px] text-white/30">
+              <CalendarDays className="w-8 h-8 text-foreground-muted mb-3" />
+              <p className="text-[12px] text-foreground-muted">
                 {selectedDay ? "No content scheduled" : "Click a date to see content"}
               </p>
             </div>
           )}
 
           {/* Upcoming Items */}
-          <div className="mt-6 pt-4 border-t border-white/[0.06]">
-            <h4 className="text-[11px] text-white/30 uppercase tracking-wider mb-3">Upcoming This Week</h4>
+          <div className="mt-6 pt-4 border-t border-border-subtle">
+            <h4 className="text-[11px] text-foreground-muted uppercase tracking-wider mb-3">Upcoming This Week</h4>
             <div className="space-y-2">
               {EVENTS.filter((e) => e.date >= 27 && e.date <= 31).map((event) => {
                 const style = STATUS_STYLES[event.status];
@@ -180,9 +180,9 @@ export default function CalendarPage() {
                   <div key={event.id} className="flex items-center gap-2.5 py-1.5">
                     <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${style.dot}`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[12px] text-white/60 truncate">{event.title}</p>
+                      <p className="text-[12px] text-foreground-secondary truncate">{event.title}</p>
                     </div>
-                    <span className="text-[10px] text-white/25">Jul {event.date}</span>
+                    <span className="text-[10px] text-foreground-muted">Jul {event.date}</span>
                   </div>
                 );
               })}

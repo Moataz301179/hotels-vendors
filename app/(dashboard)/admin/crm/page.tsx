@@ -101,8 +101,8 @@ const STATUS_CONFIG: Record<
 > = {
   DISCOVERED: {
     label: "Discovered",
-    color: "bg-white/5 text-white/50 border-white/10",
-    dot: "bg-white/30",
+    color: "bg-surface-2 text-foreground-tertiary border-border-subtle",
+    dot: "bg-surface-1",
   },
   ENRICHED: {
     label: "Enriched",
@@ -151,8 +151,8 @@ const STATUS_CONFIG: Record<
   },
   PAUSED: {
     label: "Paused",
-    color: "bg-white/5 text-white/30 border-white/8",
-    dot: "bg-white/20",
+    color: "bg-surface-2 text-foreground-muted border-border-subtle",
+    dot: "bg-surface-2",
   },
 };
 
@@ -227,7 +227,7 @@ function PriorityBadge({ score }: { score: number }) {
       ? "text-red-400 bg-red-500/10"
       : score >= 5
         ? "text-amber-400 bg-amber-500/10"
-        : "text-white/30 bg-white/5";
+        : "text-foreground-muted bg-surface-2";
   return (
     <span
       className={`inline-flex items-center justify-center min-w-[28px] h-7 px-1.5 rounded-lg text-[11px] font-bold ${color}`}
@@ -249,7 +249,7 @@ function StatsCard({
   accent?: string;
 }) {
   return (
-    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center gap-3">
+    <div className="p-4 rounded-xl bg-surface-1 border border-border-subtle flex items-center gap-3">
       <div
         className={`w-9 h-9 rounded-lg flex items-center justify-center ${accent || "bg-accent-base/15"}`}
       >
@@ -259,7 +259,7 @@ function StatsCard({
         <p className="text-[20px] font-bold text-white leading-tight">
           {value}
         </p>
-        <p className="text-[11px] text-white/40 uppercase tracking-wider">
+        <p className="text-[11px] text-foreground-muted uppercase tracking-wider">
           {label}
         </p>
       </div>
@@ -328,13 +328,13 @@ function SlideOver({
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         onClick={(e) => e.stopPropagation()}
-        className="absolute right-0 top-0 bottom-0 w-full max-w-lg bg-[#0f0f0f] border-l border-white/[0.06] overflow-y-auto"
+        className="absolute right-0 top-0 bottom-0 w-full max-w-lg bg-surface-1 border-l border-border-subtle overflow-y-auto"
       >
-        <div className="sticky top-0 z-10 bg-[#0f0f0f] border-b border-white/[0.06] px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-surface-1 border-b border-border-subtle px-6 py-4 flex items-center justify-between">
           <h2 className="text-[15px] font-bold text-white">Lead Details</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] transition-colors"
+            className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -389,20 +389,20 @@ function SlideOver({
               { label: "Responses", value: String(lead.responseCount) },
             ].map(({ label, value }) => (
               <div key={label}>
-                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-0.5">
+                <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-0.5">
                   {label}
                 </p>
-                <p className="text-[13px] text-white/70 truncate">{value}</p>
+                <p className="text-[13px] text-foreground-secondary truncate">{value}</p>
               </div>
             ))}
           </div>
 
           {lead.enrichment && (
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">
+            <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+              <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">
                 Enrichment Notes
               </p>
-              <p className="text-[13px] text-white/60 whitespace-pre-wrap">
+              <p className="text-[13px] text-foreground-secondary whitespace-pre-wrap">
                 {lead.enrichment}
               </p>
             </div>
@@ -411,7 +411,7 @@ function SlideOver({
           {/* Outreach History */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-[13px] font-semibold text-white/70">
+              <h4 className="text-[13px] font-semibold text-foreground-secondary">
                 Outreach History
               </h4>
               <button
@@ -431,14 +431,14 @@ function SlideOver({
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden mb-3"
                 >
-                  <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+                  <div className="p-3 rounded-lg bg-surface-1 border border-border-subtle space-y-2.5">
                     <div className="grid grid-cols-2 gap-2">
                       <select
                         value={outreachForm.channel}
                         onChange={(e) =>
                           setOutreachForm({ ...outreachForm, channel: e.target.value })
                         }
-                        className="h-8 px-2 rounded-lg text-[12px] text-white/70 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+                        className="h-8 px-2 rounded-lg text-[12px] text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
                       >
                         {OUTREACH_CHANNELS.map((ch) => (
                           <option key={ch} value={ch}>
@@ -454,7 +454,7 @@ function SlideOver({
                             messageType: e.target.value,
                           })
                         }
-                        className="h-8 px-2 rounded-lg text-[12px] text-white/70 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+                        className="h-8 px-2 rounded-lg text-[12px] text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
                       >
                         {OUTREACH_TYPES.map((t) => (
                           <option key={t} value={t}>
@@ -473,7 +473,7 @@ function SlideOver({
                           subject: e.target.value,
                         })
                       }
-                      className="w-full h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+                      className="w-full h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
                     />
                     <textarea
                       placeholder="Message body..."
@@ -482,7 +482,7 @@ function SlideOver({
                       onChange={(e) =>
                         setOutreachForm({ ...outreachForm, body: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-lg text-[12px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40 resize-none"
+                      className="w-full px-3 py-2 rounded-lg text-[12px] text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40 resize-none"
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <input
@@ -495,7 +495,7 @@ function SlideOver({
                             recipientEmail: e.target.value,
                           })
                         }
-                        className="h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+                        className="h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
                       />
                       <input
                         type="tel"
@@ -507,13 +507,13 @@ function SlideOver({
                             recipientPhone: e.target.value,
                           })
                         }
-                        className="h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+                        className="h-8 px-3 rounded-lg text-[12px] text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
                       />
                     </div>
                     <button
                       onClick={handleLogOutreach}
                       disabled={outreachLoading}
-                      className="w-full h-8 rounded-lg bg-accent-base hover:bg-[#b91c1c] text-white text-[12px] font-medium transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      className="w-full h-8 rounded-lg bg-accent-base hover:bg-red-700 text-white text-[12px] font-medium transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       {outreachLoading ? (
                         <Loader2 className="w-3 h-3 animate-spin" />
@@ -529,7 +529,7 @@ function SlideOver({
 
             <div className="space-y-2">
               {(lead.outreachLogs ?? []).length === 0 && (
-                <p className="text-[12px] text-white/20 py-4 text-center">
+                <p className="text-[12px] text-foreground-muted py-4 text-center">
                   No outreach logged yet
                 </p>
               )}
@@ -538,30 +538,30 @@ function SlideOver({
                 return (
                   <div
                     key={log.id}
-                    className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]"
+                    className="p-3 rounded-lg bg-surface-1 border border-border-invisible"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        <ChIcon className="w-3 h-3 text-white/30" />
-                        <span className="text-[11px] font-medium text-white/60">
+                        <ChIcon className="w-3 h-3 text-foreground-muted" />
+                        <span className="text-[11px] font-medium text-foreground-secondary">
                           {log.channel} · {log.messageType}
                         </span>
                       </div>
-                      <span className="text-[10px] text-white/20">
+                      <span className="text-[10px] text-foreground-muted">
                         {new Date(log.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     {log.subject && (
-                      <p className="text-[12px] text-white/50 mb-0.5">
+                      <p className="text-[12px] text-foreground-tertiary mb-0.5">
                         {log.subject}
                       </p>
                     )}
                     {log.body && (
-                      <p className="text-[11px] text-white/30 line-clamp-2">
+                      <p className="text-[11px] text-foreground-muted line-clamp-2">
                         {log.body}
                       </p>
                     )}
-                    <p className="text-[10px] text-white/20 mt-1">
+                    <p className="text-[10px] text-foreground-muted mt-1">
                       by {log.agentName}
                     </p>
                   </div>
@@ -638,7 +638,7 @@ export default function AdminCrmPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-border-subtle">
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-accent-base/15 flex items-center justify-center">
@@ -648,13 +648,13 @@ export default function AdminCrmPage() {
               <h1 className="text-[22px] font-bold tracking-tight text-white">
                 CRM Pipeline
               </h1>
-              <p className="text-[13px] text-white/40">
+              <p className="text-[13px] text-foreground-muted">
                 Lead management and outreach tracking
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] text-white/40">
+            <span className="text-[13px] text-foreground-muted">
               {pagination?.total ?? 0} total leads
             </span>
           </div>
@@ -700,7 +700,7 @@ export default function AdminCrmPage() {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[220px] max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted" />
             <input
               type="text"
               placeholder="Search leads..."
@@ -709,7 +709,7 @@ export default function AdminCrmPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40 transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-lg text-sm text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40 transition-all"
             />
           </div>
           <select
@@ -718,7 +718,7 @@ export default function AdminCrmPage() {
               setTypeFilter(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Types</option>
             <option value="HOTEL">Hotels</option>
@@ -732,7 +732,7 @@ export default function AdminCrmPage() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Statuses</option>
             {ALL_STATUSES.map((s) => (
@@ -749,7 +749,7 @@ export default function AdminCrmPage() {
               setCityFilter(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 rounded-lg text-sm text-white placeholder:text-white/20 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40 w-32"
+            className="h-10 px-3 rounded-lg text-sm text-white placeholder:text-foreground-muted bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40 w-32"
           />
           <select
             value={priorityFilter}
@@ -757,7 +757,7 @@ export default function AdminCrmPage() {
               setPriorityFilter(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 rounded-lg text-sm text-white/60 bg-white/[0.04] border border-white/[0.08] outline-none focus:border-accent-base/40"
+            className="h-10 px-3 rounded-lg text-sm text-foreground-secondary bg-surface-2 border border-border-subtle outline-none focus:border-accent-base/40"
           >
             <option value="">All Priority</option>
             <option value="10">P10 (Critical)</option>
@@ -768,30 +768,30 @@ export default function AdminCrmPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl bg-[#0f0f0f] border border-white/[0.06] overflow-hidden">
+        <div className="rounded-xl bg-surface-1 border border-border-subtle overflow-hidden">
           <div className="overflow-x-auto table-scroll-wrapper">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                <tr className="border-b border-border-subtle">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Lead
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     City
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Priority
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Score
                   </th>
-                  <th className="px-5 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                  <th className="px-5 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">
                     Last Contact
                   </th>
                 </tr>
@@ -801,7 +801,7 @@ export default function AdminCrmPage() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="px-5 py-12 text-center text-white/30 text-[13px]"
+                      className="px-5 py-12 text-center text-foreground-muted text-[13px]"
                     >
                       Loading leads...
                     </td>
@@ -811,7 +811,7 @@ export default function AdminCrmPage() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="px-5 py-12 text-center text-white/30 text-[13px]"
+                      className="px-5 py-12 text-center text-foreground-muted text-[13px]"
                     >
                       No leads found
                     </td>
@@ -829,7 +829,7 @@ export default function AdminCrmPage() {
                       onClick={() =>
                         setSelectedLead(lead as LeadDetailResponse)
                       }
-                      className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                      className="hover:bg-surface-1 transition-colors cursor-pointer"
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
@@ -842,7 +842,7 @@ export default function AdminCrmPage() {
                             <p className="text-[13px] font-medium text-white truncate max-w-[200px]">
                               {lead.name}
                             </p>
-                            <p className="text-[12px] text-white/30 flex items-center gap-1">
+                            <p className="text-[12px] text-foreground-muted flex items-center gap-1">
                               {lead.email && (
                                 <>
                                   <Mail className="w-3 h-3" /> {lead.email}
@@ -854,7 +854,7 @@ export default function AdminCrmPage() {
                                 </>
                               )}
                               {!lead.email && !lead.phone && (
-                                <span className="text-white/15">No contact</span>
+                                <span className="text-foreground-muted">No contact</span>
                               )}
                             </p>
                           </div>
@@ -868,8 +868,8 @@ export default function AdminCrmPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="text-[13px] text-white/50 flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-white/20" />
+                        <span className="text-[13px] text-foreground-tertiary flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-foreground-muted" />
                           {lead.city || "—"}
                         </span>
                       </td>
@@ -883,7 +883,7 @@ export default function AdminCrmPage() {
                         <ScoreBadge score={score} />
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="text-[12px] text-white/30 flex items-center gap-1">
+                        <span className="text-[12px] text-foreground-muted flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {lead.lastContactAt
                             ? new Date(lead.lastContactAt).toLocaleDateString()
@@ -899,8 +899,8 @@ export default function AdminCrmPage() {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-[11px] text-white/30">
+            <div className="px-5 py-3 border-t border-border-subtle flex items-center justify-between">
+              <span className="text-[11px] text-foreground-muted">
                 Showing {(page - 1) * pagination.limit + 1} -{" "}
                 {Math.min(page * pagination.limit, pagination.total)} of{" "}
                 {pagination.total}
@@ -909,11 +909,11 @@ export default function AdminCrmPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] disabled:opacity-30 transition-colors"
+                  className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-[12px] text-white/50 px-2">
+                <span className="text-[12px] text-foreground-tertiary px-2">
                   {page} / {pagination.totalPages}
                 </span>
                 <button
@@ -921,7 +921,7 @@ export default function AdminCrmPage() {
                     setPage((p) => Math.min(pagination.totalPages, p + 1))
                   }
                   disabled={page >= pagination.totalPages}
-                  className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] disabled:opacity-30 transition-colors"
+                  className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 disabled:opacity-30 transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

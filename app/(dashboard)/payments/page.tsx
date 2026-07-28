@@ -96,9 +96,9 @@ export default function PaymentsPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Payments & Transactions</h1>
-          <p className="text-sm text-white/40 mt-0.5">Monitor payment flows, factoring settlements, and transaction history</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Monitor payment flows, factoring settlements, and transaction history</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-2 hover:bg-surface-2 border border-border-subtle text-xs text-foreground-secondary transition-all">
           <Download size={14} />
           Export Report
         </button>
@@ -110,12 +110,12 @@ export default function PaymentsPage() {
           <motion.div
             key={s.label}
             variants={fadeInUp}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+            className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
           >
             <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <s.icon size={15} className="text-white/40" />
+              <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
+              <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
+                <s.icon size={15} className="text-foreground-muted" />
               </div>
             </div>
             <p className="text-xl font-bold text-white">{s.value}</p>
@@ -136,71 +136,71 @@ export default function PaymentsPage() {
       <motion.div variants={fadeInUp} className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-md">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
             <input
               type="text"
               placeholder="Search transactions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
+            className="px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-foreground-secondary focus:outline-none"
           >
-            <option value="all" className="bg-[#0a0a0a]">All Status</option>
-            <option value="COMPLETED" className="bg-[#0a0a0a]">Completed</option>
-            <option value="PENDING" className="bg-[#0a0a0a]">Pending</option>
-            <option value="FAILED" className="bg-[#0a0a0a]">Failed</option>
+            <option value="all" className="bg-surface-2">All Status</option>
+            <option value="COMPLETED" className="bg-surface-2">Completed</option>
+            <option value="PENDING" className="bg-surface-2">Pending</option>
+            <option value="FAILED" className="bg-surface-2">Failed</option>
           </select>
         </div>
 
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+        <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
-              <p className="text-xs text-white/30 mt-3">Loading transactions...</p>
+              <div className="w-6 h-6 border-2 border-border-subtle border-t-accent-base rounded-full animate-spin mx-auto" />
+              <p className="text-xs text-foreground-muted mt-3">Loading transactions...</p>
             </div>
           ) : filteredTxns.length === 0 ? (
             <div className="p-8 text-center">
-              <CreditCard size={32} className="text-white/10 mx-auto mb-3" />
-              <p className="text-sm text-white/30">
+              <CreditCard size={32} className="text-foreground-muted mx-auto mb-3" />
+              <p className="text-sm text-foreground-muted">
                 {searchQuery || filterStatus !== "all" ? "No matching transactions." : "No transactions yet."}
               </p>
-              <p className="text-xs text-white/20 mt-1">Transactions will appear here once payments are processed.</p>
+              <p className="text-xs text-foreground-muted mt-1">Transactions will appear here once payments are processed.</p>
             </div>
           ) : (
             <table className="w-full min-w-[640px]">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Transaction ID</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Method</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
+                <tr className="border-b border-border-subtle">
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Transaction ID</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Supplier</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Method</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTxns.map((t) => (
-                  <tr key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <tr key={t.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-white/60">{t.id.slice(0, 12)}</span>
+                      <span className="text-xs font-mono text-foreground-secondary">{t.id.slice(0, 12)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs text-white">{t.hotel?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/40">{t.supplier?.name || "—"}</span>
+                      <span className="text-[11px] text-foreground-muted">{t.supplier?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs font-semibold text-white">EGP {t.amount.toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.method] || "bg-white/10 text-white/40"}`}>
+                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${METHOD_COLORS[t.method] || "bg-surface-2 text-foreground-muted"}`}>
                         {t.method}
                       </span>
                     </td>
@@ -208,7 +208,7 @@ export default function PaymentsPage() {
                       <StatusBadge status={t.status} />
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/30">
+                      <span className="text-[11px] text-foreground-muted">
                         {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—"}
                       </span>
                     </td>

@@ -27,7 +27,7 @@ const CAMPAIGNS: Campaign[] = [
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string }> = {
   active: { label: "Active", bg: "bg-emerald-500/15", text: "text-emerald-400" },
-  draft: { label: "Draft", bg: "bg-white/[0.06]", text: "text-white/40" },
+  draft: { label: "Draft", bg: "bg-surface-2", text: "text-foreground-muted" },
   completed: { label: "Completed", bg: "bg-blue-500/15", text: "text-blue-400" },
   paused: { label: "Paused", bg: "bg-amber-500/15", text: "text-amber-400" },
 };
@@ -67,10 +67,10 @@ export default function CampaignsPage() {
           { label: "Total Budget", value: formatEgp(totalBudget), icon: Eye, color: "#f59e0b" },
           { label: "Conversions", value: String(totalConversions), icon: ArrowRightLeft, color: "#8b5cf6" },
         ].map((kpi, i) => (
-          <div key={kpi.label} className="p-4 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
+          <div key={kpi.label} className="p-4 rounded-xl bg-surface-1 border border-border-subtle">
             <div className="flex items-center gap-2 mb-2">
               <kpi.icon className="w-4 h-4" style={{ color: kpi.color }} />
-              <span className="text-[10px] text-white/30 uppercase tracking-wider">{kpi.label}</span>
+              <span className="text-[10px] text-foreground-muted uppercase tracking-wider">{kpi.label}</span>
             </div>
             <div className="text-[18px] font-bold text-white">{kpi.value}</div>
           </div>
@@ -82,18 +82,18 @@ export default function CampaignsPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">Campaign</th>
-                <th className="text-left text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">Status</th>
-                <th className="text-left text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">Channel</th>
-                <th className="text-right text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">Budget</th>
-                <th className="text-right text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">
+              <tr className="border-b border-border-subtle">
+                <th className="text-left text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">Campaign</th>
+                <th className="text-left text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">Status</th>
+                <th className="text-left text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">Channel</th>
+                <th className="text-right text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">Budget</th>
+                <th className="text-right text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">
                   <span className="inline-flex items-center gap-1"><Eye className="w-3 h-3" />Impressions</span>
                 </th>
-                <th className="text-right text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3 pr-4">
+                <th className="text-right text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3 pr-4">
                   <span className="inline-flex items-center gap-1"><MousePointerClick className="w-3 h-3" />CTR</span>
                 </th>
-                <th className="text-right text-[11px] text-white/30 uppercase tracking-wider font-medium pb-3">
+                <th className="text-right text-[11px] text-foreground-muted uppercase tracking-wider font-medium pb-3">
                   <span className="inline-flex items-center gap-1"><ArrowRightLeft className="w-3 h-3" />CVR</span>
                 </th>
               </tr>
@@ -102,7 +102,7 @@ export default function CampaignsPage() {
               {CAMPAIGNS.map((campaign) => {
                 const status = STATUS_CONFIG[campaign.status];
                 return (
-                  <tr key={campaign.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={campaign.id} className="hover:bg-surface-1 transition-colors">
                     <td className="py-3.5 pr-4">
                       <p className="text-[13px] font-medium text-white">{campaign.name}</p>
                     </td>
@@ -111,11 +111,11 @@ export default function CampaignsPage() {
                         {status.label}
                       </span>
                     </td>
-                    <td className="py-3.5 pr-4 text-[12px] text-white/50">{campaign.channel}</td>
-                    <td className="py-3.5 pr-4 text-[12px] text-white/60 text-right font-medium">{formatEgp(campaign.budget)}</td>
-                    <td className="py-3.5 pr-4 text-[12px] text-white/60 text-right">{campaign.impressions.toLocaleString()}</td>
-                    <td className="py-3.5 pr-4 text-[12px] text-white/60 text-right">{ctr(campaign.clicks, campaign.impressions)}</td>
-                    <td className="py-3.5 text-[12px] text-white/60 text-right">{cvr(campaign.conversions, campaign.clicks)}</td>
+                    <td className="py-3.5 pr-4 text-[12px] text-foreground-tertiary">{campaign.channel}</td>
+                    <td className="py-3.5 pr-4 text-[12px] text-foreground-secondary text-right font-medium">{formatEgp(campaign.budget)}</td>
+                    <td className="py-3.5 pr-4 text-[12px] text-foreground-secondary text-right">{campaign.impressions.toLocaleString()}</td>
+                    <td className="py-3.5 pr-4 text-[12px] text-foreground-secondary text-right">{ctr(campaign.clicks, campaign.impressions)}</td>
+                    <td className="py-3.5 text-[12px] text-foreground-secondary text-right">{cvr(campaign.conversions, campaign.clicks)}</td>
                   </tr>
                 );
               })}

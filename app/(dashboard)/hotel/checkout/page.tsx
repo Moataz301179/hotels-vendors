@@ -141,23 +141,23 @@ export default function CheckoutPage() {
           <CheckCircle size={40} className="text-emerald-400" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Order Placed Successfully</h1>
-        <p className="text-white/40 mb-6">Your orders have been submitted for approval.</p>
+        <p className="text-foreground-muted mb-6">Your orders have been submitted for approval.</p>
         <div className="space-y-3 mb-8">
           {orders.map((o) => (
-            <div key={o.id} className="bg-white/[0.02] rounded-xl border border-white/[0.06] p-4 text-left">
+            <div key={o.id} className="bg-surface-1 rounded-xl border border-border-subtle p-4 text-left">
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm font-semibold text-white">{o.orderNumber ?? o.id.slice(0, 8)}</p>
-                  <p className="text-xs text-white/40">{o.supplier ?? 'Supplier'}</p>
+                  <p className="text-xs text-foreground-muted">{o.supplier ?? 'Supplier'}</p>
                 </div>
-                <span className="text-sm font-bold text-[#39ff7e]">EGP {o.total.toFixed(2)}</span>
+                <span className="text-sm font-bold text-accent-base">EGP {o.total.toFixed(2)}</span>
               </div>
             </div>
           ))}
         </div>
         <button
           onClick={() => router.push("/hotel/order")}
-          className="px-6 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] font-medium hover:bg-[#39ff7e]/90 transition-colors"
+          className="px-6 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-accent-base/90 transition-colors"
         >
           Track Orders
         </button>
@@ -180,16 +180,16 @@ export default function CheckoutPage() {
               <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   isCurrent
-                    ? "bg-[#39ff7e] text-[#07090f]"
+                    ? "bg-accent-base text-white"
                     : isActive
-                    ? "bg-[#39ff7e]/10 text-[#39ff7e]"
-                    : "bg-white/[0.04] text-white/30"
+                    ? "bg-accent-base/10 text-accent-base"
+                    : "bg-surface-2 text-foreground-muted"
                 }`}
               >
                 <Icon size={14} />
                 {s.label}
               </div>
-              {i < STEPS.length - 1 && <ChevronRight size={14} className="text-white/20" />}
+              {i < STEPS.length - 1 && <ChevronRight size={14} className="text-foreground-muted" />}
             </div>
           );
         })}
@@ -205,49 +205,49 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6 space-y-4"
+                className="bg-surface-1 rounded-2xl border border-border-subtle p-6 space-y-4"
               >
                 <h2 className="text-lg font-semibold text-white">Delivery Address</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">Address</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">Address</label>
                     <input
                       value={address.address}
                       onChange={(e) => setAddress({ ...address, address: e.target.value })}
                       placeholder="Street address"
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">City</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">City</label>
                     <input
                       value={address.city}
                       onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">Governorate</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">Governorate</label>
                     <input
                       value={address.governorate}
                       onChange={(e) => setAddress({ ...address, governorate: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">Phone</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">Phone</label>
                     <input
                       value={address.phone}
                       onChange={(e) => setAddress({ ...address, phone: e.target.value })}
                       placeholder="+20 10..."
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                 </div>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!address.address || !address.phone}
-                  className="w-full py-3 rounded-xl bg-[#39ff7e] text-[#07090f] font-medium hover:bg-[#39ff7e]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-accent-base/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Continue to Shipping
                 </button>
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6 space-y-4"
+                className="bg-surface-1 rounded-2xl border border-border-subtle p-6 space-y-4"
               >
                 <h2 className="text-lg font-semibold text-white">Shipping Method</h2>
                 <div className="space-y-3">
@@ -274,13 +274,13 @@ export default function CheckoutPage() {
                       onClick={() => setShippingMethod(method.id as "express" | "standard" | "self")}
                       className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-colors text-left ${
                         shippingMethod === method.id
-                          ? "border-[#39ff7e] bg-[#39ff7e]/5"
-                          : "border-white/[0.06] hover:border-white/[0.12]"
+                          ? "border-accent-base bg-accent-base/5"
+                          : "border-border-subtle hover:border-border-visible"
                       }`}
                     >
                       <div>
                         <p className="text-sm font-semibold text-white">{method.label}</p>
-                        <p className="text-xs text-white/40">{method.desc}</p>
+                        <p className="text-xs text-foreground-muted">{method.desc}</p>
                       </div>
                       <span className="text-sm font-bold text-white">
                         {method.cost === 0 ? "Free" : `EGP ${method.cost}`}
@@ -291,13 +291,13 @@ export default function CheckoutPage() {
                 <div className="flex gap-3">
                   <button
                     onClick={() => setStep(1)}
-                    className="flex-1 py-3 rounded-xl border border-white/[0.06] text-white/50 font-medium hover:bg-white/[0.04] transition-colors"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle text-foreground-tertiary font-medium hover:bg-surface-2 transition-colors"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setStep(3)}
-                    className="flex-1 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] font-medium hover:bg-[#39ff7e]/90 transition-colors"
+                    className="flex-1 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-accent-base/90 transition-colors"
                   >
                     Continue to Payment
                   </button>
@@ -311,35 +311,35 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6 space-y-4"
+                className="bg-surface-1 rounded-2xl border border-border-subtle p-6 space-y-4"
               >
                 <h2 className="text-lg font-semibold text-white">Review & Payment</h2>
 
                 {/* B2B Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">PO Number</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">PO Number</label>
                     <input
                       value={poNumber}
                       onChange={(e) => setPoNumber(e.target.value)}
                       placeholder="Optional"
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">Cost Center</label>
+                    <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">Cost Center</label>
                     <input
                       value={costCenter}
                       onChange={(e) => setCostCenter(e.target.value)}
                       placeholder="Optional"
-                      className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
                     />
                   </div>
                 </div>
 
                 {/* Payment Methods */}
                 <div>
-                  <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-2">Payment Method</label>
+                  <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-2">Payment Method</label>
                   <div className="grid grid-cols-2 gap-3">
                     {[
                       { id: "bank_transfer", label: "Bank Transfer" },
@@ -354,8 +354,8 @@ export default function CheckoutPage() {
                           paymentMethod === pm.id
                             ? pm.id === "oliv_checkout"
                               ? "border-[#4A7C59] bg-[#4A7C59]/5 text-[#4A7C59]"
-                              : "border-[#39ff7e] bg-[#39ff7e]/5 text-[#39ff7e]"
-                            : "border-white/[0.06] text-white/50 hover:border-white/[0.12]"
+                              : "border-accent-base bg-accent-base/5 text-accent-base"
+                            : "border-border-subtle text-foreground-tertiary hover:border-border-visible"
                         }`}
                       >
                         <div className="flex items-center gap-2">
@@ -363,7 +363,7 @@ export default function CheckoutPage() {
                           <span>{pm.label}</span>
                         </div>
                         {pm.desc && (
-                          <p className="text-xs text-white/30 mt-1">{pm.desc}</p>
+                          <p className="text-xs text-foreground-muted mt-1">{pm.desc}</p>
                         )}
                       </button>
                     ))}
@@ -371,20 +371,20 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5">Notes</label>
+                  <label className="block text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5">Notes</label>
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Any special instructions..."
                     rows={3}
-                    className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20 resize-none"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle resize-none"
                   />
                 </div>
 
                 <div className="flex gap-3">
                   <button
                     onClick={() => setStep(2)}
-                    className="flex-1 py-3 rounded-xl border border-white/[0.06] text-white/50 font-medium hover:bg-white/[0.04] transition-colors"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle text-foreground-tertiary font-medium hover:bg-surface-2 transition-colors"
                   >
                     Back
                   </button>
@@ -409,7 +409,7 @@ export default function CheckoutPage() {
                       }
                     }}
                     disabled={loading}
-                    className="flex-1 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] font-medium hover:bg-[#39ff7e]/90 disabled:opacity-50 transition-colors"
+                    className="flex-1 py-3 rounded-xl bg-accent-base text-white font-medium hover:bg-accent-base/90 disabled:opacity-50 transition-colors"
                   >
                     {loading ? "Placing Order..." : paymentMethod === "oliv_checkout" ? `Pay via Oliv · EGP ${grandTotal.toFixed(2)}` : `Place Order · EGP ${grandTotal.toFixed(2)}`}
                   </button>
@@ -419,35 +419,35 @@ export default function CheckoutPage() {
           </AnimatePresence>
 
           {/* Cart Items */}
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6">
-            <h3 className="text-sm font-semibold text-white/70 mb-4">Order Items</h3>
+          <div className="bg-surface-1 rounded-2xl border border-border-subtle p-6">
+            <h3 className="text-sm font-semibold text-foreground-secondary mb-4">Order Items</h3>
             {Object.entries(supplierGroups).map(([supplierName, supplierItems]) => (
               <div key={supplierName} className="mb-4 last:mb-0">
-                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-white/[0.06]">
-                  <Package size={14} className="text-white/30" />
-                  <span className="text-xs font-semibold text-white/50">{supplierName}</span>
+                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-border-subtle">
+                  <Package size={14} className="text-foreground-muted" />
+                  <span className="text-xs font-semibold text-foreground-tertiary">{supplierName}</span>
                 </div>
                 <div className="space-y-3">
                   {supplierItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-white/[0.04] flex items-center justify-center text-xs font-bold text-white/30 shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-surface-2 flex items-center justify-center text-xs font-bold text-foreground-muted shrink-0">
                         {item.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">{item.name}</p>
-                        <p className="text-xs text-white/30">{item.sku}</p>
+                        <p className="text-xs text-foreground-muted">{item.sku}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 rounded-lg border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-white/[0.04] transition-colors"
+                          className="w-7 h-7 rounded-lg border border-border-subtle flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition-colors"
                         >
                           <Minus size={12} />
                         </button>
                         <span className="text-sm font-medium text-white w-6 text-center">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 rounded-lg border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-white/[0.04] transition-colors"
+                          className="w-7 h-7 rounded-lg border border-border-subtle flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition-colors"
                         >
                           <Plus size={12} />
                         </button>
@@ -457,7 +457,7 @@ export default function CheckoutPage() {
                       </span>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        className="p-1.5 rounded-lg text-foreground-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -471,22 +471,22 @@ export default function CheckoutPage() {
 
         {/* Sidebar Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6 sticky top-6">
-            <h3 className="text-sm font-semibold text-white/70 mb-4">Order Summary</h3>
+          <div className="bg-surface-1 rounded-2xl border border-border-subtle p-6 sticky top-6">
+            <h3 className="text-sm font-semibold text-foreground-secondary mb-4">Order Summary</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-white/50">
+              <div className="flex justify-between text-foreground-tertiary">
                 <span>Subtotal</span>
                 <span>EGP {subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-white/50">
+              <div className="flex justify-between text-foreground-tertiary">
                 <span>VAT (14%)</span>
                 <span>EGP {vatAmount.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-white/50">
+              <div className="flex justify-between text-foreground-tertiary">
                 <span>Shipping</span>
                 <span>{shippingCost === 0 ? "Free" : `EGP ${shippingCost.toFixed(2)}`}</span>
               </div>
-              <div className="border-t border-white/[0.06] pt-3 flex justify-between font-semibold text-white">
+              <div className="border-t border-border-subtle pt-3 flex justify-between font-semibold text-white">
                 <span>Grand Total</span>
                 <span>EGP {grandTotal.toFixed(2)}</span>
               </div>
@@ -503,16 +503,16 @@ export default function CheckoutPage() {
                     ? "bg-red-500/10 border-red-500/20"
                     : utilization > 80
                       ? "bg-amber-500/10 border-amber-500/20"
-                      : "bg-white/[0.02] border-white/[0.06]"
+                      : "bg-surface-1 border-border-subtle"
                 }`}>
                   <Landmark size={14} className={`shrink-0 mt-0.5 ${
-                    willExceed ? "text-red-400" : utilization > 80 ? "text-amber-400" : "text-white/40"
+                    willExceed ? "text-red-400" : utilization > 80 ? "text-amber-400" : "text-foreground-muted"
                   }`} />
                   <div className="text-xs space-y-1">
-                    <p className={`font-semibold ${willExceed ? "text-red-300" : utilization > 80 ? "text-amber-300/80" : "text-white/50"}`}>
+                    <p className={`font-semibold ${willExceed ? "text-red-300" : utilization > 80 ? "text-amber-300/80" : "text-foreground-tertiary"}`}>
                       Credit Impact
                     </p>
-                    <div className="space-y-0.5 text-white/40">
+                    <div className="space-y-0.5 text-foreground-muted">
                       <div className="flex justify-between">
                         <span>Current usage</span>
                         <span>EGP {creditInfo.creditUsed.toLocaleString()}</span>
@@ -521,7 +521,7 @@ export default function CheckoutPage() {
                         <span>+ This order</span>
                         <span>EGP {grandTotal.toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between border-t border-white/[0.06] pt-0.5">
+                      <div className="flex justify-between border-t border-border-subtle pt-0.5">
                         <span>After checkout</span>
                         <span>EGP {newExposure.toLocaleString()} / {creditInfo.creditLimit.toLocaleString()}</span>
                       </div>

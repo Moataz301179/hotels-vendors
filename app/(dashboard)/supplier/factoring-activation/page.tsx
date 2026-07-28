@@ -133,7 +133,7 @@ export default function OlivConsentScreen() {
       </div>
 
       {/* Consent Card */}
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardHeader>
           <CardTitle className="text-white text-lg">Data Sharing Consent</CardTitle>
         </CardHeader>
@@ -144,7 +144,7 @@ export default function OlivConsentScreen() {
               className={`p-4 rounded-lg border transition-colors ${
                 agreedItems.has(item.id)
                   ? 'bg-[#4A7C59]/10 border-[#4A7C59]/50'
-                  : 'bg-white/5 border-white/10'
+                  : 'bg-surface-2 border-border-subtle'
               }`}
             >
               <div className="flex items-start space-x-3">
@@ -160,7 +160,7 @@ export default function OlivConsentScreen() {
                       {item.category}
                     </Label>
                     {item.required && (
-                      <span className="text-xs text-[#ff7e1a]">(Required)</span>
+                      <span className="text-xs text-orange-base">(Required)</span>
                     )}
                   </div>
                   <p className="text-sm text-gray-400 mt-1">{item.description}</p>
@@ -168,7 +168,7 @@ export default function OlivConsentScreen() {
                     {item.examples.map((example, idx) => (
                       <span
                         key={idx}
-                        className="text-xs bg-white/5 text-gray-300 px-2 py-1 rounded"
+                        className="text-xs bg-surface-2 text-gray-300 px-2 py-1 rounded"
                       >
                         {example}
                       </span>
@@ -204,7 +204,7 @@ export default function OlivConsentScreen() {
           <div className="flex space-x-4 w-full">
             <Button
               variant="outline"
-              className="flex-1 border-white/20 text-white hover:bg-white/5"
+              className="flex-1 border-border-subtle text-white hover:bg-surface-2"
               onClick={() => router.back()}
               disabled={loading}
             >
@@ -232,7 +232,7 @@ export default function OlivConsentScreen() {
       </Card>
 
       {/* Info box */}
-      <Card className="bg-[#12121a] border-white/10">
+      <Card className="bg-surface-1 border-border-subtle">
         <CardContent className="p-4">
           <div className="flex items-start space-x-3">
             <svg className="w-5 h-5 text-[#64b5f6] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

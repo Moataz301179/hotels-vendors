@@ -142,7 +142,7 @@ export default function SupplierOrdersPage() {
       <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white">Order Fulfillment</h1>
-          <p className="text-sm text-white/40 mt-0.5">Manage and fulfill incoming orders</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Manage and fulfill incoming orders</p>
         </div>
       </motion.div>
 
@@ -156,10 +156,10 @@ export default function SupplierOrdersPage() {
         ].map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+            <div key={stat.label} className="p-4 rounded-xl bg-surface-1 border border-border-subtle">
               <div className="flex items-center gap-2 mb-2">
                 <Icon size={14} className={stat.color} />
-                <span className="text-[10px] text-white/30 uppercase tracking-wider">{stat.label}</span>
+                <span className="text-[10px] text-foreground-muted uppercase tracking-wider">{stat.label}</span>
               </div>
               <p className="text-lg font-semibold text-white">{stat.value}</p>
             </div>
@@ -170,13 +170,13 @@ export default function SupplierOrdersPage() {
       {/* Search & Tabs */}
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search orders..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-white/12"
+            className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted outline-none focus:border-border-subtle"
           />
         </div>
         <div className="flex gap-1">
@@ -186,8 +186,8 @@ export default function SupplierOrdersPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-accent-base/20 text-[#ff6b6b] border border-accent-base/30"
-                  : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
+                  ? "bg-accent-base/20 text-red-400 border border-accent-base/30"
+                  : "text-foreground-muted hover:text-foreground-secondary hover:bg-surface-1"
               }`}
             >
               {tab.label}
@@ -209,30 +209,30 @@ export default function SupplierOrdersPage() {
             icon="inbox"
           />
         ) : (
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+          <div className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
             <table className="w-full min-w-[800px]">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Order ID</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Items</th>
-                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
-                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
-                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-border-subtle">
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Order ID</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Items</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Status</th>
+                   <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
+                   <th className="text-right px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                  <tr key={order.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-white/60">{order.orderNumber}</span>
+                      <span className="text-xs font-mono text-foreground-secondary">{order.orderNumber}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs text-white">{order.hotel?.name || "—"}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-white/60">
+                      <span className="text-xs text-foreground-secondary">
                         {order.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0} items
                       </span>
                     </td>
@@ -243,13 +243,13 @@ export default function SupplierOrdersPage() {
                       <StatusPill status={order.status} />
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[11px] text-white/30">{new Date(order.createdAt).toLocaleDateString()}</span>
+                      <span className="text-[11px] text-foreground-muted">{new Date(order.createdAt).toLocaleDateString()}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors"
                           title="View"
                         >
                           <Eye size={14} />
@@ -257,7 +257,7 @@ export default function SupplierOrdersPage() {
                         {SUPPLIER_ACTIONS[order.status]?.length > 0 && (
                           <button
                             onClick={() => setUpdateOrder(order)}
-                            className="p-1.5 rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors"
                             title="Update Status"
                           >
                             <RefreshCw size={14} />
@@ -284,26 +284,26 @@ export default function SupplierOrdersPage() {
         {selectedOrder && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Total</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Total</p>
                 <p className="text-sm text-white mt-0.5">{formatCurrency(selectedOrder.total, selectedOrder.currency)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-white/20 uppercase">Status</p>
+              <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+                <p className="text-[10px] text-foreground-muted uppercase">Status</p>
                 <div className="mt-0.5"><StatusPill status={selectedOrder.status} /></div>
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-white/20 uppercase mb-2">Items</p>
+              <p className="text-[10px] text-foreground-muted uppercase mb-2">Items</p>
               <div className="space-y-1.5">
                 {selectedOrder.items?.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/[0.015] border border-white/[0.04]">
-                    <span className="text-xs text-white/60">{item.product?.name}</span>
-                    <span className="text-xs text-white/40">× {item.quantity}</span>
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-surface-1 border border-border-invisible">
+                    <span className="text-xs text-foreground-secondary">{item.product?.name}</span>
+                    <span className="text-xs text-foreground-muted">× {item.quantity}</span>
                   </div>
                 ))}
                 {(!selectedOrder.items || selectedOrder.items.length === 0) && (
-                  <p className="text-xs text-white/20">No items listed.</p>
+                  <p className="text-xs text-foreground-muted">No items listed.</p>
                 )}
               </div>
             </div>
@@ -322,7 +322,7 @@ export default function SupplierOrdersPage() {
         {updateOrder && (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-white/40">Current:</span>
+              <span className="text-xs text-foreground-muted">Current:</span>
               <StatusPill status={updateOrder.status} />
             </div>
 
@@ -333,22 +333,22 @@ export default function SupplierOrdersPage() {
             )}
 
             <div className="pt-1">
-              <p className="text-xs text-white/40 mb-2">Select action:</p>
+              <p className="text-xs text-foreground-muted mb-2">Select action:</p>
               <div className="grid gap-2">
                 {availableActions.map((action) => (
                   <button
                     key={action.nextStatus}
                     disabled={updating}
                     onClick={() => handleStatusUpdate(updateOrder.id, action.nextStatus)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white/80 hover:bg-white/[0.04] hover:border-white/[0.10] transition-all disabled:opacity-50 ${action.color.replace("bg-", "hover:bg-")}`}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg bg-surface-1 border border-border-subtle text-sm text-foreground-secondary hover:bg-surface-2 hover:border-border-visible transition-all disabled:opacity-50 ${action.color.replace("bg-", "hover:bg-")}`}
                   >
                     <span>{action.label}</span>
-                    {updating && <Loader2 size={14} className="animate-spin text-white/30" />}
+                    {updating && <Loader2 size={14} className="animate-spin text-foreground-muted" />}
                   </button>
                 ))}
               </div>
               {availableActions.length === 0 && (
-                <p className="text-xs text-white/20">No actions available for this status.</p>
+                <p className="text-xs text-foreground-muted">No actions available for this status.</p>
               )}
             </div>
           </div>

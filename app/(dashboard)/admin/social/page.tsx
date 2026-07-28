@@ -121,27 +121,27 @@ export default function SocialAdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-canvas text-white">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-[28px] font-bold tracking-tight">Social Media Command Center</h1>
-            <p className="text-white/40 text-[14px] mt-1">
+            <p className="text-foreground-muted text-[14px] mt-1">
               Campaign management, post scheduling, and beta launch orchestration
             </p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={processQueue}
-              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-accent-base hover:bg-[#7A0000] rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-accent-base hover:bg-red-800 rounded-lg transition-colors"
             >
               <Rocket className="w-4 h-4" />
               Process Queue
             </button>
             <Link
               href="/admin/social/campaigns/new"
-              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-surface-2 hover:bg-surface-2 border border-border-subtle rounded-lg transition-colors"
             >
               <Plus className="w-4 h-4" />
               New Campaign
@@ -185,38 +185,38 @@ export default function SocialAdminPage() {
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[18px] font-semibold">Campaigns</h2>
-            <span className="text-[12px] text-white/30">{campaigns.length} total</span>
+            <span className="text-[12px] text-foreground-muted">{campaigns.length} total</span>
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-white/30">Loading campaigns...</div>
+            <div className="text-center py-12 text-foreground-muted">Loading campaigns...</div>
           ) : campaigns.length === 0 ? (
-            <div className="text-center py-12 border border-white/[0.06] rounded-xl bg-white/[0.02]">
-              <Megaphone className="w-8 h-8 text-white/20 mx-auto mb-3" />
-              <p className="text-white/40 text-[14px]">No campaigns yet</p>
-              <p className="text-white/20 text-[12px] mt-1">Create your first social media campaign</p>
+            <div className="text-center py-12 border border-border-subtle rounded-xl bg-surface-1">
+              <Megaphone className="w-8 h-8 text-foreground-muted mx-auto mb-3" />
+              <p className="text-foreground-muted text-[14px]">No campaigns yet</p>
+              <p className="text-foreground-muted text-[12px] mt-1">Create your first social media campaign</p>
             </div>
           ) : (
-            <div className="border border-white/[0.06] rounded-xl overflow-hidden">
+            <div className="border border-border-subtle rounded-xl overflow-hidden">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Campaign</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Objective</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Platforms</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Posts</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider">Timeline</th>
-                    <th className="px-4 py-3 text-[11px] font-medium text-white/40 uppercase tracking-wider text-right">Actions</th>
+                  <tr className="border-b border-border-subtle bg-surface-1">
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Campaign</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Objective</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Platforms</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Posts</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider">Timeline</th>
+                    <th className="px-4 py-3 text-[11px] font-medium text-foreground-muted uppercase tracking-wider text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {campaigns.map((c) => (
-                    <tr key={c.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                    <tr key={c.id} className="border-b border-border-invisible hover:bg-surface-1 transition-colors">
                       <td className="px-4 py-3">
                         <div className="font-medium text-[13px]">{c.name}</div>
                       </td>
-                      <td className="px-4 py-3 text-[12px] text-white/50">{c.objective}</td>
+                      <td className="px-4 py-3 text-[12px] text-foreground-tertiary">{c.objective}</td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium border ${statusColors[c.status] || statusColors.DRAFT}`}>
                           {c.status}
@@ -225,16 +225,16 @@ export default function SocialAdminPage() {
                       <td className="px-4 py-3">
                         <div className="flex gap-1">
                           {c.platforms.map((p) => (
-                            <span key={p} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-white/40 border border-white/[0.06]">
+                            <span key={p} className="text-[10px] px-1.5 py-0.5 rounded bg-surface-2 text-foreground-muted border border-border-subtle">
                               {p}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-[12px] text-white/50">
+                      <td className="px-4 py-3 text-[12px] text-foreground-tertiary">
                         {c.publishedPosts}/{c.totalPosts}
                       </td>
-                      <td className="px-4 py-3 text-[12px] text-white/50">
+                      <td className="px-4 py-3 text-[12px] text-foreground-tertiary">
                         {new Date(c.startDate).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "short",
@@ -250,7 +250,7 @@ export default function SocialAdminPage() {
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             href={`/admin/social/campaigns/${c.id}`}
-                            className="p-1.5 rounded-lg text-white/30 hover:text-white hover:bg-white/[0.06] transition-colors"
+                            className="p-1.5 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 transition-colors"
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </Link>
@@ -267,7 +267,7 @@ export default function SocialAdminPage() {
         {/* Queue & Waiting List Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Publishing Queue */}
-          <section className="border border-white/[0.06] rounded-xl p-6 bg-white/[0.02]">
+          <section className="border border-border-subtle rounded-xl p-6 bg-surface-1">
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-4 h-4 text-accent-base" />
               <h2 className="text-[16px] font-semibold">Publishing Queue</h2>
@@ -276,17 +276,17 @@ export default function SocialAdminPage() {
               <div className="space-y-3">
                 <QueueRow label="Overdue" value={queue.overdue} color="text-red-400" />
                 <QueueRow label="Scheduled" value={queue.scheduled} color="text-blue-400" />
-                <QueueRow label="Draft" value={queue.draft} color="text-white/40" />
+                <QueueRow label="Draft" value={queue.draft} color="text-foreground-muted" />
                 <QueueRow label="Published Today" value={queue.publishedToday} color="text-green-400" />
                 <QueueRow label="Failed" value={queue.failed} color="text-orange-400" />
               </div>
             ) : (
-              <div className="text-white/30 text-[13px]">Loading queue...</div>
+              <div className="text-foreground-muted text-[13px]">Loading queue...</div>
             )}
           </section>
 
           {/* Waiting List Breakdown */}
-          <section className="border border-white/[0.06] rounded-xl p-6 bg-white/[0.02]">
+          <section className="border border-border-subtle rounded-xl p-6 bg-surface-1">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-4 h-4 text-accent-base" />
               <h2 className="text-[16px] font-semibold">Beta Waiting List</h2>
@@ -295,21 +295,21 @@ export default function SocialAdminPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   {Object.entries(waitingList.byRole).map(([role, count]) => (
-                    <div key={role} className="text-center p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                    <div key={role} className="text-center p-3 rounded-lg bg-surface-1 border border-border-subtle">
                       <div className="text-[20px] font-bold text-white">{count}</div>
-                      <div className="text-[11px] text-white/40 mt-1">{role.toLowerCase()}s</div>
+                      <div className="text-[11px] text-foreground-muted mt-1">{role.toLowerCase()}s</div>
                     </div>
                   ))}
                 </div>
-                <div className="pt-3 border-t border-white/[0.06]">
+                <div className="pt-3 border-t border-border-subtle">
                   <div className="flex items-center justify-between text-[12px]">
-                    <span className="text-white/40">Pending invites</span>
-                    <span className="text-white/60 font-medium">
+                    <span className="text-foreground-muted">Pending invites</span>
+                    <span className="text-foreground-secondary font-medium">
                       {waitingList.byStatus?.PENDING || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[12px] mt-2">
-                    <span className="text-white/40">Converted</span>
+                    <span className="text-foreground-muted">Converted</span>
                     <span className="text-green-400 font-medium">
                       {waitingList.byStatus?.CONVERTED || 0}
                     </span>
@@ -317,7 +317,7 @@ export default function SocialAdminPage() {
                 </div>
               </div>
             ) : (
-              <div className="text-white/30 text-[13px]">Loading waiting list...</div>
+              <div className="text-foreground-muted text-[13px]">Loading waiting list...</div>
             )}
           </section>
         </div>
@@ -343,15 +343,15 @@ function StatCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+      className="p-5 rounded-xl border border-border-subtle bg-surface-1"
     >
       <div className="flex items-center justify-between mb-3">
         <Icon className="w-5 h-5" style={{ color }} />
-        <TrendingUp className="w-3.5 h-3.5 text-white/20" />
+        <TrendingUp className="w-3.5 h-3.5 text-foreground-muted" />
       </div>
       <div className="text-[28px] font-bold tracking-tight">{value}</div>
-      <div className="text-[12px] text-white/40 mt-1">{label}</div>
-      <div className="text-[11px] text-white/25 mt-1">{subtext}</div>
+      <div className="text-[12px] text-foreground-muted mt-1">{label}</div>
+      <div className="text-[11px] text-foreground-muted mt-1">{subtext}</div>
     </motion.div>
   );
 }
@@ -367,7 +367,7 @@ function QueueRow({
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[13px] text-white/50">{label}</span>
+      <span className="text-[13px] text-foreground-tertiary">{label}</span>
       <span className={`text-[13px] font-semibold ${color}`}>{value}</span>
     </div>
   );

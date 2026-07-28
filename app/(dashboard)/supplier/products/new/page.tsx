@@ -142,7 +142,7 @@ export default function NewProductPage() {
           <CheckCircle2 className="w-8 h-8 text-emerald-400" />
         </motion.div>
         <h2 className="text-xl font-bold text-white">Product Created!</h2>
-        <p className="text-sm text-white/40">Redirecting to your product catalog...</p>
+        <p className="text-sm text-foreground-muted">Redirecting to your product catalog...</p>
       </div>
     );
   }
@@ -158,13 +158,13 @@ export default function NewProductPage() {
       <motion.div variants={fadeInUp} className="flex items-center gap-4">
         <Link
           href="/supplier/products"
-          className="p-2 rounded-lg border border-white/[0.06] text-white/40 hover:text-white/70 hover:border-white/12 transition-all"
+          className="p-2 rounded-lg border border-border-subtle text-foreground-muted hover:text-foreground-secondary hover:border-border-subtle transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">Add New Product</h1>
-          <p className="text-xs text-white/40">List a new product on the marketplace</p>
+          <p className="text-xs text-foreground-muted">List a new product on the marketplace</p>
         </div>
       </motion.div>
 
@@ -177,78 +177,78 @@ export default function NewProductPage() {
 
       <motion.form variants={fadeInUp} onSubmit={handleSubmit} className="space-y-5">
         {/* Basic Info */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-white/70 flex items-center gap-2">
-            <Package className="w-4 h-4 text-white/30" />
+        <div className="rounded-2xl border border-border-subtle bg-surface-1 p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground-secondary flex items-center gap-2">
+            <Package className="w-4 h-4 text-foreground-muted" />
             Basic Information
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">SKU *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">SKU *</label>
               <input
                 required
                 value={form.sku}
                 onChange={(e) => handleChange("sku", e.target.value)}
                 placeholder="e.g., POUL-001"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Product Name *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Product Name *</label>
               <input
                 required
                 value={form.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 placeholder="e.g., Whole Chicken (Halal, 1.2kg)"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Description</label>
+            <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Description</label>
             <textarea
               value={form.description}
               onChange={(e) => handleChange("description", e.target.value)}
               placeholder="Describe your product..."
               rows={3}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20 resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle resize-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Category *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Category *</label>
               <select
                 required
                 value={form.category}
                 onChange={(e) => handleChange("category", e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-white/20 appearance-none"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-border-subtle appearance-none"
               >
                 {HOTEL_CATEGORIES.map((cat) => (
-                  <option key={cat.id} value={cat.id} className="bg-[#121212]">
+                  <option key={cat.id} value={cat.id} className="bg-surface-2">
                     {cat.label} ({cat.code})
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Subcategory</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Subcategory</label>
               <input
                 value={form.subcategory}
                 onChange={(e) => handleChange("subcategory", e.target.value)}
                 placeholder="e.g., poultry"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
           </div>
         </div>
 
         {/* Product Images */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-white/70 flex items-center gap-2">
-            <ImageIcon className="w-4 h-4 text-white/30" />
+        <div className="rounded-2xl border border-border-subtle bg-surface-1 p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground-secondary flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-foreground-muted" />
             Product Images
           </h2>
 
@@ -265,7 +265,7 @@ export default function NewProductPage() {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingImages || imageUrls.length >= 5}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-white/50 hover:text-white/70 hover:border-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-border-visible bg-surface-1 text-foreground-tertiary hover:text-foreground-secondary hover:border-border-subtle transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploadingImages ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -274,7 +274,7 @@ export default function NewProductPage() {
               )}
               {uploadingImages ? "Uploading..." : "Upload Images"}
             </button>
-            <span className="text-[11px] text-white/30">
+            <span className="text-[11px] text-foreground-muted">
               {imageUrls.length}/5 images • JPEG, PNG, WebP • Max 5MB each
             </span>
           </div>
@@ -283,7 +283,7 @@ export default function NewProductPage() {
             <div className="flex flex-wrap gap-3">
               {imagePreviews.map((preview, index) => (
                 <div key={index} className="relative group">
-                  <div className="w-20 h-20 rounded-lg overflow-hidden border border-white/[0.08]">
+                  <div className="w-20 h-20 rounded-lg overflow-hidden border border-border-subtle">
                     <img
                       src={preview}
                       alt={`Preview ${index + 1}`}
@@ -304,15 +304,15 @@ export default function NewProductPage() {
         </div>
 
         {/* Pricing & Inventory */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-white/70 flex items-center gap-2">
-            <Plus className="w-4 h-4 text-white/30" />
+        <div className="rounded-2xl border border-border-subtle bg-surface-1 p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground-secondary flex items-center gap-2">
+            <Plus className="w-4 h-4 text-foreground-muted" />
             Pricing & Inventory
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Unit Price (EGP) *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Unit Price (EGP) *</label>
               <input
                 required
                 type="number"
@@ -321,11 +321,11 @@ export default function NewProductPage() {
                 value={form.unitPrice}
                 onChange={(e) => handleChange("unitPrice", e.target.value)}
                 placeholder="0.00"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Stock Quantity *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Stock Quantity *</label>
               <input
                 required
                 type="number"
@@ -333,11 +333,11 @@ export default function NewProductPage() {
                 value={form.stockQuantity}
                 onChange={(e) => handleChange("stockQuantity", e.target.value)}
                 placeholder="0"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Min Order Qty *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Min Order Qty *</label>
               <input
                 required
                 type="number"
@@ -345,34 +345,34 @@ export default function NewProductPage() {
                 value={form.minOrderQty}
                 onChange={(e) => handleChange("minOrderQty", e.target.value)}
                 placeholder="1"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Unit of Measure *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Unit of Measure *</label>
               <select
                 required
                 value={form.unitOfMeasure}
                 onChange={(e) => handleChange("unitOfMeasure", e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-white/20 appearance-none"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-border-subtle appearance-none"
               >
-                <option value="piece" className="bg-[#121212]">Piece</option>
-                <option value="kg" className="bg-[#121212]">Kilogram (kg)</option>
-                <option value="liter" className="bg-[#121212]">Liter</option>
-                <option value="set" className="bg-[#121212]">Set</option>
-                <option value="box" className="bg-[#121212]">Box</option>
-                <option value="carton" className="bg-[#121212]">Carton</option>
-                <option value="pack" className="bg-[#121212]">Pack</option>
-                <option value="roll" className="bg-[#121212]">Roll</option>
-                <option value="meter" className="bg-[#121212]">Meter</option>
-                <option value="dozen" className="bg-[#121212]">Dozen</option>
+                <option value="piece" className="bg-surface-2">Piece</option>
+                <option value="kg" className="bg-surface-2">Kilogram (kg)</option>
+                <option value="liter" className="bg-surface-2">Liter</option>
+                <option value="set" className="bg-surface-2">Set</option>
+                <option value="box" className="bg-surface-2">Box</option>
+                <option value="carton" className="bg-surface-2">Carton</option>
+                <option value="pack" className="bg-surface-2">Pack</option>
+                <option value="roll" className="bg-surface-2">Roll</option>
+                <option value="meter" className="bg-surface-2">Meter</option>
+                <option value="dozen" className="bg-surface-2">Dozen</option>
               </select>
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Lead Time (days) *</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Lead Time (days) *</label>
               <input
                 required
                 type="number"
@@ -380,34 +380,34 @@ export default function NewProductPage() {
                 value={form.leadTimeDays}
                 onChange={(e) => handleChange("leadTimeDays", e.target.value)}
                 placeholder="1"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
             <div>
-              <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Shelf Life (days)</label>
+              <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Shelf Life (days)</label>
               <input
                 type="number"
                 min="1"
                 value={form.shelfLifeDays}
                 onChange={(e) => handleChange("shelfLifeDays", e.target.value)}
                 placeholder="Optional"
-                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-white/20"
+                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-border-subtle"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[11px] text-white/40 uppercase tracking-wider mb-1.5 block">Temperature Requirement</label>
+            <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Temperature Requirement</label>
             <select
               value={form.temperatureReq}
               onChange={(e) => handleChange("temperatureReq", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-white/20 appearance-none"
+              className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-border-subtle appearance-none"
             >
-              <option value="" className="bg-[#121212]">Ambient (no special storage)</option>
-              <option value="Chilled 2-5°C" className="bg-[#121212]">Chilled 2-5°C</option>
-              <option value="Frozen -18°C" className="bg-[#121212]">Frozen -18°C</option>
-              <option value="Frozen -25°C" className="bg-[#121212]">Frozen -25°C</option>
-              <option value="Dry Storage" className="bg-[#121212]">Dry Storage</option>
+              <option value="" className="bg-surface-2">Ambient (no special storage)</option>
+              <option value="Chilled 2-5°C" className="bg-surface-2">Chilled 2-5°C</option>
+              <option value="Frozen -18°C" className="bg-surface-2">Frozen -18°C</option>
+              <option value="Frozen -25°C" className="bg-surface-2">Frozen -25°C</option>
+              <option value="Dry Storage" className="bg-surface-2">Dry Storage</option>
             </select>
           </div>
         </div>
@@ -416,14 +416,14 @@ export default function NewProductPage() {
         <div className="flex items-center gap-3 pt-2">
           <Link
             href="/supplier/products"
-            className="px-5 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:text-white border border-white/[0.06] hover:border-white/[0.12] transition-all"
+            className="px-5 py-2.5 rounded-xl text-sm font-medium text-foreground-tertiary hover:text-white border border-border-subtle hover:border-border-visible transition-all"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent-base hover:bg-[#6B0000] disabled:opacity-50 text-sm font-medium text-white transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent-base hover:bg-red-900 disabled:opacity-50 text-sm font-medium text-white transition-all"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
             {loading ? "Creating..." : "Create Product"}
