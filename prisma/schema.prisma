@@ -89,6 +89,7 @@ model Tenant {
   tripStops              TripStop[]
   users                  User[]
   Workspace              Workspace[]
+  goodsReceiptNotes      GoodsReceiptNote[]
 
   @@index([deletedAt], map: "Tenant_deleted_idx")
   @@index([parentTenantId], map: "Tenant_parent_idx")
@@ -179,6 +180,7 @@ model Hotel {
   spendRecords         SpendRecord[]
   tripStops            TripStop[]
   users                User[]
+  goodsReceiptNotes    GoodsReceiptNote[]
 
   @@index([tenantId])
   @@index([city])
@@ -319,6 +321,7 @@ model Supplier {
   tenant               Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   audits               SupplierAudit[]
   users                User[]
+  goodsReceiptNotes    GoodsReceiptNote[]
 
   @@index([tenantId])
   @@index([city])
@@ -382,6 +385,7 @@ model Product {
   reviews            ProductReview[]
   seasonalities      ProductSeasonality[]
   ProductTierPrice   ProductTierPrice[]
+  grnLineItems       GrnLineItem[]
 
   @@index([tenantId])
   @@index([supplierId])
@@ -453,6 +457,7 @@ model Order {
   items                  OrderItem[]
   ReturnRequest          ReturnRequest[]
   tripStops              TripStop[]
+  goodsReceiptNotes      GoodsReceiptNote[]
 
   @@index([tenantId])
   @@index([hotelId])
@@ -477,6 +482,7 @@ model OrderItem {
   total            Decimal?  @db.Decimal(12, 2)
   order            Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product          Product   @relation(fields: [productId], references: [id])
+  grnLineItems     GrnLineItem[]
 
   @@index([deletedAt], map: "OrderItem_deleted_idx")
 }
@@ -2244,6 +2250,63 @@ model ReturnRequest {
   @@index([tenantId, status], map: "ReturnRequest_tenant_status_idx")
 }
 
+model GoodsReceiptNote {
+  id                String   @id @default(cuid())
+  grnNumber         String   @unique
+  status            GrnStatus @default(PENDING)
+  orderId           String
+  hotelId           String
+  supplierId        String
+  tenantId          String
+  receivedById      String?
+  warehouseLocation String?
+  deliveryNoteRef   String?
+  vehiclePlate      String?
+  notes             String?
+  receivedAt        DateTime @default(now())
+  inspectedAt       DateTime?
+  acceptedAt        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  uuid              String?  @unique(map: "GoodsReceiptNote_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt         DateTime?
+
+  order             Order    @relation(fields: [orderId], references: [id])
+  hotel             Hotel    @relation(fields: [hotelId], references: [id])
+  supplier          Supplier @relation(fields: [supplierId], references: [id])
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lineItems         GrnLineItem[]
+
+  @@index([tenantId])
+  @@index([orderId])
+  @@index([hotelId])
+  @@index([status])
+  @@index([deletedAt], map: "GRN_deleted_idx")
+}
+
+model GrnLineItem {
+  id                String  @id @default(cuid())
+  grnId             String
+  orderItemId       String
+  productId         String
+  orderedQuantity   Int
+  receivedQuantity  Int
+  acceptedQuantity  Int
+  rejectedQuantity  Int     @default(0)
+  rejectionReason   String?
+  batchNumber       String?
+  expiryDate        DateTime?
+  conditionNotes    String?
+  uuid              String? @unique(map: "GrnLineItem_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  grn               GoodsReceiptNote @relation(fields: [grnId], references: [id], onDelete: Cascade)
+  orderItem         OrderItem        @relation(fields: [orderItemId], references: [id])
+  product           Product          @relation(fields: [productId], references: [id])
+
+  @@index([grnId])
+  @@index([orderItemId])
+}
+
 model Workspace {
   id        String    @id
   uuid      String    @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -2954,6 +3017,15 @@ enum ReturnStatus {
   PICKED_UP
   REFUNDED
   CREDITED
+}
+
+enum GrnStatus {
+  PENDING
+  RECEIVING
+  INSPECTING
+  ACCEPTED
+  PARTIALLY_ACCEPTED
+  REJECTED
 }
 
 enum TenantRelation {

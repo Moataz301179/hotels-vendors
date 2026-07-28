@@ -113,6 +113,31 @@ export const OrderCreateSchema = z.object({
   deliveryInstructions: z.string().optional(),
 });
 
+/* ── GRN Schemas ── */
+export const GrnLineItemSchema = z.object({
+  orderItemId: z.string().cuid(),
+  productId: z.string().cuid(),
+  orderedQuantity: z.number().int().nonneg(),
+  receivedQuantity: z.number().int().nonneg(),
+  acceptedQuantity: z.number().int().nonneg(),
+  rejectedQuantity: z.number().int().nonneg().default(0),
+  rejectionReason: z.string().optional(),
+  batchNumber: z.string().optional(),
+  expiryDate: z.string().datetime().optional(),
+  conditionNotes: z.string().optional(),
+});
+
+export const GrnCreateSchema = z.object({
+  orderId: z.string().cuid(),
+  hotelId: z.string().cuid().optional(),
+  supplierId: z.string().cuid().optional(),
+  warehouseLocation: z.string().optional(),
+  deliveryNoteRef: z.string().optional(),
+  vehiclePlate: z.string().optional(),
+  notes: z.string().optional(),
+  lineItems: z.array(GrnLineItemSchema).min(1, "At least one line item required"),
+});
+
 /* ── Invoice Schemas ── */
 export const InvoiceCreateSchema = z.object({
   invoiceNumber: z.string().min(1),
