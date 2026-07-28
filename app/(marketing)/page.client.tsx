@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
+import { useLanguage } from "@/lib/i18n/language-context";
 import {
   FileText,
   CheckCircle2,
@@ -1014,6 +1015,7 @@ const STEPS = [
 export function SandboxCarousel() {
   const [active, setActive] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { ar } = useLanguage();
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
