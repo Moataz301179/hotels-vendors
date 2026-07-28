@@ -30,8 +30,8 @@ interface DashboardHeaderProps {
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-[#39ff7e]" },
-  hotel: { label: "Hotel Buyer", badgeColor: "bg-[#39ff7e]" },
+  admin: { label: "Platform Admin", badgeColor: "bg-accent-base" },
+  hotel: { label: "Hotel Buyer", badgeColor: "bg-accent-base" },
   supplier: { label: "Supplier", badgeColor: "bg-[#ff7e1a]" },
   factoring: { label: "Factoring Partner", badgeColor: "bg-[#c455ff]" },
   shipping: { label: "Logistics", badgeColor: "bg-[#64b5f6]" },
@@ -43,12 +43,12 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
   const { totalItems, toggleCart } = useCart();
 
   return (
-    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[#12121a]/90 backdrop-blur-xl border-b border-white/[0.06]">
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle">
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
           onClick={onMenuClick}
-          className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.06] transition-colors flex-shrink-0"
+          className="p-2 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 transition-colors flex-shrink-0"
           aria-label="Open menu"
         >
           <Menu size={20} />
@@ -60,9 +60,9 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">
-          <span className="text-xs font-medium text-white/25 uppercase tracking-[0.15em]">Dashboard</span>
+          <span className="text-xs font-medium text-foreground-muted uppercase tracking-[0.15em]">Dashboard</span>
           <span className="text-white/10">/</span>
-          <span className="text-xs font-medium text-white/50">{config.label}</span>
+          <span className="text-xs font-medium text-foreground-tertiary">{config.label}</span>
         </div>
       </div>
 
@@ -73,15 +73,15 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
       {/* Right: Actions */}
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-border-subtle">
           <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
-          <span className="text-xs font-medium text-white/50">{config.label}</span>
+          <span className="text-xs font-medium text-foreground-tertiary">{config.label}</span>
           {role === "supplier" && user?.createdAt && (() => {
             const trial = getTrialStatus(user.createdAt);
             if (trial.isExpired) return null;
             return (
               <span className="flex items-center gap-1 ml-1 px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider"
-                style={{ backgroundColor: "#ff7e1a18", color: "#ff7e1a" }}>
+                style={{ backgroundColor: "#ff7e1a18", color: "var(--orange-base)" }}>
                 <Clock size={10} />
                 Trial {trial.daysRemaining}d
               </span>
@@ -91,16 +91,16 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
         {role === "admin" && (
           <>
-            <Link href="/admin/health" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Platform Health">
+            <Link href="/admin/health" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Platform Health">
               <HeartPulse size={18} />
             </Link>
-            <Link href="/admin/logs" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="System Logs">
+            <Link href="/admin/logs" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="System Logs">
               <ScrollText size={18} />
             </Link>
           </>
         )}
 
-        <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Settings">
+        <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Settings">
           <Settings size={18} />
         </Link>
 
@@ -111,12 +111,12 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
         <button
           onClick={toggleCart}
-          className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all"
+          className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all"
           aria-label={`Shopping cart${totalItems > 0 ? `, ${totalItems} items` : ""}`}
         >
           <ShoppingCart size={18} />
           {totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#39ff7e] text-[11px] font-bold text-[#07090f] flex items-center justify-center ring-2 ring-[#12121a]">
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-[11px] font-bold text-[#07090f] flex items-center justify-center ring-2 ring-[#12121a]">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}

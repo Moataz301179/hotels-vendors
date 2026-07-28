@@ -283,24 +283,24 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
 
       {/* Panel */}
       <div
-        className="relative w-full max-w-lg mx-4 rounded-2xl border border-white/[0.08] bg-[#12121a]/95 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.8)] overflow-hidden"
+        className="relative w-full max-w-lg mx-4 rounded-2xl border border-border-subtle bg-surface-1/95 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.8)] overflow-hidden"
         onKeyDown={handleKeyDown}
       >
         {/* Search Input */}
-        <div className="flex items-center gap-3 px-4 h-14 border-b border-white/[0.06]">
-          <Search size={18} className="text-white/30 flex-shrink-0" />
+        <div className="flex items-center gap-3 px-4 h-14 border-b border-border-subtle">
+          <Search size={18} className="text-foreground-muted flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command or search..."
-            className="flex-1 bg-transparent text-white text-sm placeholder:text-white/25 outline-none"
+            className="flex-1 bg-transparent text-white text-sm placeholder:text-foreground-muted outline-none"
             aria-label="Search commands"
             autoComplete="off"
             spellCheck={false}
           />
-          <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-white/30 bg-white/[0.04] border border-white/[0.06]">
+          <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-foreground-muted bg-white/[0.04] border border-border-subtle">
             ESC
           </kbd>
         </div>
@@ -308,7 +308,7 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
         {/* Results */}
         <div ref={listRef} className="max-h-[360px] overflow-y-auto py-2" role="listbox" aria-label="Command results">
           {flatList.length === 0 && (
-            <div className="px-4 py-8 text-center text-sm text-white/30">
+            <div className="px-4 py-8 text-center text-sm text-foreground-muted">
               No results found
             </div>
           )}
@@ -316,7 +316,7 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
           {Object.entries(grouped).map(([group, items]) => {
             return (
               <div key={group}>
-                <div className="px-4 py-1.5 text-[11px] font-semibold text-white/20 uppercase tracking-[0.12em]">
+                <div className="px-4 py-1.5 text-[11px] font-semibold text-foreground-muted uppercase tracking-[0.12em]">
                   {getGroupLabel(group as CommandItem["group"])}
                 </div>
                 {items.map((item) => {
@@ -331,15 +331,15 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
                       aria-selected={isSelected}
                       className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                         isSelected
-                          ? "bg-white/[0.06] text-white"
-                          : "text-white/50 hover:text-white hover:bg-white/[0.03]"
+                          ? "bg-surface-2 text-white"
+                          : "text-foreground-tertiary hover:text-white hover:bg-surface-1"
                       }`}
                       onClick={() => executeItem(item)}
                       onMouseEnter={() => setSelectedIndex(idx)}
                     >
                       <Icon
                         size={16}
-                        className={`flex-shrink-0 ${isSelected ? "text-[#39ff7e]" : "text-white/25"}`}
+                        className={`flex-shrink-0 ${isSelected ? "text-accent-base" : "text-foreground-muted"}`}
                       />
                       <span className="flex-1 truncate">{item.label}</span>
                       {item.href && (
@@ -351,7 +351,7 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
                         />
                       )}
                       {item.shortcut && (
-                        <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-white/25 bg-white/[0.03] border border-white/[0.06]">
+                        <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-foreground-muted bg-surface-1 border border-border-subtle">
                           {item.shortcut}
                         </kbd>
                       )}
@@ -364,7 +364,7 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-4 px-4 h-10 border-t border-white/[0.06] text-[11px] text-white/20">
+        <div className="flex items-center gap-4 px-4 h-10 border-t border-border-subtle text-[11px] text-foreground-muted">
           <span className="flex items-center gap-1.5">
             <ArrowUp size={11} />
             <ArrowDown size={11} />
@@ -375,7 +375,7 @@ export function CommandPalette({ role, open, onClose }: CommandPaletteProps) {
             <span>select</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] text-[10px]">esc</kbd>
+            <kbd className="px-1 py-0.5 rounded bg-white/[0.04] border border-border-subtle text-[10px]">esc</kbd>
             <span>close</span>
           </span>
         </div>
@@ -395,13 +395,13 @@ export function CommandPaletteTrigger({
   return (
     <button
       onClick={onOpen}
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-white/30 hover:text-white/60 bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] hover:bg-white/[0.06] transition-all ${className}`}
+      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-foreground-muted hover:text-foreground-secondary bg-surface-1 border border-border-subtle hover:border-border-visible hover:bg-surface-2 transition-all ${className}`}
       aria-label="Open command palette"
     >
       <Search size={14} />
       <span className="hidden sm:inline">Search...</span>
-      <kbd className="hidden sm:inline-flex items-center gap-0.5 ml-2 text-[10px] font-medium text-white/25">
-        <span className="px-1 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">
+      <kbd className="hidden sm:inline-flex items-center gap-0.5 ml-2 text-[10px] font-medium text-foreground-muted">
+        <span className="px-1 py-0.5 rounded bg-white/[0.04] border border-border-subtle">
           {"\u2318"}K
         </span>
       </kbd>

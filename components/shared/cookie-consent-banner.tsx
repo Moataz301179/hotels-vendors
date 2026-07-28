@@ -50,13 +50,13 @@ export function CookieConsentBanner() {
       aria-label="Cookie consent"
       className="fixed bottom-0 left-0 right-0 z-[9998] p-4 sm:p-6"
     >
-      <div className="max-w-3xl mx-auto rounded-2xl border border-white/10 bg-[#12121a]/95 backdrop-blur-xl p-5 sm:p-6 shadow-2xl">
+      <div className="max-w-3xl mx-auto rounded-2xl border border-border-subtle bg-surface-1/95 backdrop-blur-xl p-5 sm:p-6 shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex-1">
             <p className="text-sm text-white font-medium mb-1">
               We use cookies to improve your experience
             </p>
-            <p className="text-xs text-white/45 leading-relaxed">
+            <p className="text-xs text-foreground-secondary leading-relaxed">
               Essential cookies keep the platform secure. Analytics cookies help
               us understand usage. You can choose which to accept.
             </p>
@@ -64,19 +64,19 @@ export function CookieConsentBanner() {
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
             <button
               onClick={() => accept("essential")}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-border-subtle text-foreground-tertiary hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
             >
               Essential Only
             </button>
             <button
               onClick={() => accept("analytics")}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-border-subtle text-foreground-tertiary hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
             >
               + Analytics
             </button>
             <button
               onClick={() => accept("all")}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#39ff7e] text-[#07090f] hover:bg-[#5fff9a] transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-accent-base text-[#07090f] hover:bg-[#5fff9a] transition-colors cursor-pointer"
             >
               Accept All
             </button>

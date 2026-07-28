@@ -33,7 +33,7 @@ export function DensityToggle() {
   return (
     <button
       onClick={toggle}
-      className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.05] transition-all hidden sm:flex"
+      className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex"
       aria-label={`Switch to ${density === "compact" ? "comfortable" : "compact"} density`}
       title={density === "compact" ? "Comfortable spacing" : "Compact spacing"}
     >

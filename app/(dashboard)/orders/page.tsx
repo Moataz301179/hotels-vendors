@@ -44,7 +44,7 @@ function StatusBadge({ status }: { status: string }) {
     IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
     DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
     CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-    DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+    DRAFT: { bg: "bg-white/10", text: "text-foreground-muted", dot: "bg-white/40", label: "Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -181,7 +181,7 @@ export default function OrdersPage() {
       key: "orderNumber",
       label: "Order ID",
       primary: true,
-      render: (o) => <span className="text-xs font-mono text-white/60">{o.orderNumber}</span>,
+      render: (o) => <span className="text-xs font-mono text-foreground-secondary">{o.orderNumber}</span>,
     },
     {
       key: "hotel",
@@ -191,7 +191,7 @@ export default function OrdersPage() {
     {
       key: "supplier",
       label: "Supplier",
-      render: (o) => <span className="text-[11px] text-white/40">{o.supplier?.name || "—"}</span>,
+      render: (o) => <span className="text-[11px] text-foreground-muted">{o.supplier?.name || "—"}</span>,
     },
     {
       key: "items",
@@ -217,7 +217,7 @@ export default function OrdersPage() {
       key: "deliveryDate",
       label: "Delivery",
       render: (o) => (
-        <span className="text-[11px] text-white/30">
+        <span className="text-[11px] text-foreground-muted">
           {o.deliveryDate ? new Date(o.deliveryDate).toLocaleDateString() : "—"}
         </span>
       ),
@@ -230,7 +230,7 @@ export default function OrdersPage() {
       render: (o) => (
         <button
           onClick={(e) => { e.stopPropagation(); setSelectedOrder(o); }}
-          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
+          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-foreground-muted hover:text-foreground-secondary transition-colors"
           aria-label={`View order ${o.orderNumber}`}
         >
           <Eye size={14} />
@@ -250,7 +250,7 @@ export default function OrdersPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Order Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Track, manage, and fulfill orders across the entire supply chain</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Track, manage, and fulfill orders across the entire supply chain</p>
         </div>
       </motion.div>
 
@@ -262,12 +262,12 @@ export default function OrdersPage() {
               <motion.div
                 key={s.label}
                 variants={fadeInUp}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-colors"
+                className="rounded-xl border border-border-subtle bg-surface-1 p-4 hover:bg-surface-1 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{s.label}</span>
+                  <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{s.label}</span>
                   <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                    <s.icon size={15} className="text-white/40" />
+                    <s.icon size={15} className="text-foreground-muted" />
                   </div>
                 </div>
                 <p className="text-xl font-bold text-white">{s.value}</p>
@@ -282,19 +282,19 @@ export default function OrdersPage() {
       {/* Search + Filters */}
       <motion.div variants={fadeInUp} className="flex items-center gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted" />
           <input
             type="text"
             placeholder="Search orders, hotels, suppliers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50"
+            className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50"
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white/60 focus:outline-none"
+          className="px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-foreground-secondary focus:outline-none"
         >
           <option value="all" className="bg-[#0a0a0a]">All Status</option>
           <option value="PENDING_APPROVAL" className="bg-[#0a0a0a]">Pending</option>
@@ -321,7 +321,7 @@ export default function OrdersPage() {
               </span>
               <button
                 onClick={clearSelection}
-                className="p-1 rounded hover:bg-white/[0.06] text-white/40 hover:text-white transition-colors"
+                className="p-1 rounded hover:bg-surface-2 text-foreground-muted hover:text-white transition-colors"
                 aria-label="Clear selection"
               >
                 <X size={14} />
@@ -330,7 +330,7 @@ export default function OrdersPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={exportCsv}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.04] border border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.04] border border-border-subtle text-foreground-secondary hover:text-white hover:bg-surface-2 transition-colors"
               >
                 <Download size={13} />
                 Export CSV
@@ -363,7 +363,7 @@ export default function OrdersPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-sm text-white/70"
+            className="rounded-xl border border-border-subtle bg-surface-1 px-4 py-3 text-sm text-foreground-secondary"
           >
             {bulkMessage}
           </motion.div>
@@ -383,7 +383,7 @@ export default function OrdersPage() {
             action={
               <button
                 onClick={() => { setSearchQuery(""); setFilterStatus("all"); }}
-                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white transition-colors"
+                className="px-4 py-2 rounded-lg bg-white/[0.04] border border-border-subtle text-xs text-foreground-secondary hover:text-white transition-colors"
               >
                 Clear Filters
               </button>

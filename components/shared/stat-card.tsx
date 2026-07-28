@@ -14,7 +14,7 @@ interface StatCardProps {
 
 export function StatCard({ title, value, change, changeType = "neutral", icon: Icon, className }: StatCardProps) {
   return (
-    <div className={cn("rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm", className)}>
+    <div className={cn("rounded-xl border border-border-subtle bg-white/5 p-6 backdrop-blur-sm", className)}>
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-slate-400">{title}</span>
         <Icon className="h-5 w-5 text-slate-400" />

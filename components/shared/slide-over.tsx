@@ -66,22 +66,22 @@ export function SlideOver({
         role="dialog"
         aria-modal="true"
         aria-label={title ?? "Detail panel"}
-        className={`relative ${width} h-full flex flex-col bg-[#0c0c12]/95 backdrop-blur-xl border-l border-white/10 shadow-2xl animate-slide-in-right`}
+        className={`relative ${width} h-full flex flex-col bg-canvas/95 backdrop-blur-xl border-l border-border-subtle shadow-2xl animate-slide-in-right`}
       >
         {/* Header */}
         {(title || description) && (
-          <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-white/[0.06] shrink-0">
+          <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-border-subtle shrink-0">
             <div className="min-w-0">
               {title && (
                 <h2 className="text-sm font-semibold text-white truncate">{title}</h2>
               )}
               {description && (
-                <p className="text-xs text-white/30 mt-0.5 truncate">{description}</p>
+                <p className="text-xs text-foreground-muted mt-0.5 truncate">{description}</p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white/60 transition-colors shrink-0 min-w-[36px] min-h-[36px] flex items-center justify-center"
+              className="p-1.5 rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary transition-colors shrink-0 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label="Close panel"
             >
               <X size={16} />

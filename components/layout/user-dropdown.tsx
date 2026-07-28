@@ -50,8 +50,8 @@ export function UserDropdown({ user }: UserDropdownProps) {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-1 w-56 rounded-lg border border-white/10 bg-[#141420] shadow-xl">
-          <div className="border-b border-white/10 px-4 py-3">
+        <div className="absolute right-0 z-50 mt-1 w-56 rounded-lg border border-border-subtle bg-[#141420] shadow-xl">
+          <div className="border-b border-border-subtle px-4 py-3">
             <div className="font-medium text-white">{user?.name || "User"}</div>
             <div className="text-xs text-zinc-400">{user?.email || ""}</div>
           </div>
@@ -69,7 +69,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
               <Shield className="h-4 w-4" /> Security
             </button>
           </div>
-          <div className="border-t border-white/10 py-1">
+          <div className="border-t border-border-subtle py-1">
             <button
               onClick={handleLogout}
               className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-white/5"

@@ -35,7 +35,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "DEMO: Pending" },
     REJECTED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "DEMO: Rejected" },
     SUBMITTED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "DEMO: Submitted" },
-    DRAFT: { bg: "bg-white/5", text: "text-white/40", dot: "bg-white/40", label: "DEMO: Draft" },
+    DRAFT: { bg: "bg-white/5", text: "text-foreground-muted", dot: "bg-white/40", label: "DEMO: Draft" },
   };
   const c = config[status] || config.DRAFT;
   return (
@@ -82,11 +82,11 @@ export default function EtaCenterPage() {
       <motion.div variants={fadeInUp} className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">ETA E-Invoicing Center</h1>
-          <p className="text-sm text-white/40 mt-0.5">Egyptian Tax Authority compliance — submit, validate, and track invoices</p>
+          <p className="text-sm text-foreground-muted mt-0.5">Egyptian Tax Authority compliance — submit, validate, and track invoices</p>
         </div>
         <button
           onClick={() => refetch()}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.06] text-xs text-white/80 transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-surface-2 border border-border-subtle text-xs text-white/80 transition-all"
         >
           <RefreshCw size={14} />
           Refresh
@@ -100,11 +100,11 @@ export default function EtaCenterPage() {
           { label: "ETA Accepted", value: metrics.accepted.toString(), icon: CheckCircle2 },
           { label: "ETA Rejected", value: metrics.rejected.toString(), icon: AlertTriangle },
         ].map((m) => (
-          <motion.div key={m.label} variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <motion.div key={m.label} variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 p-4">
             <div className="flex items-start justify-between mb-3">
-              <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">{m.label}</span>
+              <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">{m.label}</span>
               <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
-                <m.icon size={15} className="text-white/40" />
+                <m.icon size={15} className="text-foreground-muted" />
               </div>
             </div>
             <p className="text-xl font-bold text-white">{m.value}</p>
@@ -112,42 +112,42 @@ export default function EtaCenterPage() {
         ))}
       </motion.div>
 
-      <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
+      <motion.div variants={fadeInUp} className="rounded-xl border border-border-subtle bg-surface-1 overflow-hidden overflow-x-auto table-scroll-wrapper">
         {loading ? (
           <div className="p-8 text-center">
             <div className="w-6 h-6 border-2 border-white/20 border-t-[#39ff7e] rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-white/30 mt-3">Loading invoices...</p>
+            <p className="text-xs text-foreground-muted mt-3">Loading invoices...</p>
           </div>
         ) : invoices.length === 0 ? (
           <div className="p-8 text-center">
             <FileCheck size={32} className="text-white/10 mx-auto mb-3" />
-            <p className="text-sm text-white/30">No invoices yet.</p>
-            <p className="text-xs text-white/20 mt-1">Invoices will appear here once orders are placed.</p>
+            <p className="text-sm text-foreground-muted">No invoices yet.</p>
+            <p className="text-xs text-foreground-muted mt-1">Invoices will appear here once orders are placed.</p>
           </div>
         ) : (
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Invoice #</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">ETA Status <span className="text-amber-400/60">(DEMO)</span></th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">ETA UUID <span className="text-amber-400/60">(DEMO)</span></th>
-                <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Date</th>
+              <tr className="border-b border-border-subtle">
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Invoice #</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Hotel</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Supplier</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Amount</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">ETA Status <span className="text-amber-400/60">(DEMO)</span></th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">ETA UUID <span className="text-amber-400/60">(DEMO)</span></th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody>
               {invoices.map((inv) => (
-                <tr key={inv.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
+                <tr key={inv.id} className="border-b border-border-invisible hover:bg-white/[0.015] transition-colors">
                   <td className="px-4 py-3">
-                    <span className="text-xs font-mono text-white/60">{inv.invoiceNumber}</span>
+                    <span className="text-xs font-mono text-foreground-secondary">{inv.invoiceNumber}</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs text-white">{inv.hotel?.name || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/40">{inv.supplier?.name || "—"}</span>
+                    <span className="text-[11px] text-foreground-muted">{inv.supplier?.name || "—"}</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs font-semibold text-white">EGP {inv.amount.toLocaleString()}</span>
@@ -156,12 +156,12 @@ export default function EtaCenterPage() {
                     <StatusBadge status={inv.etaStatus || "DRAFT"} />
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[10px] font-mono text-white/25">
+                    <span className="text-[10px] font-mono text-foreground-muted">
                       {inv.etaUuid ? `${inv.etaUuid.slice(0, 8)}...` : "—"}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">
+                    <span className="text-[11px] text-foreground-muted">
                       {inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString() : "—"}
                     </span>
                   </td>

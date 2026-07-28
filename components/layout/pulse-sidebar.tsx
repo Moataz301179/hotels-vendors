@@ -215,13 +215,13 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-white/[0.06] bg-[#12121a]">
+      <div className="h-full flex flex-col items-center py-4 border-r border-border-subtle bg-surface-1">
         <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/[0.05] transition-colors">
           <BrandLogo variant="dark" size="md" showText={false} />
         </Link>
         <button
           onClick={onToggle}
-          className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.05] text-white/30 hover:text-white transition-colors"
+          className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.05] text-foreground-muted hover:text-white transition-colors"
           aria-label={isMobile ? "Close menu" : "Expand sidebar"}
         >
           <ChevronRight size={18} />
@@ -237,13 +237,13 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                   href={item.href}
                   className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
                     isActive
-                      ? "bg-[#39ff7e]/12 text-white"
-                      : "text-white/30 hover:text-white hover:bg-white/[0.04]"
+                      ? "bg-accent-base/12 text-white"
+                      : "text-foreground-muted hover:text-white hover:bg-white/[0.04]"
                   }`}
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#39ff7e] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-accent-base rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -253,7 +253,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
         </div>
 
         <div className="mt-auto flex flex-col gap-1 w-full px-2">
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg text-white/30 hover:text-white hover:bg-white/[0.04] transition-all">
+          <button className="flex items-center justify-center w-10 h-10 rounded-lg text-foreground-muted hover:text-white hover:bg-white/[0.04] transition-all">
             <Settings size={18} />
           </button>
         </div>
@@ -262,9 +262,9 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-white/[0.06] bg-[#12121a]">
+    <div className="h-full flex flex-col border-r border-border-subtle bg-surface-1">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-white/[0.04]">
+      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-border-invisible">
         <Link href="/" className="flex items-center gap-2.5 group">
           <BrandLogo variant="dark" size="md" showText={false} />
           <span className="text-sm font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
@@ -273,7 +273,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
         </Link>
         <button
           onClick={onToggle}
-          className="p-1.5 rounded-md hover:bg-white/[0.05] text-white/25 hover:text-white transition-colors"
+          className="p-1.5 rounded-md hover:bg-white/[0.05] text-foreground-muted hover:text-white transition-colors"
           aria-label={isMobile ? "Close menu" : "Collapse sidebar"}
         >
           {isMobile ? <X size={16} /> : <ChevronLeft size={16} />}
@@ -284,7 +284,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
       <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
         {navGroups.map((group) => (
           <div key={group.section} className="mb-5">
-            <p className="px-3 mb-1.5 text-[12px] font-semibold text-white/20 uppercase tracking-[0.15em]">
+            <p className="px-3 mb-1.5 text-[12px] font-semibold text-foreground-muted uppercase tracking-[0.15em]">
               {group.section}
             </p>
             <div className="flex flex-col gap-0.5">
@@ -296,14 +296,14 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                     href={item.href}
                     className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
                       isActive
-                        ? "bg-[#39ff7e]/10 text-white font-medium"
-                        : "text-white/40 hover:text-white hover:bg-white/[0.03]"
+                        ? "bg-accent-base/10 text-white font-medium"
+                        : "text-foreground-muted hover:text-white hover:bg-surface-1"
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#39ff7e] rounded-r-full shadow-[0_0_8px_rgba(57,255,126,0.3)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent-base rounded-r-full shadow-[0_0_8px_rgba(57,255,126,0.3)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#39ff7e]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-accent-base" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -314,9 +314,9 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
       </nav>
 
       {/* Footer */}
-      <div className="p-3 border-t border-white/[0.04]">
+      <div className="p-3 border-t border-border-invisible">
           <button
-            className="flex items-center gap-3 px-3 py-2 min-h-[44px] rounded-lg text-sm text-white/35 hover:text-white hover:bg-white/[0.03] transition-all w-full"
+            className="flex items-center gap-3 px-3 py-2 min-h-[44px] rounded-lg text-sm text-foreground-muted hover:text-white hover:bg-surface-1 transition-all w-full"
             aria-label="Settings"
           >
           <Settings size={17} />

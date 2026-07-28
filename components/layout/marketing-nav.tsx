@@ -44,7 +44,7 @@ export function MarketingNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="px-4 py-2 text-[14px] font-medium rounded-lg text-white/50 hover:text-white transition-colors"
+              className="px-4 py-2 text-[14px] font-medium rounded-lg text-foreground-tertiary hover:text-white transition-colors"
             >
               {item.label}
             </Link>
@@ -54,21 +54,21 @@ export function MarketingNav() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/login"
-            className="text-[14px] font-medium text-white/50 hover:text-white transition-colors"
+            className="text-[14px] font-medium text-foreground-tertiary hover:text-white transition-colors"
           >
             Sign In
           </Link>
           <Link
             href="/register"
             className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-            style={{ backgroundColor: "#39ff7e", color: "#000000" }}
+            style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}
           >
             Get Started
           </Link>
         </div>
 
         <button
-          className="lg:hidden p-2 rounded-lg text-white/50 hover:text-white transition-colors"
+          className="lg:hidden p-2 rounded-lg text-foreground-tertiary hover:text-white transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -82,7 +82,7 @@ export function MarketingNav() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="block py-2.5 text-[14px] font-medium text-white/50 hover:text-white transition-colors"
+                className="block py-2.5 text-[14px] font-medium text-foreground-tertiary hover:text-white transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -91,14 +91,14 @@ export function MarketingNav() {
             <div className="pt-4 flex gap-3">
               <Link
                 href="/login"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-white/10 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium border border-border-subtle rounded-lg text-foreground-secondary hover:text-white hover:bg-white/5 transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
                 className="flex-1 text-center py-2.5 text-[13px] font-medium rounded-lg transition-all"
-                style={{ backgroundColor: "#39ff7e", color: "#000000" }}
+                style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}
               >
                 Get Started
               </Link>

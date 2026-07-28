@@ -49,11 +49,11 @@ export function CardTable<T>({
   return (
     <>
       {/* Desktop: table */}
-      <div className="hidden md:block rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+      <div className="hidden md:block rounded-xl border border-border-subtle bg-surface-1 overflow-hidden">
         <div className="overflow-x-auto table-scroll-wrapper">
           <table className="w-full min-w-[640px]">
             <thead>
-              <tr className="border-b border-white/[0.06]">
+              <tr className="border-b border-border-subtle">
                 {hasCheckbox && (
                   <th className="px-4 py-3 w-10">
                     {onToggleAll && (
@@ -63,9 +63,9 @@ export function CardTable<T>({
                         aria-label={allSelected ? "Deselect all" : "Select all"}
                       >
                         {allSelected ? (
-                          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="#39ff7e" stroke="#39ff7e" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="var(--accent-base)" stroke="var(--accent-base)" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         ) : someSelected ? (
-                          <div className="w-[15px] h-[15px] rounded border-2 border-[#39ff7e]/50 bg-[#39ff7e]/20" />
+                          <div className="w-[15px] h-[15px] rounded border-2 border-[#39ff7e]/50 bg-accent-base/20" />
                         ) : (
                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/></svg>
                         )}
@@ -76,7 +76,7 @@ export function CardTable<T>({
                 {columns.map((col, i) => (
                   <th
                     key={col.key}
-                    className={`px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider ${getAlign(col, i === columns.length - 1)}`}
+                    className={`px-4 py-3 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider ${getAlign(col, i === columns.length - 1)}`}
                   >
                     {col.label}
                   </th>
@@ -90,7 +90,7 @@ export function CardTable<T>({
                 return (
                   <tr
                     key={id}
-                    className={`border-b border-white/[0.04] transition-colors hover:bg-white/[0.015] ${isSelected ? "bg-[#39ff7e]/[0.04]" : ""}`}
+                    className={`border-b border-border-invisible transition-colors hover:bg-white/[0.015] ${isSelected ? "bg-accent-base/[0.04]" : ""}`}
                   >
                     {hasCheckbox && (
                       <td className="px-4 py-3 w-10">
@@ -100,7 +100,7 @@ export function CardTable<T>({
                           aria-label={`Select row ${id}`}
                         >
                           {isSelected ? (
-                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="#39ff7e" stroke="#39ff7e" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="var(--accent-base)" stroke="var(--accent-base)" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                           ) : (
                             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/></svg>
                           )}
@@ -114,7 +114,7 @@ export function CardTable<T>({
                           {col.render
                             ? col.render(row)
                             : (
-                                <span className={`text-xs ${col.primary ? "font-mono text-white/60" : col.badge ? "" : "text-white"}`}>
+                                <span className={`text-xs ${col.primary ? "font-mono text-foreground-secondary" : col.badge ? "" : "text-white"}`}>
                                   {renderCellValue(row, col)}
                                 </span>
                               )}
@@ -137,7 +137,7 @@ export function CardTable<T>({
           return (
             <div
               key={id}
-              className="bg-white/[0.03] border border-white/[0.08] rounded-lg p-4"
+              className="bg-surface-1 border border-border-subtle rounded-lg p-4"
             >
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3 min-w-0">
@@ -148,7 +148,7 @@ export function CardTable<T>({
                       aria-label={isSelected ? "Deselect" : "Select"}
                     >
                       {isSelected ? (
-                        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="#39ff7e" stroke="#39ff7e" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="var(--accent-base)" stroke="var(--accent-base)" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       ) : (
                         <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/></svg>
                       )}
@@ -173,7 +173,7 @@ export function CardTable<T>({
                       return col.render ? (
                         <span key={col.key}>{col.render(row)}</span>
                       ) : (
-                        <span key={col.key} className="text-xs text-white/60">{renderCellValue(row, col)}</span>
+                        <span key={col.key} className="text-xs text-foreground-secondary">{renderCellValue(row, col)}</span>
                       );
                     })}
                   </div>
@@ -184,13 +184,13 @@ export function CardTable<T>({
                   if (col.primary || col.badge) return null;
                   return (
                     <div key={col.key} className="flex items-center justify-between">
-                      <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">
+                      <span className="text-[10px] font-medium text-foreground-muted uppercase tracking-wider">
                         {col.label}
                       </span>
                       {col.render ? (
                         col.render(row)
                       ) : (
-                        <span className="text-xs text-white/60">{renderCellValue(row, col)}</span>
+                        <span className="text-xs text-foreground-secondary">{renderCellValue(row, col)}</span>
                       )}
                     </div>
                   );
@@ -199,7 +199,7 @@ export function CardTable<T>({
               {onRowClick && (
                 <button
                   onClick={() => onRowClick(row)}
-                  className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[11px] font-medium text-white/40 hover:text-white/60 hover:bg-white/[0.06] transition-colors active:scale-[0.98]"
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white/[0.04] border border-border-subtle text-[11px] font-medium text-foreground-muted hover:text-foreground-secondary hover:bg-surface-2 transition-colors active:scale-[0.98]"
                 >
                   View Details
                 </button>

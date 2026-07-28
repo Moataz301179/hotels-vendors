@@ -46,7 +46,7 @@ const statusConfig: Record<string, { bg: string; text: string; dot: string; labe
   IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
   DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },
   CANCELLED: { bg: "bg-red-500/10", text: "text-red-400", dot: "bg-red-400", label: "Cancelled" },
-  DRAFT: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Draft" },
+  DRAFT: { bg: "bg-white/10", text: "text-foreground-muted", dot: "bg-white/40", label: "Draft" },
 };
 
 const timelineSteps = [
@@ -86,7 +86,7 @@ function Timeline({ status }: { status: string }) {
           <div key={step.key} className="flex items-start gap-3 relative">
             {/* Vertical line */}
             {i < timelineSteps.length - 1 && (
-              <div className={`absolute left-[11px] top-[24px] w-px h-[20px] ${isComplete ? "bg-accent-base/40" : "bg-white/[0.06]"}`} />
+              <div className={`absolute left-[11px] top-[24px] w-px h-[20px] ${isComplete ? "bg-accent-base/40" : "bg-surface-2"}`} />
             )}
             {/* Dot / Icon */}
             <div className={`relative z-10 flex items-center justify-center w-[22px] h-[22px] rounded-full shrink-0 mt-0.5 ${
@@ -96,10 +96,10 @@ function Timeline({ status }: { status: string }) {
                   ? "bg-accent-base/10"
                   : "bg-white/[0.04]"
             }`}>
-              <Icon size={11} className={isComplete ? "text-accent-base" : "text-white/20"} />
+              <Icon size={11} className={isComplete ? "text-accent-base" : "text-foreground-muted"} />
             </div>
             {/* Label */}
-            <span className={`text-xs pb-5 ${isCurrent ? "text-white font-medium" : isComplete ? "text-white/50" : "text-white/20"}`}>
+            <span className={`text-xs pb-5 ${isCurrent ? "text-white font-medium" : isComplete ? "text-foreground-tertiary" : "text-foreground-muted"}`}>
               {step.label}
             </span>
           </div>
@@ -131,20 +131,20 @@ export function OrderDetailPanel({
       <div className="space-y-5">
         {/* Summary cards */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-            <p className="text-[10px] text-white/20 uppercase tracking-wider">Status</p>
+          <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+            <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Status</p>
             <div className="mt-1.5"><StatusBadge status={order.status} /></div>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-            <p className="text-[10px] text-white/20 uppercase tracking-wider">Total</p>
+          <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+            <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Total</p>
             <p className="text-sm font-semibold text-white mt-1">{formatCurrency(order.total, order.currency)}</p>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-            <p className="text-[10px] text-white/20 uppercase tracking-wider">Items</p>
+          <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+            <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Items</p>
             <p className="text-sm text-white mt-1">{itemCount}</p>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-            <p className="text-[10px] text-white/20 uppercase tracking-wider">Delivery</p>
+          <div className="p-3 rounded-lg bg-surface-1 border border-border-invisible">
+            <p className="text-[10px] text-foreground-muted uppercase tracking-wider">Delivery</p>
             <p className="text-sm text-white mt-1">
               {order.deliveryDate
                 ? new Date(order.deliveryDate).toLocaleDateString()
@@ -155,21 +155,21 @@ export function OrderDetailPanel({
 
         {/* Items table */}
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider mb-2">Order Items</p>
-          <div className="rounded-lg border border-white/[0.04] overflow-hidden">
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-2">Order Items</p>
+          <div className="rounded-lg border border-border-invisible overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/[0.04] bg-white/[0.01]">
-                  <th className="text-left px-3 py-2 text-[10px] font-medium text-white/30 uppercase">Product</th>
-                  <th className="text-right px-3 py-2 text-[10px] font-medium text-white/30 uppercase">Qty</th>
-                  <th className="text-right px-3 py-2 text-[10px] font-medium text-white/30 uppercase">Total</th>
+                <tr className="border-b border-border-invisible bg-white/[0.01]">
+                  <th className="text-left px-3 py-2 text-[10px] font-medium text-foreground-muted uppercase">Product</th>
+                  <th className="text-right px-3 py-2 text-[10px] font-medium text-foreground-muted uppercase">Qty</th>
+                  <th className="text-right px-3 py-2 text-[10px] font-medium text-foreground-muted uppercase">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {order.items?.map((item, i) => (
                   <tr key={i} className="border-b border-white/[0.03] last:border-b-0">
-                    <td className="px-3 py-2 text-xs text-white/60">{item.product?.name}</td>
-                    <td className="px-3 py-2 text-xs text-white/40 text-right">×{item.quantity}</td>
+                    <td className="px-3 py-2 text-xs text-foreground-secondary">{item.product?.name}</td>
+                    <td className="px-3 py-2 text-xs text-foreground-muted text-right">×{item.quantity}</td>
                     <td className="px-3 py-2 text-xs text-white text-right font-medium">{formatCurrency(item.total, order.currency)}</td>
                   </tr>
                 ))}
@@ -180,12 +180,12 @@ export function OrderDetailPanel({
 
         {/* Timeline */}
         <div>
-          <p className="text-[10px] text-white/20 uppercase tracking-wider mb-3">Timeline</p>
+          <p className="text-[10px] text-foreground-muted uppercase tracking-wider mb-3">Timeline</p>
           <Timeline status={order.status} />
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 pt-2 border-t border-white/[0.04]">
+        <div className="flex items-center gap-2 pt-2 border-t border-border-invisible">
           {order.status === "PENDING_APPROVAL" && onApprove && (
             <button
               onClick={() => onApprove(order)}
@@ -207,7 +207,7 @@ export function OrderDetailPanel({
           {onViewFull && (
             <button
               onClick={() => onViewFull(order)}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white/60 text-xs font-medium hover:text-white hover:bg-white/[0.06] transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white/[0.04] border border-border-subtle text-foreground-secondary text-xs font-medium hover:text-white hover:bg-surface-2 transition-colors"
             >
               <ExternalLink size={13} />
               View Full Order
