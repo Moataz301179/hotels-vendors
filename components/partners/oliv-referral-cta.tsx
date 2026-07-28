@@ -20,9 +20,12 @@ export function OlivReferralCTA({
   amount,
   variant = "card",
 }: OlivReferralCTAProps) {
-  const referralUrl = orderId
-    ? `https://oliv.finance/apply?ref=${orderId}&source=hotelsvendors`
-    : "https://oliv.finance/#register";
+  const params = new URLSearchParams();
+  if (orderId) params.set("orderId", orderId);
+  if (invoiceId) params.set("invoiceId", invoiceId);
+  if (amount) params.set("amount", String(amount));
+  const qs = params.toString();
+  const referralUrl = `/api/v1/oliv/click${qs ? `?${qs}` : ""}`;
 
   if (variant === "banner") {
     return (

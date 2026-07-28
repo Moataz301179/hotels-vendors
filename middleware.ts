@@ -61,6 +61,7 @@ const PUBLIC_PATHS = [
   "/api/v1/auth/verify",
   "/api/v1/supplier/onboard",
   "/api/v1/oliv/referral",
+  "/api/v1/oliv/click",
   "/api/v1/oliv/webhook",
   "/api/v1/cms/content",
   "/api/v1/ai/public",
