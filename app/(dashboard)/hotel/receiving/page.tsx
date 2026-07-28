@@ -155,7 +155,7 @@ export default function ReceivingPage() {
           <LoadingTable rows={5} />
         ) : filtered.length === 0 ? (
           <EmptyState
-            icon={<Package className="h-8 w-8 text-white/20" />}
+            icon="package"
             title="No GRNs found"
             description="Goods receipt notes will appear here once deliveries are recorded."
           />
