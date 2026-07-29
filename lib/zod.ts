@@ -297,13 +297,6 @@ export const BusinessRegisterSchema = z.object({
   termsAccepted: z.literal(true, { error: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
 }).superRefine((data, ctx) => {
   if (data.accountType === "business") {
-    if (!data.taxId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Tax ID is required for business accounts",
-        path: ["taxId"],
-      });
-    }
     if (!data.city) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

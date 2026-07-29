@@ -1334,22 +1334,18 @@ describe("BusinessRegisterSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("requires taxId for business accounts (superRefine)", () => {
+  it("allows missing taxId for business accounts (collected post-registration)", () => {
     const result = BusinessRegisterSchema.safeParse({
       type: "hotel",
       name: "Grand Nile",
       email: "reg@grandnile.com",
       password: "Secure123!",
       accountType: "business",
+      city: "Cairo",
+      governorate: "Cairo",
       termsAccepted: true,
     });
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      const taxIdIssue = result.error.issues.find(
-        (i) => i.path.includes("taxId")
-      );
-      expect(taxIdIssue).toBeDefined();
-    }
+    expect(result.success).toBe(true);
   });
 
   it("requires city for business accounts (superRefine)", () => {

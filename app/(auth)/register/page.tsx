@@ -72,7 +72,7 @@ function RegisterContent() {
     termsAccepted: false,
   });
 
-  const updateForm = (field: string, value: string) => {
+  const updateForm = (field: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setError("");
   };
@@ -87,8 +87,8 @@ function RegisterContent() {
       setLoading(false);
       return;
     }
-    if (form.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (form.password.length < 8 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/[0-9]/.test(form.password)) {
+      setError("Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number");
       setLoading(false);
       return;
     }
@@ -252,9 +252,9 @@ function RegisterContent() {
                 type={showPassword ? "text" : "password"}
                 value={form.password}
                 onChange={(e) => updateForm("password", e.target.value)}
-                placeholder="Min 6 characters"
+                placeholder="Min 8 chars, 1 uppercase, 1 number"
                 required
-                minLength={6}
+                minLength={8}
                 className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
               />
               <button
@@ -390,7 +390,7 @@ function RegisterContent() {
               <input
                 type="checkbox"
                 checked={form.termsAccepted}
-                onChange={(e) => updateForm("termsAccepted", e.target.checked ? "true" : "")}
+                onChange={(e) => updateForm("termsAccepted", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
@@ -405,7 +405,7 @@ function RegisterContent() {
               <input
                 type="checkbox"
                 checked={form.marketingConsent}
-                onChange={(e) => updateForm("marketingConsent", e.target.checked ? "true" : "")}
+                onChange={(e) => updateForm("marketingConsent", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
