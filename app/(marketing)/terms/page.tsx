@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/terms") },
   title: "Terms of Service — HotelsVendors",
   description:
     "Terms of Service governing the use of HotelsVendors B2B procurement platform for Egyptian hospitality.",

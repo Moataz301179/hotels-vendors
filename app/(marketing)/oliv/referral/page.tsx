@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowRight, CheckCircle2, Building2, Users, Phone, Mail, User, Store, Loader2, ExternalLink, Shield, Zap, Clock } from "lucide-react"
 
-const OLIV_REFERRAL_URL = "https://oliv.finance/apply?ref=CHV000&source=hotelsvendors"
+const OLIV_REFERRAL_URL = "/api/v1/oliv/click"
 
 export default function OlivReferralPage() {
   const [step, setStep] = useState<"form" | "submitted">("form")
@@ -304,7 +304,7 @@ export default function OlivReferralPage() {
           <h2 className="text-2xl font-semibold text-white text-center mb-8">Frequently Asked Questions</h2>
           <div className="space-y-3">
             {[
-              { q: "Do I need to be on HotelsVendors to apply?", a: "No. You can apply directly to Oliv using this referral link. However, if you also join HotelsVendors, your invoices get auto-verified and financing is even faster." },
+              { q: "Do I need to register here before applying to Oliv?", a: "Yes — always start here. Register your interest above so we log your referral ID, then continue to Oliv through our tracked link. This guarantees priority processing, waived onboarding fees, and proper attribution of your account to the HotelsVendors partnership." },
               { q: "How does Oliv know I was referred by HotelsVendors?", a: "When you apply via our referral link or mention 'HotelsVendors' in the referral field during Oliv's onboarding, their system flags your account for priority processing." },
               { q: "What are the eligibility requirements?", a: "B2B company registered in Egypt, 6+ months of e-invoice history on ETA, EGP 10M+ annual revenue, and active ETA platform user." },
               { q: "Is there any cost to apply?", a: "No. Application and onboarding are free. You only pay when you use the financing facility." },

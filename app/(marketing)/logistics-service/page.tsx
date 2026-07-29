@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, Truck, MapPin, Clock, TrendingDown, Shield, Thermometer, Route, Banknote, PackageCheck } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/logistics-service") },
   title: "Coastal Hotel Logistics Egypt | Shark-Breaker Shared-Route Delivery | HotelsVendors",
   description: "AI-driven shared-route logistics for Egyptian coastal hotels. Multi-supplier load matching, cold-chain capable, 48-hour delivery guarantee across 6 governorates. Up to 40% cost reduction.",
   keywords: ["B2B hospitality procurement Egypt", "hotel logistics Egypt", "shared-route delivery Red Sea", "coastal hotel suppliers", "Shark-Breaker logistics", "سلسلة التوريد الفندقية", "لوجستيات الفنادق مصر"],

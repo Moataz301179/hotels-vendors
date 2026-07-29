@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/privacy") },
   title: "Privacy Policy — HotelsVendors",
   description:
     "Privacy Policy for HotelsVendors B2B procurement platform. Data protection under Egyptian Data Protection Law (Law No. 151 of 2020) and GDPR.",

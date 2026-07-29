@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, Shield, Zap, Building2, Users, CreditCard, Wallet, BarChart3, Truck, Landmark, RefreshCw, MapPin, Phone, Mail, Globe, AlertCircle, Package, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/hotels/join") },
   title: "Join as Hotel — Onboarding Wizard | HotelsVendors",
   description: "Step-by-step hotel onboarding: Register → Connect ETA Token → Set Up Oliv Financing → Start Procuring. Net-60 terms, EGP 10M+ credit facility.",
   openGraph: {

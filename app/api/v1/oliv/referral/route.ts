@@ -22,15 +22,17 @@ export async function POST(request: NextRequest) {
     }
     const { name, email, phone, company, role } = parsed.data;
 
-    const id = "HV-OLIV-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
-
     const lead = await prisma.leadCapture.create({
       data: {
         companyName: company || `${name} (Oliv Referral)`,
         email,
         sector: "HOTEL",
         role,
-        message: phone || undefined,
+        message: JSON.stringify({
+          referralCode: "CHV000",
+          phone: phone || null,
+          capturedAt: new Date().toISOString(),
+        }),
         source: "OLIV_REFERRAL_PAGE",
         status: "new",
       },

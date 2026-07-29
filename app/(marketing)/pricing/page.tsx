@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { Check, ArrowRight, Building2, Store, Landmark, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/pricing") },
   title: "Enterprise Hospitality Procurement Pricing | HotelsVendors Egypt",
   description: "Transparent pricing for Egyptian hospitality procurement. SaaS listing plans, per-document ETA processing fees, and marketplace commissions. No hidden financial spreads.",
   keywords: ["B2B hospitality procurement Egypt", "hotel procurement pricing Egypt", "SaaS marketplace Egypt", "ETA document processing fee", "hospitality platform pricing", "تسعير المشتريات الفندقية مصر"],

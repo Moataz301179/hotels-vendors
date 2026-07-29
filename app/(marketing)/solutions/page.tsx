@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, Building2, Store, Landmark, Truck, BrainCircuit, ShieldCheck, Banknote, FileCheck, MapPin, Clock, Users } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/solutions") },
   title: "Hospitality Procurement Solutions Egypt | F&B, Consumables, FF&E Covered | HotelsVendors",
   description: "Tailored B2B procurement solutions for Egyptian hotels, suppliers, factoring companies, and logistics providers. F&B, consumables, guest supplies, FF&E, and services.",
   keywords: ["B2B hospitality procurement Egypt", "hotel procurement solutions Egypt", "F&B suppliers Egypt", "FF&E procurement", "hospitality factoring Egypt", "حلول المشتريات الفندقية مصر", "سلسلة التوريد الفندقية"],

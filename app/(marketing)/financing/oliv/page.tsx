@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, Clock, Shield, CheckCircle2, Banknote, FileText, Landmark, Zap } from "lucide-react";
 import { OlivLogo } from "@/components/partners/oliv-logo";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/financing/oliv") },
   title: "Invoice Financing via Oliv | Get Paid in 48 Hours | HotelsVendors",
   description:
     "HotelsVendors partners with Oliv to offer suppliers instant invoice financing. Get approved in minutes, funded in 48 hours. No tech integration needed.",

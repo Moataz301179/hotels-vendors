@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Shield, Zap, Building2, CreditCard, FileText, Users, TrendingUp, Package, Truck, Clock, Landmark, RefreshCw, Wallet, Banknote, BarChart3 } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/hotels") },
   title: "Hotels — B2B Procurement + Oliv Factoring | HotelsVendors",
   description: "Centralize procurement across all properties. Get Net-60 terms via Oliv reverse factoring. Suppliers paid instantly. ETA-compliant invoicing. EGP 10M+ credit facility.",
   openGraph: {

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, FileText, Truck, CreditCard, Landmark, Zap, Shield, Building2, Factory, Users, RefreshCw, ExternalLink, Calendar } from "lucide-react";
 import { OlivLogo } from "@/components/partners/oliv-logo";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/flow") },
   title: "How It Works — Order to Payment in 48 Hours | HotelsVendors × Oliv",
   description: "Place orders, get ETA-compliant invoices, access up to EGP 10M instant financing via Oliv. Paperless, 48-hour funding, any invoice volume.",
   openGraph: {

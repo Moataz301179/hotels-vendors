@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Shield, Zap, Store, CreditCard, Clock, Factory, Truck, Users, TrendingUp, Landmark, RefreshCw, ExternalLink, Package } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/suppliers") },
   title: "Suppliers — Sell to Hotels | HotelsVendors",
   description: "List your hospitality products, reach 480+ hotels, get instant invoice financing up to EGP 10M. Paperless onboarding, zero recourse risk.",
   openGraph: {

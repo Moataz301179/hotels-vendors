@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     template: "%s | HotelsVendors",
   },
   description:
-    "Egypt's B2B hospitality procurement infrastructure. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route logistics — purpose-built for coastal hotel chains.",
+    "Egypt's B2B hospitality procurement platform. AI demand forecasting, embedded factoring, ETA e-invoicing, and shared logistics for hotel chains.",
   keywords: [
     "B2B hospitality procurement Egypt",
     "automated factoring lines Cairo",

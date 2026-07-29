@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, Shield, Zap, Landmark, RefreshCw, ExternalLink, Factory, Truck, CreditCard, Users, TrendingUp, FileText, Building2, Package } from "lucide-react";
 import { OlivLogo } from "@/components/partners/oliv-logo";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/suppliers/join") },
   title: "Join as Supplier — Get Paid in 48h | HotelsVendors",
   description: "List your hospitality products, reach 480+ hotels, get instant invoice financing up to EGP 10M. Paperless onboarding, zero recourse risk.",
   openGraph: {

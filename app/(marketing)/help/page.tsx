@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { HelpCircle, Search, Hotel, Store, Landmark, Truck, ArrowRight, MessageSquare, Mail, BookOpen, Video, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/help") },
   title: "Help Center — HotelsVendors",
   description: "Get help with HotelsVendors. Documentation, guides, and support for hotels, suppliers, factoring, and logistics.",
   openGraph: {

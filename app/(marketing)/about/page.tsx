@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/about") },
   title: "About HotelsVendors — Egypt's B2B Hospitality Procurement Platform | HotelsVendors",
   description:
     "Learn how HotelsVendors is digitizing procurement for Egypt's $21.5B hospitality sector. The four-sided marketplace connecting hotels, suppliers, logistics, and factoring companies.",

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, FileCheck, Shield, Lock, Globe, Mail, CreditCard, CheckCircle2, Fingerprint, Server, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/compliance") },
   title: "ETA E-Invoicing Compliance Egypt | Zero-Exposure Regulatory Shield | HotelsVendors",
   description: "Full ETA Phase 1 & 2 e-invoicing compliance with RSA-2048 digital signing, UUID tracking, and three-way matching. FRA anti-fraud aligned. Zero penalty exposure.",
   keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
