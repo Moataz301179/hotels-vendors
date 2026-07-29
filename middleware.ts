@@ -66,6 +66,7 @@ const PUBLIC_PATHS = [
   "/api/v1/cms/content",
   "/api/v1/ai/public",
   "/api/v1/contact",
+  "/api/v1/products",
   "/api/health",
 ];
 
