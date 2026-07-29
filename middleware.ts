@@ -65,6 +65,7 @@ const PUBLIC_PATHS = [
   "/api/v1/oliv/webhook",
   "/api/v1/cms/content",
   "/api/v1/ai/public",
+  "/api/v1/contact",
   "/api/health",
 ];
 
