@@ -90,7 +90,7 @@ export default function OlivReferralPage() {
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Max Credit (EGP)</div>
           </div>
           <div>
-            <div className="text-[22px] font-bold" style={{ color: "#39ff7e" }}>48h</div>
+            <div className="text-[22px] font-bold" style={{ color: "#14b8a6" }}>48h</div>
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Funding Speed</div>
           </div>
           <div>
@@ -114,7 +114,7 @@ export default function OlivReferralPage() {
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { step: "01", title: "Register Your Interest", desc: "Fill the form below. We create your account and send you the HotelsVendors app with everything pre-filled.", color: "#4A7C59" },
-              { step: "02", title: "Apply In-App (3 Minutes)", desc: "Open the app, tap 'Oliv Financing', and complete the guided KYC — company, signatory, bank account. No websites, no paperwork.", color: "#39ff7e" },
+              { step: "02", title: "Apply In-App (3 Minutes)", desc: "Open the app, tap 'Oliv Financing', and complete the guided KYC — company, signatory, bank account. No websites, no paperwork.", color: "#14b8a6" },
               { step: "03", title: "Get Funded in 48h", desc: "Oliv approves within 24 hours. Upload invoices in the app and receive funds in 48 hours. Non-recourse, revolving facility.", color: "#ff7e1a" },
             ].map((s) => (
               <div key={s.step} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all">

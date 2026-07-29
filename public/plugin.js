@@ -85,7 +85,7 @@ class HotelsVendorsPlugin {
     // Create financing button
     const button = document.createElement('button');
     button.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #12121a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #39ff7e; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #12121a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #14b8a6; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
         </svg>
@@ -96,8 +96,8 @@ class HotelsVendorsPlugin {
     button.onmouseover = () => {
       const div = button.firstElementChild as HTMLDivElement;
       if (div) {
-        div.style.borderColor = 'rgba(57,255,126,0.3)';
-        div.style.boxShadow = '0 4px 20px rgba(57,255,126,0.15)';
+        div.style.borderColor = 'rgba(20,184,166,0.3)';
+        div.style.boxShadow = '0 4px 20px rgba(20,184,166,0.15)';
       }
     };
     button.onmouseout = () => {
@@ -136,7 +136,7 @@ class HotelsVendorsPlugin {
         <p style="color: #999; font-size: 13px; margin-bottom: 20px;">
           Get 30-90 day credit on this purchase. Powered by Oliv Finance.
         </p>
-        <div style="background: rgba(57,255,126,0.05); border: 1px solid rgba(57,255,126,0.2); border-radius: 10px; padding: 16px; margin-bottom: 20px;">
+        <div style="background: rgba(20,184,166,0.05); border: 1px solid rgba(20,184,166,0.2); border-radius: 10px; padding: 16px; margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
             <span style="color: #999; font-size: 13px;">Order Amount</span>
             <span id="hv-amount" style="color: white; font-weight: 600;">EGP 0</span>
@@ -147,10 +147,10 @@ class HotelsVendorsPlugin {
           </div>
           <div style="display: flex; justify-content: space-between;">
             <span style="color: #999; font-size: 13px;">You Pay Later</span>
-            <span id="hv-net" style="color: #39ff7e; font-weight: 600;">EGP 0</span>
+            <span id="hv-net" style="color: #14b8a6; font-weight: 600;">EGP 0</span>
           </div>
         </div>
-        <button id="hv-apply-btn" style="width: 100%; padding: 14px; background: #39ff7e; color: #0c0c12; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;">
+        <button id="hv-apply-btn" style="width: 100%; padding: 14px; background: #14b8a6; color: #0c0c12; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;">
           Apply for Financing
         </button>
         <p style="color: #666; font-size: 11px; text-align: center; margin-top: 12px;">

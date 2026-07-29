@@ -213,7 +213,7 @@ export default async function HotelCashflowPage() {
                       height: `${Math.max(height, 2)}%`,
                       background:
                         i === monthlyTrend.length - 1
-                          ? "linear-gradient(180deg, var(--accent-base), rgba(57, 255, 126, 0.3))"
+                          ? "linear-gradient(180deg, var(--accent-base), rgba(20, 184, 166, 0.3))"
                           : "linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))",
                     }}
                   />

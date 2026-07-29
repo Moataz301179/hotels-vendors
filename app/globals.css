@@ -2,7 +2,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    HOTELS VENDORS — DESIGN SYSTEM v8 (Reference-Aligned)
-   Green: #39ff7e — Primary / HotelsVendors
+   Teal: #14b8a6 — Primary / HotelsVendors
    Orange: #ff7e1a — Fast / INVO / Factoring
    Purple: #c455ff — AI / Compliance
    Background: oklch(0.10 0.015 280) / #0c0c12
@@ -35,14 +35,14 @@
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(57, 255, 126, 0.20);
+  --border-accent: rgba(20, 184, 166, 0.20);
 
-  /* ── Primary: Green #39ff7e ── */
-  --accent-base: #39ff7e;
-  --accent-light: #5fff9a;
-  --accent-dark: #20e060;
-  --accent-muted: rgba(57, 255, 126, 0.10);
-  --accent-glow: rgba(57, 255, 126, 0.12);
+  /* ── Primary: Teal #14b8a6 ── */
+  --accent-base: #14b8a6;
+  --accent-light: #2dd4bf;
+  --accent-dark: #0d9488;
+  --accent-muted: rgba(20, 184, 166, 0.10);
+  --accent-glow: rgba(20, 184, 166, 0.12);
 
   /* ── Orange #ff7e1a ── */
   --orange-base: #ff7e1a;
@@ -60,13 +60,13 @@
 
   /* ── Semantic ── */
   --error: #EF4444;
-  --success: #39ff7e;
+  --success: #14b8a6;
   --warning: #ff7e1a;
   --info: #64b5f6;
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-green: 0 0 40px rgba(57, 255, 126, 0.08);
+  --shadow-glow-green: 0 0 40px rgba(20, 184, 166, 0.08);
   --shadow-glow-orange: 0 0 40px rgba(255, 126, 26, 0.08);
   --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -333,15 +333,15 @@
 [data-theme="light"] .hover\:border-white\/\[0\.12\]:hover { border-color: rgba(0,0,0,0.15) !important; }
 [data-theme="light"] .hover\:border-white\/20:hover { border-color: rgba(0,0,0,0.20) !important; }
 
-/* ── Green accent → Green family (darker for light contrast) ── */
-[data-theme="light"] .bg-\[\#39ff7e\] { background-color: #16a34a !important; }
-[data-theme="light"] .bg-\[\#39ff7e\]\/10 { background-color: rgba(22,163,74,0.10) !important; }
-[data-theme="light"] .text-\[\#39ff7e\] { color: #15803d !important; }
-[data-theme="light"] .border-\[\#39ff7e\]\/30 { border-color: rgba(22,163,74,0.30) !important; }
-[data-theme="light"] .border-\[\#39ff7e\]\/20 { border-color: rgba(22,163,74,0.20) !important; }
-[data-theme="light"] .border-\[\#39ff7e\]\/40 { border-color: rgba(22,163,74,0.40) !important; }
-[data-theme="light"] .hover\:bg-\[\#5fff9a\]:hover { background-color: #15803d !important; }
-[data-theme="light"] .hover\:bg-\[\#39ff7e\]\/90:hover { background-color: rgba(22,163,74,0.90) !important; }
+/* ── Teal accent → Teal family (darker for light contrast) ── */
+[data-theme="light"] .bg-\[\#14b8a6\] { background-color: #0d9488 !important; }
+[data-theme="light"] .bg-\[\#14b8a6\]\/10 { background-color: rgba(13,148,136,0.10) !important; }
+[data-theme="light"] .text-\[\#14b8a6\] { color: #0f766e !important; }
+[data-theme="light"] .border-\[\#14b8a6\]\/30 { border-color: rgba(13,148,136,0.30) !important; }
+[data-theme="light"] .border-\[\#14b8a6\]\/20 { border-color: rgba(13,148,136,0.20) !important; }
+[data-theme="light"] .border-\[\#14b8a6\]\/40 { border-color: rgba(13,148,136,0.40) !important; }
+[data-theme="light"] .hover\:bg-\[\#2dd4bf\]:hover { background-color: #0f766e !important; }
+[data-theme="light"] .hover\:bg-\[\#14b8a6\]\/90:hover { background-color: rgba(13,148,136,0.90) !important; }
 [data-theme="light"] .text-\[\#07090f\] { color: #ffffff !important; }
 [data-theme="light"] .ring-\[\#12121a\] { --tw-ring-color: #f8fafc !important; }
 [data-theme="light"] .border-\[\#0c0c12\] { border-color: #f8fafc !important; }
@@ -384,9 +384,12 @@
 [data-theme="light"] [style*="background: rgba(7,9,15"] {
   background: rgba(255,255,255,0.90) !important;
 }
-[data-theme="light"] [style*="color: \"#39ff7e\""],
-[data-theme="light"] [style*="color: #39ff7e"] {
-  color: #15803d !important;
+[data-theme="light"] [style*="background: rgba(18,18,26,0.95)"] {
+  background: rgba(248,250,252,0.95) !important;
+}
+[data-theme="light"] [style*="color: \"#14b8a6\""],
+[data-theme="light"] [style*="color: #14b8a6"] {
+  color: #0f766e !important;
 }
 [data-theme="light"] [style*="color: \"#ff7e1a\""],
 [data-theme="light"] [style*="color: #ff7e1a"] {
@@ -396,9 +399,9 @@
 [data-theme="light"] [style*="color: #c455ff"] {
   color: #6d28d9 !important;
 }
-[data-theme="light"] [style*="borderColor: \"#39ff7e"],
-[data-theme="light"] [style*="border-color: #39ff7e"] {
-  border-color: rgba(22,163,74,0.25) !important;
+[data-theme="light"] [style*="borderColor: \"#14b8a6"],
+[data-theme="light"] [style*="border-color: #14b8a6"] {
+  border-color: rgba(13,148,136,0.25) !important;
 }
 [data-theme="light"] [style*="borderColor: \"#ff7e1a"],
 [data-theme="light"] [style*="border-color: #ff7e1a"] {
@@ -408,10 +411,10 @@
 [data-theme="light"] [style*="border-color: #c455ff"] {
   border-color: rgba(124,58,237,0.25) !important;
 }
-[data-theme="light"] [style*="background: \"#39ff7e"],
-[data-theme="light"] [style*="background-color: \"#39ff7e"],
-[data-theme="light"] [style*="background: #39ff7e"] {
-  background-color: #16a34a !important;
+[data-theme="light"] [style*="background: \"#14b8a6"],
+[data-theme="light"] [style*="background-color: \"#14b8a6"],
+[data-theme="light"] [style*="background: #14b8a6"] {
+  background-color: #0d9488 !important;
 }
 [data-theme="light"] [style*="background: \"#ff7e1a"],
 [data-theme="light"] [style*="background-color: \"#ff7e1a"],
@@ -433,6 +436,28 @@
 
 /* ── Box shadow overrides ── */
 [data-theme="light"] .shadow-2xl { box-shadow: 0 8px 32px rgba(0,0,0,0.10) !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SITE NAVIGATION — Light theme overrides
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="light"] .bg-\[\#0c0c12\]\/85 { background-color: rgba(255,255,255,0.95) !important; }
+[data-theme="light"] .bg-\[\#12121a\] { background-color: #f8fafc !important; }
+[data-theme="light"] .border-white\/5 { border-color: rgba(0,0,0,0.06) !important; }
+[data-theme="light"] .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.08) !important; }
+[data-theme="light"] .text-white\/50 { color: rgba(15,23,42,0.50) !important; }
+[data-theme="light"] .text-white\/80 { color: rgba(15,23,42,0.80) !important; }
+[data-theme="light"] .text-white\/35 { color: rgba(15,23,42,0.35) !important; }
+[data-theme="light"] .text-white\/30 { color: rgba(15,23,42,0.30) !important; }
+[data-theme="light"] .hover\:text-white:hover { color: #0f172a !important; }
+[data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: rgba(0,0,0,0.03) !important; }
+[data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover { background-color: rgba(0,0,0,0.04) !important; }
+
+/* Dropdown link hover in light mode */
+[data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: rgba(0,0,0,0.03) !important; }
+
+/* Mobile menu */
+[data-theme="light"] .bg-\[\#12121a\] { background-color: #f8fafc !important; }
+[data-theme="light"] .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.08) !important; }
 [data-theme="light"] [style*="boxShadow: \"0 0 80px"] { box-shadow: 0 8px 40px rgba(22,163,74,0.08) !important; }
 [data-theme="light"] [style*="boxShadow: \"0 0 40px"] { box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important; }
 
@@ -440,8 +465,8 @@
 [data-theme="light"] main { color: #0f172a !important; }
 
 /* ── Green glow shadow → softer on light ── */
-[data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#39ff7e"] {
-  box-shadow: 0 4px 20px rgba(22,163,74,0.10) !important;
+[data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#14b8a6"] {
+  box-shadow: 0 4px 20px rgba(13,148,136,0.10) !important;
 }
 [data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#ff7e1a"] {
   box-shadow: 0 4px 20px rgba(234,88,12,0.10) !important;
@@ -449,8 +474,8 @@
 [data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#c455ff"] {
   box-shadow: 0 4px 20px rgba(124,58,237,0.10) !important;
 }
-[data-theme="light"] [style*="boxShadow: \"0 0 40px 2px #39ff7e"] {
-  box-shadow: 0 4px 30px rgba(22,163,74,0.08) !important;
+[data-theme="light"] [style*="boxShadow: \"0 0 40px 2px #14b8a6"] {
+  box-shadow: 0 4px 30px rgba(13,148,136,0.08) !important;
 }
 [data-theme="light"] [style*="boxShadow: \"0 0 40px 2px #ff7e1a"] {
   box-shadow: 0 4px 30px rgba(234,88,12,0.08) !important;
@@ -830,7 +855,7 @@ textarea:focus-visible {
    TEXT GRADIENT UTILITIES
    ═══════════════════════════════════════════════════════════════ */
 .text-gradient-lime {
-  background: linear-gradient(135deg, #39ff7e, #ff7e1a);
+  background: linear-gradient(135deg, #14b8a6, #ff7e1a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

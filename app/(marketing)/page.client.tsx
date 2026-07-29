@@ -132,7 +132,7 @@ export default function MarketingPage() {
 
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(rgba(57,255,126,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,126,0.02) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(20,184,166,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.02) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           maskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
           WebkitMaskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
@@ -205,7 +205,7 @@ export default function MarketingPage() {
           href="/oliv/referral"
           className={`absolute bottom-0 left-0 right-0 z-20 block w-full overflow-hidden border-t border-white/5 select-none ${ar ? "font-cairo" : ""}`}
           style={{
-            background: "linear-gradient(90deg, rgba(57,255,126,0.06) 0%, rgba(12,12,18,0.95) 25%, rgba(12,12,18,0.95) 75%, rgba(57,255,126,0.06) 100%)",
+            background: "linear-gradient(90deg, rgba(20,184,166,0.06) 0%, rgba(12,12,18,0.95) 25%, rgba(12,12,18,0.95) 75%, rgba(20,184,166,0.06) 100%)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -213,39 +213,39 @@ export default function MarketingPage() {
           <div className={`flex items-center py-2.5 whitespace-nowrap w-max animate-marquee ${ar ? "flex-row-reverse" : ""}`}>
             {ar ? (
               <>
-                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#39ff7e] font-semibold">10 مليون ج.م</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#39ff7e] font-semibold">الرقم الضريبي الموحد</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#39ff7e] font-semibold">48 ساعة</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#39ff7e] font-semibold">بالشراكة مع Oliv</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#39ff7e] font-semibold">10 مليون ج.م</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#39ff7e] font-semibold">الرقم الضريبي الموحد</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#39ff7e] font-semibold">48 ساعة</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#39ff7e] font-semibold">بالشراكة مع Oliv</span></span>
+                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#14b8a6] font-semibold">10 مليون ج.م</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#14b8a6] font-semibold">الرقم الضريبي الموحد</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#14b8a6] font-semibold">48 ساعة</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#14b8a6] font-semibold">بالشراكة مع Oliv</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#14b8a6] font-semibold">10 مليون ج.م</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#14b8a6] font-semibold">الرقم الضريبي الموحد</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#14b8a6] font-semibold">48 ساعة</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#14b8a6] font-semibold">بالشراكة مع Oliv</span></span>
               </>
             ) : (
               <>
-                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#39ff7e] font-semibold">EGP 10M</span> credit line</span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#39ff7e] font-semibold">ETA tax UUID</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#39ff7e] font-semibold">48 hours</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#39ff7e] font-semibold">Powered by Oliv Finance</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#39ff7e] font-semibold">EGP 10M</span> credit line</span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#39ff7e] font-semibold">ETA tax UUID</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#39ff7e] font-semibold">48 hours</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#39ff7e]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#39ff7e] font-semibold">Powered by Oliv Finance</span></span>
+                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#14b8a6] font-semibold">EGP 10M</span> credit line</span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#14b8a6] font-semibold">ETA tax UUID</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#14b8a6] font-semibold">48 hours</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#14b8a6] font-semibold">Powered by Oliv Finance</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#14b8a6] font-semibold">EGP 10M</span> credit line</span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#14b8a6] font-semibold">ETA tax UUID</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#14b8a6] font-semibold">48 hours</span></span>
+                <span className="w-1 h-1 rounded-full bg-[#14b8a6]/60 mx-4 shrink-0" />
+                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#14b8a6] font-semibold">Powered by Oliv Finance</span></span>
               </>
             )}
           </div>
@@ -912,7 +912,7 @@ export default function MarketingPage() {
             <div
               className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "var(--border-accent)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px rgba(57,255,126,0.19), inset 0 0 20px 0px rgba(57,255,126,0.03)"; e.currentTarget.style.borderColor = "rgba(57,255,126,0.53)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px rgba(20,184,166,0.19), inset 0 0 20px 0px rgba(20,184,166,0.03)"; e.currentTarget.style.borderColor = "rgba(20,184,166,0.53)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--border-accent)"; }}
             >
               <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>

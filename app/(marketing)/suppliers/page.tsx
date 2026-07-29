@@ -19,7 +19,7 @@ const SUPPLIER_FEATURES = [
     icon: Users,
     title: "Access 480+ Hotels",
     desc: "Direct access to hotel buyers across Egypt. No middlemen. No bidding wars.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: CreditCard,
@@ -31,7 +31,7 @@ const SUPPLIER_FEATURES = [
     icon: Shield,
     title: "Zero Recourse Risk",
     desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: RefreshCw,
@@ -54,14 +54,14 @@ const SUPPLIER_FEATURES = [
 ];
 
 const STATS = [
-  { value: "480+", label: "Hotel Buyers", color: "#39ff7e" },
+  { value: "480+", label: "Hotel Buyers", color: "#14b8a6" },
   { value: "EGP 10M", label: "Max Credit Line", color: "#4A7C59" },
   { value: "48h", label: "Payment Speed", color: "#ff7e1a" },
   { value: "0%", label: "Recourse Risk", color: "#c455ff" },
 ];
 
 const HOW_IT_WORKS = [
-  { step: "1", title: "Register", desc: "Fill in your company details, Tax ID, and product categories. Takes 2 minutes.", color: "#39ff7e" },
+  { step: "1", title: "Register", desc: "Fill in your company details, Tax ID, and product categories. Takes 2 minutes.", color: "#14b8a6" },
   { step: "2", title: "List Products", desc: "Upload SKUs, set fixed prices & stock levels. Start receiving orders immediately.", color: "#ff7e1a" },
   { step: "3", title: "Get Paid", desc: "Fulfill orders, apply for Oliv financing, receive cash in 48 hours.", color: "#4A7C59" },
 ];
@@ -94,7 +94,7 @@ export default function SuppliersPage() {
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             List your hospitality products on Egypt&apos;s largest B2B procurement platform.
             Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "#4A7C59" }}>Oliv finances it instantly</strong>.
-            Up to <strong style={{ color: "#39ff7e" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
+            Up to <strong style={{ color: "#14b8a6" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>

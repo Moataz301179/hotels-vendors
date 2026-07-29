@@ -26,7 +26,7 @@ export default function DemoCheckout() {
             </div>
 
             <div className="flex gap-3">
-              <button onClick={placeOrder} className="px-4 py-2 bg-[#39ff7e] text-black rounded font-semibold">Place Order (No Payment)</button>
+              <button onClick={placeOrder} className="px-4 py-2 bg-[#14b8a6] text-black rounded font-semibold">Place Order (No Payment)</button>
               <Link href="/demo" className="px-4 py-2 bg-white/5 border border-white/10 rounded">Back to Demo</Link>
             </div>
           </div>

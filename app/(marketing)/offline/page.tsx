@@ -18,7 +18,7 @@ export default function OfflinePage() {
         <div className="flex flex-wrap gap-3 justify-center">
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] text-[13px] font-semibold hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]"
           >
             <RefreshCw size={14} />
             Try Again

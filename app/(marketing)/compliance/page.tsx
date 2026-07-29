@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 };
 
 const complianceAreas = [
-  { icon: FileCheck, title: "ETA E-Invoicing", desc: "Full Egyptian Tax Authority Phase 1 & 2 e-invoicing compliance. RSA-2048 digital signing, UUID tracking, real-time submission.", color: "#39ff7e" },
-  { icon: Shield, title: "FRA Anti-Fraud", desc: "Aligned with Egyptian Financial Regulatory Authority guidelines. Three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note.", color: "#39ff7e" },
+  { icon: FileCheck, title: "ETA E-Invoicing", desc: "Full Egyptian Tax Authority Phase 1 & 2 e-invoicing compliance. RSA-2048 digital signing, UUID tracking, real-time submission.", color: "#14b8a6" },
+  { icon: Shield, title: "FRA Anti-Fraud", desc: "Aligned with Egyptian Financial Regulatory Authority guidelines. Three-way matching gate: PO + ETA UUID + Signed Digital Delivery Note.", color: "#14b8a6" },
   { icon: Lock, title: "Data Protection", desc: "GDPR-aligned with encryption at rest and in transit, role-based access controls, and comprehensive audit trails.", color: "#64b5f6" },
   { icon: Fingerprint, title: "ISO/IEC 27001", desc: "Information Security Management alignment. Server-side sanitization proxies and stateless data processing architecture.", color: "#ff7e1a" },
   { icon: Server, title: "SOC 2 Type II", desc: "Audit-ready posture for enterprise procurement. Independent third-party validation of security, availability, and confidentiality controls.", color: "#c455ff" },
@@ -29,7 +29,7 @@ export default function CompliancePage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Compliance</span>
           <h1 className="text-[clamp(28px,4vw,48px)] font-medium leading-[1.1] mb-5 text-white">
@@ -39,7 +39,7 @@ export default function CompliancePage() {
             Every transaction on HotelsVendors is cryptographically signed, UUID-tracked, and ETA-submitted in real-time. Three-way matching is automated. Audit trails are immutable. Your compliance team reviews exceptions, not every invoice.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=fintech" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+            <Link href="/register?sector=fintech" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
               Register for Compliance Access <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -60,7 +60,7 @@ export default function CompliancePage() {
               { icon: CheckCircle2, label: "Three-Way Match", desc: "Auto-verified" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#39ff7e" }} />
+                <b.icon size={16} style={{ color: "#14b8a6" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -76,7 +76,7 @@ export default function CompliancePage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="rounded-2xl p-6 md:p-8" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center gap-3 mb-4">
-              <FileCheck size={20} style={{ color: "#39ff7e" }} />
+              <FileCheck size={20} style={{ color: "#14b8a6" }} />
               <div>
                 <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Primary Engine</span>
                 <h2 className="text-[18px] font-medium text-white">ETA E-Invoicing Compliance</h2>
@@ -95,7 +95,7 @@ export default function CompliancePage() {
                 "Zero penalty exposure",
               ].map((f) => (
                 <div key={f} className="flex items-center gap-2 text-[12px] text-white/40">
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#39ff7e" }} />{f}
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#14b8a6" }} />{f}
                 </div>
               ))}
             </div>
@@ -110,7 +110,7 @@ export default function CompliancePage() {
           <h2 className="text-[20px] font-medium mb-8 text-white">Compliance Areas</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {complianceAreas.map((a) => (
-              <div key={a.title} className="rounded-2xl p-6 transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={a.title} className="rounded-2xl p-6 transition-all hover:border-[#14b8a6]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: a.color + "15" }}>
                   <a.icon size={18} style={{ color: a.color }} />
                 </div>
@@ -164,10 +164,10 @@ export default function CompliancePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Shield size={28} className="mx-auto mb-6" style={{ color: "#39ff7e" }} />
+          <Shield size={28} className="mx-auto mb-6" style={{ color: "#14b8a6" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Compliance-Ready Procurement</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Every invoice. Every delivery. Every payment. Fully auditable from day one.</p>
-          <Link href="/register?sector=fintech" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+          <Link href="/register?sector=fintech" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
             Get Started <ArrowRight size={14} />
           </Link>
         </div>

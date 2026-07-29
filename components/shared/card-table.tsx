@@ -65,7 +65,7 @@ export function CardTable<T>({
                         {allSelected ? (
                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" fill="var(--accent-base)" stroke="var(--accent-base)" strokeWidth="1"/><path d="M4 7.5L6.5 10L11 5" stroke="#0c0c12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         ) : someSelected ? (
-                          <div className="w-[15px] h-[15px] rounded border-2 border-[#39ff7e]/50 bg-accent-base/20" />
+                          <div className="w-[15px] h-[15px] rounded border-2 border-[#14b8a6]/50 bg-accent-base/20" />
                         ) : (
                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/></svg>
                         )}

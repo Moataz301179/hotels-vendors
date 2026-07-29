@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 };
 
 const governorates = [
-  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#39ff7e" },
-  { name: "Hurghada", type: "Red Sea", color: "#39ff7e" },
+  { name: "Sharm El-Sheikh", type: "Coastal Hub", color: "#14b8a6" },
+  { name: "Hurghada", type: "Red Sea", color: "#14b8a6" },
   { name: "Cairo", type: "Central Hub", color: "#64b5f6" },
   { name: "Alexandria", type: "Mediterranean", color: "#ff7e1a" },
   { name: "Marsa Alam", type: "Red Sea South", color: "#c455ff" },
@@ -25,9 +25,9 @@ const governorates = [
 ];
 
 const features = [
-  { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#39ff7e" },
+  { icon: TrendingDown, title: "40% Cost Reduction", desc: "Shared-route consolidation means trucks run full, not half-empty. AI matches multi-supplier loads to minimize empty miles across the Red Sea corridor.", color: "#14b8a6" },
   { icon: Clock, title: "48-Hour Guarantee", desc: "From order confirmation to delivery at your receiving dock. SLA-backed with automatic compensation for delays.", color: "#64b5f6" },
-  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#39ff7e" },
+  { icon: Thermometer, title: "Cold-Chain Ready", desc: "Temperature-controlled vehicles for F&B, pharmaceuticals, and perishables. Real-time temperature monitoring with automated alerts.", color: "#14b8a6" },
   { icon: Route, title: "AI Route Optimization", desc: "Dynamic route planning across 6 governorates. Multi-supplier load matching minimizes dock congestion and receiving overhead.", color: "#ff7e1a" },
   { icon: MapPin, title: "Real-Time GPS Tracking", desc: "Track every shipment from pickup to delivery. Automated ETA updates sent to your procurement team. Digital proof of delivery.", color: "#c455ff" },
   { icon: Banknote, title: "Paid in 4 Hours", desc: "Not 90 days. Not 30 days. Digital POD triggers automated payment within 4 hours of confirmed delivery.", color: "#ff7e1a" },
@@ -48,7 +48,7 @@ export default function LogisticsServicePage() {
             AI-driven shared-route consolidation across 6 Egyptian governorates. Multi-supplier load matching, cold-chain capability, and real-time GPS. Built for carriers who want guaranteed volume and fast settlement.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
               Register as Carrier <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -119,7 +119,7 @@ export default function LogisticsServicePage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Need Reliable Hotel Delivery?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Whether you&apos;re a hotel needing deliveries or a carrier looking for volume, we&apos;ve got you covered.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
               Register Hotel <ArrowRight size={14} />
             </Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

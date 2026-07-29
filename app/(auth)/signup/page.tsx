@@ -21,7 +21,7 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false)
 
   const roles = [
-    { value: "hotel" as PlatformRole, icon: Building2, title: "Hotel", description: "I work for a hotel or hotel group", color: "#39ff7e" },
+    { value: "hotel" as PlatformRole, icon: Building2, title: "Hotel", description: "I work for a hotel or hotel group", color: "#14b8a6" },
     { value: "supplier" as PlatformRole, icon: Store, title: "Supplier", description: "I represent a supplier company", color: "#ff7e1a" },
   ]
 
@@ -49,8 +49,8 @@ export default function SignupPage() {
   if (success) {
     return (
       <div className="text-center space-y-6 py-8">
-        <div className="w-16 h-16 rounded-full bg-[#39ff7e]/10 border border-[#39ff7e]/20 flex items-center justify-center mx-auto">
-          <CheckCircle2 size={32} className="text-[#39ff7e]" />
+        <div className="w-16 h-16 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto">
+          <CheckCircle2 size={32} className="text-[#14b8a6]" />
         </div>
         <div>
           <h1 className="text-[24px] font-semibold text-white mb-2">Check your email</h1>
@@ -60,7 +60,7 @@ export default function SignupPage() {
         </div>
         <p className="text-[13px] text-white/25">
           Didn&apos;t receive it? Check your spam folder or{" "}
-          <a href="/signup" className="text-[#39ff7e] hover:opacity-80">try again</a>.
+          <a href="/signup" className="text-[#14b8a6] hover:opacity-80">try again</a>.
         </p>
       </div>
     )
@@ -69,7 +69,7 @@ export default function SignupPage() {
   return (
     <div className="space-y-8">
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#39ff7e]/[0.08] border border-[#39ff7e]/15 text-[#39ff7e] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           <Sparkles size={11} />
           Quick Signup
         </div>
@@ -114,7 +114,7 @@ export default function SignupPage() {
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${roles.find(r => r.value === platformRole)?.color}10` }}>
-                {platformRole === "hotel" ? <Building2 className="w-4 h-4 text-[#39ff7e]" /> : <Store className="w-4 h-4 text-[#ff7e1a]" />}
+                {platformRole === "hotel" ? <Building2 className="w-4 h-4 text-[#14b8a6]" /> : <Store className="w-4 h-4 text-[#ff7e1a]" />}
               </div>
               <p className="text-xs font-medium text-white">{platformRole === "hotel" ? "Hotel Account" : "Supplier Account"}</p>
             </div>
@@ -127,7 +127,7 @@ export default function SignupPage() {
               <div key={field.label}>
                 <label className="block text-[13px] font-medium text-white/50 mb-1.5">{field.label}</label>
                 <input type={field.type} value={field.value} onChange={(e) => field.onChange(e.target.value)} placeholder={field.placeholder} required={field.required}
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#14b8a6]/30 focus:ring-1 focus:ring-[#14b8a6]/10 transition-all" />
               </div>
             ))}
 
@@ -135,7 +135,7 @@ export default function SignupPage() {
               <label className="block text-[13px] font-medium text-white/50 mb-1.5">Password</label>
               <div className="relative">
                 <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 8 characters" required minLength={8}
-                  className="w-full px-4 py-3 pr-12 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all" />
+                  className="w-full px-4 py-3 pr-12 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#14b8a6]/30 focus:ring-1 focus:ring-[#14b8a6]/10 transition-all" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors">
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -149,7 +149,7 @@ export default function SignupPage() {
               <div key={field.label}>
                 <label className="block text-[13px] font-medium text-white/50 mb-1.5">{field.label} <span className="text-white/25">{field.sub}</span></label>
                 <input type={field.type} value={field.value} onChange={(e) => field.onChange(e.target.value)} placeholder={field.placeholder}
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#14b8a6]/30 focus:ring-1 focus:ring-[#14b8a6]/10 transition-all" />
                 {field.label === "Tax ID" && taxId && (
                   <p className="text-xs mt-1 text-white/25">{taxId.length >= 9 && taxId.length <= 15 ? "Valid format" : "9-15 digit Egyptian Tax ID"}</p>
                 )}
@@ -157,7 +157,7 @@ export default function SignupPage() {
             ))}
 
             <button type="submit" disabled={loading}
-              className="w-full py-3 rounded-xl text-[13px] font-semibold bg-[#39ff7e] text-[#07090f] hover:bg-[#39ff7e]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]">
+              className="w-full py-3 rounded-xl text-[13px] font-semibold bg-[#14b8a6] text-[#07090f] hover:bg-[#14b8a6]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]">
               {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Create account"}
             </button>
           </form>
@@ -166,7 +166,7 @@ export default function SignupPage() {
 
       <p className="text-center text-[13px] text-white/30">
         Already have an account?{" "}
-        <Link href="/login" className="text-[#39ff7e] hover:opacity-80 font-medium transition-opacity">Sign in</Link>
+        <Link href="/login" className="text-[#14b8a6] hover:opacity-80 font-medium transition-opacity">Sign in</Link>
       </p>
     </div>
   )

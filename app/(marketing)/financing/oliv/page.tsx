@@ -30,13 +30,13 @@ const benefits = [
     icon: Zap,
     title: "Instant Credit Approval",
     desc: "Our credit engine analyzes your business performance in minutes and instantly assigns your available credit.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: Clock,
     title: "Funded in 48 Hours",
     desc: "From invoice submission to cash in your account — the entire process takes less than 2 days.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: FileText,
@@ -60,7 +60,7 @@ const benefits = [
     icon: Landmark,
     title: "No Tech Requirements",
     desc: "No accounting software needed. No API integration. Just submit your invoice and get financed.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
 ];
 
@@ -69,7 +69,7 @@ const steps = [
     step: "01",
     title: "Complete a Transaction",
     desc: "Fulfill an order on HotelsVendors. Your verified invoice becomes your financing collateral.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     step: "02",
@@ -87,7 +87,7 @@ const steps = [
     step: "04",
     title: "Receive Funds",
     desc: "Cash deposited to your account within 48 hours. Use it for your next procurement cycle.",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
 ];
 
@@ -117,21 +117,21 @@ export default function OlivFinancingPage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#39ff7e33", backgroundColor: "#39ff7e10" }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#14b8a633", backgroundColor: "#14b8a610" }}>
             <OlivLogo size="xs" variant="green" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#39ff7e" }}>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#14b8a6" }}>
               Partner Integration
             </span>
           </div>
           <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
             Get Your Invoices<br />
-            <span style={{ color: "#39ff7e" }}>Financed in 48 Hours.</span>
+            <span style={{ color: "#14b8a6" }}>Financed in 48 Hours.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed mb-8">
             HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#ffffff" }}>
+            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#ffffff" }}>
               Apply on Oliv <ArrowRight size={14} />
             </a>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -142,12 +142,12 @@ export default function OlivFinancingPage() {
       </section>
 
       {/* Trust badges */}
-      <section className="py-6 border-y" style={{ borderColor: "#39ff7e18" }}>
+      <section className="py-6 border-y" style={{ borderColor: "#14b8a618" }}>
         <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-6 text-[12px] text-white/30">
-          <span className="flex items-center gap-2"><Shield size={14} style={{ color: "#39ff7e" }} /> FRA Licensed</span>
-          <span className="flex items-center gap-2"><Landmark size={14} style={{ color: "#39ff7e" }} /> Suez Canal Bank Backed</span>
-          <span className="flex items-center gap-2"><CheckCircle2 size={14} style={{ color: "#39ff7e" }} /> EGP 30M Credit Facility</span>
-          <span className="flex items-center gap-2"><Zap size={14} style={{ color: "#39ff7e" }} /> 48-Hour Funding</span>
+          <span className="flex items-center gap-2"><Shield size={14} style={{ color: "#14b8a6" }} /> FRA Licensed</span>
+          <span className="flex items-center gap-2"><Landmark size={14} style={{ color: "#14b8a6" }} /> Suez Canal Bank Backed</span>
+          <span className="flex items-center gap-2"><CheckCircle2 size={14} style={{ color: "#14b8a6" }} /> EGP 30M Credit Facility</span>
+          <span className="flex items-center gap-2"><Zap size={14} style={{ color: "#14b8a6" }} /> 48-Hour Funding</span>
         </div>
       </section>
 
@@ -155,7 +155,7 @@ export default function OlivFinancingPage() {
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>How It Works</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>How It Works</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">From Invoice to Cash in 4 Steps</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -171,10 +171,10 @@ export default function OlivFinancingPage() {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 border-y" style={{ borderColor: "#39ff7e18" }}>
+      <section className="py-20 border-y" style={{ borderColor: "#14b8a618" }}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>Why Oliv</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>Why Oliv</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Built for Egyptian SMEs</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -197,7 +197,7 @@ export default function OlivFinancingPage() {
       {/* Integration note */}
       <section className="py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>HotelsVendors + Oliv</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>HotelsVendors + Oliv</span>
           <h2 className="text-2xl md:text-3xl font-semibold text-white mb-5">Seamless Integration. Zero Disruption.</h2>
           <p className="text-[14px] text-white/40 leading-relaxed mb-8 max-w-xl mx-auto">
             Your verified invoices on HotelsVendors become your financing collateral. No additional paperwork. No separate onboarding. Just click &quot;Get Financed&quot; from your order dashboard.
@@ -208,11 +208,11 @@ export default function OlivFinancingPage() {
               <div className="text-[12px] text-white/40">Extra fees from HotelsVendors</div>
             </div>
             <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-              <div className="text-[24px] font-bold mb-1" style={{ color: "#39ff7e" }}>48h</div>
+              <div className="text-[24px] font-bold mb-1" style={{ color: "#14b8a6" }}>48h</div>
               <div className="text-[12px] text-white/40">Average funding time</div>
             </div>
             <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-              <div className="text-[24px] font-bold mb-1" style={{ color: "#39ff7e" }}>$30M</div>
+              <div className="text-[24px] font-bold mb-1" style={{ color: "#14b8a6" }}>$30M</div>
               <div className="text-[12px] text-white/40">Suez Canal Bank facility</div>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function OlivFinancingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 border-y" style={{ borderColor: "#39ff7e18" }}>
+      <section className="py-20 border-y" style={{ borderColor: "#14b8a618" }}>
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-2xl font-semibold text-white text-center mb-10">Frequently Asked Questions</h2>
           <div className="space-y-4">
@@ -242,7 +242,7 @@ export default function OlivFinancingPage() {
             Start transacting on HotelsVendors, then apply for Oliv financing. It&apos;s that simple.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#39ff7e", color: "#ffffff" }}>
+            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#14b8a6", color: "#ffffff" }}>
               <OlivLogo size="xs" variant="dark" />
               Apply Now <ArrowRight size={14} />
             </a>

@@ -23,7 +23,7 @@ const solutions = [
     features: ["AI demand forecasting", "Budget blockades", "Multi-property control", "Net-60 factoring", "48-hour delivery"],
     href: "/register?sector=procurement",
     cta: "Register Hotel",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: Store,
@@ -32,7 +32,7 @@ const solutions = [
     features: ["Catalog management", "PO notifications", "ETA invoicing", "24hr payment", "Analytics dashboard"],
     href: "/register?sector=procurement",
     cta: "Become a Supplier",
-    color: "#39ff7e",
+    color: "#14b8a6",
   },
   {
     icon: Landmark,
@@ -59,7 +59,7 @@ export default function SolutionsPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Solutions</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -82,7 +82,7 @@ export default function SolutionsPage() {
               { icon: MapPin, label: "6 Governorates", desc: "Full coverage" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#39ff7e" }} />
+                <b.icon size={16} style={{ color: "#14b8a6" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -97,7 +97,7 @@ export default function SolutionsPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-6">
           {solutions.map((s) => (
-            <div key={s.title} className="rounded-2xl p-8 transition-all hover:border-[#39ff7e]/10" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={s.title} className="rounded-2xl p-8 transition-all hover:border-[#14b8a6]/10" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-3 mb-4">
@@ -116,7 +116,7 @@ export default function SolutionsPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-center lg:justify-end">
-                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+                  <Link href={s.href} className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
                     {s.cta} <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -129,19 +129,19 @@ export default function SolutionsPage() {
       {/* Ecosystem Overview */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#39ff7e" }} />
+          <BrainCircuit size={32} className="mx-auto mb-6" style={{ color: "#14b8a6" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">The Full Picture</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-xl mx-auto">
             All four stakeholders connect on one platform. Hotels order, suppliers fulfill, funders finance, and carriers deliver — with AI orchestrating every step.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {[
-              { icon: Building2, label: "Hotels", color: "#39ff7e" },
-              { icon: Store, label: "Suppliers", color: "#39ff7e" },
+              { icon: Building2, label: "Hotels", color: "#14b8a6" },
+              { icon: Store, label: "Suppliers", color: "#14b8a6" },
               { icon: Landmark, label: "Funders", color: "#ff7e1a" },
               { icon: Truck, label: "Carriers", color: "#64b5f6" },
             ].map((item) => (
-              <div key={item.label} className="rounded-xl p-4 transition-all hover:border-[#39ff7e]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={item.label} className="rounded-xl p-4 transition-all hover:border-[#14b8a6]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <item.icon size={20} className="mx-auto mb-2" style={{ color: item.color }} />
                 <p className="text-[12px] font-medium text-white/60">{item.label}</p>
               </div>
@@ -153,11 +153,11 @@ export default function SolutionsPage() {
       {/* Compliance */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: "#39ff7e" }} />
+          <ShieldCheck size={28} className="mx-auto mb-6" style={{ color: "#14b8a6" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">ETA Compliant. FRA Secure.</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Every transaction on HotelsVendors meets Egyptian Tax Authority e-invoicing requirements and FRA anti-fraud standards.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
               Get Started <ArrowRight size={14} />
             </Link>
             <Link href="/compliance" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

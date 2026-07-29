@@ -9,7 +9,7 @@ const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#39ff7e";
+const ACCENT_TEAL = "#14b8a6";
 
 export default async function InvoicesPage() {
   const supabase = await createClient();
@@ -75,10 +75,10 @@ export default async function InvoicesPage() {
                     key={inv.id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(57,255,126,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(20,184,166,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
-                    <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>
+                    <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_TEAL }}>
                       {inv.id.slice(0, 8)}...
                     </td>
                     <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(inv as any).hotels?.name || "—"}</td>

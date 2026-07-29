@@ -54,7 +54,7 @@ function ResetPasswordForm() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#39ff7e]/[0.08] border border-[#39ff7e]/15 text-[#39ff7e] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           <Lock size={11} />
           Password Reset
         </div>
@@ -65,15 +65,15 @@ function ResetPasswordForm() {
       <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 sm:p-8">
         {success ? (
           <div className="text-center space-y-5 py-4">
-            <div className="w-16 h-16 rounded-full bg-[#39ff7e]/10 border border-[#39ff7e]/20 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-8 h-8 text-[#39ff7e]" />
+            <div className="w-16 h-16 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-8 h-8 text-[#14b8a6]" />
             </div>
             <div>
               <h3 className="text-white font-semibold text-[16px]">Password updated</h3>
               <p className="text-white/40 text-[14px] mt-1">Your password has been reset. Redirecting to sign in...</p>
             </div>
             <Link href="/login"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#39ff7e] text-[#07090f] text-[13px] font-semibold hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)]">
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]">
               Sign In Now
             </Link>
           </div>
@@ -89,7 +89,7 @@ function ResetPasswordForm() {
                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
                 <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min 6 characters" required
-                  className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[14px] text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all" />
+                  className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[14px] text-white placeholder:text-white/15 outline-none focus:border-[#14b8a6]/30 focus:ring-1 focus:ring-[#14b8a6]/10 transition-all" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors">
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -103,12 +103,12 @@ function ResetPasswordForm() {
                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
                 <input type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat your password" required
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[14px] text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all" />
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[14px] text-white placeholder:text-white/15 outline-none focus:border-[#14b8a6]/30 focus:ring-1 focus:ring-[#14b8a6]/10 transition-all" />
               </div>
             </div>
 
             <button type="submit" disabled={loading || !token}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#39ff7e] text-[#07090f] text-[13px] font-semibold hover:bg-[#39ff7e]/90 transition-all hover:shadow-[0_0_20px_rgba(57,255,126,0.15)] disabled:opacity-50">
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] disabled:opacity-50">
               {loading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
@@ -120,7 +120,7 @@ function ResetPasswordForm() {
       </div>
 
       <p className="text-center text-[13px] text-white/30">
-        <Link href="/login" className="text-[#39ff7e] hover:opacity-80 font-medium transition-opacity">Back to Sign In</Link>
+        <Link href="/login" className="text-[#14b8a6] hover:opacity-80 font-medium transition-opacity">Back to Sign In</Link>
       </p>
     </div>
   );

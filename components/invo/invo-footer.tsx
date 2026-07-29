@@ -8,7 +8,7 @@ export function InvoFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-md bg-[#39ff7e] flex items-center justify-center">
+              <div className="w-7 h-7 rounded-md bg-[#14b8a6] flex items-center justify-center">
                 <Zap className="w-4 h-4 text-black" />
               </div>
               <span className="text-[16px] font-medium text-white">INVO</span>

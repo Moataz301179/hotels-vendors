@@ -45,7 +45,7 @@ export default function AuthLayout({
                 key={badge.label}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]"
               >
-                <badge.icon size={12} className="text-[#39ff7e]" />
+                <badge.icon size={12} className="text-[#14b8a6]" />
                 <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
                   {badge.label}
                 </span>

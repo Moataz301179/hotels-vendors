@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
-import { ThemeModeToggle } from "@/components/theme/mode-toggle";
+import { ThemeModeToggle, getStoredMode } from "@/components/theme/mode-toggle";
 import { useLanguage } from "@/lib/i18n/language-context";
 
 interface DropdownItem {
@@ -64,7 +64,7 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
       {open && (
         <div
           className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-[#12121a] border border-white/[0.06] rounded-xl shadow-2xl backdrop-blur-xl"
-          style={{ background: "rgba(18,18,26,0.95)" }}
+          style={{ backgroundColor: "var(--bg-surface-1)" }}
         >
           <div className="py-2">
             {group.items.map((item) => (
@@ -88,15 +88,30 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const { locale } = useLanguage();
   const ar = locale === "ar";
   const groups = getGroups(ar);
 
+  useEffect(() => {
+    setTheme(getStoredMode());
+    const observer = new MutationObserver(() => {
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      setTheme(isLight ? "light" : "dark");
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const isLight = theme === "light";
+  const logoVariant = isLight ? "dark" : "light";
+  const textColor = isLight ? "#0f172a" : "#ffffff";
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
-        <BrandLogo variant="dark" size="md" showText={false} />
-        <span className="font-semibold text-white uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+        <BrandLogo variant={logoVariant} size="md" showText={false} />
+        <span className="font-semibold uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", color: textColor }}>
           Hotels Vendors
         </span>
       </Link>
@@ -126,7 +141,7 @@ export function SiteNav() {
         </Link>
         <Link
           href="/register"
-          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#39ff7e] text-[#07090f] ${ar ? "font-cairo" : ""}`}
+          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#14b8a6] text-[#07090f] ${ar ? "font-cairo" : ""}`}
         >
           {ar ? "جرّب التجربة" : "Try the Demo"}
         </Link>
@@ -143,7 +158,7 @@ export function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="absolute top-full left-0 right-0 bg-[#12121a] border-b border-white/[0.06] px-6 py-4 flex flex-col gap-4 md:hidden">
+        <div className="absolute top-full left-0 right-0 border-b border-white/[0.06] px-6 py-4 flex flex-col gap-4 md:hidden" style={{ backgroundColor: "var(--bg-surface-1)" }}>
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
               <span className="text-xs text-white/30 uppercase tracking-widest font-semibold">{g.label}</span>
@@ -181,7 +196,7 @@ export function SiteNav() {
           <Link
             href="/register"
             onClick={() => setOpen(false)}
-            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#39ff7e] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
+            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#14b8a6] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
           >
             {ar ? "جرّب التجربة" : "Try the Demo"}
           </Link>

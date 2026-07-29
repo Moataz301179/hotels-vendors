@@ -77,7 +77,7 @@ export default function PricingPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Pricing</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -99,7 +99,7 @@ export default function PricingPage() {
               { icon: Building2, label: "Per-Property Billing", desc: "Scales with you" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#39ff7e" }} />
+                <b.icon size={16} style={{ color: "#14b8a6" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -117,16 +117,16 @@ export default function PricingPage() {
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className="rounded-2xl p-7 flex flex-col transition-all hover:border-[#39ff7e]/10"
+                className="rounded-2xl p-7 flex flex-col transition-all hover:border-[#14b8a6]/10"
                 style={{
                   backgroundColor: tier.highlighted ? "#12121a" : "#12121a",
-                  border: tier.highlighted ? "1px solid rgba(57,255,126,0.2)" : "1px solid rgba(255,255,255,0.06)",
+                  border: tier.highlighted ? "1px solid rgba(20,184,166,0.2)" : "1px solid rgba(255,255,255,0.06)",
                 }}
               >
                 {tier.highlighted && (
-                  <span className="text-[10px] font-medium text-[#39ff7e] uppercase tracking-wider mb-3">Most Popular</span>
+                  <span className="text-[10px] font-medium text-[#14b8a6] uppercase tracking-wider mb-3">Most Popular</span>
                 )}
-                <tier.icon size={20} className="mb-3" style={{ color: tier.highlighted ? "#39ff7e" : "rgba(255,255,255,0.3)" }} />
+                <tier.icon size={20} className="mb-3" style={{ color: tier.highlighted ? "#14b8a6" : "rgba(255,255,255,0.3)" }} />
                 <h3 className="text-[18px] font-medium text-white mb-1">{tier.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-[32px] font-medium text-white">{tier.price}</span>
@@ -136,7 +136,7 @@ export default function PricingPage() {
                 <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
-                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#39ff7e" }} />
+                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#14b8a6" }} />
                       <span className="text-[12px] text-white/50">{f}</span>
                     </li>
                   ))}
@@ -145,7 +145,7 @@ export default function PricingPage() {
                   href="/register"
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-medium transition-all"
                   style={tier.highlighted
-                    ? { backgroundColor: "#39ff7e", color: "#07090f" }
+                    ? { backgroundColor: "#14b8a6", color: "#07090f" }
                     : { border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }
                   }
                 >
@@ -181,7 +181,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Need a Custom Plan?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">We work with hotel groups of all sizes. Let&apos;s build a plan that fits your portfolio.</p>
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#07090f" }}>
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
             Contact Sales <ArrowRight size={14} />
           </Link>
         </div>

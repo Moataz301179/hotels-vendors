@@ -9,7 +9,7 @@ const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#39ff7e";
+const ACCENT_TEAL = "#14b8a6";
 
 export default async function FactoringPage() {
   const supabase = await createClient();
@@ -65,7 +65,7 @@ export default async function FactoringPage() {
                 <div className="text-[12px] mt-2 space-y-1" style={{ color: TEXT_SECONDARY }}>
                   <div>Credit Limit: <span style={{ color: TEXT_PRIMARY }}>{(funder.credit_limit || 0).toLocaleString("en-EG")} EGP</span></div>
                   <div>Min Invoice: <span style={{ color: TEXT_PRIMARY }}>{(funder.min_invoice || 0).toLocaleString("en-EG")} EGP</span></div>
-                  <div>Rate: <span style={{ color: ACCENT_LIME }}>{(funder.rate_min || 0).toFixed(2)}% — {(funder.rate_max || 0).toFixed(2)}%</span></div>
+                  <div>Rate: <span style={{ color: ACCENT_TEAL }}>{(funder.rate_min || 0).toFixed(2)}% — {(funder.rate_max || 0).toFixed(2)}%</span></div>
                 </div>
               </div>
             ))}
@@ -107,10 +107,10 @@ export default async function FactoringPage() {
                       key={req.id}
                       className="border-t transition-colors"
                       style={{ borderColor: BORDER }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(57,255,126,0.02)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(20,184,166,0.02)")}
                       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                     >
-                      <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>
+                      <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_TEAL }}>
                         {req.id.slice(0, 8)}...
                       </td>
                       <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{(req as any).hotels?.name || "—"}</td>
