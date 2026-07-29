@@ -126,8 +126,8 @@ export default function MarketingPage() {
             width={1920}
             height={1080}
           />
-          <div className={`absolute inset-0 ${ar ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-[#0c0c12] via-[#0c0c12]/85 to-[#0c0c12]/40`} />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-transparent to-[#0c0c12]/30" />
+          <div className={`absolute inset-0 ${ar ? "bg-gradient-to-l" : "bg-gradient-to-r"}`} style={{ background: `linear-gradient(to ${ar ? "left" : "right"}, rgba(var(--hero-overlay-rgb), 1) 0%, rgba(var(--hero-overlay-rgb), 0.85) 60%, rgba(var(--hero-overlay-rgb), 0.4) 100%)` }} />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(to top, rgba(var(--hero-overlay-rgb), 1) 0%, transparent 50%, rgba(var(--hero-overlay-rgb), 0.3) 100%)` }} />
         </div>
 
         {/* Subtle grid pattern */}
@@ -150,7 +150,7 @@ export default function MarketingPage() {
               {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-white/80 max-w-xl mb-6 leading-relaxed animate-fade-in-up animation-delay-100">
+            <p className="text-lg md:text-xl max-w-xl mb-6 leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
               {t("hero.subtitle")}
             </p>
 

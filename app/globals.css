@@ -71,6 +71,10 @@
   --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.08);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
+  /* ── Hero overlays (dark for dark mode) ── */
+  --hero-overlay-rgb: 12, 12, 18;
+  --hero-text-rgb: 255, 255, 255;
+
   /* ── Layout ── */
   --header-height: 64px;
   --sidebar-width: 280px;
@@ -146,6 +150,10 @@
   --success: #2a088c;
   --warning: #f5870a;
   --info: #2563eb;
+
+  /* ── Hero overlay (light for light mode) ── */
+  --hero-overlay-rgb: 255, 255, 255;
+  --hero-text-rgb: 1, 18, 36;
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.08);
