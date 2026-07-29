@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
@@ -16,7 +17,55 @@ import {
   Package,
   MapPin,
   Building2,
+  Search,
 } from "lucide-react";
+
+/* ──────────────────────────────────────────────────────────────
+   COUNT-UP ANIMATION (stat counters)
+   ────────────────────────────────────────────────────────────── */
+function useCountUp(end: number, duration = 1600) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !started.current) {
+          started.current = true;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            setValue(Math.round(eased * end));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [end, duration]);
+
+  return { value, ref };
+}
+
+function StatCounter({ end, suffix, label }: { end: number; suffix?: string; label: string }) {
+  const { value, ref } = useCountUp(end);
+  return (
+    <div className="text-center">
+      <div className="text-2xl md:text-3xl font-bold text-foreground" ref={ref}>
+        {value}
+        {suffix}
+      </div>
+      <div className="text-[11px] md:text-xs text-foreground-secondary mt-1 font-medium">{label}</div>
+    </div>
+  );
+}
 
 /* ──────────────────────────────────────────────────────────────
    SCROLL ANIMATION HOOK
@@ -50,10 +99,18 @@ function useScrollReveal() {
 export default function MarketingPage() {
   useScrollReveal();
   const { t, locale } = useTranslation("homepage");
+  const router = useRouter();
   const [layer, setLayer] = useState<"hv" | "invo">("hv");
   const [tab, setTab] = useState<"hotel" | "vendor" | "chat">("hotel");
+  const [query, setQuery] = useState("");
 
   const ar = locale === "ar";
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    router.push(q ? `/marketplace?q=${encodeURIComponent(q)}` : "/marketplace");
+  };
 
   return (
     <main className="min-h-screen bg-canvas text-foreground font-sans">
@@ -93,9 +150,28 @@ export default function MarketingPage() {
               {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-foreground-secondary max-w-lg mb-8 leading-relaxed animate-fade-in-up animation-delay-100">
+            <p className="text-lg md:text-xl text-foreground-secondary max-w-lg mb-6 leading-relaxed animate-fade-in-up animation-delay-100">
               {t("hero.subtitle")}
             </p>
+
+            {/* Interactive search bar — app-like entry point */}
+            <form onSubmit={handleSearch} className="flex items-stretch gap-2 max-w-xl mx-auto mb-8 animate-fade-in-up animation-delay-150">
+              <div className="relative flex-1">
+                <Search className={`absolute top-1/2 -translate-y-1/2 text-white/40 ${ar ? "right-3" : "left-3"}`} size={18} />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t("hero.searchPlaceholder")}
+                  className={`w-full h-12 rounded-lg bg-surface-1 border border-white/10 text-foreground text-sm placeholder:text-white/40 outline-none focus:border-accent-base/50 transition-colors ${ar ? "pr-10 pl-4" : "pl-10 pr-4"}`}
+                />
+              </div>
+              <button
+                type="submit"
+                className="h-12 px-6 rounded-lg bg-accent-base text-[#07090f] text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
+              >
+                {t("hero.search")}
+              </button>
+            </form>
 
             <div className="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-200">
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>ETA</span>
@@ -112,6 +188,14 @@ export default function MarketingPage() {
               <Link href="/sandbox" className="text-sm px-8 py-3.5 font-semibold rounded-lg border inline-flex items-center justify-center gap-2 bg-surface-1 hover:bg-surface-2 transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
                 {t("hero.exploreSandbox")}
               </Link>
+            </div>
+
+            {/* Animated stat counters — live platform feel */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/5 animate-fade-in-up animation-delay-400">
+              <StatCounter end={200} suffix="+" label={t("hero.stats.hotels")} />
+              <StatCounter end={1200} suffix="+" label={t("hero.stats.suppliers")} />
+              <StatCounter end={2} suffix="B" label={t("hero.stats.gmv")} />
+              <StatCounter end={48} suffix="h" label={t("hero.stats.delivery")} />
             </div>
           </div>
         </div>
