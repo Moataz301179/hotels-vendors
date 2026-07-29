@@ -63,20 +63,20 @@ export default function OlivReferralPage() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <a
-              href={OLIV_REFERRAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#referral-form"
               className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]"
               style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
             >
-              Apply Now on Oliv <ExternalLink size={14} />
+              Get Started — Register Interest <ArrowRight size={14} />
             </a>
             <a
-              href="#referral-form"
+              href={OLIV_REFERRAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]"
               style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}
             >
-              Register Your Interest
+              Apply on Oliv Directly <ExternalLink size={14} />
             </a>
           </div>
         </div>
@@ -113,9 +113,9 @@ export default function OlivReferralPage() {
           </div>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "You Apply", desc: "Click 'Apply Now' or fill the form below. Mention 'HotelsVendors' as your referral source.", color: "#4A7C59" },
-              { step: "02", title: "Oliv Onboards You", desc: "Oliv runs eKYC (National ID, CR, tax card, I-Score), approves your credit line typically within 24 hours.", color: "#39ff7e" },
-              { step: "03", title: "Start Financing", desc: "Connect your ETA account, submit invoices, and get funded in 48 hours. Non-recourse, revolving facility.", color: "#ff7e1a" },
+              { step: "01", title: "Register Your Interest", desc: "Fill the form below. We create your account and send you the HotelsVendors app with everything pre-filled.", color: "#4A7C59" },
+              { step: "02", title: "Apply In-App (3 Minutes)", desc: "Open the app, tap 'Oliv Financing', and complete the guided KYC — company, signatory, bank account. No websites, no paperwork.", color: "#39ff7e" },
+              { step: "03", title: "Get Funded in 48h", desc: "Oliv approves within 24 hours. Upload invoices in the app and receive funds in 48 hours. Non-recourse, revolving facility.", color: "#ff7e1a" },
             ].map((s) => (
               <div key={s.step} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all">
                 <div className="text-[11px] font-bold uppercase tracking-[0.15em] mb-3" style={{ color: s.color }}>{s.step}</div>
@@ -167,19 +167,15 @@ export default function OlivReferralPage() {
               </div>
               <h2 className="text-[22px] font-semibold text-white mb-3">You&apos;re on the List!</h2>
               <p className="text-[14px] text-white/40 mb-6 leading-relaxed">
-                We&apos;ve recorded your interest. Now go to Oliv&apos;s application page and mention <strong style={{ color: "#4A7C59" }}>HotelsVendors</strong> as your referral source to get priority processing.
+                We&apos;ve recorded your interest with referral code <strong style={{ color: "#4A7C59" }}>CHV000</strong>. Our team will contact you within 24 hours with your HotelsVendors app login — you&apos;ll complete the 3-minute Oliv application right inside the app.
               </p>
-              <a
-                href={OLIV_REFERRAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)] mb-4"
-                style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
-              >
-                Apply Now on Oliv <ExternalLink size={14} />
-              </a>
+              <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
+                <p className="text-[12px] text-white/50 leading-relaxed">
+                  <strong style={{ color: "#4A7C59" }}>Next step:</strong> Watch for our WhatsApp/email with your app credentials. The entire Oliv application happens inside the HotelsVendors app — no external sites, no paperwork.
+                </p>
+              </div>
               <p className="text-[11px] text-white/20">
-                Referral ID: {result?.id || "HV-REF-" + Date.now().toString(36).toUpperCase()}
+                Referral ID: {result?.id || "HV-REF-" + Date.now().toString(36).toUpperCase()} · Code: CHV000
               </p>
             </div>
           ) : (
@@ -280,7 +276,7 @@ export default function OlivReferralPage() {
 
                 <div className="rounded-xl p-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
                   <p className="text-[11px] text-white/40 leading-relaxed">
-                    <strong style={{ color: "#4A7C59" }}>After submitting:</strong> Go to Oliv&apos;s application page and mention <strong>HotelsVendors</strong> as your referral source. This ensures your application gets priority processing and proper attribution.
+                    <strong style={{ color: "#4A7C59" }}>What happens next:</strong> Our team contacts you within 24 hours with your HotelsVendors app login. You complete the 3-minute Oliv KYC inside the app — company details, signatory, bank account — and Oliv approves within a day.
                   </p>
                 </div>
 
@@ -305,7 +301,7 @@ export default function OlivReferralPage() {
           <div className="space-y-3">
             {[
               { q: "Do I need to register here before applying to Oliv?", a: "Yes — always start here. Register your interest above so we log your referral ID, then continue to Oliv through our tracked link. This guarantees priority processing, waived onboarding fees, and proper attribution of your account to the HotelsVendors partnership." },
-              { q: "How does Oliv know I was referred by HotelsVendors?", a: "When you apply via our referral link or mention 'HotelsVendors' in the referral field during Oliv's onboarding, their system flags your account for priority processing." },
+              { q: "How does Oliv know I was referred by HotelsVendors?", a: "Your application is submitted through the HotelsVendors app under partner code CHV000, which permanently attributes your account to our partnership — priority processing and waived onboarding fees apply automatically." },
               { q: "What are the eligibility requirements?", a: "B2B company registered in Egypt, 6+ months of e-invoice history on ETA, EGP 10M+ annual revenue, and active ETA platform user." },
               { q: "Is there any cost to apply?", a: "No. Application and onboarding are free. You only pay when you use the financing facility." },
             ].map((f) => (
@@ -323,16 +319,14 @@ export default function OlivReferralPage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Ready to Unlock Your Credit Line?</h2>
           <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
-            Oliv has facilitated over EGP 30M in invoice financing for Egyptian SMEs. Join them today — no paperwork, no branch visits.
+            Oliv has facilitated over EGP 30M in invoice financing for Egyptian SMEs. Register below and apply in minutes through the HotelsVendors app.
           </p>
           <a
-            href={OLIV_REFERRAL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#referral-form"
             className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]"
             style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
           >
-            Apply Now on Oliv <ExternalLink size={14} />
+            Get Started <ArrowRight size={14} />
           </a>
           <p className="text-[11px] text-white/20 mt-4">
             Powered by Oliv Finance &mdash; Egypt&apos;s first FRA-licensed digital factoring platform
