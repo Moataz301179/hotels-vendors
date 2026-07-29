@@ -23,7 +23,7 @@ const FLOW_STEPS = [
     subtitle: "Browse catalog, select quantities, submit PO",
     actor: "Hotel Procurement",
     icon: Building2,
-    color: "#14b8a6",
+    color: "#f5870a",
     details: [
       "Search 1,000+ verified hospitality SKUs",
       "Multi-property cart with budget controls",
@@ -91,11 +91,11 @@ const FLOW_STEPS = [
 
 const KEY_METRICS = [
   { label: "Max Pre-Approval", value: "EGP 10M", icon: CreditCard, color: "#4A7C59" },
-  { label: "Funding Speed", value: "48 Hours", icon: Clock, color: "#14b8a6" },
+  { label: "Funding Speed", value: "48 Hours", icon: Clock, color: "#f5870a" },
   { label: "Invoice Volume", value: "Unlimited", icon: RefreshCw, color: "#c455ff" },
   { label: "Paperwork", value: "Zero", icon: FileText, color: "#ff7e1a" },
   { label: "ETA Compliance", value: "100%", icon: Shield, color: "#64b5f6" },
-  { label: "Hotel Payment Terms", value: "Net-60", icon: Calendar, color: "#14b8a6" },
+  { label: "Hotel Payment Terms", value: "Net-60", icon: Calendar, color: "#f5870a" },
 ];
 
 const SUPPLIER_BENEFITS = [
@@ -207,7 +207,7 @@ export default function FlowPage() {
       <section className="py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>Complete Journey</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Complete Journey</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Five Steps. One Platform. Zero Friction.</h2>
           </div>
           <div className="space-y-6">
@@ -241,7 +241,7 @@ export default function FlowPage() {
         <div className="mx-auto max-w-5xl px-6">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>For Hotels</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>For Hotels</span>
               <h2 className="text-3xl md:text-4xl font-semibold text-white">Extend Terms. Strengthen Supply Chain.</h2>
             </div>
             <BrandLogo variant="light" size="md" showText={false} />
@@ -267,8 +267,8 @@ export default function FlowPage() {
                 <div className="text-[36px] font-bold mb-1" style={{ color: "#4A7C59" }}>10M+</div>
                 <div className="text-[13px] text-white/40">EGP Pre-Approval Limit</div>
               </div>
-              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#14b8a608", border: "1px solid #14b8a618" }}>
-                <div className="text-[36px] font-bold mb-1" style={{ color: "#14b8a6" }}>48h</div>
+              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#f5870a08", border: "1px solid #f5870a18" }}>
+                <div className="text-[36px] font-bold mb-1" style={{ color: "#f5870a" }}>48h</div>
                 <div className="text-[13px] text-white/40">Funds in Account</div>
               </div>
               <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#c455ff08", border: "1px solid #c455ff18" }}>

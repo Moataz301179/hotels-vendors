@@ -88,7 +88,7 @@ export function OlivReferralCTA({
           FRA Licensed
         </div>
         <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#14b8a6" }} />
+          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#f5870a" }} />
           48h Funding
         </div>
       </div>

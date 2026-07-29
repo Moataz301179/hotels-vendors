@@ -172,7 +172,7 @@ export default function TermsPage() {
             </p>
             <p>
               9.2. For details on data collection, processing, storage, and your rights, please
-              refer to our <a href="/privacy" className="underline" style={{ color: "#14b8a6" }}>Privacy Policy</a>.
+              refer to our <a href="/privacy" className="underline" style={{ color: "#f5870a" }}>Privacy Policy</a>.
             </p>
           </section>
 

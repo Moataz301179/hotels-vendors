@@ -141,7 +141,7 @@ export function SiteNav() {
         </Link>
         <Link
           href="/register"
-          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#14b8a6] text-[#07090f] ${ar ? "font-cairo" : ""}`}
+          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#f5870a] text-[#07090f] ${ar ? "font-cairo" : ""}`}
         >
           {ar ? "جرّب التجربة" : "Try the Demo"}
         </Link>
@@ -196,7 +196,7 @@ export function SiteNav() {
           <Link
             href="/register"
             onClick={() => setOpen(false)}
-            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#14b8a6] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
+            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#f5870a] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
           >
             {ar ? "جرّب التجربة" : "Try the Demo"}
           </Link>

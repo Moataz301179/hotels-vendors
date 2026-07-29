@@ -416,7 +416,7 @@ export default function SocialMediaPage() {
                     <h3 className="text-[15px] font-medium text-white">{item.title}</h3>
                     <span className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
                       item.status === "In Progress"
-                        ? "bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/20"
+                        ? "bg-[#f5870a]/10 text-[#f5870a] border border-[#f5870a]/20"
                         : "bg-white/[0.03] text-white/30 border border-white/[0.06]"
                     }`}>
                       {item.status}
@@ -495,8 +495,8 @@ function BetaWaitingListForm() {
   if (submitted) {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto mb-4">
-          <Check className="w-6 h-6 text-[#14b8a6]" />
+        <div className="w-12 h-12 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto mb-4">
+          <Check className="w-6 h-6 text-[#f5870a]" />
         </div>
         <h4 className="text-[16px] font-medium text-white mb-2">You are on the list!</h4>
         <p className="text-[13px] text-white/35">

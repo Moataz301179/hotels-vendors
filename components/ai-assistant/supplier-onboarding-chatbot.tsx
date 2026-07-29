@@ -100,7 +100,7 @@ export function SupplierOnboardingBot() {
             <div className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ backgroundColor: "#4A7C59", boxShadow: "0 0 30px rgba(74,124,89,0.3)" }}>
               <MessageCircle size={22} className="text-white" />
             </div>
-            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#14b8a6] border-2 border-[#0c0c12] animate-pulse" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#f5870a] border-2 border-[#0c0c12] animate-pulse" />
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-[#12121a] border border-white/10 text-[11px] text-white/60 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               Talk to Onboarding Agent
             </div>

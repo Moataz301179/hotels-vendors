@@ -20,7 +20,7 @@ const CONTACT_METHODS = [
     title: "Email Us",
     desc: "For general inquiries and support",
     value: "info@hotelsvendors.com",
-    color: "#14b8a6",
+    color: "#f5870a",
   },
   {
     icon: Phone,
@@ -105,7 +105,7 @@ export default function ContactPage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.06) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(245,135,10,0.06) 0%, transparent 70%)" }}
         />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <span className="label-upper mb-4 block">Contact</span>
@@ -173,7 +173,7 @@ export default function ContactPage() {
                         key={t.value}
                         className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border text-center cursor-pointer transition-all"
                         style={{
-                          borderColor: form.type === t.value ? "rgba(20,184,166,0.3)" : "var(--border-subtle)",
+                          borderColor: form.type === t.value ? "rgba(245,135,10,0.3)" : "var(--border-subtle)",
                           backgroundColor: form.type === t.value ? "var(--accent-muted)" : "rgba(255,255,255,0.02)",
                           color: form.type === t.value ? "var(--accent-base)" : "var(--text-muted)",
                         }}

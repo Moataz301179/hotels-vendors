@@ -76,7 +76,7 @@ export function CookieConsentBanner() {
             </button>
             <button
               onClick={() => accept("all")}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-accent-base text-[#07090f] hover:bg-[#2dd4bf] transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-accent-base text-[#07090f] hover:bg-[#f7a23a] transition-colors cursor-pointer"
             >
               Accept All
             </button>

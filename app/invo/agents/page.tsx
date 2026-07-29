@@ -9,7 +9,7 @@ const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_TEAL = "#14b8a6";
+const ACCENT_ORANGE = "#f5870a";
 
 const AGENT_PIPELINE = [
   { id: "agent_1_ingestion", name: "Ingestion", desc: "Parse and validate incoming invoices", icon: "📥" },
@@ -76,7 +76,7 @@ export default async function AgentsPage() {
               <div className="mt-3">
                 <button
                   className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
-                  style={{ backgroundColor: "rgba(20,184,166,0.10)", color: ACCENT_TEAL, border: "1px solid rgba(20,184,166,0.20)" }}
+                  style={{ backgroundColor: "rgba(245,135,10,0.10)", color: ACCENT_ORANGE, border: "1px solid rgba(245,135,10,0.20)" }}
                 >
                   Run Agent
                 </button>
@@ -97,7 +97,7 @@ export default async function AgentsPage() {
           </div>
           <button
             className="px-5 py-2.5 rounded-lg text-[13px] font-bold transition-all hover:-translate-y-0.5"
-            style={{ backgroundColor: ACCENT_TEAL, color: "#101215" }}
+            style={{ backgroundColor: ACCENT_ORANGE, color: "#101215" }}
           >
             ▶ Run Swarm
           </button>
@@ -133,10 +133,10 @@ export default async function AgentsPage() {
                     key={log.log_id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(20,184,166,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(245,135,10,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
-                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_TEAL }}>{log.agent_name}</td>
+                    <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_ORANGE }}>{log.agent_name}</td>
                     <td className="px-5 py-3" style={{ color: TEXT_PRIMARY }}>{log.action_executed}</td>
                     <td className="px-5 py-3 font-mono text-[11px]" style={{ color: TEXT_MUTED }}>
                       {log.invoice_id?.slice(0, 8) || "—"}

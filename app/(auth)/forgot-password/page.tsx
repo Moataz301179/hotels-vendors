@@ -38,8 +38,8 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <div className="text-center space-y-6 py-8">
-        <div className="w-20 h-20 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto">
-          <CheckCircle2 size={40} className="text-[#14b8a6]" />
+        <div className="w-20 h-20 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto">
+          <CheckCircle2 size={40} className="text-[#f5870a]" />
         </div>
         <div>
           <h1 className="text-[24px] font-semibold text-white mb-2">Check your email</h1>
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5870a]/[0.08] border border-[#f5870a]/15 text-[#f5870a] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           <KeyRound size={11} />
           Password Reset
         </div>
@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 placeholder="you@hotel.com"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#f5870a] text-[#07090f] text-[13px] font-semibold hover:bg-[#f5870a]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
@@ -120,7 +120,7 @@ export default function ForgotPasswordPage() {
       {/* Footer */}
       <p className="text-center text-[13px] text-white/30">
         Remember your password?{" "}
-        <Link href="/login" className="text-[#14b8a6] hover:opacity-80 font-medium transition-opacity">
+        <Link href="/login" className="text-[#f5870a] hover:opacity-80 font-medium transition-opacity">
           Sign in
         </Link>
       </p>

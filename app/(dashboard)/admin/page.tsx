@@ -35,7 +35,7 @@ const MODULES = [
     group: "Intelligence",
     items: [
       { label: "Data Explorer", desc: "Cross-tenant search across users, suppliers, hotels, orders & products", icon: Search, to: "/admin/explorer", color: "#6366f1" },
-      { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#14b8a6" },
+      { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#f5870a" },
       { label: "Reports", desc: "Platform-wide analytics, GMV tracking & KPI dashboards", icon: PieChart, to: "/admin/reports", color: "#8b5cf6" },
       { label: "Analytics & Insights", desc: "User metrics, order analytics, revenue trends & growth KPIs", icon: BarChart3, to: "/admin/analytics", color: "var(--purple-base)" },
     ],

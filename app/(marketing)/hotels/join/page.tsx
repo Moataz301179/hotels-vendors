@@ -20,7 +20,7 @@ const ONBOARDING_STEPS = [
     title: "Register Account",
     desc: "Create your HotelsVendors account with basic business details.",
     icon: Building2,
-    color: "#14b8a6",
+    color: "#f5870a",
     fields: ["Full Name", "Email", "Password", "Tax ID", "City", "Governorate"],
   },
   {
@@ -51,7 +51,7 @@ const ONBOARDING_STEPS = [
 
 const BENEFITS = [
   { icon: Clock, title: "Net-60 Payment Terms", desc: "Pay Oliv at Net-60 instead of Net-15/30 to suppliers.", color: "#4A7C59" },
-  { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly. They prioritize your orders.", color: "#14b8a6" },
+  { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly. They prioritize your orders.", color: "#f5870a" },
   { icon: Users, title: "One Monthly Payment", desc: "Single wire to Oliv covers all financed invoices.", color: "#c455ff" },
   { icon: Building2, title: "Multi-Property Support", desc: "Centralized procurement across all properties.", color: "#ff7e1a" },
   { icon: Package, title: "10,000+ Products", desc: "Browse fixed-price catalog from 500+ verified suppliers.", color: "#64b5f6" },

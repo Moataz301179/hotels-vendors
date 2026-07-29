@@ -158,8 +158,8 @@ export default function SupplierOnboardingPage() {
       <div className="min-h-screen bg-[#0c0c12]">
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
-            <div className="w-20 h-20 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto mb-8">
-              <CheckCircle2 size={40} className="text-[#14b8a6]" />
+            <div className="w-20 h-20 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto mb-8">
+              <CheckCircle2 size={40} className="text-[#f5870a]" />
             </div>
             <h1 className="text-3xl font-medium text-white mb-4">Application Submitted</h1>
             <p className="text-white/40 text-lg mb-10 max-w-md mx-auto">
@@ -231,14 +231,14 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-[#ff7e1a] text-black" : isCompleted ? "bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
+                          isActive ? "bg-[#ff7e1a] text-black" : isCompleted ? "bg-[#f5870a]/10 text-[#f5870a] border border-[#f5870a]/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
-                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-white" : isCompleted ? "text-[#14b8a6]/60" : "text-white/20"}`}>{s.label}</span>
+                        <span className={`text-[11px] mt-2 font-medium ${isActive ? "text-white" : isCompleted ? "text-[#f5870a]/60" : "text-white/20"}`}>{s.label}</span>
                       </div>
                       {i < STEPS.length - 1 && (
-                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-[#14b8a6]/20" : "bg-white/[0.04]"}`} />
+                        <div className={`flex-1 h-px mx-3 rounded-full ${isCompleted ? "bg-[#f5870a]/20" : "bg-white/[0.04]"}`} />
                       )}
                     </div>
                   );
@@ -385,7 +385,7 @@ export default function SupplierOnboardingPage() {
                           {DELIVERY_AREAS.map((area) => {
                             const selected = form.deliveryAreas.includes(area);
                             return (
-                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
+                              <button key={area} onClick={() => toggleArray("deliveryAreas", area)} className={`px-4 py-2 rounded-lg text-[13px] font-medium transition-all ${selected ? "bg-[#f5870a]/10 text-[#f5870a] border border-[#f5870a]/20" : "bg-white/[0.03] text-white/30 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/50"}`}>
                                 {area}
                               </button>
                             );

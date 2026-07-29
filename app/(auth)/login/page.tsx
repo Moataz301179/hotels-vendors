@@ -55,7 +55,7 @@ export default function LoginPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5870a]/[0.08] border border-[#f5870a]/15 text-[#f5870a] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           <Lock size={11} />
           Secure Access
         </div>
@@ -89,7 +89,7 @@ export default function LoginPage() {
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 placeholder="you@hotel.com or admin"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 placeholder="Min 6 characters"
                 required
                 minLength={6}
-                className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
               <button
                 type="button"
@@ -123,10 +123,10 @@ export default function LoginPage() {
           {/* Remember + Forgot */}
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-white/35 text-[13px] cursor-pointer hover:text-white/50 transition-colors">
-              <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#14b8a6]" />
+              <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#f5870a]" />
               Remember me
             </label>
-            <Link href="/forgot-password" className="text-[13px] text-[#14b8a6] hover:opacity-80 transition-opacity font-medium">
+            <Link href="/forgot-password" className="text-[13px] text-[#f5870a] hover:opacity-80 transition-opacity font-medium">
               Forgot password?
             </Link>
           </div>
@@ -135,7 +135,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#f5870a] text-[#07090f] text-[13px] font-semibold hover:bg-[#f5870a]/90 disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
@@ -152,7 +152,7 @@ export default function LoginPage() {
       {/* Footer */}
       <p className="text-center text-[13px] text-white/30">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-[#14b8a6] hover:opacity-80 font-medium transition-opacity">
+        <Link href="/register" className="text-[#f5870a] hover:opacity-80 font-medium transition-opacity">
           Create one
         </Link>
       </p>

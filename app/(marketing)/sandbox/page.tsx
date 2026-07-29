@@ -50,8 +50,8 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#14b8a6",
-    accentMuted: "rgba(20,184,166,0.1)",
+    color: "#f5870a",
+    accentMuted: "rgba(245,135,10,0.1)",
     description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
     steps: [
       { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Forecast generated: 2,400 kg F&B, 800 units consumables, 120 linens. Budget blockade set at EGP 185,000.", icon: BarChart3 },
@@ -64,7 +64,7 @@ const ROLES: RoleConfig[] = [
     key: "supplier",
     label: "Supplier / Vendor",
     icon: Store,
-    color: "#14b8a6",
+    color: "#f5870a",
     accentMuted: "rgba(34,197,94,0.1)",
     description: "Discover how suppliers get discovered, receive POs, and get paid in 24 hours.",
     steps: [
@@ -133,7 +133,7 @@ export default function SandboxPage() {
     <main className="min-h-screen" style={{ backgroundColor: "#0c0c12", color: "#ffffff" }}>
 
       <section className="pt-28 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,135,10,0.03) 0%, transparent 70%)" }} />
 
         <div className="relative z-10 mx-auto max-w-5xl px-6">
           {/* Header */}
@@ -143,8 +143,8 @@ export default function SandboxPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(20,184,166,0.15)", backgroundColor: "rgba(20,184,166,0.04)" }}>
-              <Zap size={11} style={{ color: "#14b8a6" }} />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(245,135,10,0.15)", backgroundColor: "rgba(245,135,10,0.04)" }}>
+              <Zap size={11} style={{ color: "#f5870a" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
             <h1 className="text-[clamp(28px,4vw,44px)] font-bold tracking-tight text-white mb-4">
@@ -352,8 +352,8 @@ export default function SandboxPage() {
                       <div className="flex flex-wrap justify-center gap-3">
                         <Link
                           href="/register"
-                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(20,184,166,0.2)]"
-                          style={{ backgroundColor: "#14b8a6", color: "#07090f" }}
+                          className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]"
+                          style={{ backgroundColor: "#f5870a", color: "#07090f" }}
                         >
                           Get Full Access <ArrowRight size={14} />
                         </Link>

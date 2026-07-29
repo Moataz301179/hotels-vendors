@@ -21,7 +21,7 @@ const ONBOARDING_STEPS = [
     title: "Register (2 minutes)",
     desc: "Fill in your name, email, password, Tax ID, city, and governorate. Select 'Supplier' as your account type.",
     icon: FileText,
-    color: "#14b8a6",
+    color: "#f5870a",
     detail: "Tax ID is your Egyptian Tax Identification Number. You can find it on your tax certificate.",
   },
   {
@@ -47,7 +47,7 @@ const PAYMENT_STEPS = [
     step: "A",
     title: "Fulfill an Order",
     desc: "A hotel places a PO. You accept, deliver, and the invoice is verified by HotelsVendors.",
-    color: "#14b8a6",
+    color: "#f5870a",
   },
   {
     step: "B",
@@ -64,7 +64,7 @@ const PAYMENT_STEPS = [
 ];
 
 const BENEFITS = [
-  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.", color: "#14b8a6" },
+  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.", color: "#f5870a" },
   { icon: Shield, title: "Zero Recourse Risk", desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.", color: "#4A7C59" },
   { icon: RefreshCw, title: "Unlimited Invoice Volume", desc: "Credit engine processes any number of invoices. Revolving facility grows with you.", color: "#c455ff" },
   { icon: ExternalLink, title: "No Tech Integration", desc: "Works through HotelsVendors dashboard. One click to apply. No API needed.", color: "#ff7e1a" },
@@ -101,7 +101,7 @@ export default function SupplierJoinPage() {
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             List your hospitality products on Egypt&apos;s largest B2B procurement platform.
             Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "#4A7C59" }}>Oliv finances it instantly</strong>.
-            Up to <strong style={{ color: "#14b8a6" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
+            Up to <strong style={{ color: "#f5870a" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
@@ -128,7 +128,7 @@ export default function SupplierJoinPage() {
       <section id="how-it-works" className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>Start in 3 Simple Steps</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Start in 3 Simple Steps</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">From Registration to First Order</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 mb-12">
@@ -202,7 +202,7 @@ export default function SupplierJoinPage() {
                 <div className="text-[12px] text-white/40">Max Credit Line (EGP)</div>
               </div>
               <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-                <div className="text-[24px] font-bold mb-1" style={{ color: "#14b8a6" }}>48h</div>
+                <div className="text-[24px] font-bold mb-1" style={{ color: "#f5870a" }}>48h</div>
                 <div className="text-[12px] text-white/40">Funding Speed</div>
               </div>
               <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">

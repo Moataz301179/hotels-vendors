@@ -2,46 +2,46 @@ const BADGE_STYLES: Record<string, { bg: string; text: string; label: string }> 
   // Procurement states
   draft: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Draft" },
   pending_approval: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Pending Approval" },
-  approved: { bg: "rgba(20,184,166,0.12)", text: "#14b8a6", label: "Approved" },
+  approved: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Approved" },
   ordered: { bg: "rgba(100,181,246,0.15)", text: "#64b5f6", label: "Ordered" },
   shipped: { bg: "rgba(13,110,253,0.15)", text: "#64b5f6", label: "Shipped" },
-  delivered: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Delivered" },
+  delivered: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Delivered" },
   invoiced: { bg: "rgba(196,85,255,0.15)", text: "#c455ff", label: "Invoiced" },
-  paid: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Paid" },
+  paid: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Paid" },
   disputed: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Disputed" },
   cancelled: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Cancelled" },
   // Invoice qualification
   pending_documents: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Pending Documents" },
-  qualified: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Qualified" },
+  qualified: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Qualified" },
   rejected: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Rejected" },
   expired: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Expired" },
   // Fraud gate
   // (pending already mapped above)
-  cleared: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Cleared" },
+  cleared: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Cleared" },
   flagged: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "Flagged" },
   blocked: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Blocked" },
   // ETA
-  submitted: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Submitted" },
+  submitted: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Submitted" },
   failed: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Failed" },
   // Factoring match
   not_submitted: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Not Submitted" },
   matched: { bg: "rgba(100,181,246,0.15)", text: "#64b5f6", label: "Matched" },
-  funded: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Funded" },
+  funded: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Funded" },
   // Subscription
   trial: { bg: "rgba(255,193,7,0.12)", text: "#FFC107", label: "Trial" },
-  active: { bg: "rgba(20,184,166,0.12)", text: "#14b8a6", label: "Active" },
+  active: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Active" },
   past_due: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "Past Due" },
   // Alerts
   open: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Open" },
   acknowledged: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Acknowledged" },
-  resolved: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Resolved" },
+  resolved: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Resolved" },
   // Risk bands
-  low: { bg: "rgba(20,184,166,0.12)", text: "#14b8a6", label: "Low Risk" },
+  low: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Low Risk" },
   medium: { bg: "rgba(255,193,7,0.12)", text: "#FFC107", label: "Medium Risk" },
   high: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "High Risk" },
   critical: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Critical Risk" },
   // Compliance
-  pass: { bg: "rgba(20,184,166,0.15)", text: "#14b8a6", label: "Pass" },
+  pass: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Pass" },
   fail: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Fail" },
   not_applicable: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "N/A" },
   // Bidding

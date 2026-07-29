@@ -64,7 +64,7 @@ export default function DemoPage() {
                     <div className="font-medium">{it.name}</div>
                     <div className="text-sm text-white/50">{it.qty} {it.unit} · EGP {it.price}</div>
                   </div>
-                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-[#14b8a6] text-black rounded">Add</button>
+                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-[#f5870a] text-black rounded">Add</button>
                 </li>
               ))}
             </ul>

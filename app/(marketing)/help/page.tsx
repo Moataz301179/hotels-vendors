@@ -19,7 +19,7 @@ const HELP_CATEGORIES = [
     icon: Hotel,
     title: "For Hotels",
     desc: "Procurement, ordering, invoicing, and account management",
-    color: "#14b8a6",
+    color: "#f5870a",
     links: [
       { label: "Getting Started as a Hotel", href: "/hotels/join" },
       { label: "How to Place an Order", href: "/help" },
@@ -75,17 +75,17 @@ export default function HelpPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.06) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,135,10,0.06) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#14b8a622", backgroundColor: "#14b8a608" }}>
-            <HelpCircle size={12} style={{ color: "#14b8a6" }} />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#14b8a6" }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#f5870a22", backgroundColor: "#f5870a08" }}>
+            <HelpCircle size={12} style={{ color: "#f5870a" }} />
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#f5870a" }}>
               Help Center
             </span>
           </div>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
             How Can We<br />
-            <span style={{ color: "#14b8a6" }}>Help You?</span>
+            <span style={{ color: "#f5870a" }}>Help You?</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             Find answers to common questions, explore documentation, or contact our support team.
@@ -97,7 +97,7 @@ export default function HelpPage() {
             <input
               type="text"
               placeholder="Search help articles..."
-              className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+              className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
             />
           </div>
         </div>
@@ -111,10 +111,10 @@ export default function HelpPage() {
               const Icon = l.icon;
               return (
                 <Link key={l.label} href={l.href} className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5 hover:border-white/[0.10] transition-all group">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "#14b8a612", border: "1px solid #14b8a622" }}>
-                    <Icon size={18} style={{ color: "#14b8a6" }} />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "#f5870a12", border: "1px solid #f5870a22" }}>
+                    <Icon size={18} style={{ color: "#f5870a" }} />
                   </div>
-                  <h3 className="text-[14px] font-semibold text-white mb-1 group-hover:text-[#14b8a6] transition-colors">{l.label}</h3>
+                  <h3 className="text-[14px] font-semibold text-white mb-1 group-hover:text-[#f5870a] transition-colors">{l.label}</h3>
                   <p className="text-[12px] text-white/40">{l.desc}</p>
                 </Link>
               );
@@ -127,7 +127,7 @@ export default function HelpPage() {
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>Browse by Topic</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Browse by Topic</span>
             <h2 className="text-2xl md:text-3xl font-semibold text-white">Help for Every Role</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-6">
@@ -170,7 +170,7 @@ export default function HelpPage() {
             We typically respond within 24 hours.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]" style={{ backgroundColor: "#14b8a6", color: "#07090f" }}>
+            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
               <Mail size={14} />
               Contact Support
             </Link>

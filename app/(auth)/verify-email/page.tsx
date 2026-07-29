@@ -66,7 +66,7 @@ function VerifyEmailForm() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5870a]/[0.08] border border-[#f5870a]/15 text-[#f5870a] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           Email Verification
         </div>
         <h1 className="text-[28px] font-semibold text-white tracking-[-0.02em]">Confirming your email</h1>
@@ -85,15 +85,15 @@ function VerifyEmailForm() {
 
           {status === "success" && (
             <>
-              <div className="w-16 h-16 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-8 h-8 text-[#14b8a6]" />
+              <div className="w-16 h-16 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 h-8 text-[#f5870a]" />
               </div>
               <div>
                 <h3 className="text-white font-semibold text-[16px]">Email Verified</h3>
                 <p className="text-white/40 text-[14px] mt-1">{message}</p>
               </div>
               <Link href="/login"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#14b8a6] text-[#07090f] text-[13px] font-semibold hover:bg-[#14b8a6]/90 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]">
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#f5870a] text-[#07090f] text-[13px] font-semibold hover:bg-[#f5870a]/90 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]">
                 Sign In <ArrowRight className="w-4 h-4" />
               </Link>
             </>
@@ -117,7 +117,7 @@ function VerifyEmailForm() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@company.com"
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
                     />
                   </div>
                 )}
@@ -126,7 +126,7 @@ function VerifyEmailForm() {
                   <MailCheck className="w-4 h-4" />
                   {resending ? "Sending..." : "Resend Verification Email"}
                 </button>
-                {resendMsg && <p className="text-xs text-[#14b8a6]">{resendMsg}</p>}
+                {resendMsg && <p className="text-xs text-[#f5870a]">{resendMsg}</p>}
               </div>
               <Link href="/login" className="inline-flex items-center gap-2 text-[13px] text-white/35 hover:text-white/60 transition-colors">
                 Back to Sign In

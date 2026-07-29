@@ -271,7 +271,7 @@ function ComplianceSandbox() {
             >
               <div className="flex items-center gap-2 mb-2">
                 {result.compliant ? (
-                  <CheckCircle2 className="w-5 h-5 text-[#14b8a6]" />
+                  <CheckCircle2 className="w-5 h-5 text-[#f5870a]" />
                 ) : (
                   <AlertTriangle className="w-5 h-5 text-[#EF4444]" />
                 )}
@@ -287,7 +287,7 @@ function ComplianceSandbox() {
                     </p>
                   ))
                 ) : (
-                  <p className="text-xs text-[#14b8a6]" style={{ fontFamily: "var(--font-sans)" }}>
+                  <p className="text-xs text-[#f5870a]" style={{ fontFamily: "var(--font-sans)" }}>
                     All checks passed. ETA-compliant invoice can be issued.
                   </p>
                 )}

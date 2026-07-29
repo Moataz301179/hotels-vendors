@@ -27,7 +27,7 @@ type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
-  { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "#14b8a6" },
+  { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "#f5870a" },
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "#ff7e1a" },
   { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "#c455ff" },
   { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "#64b5f6" },
@@ -136,8 +136,8 @@ function RegisterContent() {
   if (registered) {
     return (
       <div className="text-center space-y-6 py-8">
-        <div className="w-20 h-20 rounded-full bg-[#14b8a6]/10 border border-[#14b8a6]/20 flex items-center justify-center mx-auto">
-          <CheckCircle2 size={40} className="text-[#14b8a6]" />
+        <div className="w-20 h-20 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto">
+          <CheckCircle2 size={40} className="text-[#f5870a]" />
         </div>
         <div>
           <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
@@ -153,7 +153,7 @@ function RegisterContent() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14b8a6]/[0.08] border border-[#14b8a6]/15 text-[#14b8a6] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5870a]/[0.08] border border-[#f5870a]/15 text-[#f5870a] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
           {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
           {form.role === "HOTEL" ? "Hotel Registration" : form.role === "SUPPLIER" ? "Supplier Registration" : form.role === "FACTORING" ? "Factoring Registration" : "Logistics Registration"}
         </div>
@@ -218,7 +218,7 @@ function RegisterContent() {
                 onChange={(e) => updateForm("name", e.target.value)}
                 placeholder="Your full name"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
             </div>
           </div>
@@ -236,7 +236,7 @@ function RegisterContent() {
                 onChange={(e) => updateForm("email", e.target.value)}
                 placeholder="you@company.com"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ function RegisterContent() {
                 placeholder="Min 8 chars, 1 uppercase, 1 number"
                 required
                 minLength={8}
-                className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
               <button
                 type="button"
@@ -280,7 +280,7 @@ function RegisterContent() {
                 onChange={(e) => updateForm("city", e.target.value)}
                 placeholder="e.g. Cairo, Sharm El-Sheikh"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@ function RegisterContent() {
                 value={form.governorate}
                 onChange={(e) => updateForm("governorate", e.target.value)}
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all appearance-none"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all appearance-none"
               >
                 <option value="" className="bg-[#12121a] text-white/40">Select governorate</option>
                 {GOVERNORATES.map((g) => (
@@ -316,7 +316,7 @@ function RegisterContent() {
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: "SINGLE", label: "Single Property", icon: Home, color: "#14b8a6" },
+                    { value: "SINGLE", label: "Single Property", icon: Home, color: "#f5870a" },
                     { value: "CHAIN", label: "Hotel Chain", icon: Building, color: "#4A7C59" },
                     { value: "MANAGEMENT", label: "Management Co.", icon: Users, color: "#c455ff" },
                   ].map((pt) => {
@@ -354,7 +354,7 @@ function RegisterContent() {
                       value={form.numberOfProperties}
                       onChange={(e) => updateForm("numberOfProperties", e.target.value)}
                       required
-                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#14b8a6]/30 focus:outline-none focus:ring-1 focus:ring-[#14b8a6]/10 transition-all appearance-none"
+                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all appearance-none"
                     >
                       <option value="1" className="bg-[#12121a] text-white">1 property</option>
                       <option value="2-5" className="bg-[#12121a] text-white">2-5 properties</option>
@@ -391,13 +391,13 @@ function RegisterContent() {
                 type="checkbox"
                 checked={form.termsAccepted}
                 onChange={(e) => updateForm("termsAccepted", e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#14b8a6] focus:ring-[#14b8a6]/20"
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
                 I agree to the{" "}
-                <Link href="/terms" className="text-[#14b8a6] hover:opacity-80 underline underline-offset-2">Terms of Service</Link>
+                <Link href="/terms" className="text-[#f5870a] hover:opacity-80 underline underline-offset-2">Terms of Service</Link>
                 {" "}and{" "}
-                <Link href="/privacy" className="text-[#14b8a6] hover:opacity-80 underline underline-offset-2">Privacy Policy</Link>
+                <Link href="/privacy" className="text-[#f5870a] hover:opacity-80 underline underline-offset-2">Privacy Policy</Link>
                 <span className="text-red-400 ml-0.5">*</span>
               </span>
             </label>
@@ -406,7 +406,7 @@ function RegisterContent() {
                 type="checkbox"
                 checked={form.marketingConsent}
                 onChange={(e) => updateForm("marketingConsent", e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#14b8a6] focus:ring-[#14b8a6]/20"
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
                 I agree to receive marketing communications about products, services, and promotions. You can withdraw consent at any time.
@@ -418,7 +418,7 @@ function RegisterContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(20,184,166,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
             style={{
               backgroundColor: form.role === "HOTEL" ? "#4A7C59" : form.role === "SUPPLIER" ? "#ff7e1a" : form.role === "FACTORING" ? "#c455ff" : "#64b5f6",
               color: "#ffffff",
@@ -446,7 +446,7 @@ function RegisterContent() {
       {/* Footer */}
       <p className="text-center text-[13px] text-white/30">
         Already have an account?{" "}
-        <Link href="/login" className="text-[#14b8a6] hover:opacity-80 font-medium transition-opacity">
+        <Link href="/login" className="text-[#f5870a] hover:opacity-80 font-medium transition-opacity">
           Sign in
         </Link>
       </p>

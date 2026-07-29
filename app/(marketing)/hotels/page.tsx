@@ -20,7 +20,7 @@ const ONBOARDING_STEPS = [
     title: "Register Your Hotel",
     desc: "Create your account with Tax ID, city, and governorate. Select 'Hotel' as your account type.",
     icon: Building2,
-    color: "#14b8a6",
+    color: "#f5870a",
     detail: "Single property or chain — we support both. Multi-property groups get centralized procurement.",
   },
   {
@@ -54,7 +54,7 @@ const FACTORING_OPTIONS = [
     title: "Factoring (Supplier-Initiated)",
     desc: "Suppliers submit verified invoices to Oliv for immediate payment. You maintain your payment terms.",
     icon: RefreshCw,
-    color: "#14b8a6",
+    color: "#f5870a",
     benefits: [
       "Suppliers get paid in 48 hours",
       "Your payment terms stay Net-60",
@@ -78,7 +78,7 @@ const FACTORING_OPTIONS = [
 
 const BENEFITS = [
   { icon: Clock, title: "Net-60 Payment Terms", desc: "Pay Oliv at Net-60 instead of Net-15/30 to suppliers. Preserve working capital for operations.", color: "#4A7C59" },
-  { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly via Oliv. They prioritize your orders — better fill rates, faster delivery.", color: "#14b8a6" },
+  { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly via Oliv. They prioritize your orders — better fill rates, faster delivery.", color: "#f5870a" },
   { icon: Users, title: "One Monthly Payment", desc: "Single wire to Oliv covers all financed invoices. Simplified AP. Auto-reconciled to PO level.", color: "#c455ff" },
   { icon: Building2, title: "Multi-Property Support", desc: "Centralized procurement across all properties. Budget controls per outlet. Authority Matrix governance.", color: "#ff7e1a" },
   { icon: BarChart3, title: "Full Spend Visibility", desc: "Real-time dashboard: PO → Delivery → Invoice → Financing → Payment. Complete audit trail.", color: "#64b5f6" },
@@ -87,7 +87,7 @@ const BENEFITS = [
 
 const METRICS = [
   { label: "Payment Terms", value: "Net-60", icon: Clock, color: "#4A7C59" },
-  { label: "Consolidated Payments", value: "1 / Month", icon: CreditCard, color: "#14b8a6" },
+  { label: "Consolidated Payments", value: "1 / Month", icon: CreditCard, color: "#f5870a" },
   { label: "Supplier Fill Rate", value: "+23%", icon: TrendingUp, color: "#c455ff" },
   { label: "AP Workload", value: "-60%", icon: Wallet, color: "#ff7e1a" },
   { label: "ETA Compliance", value: "100%", icon: Shield, color: "#64b5f6" },
@@ -150,7 +150,7 @@ export default function HotelsPage() {
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#14b8a6" }}>Get Started in 4 Steps</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Get Started in 4 Steps</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">From Registration to First Order</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -222,7 +222,7 @@ export default function HotelsPage() {
           <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-8 md:p-10">
             <div className="grid sm:grid-cols-4 gap-6">
               {[
-                { step: "1", title: "Browse Catalog", desc: "Search 10,000+ products from 500+ verified suppliers.", color: "#14b8a6" },
+                { step: "1", title: "Browse Catalog", desc: "Search 10,000+ products from 500+ verified suppliers.", color: "#f5870a" },
                 { step: "2", title: "Place Order", desc: "Add to cart, apply Authority Matrix approvals, confirm PO.", color: "#c455ff" },
                 { step: "3", title: "Checkout via Oliv", desc: "At checkout, Oliv processes the payment. Your terms: Net-60.", color: "#4A7C59" },
                 { step: "4", title: "Suppliers Paid", desc: "Suppliers receive payment in 48 hours. You pay Oliv later.", color: "#ff7e1a" },

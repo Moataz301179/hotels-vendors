@@ -50,7 +50,7 @@ const MARKET_STATS = [
     value: "$21.54B",
     label: "Egyptian Hospitality",
     detail: "2026 market size, 7.12% CAGR",
-    color: "#14b8a6",
+    color: "#f5870a",
   },
   {
     value: "51.2%",
@@ -77,7 +77,7 @@ const HOW_IT_WORKS = [
     icon: Search,
     title: "Browse",
     desc: "Explore a curated catalog of hospitality SKUs from verified Egyptian suppliers. Filter by category, price, and availability.",
-    color: "#14b8a6",
+    color: "#f5870a",
     step: "01",
   },
   {
@@ -97,7 +97,7 @@ const HOW_IT_WORKS = [
 ];
 
 const TEAM_ROLES = [
-  { role: "Chief Executive Officer", focus: "Hospitality & Strategy", color: "#14b8a6" },
+  { role: "Chief Executive Officer", focus: "Hospitality & Strategy", color: "#f5870a" },
   { role: "Chief Technology Officer", focus: "Platform & Engineering", color: "#ff7e1a" },
   { role: "Chief Operating Officer", focus: "Marketplace & Growth", color: "#c455ff" },
 ];
@@ -110,7 +110,7 @@ const TRACTION_STATS = [
 ];
 
 const TRUST_SIGNALS = [
-  { icon: FileCheck, title: "ETA Compliant", desc: "Real-time e-invoicing with the Egyptian Tax Authority", color: "#14b8a6" },
+  { icon: FileCheck, title: "ETA Compliant", desc: "Real-time e-invoicing with the Egyptian Tax Authority", color: "#f5870a" },
   { icon: ShieldCheck, title: "Authority Matrix", desc: "Multi-level order governance with audit trails", color: "#ff7e1a" },
   { icon: Banknote, title: "Non-Recourse Factoring", desc: "Zero supplier default risk, embedded liquidity", color: "#c455ff" },
   { icon: Lock, title: "RBAC Security", desc: "Server-side role enforcement, tenant isolation", color: "#64b5f6" },
@@ -123,7 +123,7 @@ export default function AboutPage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.04) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(245,135,10,0.04) 0%, transparent 70%)" }}
         />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <span className="label-upper mb-4 block">About HotelsVendors</span>
