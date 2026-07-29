@@ -135,7 +135,7 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-canvas text-foreground flex items-center justify-center">
         <LoadingPage />
       </div>
     );
@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-canvas text-foreground flex flex-col items-center justify-center gap-4">
         <Package className="w-12 h-12 text-foreground-muted" />
         <h1 className="text-xl font-semibold">Product Not Found</h1>
         <p className="text-sm text-foreground-muted">{error || "This product may have been removed or the URL is incorrect."}</p>
@@ -192,7 +192,7 @@ export default function ProductDetailPage() {
     new Intl.NumberFormat("en-EG", { style: "currency", currency: product.currency, minimumFractionDigits: 0 }).format(price);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-canvas text-foreground">
       {/* Breadcrumb */}
       <div className="border-b border-border-subtle">
         <div className="max-w-[1400px] mx-auto px-6 py-3">
