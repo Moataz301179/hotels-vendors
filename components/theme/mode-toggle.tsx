@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 
 const STORAGE_KEY = "hv-theme-mode";
 
-function getStoredMode(): "dark" | "light" {
+export function getStoredMode(): "dark" | "light" {
   if (typeof window === "undefined") return "dark";
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
