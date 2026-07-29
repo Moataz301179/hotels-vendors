@@ -171,7 +171,7 @@ function MarketplaceContent() {
               {filteredProducts.slice(0, 24).map((p) => (
                 <div key={p.id} className="group rounded-xl overflow-hidden border transition-all hover:border-white/20 hover:scale-[1.02] cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                   <div className="relative h-32 overflow-hidden">
-                    <img src={p.images || "https://images.unsplash.com/photo-1585670149967-b4f4da88cc9f?w=400"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
+                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || "https://images.unsplash.com/photo-1585670149967-b4f4da88cc9f?w=400"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
                     <div className="absolute top-2 left-2">
                       <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(245,135,10,0.15)", color: "#f5870a" }}>{p.category.replace(/_/g, " ")}</span>
                     </div>
