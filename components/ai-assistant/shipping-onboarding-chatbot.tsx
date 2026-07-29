@@ -1,14 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Truck, ArrowRight, Loader2 } from "lucide-react";
-
-const SHIPPING_PRESETS = [
-  "How do I register as a logistics provider?",
-  "What documents are needed for fleet onboarding?",
-  "How does proof-of-delivery work?",
-  "How do I get paid for deliveries?",
-];
+import { MessageCircle, X, Send, Truck, Loader2 } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -20,7 +13,7 @@ export function ShippingOnboardingBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Welcome! I'm here to help you join HotelsVendors as a logistics provider. I'll guide you through fleet registration, explain how shared-route optimization reduces your costs, and help you understand proof-of-delivery workflows. What would you like to know?",
+      content: "Hi! I'm the HotelsVendors AI assistant. Ask me anything about logistics registration, fleet onboarding, delivery workflows, or any other platform questions.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -161,22 +154,6 @@ export function ShippingOnboardingBot() {
               </div>
             )}
             <div ref={messagesEndRef} />
-          </div>
-
-          {/* Presets */}
-          <div className="px-4 pt-2 pb-1 flex flex-wrap gap-1.5 shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-            {SHIPPING_PRESETS.map((prompt) => (
-              <button
-                key={prompt}
-                onClick={() => handleSend(prompt)}
-                className="px-2.5 py-1 rounded-lg text-[11px] transition-colors"
-                style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.4)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
-              >
-                {prompt}
-              </button>
-            ))}
           </div>
 
           {/* Input */}
