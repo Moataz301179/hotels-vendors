@@ -133,15 +133,30 @@ function RegisterContent() {
     }
   };
 
+  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all";
+
+  const roleColorMap: Record<StakeholderRole, string> = {
+    HOTEL: "#f5870a",
+    SUPPLIER: "#ff7e1a",
+    FACTORING: "#c455ff",
+    LOGISTICS: "#64b5f6",
+  };
+
+  const ptColorMap: Record<string, string> = {
+    SINGLE: "#f5870a",
+    CHAIN: "#4A7C59",
+    MANAGEMENT: "#c455ff",
+  };
+
   if (registered) {
     return (
       <div className="text-center space-y-6 py-8">
-        <div className="w-20 h-20 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto">
-          <CheckCircle2 size={40} className="text-[#f5870a]" />
+        <div className="w-20 h-20 rounded-full border flex items-center justify-center mx-auto" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)" }}>
+          <CheckCircle2 size={40} style={{ color: "var(--accent-base)" }} />
         </div>
         <div>
           <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
-          <p className="text-white/40 text-[14px]">
+          <p className="text-foreground-secondary text-[14px]">
             Your account has been created. Redirecting you to sign in...
           </p>
         </div>
@@ -151,36 +166,33 @@ function RegisterContent() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5870a]/[0.08] border border-[#f5870a]/15 text-[#f5870a] text-[11px] font-medium uppercase tracking-[0.15em] mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium uppercase tracking-[0.15em] mb-5" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
           {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
           {form.role === "HOTEL" ? "Hotel Registration" : form.role === "SUPPLIER" ? "Supplier Registration" : form.role === "FACTORING" ? "Factoring Registration" : "Logistics Registration"}
         </div>
-        <h1 className="text-[28px] font-semibold text-white tracking-[-0.02em]">
+        <h1 className="text-[28px] font-semibold text-foreground tracking-[-0.02em]">
           Create Account
         </h1>
-        <p className="mt-2 text-[14px] text-white/40">
-          {form.role === "HOTEL" 
-            ? "Join Egypt's leading B2B hospitality procurement platform. Net-60 terms via Oliv."
+        <p className="mt-2 text-[14px] text-foreground-secondary">
+          {form.role === "HOTEL"
+            ? "Join Egypt&apos;s leading B2B hospitality procurement platform. Net-60 terms via Oliv."
             : form.role === "SUPPLIER"
             ? "List your products, reach 480+ hotels, get paid in 48 hours via Oliv."
-            : "Join Egypt's leading B2B hospitality procurement platform."}
+            : "Join Egypt&apos;s leading B2B hospitality procurement platform."}
         </p>
       </div>
 
-      {/* Form Card */}
-      <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 sm:p-8">
+      <div className="rounded-2xl border border-subtle bg-surface-1 p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-[13px]">
+            <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400 text-[13px]">
               {error}
             </div>
           )}
 
-          {/* Role Selection */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">I am a...</label>
+            <label className="block text-[13px] font-medium text-foreground-secondary">I am a...</label>
             <div className="grid grid-cols-2 gap-2">
               {ROLES.map((role) => {
                 const Icon = role.icon;
@@ -205,49 +217,46 @@ function RegisterContent() {
             </div>
           </div>
 
-          {/* Name */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
               Full Name <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => updateForm("name", e.target.value)}
                 placeholder="Your full name"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
+                className={fieldCls}
               />
             </div>
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
               Email <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type="email"
                 value={form.email}
                 onChange={(e) => updateForm("email", e.target.value)}
                 placeholder="you@company.com"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
+                className={fieldCls}
               />
             </div>
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
               Password <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={form.password}
@@ -255,63 +264,59 @@ function RegisterContent() {
                 placeholder="Min 8 chars, 1 uppercase, 1 number"
                 required
                 minLength={8}
-                className="w-full pl-11 pr-12 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
+                className={fieldCls}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/40 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground-secondary transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* City */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
               City <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
                 type="text"
                 value={form.city}
                 onChange={(e) => updateForm("city", e.target.value)}
                 placeholder="e.g. Cairo, Sharm El-Sheikh"
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all"
+                className={fieldCls}
               />
             </div>
           </div>
 
-          {/* Governorate */}
           <div className="space-y-2">
-            <label className="block text-[13px] font-medium text-white/50">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
               Governorate <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <select
                 value={form.governorate}
                 onChange={(e) => updateForm("governorate", e.target.value)}
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all appearance-none"
+                className={`${fieldCls} appearance-none`}
               >
-                <option value="" className="bg-[#12121a] text-white/40">Select governorate</option>
+                <option value="" className="bg-surface-1 text-foreground-secondary">Select governorate</option>
                 {GOVERNORATES.map((g) => (
-                  <option key={g} value={g} className="bg-[#12121a] text-white">{g}</option>
+                  <option key={g} value={g} className="bg-surface-1 text-white">{g}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Hotel-Specific Fields */}
           {form.role === "HOTEL" && (
             <>
-              {/* Property Type */}
               <div className="space-y-2">
-                <label className="block text-[13px] font-medium text-white/50">
+                <label className="block text-[13px] font-medium text-foreground-secondary">
                   Property Type <span className="text-red-400">*</span>
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -328,9 +333,7 @@ function RegisterContent() {
                         type="button"
                         onClick={() => updateForm("propertyType", pt.value)}
                         className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border text-[11px] font-medium transition-all ${
-                          isSelected
-                            ? "text-[#07090f] border-transparent"
-                            : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                          isSelected ? "text-[#07090f] border-transparent" : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
                         }`}
                         style={isSelected ? { backgroundColor: pt.color, borderColor: pt.color } : {}}
                       >
@@ -342,49 +345,45 @@ function RegisterContent() {
                 </div>
               </div>
 
-              {/* Number of Properties */}
               {(form.propertyType === "CHAIN" || form.propertyType === "MANAGEMENT") && (
                 <div className="space-y-2">
-                  <label className="block text-[13px] font-medium text-white/50">
+                  <label className="block text-[13px] font-medium text-foreground-secondary">
                     Number of Properties <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
-                    <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+                    <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
                     <select
                       value={form.numberOfProperties}
                       onChange={(e) => updateForm("numberOfProperties", e.target.value)}
                       required
-                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all appearance-none"
+                      className={`${fieldCls} appearance-none`}
                     >
-                      <option value="1" className="bg-[#12121a] text-white">1 property</option>
-                      <option value="2-5" className="bg-[#12121a] text-white">2-5 properties</option>
-                      <option value="6-10" className="bg-[#12121a] text-white">6-10 properties</option>
-                      <option value="11-20" className="bg-[#12121a] text-white">11-20 properties</option>
-                      <option value="20+" className="bg-[#12121a] text-white">20+ properties</option>
+                      <option value="1" className="bg-surface-1 text-foreground-secondary">1 property</option>
+                      <option value="2-5" className="bg-surface-1 text-white">2-5 properties</option>
+                      <option value="6-10" className="bg-surface-1 text-white">6-10 properties</option>
+                      <option value="11-20" className="bg-surface-1 text-white">11-20 properties</option>
+                      <option value="20+" className="bg-surface-1 text-white">20+ properties</option>
                     </select>
                   </div>
                 </div>
               )}
 
-              {/* Hotel Info Box */}
-              <div className="rounded-xl p-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
-                <p className="text-[12px] text-white/40 leading-relaxed">
+              <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(74,124,89,0.05)", border: "1px solid rgba(74,124,89,0.13)" }}>
+                <p className="text-[12px] text-foreground-secondary leading-relaxed">
                   <strong style={{ color: "#4A7C59" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then set up Oliv financing for Net-60 payment terms. Suppliers get paid instantly.
                 </p>
               </div>
             </>
           )}
 
-          {/* Supplier Info Box */}
           {form.role === "SUPPLIER" && (
-            <div className="rounded-xl p-4" style={{ backgroundColor: "#ff7e1a08", border: "1px solid #ff7e1a22" }}>
-              <p className="text-[12px] text-white/40 leading-relaxed">
+            <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,126,26,0.05)", border: "1px solid rgba(255,126,26,0.13)" }}>
+              <p className="text-[12px] text-foreground-secondary leading-relaxed">
                 <strong style={{ color: "#ff7e1a" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for Oliv financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
               </p>
             </div>
           )}
 
-          {/* Consent Checkboxes */}
           <div className="space-y-3 pt-2">
             <label className="flex items-start gap-3 cursor-pointer group">
               <input
@@ -393,11 +392,11 @@ function RegisterContent() {
                 onChange={(e) => updateForm("termsAccepted", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
               />
-              <span className="text-[12px] text-white/40 leading-relaxed">
+              <span className="text-[12px] text-foreground-secondary leading-relaxed">
                 I agree to the{" "}
-                <Link href="/terms" className="text-[#f5870a] hover:opacity-80 underline underline-offset-2">Terms of Service</Link>
+                <Link href="/terms" className="text-accent-base hover:opacity-80 underline underline-offset-2">Terms of Service</Link>
                 {" "}and{" "}
-                <Link href="/privacy" className="text-[#f5870a] hover:opacity-80 underline underline-offset-2">Privacy Policy</Link>
+                <Link href="/privacy" className="text-accent-base hover:opacity-80 underline underline-offset-2">Privacy Policy</Link>
                 <span className="text-red-400 ml-0.5">*</span>
               </span>
             </label>
@@ -408,19 +407,18 @@ function RegisterContent() {
                 onChange={(e) => updateForm("marketingConsent", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
               />
-              <span className="text-[12px] text-white/40 leading-relaxed">
+              <span className="text-[12px] text-foreground-secondary leading-relaxed">
                 I agree to receive marketing communications about products, services, and promotions. You can withdraw consent at any time.
               </span>
             </label>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
             style={{
-              backgroundColor: form.role === "HOTEL" ? "#4A7C59" : form.role === "SUPPLIER" ? "#ff7e1a" : form.role === "FACTORING" ? "#c455ff" : "#64b5f6",
+              backgroundColor: roleColorMap[form.role],
               color: "#ffffff",
             }}
           >
@@ -436,17 +434,15 @@ function RegisterContent() {
         </form>
       </div>
 
-      {/* Info Note */}
       <div className="rounded-xl p-4 bg-white/[0.02] border border-white/[0.06]">
-        <p className="text-[12px] text-white/40 leading-relaxed">
+        <p className="text-[12px] text-foreground-secondary leading-relaxed">
           Tax ID and Commercial Registry can be added after registration in your dashboard settings.
         </p>
       </div>
 
-      {/* Footer */}
-      <p className="text-center text-[13px] text-white/30">
+      <p className="text-center text-[13px] text-foreground-muted">
         Already have an account?{" "}
-        <Link href="/login" className="text-[#f5870a] hover:opacity-80 font-medium transition-opacity">
+        <Link href="/login" className="text-accent-base hover:opacity-80 font-medium transition-opacity">
           Sign in
         </Link>
       </p>
