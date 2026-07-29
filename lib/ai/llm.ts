@@ -13,6 +13,7 @@ export interface RouterOptions {
   maxTokens?: number;
   jsonMode?: boolean;
   timeoutMs?: number;
+  taskComplexity?: "simple" | "medium" | "complex";
 }
 
 export interface RouterResult {
