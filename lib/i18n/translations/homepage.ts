@@ -8,9 +8,9 @@ export const homepage = {
 
     // ── Hero ──
     "hero.badge": "Egypt & MENA — AI-Native B2B Hotel Procurement",
-    "hero.headline1": "Hotel Procurement",
-    "hero.headline2": "Infrastructure",
-    "hero.subtitle": "Hotels, suppliers, logistics, and capital — unified on one AI-governed, ETA-compliant platform.",
+    "hero.headline1": "Welcome to the AI-Advanced Procurement",
+    "hero.headline2": "B2B Platform for Hospitality",
+    "hero.subtitle": "The only platform in Egypt aggregating all solutions any hotel needs — from procurement and logistics to financing and ETA compliance — solving traditional procurement limitations.",
     "hero.searchPlaceholder": "Search products, suppliers, or SKU code...",
     "hero.search": "Search",
     "hero.stats.hotels": "Hotels Onboarded",
@@ -280,9 +280,9 @@ export const homepage = {
 
     // ── Hero ──
     "hero.badge": "مصر والشرق الأوسط — منصة مشتريات فندقية بالذكاء الاصطناعي",
-    "hero.headline1": "منصة المشتريات",
-    "hero.headline2": "الفندقية المتكاملة",
-    "hero.subtitle": "الفنادق والموردون وشركات الشحن وجهات التمويل — كلها في منصة واحدة متوافقة مع هيئة الضرائب المصرية.",
+    "hero.headline1": "مرحباً بكم في منصة المشتريات",
+    "hero.headline2": "المتطورة بالذكاء الاصطناعي للفنادق",
+    "hero.subtitle": "المنصة الوحيدة في مصر التي تجمع كل الحلول التي يحتاجها أي فندق — من المشتريات والخدمات اللوجستية إلى التمويل والامتثال للهيئة الضريبية — لحل قيود المشتريات التقليدية.",
     "hero.searchPlaceholder": "ابحث عن منتجات، موردين، أو رمز SKU...",
     "hero.search": "بحث",
     "hero.stats.hotels": "فندق مسجل",

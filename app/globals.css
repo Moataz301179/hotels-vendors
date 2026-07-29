@@ -429,7 +429,7 @@
 [data-theme="light"] .text-white\/80 { color: rgba(1,18,36,0.80) !important; }
 [data-theme="light"] .text-white\/35 { color: rgba(1,18,36,0.35) !important; }
 [data-theme="light"] .text-white\/30 { color: rgba(1,18,36,0.30) !important; }
-[data-theme="light"] .hover\:text-white:hover { color: #011224 !important; }
+[data-theme="light"] .hover\:text-white:hover { color: #3b82f6 !important; }
 [data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: rgba(1,18,36,0.03) !important; }
 [data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover { background-color: rgba(1,18,36,0.04) !important; }
 

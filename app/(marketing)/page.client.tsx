@@ -150,7 +150,7 @@ export default function MarketingPage() {
               {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-foreground-secondary max-w-lg mb-6 leading-relaxed animate-fade-in-up animation-delay-100">
+            <p className="text-lg md:text-xl text-white/80 max-w-xl mb-6 leading-relaxed animate-fade-in-up animation-delay-100">
               {t("hero.subtitle")}
             </p>
 
