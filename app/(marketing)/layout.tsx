@@ -7,7 +7,7 @@ import { SupplierOnboardingBot } from "@/components/ai-assistant/supplier-onboar
 export const metadata: Metadata = {
   title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
   description:
-    "Egypt's B2B hospitality procurement infrastructure. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route logistics — purpose-built for coastal hotel chains in Sharm El-Sheikh and Hurghada.",
+    "Egypt's B2B hospitality procurement platform. AI demand forecasting, embedded factoring, ETA e-invoicing, and shared logistics for hotel chains.",
   keywords: [
     "B2B hospitality procurement Egypt",
     "automated factoring lines Cairo",
@@ -38,6 +38,7 @@ export const metadata: Metadata = {
       "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
   },
   alternates: {
+    canonical: "https://www.hotelsvendors.com",
     languages: {
       "en": "/",
       "ar": "/ar",
