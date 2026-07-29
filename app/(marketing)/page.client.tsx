@@ -25,7 +25,7 @@ import {
    ────────────────────────────────────────────────────────────── */
 function useCountUp(end: number, duration = 1600) {
   const [value, setValue] = useState(0);
-  const ref = useRef<HTMLSpanElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const started = useRef(false);
 
   useEffect(() => {
