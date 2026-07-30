@@ -41,9 +41,21 @@ export async function executeLLM(
       { role: "user", content: arg2 },
     ];
     options = arg3 || {};
+  } else if (typeof arg1 === "string" && typeof arg2 === "object" && arg2 !== null) {
+    messages = [
+      { role: "system", content: arg1 },
+      { role: "user", content: "" },
+    ];
+    options = arg2;
   } else if (Array.isArray(arg1)) {
     messages = arg1;
     options = (arg2 as RouterOptions) || {};
+  } else if (typeof arg1 === "string") {
+    messages = [
+      { role: "system", content: arg1 },
+      { role: "user", content: "" },
+    ];
+    options = arg3 || {};
   } else {
     throw new Error("Invalid executeLLM arguments");
   }
