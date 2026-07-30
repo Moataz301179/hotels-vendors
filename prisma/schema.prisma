@@ -738,6 +738,7 @@ model FactoringRequest {
   riskTier              RiskTier               @default(MEDIUM)
   disbursedAt           DateTime?
   settledAt             DateTime?
+  maturityDate          DateTime?
   hotelPaidAt           DateTime?
   isNonRecourse         Boolean                @default(true)
   partnerResponse       String?
