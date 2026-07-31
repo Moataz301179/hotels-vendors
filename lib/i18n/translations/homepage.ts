@@ -269,6 +269,32 @@ export const homepage = {
     "carousel.badge": "Platform Demo",
     "carousel.title": "See It in Action",
     "carousel.subtitle": "Follow a complete procurement cycle — from order placement to payment settlement.",
+
+    // ── Oliv Ad Carousel ──
+    "olivCarousel.section": "Financing Powered by Oliv",
+    "olivCarousel.slide1.title": "Get Approved for Up to EGP 10M",
+    "olivCarousel.slide1.subtitle": "Revolving credit line — no fixed limits. Waived onboarding fees for HotelsVendors referrals.",
+    "olivCarousel.slide1.badge": "EGP 10M Limit",
+    "olivCarousel.slide1.ctaText": "Apply on Oliv — Code CHV000",
+    "olivCarousel.slide1.qrText": "Scan to apply\nwith referral code CHV000",
+
+    "olivCarousel.slide2.title": "Same-Day Approval",
+    "olivCarousel.slide2.subtitle": "Approved in hours using your ETA tax UUID. No waiting weeks for bank decisions.",
+    "olivCarousel.slide2.badge": "Same Day",
+    "olivCarousel.slide2.ctaText": "Get Started — CHV000",
+    "olivCarousel.slide2.qrText": "Scan for instant\nreferral — CHV000",
+
+    "olivCarousel.slide3.title": "48-Hour Funding",
+    "olivCarousel.slide3.subtitle": "From invoice submission to cash in your account. Non-recourse — Oliv bears the risk.",
+    "olivCarousel.slide3.badge": "48h Payout",
+    "olivCarousel.slide3.ctaText": "Unlock Liquidity — CHV000",
+    "olivCarousel.slide3.qrText": "Scan & apply with\nCHV000 referral",
+
+    "olivCarousel.slide4.title": "FRA Licensed. Non-Recourse.",
+    "olivCarousel.slide4.subtitle": "Egypt's first FRA-licensed digital factoring platform. Zero collateral. Zero risk for suppliers.",
+    "olivCarousel.slide4.badge": "FRA Licensed",
+    "olivCarousel.slide4.ctaText": "Finance Now — Code CHV000",
+    "olivCarousel.slide4.qrText": "Scan to register\nwith code CHV000",
   } as const,
 
   ar: {
@@ -541,6 +567,32 @@ export const homepage = {
     "carousel.badge": "عرض المنصة",
     "carousel.title": "شاهد العمل",
     "carousel.subtitle": "اتبع دورة مشتريات كاملة — من تقديم الطلب إلى تسوية الدفع.",
+
+    // ── Oliv Ad Carousel ──
+    "olivCarousel.section": "تمويل عبر Oliv",
+    "olivCarousel.slide1.title": "موافقة على خط ائتمان يصل إلى 10 مليون ج.م",
+    "olivCarousel.slide1.subtitle": "خط ائتمان متجدد — بدون حدود ثابتة. رسوم تسجيل مخفضة للإحالة من HotelsVendors.",
+    "olivCarousel.slide1.badge": "حد أقصى 10M ج.م",
+    "olivCarousel.slide1.ctaText": "قدم على Oliv — الكود CHV000",
+    "olivCarousel.slide1.qrText": "امسح للتقديم\nبكود الإحالة CHV000",
+
+    "olivCarousel.slide2.title": "موافقة في نفس اليوم",
+    "olivCarousel.slide2.subtitle": "موافقة في ساعات باستخدام UUID الضريبي للهيئة الضريبية. بدون انتظار أسابيع.",
+    "olivCarousel.slide2.badge": "نفس اليوم",
+    "olivCarousel.slide2.ctaText": "ابدأ — CHV000",
+    "olivCarousel.slide2.qrText": "امسح للحصول على\nإحالة فورية — CHV000",
+
+    "olivCarousel.slide3.title": "تصرف خلال 48 ساعة",
+    "olivCarousel.slide3.subtitle": "من تقديم الفاتورة إلى المال في حسابك. غير مضمون — Oliv تتحمل المخاطرة.",
+    "olivCarousel.slide3.badge": "تصرف 48 ساعة",
+    "olivCarousel.slide3.ctaText": "فتح سيولة — CHV000",
+    "olivCarousel.slide3.qrText": "امسح وقدّم ب\nإحالة CHV000",
+
+    "olivCarousel.slide4.title": "مرخص من FRA. غير مضمون.",
+    "olivCarousel.slide4.subtitle": "أول منصة تمويل إسقاطية مرخصة من FRA في مصر. لا ضمانات. لا مخاطر للموردين.",
+    "olivCarousel.slide4.badge": "مرخص FRA",
+    "olivCarousel.slide4.ctaText": "التمويل الآن — الكود CHV000",
+    "olivCarousel.slide4.qrText": "امسح للتسجيل\nبكود CHV000",
   } as const,
 } as const;
 

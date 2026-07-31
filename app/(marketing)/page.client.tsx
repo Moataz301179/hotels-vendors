@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { OlivAdCarousel } from "@/components/marketing/oliv-ad-carousel";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
 import {
@@ -116,41 +117,21 @@ export default function MarketingPage() {
     <main className="min-h-screen bg-canvas text-foreground font-sans">
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background: hotel room photo with dark overlay */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
-            alt=""
-            className="w-full h-full object-cover"
-            width={1920}
-            height={1080}
-          />
-          <div className={`absolute inset-0 ${ar ? "bg-gradient-to-l" : "bg-gradient-to-r"}`} style={{ background: `linear-gradient(to ${ar ? "left" : "right"}, rgba(var(--hero-overlay-rgb), 1) 0%, rgba(var(--hero-overlay-rgb), 0.85) 60%, rgba(var(--hero-overlay-rgb), 0.4) 100%)` }} />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(to top, rgba(var(--hero-overlay-rgb), 1) 0%, transparent 50%, rgba(var(--hero-overlay-rgb), 0.3) 100%)` }} />
-        </div>
-
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(rgba(245,135,10,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(245,135,10,0.02) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
-          WebkitMaskImage: `radial-gradient(ellipse 60% 50% at ${ar ? "30%" : "70%"} 50%, black 10%, transparent 70%)`,
-        }} />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24 w-full">
-          {/* Centered Copy */}
-          <div className="max-w-3xl mx-auto text-center">
+      <section className="pt-16">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Text content (title NOT overlaid on image) */}
+            <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent-base animate-pulse" />
               {t("hero.badge")}
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.08] mb-6 animate-fade-in-up">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground leading-tight mb-4 animate-fade-in-up">
               {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
             </h1>
 
-            <p className="text-lg md:text-xl max-w-xl mb-6 leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
+            <p className="text-base md:text-lg max-w-xl leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
               {t("hero.subtitle")}
             </p>
 
@@ -198,58 +179,28 @@ export default function MarketingPage() {
               <StatCounter end={48} suffix="h" label={t("hero.stats.delivery")} />
             </div>
           </div>
-        </div>
 
-        {/* ═══════════ OLIV FINANCE TICKER (bottom of hero) ═══════════ */}
-        <Link
-          href="/oliv/referral"
-          className={`absolute bottom-0 left-0 right-0 z-20 block w-full overflow-hidden border-t border-white/5 select-none ${ar ? "font-cairo" : ""}`}
-          style={{
-            background: "linear-gradient(90deg, rgba(245,135,10,0.06) 0%, rgba(12,12,18,0.95) 25%, rgba(12,12,18,0.95) 75%, rgba(245,135,10,0.06) 100%)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-          }}
-        >
-          <div className={`flex items-center py-2.5 whitespace-nowrap w-max animate-marquee ${ar ? "flex-row-reverse" : ""}`}>
-            {ar ? (
-              <>
-                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#f5870a] font-semibold">10 مليون ج.م</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#f5870a] font-semibold">الرقم الضريبي الموحد</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#f5870a] font-semibold">48 ساعة</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#f5870a] font-semibold">بالشراكة مع Oliv</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">احصل على خط ائتمان يصل إلى <span className="text-[#f5870a] font-semibold">10 مليون ج.م</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">موافقة في نفس اليوم باستخدام <span className="text-[#f5870a] font-semibold">الرقم الضريبي الموحد</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">صرف التمويل خلال <span className="text-[#f5870a] font-semibold">48 ساعة</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">بدون ضمانات — <span className="text-[#f5870a] font-semibold">بالشراكة مع Oliv</span></span>
-              </>
-            ) : (
-              <>
-                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#f5870a] font-semibold">EGP 10M</span> credit line</span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#f5870a] font-semibold">ETA tax UUID</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#f5870a] font-semibold">48 hours</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#f5870a] font-semibold">Powered by Oliv Finance</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Get approved for up to <span className="text-[#f5870a] font-semibold">EGP 10M</span> credit line</span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Same day approval with <span className="text-[#f5870a] font-semibold">ETA tax UUID</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">Funds disbursed in <span className="text-[#f5870a] font-semibold">48 hours</span></span>
-                <span className="w-1 h-1 rounded-full bg-[#f5870a]/60 mx-4 shrink-0" />
-                <span className="text-sm font-medium text-white/90 mx-4">No collateral required — <span className="text-[#f5870a] font-semibold">Powered by Oliv Finance</span></span>
-              </>
-            )}
+          {/* Right: Image in separate box (NOT overlaid on text) */}
+          <div>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
+              <img
+                src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
+                alt="Hotel procurement platform"
+                className="w-full h-full object-cover"
+                width={1920}
+                height={1080}
+              />
+              {/* Subtle gradient in image for depth */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,12,18,0.9) 0%, transparent 40%)" }} />
+            </div>
           </div>
-        </Link>
+        </div>
+      </div>
+
+        {/* ═══════════ OLIV AD CAROUSEL ═══════════ */}
+        <div className="max-w-7xl mx-auto px-6 md:px-12 pb-8">
+          <OlivAdCarousel />
+        </div>
       </section>
 
       {/* ═══════════ PLATFORM OVERVIEW — Dashboard Mockup ═══════════ */}
