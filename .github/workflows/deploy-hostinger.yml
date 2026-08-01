@@ -41,14 +41,14 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            echo "[2/6] Running Prisma migrations..."
-            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
+            echo "[2/6] Stopping old containers (free ports)..."
+            docker compose -f docker-compose.swarm.yml down 2>/dev/null || true
 
             echo "[3/6] Building all services..."
             docker compose -f docker-compose.swarm.yml build --no-cache
 
-            echo "[4/6] Stopping old containers (free ports)..."
-            docker compose -f docker-compose.swarm.yml down 2>/dev/null || true
+            echo "[4/6] Running Prisma migrations..."
+            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
 
             echo "[5/6] Starting full stack..."
             docker compose -f docker-compose.swarm.yml up -d
