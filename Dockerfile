@@ -13,7 +13,10 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build Next.js (produces .next/standalone for production)
+# Build Next.js (produces .next/standalone for production).
+# NOTE: NODE_ENV is intentionally NOT set to "production" here.
+# next.config.ts throws if SESSION_SECRET is missing in production mode,
+# and the real SESSION_SECRET is injected at runtime via docker-compose.
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
