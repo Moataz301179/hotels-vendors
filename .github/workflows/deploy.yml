@@ -96,7 +96,7 @@ jobs:
             echo "  Commit: ${{ github.sha }}"
             echo "  Method: Docker Compose"
 
-            cd /var/www/hotelsvendors
+            cd /var/www/hotelsvendors-v2
 
             echo "[1/6] Pulling latest code..."
             git fetch origin main
