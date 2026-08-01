@@ -54,6 +54,8 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
           SESSION_SECRET: "dummy-for-ci-build-only"
           DATABASE_URL: "postgresql://dummy:placeholder@localhost:5432/dummy"
+          HOTELSVENDORS_HMAC_SECRET: "dummy-hmac-secret-for-ci-build-only-32chars-minimum"
+          ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 
   audit:
     name: Security Audit
