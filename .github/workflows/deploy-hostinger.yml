@@ -37,20 +37,23 @@ jobs:
 
             cd /var/www/hotelsvendors-v2
 
-            echo "[1/5] Pulling latest code..."
+            echo "[1/6] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
 
-            echo "[2/5] Running Prisma migrations..."
+            echo "[2/6] Running Prisma migrations..."
             docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
 
-            echo "[3/5] Building all services..."
+            echo "[3/6] Building all services..."
             docker compose -f docker-compose.swarm.yml build --no-cache
 
-            echo "[4/5] Starting full stack..."
+            echo "[4/6] Stopping old containers (free ports)..."
+            docker compose -f docker-compose.swarm.yml down 2>/dev/null || true
+
+            echo "[5/6] Starting full stack..."
             docker compose -f docker-compose.swarm.yml up -d
 
-            echo "[5/5] Health checks..."
+            echo "[6/6] Health checks..."
             sleep 10
             APP_STATUS=$(docker inspect --format='{{.State.Status}}' hv-app 2>/dev/null || echo "unknown")
             WORKER_STATUS=$(docker inspect --format='{{.State.Status}}' hv-swarm-worker 2>/dev/null || echo "unknown")
