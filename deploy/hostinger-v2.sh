@@ -1,226 +1,130 @@
 #!/bin/bash
-# Hotels Vendors — Hostinger VPS Full Deployment Script v3 (Ollama Primary)
-# Includes: Docker, Ollama LLM, Swarm, OpenClaw, Agent0, SSL, Cloudflare Tunnel
-
-set -e
+# Hotels Vendors — Hostinger VPS Deployment Script (PM2 + Standalone)
+#
+# This is a MANUAL fallback script. The primary deployment path is
+# GitHub Actions: push to main → deploy-hostinger.yml
+#
+# Run this on the VPS to do a fresh PM2 deployment (not Docker):
+#   bash deploy/hostinger-v2.sh [production|staging]
+#
 
 ENV=${1:-production}
 DOMAIN="www.hotelsvendors.com"
-APP_DIR="/var/www/hotelsvendors"
+APP_DIR="/var/www/hotelsvendors-v2"
 USER="ubuntu"
-OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
 
 echo "═══════════════════════════════════════════════════"
-echo "  Hotels Vendors — Hostinger VPS Deployment v3"
-echo "  Ollama Primary — Zero API Cost Swarm"
+echo "  Hotels Vendors — Hostinger VPS Deploy (PM2)"
 echo "  Environment: $ENV"
-echo "  Domain: $DOMAIN"
+echo "  Domain:      $DOMAIN"
+echo "  App Dir:     $APP_DIR"
 echo "═══════════════════════════════════════════════════"
 
-# ── 1. SYSTEM UPDATE ──
-echo "[1/13] Updating system..."
+# ── 1. System update ──
+echo "[1/6] Updating system..."
 sudo apt-get update -qq
 sudo apt-get upgrade -y -qq
+echo ""
 
-# ── 2. INSTALL DOCKER ──
-echo "[2/13] Installing Docker..."
-if ! command -v docker &> /dev/null; then
-  curl -fsSL https://get.docker.com | sudo sh
-  sudo usermod -aG docker $USER
-fi
-sudo systemctl enable docker
-sudo systemctl start docker
-
-# ── 3. INSTALL DOCKER COMPOSE ──
-echo "[3/13] Installing Docker Compose..."
-if ! command -v docker-compose &> /dev/null; then
-  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
+# ── 2. Install Node.js / PM2 ──
+echo "[2/6] Checking Node.js & PM2..."
+if ! command -v node &> /dev/null; then
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  sudo apt-get install -y nodejs
 fi
 
-# ── 4. CREATE APP DIRECTORY ──
-echo "[4/13] Setting up application directory..."
-sudo mkdir -p $APP_DIR
-sudo chown $USER:$USER $APP_DIR
+if ! command -v pm2 &> /dev/null; then
+  sudo npm install -g pm2
+fi
+echo "  Node: $(node --version)"
+echo "  npm:  $(npm --version)"
+echo "  PM2:  $(pm2 --version)"
+echo ""
 
-# ── 5. CLONE REPO ──
-echo "[5/13] Cloning repository..."
+# ── 3. Create app directory & clone repo ──
+echo "[3/6] Setting up application directory..."
+sudo mkdir -p "$APP_DIR"
+sudo chown "$USER":"$USER" "$APP_DIR"
+
 if [ -d "$APP_DIR/.git" ]; then
-  cd $APP_DIR && git pull origin main
+  cd "$APP_DIR" && git pull origin main
 else
-  git clone https://github.com/Moataz301179/hotels-vendors.git $APP_DIR
+  git clone https://github.com/Moataz301179/hotels-vendors.git "$APP_DIR"
+  cd "$APP_DIR"
 fi
+echo ""
 
-# ── 6. CREATE ENV FILE ──
-echo "[6/13] Creating environment file..."
-cat > $APP_DIR/.env << 'EOF'
-# ═══════════════════════════════════════════════════════════════
-# Hotels Vendors — Environment Variables (Swarm v3 — Ollama Primary)
-# ═══════════════════════════════════════════════════════════════
+# ── 4. Install dependencies & build ──
+echo "[4/6] Installing dependencies & building..."
+npm ci --legacy-peer-deps
+npx prisma generate
+NEXT_TELEMETRY_DISABLED=1 npm run build
+echo ""
 
-# ── Database ──
-DATABASE_URL=postgresql://hotels_vendors:CHANGE_ME@postgres:5433/hotels_vendors
-
-# ── Redis ──
-REDIS_URL=redis://redis:6379
-
-# ── Session ──
-SESSION_SECRET=CHANGE_ME_32_CHAR_MIN
-
-# ═══════════════════════════════════════════════════════════════
-# LLM PROVIDERS — Ollama is PRIMARY (zero cost, runs on VPS)
-# ═══════════════════════════════════════════════════════════════
-
-# Option A: OLLAMA (PRIMARY — local/VPS, no API key needed)
-OLLAMA_URL=http://ollama:11434
-OLLAMA_MODEL=llama3.1:8b
-
-# Option B: GROQ (FREE TIER FALLBACK — 20 req/min, 1M tok/day)
-# Get free key: https://console.groq.com (no credit card)
-GROQ_API_KEY=
-
-# Option C: OPENROUTER (UNIVERSAL FALLBACK — $5-10 credits)
-OPENROUTER_API_KEY=
-
-# Option D: KIMI via Moonshot (FUNDED FALLBACK)
-KIMI_API_KEY=
-
-# Option E: Grok via xAI (FUNDED FALLBACK)
-XAI_API_KEY=
-
-# ── Internal Services ──
-OPENCLAW_URL=http://openclaw:8000
-AGENT0_URL=http://agent0:9000
-
-# ── Email (SendGrid recommended) ──
-EMAIL_SERVICE=sendgrid
-EMAIL_API_KEY=
-EMAIL_FROM=noreply@hotelsvendors.com
-
-# ── WhatsApp / Twilio ──
-TWILIO_ACCOUNT_SID=
-TWILIO_AUTH_TOKEN=
-TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
-
-# ── App URL ──
-APP_URL=https://hotelsvendors.com
+# ── 5. Create/Update PM2 ecosystem config ──
+echo "[5/6] Configuring PM2 process..."
+cat > "$APP_DIR/ecosystem.config.js" << 'EOF'
+module.exports = {
+  apps: [{
+    name: "hotels-vendors",
+    script: "./.next/standalone/server.js",
+    cwd: "/var/www/hotelsvendors-v2",
+    env: {
+      NODE_ENV: "production",
+      PORT: 3000,
+    },
+    env_production: {
+      NODE_ENV: "production",
+      PORT: 3000,
+    },
+    max_memory_restart: "1G",
+    log_file: "/var/www/hotelsvendors-v2/logs/app-combined.log",
+    error_file: "/var/www/hotelsvendors-v2/logs/app-error.log",
+    out_file: "/var/www/hotelsvendors-v2/logs/app-out.log",
+    time: true,
+    combine_logs: true,
+    kill_timeout: 30000,
+  }],
+};
 EOF
 
-echo "⚠️  IMPORTANT: Edit $APP_DIR/.env before starting!"
-echo "    - Change DATABASE_URL password"
-echo "    - Change SESSION_SECRET"
-echo "    - Add GROQ_API_KEY for free fallback (recommended)"
+sudo mkdir -p "$APP_DIR/logs"
+sudo chown "$USER":"$USER" "$APP_DIR/logs"
 
-# ── 7. BUILD AND START INFRA ──
-echo "[7/13] Building and starting infrastructure (postgres, redis, ollama)..."
-cd $APP_DIR
-sudo docker-compose -f docker-compose.swarm.yml pull
-sudo docker-compose -f docker-compose.swarm.yml up -d postgres redis ollama
+pm2 reload ecosystem.config.js --env "$ENV" || pm2 start ecosystem.config.js --env "$ENV"
+pm2 save
+sudo pm2 startup systemd -u "$USER" --mpath "$(which pm2)" 2>/dev/null || true
+echo ""
 
-# ── 8. PULL OLLAMA MODEL ──
-echo "[8/13] Pulling Ollama model ($OLLAMA_MODEL)..."
-sleep 5
-sudo docker-compose -f docker-compose.swarm.yml exec -T ollama ollama pull $OLLAMA_MODEL || {
-  echo "⚠️  Ollama pull failed — will retry on first use"
-}
+# ── 6. Health check ──
+echo "[6/6] Running health checks..."
+sleep 10
 
-# ── 9. BUILD APP ──
-echo "[9/13] Building application..."
-sudo docker-compose -f docker-compose.swarm.yml build app swarm-worker openclaw agent0
-
-# ── 10. START ALL SERVICES ──
-echo "[10/13] Starting all services..."
-sudo docker-compose -f docker-compose.swarm.yml up -d
-
-# ── 11. RUN DATABASE MIGRATIONS ──
-echo "[11/13] Running database migrations..."
-sleep 15
-sudo docker-compose -f docker-compose.swarm.yml exec -T app npx prisma migrate deploy || true
-
-# ── 12. SETUP SSL (if domain is configured) ──
-echo "[12/13] SSL setup..."
-read -p "Do you want to setup SSL with Let's Encrypt? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  sudo docker run -it --rm \
-    -v $APP_DIR/deploy/certbot/www:/var/www/certbot \
-    -v certbot_data:/etc/letsencrypt \
-    certbot/certbot certonly \
-    --webroot -w /var/www/certbot \
-    -d $DOMAIN -d hotelsvendors.com \
-    --agree-tos --no-eff-email
+APP_STATUS=$(pm2 describe hotels-vendors 2>/dev/null | grep -c "online" || echo "0")
+if [ "$APP_STATUS" -gt 0 ]; then
+  echo "  ✅ PM2: hotels-vendors is online"
+else
+  echo "  ❌ PM2: hotels-vendors is NOT running"
+  pm2 logs hotels-vendors --lines 50
+  exit 1
 fi
 
-# ── 13. CLOUDFLARE TUNNEL (optional) ──
-echo "[13/13] Cloudflare Tunnel setup (optional)..."
-read -p "Do you want to setup Cloudflare Tunnel? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  read -p "Enter your Cloudflare Tunnel token: " CF_TOKEN
-  sudo docker run -d \
-    --name cloudflared \
-    --restart unless-stopped \
-    cloudflare/cloudflared:latest tunnel --no-autoupdate run --token $CF_TOKEN
+HTTP_STATUS=$(curl -so /dev/null -w "%{http_code}" "https://$DOMAIN/api/health" || echo "000")
+if [ "$HTTP_STATUS" = "200" ]; then
+  echo "  ✅ App is healthy (HTTP $HTTP_STATUS)"
+else
+  echo "  ⚠ Health check returned HTTP $HTTP_STATUS"
 fi
 
-# ── 14. SETUP LOG ROTATION ──
-echo "[14/14] Setting up log rotation..."
-sudo tee /etc/logrotate.d/hotels-vendors > /dev/null << 'EOF'
-/var/www/hotelsvendors/logs/*.log {
-    daily
-    rotate 14
-    compress
-    delaycompress
-    missingok
-    notifempty
-    create 0644 ubuntu ubuntu
-}
-EOF
-
-# ── 15. HEALTH CHECK ──
-echo "═══════════════════════════════════════════════════"
-echo "  🚀 DEPLOYMENT COMPLETE — Running Health Checks"
-echo "═══════════════════════════════════════════════════"
-sleep 5
-
-curl -sf http://localhost:3000/api/health && echo "✅ App is healthy" || echo "⚠️  App health check failed"
-curl -sf http://localhost:11434/api/tags && echo "✅ Ollama is healthy" || echo "⚠️  Ollama health check failed"
-curl -sf http://localhost:8000/health && echo "✅ OpenClaw is healthy" || echo "⚠️  OpenClaw health check failed"
-curl -sf http://localhost:9000/health && echo "✅ Agent0 is healthy" || echo "⚠️  Agent0 health check failed"
-
 echo ""
 echo "═══════════════════════════════════════════════════"
-echo "  🧠 SWARM SERVICES"
+echo "  Deploy Complete"
 echo "═══════════════════════════════════════════════════"
 echo ""
-echo "LLM Engine:"
-echo "  Ollama:    http://localhost:11434 (PRIMARY — $OLLAMA_MODEL)"
+echo "Management commands:"
+echo "  pm2 status              # Check process status"
+echo "  pm2 logs hotels-vendors # View app logs"
+echo "  pm2 restart hotels-vendors"
+echo "  pm2 stop hotels-vendors"
 echo ""
-echo "Services:"
-echo "  App:       http://localhost:3000"
-echo "  OpenClaw:  http://localhost:8000"
-echo "  Agent0:    http://localhost:9000"
-echo "  Postgres:  localhost:5433"
-echo "  Redis:     localhost:6379"
-echo ""
-echo "Management:"
-echo "  docker-compose -f docker-compose.swarm.yml logs -f app"
-echo "  docker-compose -f docker-compose.swarm.yml logs -f swarm-worker"
-echo "  docker-compose -f docker-compose.swarm.yml logs -f ollama"
-echo ""
-echo "Swarm API:"
-echo "  POST /api/v1/swarm/director/plan  → Trigger Director cycle"
-echo "  GET  /api/v1/swarm/health         → Swarm health dashboard"
-echo "  GET  /api/v1/swarm/agents         → List all agents"
-echo "  GET  /api/v1/swarm/jobs           → List jobs"
-echo ""
-echo "Ollama Commands:"
-echo "  docker-compose -f docker-compose.swarm.yml exec ollama ollama list"
-echo "  docker-compose -f docker-compose.swarm.yml exec ollama ollama pull llama3.1:8b"
-echo ""
-echo "Next steps:"
-echo "  1. Edit $APP_DIR/.env with real values"
-echo "  2. Restart: docker-compose -f docker-compose.swarm.yml restart"
-echo "  3. Trigger first Director cycle:"
-echo "     curl -X POST http://localhost:3000/api/v1/swarm/director/plan"
-echo ""
+echo "App:   https://$DOMAIN"

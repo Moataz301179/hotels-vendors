@@ -2,134 +2,75 @@
 set -euo pipefail
 
 # ═══════════════════════════════════════════════════════════════
-# Hotels Vendors — One-Command Production Deployment
-# Run this on the VPS after pushing code to GitHub
+# Hotels Vendors — One-Command Production Deployment (PM2)
+#
+# This is a MANUAL fallback script. The primary deployment path is
+# GitHub Actions: push to main → deploy.yml / deploy-hostinger.yml.
+#
+# Run this on the VPS ONLY to bypass GitHub Actions:
+#   bash deploy/deploy.sh
 # ═══════════════════════════════════════════════════════════════
 
-REPO_DIR="/var/www/hotelsvendors"
-COMPOSE_FILE="docker-compose.swarm.yml"
-APP_CONTAINER="hv-app"
-NGINX_CONTAINER="hv-nginx"
-CERTBOT_CONTAINER="hv-certbot"
+REPO_DIR="/var/www/hotelsvendors-v2"
 DOMAIN="www.hotelsvendors.com"
-ALT_DOMAIN="hotelsvendors.com"
+PM2_APP_NAME="hotels-vendors"
 
 cd "$REPO_DIR"
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "  Hotels Vendors — Production Deploy"
+echo "  Hotels Vendors — Production Deploy (PM2 + Standalone)"
+echo "  $(date)"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
 # ── 1. Pull latest code ──
-echo "[1/7] Pulling latest code..."
-git pull origin main
+echo "[1/5] Pulling latest code..."
+git fetch origin main
+git reset --hard origin/main
 echo ""
 
-# ── 2. Build app Docker image ──
-echo "[2/7] Building app Docker image..."
-docker compose -f "$COMPOSE_FILE" build --no-cache app
+# ── 2. Install dependencies ──
+echo "[2/5] Installing dependencies..."
+npm ci --legacy-peer-deps
 echo ""
 
-# ── 3. Check SSL certificates ──
-echo "[3/7] Checking SSL certificates..."
-CERT_PATH="/var/lib/docker/volumes/hotelsvendors_certbot_data/_data/live/$DOMAIN"
-if [ -f "$CERT_PATH/fullchain.pem" ] && [ -f "$CERT_PATH/privkey.pem" ]; then
-    echo "  ✓ SSL certificates found"
+# ── 3. Generate Prisma client ──
+echo "[3/5] Generating Prisma client..."
+npx prisma generate
+echo ""
+
+# ── 4. Build application (standalone) ──
+echo "[4/5] Building application..."
+NEXT_TELEMETRY_DISABLED=1 npm run build
+echo ""
+
+# ── 5. Restart PM2 process ──
+echo "[5/5] Restarting PM2 process..."
+if pm2 describe "$PM2_APP_NAME" > /dev/null 2>&1; then
+    pm2 reload ecosystem.config.js --env production
 else
-    echo "  ✗ SSL certificates NOT found — running certbot..."
-
-    # Create certbot webroot dir
-    mkdir -p "$REPO_DIR/deploy/certbot/www"
-
-    # Ensure nginx is running with HTTP config so certbot can validate
-    docker compose -f "$COMPOSE_FILE" up -d nginx
-
-    # Run certbot standalone to get certs
-    docker run --rm \
-        -v hotelsvendors_certbot_data:/etc/letsencrypt \
-        -v "$REPO_DIR/deploy/certbot/www:/var/www/certbot" \
-        -p 80:80 \
-        certbot/certbot certonly \
-        --standalone \
-        --non-interactive \
-        --agree-tos \
-        --email admin@hotelsvendors.com \
-        -d "$DOMAIN" \
-        -d "$ALT_DOMAIN" \
-        || {
-            echo "  ⚠ Certbot failed — checking for existing certs..."
-            # Fallback: try certbot with webroot via running nginx
-            docker run --rm \
-                -v hotelsvendors_certbot_data:/etc/letsencrypt \
-                -v "$REPO_DIR/deploy/certbot/www:/var/www/certbot" \
-                certbot/certbot certonly \
-                --webroot \
-                --webroot-path /var/www/certbot \
-                --non-interactive \
-                --agree-tos \
-                --email admin@hotelsvendors.com \
-                -d "$DOMAIN" \
-                -d "$ALT_DOMAIN" \
-                || true
-        }
-
-    if [ -f "$CERT_PATH/fullchain.pem" ]; then
-        echo "  ✓ SSL certificates obtained"
-    else
-        echo "  ⚠ WARNING: Could not obtain SSL certs. HTTPS will fail."
-        echo "    Check: docker logs $CERTBOT_CONTAINER"
-    fi
+    pm2 start ecosystem.config.js --env production
 fi
+pm2 save
 echo ""
 
-# ── 4. Restart services ──
-echo "[4/7] Restarting services..."
-docker compose -f "$COMPOSE_FILE" up -d app nginx
+# ── Health check ──
+echo "────────────────────────────────────────────────────────────"
+echo "  Health Checks"
+echo "────────────────────────────────────────────────────────────"
+sleep 10
+HTTP_STATUS=$(curl -so /dev/null -w "%{http_code}" "https://$DOMAIN/api/health" || echo "000")
+if [ "$HTTP_STATUS" = "200" ]; then
+    echo "  ✅ App is healthy (HTTP $HTTP_STATUS)"
+else
+    echo "  ⚠ Health check returned HTTP $HTTP_STATUS — check server logs"
+    echo "  Run: pm2 logs $PM2_APP_NAME --lines 50"
+    exit 1
+fi
+
 echo ""
-
-# ── 5. Health check ──
-echo "[5/7] Health checks..."
-sleep 5
-
-APP_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' "$APP_CONTAINER" 2>/dev/null || echo "N/A")
-NGINX_HEALTH=$(docker inspect --format='{{.State.Status}}' "$NGINX_CONTAINER" 2>/dev/null || echo "N/A")
-
-echo "  App container:   $APP_HEALTH"
-echo "  Nginx container: $NGINX_HEALTH"
-
-# Test internal endpoints
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ || echo "000")
-echo "  App port 3000:   HTTP $HTTP_CODE"
-
-HTTP_CODE_NGINX=$(curl -s -o /dev/null -w "%{http_code}" -H "Host: hotelsvendors.com" http://localhost/ || echo "000")
-echo "  Nginx port 80:   HTTP $HTTP_CODE_NGINX"
-echo ""
-
-# ── 6. Verify content ──
-echo "[6/7] Verifying deployed content..."
-ABOUT_TITLE=$(curl -s -H "Host: hotelsvendors.com" http://localhost/about | grep -o '<title>[^<]*</title>' | head -1 || echo "NOT FOUND")
-HELP_TITLE=$(curl -s -H "Host: hotelsvendors.com" http://localhost/help | grep -o '<title>[^<]*</title>' | head -1 || echo "NOT FOUND")
-HOME_LINK=$(curl -s -H "Host: hotelsvendors.com" http://localhost/ | grep -o 'href="/about"[^>]*>[^<]*' | head -1 || echo "NOT FOUND")
-
-echo "  /about title:    $ABOUT_TITLE"
-echo "  /help title:     $HELP_TITLE"
-echo "  Home About link: $HOME_LINK"
-echo ""
-
-# ── 7. Cleanup ──
-echo "[7/7] Cleaning up old Docker images..."
-docker image prune -f 2>/dev/null || true
-echo ""
-
 echo "═══════════════════════════════════════════════════════════════"
 echo "  Deploy Complete"
+echo "  App:  https://$DOMAIN"
+echo "  Logs: pm2 logs $PM2_APP_NAME"
 echo "═══════════════════════════════════════════════════════════════"
-echo ""
-echo "  App:     http://localhost:3000"
-echo "  Nginx:   http://localhost  →  https://hotelsvendors.com"
-echo ""
-echo "  To check logs:"
-echo "    docker logs -f $APP_CONTAINER"
-echo "    docker logs -f $NGINX_CONTAINER"
-echo ""
