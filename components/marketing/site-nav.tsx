@@ -110,27 +110,32 @@ export function SiteNav() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
-        <BrandLogo variant={logoVariant} size="md" showText={false} />
-        <span className="font-semibold uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", color: textColor }}>
-          Hotels Vendors
+        {/* Mobile: icon-only, smaller */}
+        <BrandLogo variant={logoVariant} size="sm" showText={false} className="md:hidden" />
+        {/* Desktop: icon + wordmark */}
+        <span className="hidden md:flex items-center gap-2.5">
+          <BrandLogo variant={logoVariant} size="md" showText={false} />
+          <span className="font-semibold uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", color: textColor }}>
+            Hotels Vendors
+          </span>
         </span>
       </Link>
 
       {/* Desktop nav */}
-      <div className="hidden md:flex items-center gap-7">
+      <div className="hidden md:flex items-center gap-7 overflow-x-auto">
         {groups.map((g) => (
           <DropdownMenu key={g.label} group={g} ar={ar} />
         ))}
         <Link
           href="/pricing"
-          className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer"
+          className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
         >
           {ar ? "الأسعار" : "Pricing"}
         </Link>
       </div>
 
       {/* Desktop actions */}
-      <div className="hidden md:flex items-center gap-3 rtl:order-first">
+      <div className="hidden md:flex items-center gap-3 rtl:order-first shrink-0">
         <LanguageSwitcher />
         <ThemeModeToggle variant="icon" />
         <Link
@@ -150,7 +155,7 @@ export function SiteNav() {
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden text-white/50 cursor-pointer bg-transparent border-0 p-2"
+        className="md:hidden text-white/50 cursor-pointer bg-transparent border-0 p-2 flex-shrink-0 ml-auto"
         aria-label="Toggle menu"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
@@ -196,7 +201,7 @@ export function SiteNav() {
           <Link
             href="/register"
             onClick={() => setOpen(false)}
-            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#f5870a] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
+            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#f5870a] text-[#07090b] text-center ${ar ? "font-cairo" : ""}`}
           >
             {ar ? "جرّب التجربة" : "Try the Demo"}
           </Link>

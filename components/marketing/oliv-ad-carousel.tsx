@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, QrCode } from "lucide-react";
 import { OlivLogo } from "@/components/partners/oliv-logo";
@@ -105,11 +104,6 @@ export function OlivAdCarousel() {
   });
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-  }, []);
 
   const next = useCallback(() => {
     setDirection(1);
@@ -131,14 +125,13 @@ export function OlivAdCarousel() {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border transition-all duration-500 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      }`}
+      className="relative overflow-hidden rounded-2xl border shadow-[0_0_50px_rgba(74,124,89,0.12)] will-change-transform"
       style={{
-        borderColor: "rgba(74,124,89,0.15)",
-        background: "linear-gradient(135deg, rgba(12,12,18,0.95) 0%, rgba(18,18,26,0.98) 100%)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        borderColor: "rgba(74,124,89,0.25)",
+        background: "linear-gradient(135deg, rgba(12,12,18,0.96) 0%, rgba(18,18,26,0.99) 100%)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px rgba(74,124,89,0.12)",
       }}
     >
       <AnimatePresence custom={direction} mode="wait">

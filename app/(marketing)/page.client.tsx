@@ -117,9 +117,9 @@ export default function MarketingPage() {
     <main className="min-h-screen bg-canvas text-foreground font-sans">
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="pt-16">
+      <section className="pt-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left: Text content (title NOT overlaid on image) */}
             <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
@@ -148,7 +148,7 @@ export default function MarketingPage() {
               </div>
               <button
                 type="submit"
-                className="h-12 px-6 rounded-lg bg-accent-base text-[#07090f] text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
+                className="h-12 px-6 rounded-lg bg-accent-base text-[#07090b] text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
               >
                 {t("hero.search")}
               </button>
@@ -162,7 +162,7 @@ export default function MarketingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-300">
-              <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-accent-base text-[#07090f] hover:bg-accent-light transition-colors">
+              <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-accent-base text-[#07090b] hover:bg-accent-light transition-colors">
                 {t("hero.startFree")}
                 <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
               </Link>
@@ -181,7 +181,7 @@ export default function MarketingPage() {
           </div>
 
           {/* Right: Image in separate box (NOT overlaid on text) */}
-          <div>
+          <div className="mt-12 lg:mt-0">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
               <img
                 src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
@@ -190,15 +190,15 @@ export default function MarketingPage() {
                 width={1920}
                 height={1080}
               />
-              {/* Subtle gradient in image for depth */}
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,12,18,0.9) 0%, transparent 40%)" }} />
+              {/* Gradient overlay anchored at the bottom — below the header title */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, rgba(12,12,18,0.9) 100%)" }} />
             </div>
           </div>
         </div>
       </div>
 
         {/* ═══════════ OLIV AD CAROUSEL ═══════════ */}
-        <div className="max-w-7xl mx-auto px-6 md:px-12 pb-8">
+        <div className="w-full px-6 md:px-12 pb-8">
           <OlivAdCarousel />
         </div>
       </section>
