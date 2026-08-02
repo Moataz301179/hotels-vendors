@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   Truck, MapPin, Clock, CheckCircle2, AlertCircle, ArrowUpRight, ArrowDownRight,
   Package, Route, Navigation, Camera, DollarSign, Users, Car, Upload,
+  X, Download,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 import { ShippingOnboardingBot } from "@/components/ai-assistant/shipping-onboarding-chatbot";
@@ -115,6 +116,8 @@ type Tab = "trips" | "fleet" | "earnings" | "pod";
 
 export default function LogisticsPortalPage() {
   const [activeTab, setActiveTab] = useState<Tab>("trips");
+  const [podDialogOpen, setPodDialogOpen] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 
   const { data: tripsData, loading: tripsLoading } = useApi<{ trips: Trip[]; pagination: { total: number } }>(
     "/api/v1/shipping/trips?page=1&limit=20"
@@ -125,9 +128,11 @@ export default function LogisticsPortalPage() {
     daily: { date: string; trips: number; stops: number; earnings: number }[];
     topVehicles: { plate: string; trips: number; earnings: number }[];
   }>("/api/v1/shipping/earnings?period=30d");
+  const { data: podData, loading: podLoading } = useApi<{ trips: Trip[] }>("/api/v1/shipping/pod");
 
   const trips = tripsData?.trips ?? [];
   const fleet = fleetData ?? [];
+  const podTrips = podData?.trips ?? [];
 
   const metrics = useMemo(() => {
     const active = trips.filter((t) => !["DELIVERED", "RETURNING", "CANCELLED", "COMPLETED"].includes(t.status)).length;
@@ -428,11 +433,68 @@ export default function LogisticsPortalPage() {
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <Camera size={14} className="text-foreground-muted" /> Proof of Delivery
           </h3>
-          <div className="rounded-xl border border-border-subtle bg-surface-1 p-8 text-center">
-            <Camera size={32} className="text-foreground-muted mx-auto mb-3" />
-            <p className="text-sm text-foreground-muted">Select a trip to view or submit proof of delivery.</p>
-            <p className="text-xs text-foreground-muted mt-1">POD includes photo capture, recipient signature, and delivery notes.</p>
-          </div>
+          {podLoading ? (
+            <div className="animate-pulse space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          ) : podTrips.length === 0 ? (
+            <div className="rounded-xl border border-border-subtle bg-surface-1 p-8 text-center">
+              <Camera size={32} className="text-foreground-muted mx-auto mb-3" />
+              <p className="text-sm text-foreground-muted">No trips with POD data yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {podTrips.map((trip) => (
+                <div key={trip.id} className="rounded-xl border border-border-subtle bg-surface-1 p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">Trip #{trip.id}</p>
+                      <p className="text-xs text-foreground-muted">{trip.origin} → {trip.destination}</p>
+                    </div>
+                    <StatusBadge status={trip.status} />
+                  </div>
+                  {trip.podSubmitted ? (
+                    <div className="flex items-center gap-2 text-xs text-emerald-400">
+                      <CheckCircle2 size={14} /> POD submitted on {new Date(trip.podSubmittedAt).toLocaleDateString("en-EG")}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setSelectedTrip(trip);
+                        setPodDialogOpen(true);
+                      }}
+                      className="mt-2 px-3 py-1.5 rounded-lg bg-accent-base/10 text-accent-base text-xs font-medium hover:bg-accent-base/20 transition-colors"
+                    >
+                      Submit POD
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* POD Submission Dialog */}
+          {podDialogOpen && selectedTrip && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setPodDialogOpen(false)}>
+              <div className="bg-surface-2 rounded-2xl border border-border-subtle p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+                <h4 className="text-sm font-semibold text-white mb-4">Submit Proof of Delivery</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] text-foreground-muted mb-1">Recipient Name</label>
+                    <input type="text" className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50" placeholder="Enter recipient name" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-foreground-muted mb-1">Delivery Notes</label>
+                    <textarea className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-white placeholder:text-foreground-muted focus:outline-none focus:border-accent-base/50" rows={2} placeholder="Any delivery notes..." />
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <button onClick={() => setPodDialogOpen(false)} className="flex-1 px-4 py-2 rounded-lg bg-surface-1 border border-border-subtle text-xs text-foreground-muted hover:text-foreground-secondary transition-colors">Cancel</button>
+                    <button onClick={() => { setPodDialogOpen(false); setSelectedTrip(null); }} className="flex-1 px-4 py-2 rounded-lg bg-accent-base text-white text-xs font-medium hover:bg-accent-base/90 transition-colors">Submit POD</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
 

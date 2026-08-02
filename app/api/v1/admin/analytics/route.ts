@@ -30,15 +30,21 @@ export async function GET(request: NextRequest) {
         where: { factoringStatus: { in: ["ACCEPTED", "PAID"] }, createdAt: { gte: startDate } },
         _sum: { total: true },
       }),
+      prisma.order.aggregate({
+        where: { status: { in: ["DELIVERED", "CONFIRMED"] }, createdAt: { gte: startDate } },
+        _sum: { total: true },
+      }),
+      prisma.invoice.aggregate({
+        where: { factoringStatus: { in: ["ACCEPTED", "PAID"] }, createdAt: { gte: startDate } },
+        _sum: { total: true },
+      }),
       prisma.supplier.findMany({
         orderBy: { orders: { _count: "desc" } },
         take: 5,
-        select: { id: true, name: true, _count: { select: { orders: true } } },
       }),
       prisma.hotel.findMany({
         orderBy: { orders: { _count: "desc" } },
         take: 5,
-        select: { id: true, name: true, _count: { select: { orders: true } } },
       }),
       prisma.order.groupBy({
         by: ["status"],
@@ -54,6 +60,39 @@ export async function GET(request: NextRequest) {
     const totalRevenue = Number(totalRevenueResult._sum?.total ?? 0);
     const factoringVolume = Number(factoringVolumeResult._sum?.total ?? 0);
     const platformFees = Math.round(totalRevenue * 0.025);
+
+    // Revenue by month
+    const revenueByMonth: Array<{ month: string; revenue: number; fees: number }> = [];
+    const months = period === "7d" ? 1 : period === "30d" ? 6 : period === "90d" ? 9 : 12;
+    for (let i = months - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const startOfMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      const endOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      const monthRevenue = await prisma.order.aggregate({
+        where: { status: { in: ["DELIVERED", "CONFIRMED"] }, createdAt: { gte: startOfMonth, lte: endOfMonth } },
+        _sum: { total: true },
+      });
+      revenueByMonth.push({
+        month: startOfMonth.toLocaleDateString("en-EG", { month: "short" }),
+        revenue: Number(monthRevenue._sum.total ?? 0),
+        fees: Math.round(Number(monthRevenue._sum.total ?? 0) * 0.025),
+      });
+    }
+
+    // Top suppliers with revenue
+    const supplierIds = topSuppliers.map((s) => s.id);
+    const supplierRevenues = await prisma.order.aggregate({
+      where: { supplierId: { in: supplierIds }, status: { in: ["DELIVERED", "CONFIRMED"] }, createdAt: { gte: startDate } },
+      _sum: { total: true },
+    });
+
+    // Top hotels with spend
+    const hotelIds = topHotels.map((h) => h.id);
+    const hotelSpends = await prisma.order.aggregate({
+      where: { hotelId: { in: hotelIds }, status: { in: ["DELIVERED", "CONFIRMED"] }, createdAt: { gte: startDate } },
+      _sum: { total: true },
+    });
 
     const previousPeriodStart = new Date(startDate.getTime() - (now.getTime() - startDate.getTime()));
     const previousRevenue = await prisma.order.aggregate({
@@ -79,9 +118,23 @@ export async function GET(request: NextRequest) {
         pendingOrders,
         completedOrders,
         rejectedOrders: totalOrders - completedOrders - pendingOrders,
-        topSuppliers: topSuppliers.map((s) => ({ id: s.id, name: s.name, orderCount: s._count.orders })),
-        topHotels: topHotels.map((h) => ({ id: h.id, name: h.name, orderCount: h._count.orders })),
-        revenueByMonth: [],
+        topSuppliers: topSuppliers.map((s) => ({
+          id: s.id,
+          name: s.name,
+          orders: s._count.orders,
+          revenue: Number(supplierRevenues._sum.total ?? 0) > 0 
+            ? Math.round((Number(supplierRevenues._sum.total ?? 0) * (s._count.orders / topSuppliers.reduce((sum, x) => sum + x._count.orders, 0))))
+            : 0,
+        })),
+        topHotels: topHotels.map((h) => ({
+          id: h.id,
+          name: h.name,
+          orders: h._count.orders,
+          spend: Number(hotelSpends._sum.total ?? 0) > 0
+            ? Math.round((Number(hotelSpends._sum.total ?? 0) * (h._count.orders / topHotels.reduce((sum, x) => sum + x._count.orders, 0))))
+            : 0,
+        })),
+        revenueByMonth,
         ordersByStatus: ordersByStatus.map((s) => ({ status: s.status, count: s._count })),
       },
     });

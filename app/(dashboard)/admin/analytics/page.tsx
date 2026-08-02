@@ -39,55 +39,11 @@ export default function AdminAnalyticsPage() {
     setLoading(true);
     try {
       const res = await fetch(`/api/v1/admin/analytics?period=${period}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       if (json.success) setData(json.data);
     } catch {
-      // Mock data
-      setData({
-        totalRevenue: 1250000,
-        totalOrders: 847,
-        totalUsers: 234,
-        totalSuppliers: 89,
-        totalHotels: 145,
-        platformFees: 25000,
-        factoringVolume: 4200000,
-        avgOrderValue: 15400,
-        monthlyGrowth: 12.5,
-        activeUsers: 189,
-        pendingOrders: 23,
-        completedOrders: 798,
-        rejectedOrders: 26,
-        topSuppliers: [
-          { name: "ABC Cleaning Supplies", orders: 156, revenue: 2340000 },
-          { name: "Egyptian Paper Products", orders: 134, revenue: 1890000 },
-          { name: "Delta Foods Trading", orders: 112, revenue: 1560000 },
-          { name: "Cairo Hospitality Supplies", orders: 98, revenue: 1230000 },
-          { name: "Nile Valley Chemicals", orders: 87, revenue: 980000 },
-        ],
-        topHotels: [
-          { name: "Marriott Cairo", orders: 89, spend: 1230000 },
-          { name: "Hilton Ramses", orders: 76, spend: 980000 },
-          { name: "Four Seasons Nile", orders: 65, spend: 870000 },
-          { name: "Kempinski Nile", orders: 54, spend: 650000 },
-          { name: "Sofitel Nile El Gezirah", orders: 43, spend: 540000 },
-        ],
-        revenueByMonth: [
-          { month: "Jan", revenue: 85000, fees: 1700 },
-          { month: "Feb", revenue: 92000, fees: 1840 },
-          { month: "Mar", revenue: 105000, fees: 2100 },
-          { month: "Apr", revenue: 118000, fees: 2360 },
-          { month: "May", revenue: 132000, fees: 2640 },
-          { month: "Jun", revenue: 145000, fees: 2900 },
-          { month: "Jul", revenue: 158000, fees: 3160 },
-        ],
-        ordersByStatus: [
-          { status: "Completed", count: 798, color: "#10b981" },
-          { status: "Pending", count: 23, color: "#f59e0b" },
-          { status: "In Transit", count: 15, color: "var(--info)" },
-          { status: "Rejected", count: 26, color: "var(--error)" },
-          { status: "Cancelled", count: 8, color: "#6b7280" },
-        ],
-      });
+      setData(null);
     } finally {
       setLoading(false);
     }
@@ -152,6 +108,17 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
       </div>
+
+      {data === null && !loading && (
+        <div className="p-8 rounded-2xl bg-surface-1 border border-error/20 text-center">
+          <AlertCircle className="w-12 h-12 text-error mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-error mb-2">Failed to load analytics</h3>
+          <p className="text-foreground-muted mb-4">Unable to fetch analytics data from the server.</p>
+          <button onClick={fetchAnalytics} className="px-4 py-2 rounded-xl bg-accent-base text-white text-sm font-medium hover:bg-accent-base/90 transition-colors">
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* KPI Cards */}
       {data && (
