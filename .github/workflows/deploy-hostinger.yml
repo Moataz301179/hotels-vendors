@@ -3,6 +3,12 @@ name: Deploy to Hostinger VPS (PM2)
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      log-level:
+        description: 'Log level'
+        required: false
+        default: 'info'
 
 jobs:
   deploy:
