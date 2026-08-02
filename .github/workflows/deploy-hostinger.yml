@@ -56,6 +56,7 @@ jobs:
           RESEND_API_KEY: ${{ env.RESEND_API_KEY }}
           ETA_API_BASE_URL: ${{ env.ETA_API_BASE_URL }}
           ETA_API_KEY: ${{ env.ETA_API_KEY }}
+        run: npm run build
 
       - name: Deploy to Hostinger VPS (PM2)
         env:
