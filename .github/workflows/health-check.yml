@@ -1,0 +1,20 @@
+name: Daily Health Check
+
+on:
+  schedule:
+    - cron: '0 6 * * *'      # Every day at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get HTTPS response
+        run: |
+          RESP=$(curl -s -o /dev/null -w "%{http_code}" https://www.hotelsvendors.com/api/health)
+          if [ "$RESP" -ne 200 ]; then
+            echo "❌ Health check failed – HTTP $RESP"
+            exit 1
+          else
+            echo "✅ Health check passed – HTTP 200"
+          fi
