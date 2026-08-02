@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
-import { createSession } from "@/lib/session";
 import { BusinessRegisterSchema } from "@/lib/zod";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
@@ -193,8 +192,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
     console.error("[Register] Failed to send verification email to", data.email);
   }
 
-  const token = await createSession(user.id, user.platformRole, tenant.id);
-
   await audit({
     entityType: "USER",
     entityId: user.id,
@@ -208,7 +205,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   return success({
-    token,
+    message: "Registration successful. Please check your email to verify your account before logging in.",
     user: { id: user.id, email: user.email, name: user.name, role: user.role, platformRole: user.platformRole, accountType: user.accountType },
     hotel,
     supplier,

@@ -29,10 +29,10 @@ export function OlivReferralCTA({
 
   if (variant === "banner") {
     return (
-      <div className="rounded-xl border p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ borderColor: "#4A7C5922", backgroundColor: "#4A7C5908" }}>
+      <div className="rounded-xl border p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ borderColor: "rgba(var(--success-rgb),0.22)", backgroundColor: "rgba(var(--success-rgb),0.08)" }}>
         <div className="flex items-center gap-3 flex-1">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#4A7C5915", border: "1px solid #4A7C5925" }}>
-            <Landmark size={18} style={{ color: "#4A7C59" }} />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(var(--success-rgb),0.15)", border: "1px solid var(--success)25" }}>
+            <Landmark size={18} style={{ color: "var(--success)" }} />
           </div>
           <div>
             <div className="text-[13px] font-semibold text-white">Need Working Capital?</div>
@@ -47,8 +47,8 @@ export function OlivReferralCTA({
           href={referralUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.2)] shrink-0"
-          style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
+          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)] shrink-0"
+          style={{ backgroundColor: "var(--success)", color: "#ffffff" }}
         >
           Apply on Oliv <ExternalLink size={12} />
         </a>
@@ -63,7 +63,7 @@ export function OlivReferralCTA({
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 text-[12px] font-medium transition-colors hover:opacity-80"
-        style={{ color: "#4A7C59" }}
+        style={{ color: "var(--success)" }}
       >
         <Landmark size={13} />
         Finance via Oliv
@@ -74,7 +74,7 @@ export function OlivReferralCTA({
 
   // Default: card
   return (
-    <div className="rounded-xl border bg-[#12121a] p-5 hover:border-white/[0.10] transition-all" style={{ borderColor: "#4A7C5922" }}>
+    <div className="rounded-xl border bg-[#12121a] p-5 hover:border-white/[0.10] transition-all" style={{ borderColor: "rgba(var(--success-rgb),0.22)" }}>
       <div className="flex items-center gap-3 mb-3">
         <OlivLogo size="sm" variant="green" />
       </div>
@@ -84,11 +84,11 @@ export function OlivReferralCTA({
       </p>
       <div className="flex items-center gap-3 mb-4">
         <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#4A7C59" }} />
+          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--success)" }} />
           FRA Licensed
         </div>
         <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#f5870a" }} />
+          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-base)" }} />
           48h Funding
         </div>
       </div>
@@ -96,8 +96,8 @@ export function OlivReferralCTA({
         href={referralUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.15)]"
-        style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[12px] font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.15)]"
+        style={{ backgroundColor: "var(--success)", color: "#ffffff" }}
       >
         Get Financed <ArrowRight size={13} />
       </a>

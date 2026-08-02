@@ -1,54 +1,54 @@
 const BADGE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   // Procurement states
-  draft: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Draft" },
-  pending_approval: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Pending Approval" },
-  approved: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Approved" },
-  ordered: { bg: "rgba(100,181,246,0.15)", text: "#64b5f6", label: "Ordered" },
-  shipped: { bg: "rgba(13,110,253,0.15)", text: "#64b5f6", label: "Shipped" },
-  delivered: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Delivered" },
-  invoiced: { bg: "rgba(196,85,255,0.15)", text: "#c455ff", label: "Invoiced" },
-  paid: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Paid" },
-  disputed: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Disputed" },
-  cancelled: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Cancelled" },
+  draft: { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "Draft" },
+  pending_approval: { bg: "var(--warning-bg)", text: "var(--warning)", label: "Pending Approval" },
+  approved: { bg: "rgba(var(--accent-base-rgb),0.12)", text: "var(--accent-base)", label: "Approved" },
+  ordered: { bg: "var(--info-bg)", text: "var(--info)", label: "Ordered" },
+  shipped: { bg: "var(--info-bg)", text: "var(--info)", label: "Shipped" },
+  delivered: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Delivered" },
+  invoiced: { bg: "var(--purple-base)/10", text: "var(--purple-base)", label: "Invoiced" },
+  paid: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Paid" },
+  disputed: { bg: "var(--error-bg)", text: "var(--error)", label: "Disputed" },
+  cancelled: { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "Cancelled" },
   // Invoice qualification
-  pending_documents: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Pending Documents" },
-  qualified: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Qualified" },
-  rejected: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Rejected" },
-  expired: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Expired" },
+  pending_documents: { bg: "var(--warning-bg)", text: "var(--warning)", label: "Pending Documents" },
+  qualified: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Qualified" },
+  rejected: { bg: "var(--error-bg)", text: "var(--error)", label: "Rejected" },
+  expired: { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "Expired" },
   // Fraud gate
   // (pending already mapped above)
-  cleared: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Cleared" },
-  flagged: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "Flagged" },
-  blocked: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Blocked" },
+  cleared: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Cleared" },
+  flagged: { bg: "rgba(var(--orange-base-rgb),0.15)", text: "var(--orange-base)", label: "Flagged" },
+  blocked: { bg: "var(--error-bg)", text: "var(--error)", label: "Blocked" },
   // ETA
-  submitted: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Submitted" },
-  failed: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Failed" },
+  submitted: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Submitted" },
+  failed: { bg: "var(--error-bg)", text: "var(--error)", label: "Failed" },
   // Factoring match
-  not_submitted: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "Not Submitted" },
-  matched: { bg: "rgba(100,181,246,0.15)", text: "#64b5f6", label: "Matched" },
-  funded: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Funded" },
+  not_submitted: { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "Not Submitted" },
+  matched: { bg: "var(--info-bg)", text: "var(--info)", label: "Matched" },
+  funded: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Funded" },
   // Subscription
-  trial: { bg: "rgba(255,193,7,0.12)", text: "#FFC107", label: "Trial" },
-  active: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Active" },
-  past_due: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "Past Due" },
+  trial: { bg: "var(--warning-bg)", text: "var(--warning)", label: "Trial" },
+  active: { bg: "rgba(var(--accent-base-rgb),0.12)", text: "var(--accent-base)", label: "Active" },
+  past_due: { bg: "rgba(var(--orange-base-rgb),0.15)", text: "var(--orange-base)", label: "Past Due" },
   // Alerts
-  open: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Open" },
-  acknowledged: { bg: "rgba(255,193,7,0.15)", text: "#FFC107", label: "Acknowledged" },
-  resolved: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Resolved" },
+  open: { bg: "var(--error-bg)", text: "var(--error)", label: "Open" },
+  acknowledged: { bg: "var(--warning-bg)", text: "var(--warning)", label: "Acknowledged" },
+  resolved: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Resolved" },
   // Risk bands
-  low: { bg: "rgba(245,135,10,0.12)", text: "#f5870a", label: "Low Risk" },
-  medium: { bg: "rgba(255,193,7,0.12)", text: "#FFC107", label: "Medium Risk" },
-  high: { bg: "rgba(255,126,26,0.15)", text: "#ff7e1a", label: "High Risk" },
-  critical: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Critical Risk" },
+  low: { bg: "rgba(var(--accent-base-rgb),0.12)", text: "var(--accent-base)", label: "Low Risk" },
+  medium: { bg: "var(--warning-bg)", text: "var(--warning)", label: "Medium Risk" },
+  high: { bg: "rgba(var(--orange-base-rgb),0.15)", text: "var(--orange-base)", label: "High Risk" },
+  critical: { bg: "var(--error-bg)", text: "var(--error)", label: "Critical Risk" },
   // Compliance
-  pass: { bg: "rgba(245,135,10,0.15)", text: "#f5870a", label: "Pass" },
-  fail: { bg: "rgba(239,68,68,0.15)", text: "#EF4444", label: "Fail" },
-  not_applicable: { bg: "rgba(108,117,125,0.15)", text: "#6C757D", label: "N/A" },
+  pass: { bg: "rgba(var(--accent-base-rgb),0.15)", text: "var(--accent-base)", label: "Pass" },
+  fail: { bg: "var(--error-bg)", text: "var(--error)", label: "Fail" },
+  not_applicable: { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "N/A" },
   // Bidding
-  bidding_open: { bg: "rgba(100,181,246,0.15)", text: "#64b5f6", label: "Bidding Open" },
+  bidding_open: { bg: "var(--info-bg)", text: "var(--info)", label: "Bidding Open" },
 };
 
-const DEFAULT_BADGE = { bg: "rgba(108,117,125,0.15)", text: "#9AA0A6", label: "Unknown" };
+const DEFAULT_BADGE = { bg: "rgba(var(--foreground-tertiary-rgb),0.15)", text: "var(--foreground-tertiary)", label: "Unknown" };
 
 export function StatusBadge({ status, className = "" }: { status: string; className?: string }) {
   const style = BADGE_STYLES[status] || { ...DEFAULT_BADGE, label: status };

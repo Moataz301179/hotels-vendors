@@ -37,6 +37,8 @@ const PUBLIC_PATHS = [
   "/forgot-password",
   "/verify-email",
   "/catalog",
+  "/sandbox",
+  "/demo",
 
   "/hotels",
   "/hotels/join",
@@ -85,21 +87,21 @@ const PUBLIC_PREFIXES = [
 ];
 
 const ROLE_ROUTES: Record<string, string[]> = {
-  ADMIN: ["/admin", "/hotel", "/supplier", "/factoring", "/shipping", "/marketing", "/analytics", "/ai-agents", "/procurement", "/orders", "/payments", "/scheduler", "/security", "/dispute", "/settings", "/eta"],
-  HOTEL: ["/hotel"],
-  SUPPLIER: ["/supplier"],
-  FACTORING: ["/factoring"],
-  SHIPPING: ["/shipping"],
-  MARKETING: ["/marketing"],
+  ADMIN: ["/admin", "/hotel", "/supplier", "/factoring", "/shipping", "/marketing", "/analytics", "/ai-agents", "/procurement", "/orders", "/payments", "/scheduler", "/security", "/dispute", "/settings", "/eta", "/admin/page", "/hotel/page", "/supplier/page", "/factoring/page", "/shipping/page", "/marketing/page"],
+  HOTEL: ["/hotel", "/hotel/page"],
+  SUPPLIER: ["/supplier", "/supplier/page"],
+  FACTORING: ["/factoring", "/factoring/page"],
+  SHIPPING: ["/shipping", "/shipping/page"],
+  MARKETING: ["/marketing", "/marketing/page"],
 };
 
 const ROLE_DEFAULT_PATH: Record<string, string> = {
-  ADMIN: "/admin",
-  HOTEL: "/hotel",
-  SUPPLIER: "/supplier",
-  FACTORING: "/factoring",
-  SHIPPING: "/shipping",
-  MARKETING: "/marketing",
+  ADMIN: "/admin/page",
+  HOTEL: "/hotel/page",
+  SUPPLIER: "/supplier/page",
+  FACTORING: "/factoring/page",
+  SHIPPING: "/shipping/page",
+  MARKETING: "/marketing/page",
 };
 
 /* ── Helpers ── */
@@ -168,7 +170,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net; " +
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com; " +
     "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
@@ -201,6 +203,11 @@ export async function middleware(request: NextRequest) {
       url.pathname = `/invo${pathname}`;
       return addSecurityHeaders(NextResponse.rewrite(url));
     }
+  }
+
+  // Redirect legacy /demo and /demo/checkout to /sandbox
+  if (pathname === "/demo" || pathname.startsWith("/demo/")) {
+    return addSecurityHeaders(NextResponse.redirect(new URL("/sandbox", request.url)));
   }
 
   // Allow public paths without auth

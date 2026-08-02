@@ -39,7 +39,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
         aria-label="User menu"
         aria-expanded={open}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#c41e3a]/20 text-[#c41e3a]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-base/20 text-accent-base">
           {user?.name?.charAt(0)?.toUpperCase() || <User className="h-4 w-4" />}
         </div>
         <div className="hidden sm:block text-left">
@@ -50,7 +50,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-1 w-56 rounded-lg border border-border-subtle bg-[#141420] shadow-xl">
+          <div className="absolute right-0 z-50 mt-1 w-56 rounded-lg border border-border-subtle bg-surface-1 shadow-xl">
           <div className="border-b border-border-subtle px-4 py-3">
             <div className="font-medium text-white">{user?.name || "User"}</div>
             <div className="text-xs text-zinc-400">{user?.email || ""}</div>

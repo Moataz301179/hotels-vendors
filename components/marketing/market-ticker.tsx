@@ -100,7 +100,7 @@ export function MarketTicker() {
                   </span>
                   <span
                     className="font-mono text-[10px] flex items-center gap-0.5"
-                    style={{ color: isUp ? "#22C55E" : "#EF4444" }}
+                    style={{ color: isUp ? "var(--success)" : "var(--error)" }}
                   >
                     {isUp ? "▲" : "▼"}
                     {Math.abs(item.change).toFixed(1)}%

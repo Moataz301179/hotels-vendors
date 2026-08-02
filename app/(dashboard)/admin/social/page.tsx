@@ -177,7 +177,7 @@ export default function SocialAdminPage() {
             label="Published Today"
             value={queue?.publishedToday || 0}
             subtext={`${queue?.failed || 0} failed`}
-            color="#10B981"
+            color="var(--success)"
           />
         </div>
 

@@ -279,7 +279,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart?.(id, qty)}
             disabled={stockQuantity === 0}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-[#6B0512] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-error disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Add to Cart</span>

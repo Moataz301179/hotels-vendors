@@ -119,8 +119,9 @@ export default function MarketingPage() {
       {/* ═══════════ HERO ═══════════ */}
       <section className="pt-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Left: Text content (title NOT overlaid on image) */}
+          {/* ── Mobile & Desktop: Oliv carousel replaces hero image on the right ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            {/* Left: Text content */}
             <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent-base animate-pulse" />
@@ -148,7 +149,7 @@ export default function MarketingPage() {
               </div>
               <button
                 type="submit"
-                className="h-12 px-6 rounded-lg bg-accent-base text-[#07090b] text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
+                className="h-12 px-6 rounded-lg bg-accent-base text-surface text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
               >
                 {t("hero.search")}
               </button>
@@ -162,7 +163,7 @@ export default function MarketingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-300">
-              <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-accent-base text-[#07090b] hover:bg-accent-light transition-colors">
+              <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-accent-base text-surface hover:bg-accent-light transition-colors">
                 {t("hero.startFree")}
                 <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
               </Link>
@@ -171,7 +172,7 @@ export default function MarketingPage() {
               </Link>
             </div>
 
-            {/* Animated stat counters — live platform feel */}
+            {/* Animated stat counters — visible on all screen sizes */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/5 animate-fade-in-up animation-delay-400">
               <StatCounter end={200} suffix="+" label={t("hero.stats.hotels")} />
               <StatCounter end={1200} suffix="+" label={t("hero.stats.suppliers")} />
@@ -180,26 +181,28 @@ export default function MarketingPage() {
             </div>
           </div>
 
-          {/* Right: Image in separate box (NOT overlaid on text) */}
-          <div className="mt-12 lg:mt-0">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
-              <img
-                src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
-                alt="Hotel procurement platform"
-                className="w-full h-full object-cover"
-                width={1920}
-                height={1080}
-              />
-              {/* Gradient overlay anchored at the bottom — below the header title */}
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, rgba(12,12,18,0.9) 100%)" }} />
-            </div>
+          {/* Right: Oliv Ad Carousel (replaces hero image) */}
+          <div className="mt-12 lg:mt-0 animate-fade-in-up animation-delay-200">
+            <OlivAdCarousel />
           </div>
         </div>
       </div>
 
-        {/* ═══════════ OLIV AD CAROUSEL ═══════════ */}
-        <div className="w-full px-6 md:px-12 pb-8">
-          <OlivAdCarousel />
+        {/* ═══════════ HERO IMAGE (below the fold, full-width on all screens) ═══════════ */}
+        <div className="w-full px-6 md:px-12 pb-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
+              <img
+                src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
+                alt="Hotel procurement platform"
+                className="w-full h-48 sm:h-64 md:h-80 object-cover object-center"
+                width={1920}
+                height={1080}
+              />
+              {/* Gradient overlay for text legibility below */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(12,12,18,0.95) 100%)" }} />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -234,7 +237,7 @@ export default function MarketingPage() {
                   <div className="text-[11px] text-foreground-muted">{t("overview.meridianSub")} <span className="text-accent-base">{t("overview.meridianSavings")}</span></div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-accent-base text-[#07090f]">{t("overview.aiAssist")}</div>
+                  <div className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-accent-base text-surface">{t("overview.aiAssist")}</div>
                 </div>
               </div>
 
@@ -242,7 +245,7 @@ export default function MarketingPage() {
               <div className="grid grid-cols-4 gap-3 mb-4">
                 {[
                   { label: t("overview.orders"), value: "34", color: "var(--accent-base)", sub: "+8%" },
-                  { label: t("overview.spend"), value: "$182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} $168K` },
+                  { label: t("overview.spend"), value: "EGP 182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} EGP 168K` },
                   { label: t("overview.vendors"), value: "47", color: "var(--purple-base)", sub: "INVO" },
                   { label: t("overview.factoring"), value: "6", color: "var(--accent-base)", sub: t("overview.payout") },
                 ].map((c) => (
@@ -261,9 +264,9 @@ export default function MarketingPage() {
                   <span className="text-[10px] px-2 py-0.5 rounded-full border border-accent-base/30 text-accent-base">{t("overview.etaVerified")}</span>
                 </div>
                 {[
-                  { vendor: "Luxe Linen Co.", item: t("overview.sheets"), price: "$14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
-                  { vendor: "ProClean Supplies", item: t("overview.amenityKits"), price: "$3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
-                  { vendor: "GourmetSource", item: t("overview.coffee"), price: "$2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
+                  { vendor: "Luxe Linen Co.", item: t("overview.sheets"), price: "EGP 14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
+                  { vendor: "ProClean Supplies", item: t("overview.amenityKits"), price: "EGP 3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
+                  { vendor: "GourmetSource", item: t("overview.coffee"), price: "EGP 2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
                 ].map((o, i) => (
                   <div key={i} className={`flex items-center justify-between px-3 py-2.5 text-[11px] ${i < 2 ? "border-b border-white/[0.03]" : ""}`}>
                     <div>
@@ -442,7 +445,7 @@ export default function MarketingPage() {
                     <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
-                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-accent-base text-[#07090f] hover:bg-accent-light transition-colors">
+                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
                   {t("hv.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </Link>
               </div>
@@ -461,7 +464,7 @@ export default function MarketingPage() {
           {layer === "invo" && (
             <div className="grid md:grid-cols-2 gap-10 items-center rtl-reverse">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "#ff7e1a10" }}>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-base)10" }}>
                   {t("invo.badge")}
                 </div>
                 <h3 className="text-3xl font-extrabold mb-4 text-foreground">
@@ -481,11 +484,11 @@ export default function MarketingPage() {
                     <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
-                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-[#ff7e1a] text-[#07090f] hover:bg-[#ff9640] transition-colors">
+                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-orange-base text-surface hover:bg-[#ff9640] transition-colors">
                   {t("invo.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </Link>
               </div>
-              <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "#ff7e1a33", boxShadow: "0 0 40px 2px #ff7e1a18" }}>
+              <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "var(--orange-base)33", boxShadow: "0 0 40px 2px var(--orange-base)18" }}>
                 <img src="https://images.unsplash.com/photo-1690935986319-c11e6cae84f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="INVO vendor marketplace" className="w-full h-72 object-cover opacity-70" width={1080} height={400} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-1 via-surface-1/40 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "var(--orange-muted)", background: "rgba(0,0,0,0.75)" }}>
@@ -590,12 +593,12 @@ export default function MarketingPage() {
                     <h3 className="font-semibold text-lg text-foreground">{t("hotel.title")}</h3>
                     <p className="text-foreground-secondary text-sm">{t("hotel.subtitle")} <span style={{ color: "var(--accent-base)" }}>{t("hotel.savings")}</span></p>
                   </div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md inline-flex items-center gap-1 bg-accent-base text-[#07090f]">{t("hotel.aiAssist")}</button>
+                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md inline-flex items-center gap-1 bg-accent-base text-surface">{t("hotel.aiAssist")}</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   {[
                     { label: t("hotel.activeOrders"), value: "34", color: "var(--accent-base)", sub: "+8%" },
-                    { label: t("hotel.monthlySpend"), value: "$182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} $168K` },
+                    { label: t("hotel.monthlySpend"), value: "EGP 182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} EGP 168K` },
                     { label: t("hotel.vendorNetwork"), value: "47", color: "var(--purple-base)", sub: "via INVO" },
                     { label: t("hotel.factoringRequests"), value: "6", color: "var(--accent-base)", sub: t("hotel.factoringPending") },
                   ].map((c) => (
@@ -612,9 +615,9 @@ export default function MarketingPage() {
                     <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)" }}>{t("hotel.allVerified")}</span>
                   </div>
                   {[
-                    { vendor: "Luxe Linen Co.", item: t("hotel.sheetItem"), price: "$14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
-                    { vendor: "ProClean Supplies", item: t("hotel.amenityItem"), price: "$3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
-                    { vendor: "GourmetSource", item: t("hotel.coffeeItem"), price: "$2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
+                    { vendor: "Luxe Linen Co.", item: t("hotel.sheetItem"), price: "EGP 14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
+                    { vendor: "ProClean Supplies", item: t("hotel.amenityItem"), price: "EGP 3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
+                    { vendor: "GourmetSource", item: t("hotel.coffeeItem"), price: "EGP 2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
                   ].map((o, i) => (
                     <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-border-invisible" : ""}`}>
                       <div><div className="font-medium text-foreground">{o.vendor}</div><div className="text-foreground-secondary text-xs">{o.item}</div></div>
@@ -628,7 +631,7 @@ export default function MarketingPage() {
 
           {/* Vendor Tab */}
           {tab === "vendor" && (
-            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--orange-muted)", boxShadow: "0 0 40px 2px #ff7e1a14" }}>
+            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--orange-muted)", boxShadow: "0 0 40px 2px var(--orange-base)14" }}>
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
@@ -641,13 +644,13 @@ export default function MarketingPage() {
                     <h3 className="font-semibold text-lg text-foreground">{t("vendor.title")}</h3>
                     <p className="text-foreground-secondary text-sm">{t("vendor.aggregated")} · <span style={{ color: "var(--orange-base)" }}>{t("vendor.buyers")}</span></p>
                   </div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#ff7e1a] text-[#07090f]">{t("vendor.listProducts")}</button>
+                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-orange-base text-surface">{t("vendor.listProducts")}</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   {[
                     { label: t("vendor.hotelBuyers"), value: "340", color: "var(--orange-base)" },
-                    { label: "MRR", value: "$94K", color: "var(--accent-base)" },
-                    { label: t("vendor.avgOrder"), value: "$2.8K", color: "var(--purple-base)" },
+                    { label: "MRR", value: "EGP 94K", color: "var(--accent-base)" },
+                    { label: t("vendor.avgOrder"), value: "EGP 2.8K", color: "var(--purple-base)" },
                     { label: t("vendor.reorderRate"), value: "74%", color: "var(--orange-base)" },
                   ].map((c) => (
                     <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
@@ -656,18 +659,18 @@ export default function MarketingPage() {
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "#ff7e1a22" }}>
+                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "var(--orange-base)22" }}>
                   <div className="px-4 py-3 border-b border-border-subtle font-semibold text-sm text-foreground">{t("vendor.topProducts")}</div>
                   {[
-                    { name: t("vendor.cottonSheet"), units: t("vendor.unitsSold"), revenue: "$120K", badge: true },
-                    { name: t("vendor.duvetSet"), units: t("vendor.duvetSold"), revenue: "$74K", badge: false },
-                    { name: t("vendor.poolTowel"), units: t("vendor.towelSold"), revenue: "$34K", badge: true },
+                    { name: t("vendor.cottonSheet"), units: t("vendor.unitsSold"), revenue: "EGP 120K", badge: true },
+                    { name: t("vendor.duvetSet"), units: t("vendor.duvetSold"), revenue: "EGP 74K", badge: false },
+                    { name: t("vendor.poolTowel"), units: t("vendor.towelSold"), revenue: "EGP 34K", badge: true },
                   ].map((p, i) => (
                     <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-border-invisible" : ""}`}>
                       <div><div className="font-medium text-foreground">{p.name}</div><div className="text-foreground-secondary text-xs">{p.units}</div></div>
                       <div className="flex items-center gap-3">
                         <span className="font-semibold" style={{ color: "var(--accent-base)" }}>{p.revenue}</span>
-                        {p.badge && <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "#ff7e1a55", color: "var(--orange-base)" }}>⚡ 48h</span>}
+                        {p.badge && <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--orange-base)55", color: "var(--orange-base)" }}>⚡ 48h</span>}
                       </div>
                     </div>
                   ))}
@@ -678,7 +681,7 @@ export default function MarketingPage() {
 
           {/* Chat Tab */}
           {tab === "chat" && (
-            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--purple-muted)", boxShadow: "0 0 40px 2px #c455ff14" }}>
+            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--purple-muted)", boxShadow: "0 0 40px 2px var(--purple-base)14" }}>
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
                 <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
@@ -686,8 +689,8 @@ export default function MarketingPage() {
                 <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-foreground-secondary border border-border-subtle/50 font-mono">app.hotelsvendors.com/ai-agent</div>
               </div>
               <div className="p-6 min-h-[440px] flex flex-col">
-                <div className="flex items-center gap-3 mb-6 p-3 rounded-xl border" style={{ borderColor: "#c455ff33", background: "#c455ff08" }}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#c455ff20", color: "var(--purple-base)" }}>
+                <div className="flex items-center gap-3 mb-6 p-3 rounded-xl border" style={{ borderColor: "var(--purple-base)33", background: "var(--purple-base)08" }}>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--purple-base)20", color: "var(--purple-base)" }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
                   </div>
                   <div>
@@ -698,7 +701,7 @@ export default function MarketingPage() {
                 </div>
                 <div className="flex-1 flex flex-col gap-4 overflow-auto mb-4">
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
                       {t("chat.welcome")}
                     </div>
                   </div>
@@ -708,7 +711,7 @@ export default function MarketingPage() {
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
                       {t("chat.aiReply1")}
                     </div>
                   </div>
@@ -718,14 +721,14 @@ export default function MarketingPage() {
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "#c455ff18", border: "1px solid #c455ff33" }}>
+                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
                       {t("chat.aiReply2")}
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <div className="flex-1 rounded-xl border border-border-subtle bg-surface-1/50 px-4 py-2.5 text-sm text-foreground-secondary">{t("chat.inputPlaceholder")}</div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#c455ff] text-[#07090f]">{t("chat.send")}</button>
+                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[var(--purple-base)] text-surface">{t("chat.send")}</button>
                 </div>
               </div>
             </div>
@@ -770,9 +773,9 @@ export default function MarketingPage() {
           <div className="flex flex-col gap-4 animate-on-scroll">
             <div
               className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "#ff7e1a33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #ff7e1a30, inset 0 0 20px 0px #ff7e1a08"; e.currentTarget.style.borderColor = "#ff7e1a88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#ff7e1a33"; }}
+              style={{ borderColor: "var(--orange-base)33" }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--orange-base)30, inset 0 0 20px 0px var(--orange-base)08"; e.currentTarget.style.borderColor = "var(--orange-base)88"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--orange-base)33"; }}
             >
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -783,7 +786,7 @@ export default function MarketingPage() {
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4 text-center">
                 <div className="rounded-lg p-2 bg-canvas/60">
-                  <div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>$14.4K</div>
+                  <div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>EGP 14.4K</div>
                   <div className="text-xs text-foreground-secondary">{t("factoring.invoiceValue")}</div>
                 </div>
                 <div className="rounded-lg p-2 bg-canvas/60">
@@ -809,9 +812,9 @@ export default function MarketingPage() {
 
             <div
               className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "#c455ff33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #c455ff30, inset 0 0 20px 0px #c455ff08"; e.currentTarget.style.borderColor = "#c455ff88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#c455ff33"; }}
+              style={{ borderColor: "var(--purple-base)33" }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--purple-base)30, inset 0 0 20px 0px var(--purple-base)08"; e.currentTarget.style.borderColor = "var(--purple-base)88"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--purple-base)33"; }}
             >
               <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--purple-base)" }}>{t("pricingTransparency.badge")}</div>
               <div className="grid grid-cols-2 gap-3">
@@ -819,7 +822,7 @@ export default function MarketingPage() {
                   <div className="text-xl font-semibold" style={{ color: "var(--accent-base)" }}>1%</div>
                   <div className="text-xs text-foreground-secondary mt-0.5">{t("pricingTransparency.bankFee")}</div>
                 </div>
-                <div className="rounded-lg border p-3" style={{ borderColor: "#ff7e1a33" }}>
+                <div className="rounded-lg border p-3" style={{ borderColor: "var(--orange-base)33" }}>
                   <div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>1.5–3%</div>
                   <div className="text-xs text-foreground-secondary mt-0.5">{t("pricingTransparency.factoringFee")}</div>
                 </div>
@@ -863,7 +866,7 @@ export default function MarketingPage() {
             <div
               className="neon-card rounded-2xl border bg-surface-1 p-5"
               style={{ borderColor: "var(--border-accent)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px rgba(245,135,10,0.19), inset 0 0 20px 0px rgba(245,135,10,0.03)"; e.currentTarget.style.borderColor = "rgba(245,135,10,0.53)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px rgba(var(--accent-base-rgb),0.19), inset 0 0 20px 0px rgba(var(--accent-base-rgb),0.03)"; e.currentTarget.style.borderColor = "rgba(var(--accent-base-rgb),0.53)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--border-accent)"; }}
             >
               <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
@@ -878,12 +881,12 @@ export default function MarketingPage() {
             </div>
             <div
               className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "#ff7e1a33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px #ff7e1a30, inset 0 0 20px 0px #ff7e1a08"; e.currentTarget.style.borderColor = "#ff7e1a88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#ff7e1a33"; }}
+              style={{ borderColor: "var(--orange-base)33" }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--orange-base)30, inset 0 0 20px 0px var(--orange-base)08"; e.currentTarget.style.borderColor = "var(--orange-base)88"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--orange-base)33"; }}
             >
               <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "#ff7e1a15", borderColor: "#ff7e1a40", color: "var(--orange-base)" }}>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "var(--orange-base)15", borderColor: "var(--orange-base)40", color: "var(--orange-base)" }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 </div>
                 <div className="font-semibold text-foreground">{t("compliance.fraTitle")}</div>
@@ -995,7 +998,7 @@ export default function MarketingPage() {
             {t("cta.tagline")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg inline-flex items-center justify-center bg-accent-base text-[#07090f] hover:bg-accent-light transition-colors">
+            <Link href="/register" className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg inline-flex items-center justify-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
               {t("cta.startFree")}
             </Link>
             <Link href="/sandbox" className="font-semibold cursor-pointer text-base gap-2 rounded-lg border inline-flex items-center justify-center px-10 py-3 bg-surface-1 hover:bg-surface-2 transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>

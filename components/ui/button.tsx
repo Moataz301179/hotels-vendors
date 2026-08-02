@@ -20,13 +20,13 @@ const buttonVariants = cva(
         destructive:
           "bg-[var(--error)] text-white hover:opacity-90 active:scale-[0.98]",
         outline:
-          "border border-[var(--border-default)] bg-transparent text-[var(--foreground)] hover:bg-[var(--surface-hover)] hover:border-[var(--border-strong)]",
+          "border border-[var(--border-default)] bg-transparent text-foreground hover:bg-surface-hover hover:border-[var(--border-strong)]",
         secondary:
-          "bg-[var(--surface-raised)] text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
+          "bg-surface-raised text-foreground hover:bg-surface-hover",
         ghost:
-          "text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
+          "text-foreground-secondary hover:text-foreground hover:bg-surface-hover",
         glass:
-          "bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] text-[var(--foreground)] hover:bg-white/[0.07] hover:border-white/10",
+          "bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] text-foreground hover:bg-white/[0.07] hover:border-white/10",
         link:
           "text-[var(--accent-500)] underline-offset-4 hover:underline",
       },

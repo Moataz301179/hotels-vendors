@@ -57,15 +57,15 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-[rgba(212,168,67,0.08)] bg-black">
-        <Link href="/invo/dashboard" className="mb-4 p-1.5 rounded-lg hover:bg-[rgba(212,168,67,0.1)] transition-colors">
-          <div className="w-8 h-8 rounded-lg bg-[#D4A843] flex items-center justify-center">
-            <Zap className="w-5 h-5 text-black" />
+      <div className="h-full flex flex-col items-center py-4 border-r border-orange-base/8 bg-background">
+        <Link href="/invo/dashboard" className="mb-4 p-1.5 rounded-lg hover:bg-orange-base/10 transition-colors">
+          <div className="w-8 h-8 rounded-lg bg-orange-base flex items-center justify-center">
+            <Zap className="w-5 h-5 text-surface" />
           </div>
         </Link>
         <button
           onClick={onToggle}
-          className="p-2 rounded-lg hover:bg-[rgba(212,168,67,0.08)] text-[rgba(212,168,67,0.4)] hover:text-[#D4A843] transition-colors"
+          className="p-2 rounded-lg hover:bg-orange-base/8 text-orange-base/40 hover:text-orange-base transition-colors"
         >
           <ChevronRight size={18} />
         </button>
@@ -80,13 +80,13 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
                   href={item.href}
                   className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
                     isActive
-                      ? "bg-[rgba(212,168,67,0.15)] text-[#D4A843]"
-                      : "text-white/30 hover:text-[#D4A843] hover:bg-[rgba(212,168,67,0.06)]"
+                      ? "bg-orange-base/15 text-orange-base"
+                      : "text-white/30 hover:text-orange-base hover:bg-orange-base/6"
                   }`}
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#D4A843] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-orange-base rounded-r-full" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -109,21 +109,21 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-[rgba(212,168,67,0.08)] bg-black">
+    <div className="h-full flex flex-col border-r border-orange-base/8 bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-[rgba(212,168,67,0.06)]">
+      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-orange-base/6">
         <Link href="/invo/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[#D4A843] flex items-center justify-center">
-            <Zap className="w-5 h-5 text-black" />
+          <div className="w-8 h-8 rounded-lg bg-orange-base flex items-center justify-center">
+            <Zap className="w-5 h-5 text-surface" />
           </div>
-          <span className="text-sm font-medium text-white tracking-tight">INVO</span>
-          <span className="hidden sm:inline text-[10px] font-medium text-white/20 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+          <span className="text-sm font-medium text-foreground tracking-tight">INVO</span>
+          <span className="hidden sm:inline text-[10px] font-medium text-foreground-tertiary px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
             by HV
           </span>
         </Link>
         <button
           onClick={onToggle}
-          className="p-1.5 rounded-md hover:bg-[rgba(212,168,67,0.08)] text-white/25 hover:text-[#D4A843] transition-colors"
+          className="p-1.5 rounded-md hover:bg-orange-base/8 text-foreground-tertiary hover:text-orange-base transition-colors"
           aria-label={isMobile ? "Close menu" : "Collapse sidebar"}
         >
           {isMobile ? <X size={16} /> : <ChevronLeft size={16} />}
@@ -134,7 +134,7 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         {NAV_GROUPS.map((group) => (
           <div key={group.section} className="mb-5">
-            <p className="px-3 mb-1.5 text-[10px] font-medium text-[rgba(212,168,67,0.25)] uppercase tracking-wider">
+            <p className="px-3 mb-1.5 text-[10px] font-medium text-orange-base/25 uppercase tracking-wider">
               {group.section}
             </p>
             <div className="flex flex-col gap-0.5">
@@ -146,14 +146,14 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
                     href={item.href}
                     className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
                       isActive
-                        ? "bg-[rgba(212,168,67,0.10)] text-[#D4A843] font-medium"
-                        : "text-white/45 hover:text-white hover:bg-white/[0.03]"
+                        ? "bg-orange-base/10 text-orange-base font-medium"
+                        : "text-foreground-secondary hover:text-foreground hover:bg-white/[0.03]"
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#D4A843] rounded-r-full" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-orange-base rounded-r-full" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#D4A843]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-orange-base" : ""} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -164,10 +164,10 @@ export function InvoSidebar({ collapsed, onToggle, isMobile }: InvoSidebarProps)
       </nav>
 
       {/* Footer */}
-      <div className="p-3 border-t border-[rgba(212,168,67,0.06)]">
+      <div className="p-3 border-t border-orange-base/6">
         <Link
           href="/"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/30 hover:text-white/60 hover:bg-white/[0.03] transition-all w-full"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground-tertiary hover:text-foreground-secondary hover:bg-white/[0.03] transition-all w-full"
         >
           <ArrowRight size={17} className="rotate-180" />
           <span>HotelsVendors</span>

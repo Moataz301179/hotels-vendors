@@ -48,13 +48,13 @@ export default function OlivReferralPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>Oliv x HotelsVendors Referral</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>Oliv x HotelsVendors Referral</span>
           </div>
           <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
-            Get Up to <span style={{ color: "#4A7C59" }}>EGP 10M</span> Credit Line.<br />
+            Get Up to <span style={{ color: "var(--success)" }}>EGP 10M</span> Credit Line.<br />
             Referred by HotelsVendors.
           </h1>
           <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed mb-8">
@@ -64,8 +64,8 @@ export default function OlivReferralPage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <a
               href="#referral-form"
-              className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]"
-              style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
+              className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.2)]"
+              style={{ backgroundColor: "var(--success)", color: "#ffffff" }}
             >
               Get Started — Register Interest <ArrowRight size={14} />
             </a>
@@ -83,22 +83,22 @@ export default function OlivReferralPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-6 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-6 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-8 text-center">
           <div>
-            <div className="text-[22px] font-bold" style={{ color: "#4A7C59" }}>10M+</div>
+            <div className="text-[22px] font-bold" style={{ color: "var(--success)" }}>10M+</div>
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Max Credit (EGP)</div>
           </div>
           <div>
-            <div className="text-[22px] font-bold" style={{ color: "#f5870a" }}>48h</div>
+            <div className="text-[22px] font-bold" style={{ color: "var(--accent-base)" }}>48h</div>
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Funding Speed</div>
           </div>
           <div>
-            <div className="text-[22px] font-bold" style={{ color: "#c455ff" }}>0%</div>
+            <div className="text-[22px] font-bold" style={{ color: "var(--purple-base)" }}>0%</div>
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Recourse Risk</div>
           </div>
           <div>
-            <div className="text-[22px] font-bold" style={{ color: "#ff7e1a" }}>FRA</div>
+            <div className="text-[22px] font-bold" style={{ color: "var(--orange-base)" }}>FRA</div>
             <div className="text-[11px] text-white/30 uppercase tracking-wider mt-1">Licensed Partner</div>
           </div>
         </div>
@@ -108,14 +108,14 @@ export default function OlivReferralPage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#4A7C59" }}>The Process</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>The Process</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">How the Oliv Referral Works</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "Register Your Interest", desc: "Fill the form below. We create your account and send you the HotelsVendors app with everything pre-filled.", color: "#4A7C59" },
-              { step: "02", title: "Apply In-App (3 Minutes)", desc: "Open the app, tap 'Oliv Financing', and complete the guided KYC — company, signatory, bank account. No websites, no paperwork.", color: "#f5870a" },
-              { step: "03", title: "Get Funded in 48h", desc: "Oliv approves within 24 hours. Upload invoices in the app and receive funds in 48 hours. Non-recourse, revolving facility.", color: "#ff7e1a" },
+              { step: "01", title: "Register Your Interest", desc: "Fill the form below. We create your account and send you the HotelsVendors app with everything pre-filled.", color: "var(--success)" },
+              { step: "02", title: "Apply In-App (3 Minutes)", desc: "Open the app, tap 'Oliv Financing', and complete the guided KYC — company, signatory, bank account. No websites, no paperwork.", color: "var(--accent-base)" },
+              { step: "03", title: "Get Funded in 48h", desc: "Oliv approves within 24 hours. Upload invoices in the app and receive funds in 48 hours. Non-recourse, revolving facility.", color: "var(--orange-base)" },
             ].map((s) => (
               <div key={s.step} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all">
                 <div className="text-[11px] font-bold uppercase tracking-[0.15em] mb-3" style={{ color: s.color }}>{s.step}</div>
@@ -128,7 +128,7 @@ export default function OlivReferralPage() {
       </section>
 
       {/* Why Oliv */}
-      <section className="py-16 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-16 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-semibold text-white">Why Choose Oliv?</h2>
@@ -143,8 +143,8 @@ export default function OlivReferralPage() {
               const Icon = b.icon
               return (
                 <div key={b.title} className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5 flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#4A7C5912", border: "1px solid #4A7C5922" }}>
-                    <Icon size={16} style={{ color: "#4A7C59" }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(var(--success-rgb),0.12)", border: "1px solid rgba(var(--success-rgb),0.22)" }}>
+                    <Icon size={16} style={{ color: "var(--success)" }} />
                   </div>
                   <div>
                     <h3 className="text-[14px] font-semibold text-white mb-1">{b.title}</h3>
@@ -161,17 +161,17 @@ export default function OlivReferralPage() {
       <section id="referral-form" className="py-20">
         <div className="max-w-lg mx-auto px-6">
           {step === "submitted" ? (
-            <div className="rounded-2xl border border-[#4A7C5933] bg-[#12121a] p-8 text-center" style={{ borderColor: "#4A7C5933", backgroundColor: "rgba(18,18,26,0.8)" }}>
-              <div className="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center" style={{ backgroundColor: "#4A7C5915" }}>
-                <CheckCircle2 size={36} style={{ color: "#4A7C59" }} />
+            <div className="rounded-2xl border border-[rgba(var(--success-rgb),0.33)] bg-[#12121a] p-8 text-center" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(18,18,26,0.8)" }}>
+              <div className="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center" style={{ backgroundColor: "rgba(var(--success-rgb),0.15)" }}>
+                <CheckCircle2 size={36} style={{ color: "var(--success)" }} />
               </div>
               <h2 className="text-[22px] font-semibold text-white mb-3">You&apos;re on the List!</h2>
               <p className="text-[14px] text-white/40 mb-6 leading-relaxed">
-                We&apos;ve recorded your interest with referral code <strong style={{ color: "#4A7C59" }}>CHV000</strong>. Our team will contact you within 24 hours with your HotelsVendors app login — you&apos;ll complete the 3-minute Oliv application right inside the app.
+                We&apos;ve recorded your interest with referral code <strong style={{ color: "var(--success)" }}>CHV000</strong>. Our team will contact you within 24 hours with your HotelsVendors app login — you&apos;ll complete the 3-minute Oliv application right inside the app.
               </p>
-              <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
+              <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: "rgba(var(--success-rgb),0.08)", border: "1px solid rgba(var(--success-rgb),0.22)" }}>
                 <p className="text-[12px] text-white/50 leading-relaxed">
-                  <strong style={{ color: "#4A7C59" }}>Next step:</strong> Watch for our WhatsApp/email with your app credentials. The entire Oliv application happens inside the HotelsVendors app — no external sites, no paperwork.
+                  <strong style={{ color: "var(--success)" }}>Next step:</strong> Watch for our WhatsApp/email with your app credentials. The entire Oliv application happens inside the HotelsVendors app — no external sites, no paperwork.
                 </p>
               </div>
               <p className="text-[11px] text-white/20">
@@ -181,7 +181,7 @@ export default function OlivReferralPage() {
           ) : (
             <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 sm:p-8">
               <div className="mb-6">
-                <span className="text-[11px] font-medium uppercase tracking-[0.15em]" style={{ color: "#4A7C59" }}>Register Your Interest</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--success)" }}>Register Your Interest</span>
                 <h2 className="text-[22px] font-semibold text-white mt-2">Get Referred to Oliv</h2>
                 <p className="text-[13px] text-white/40 mt-1">Leave your details and we&apos;ll track your referral with Oliv.</p>
               </div>
@@ -203,10 +203,10 @@ export default function OlivReferralPage() {
                           onClick={() => update("role", r.value)}
                           className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-[13px] font-medium transition-all ${
                             isSelected
-                              ? "text-[#07090f] border-transparent"
+                              ? "text-surface border-transparent"
                               : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60"
                           }`}
-                          style={isSelected ? { backgroundColor: "#4A7C59", borderColor: "#4A7C59" } : {}}
+                          style={isSelected ? { backgroundColor: "var(--success)", borderColor: "var(--success)" } : {}}
                         >
                           <Icon size={14} />
                           {r.label}
@@ -226,7 +226,7 @@ export default function OlivReferralPage() {
                       onChange={e => update("name", e.target.value)}
                       placeholder="Your name"
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#4A7C59]/30 focus:outline-none focus:ring-1 focus:ring-[#4A7C59]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[var(--success)]/30 focus:outline-none focus:ring-1 focus:ring-[var(--success)]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -241,7 +241,7 @@ export default function OlivReferralPage() {
                       onChange={e => update("email", e.target.value)}
                       placeholder="you@company.com"
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#4A7C59]/30 focus:outline-none focus:ring-1 focus:ring-[#4A7C59]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[var(--success)]/30 focus:outline-none focus:ring-1 focus:ring-[var(--success)]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export default function OlivReferralPage() {
                       value={form.phone}
                       onChange={e => update("phone", e.target.value)}
                       placeholder="+20 10X XXX XXXX"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#4A7C59]/30 focus:outline-none focus:ring-1 focus:ring-[#4A7C59]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[var(--success)]/30 focus:outline-none focus:ring-1 focus:ring-[var(--success)]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -269,22 +269,22 @@ export default function OlivReferralPage() {
                       value={form.company}
                       onChange={e => update("company", e.target.value)}
                       placeholder="Your company name"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#4A7C59]/30 focus:outline-none focus:ring-1 focus:ring-[#4A7C59]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[var(--success)]/30 focus:outline-none focus:ring-1 focus:ring-[var(--success)]/10 transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="rounded-xl p-4" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5922" }}>
+                <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(var(--success-rgb),0.08)", border: "1px solid rgba(var(--success-rgb),0.22)" }}>
                   <p className="text-[11px] text-white/40 leading-relaxed">
-                    <strong style={{ color: "#4A7C59" }}>What happens next:</strong> Our team contacts you within 24 hours with your HotelsVendors app login. You complete the 3-minute Oliv KYC inside the app — company details, signatory, bank account — and Oliv approves within a day.
+                    <strong style={{ color: "var(--success)" }}>What happens next:</strong> Our team contacts you within 24 hours with your HotelsVendors app login. You complete the 3-minute Oliv KYC inside the app — company details, signatory, bank account — and Oliv approves within a day.
                   </p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.15)]"
-                  style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.15)]"
+                  style={{ backgroundColor: "var(--success)", color: "#ffffff" }}
                 >
                   {loading ? <Loader2 size={16} className="animate-spin" /> : <>Submit & Continue to Oliv <ArrowRight size={14} /></>}
                 </button>
@@ -295,7 +295,7 @@ export default function OlivReferralPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-16 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-2xl font-semibold text-white text-center mb-8">Frequently Asked Questions</h2>
           <div className="space-y-3">
@@ -323,8 +323,8 @@ export default function OlivReferralPage() {
           </p>
           <a
             href="#referral-form"
-            className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]"
-            style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}
+            className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]"
+            style={{ backgroundColor: "var(--success)", color: "#ffffff" }}
           >
             Get Started <ArrowRight size={14} />
           </a>

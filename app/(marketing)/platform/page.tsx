@@ -20,7 +20,7 @@ const pillars = [
     icon: BrainCircuit,
     num: "01",
     title: "AI Demand Forecasting",
-    color: "#f5870a",
+    color: "var(--accent-base)",
     desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio. Auto-generates POs against budget ceilings.",
     features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "94% forecast accuracy"],
   },
@@ -28,7 +28,7 @@ const pillars = [
     icon: Receipt,
     num: "02",
     title: "ETA E-Invoicing Compliance",
-    color: "#f5870a",
+    color: "var(--accent-base)",
     desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA-2048 encryption, UUID-tracked, and submitted in real-time. Zero penalty risk.",
     features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Zero penalty guarantee"],
   },
@@ -44,7 +44,7 @@ const pillars = [
     icon: Banknote,
     num: "04",
     title: "Embedded Factoring",
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
     desc: "Hotel-initiated reverse factoring with 4+ licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
     features: ["4+ licensed grantors", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
   },
@@ -55,7 +55,7 @@ export default function PlatformPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,135,10,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Platform</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -65,7 +65,7 @@ export default function PlatformPage() {
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -86,7 +86,7 @@ export default function PlatformPage() {
               { icon: BarChart3, label: "Real-Time Analytics", desc: "Live dashboards" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#f5870a" }} />
+                <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -101,7 +101,7 @@ export default function PlatformPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-4">
           {pillars.map((p) => (
-            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-[#f5870a]/10" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-accent-base/10" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="grid lg:grid-cols-4 gap-6 items-start">
                 <div className="lg:col-span-3">
                   <div className="flex items-center gap-3 mb-3">
@@ -143,8 +143,8 @@ export default function PlatformPage() {
               { icon: Banknote, label: "24-Hour Settlement", desc: "Bank-direct" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(245,135,10,0.08)" }}>
-                  <b.icon size={16} style={{ color: "#f5870a" }} />
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.08)" }}>
+                  <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                 </div>
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
@@ -159,11 +159,11 @@ export default function PlatformPage() {
       {/* CTA */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Cpu size={32} className="mx-auto mb-6" style={{ color: "#f5870a" }} />
+          <Cpu size={32} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egypt&apos;s leading hotel groups already running on HotelsVendors infrastructure.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
+            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

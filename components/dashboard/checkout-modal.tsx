@@ -17,26 +17,29 @@ export function CheckoutModal({ open, onClose }: CheckoutModalProps) {
 
   return (
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.4)" }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{ width: "100%", maxWidth: 520, backgroundColor: "#fff", borderRadius: 12, boxShadow: "0 24px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.06)", overflow: "hidden" }}
+        className="w-full max-w-xl bg-surface rounded-xl shadow-xl overflow-hidden border border-border-default"
       >
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", borderBottom: "1px solid #e3e8ee" }}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle bg-surface-raised">
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 600, color: "#1a1f36", margin: 0 }}>Immediate Checkout</h2>
-            <p style={{ fontSize: 12, color: "#8898aa", margin: "4px 0 0 0" }}>Process a payment or settlement</p>
+            <h2 className="text-sm font-semibold text-foreground">Immediate Checkout</h2>
+            <p className="text-xs text-foreground-secondary mt-0.5">Process a payment or settlement</p>
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "#8898aa", display: "flex" }}>
+          <button
+            onClick={onClose}
+            className="p-1 text-foreground-muted hover:text-foreground transition-colors cursor-pointer"
+          >
             <X size={20} />
           </button>
         </div>
 
         {/* Body */}
-        <div style={{ padding: 24 }}>
+        <div className="p-6">
           <FieldInput label="Amount (EGP)" value={amount} onChange={setAmount} placeholder="0.00" />
           <FieldInput label="Recipient" value={recipient} onChange={setRecipient} placeholder="Supplier name or IBAN" />
           <FieldInput label="Reference" value={reference} onChange={setReference} placeholder="Invoice or PO reference" />
@@ -44,17 +47,20 @@ export function CheckoutModal({ open, onClose }: CheckoutModalProps) {
           {/* Stripe Payment Element mount point */}
           <div
             id="stripe-payment-element-mount"
-            style={{ minHeight: 48, marginBottom: 20, padding: 12, border: "1px dashed #c1c9d2", borderRadius: 6, backgroundColor: "#f7f8fa", display: "flex", alignItems: "center", justifyContent: "center" }}
+            className="min-h-12 mb-5 px-3 py-2 border border-dashed border-border-subtle rounded-lg bg-surface-raised flex items-center justify-center"
           >
-            <span style={{ fontSize: 12, color: "#8898aa" }}>Stripe Payment Element will mount here</span>
+            <span className="text-xs text-foreground-muted">Stripe Payment Element will mount here</span>
           </div>
 
           {/* Actions */}
-          <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-            <button onClick={onClose} style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", border: "1px solid #e3e8ee", borderRadius: 6, backgroundColor: "#fff", color: "#525f7f", cursor: "pointer" }}>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={onClose}
+              className="text-xs font-medium px-5 py-2 rounded-lg border border-border-subtle text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] transition-colors cursor-pointer"
+            >
               Cancel
             </button>
-            <button style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", border: "none", borderRadius: 6, backgroundColor: "#635bff", color: "#fff", cursor: "pointer" }}>
+            <button className="text-xs font-medium px-5 py-2 rounded-lg bg-accent-base text-surface hover:bg-accent-dark transition-colors cursor-pointer">
               Process Payment
             </button>
           </div>
@@ -66,14 +72,14 @@ export function CheckoutModal({ open, onClose }: CheckoutModalProps) {
 
 function FieldInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder: string }) {
   return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#525f7f", marginBottom: 6 }}>{label}</label>
+    <div className="mb-4">
+      <label className="block text-xs font-semibold text-foreground-secondary mb-1.5">{label}</label>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{ width: "100%", fontSize: 14, padding: "10px 12px", border: "1px solid #e3e8ee", borderRadius: 6, outline: "none", color: "#1a1f36", backgroundColor: "#f7f8fa", boxSizing: "border-box" }}
+        className="w-full text-sm px-3 py-2.5 rounded-lg border border-border-default bg-surface text-foreground placeholder:text-foreground-muted outline-none focus:border-accent-base/30 focus:ring-1 focus:ring-accent-base/10 transition-colors"
       />
     </div>
   );

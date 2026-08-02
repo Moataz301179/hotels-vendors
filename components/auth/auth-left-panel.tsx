@@ -4,19 +4,17 @@ import { BrandLogo } from "@/components/layout/brand-logo"
 
 export function AuthLeftPanel() {
   return (
-    <aside className="hidden lg:flex w-[480px] shrink-0 flex-col justify-between p-12 relative overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)" }}
-    >
+    <aside className="hidden lg:flex w-[480px] shrink-0 flex-col justify-between p-12 relative overflow-hidden bg-surface">
       <div className="relative z-10">
         <BrandLogo variant="dark" size="md" showText={false} />
       </div>
 
       <div className="relative z-10 space-y-6">
-        <h2 className="text-2xl font-medium leading-tight" style={{ color: "var(--text-primary)" }}>
+        <h2 className="text-2xl font-medium leading-tight text-foreground">
           Egyptian hospitality<br />
           procurement infrastructure
         </h2>
-        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-sm text-foreground-muted">
           AI-powered marketplace connecting hotels with verified suppliers.
           Streamlined procurement, automated compliance, and integrated
           financing — backed by Egyptian fintech rails.
@@ -25,11 +23,7 @@ export function AuthLeftPanel() {
           {["PCI-DSS Partners", "ETA Compliant", "AML/KYC"].map((badge) => (
             <span
               key={badge}
-              className="text-[11px] font-medium px-3 py-1.5 rounded-full border"
-              style={{
-                borderColor: "var(--border-subtle)",
-                color: "var(--text-tertiary)",
-              }}
+              className="text-[11px] font-medium px-3 py-1.5 rounded-full border border-border-subtle text-foreground-tertiary"
             >
               {badge}
             </span>
@@ -37,7 +31,7 @@ export function AuthLeftPanel() {
         </div>
       </div>
 
-      <div className="relative z-10" style={{ color: "var(--text-muted)" }}>
+      <div className="relative z-10 text-foreground-tertiary">
         <p className="text-xs">
           &copy; {new Date().getFullYear()} HotelsVendors
         </p>
@@ -46,7 +40,7 @@ export function AuthLeftPanel() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at 50% 100%, rgba(132, 204, 22, 0.03) 0%, transparent 60%)",
+          background: "radial-gradient(ellipse at 50% 100%, rgba(var(--orange-base-rgb), 0.04) 0%, transparent 60%)",
         }}
       />
     </aside>

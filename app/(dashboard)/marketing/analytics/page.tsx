@@ -25,10 +25,10 @@ interface AccountingData {
 
 const LEADS_BY_SOURCE = [
   { source: "Organic Search", count: 342, color: "#10b981" },
-  { source: "LinkedIn Ads", count: 218, color: "#3b82f6" },
+  { source: "LinkedIn Ads", count: 218, color: "var(--info)" },
   { source: "Direct Outreach", count: 156, color: "#8b5cf6" },
   { source: "Referrals", count: 124, color: "#f59e0b" },
-  { source: "Events", count: 89, color: "#ef4444" },
+  { source: "Events", count: 89, color: "var(--error)" },
   { source: "Facebook", count: 67, color: "#06b6d4" },
 ];
 
@@ -40,7 +40,7 @@ export default function AnalyticsPage() {
 
   const kpiCards = [
     { label: "Total Leads", value: "1,247", icon: Users, color: "#10b981", change: "+18%", up: true },
-    { label: "Conversion Rate", value: "4.2%", icon: Target, color: "#3b82f6", change: "+0.8%", up: true },
+    { label: "Conversion Rate", value: "4.2%", icon: Target, color: "var(--info)", change: "+0.8%", up: true },
     { label: "Campaign ROI", value: "3.8x", icon: TrendingUp, color: "#8b5cf6", change: "+0.5x", up: true },
     { label: "Cost per Acquisition", value: "EGP 2,450", icon: DollarSign, color: "#f59e0b", change: "-12%", up: false },
   ];

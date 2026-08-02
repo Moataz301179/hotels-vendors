@@ -46,28 +46,28 @@ const SLIDE_SKELETON: Omit<OlivAdSlide, "title" | "subtitle" | "badge" | "ctaTex
     id: 1,
     image: "https://images.unsplash.com/photo-1582192688549-e38c0329be50?w=1920&q=85",
     alt: "Business team reviewing financial documents",
-    badgeColor: "#4A7C59",
+    badgeColor: "var(--success)",
     ctaHref: OLIV_CLICK_URL,
   },
   {
     id: 2,
     image: "https://images.unsplash.com/photo-1581091012933-6dc5ce5f532c?w=1920&q=85",
     alt: "Digital payment processing interface",
-    badgeColor: "#f5870a",
+    badgeColor: "var(--accent-base)",
     ctaHref: OLIV_CLICK_URL,
   },
   {
     id: 3,
     image: "https://images.unsplash.com/photo-1551288040-b9147c221ab3?w=1920&q=85",
     alt: "Warehouse and logistics operations",
-    badgeColor: "#c455ff",
+    badgeColor: "var(--purple-base)",
     ctaHref: OLIV_CLICK_URL,
   },
   {
     id: 4,
     image: "https://images.unsplash.com/photo-1519052537548-9b1eba2f6f4f?w=1920&q=85",
     alt: "FRA-licensed financial institution branding",
-    badgeColor: "#4A7C59",
+    badgeColor: "var(--success)",
     ctaHref: OLIV_CLICK_URL,
   },
 ];
@@ -125,13 +125,13 @@ export function OlivAdCarousel() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border shadow-[0_0_50px_rgba(74,124,89,0.12)] will-change-transform"
+      className="relative overflow-hidden rounded-2xl border will-change-transform"
       style={{
-        borderColor: "rgba(74,124,89,0.25)",
+        borderColor: "rgba(var(--accent-base-rgb),0.25)",
         background: "linear-gradient(135deg, rgba(12,12,18,0.96) 0%, rgba(18,18,26,0.99) 100%)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px rgba(74,124,89,0.12)",
+        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px rgba(var(--accent-base-rgb),0.12)",
       }}
     >
       <AnimatePresence custom={direction} mode="wait">
@@ -185,8 +185,10 @@ export function OlivAdCarousel() {
                   href={slide.ctaHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.2)] group"
-                  style={{ backgroundColor: slide.badgeColor, color: "#ffffff" }}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold rounded-lg transition-all group"
+                  style={{ backgroundColor: slide.badgeColor, color: "var(--surface)", boxShadow: "0 0 0 0px transparent" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 20px ${slide.badgeColor}40`; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 0 0px transparent"; }}
                 >
                   {slide.ctaText}
                   <ExternalLink size={13} className="group-hover:translate-x-0.5 transition-transform" />
@@ -195,7 +197,7 @@ export function OlivAdCarousel() {
 
               <div className="flex items-center gap-2 text-[10px] text-white/40">
                 <span>Referral code:</span>
-                <span className="font-mono font-semibold text-[#f5870a] tracking-wider">CHV000</span>
+                <span className="font-mono font-semibold text-accent-base tracking-wider">CHV000</span>
               </div>
             </div>
 
@@ -249,7 +251,7 @@ export function OlivAdCarousel() {
                 setDirection(i > current ? 1 : -1);
                 setCurrent(i);
               }}
-              className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-[#4A7C59]" : "w-1.5 bg-white/20 hover:bg-white/40"}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-accent-base" : "w-1.5 bg-white/20 hover:bg-white/40"}`}
               aria-label={`Go to ad ${i + 1}`}
             />
           ))}

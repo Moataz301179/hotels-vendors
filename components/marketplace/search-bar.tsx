@@ -109,7 +109,7 @@ export function SearchBar({
           </button>
           <button
             type="submit"
-            className="px-4 py-1.5 rounded-lg bg-accent-base hover:bg-[#6B0512] text-white text-sm font-medium transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-accent-base hover:bg-error text-white text-sm font-medium transition-colors"
           >
             Search
           </button>
@@ -123,7 +123,7 @@ export function SearchBar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-white/[0.08] bg-[#0a0a0a]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
+              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-white/[0.08] bg-surface/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
             >
               {recentSearches.length > 0 && (
                 <div className="p-3">
@@ -251,7 +251,7 @@ function FilterSelect({
         }}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-[#0a0a0a]">{o.label}</option>
+          <option key={o.value} value={o.value} className="bg-surface">{o.label}</option>
         ))}
       </select>
     </div>

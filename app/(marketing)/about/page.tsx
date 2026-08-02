@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/about") },
   title: "About HotelsVendors — Egypt's B2B Hospitality Procurement Platform | HotelsVendors",
   description:
-    "Learn how HotelsVendors is digitizing procurement for Egypt's $21.5B hospitality sector. The four-sided marketplace connecting hotels, suppliers, logistics, and factoring companies.",
+    "Learn how HotelsVendors is digitizing procurement for Egypt's EGP 21.5B hospitality sector. The four-sided marketplace connecting hotels, suppliers, logistics, and factoring companies.",
   keywords: [
     "B2B hospitality procurement Egypt",
     "hotel supply chain management Egypt",
@@ -40,29 +40,29 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About HotelsVendors — Egypt's B2B Hospitality Procurement Platform",
     description:
-      "HotelsVendors is digitizing procurement for Egypt's $21.5B hospitality sector. A four-sided marketplace built from scratch for Egyptian hotels.",
+      "HotelsVendors is digitizing procurement for Egypt's EGP 21.5B hospitality sector. A four-sided marketplace built from scratch for Egyptian hotels.",
     type: "website",
   },
 };
 
 const MARKET_STATS = [
   {
-    value: "$21.54B",
+    value: "EGP 21.54B",
     label: "Egyptian Hospitality",
     detail: "2026 market size, 7.12% CAGR",
-    color: "#f5870a",
+    color: "var(--accent-base)",
   },
   {
     value: "51.2%",
     label: "Chain Hotels",
     detail: "Dominant market share and growing",
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
   },
   {
     value: "1,853+",
     label: "SME Suppliers",
     detail: "Factories in 6th October City alone",
-    color: "#c455ff",
+    color: "var(--purple-base)",
   },
   {
     value: "0",
@@ -77,29 +77,29 @@ const HOW_IT_WORKS = [
     icon: Search,
     title: "Browse",
     desc: "Explore a curated catalog of hospitality SKUs from verified Egyptian suppliers. Filter by category, price, and availability.",
-    color: "#f5870a",
+    color: "var(--accent-base)",
     step: "01",
   },
   {
     icon: ShoppingCart,
     title: "Order",
     desc: "Build purchase orders with fixed pricing, apply credit terms, and route through your Authority Matrix for approval.",
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
     step: "02",
   },
   {
     icon: Truck,
     title: "Receive",
     desc: "Track fulfillment through shared logistics. Invoices auto-submit to the ETA. Payments flow through factoring partners.",
-    color: "#c455ff",
+    color: "var(--purple-base)",
     step: "03",
   },
 ];
 
 const TEAM_ROLES = [
-  { role: "Chief Executive Officer", focus: "Hospitality & Strategy", color: "#f5870a" },
-  { role: "Chief Technology Officer", focus: "Platform & Engineering", color: "#ff7e1a" },
-  { role: "Chief Operating Officer", focus: "Marketplace & Growth", color: "#c455ff" },
+  { role: "Chief Executive Officer", focus: "Hospitality & Strategy", color: "var(--accent-base)" },
+  { role: "Chief Technology Officer", focus: "Platform & Engineering", color: "var(--orange-base)" },
+  { role: "Chief Operating Officer", focus: "Marketplace & Growth", color: "var(--purple-base)" },
 ];
 
 const TRACTION_STATS = [
@@ -110,9 +110,9 @@ const TRACTION_STATS = [
 ];
 
 const TRUST_SIGNALS = [
-  { icon: FileCheck, title: "ETA Compliant", desc: "Real-time e-invoicing with the Egyptian Tax Authority", color: "#f5870a" },
-  { icon: ShieldCheck, title: "Authority Matrix", desc: "Multi-level order governance with audit trails", color: "#ff7e1a" },
-  { icon: Banknote, title: "Non-Recourse Factoring", desc: "Zero supplier default risk, embedded liquidity", color: "#c455ff" },
+  { icon: FileCheck, title: "ETA Compliant", desc: "Real-time e-invoicing with the Egyptian Tax Authority", color: "var(--accent-base)" },
+  { icon: ShieldCheck, title: "Authority Matrix", desc: "Multi-level order governance with audit trails", color: "var(--orange-base)" },
+  { icon: Banknote, title: "Non-Recourse Factoring", desc: "Zero supplier default risk, embedded liquidity", color: "var(--purple-base)" },
   { icon: Lock, title: "RBAC Security", desc: "Server-side role enforcement, tenant isolation", color: "#64b5f6" },
 ];
 
@@ -123,7 +123,7 @@ export default function AboutPage() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(245,135,10,0.04) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.04) 0%, transparent 70%)" }}
         />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <span className="label-upper mb-4 block">About HotelsVendors</span>
@@ -132,7 +132,7 @@ export default function AboutPage() {
             of Egyptian Hospitality
           </h1>
           <p className="text-[15px] max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            We built HotelsVendors because Egyptian hotels deserved better than WhatsApp threads and Excel spreadsheets. The $21.5B hospitality sector was losing 15–20% of every order to logistics friction, manual invoicing, and opaque pricing. We fixed that.
+            We built HotelsVendors because Egyptian hotels deserved better than WhatsApp threads and Excel spreadsheets. The EGP 21.5B hospitality sector was losing 15–20% of every order to logistics friction, manual invoicing, and opaque pricing. We fixed that.
           </p>
         </div>
       </section>

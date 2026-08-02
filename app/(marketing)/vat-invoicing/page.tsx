@@ -262,18 +262,18 @@ function ComplianceSandbox() {
               className="mt-6 p-4 rounded-xl"
               style={{
                 backgroundColor: result.compliant
-                  ? "rgba(34,197,94,0.1)"
-                  : "rgba(239,68,68,0.1)",
+                  ? "rgba(var(--success-rgb),0.1)"
+                  : "rgba(var(--error-rgb),0.1)",
                 border: `1px solid ${
-                  result.compliant ? "rgba(34,197,94,0.2)" : "rgba(239,68,68,0.2)"
+                  result.compliant ? "rgba(var(--success-rgb),0.2)" : "rgba(var(--error-rgb),0.2)"
                 }`,
               }}
             >
               <div className="flex items-center gap-2 mb-2">
                 {result.compliant ? (
-                  <CheckCircle2 className="w-5 h-5 text-[#f5870a]" />
+                  <CheckCircle2 className="w-5 h-5 text-accent-base" />
                 ) : (
-                  <AlertTriangle className="w-5 h-5 text-[#EF4444]" />
+                  <AlertTriangle className="w-5 h-5 text-[var(--error)]" />
                 )}
                 <span className="text-sm font-semibold text-white">
                   {result.compliant ? "Compliant" : "Issues Found"}
@@ -282,12 +282,12 @@ function ComplianceSandbox() {
               <div className="space-y-1">
                 {Array.isArray(result.issues) && result.issues.length > 0 ? (
                   result.issues.map((issue: string, i: number) => (
-                    <p key={i} className="text-xs text-[#EF4444]" style={{ fontFamily: "var(--font-sans)" }}>
+                    <p key={i} className="text-xs text-[var(--error)]" style={{ fontFamily: "var(--font-sans)" }}>
                       {issue}
                     </p>
                   ))
                 ) : (
-                  <p className="text-xs text-[#f5870a]" style={{ fontFamily: "var(--font-sans)" }}>
+                  <p className="text-xs text-accent-base" style={{ fontFamily: "var(--font-sans)" }}>
                     All checks passed. ETA-compliant invoice can be issued.
                   </p>
                 )}

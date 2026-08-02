@@ -1,15 +1,23 @@
 /**
  * Public AI Endpoint — HotelsVendors
- * No auth required. Unlimited questions. Uses Ollama (local, free).
+ * No auth required. Uses Ollama (local, free, zero API costs).
+ * Streams text tokens back to the client using the Ollama /api/generate
+ * streaming endpoint directly (avoids @ai-sdk/provider version mismatch).
  */
 
 import { NextRequest } from "next/server";
-import { executeLLM } from "@/lib/swarm/model-router";
+import { executeLLMStream, type LLMMessage } from "@/lib/ai/llm";
 import { PUBLIC_SYSTEM_PROMPT } from "@/components/ai-assistant/prompts/public-prompt";
 import { z } from "zod";
 
 const PublicAskSchema = z.object({
-  question: z.string().min(1).max(2000),
+  messages: z.array(
+    z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string(),
+    })
+  ),
+  context: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -17,22 +25,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = PublicAskSchema.parse(body);
 
-    const result = await executeLLM(PUBLIC_SYSTEM_PROMPT, data.question, {
-      maxTokens: 800,
+    // Build the message list: system prompt + conversation history
+    const messages: LLMMessage[] = [
+      { role: "system", content: PUBLIC_SYSTEM_PROMPT },
+      ...data.messages,
+    ];
+
+    const stream = await executeLLMStream(messages, {
       temperature: 0.5,
+      maxTokens: 800,
     });
 
-    return Response.json({
-      success: true,
-      data: {
-        answer: result.content,
-        model: result.model,
-        provider: result.provider,
+    return new Response(stream, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
     console.error("[Public AI] Error:", error);
     const message = error instanceof Error ? error.message : "Internal server error";
-    return Response.json({ success: false, error: message }, { status: 500 });
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

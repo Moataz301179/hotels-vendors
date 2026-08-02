@@ -25,9 +25,9 @@ export function ForexWidget() {
       style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="flex items-center gap-2 mb-3">
-        <Globe size={12} style={{ color: "#84cc16" }} />
+        <Globe size={12} style={{ color: "var(--success)" }} />
         <span className="text-[10px] font-medium text-white/40 uppercase tracking-wider">Market Rates</span>
-        <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "#84cc16" }} />
+        <div className="w-1.5 h-1.5 rounded-full animate-pulse ml-auto" style={{ backgroundColor: "var(--success)" }} />
       </div>
       <div className="space-y-2.5">
         {rates.map((rate) => (
@@ -38,7 +38,7 @@ export function ForexWidget() {
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-[11px] font-medium text-white/70">{rate.value}</span>
-              <span className="text-[9px] flex items-center gap-0.5" style={{ color: rate.up ? "#22C55E" : "#EF4444" }}>
+              <span className="text-[9px] flex items-center gap-0.5" style={{ color: rate.up ? "var(--success)" : "var(--error)" }}>
                 {rate.up ? <TrendingUp size={8} /> : <TrendingDown size={8} />}
                 {rate.change}
               </span>

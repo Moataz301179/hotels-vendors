@@ -2,7 +2,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    HOTELS VENDORS — DESIGN SYSTEM v8 (Reference-Aligned)
-   Orange: #f5870a — Primary / HotelsVendors
+   Orange: var(--accent-base) — Primary / HotelsVendors
    Orange: #ff7e1a — Fast / INVO / Factoring
    Purple: #c455ff — AI / Compliance
    Background: oklch(0.10 0.015 280) / #0c0c12
@@ -27,18 +27,42 @@
   --text-muted: #797994;
 
   --foreground: #ffffff;
+  --foreground-rgb: 255, 255, 255;
   --foreground-secondary: #a0a0b0;
+  --foreground-secondary-rgb: 160, 160, 176;
   --foreground-tertiary: #7a7a92;
+  --foreground-tertiary-rgb: 122, 122, 146;
   --foreground-muted: #797994;
+  --foreground-muted-rgb: 121, 121, 148;
 
   /* ── Borders ── */
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
   --border-accent: rgba(245, 135, 10, 0.20);
+  /* Aliases used by UI primitives (Button, Card, Input, Badge, Separator, Table) */
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.15);
 
-  /* ── Primary: Orange #f5870a ── */
+  /* ── Accent Scale (derived from --accent-base orange var(--accent-base)) ── */
+  --accent-400: var(--accent-light);
+  --accent-500: var(--accent-base);
+  --accent-600: #c76d08;
+  --accent-700: #a35505;
+
+  /* ── Glassmorphism tokens ── */
+  --glass-bg: rgba(18, 18, 26, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.06);
+
+  /* ── Role-specific semantic colors ── */
+  --role-hotel: var(--accent-base);
+  --role-factoring: var(--purple-base);
+  --role-shipping: var(--info);
+  --role-admin: var(--accent-base);
+
+  /* ── Primary: Orange (#f5870a) ── */
   --accent-base: #f5870a;
+  --accent-base-rgb: 245, 135, 10;
   --accent-light: #f7a23a;
   --accent-dark: #c76d08;
   --accent-muted: rgba(245, 135, 10, 0.10);
@@ -46,6 +70,7 @@
 
   /* ── Orange #ff7e1a ── */
   --orange-base: #ff7e1a;
+  --orange-base-rgb: 255, 126, 26;
   --orange-light: #ff9640;
   --orange-dark: #e06800;
   --orange-muted: rgba(255, 126, 26, 0.10);
@@ -53,6 +78,7 @@
 
   /* ── Purple #c455ff ── */
   --purple-base: #c455ff;
+  --purple-base-rgb: 196, 85, 255;
   --purple-light: #d47aff;
   --purple-dark: #a030e0;
   --purple-muted: rgba(196, 85, 255, 0.10);
@@ -60,9 +86,18 @@
 
   /* ── Semantic ── */
   --error: #EF4444;
-  --success: #f5870a;
-  --warning: #ff7e1a;
+  --error-rgb: 239, 68, 68;
+  --error-bg: rgba(239, 68, 68, 0.10);
+  --success: #22c55e;
+  --success-rgb: 34, 197, 94;
+  --success-bg: rgba(34, 197, 94, 0.10);
+  --warning: #f59e0b;
+  --warning-rgb: 245, 158, 11;
+  --warning-bg: rgba(245, 158, 11, 0.10);
   --info: #64b5f6;
+  --info-rgb: 100, 181, 246;
+  --info-bg: rgba(100, 181, 246, 0.10);
+  --accent-bg: rgba(245, 135, 10, 0.10);
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
@@ -74,6 +109,17 @@
   /* ── Hero overlays (dark for dark mode) ── */
   --hero-overlay-rgb: 12, 12, 18;
   --hero-text-rgb: 255, 255, 255;
+
+  /* ── Font-size type scale ── */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  --font-size-4xl: 3rem;
 
   /* ── Layout ── */
   --header-height: 64px;
@@ -104,9 +150,12 @@
   --bg-surface-3: #8eb2d4;
 
   --background: #ffffff;
-  --surface: #a3c6e1;
-  --surface-raised: #b8d4ea;
-  --surface-hover: #8eb2d4;
+  --surface: #ffffff;
+  --surface-raised: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --surface-1: #a3c6e1;
+  --surface-2: #b8d4ea;
+  --surface-3: #8eb2d4;
 
   /* ── Text Hierarchy — Black on white, white on dark ── */
   --text-primary: #011224;
@@ -115,9 +164,13 @@
   --text-muted: #7a8a9e;
 
   --foreground: #011224;
+  --foreground-rgb: 1, 18, 36;
   --foreground-secondary: #2a3a4e;
+  --foreground-secondary-rgb: 42, 58, 78;
   --foreground-tertiary: #5a6a7e;
+  --foreground-tertiary-rgb: 90, 106, 126;
   --foreground-muted: #7a8a9e;
+  --foreground-muted-rgb: 122, 138, 158;
 
   /* ── Borders ── */
   --border-invisible: rgba(1, 18, 36, 0.03);
@@ -127,6 +180,7 @@
 
   /* ── Accent: Deep Purple #2a088c ── */
   --accent-base: #2a088c;
+  --accent-base-rgb: 42, 8, 140;
   --accent-light: #3a18a0;
   --accent-dark: #1a066c;
   --accent-muted: rgba(42, 8, 140, 0.10);
@@ -147,9 +201,38 @@
 
   /* ── Semantic ── */
   --error: #dc2626;
-  --success: #2a088c;
-  --warning: #f5870a;
+  --error-rgb: 220, 38, 38;
+  --error-bg: rgba(220, 38, 38, 0.08);
+  --success: #15803d;
+  --success-rgb: 21, 128, 61;
+  --success-bg: rgba(21, 128, 61, 0.08);
+  --warning: #b45309;
+  --warning-rgb: 180, 83, 9;
+  --warning-bg: rgba(180, 83, 9, 0.08);
   --info: #2563eb;
+  --info-rgb: 37, 99, 235;
+  --info-bg: rgba(37, 99, 235, 0.08);
+  --accent-bg: rgba(42, 8, 140, 0.08);
+
+  /* ── Border aliases (light) ── */
+  --border-default: rgba(1, 18, 36, 0.12);
+  --border-strong: rgba(1, 18, 36, 0.18);
+
+  /* ── Glassmorphism tokens (light) ── */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(1, 18, 36, 0.10);
+
+  /* ── Role-specific semantic colors (light) ── */
+  --role-hotel: var(--accent-base);
+  --role-factoring: var(--purple-base);
+  --role-shipping: var(--info);
+  --role-admin: var(--accent-base);
+
+  /* ── Secondary accents (light overrides) ── */
+  --orange-base: #ea580c;
+  --orange-base-rgb: 234, 88, 12;
+  --purple-base: #2a088c;
+  --purple-base-rgb: 42, 8, 140;
 
   /* ── Hero overlay (light for light mode) ── */
   --hero-overlay-rgb: 255, 255, 255;
@@ -253,7 +336,7 @@
 }
 
 [data-theme="light"] .text-gradient-lime {
-  background: linear-gradient(135deg, #2a088c, #f5870a);
+  background: linear-gradient(135deg, #2a088c, var(--accent-base));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -323,15 +406,15 @@
 [data-theme="light"] .hover\:border-white\/20:hover { border-color: rgba(1,18,36,0.20) !important; }
 
 /* ── Accent (orange dark mode → deep purple light mode) ── */
-[data-theme="light"] .bg-\[\#f5870a\] { background-color: #2a088c !important; }
-[data-theme="light"] .bg-\[\#f5870a\]\/10 { background-color: rgba(42,8,140,0.10) !important; }
-[data-theme="light"] .text-\[\#f5870a\] { color: #2a088c !important; }
-[data-theme="light"] .border-\[\#f5870a\]\/30 { border-color: rgba(42,8,140,0.30) !important; }
-[data-theme="light"] .border-\[\#f5870a\]\/20 { border-color: rgba(42,8,140,0.20) !important; }
-[data-theme="light"] .border-\[\#f5870a\]\/40 { border-color: rgba(42,8,140,0.40) !important; }
+[data-theme="light"] .bg-accent-base { background-color: #2a088c !important; }
+[data-theme="light"] .bg-accent-base\/10 { background-color: rgba(42,8,140,0.10) !important; }
+[data-theme="light"] .text-accent-base { color: #2a088c !important; }
+[data-theme="light"] .border-accent-base\/30 { border-color: rgba(42,8,140,0.30) !important; }
+[data-theme="light"] .border-accent-base\/20 { border-color: rgba(42,8,140,0.20) !important; }
+[data-theme="light"] .border-accent-base\/40 { border-color: rgba(42,8,140,0.40) !important; }
 [data-theme="light"] .hover\:bg-\[\#f7a23a\]:hover { background-color: #3a18a0 !important; }
-[data-theme="light"] .hover\:bg-\[\#f5870a\]\/90:hover { background-color: rgba(42,8,140,0.90) !important; }
-[data-theme="light"] .text-\[\#07090f\] { color: #ffffff !important; }
+[data-theme="light"] .hover\:bg-accent-base\/90:hover { background-color: rgba(42,8,140,0.90) !important; }
+[data-theme="light"] .text-surface { color: #ffffff !important; }
 [data-theme="light"] .ring-\[\#12121a\] { --tw-ring-color: #a3c6e1 !important; }
 [data-theme="light"] .border-\[\#0c0c12\] { border-color: #a3c6e1 !important; }
 
@@ -376,8 +459,8 @@
 [data-theme="light"] [style*="background: rgba(18,18,26,0.95)"] {
   background: rgba(163,198,225,0.95) !important;
 }
-[data-theme="light"] [style*="color: \"#f5870a\""],
-[data-theme="light"] [style*="color: #f5870a"] {
+[data-theme="light"] [style*="color: \"var(--accent-base)\""],
+[data-theme="light"] [style*="color: var(--accent-base)"] {
   color: #2a088c !important;
 }
 [data-theme="light"] [style*="color: \"#ff7e1a\""],
@@ -388,8 +471,8 @@
 [data-theme="light"] [style*="color: #c455ff"] {
   color: #6d28d9 !important;
 }
-[data-theme="light"] [style*="borderColor: \"#f5870a"],
-[data-theme="light"] [style*="border-color: #f5870a"] {
+[data-theme="light"] [style*="borderColor: \"var(--accent-base)"],
+[data-theme="light"] [style*="border-color: var(--accent-base)"] {
   border-color: rgba(42,8,140,0.25) !important;
 }
 [data-theme="light"] [style*="borderColor: \"#ff7e1a"],
@@ -400,9 +483,9 @@
 [data-theme="light"] [style*="border-color: #c455ff"] {
   border-color: rgba(124,58,237,0.25) !important;
 }
-[data-theme="light"] [style*="background: \"#f5870a"],
-[data-theme="light"] [style*="background-color: \"#f5870a"],
-[data-theme="light"] [style*="background: #f5870a"] {
+[data-theme="light"] [style*="background: \"var(--accent-base)"],
+[data-theme="light"] [style*="background-color: \"var(--accent-base)"],
+[data-theme="light"] [style*="background: var(--accent-base)"] {
   background-color: #2a088c !important;
 }
 [data-theme="light"] [style*="background: \"#ff7e1a"],
@@ -415,11 +498,11 @@
 [data-theme="light"] [style*="background: #c455ff"] {
   background-color: #7c3aed !important;
 }
-[data-theme="light"] [style*="background: \"#07090f\""],
-[data-theme="light"] [style*="background-color: \"#07090f\""] {
+[data-theme="light"] [style*="background: \"var(--surface)\""],
+[data-theme="light"] [style*="background-color: \"var(--surface)\""] {
   background-color: #ffffff !important;
 }
-[data-theme="light"] [style*="color: \"#07090f\""] {
+[data-theme="light"] [style*="color: \"var(--surface)\""] {
   color: #ffffff !important;
 }
 
@@ -437,7 +520,7 @@
 [data-theme="light"] .text-white\/80 { color: rgba(1,18,36,0.80) !important; }
 [data-theme="light"] .text-white\/35 { color: rgba(1,18,36,0.35) !important; }
 [data-theme="light"] .text-white\/30 { color: rgba(1,18,36,0.30) !important; }
-[data-theme="light"] .hover\:text-white:hover { color: #3b82f6 !important; }
+[data-theme="light"] .hover\:text-white:hover { color: var(--info) !important; }
 [data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: rgba(1,18,36,0.03) !important; }
 [data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover { background-color: rgba(1,18,36,0.04) !important; }
 
@@ -454,7 +537,7 @@
 [data-theme="light"] main { color: #011224 !important; }
 
 /* ── Glow shadow → softer on light ── */
-[data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#f5870a"] {
+[data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="var(--accent-base)"] {
   box-shadow: 0 4px 20px rgba(42,8,140,0.10) !important;
 }
 [data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#ff7e1a"] {
@@ -463,7 +546,7 @@
 [data-theme="light"] [style*="boxShadow: \"0 0 18px"][style*="#c455ff"] {
   box-shadow: 0 4px 20px rgba(124,58,237,0.10) !important;
 }
-[data-theme="light"] [style*="boxShadow: \"0 0 40px 2px #f5870a"] {
+[data-theme="light"] [style*="boxShadow: \"0 0 40px 2px var(--accent-base)"] {
   box-shadow: 0 4px 30px rgba(42,8,140,0.08) !important;
 }
 [data-theme="light"] [style*="boxShadow: \"0 0 40px 2px #ff7e1a"] {
@@ -502,6 +585,15 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-accent: var(--border-accent);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
@@ -699,7 +791,7 @@ textarea:focus-visible {
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
   background: var(--accent-base);
-  color: #07090f;
+  color: var(--surface);
   font-size: 14px;
   font-weight: 500;
   border-radius: 6px;
@@ -844,7 +936,7 @@ textarea:focus-visible {
    TEXT GRADIENT UTILITIES
    ═══════════════════════════════════════════════════════════════ */
 .text-gradient-lime {
-  background: linear-gradient(135deg, #f5870a, #ff7e1a);
+  background: linear-gradient(135deg, var(--accent-base), var(--orange-base));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

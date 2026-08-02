@@ -1,10 +1,16 @@
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth/server-auth";
 import { CreditCard, TrendingUp, TrendingDown, AlertCircle, Clock } from "lucide-react";
 
 export default async function HotelCreditPage() {
-  // For now, show a placeholder with structure. Real tenant scoping
-  // will be added when auth middleware is wired to server components.
+  const user = await requireAuth();
+
+  // G1: TENANT ISOLATION — scoped to the authenticated user's tenant and hotel
   const hotels = await prisma.hotel.findMany({
+    where: {
+      tenantId: user.tenantId,
+      ...(user.hotelId ? { id: user.hotelId } : {}),
+    },
     take: 1,
     orderBy: { createdAt: "desc" },
     select: {
@@ -147,10 +153,10 @@ export default async function HotelCreditPage() {
               width: `${Math.min(utilizationRate, 100)}%`,
               background:
                 utilizationRate > 80
-                  ? "linear-gradient(90deg, #ef4444, #f97316)"
+                  ? "linear-gradient(90deg, var(--error), #f97316)"
                   : utilizationRate > 50
                     ? "linear-gradient(90deg, #f97316, #eab308)"
-                    : "linear-gradient(90deg, var(--accent-base), #22c55e)",
+                    : "linear-gradient(90deg, var(--accent-base), var(--success))",
             }}
           />
         </div>

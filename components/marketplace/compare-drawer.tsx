@@ -25,7 +25,7 @@ export function CompareDrawer() {
           >
             <button
               onClick={() => setIsOpen(true)}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-accent-base hover:bg-[#6B0512] text-white shadow-[0_0_24px_rgba(2,35,73,0.4)] transition-colors"
+              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-accent-base hover:bg-error text-white shadow-black/40 transition-colors"
             >
               <Scale className="w-5 h-5" />
               <span className="text-sm font-medium">Compare ({items.length})</span>
@@ -50,7 +50,7 @@ export function CompareDrawer() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-white/[0.08] bg-[#0a0a0a] overflow-hidden"
+              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-white/[0.08] bg-surface overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}

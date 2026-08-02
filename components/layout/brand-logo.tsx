@@ -9,11 +9,11 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  xs: { icon: 22, text: 9, tagline: 6 },
-  sm: { icon: 28, text: 11, tagline: 7 },
-  md: { icon: 36, text: 14, tagline: 9 },
-  lg: { icon: 48, text: 18, tagline: 11 },
-  xl: { icon: 64, text: 24, tagline: 14 },
+  xs: { icon: 22, text: 12, tagline: 10 },
+  sm: { icon: 28, text: 13, tagline: 11 },
+  md: { icon: 36, text: 14, tagline: 12 },
+  lg: { icon: 48, text: 16, tagline: 13 },
+  xl: { icon: 64, text: 18, tagline: 14 },
 };
 
 export function BrandLogo({
@@ -24,8 +24,6 @@ export function BrandLogo({
   showTagline = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const textColor = variant === "dark" ? "#0f172a" : "#ffffff";
-  const taglineColor = variant === "dark" ? "rgba(15,23,42,0.5)" : "rgba(255,255,255,0.5)";
   const logoSrc = variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
 
   return (
@@ -44,9 +42,9 @@ export function BrandLogo({
             className="font-semibold uppercase whitespace-nowrap"
             style={{
               fontSize: dims.text,
-              color: textColor,
-              letterSpacing: "0.2em",
-              fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
+              color: "var(--foreground)",
+              letterSpacing: "0.05em",
+              fontFamily: "var(--font-display), system-ui, sans-serif",
             }}
           >
             Hotels Vendors
@@ -56,9 +54,9 @@ export function BrandLogo({
               className="uppercase whitespace-nowrap"
               style={{
                 fontSize: dims.tagline,
-                color: taglineColor,
-                letterSpacing: "0.25em",
-                fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
+                color: "var(--foreground-muted)",
+                letterSpacing: "0.05em",
+                fontFamily: "var(--font-display), system-ui, sans-serif",
               }}
             >
               The Market Changer

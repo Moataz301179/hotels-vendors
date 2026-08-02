@@ -142,7 +142,7 @@ export default function OlivCreditFacilityDashboard() {
           <p className="text-gray-400 mb-6">
             Activate Oliv financing to access working capital for your business.
           </p>
-          <Button className="bg-[#4A7C59] hover:bg-[#4A7C59]/80 text-white">
+          <Button className="bg-[var(--success)] hover:bg-[var(--success)]/80 text-white">
             Activate Oliv Financing
           </Button>
         </CardContent>

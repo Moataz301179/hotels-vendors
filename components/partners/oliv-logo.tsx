@@ -17,9 +17,9 @@ const SIZE_MAP = {
 };
 
 const COLOR_MAP = {
-  dark: { text: "#ffffff", accent: "#4A7C59" },
-  light: { text: "#1a1a24", accent: "#4A7C59" },
-  green: { text: "#4A7C59", accent: "#4A7C59" },
+  dark: { text: "var(--text-primary)", accent: "var(--success)" },
+  light: { text: "var(--foreground)", accent: "var(--success)" },
+  green: { text: "var(--success)", accent: "var(--success)" },
 };
 
 /**
@@ -47,7 +47,7 @@ export function OlivLogo({ className, size = "md", variant = "dark" }: OlivLogoP
       <path
         d="M16 12 C20 10, 24 12, 26 18"
         fill="none"
-        stroke={variant === "light" ? "#ffffff" : "#0c0c12"}
+        stroke={variant === "light" ? "#ffffff" : "var(--bg-canvas)"}
         strokeWidth="1.5"
         strokeLinecap="round"
         opacity="0.5"

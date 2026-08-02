@@ -170,11 +170,11 @@ export default function MarketingDashboardPage() {
                   <TableRow key={i}>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-medium text-[var(--foreground)]">{l.name}</span>
+                        <span className="font-medium text-foreground">{l.name}</span>
                         <span className="text-[11px] text-[var(--foreground-muted)]">{l.createdAt ? new Date(l.createdAt).toLocaleDateString() : "—"}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-[var(--foreground-secondary)]">{l.source}</TableCell>
+                    <TableCell className="text-foreground-secondary">{l.source}</TableCell>
                     <TableCell><StatusBadge status={l.status} /></TableCell>
                   </TableRow>
                 ))}

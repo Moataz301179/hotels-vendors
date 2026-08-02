@@ -46,7 +46,7 @@ export default function FactoringServicePage() {
             Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -67,7 +67,7 @@ export default function FactoringServicePage() {
               { icon: Clock, label: "24-Hour Payment", desc: "Programmatic settlement" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#ff7e1a" }} />
+                <b.icon size={16} style={{ color: "var(--orange-base)" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -86,7 +86,7 @@ export default function FactoringServicePage() {
             {flow.map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(255,126,26,0.1)" }}>
-                  <item.icon size={20} style={{ color: "#ff7e1a" }} />
+                  <item.icon size={20} style={{ color: "var(--orange-base)" }} />
                 </div>
                 <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Step {item.step}</span>
                 <h3 className="text-[13px] font-medium text-white mt-1 mb-1.5">{item.title}</h3>
@@ -103,8 +103,8 @@ export default function FactoringServicePage() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {funderFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#ff7e1a]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-3" style={{ color: "#ff7e1a" }} />
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-orange-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <f.icon size={20} className="mb-3" style={{ color: "var(--orange-base)" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
               </div>
@@ -114,17 +114,17 @@ export default function FactoringServicePage() {
       </section>
 
       {/* Oliv Partner Section */}
-      <section className="py-16 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-16 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="mx-auto max-w-4xl px-6">
-          <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "#4A7C5922", backgroundColor: "#4A7C5906" }}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
-              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>Oliv Partnership</span>
+          <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "rgba(var(--success-rgb),0.22)", backgroundColor: "rgba(var(--success-rgb),0.06)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>Oliv Partnership</span>
             </div>
             <h2 className="text-2xl font-semibold text-white mb-3">Supplier Invoice Financing</h2>
             <p className="text-[13px] text-white/40 max-w-lg mx-auto mb-6">
               HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
             </p>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Learn More <ArrowRight size={14} />
             </Link>
           </div>
@@ -134,11 +134,11 @@ export default function FactoringServicePage() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "#ff7e1a" }} />
+          <Users size={28} className="mx-auto mb-6" style={{ color: "var(--orange-base)" }} />
           <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">4+ licensed grantors already bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
+            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Register as Grantor <ArrowRight size={14} />
             </Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

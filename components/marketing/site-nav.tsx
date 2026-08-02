@@ -63,8 +63,7 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
       </button>
       {open && (
         <div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-[#12121a] border border-white/[0.06] rounded-xl shadow-2xl backdrop-blur-xl"
-          style={{ backgroundColor: "var(--bg-surface-1)" }}
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-surface-1 border border-border-subtle rounded-xl shadow-2xl backdrop-blur-xl"
         >
           <div className="py-2">
             {group.items.map((item) => (
@@ -105,10 +104,10 @@ export function SiteNav() {
 
   const isLight = theme === "light";
   const logoVariant = isLight ? "dark" : "light";
-  const textColor = isLight ? "#0f172a" : "#ffffff";
+  const textColor = isLight ? "var(--foreground)" : "var(--foreground)";
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-border-subtle bg-canvas/90 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
         {/* Mobile: icon-only, smaller */}
         <BrandLogo variant={logoVariant} size="sm" showText={false} className="md:hidden" />
@@ -126,6 +125,12 @@ export function SiteNav() {
         {groups.map((g) => (
           <DropdownMenu key={g.label} group={g} ar={ar} />
         ))}
+        <Link
+          href="/sandbox"
+          className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+        >
+          {ar ? "التمثيل الذكي" : "Sandbox"}
+        </Link>
         <Link
           href="/pricing"
           className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
@@ -146,7 +151,7 @@ export function SiteNav() {
         </Link>
         <Link
           href="/register"
-          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#f5870a] text-[#07090f] ${ar ? "font-cairo" : ""}`}
+          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-accent-base text-surface ${ar ? "font-cairo" : ""}`}
         >
           {ar ? "جرّب التجربة" : "Try the Demo"}
         </Link>
@@ -163,7 +168,7 @@ export function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="absolute top-full left-0 right-0 border-b border-white/[0.06] px-6 py-4 flex flex-col gap-4 md:hidden" style={{ backgroundColor: "var(--bg-surface-1)" }}>
+        <div className="absolute top-full left-0 right-0 border-b border-border-subtle px-6 py-4 flex flex-col gap-4 md:hidden bg-surface-1">
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
               <span className="text-xs text-white/30 uppercase tracking-widest font-semibold">{g.label}</span>
@@ -192,17 +197,24 @@ export function SiteNav() {
           </div>
           <hr className="border-white/[0.06]" />
           <Link
+            href="/sandbox"
+            onClick={() => setOpen(false)}
+            className="text-sm text-white/50 hover:text-white"
+          >
+            {ar ? "التمثيل الذكي" : "Sandbox"}
+          </Link>
+          <Link
             href="/login"
             onClick={() => setOpen(false)}
             className="text-sm text-white/50 hover:text-white"
           >
             {ar ? "تسجيل الدخول" : "Sign In"}
           </Link>
-          <Link
-            href="/register"
-            onClick={() => setOpen(false)}
-            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#f5870a] text-[#07090b] text-center ${ar ? "font-cairo" : ""}`}
-          >
+        <Link
+              href="/register"
+              onClick={() => setOpen(false)}
+              className={`text-sm px-4 py-2 font-semibold rounded-md bg-accent-base text-surface text-center ${ar ? "font-cairo" : ""}`}
+            >
             {ar ? "جرّب التجربة" : "Try the Demo"}
           </Link>
         </div>

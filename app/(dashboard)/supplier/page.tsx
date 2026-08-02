@@ -78,6 +78,10 @@ export default function SupplierDashboardPage() {
     "/api/v1/supplier/inventory?page=1&limit=20"
   );
 
+  const { data: ratingData, loading: ratingLoading } = useApi<{ supplier: { rating: number; totalOrders: number; completedOrders: number; onTimeDeliveryRate: number; weightedScore: number } }>(
+    "/api/v1/supplier/rating"
+  );
+
   const orders = ordersData?.orders ?? [];
   const products = inventoryData?.products ?? [];
 
@@ -85,7 +89,8 @@ export default function SupplierDashboardPage() {
     const totalRevenue = orders.reduce((sum, o) => sum + (o.status !== "CANCELLED" ? o.total : 0), 0);
     const pendingOrders = orders.filter((o) => o.status === "PENDING_APPROVAL").length;
     const deliveredOrders = orders.filter((o) => o.status === "DELIVERED").length;
-    const avgRating = 4.6; // Would come from supplier profile API
+    const avgRating = ratingData?.supplier?.rating ?? 0;
+    const ratingChange = ratingData?.supplier?.onTimeDeliveryRate ? `${ratingData.supplier.onTimeDeliveryRate}% on-time` : "No data";
 
     return [
       { label: "Total Orders", value: orders.length.toString(), change: `${deliveredOrders} delivered`, up: true, icon: ClipboardList },

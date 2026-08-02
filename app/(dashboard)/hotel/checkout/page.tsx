@@ -353,7 +353,7 @@ export default function CheckoutPage() {
                         className={`p-3 rounded-xl border-2 text-sm font-medium transition-colors ${
                           paymentMethod === pm.id
                             ? pm.id === "oliv_checkout"
-                              ? "border-[#4A7C59] bg-[#4A7C59]/5 text-[#4A7C59]"
+                              ? "border-[var(--success)] bg-[var(--success)]/5 text-[var(--success)]"
                               : "border-accent-base bg-accent-base/5 text-accent-base"
                             : "border-border-subtle text-foreground-tertiary hover:border-border-visible"
                         }`}

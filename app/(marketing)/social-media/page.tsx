@@ -40,7 +40,7 @@ export default function SocialMediaPage() {
 
       {/* Hero */}
       <section className="relative pt-36 pb-20">
-        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[#ff7e1a]/[0.03] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-orange-base/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             variants={stagger}
@@ -60,7 +60,7 @@ export default function SocialMediaPage() {
             >
               The Story of
               <br />
-              <span className="text-[#ff7e1a]">Smarter Procurement</span>
+              <span className="text-orange-base">Smarter Procurement</span>
             </motion.h1>
             <motion.p
               variants={fadeUp}
@@ -73,7 +73,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#ff7e1a] text-black text-[14px] font-medium rounded-xl hover:bg-[#ff9640] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-orange-base text-black text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
               >
                 Join the Waiting List
                 <ArrowRight className="w-4 h-4" />
@@ -121,8 +121,8 @@ export default function SocialMediaPage() {
                   "Exclusive beta badge on your profile",
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#ff7e1a]/10 border border-[#ff7e1a]/20 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-[#ff7e1a]" />
+                    <div className="w-5 h-5 rounded-full bg-orange-base/10 border border-orange-base/20 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-orange-base" />
                     </div>
                     <span className="text-[14px] text-white/50">{item}</span>
                   </div>
@@ -408,15 +408,15 @@ export default function SocialMediaPage() {
                 transition={{ delay: i * 0.1 }}
                 className="flex gap-4 p-5 rounded-xl bg-[#12121a] border border-white/[0.06]"
               >
-                <div className="w-10 h-10 rounded-lg bg-[#ff7e1a]/10 border border-[#ff7e1a]/20 flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-[#ff7e1a]" />
+                <div className="w-10 h-10 rounded-lg bg-orange-base/10 border border-orange-base/20 flex items-center justify-center shrink-0">
+                  <item.icon className="w-5 h-5 text-orange-base" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="text-[15px] font-medium text-white">{item.title}</h3>
                     <span className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
                       item.status === "In Progress"
-                        ? "bg-[#f5870a]/10 text-[#f5870a] border border-[#f5870a]/20"
+                        ? "bg-accent-base/10 text-accent-base border border-accent-base/20"
                         : "bg-white/[0.03] text-white/30 border border-white/[0.06]"
                     }`}>
                       {item.status}
@@ -442,7 +442,7 @@ export default function SocialMediaPage() {
             <h2 className="text-[28px] sm:text-[40px] font-medium text-white tracking-[-0.02em] leading-tight">
               Be Part of the
               <br />
-              <span className="text-[#ff7e1a]">Procurement Revolution</span>
+              <span className="text-orange-base">Procurement Revolution</span>
             </h2>
             <p className="mt-4 text-[16px] text-white/35 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider — there is
@@ -451,7 +451,7 @@ export default function SocialMediaPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#ff7e1a] text-black text-[14px] font-medium rounded-xl hover:bg-[#ff9640] transition-colors"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-base text-black text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
               >
                 Join Beta Waiting List
                 <ArrowRight className="w-4 h-4" />
@@ -495,8 +495,8 @@ function BetaWaitingListForm() {
   if (submitted) {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 rounded-full bg-[#f5870a]/10 border border-[#f5870a]/20 flex items-center justify-center mx-auto mb-4">
-          <Check className="w-6 h-6 text-[#f5870a]" />
+        <div className="w-12 h-12 rounded-full bg-accent-base/10 border border-accent-base/20 flex items-center justify-center mx-auto mb-4">
+          <Check className="w-6 h-6 text-accent-base" />
         </div>
         <h4 className="text-[16px] font-medium text-white mb-2">You are on the list!</h4>
         <p className="text-[13px] text-white/35">
@@ -518,7 +518,7 @@ function BetaWaitingListForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
           required
-          className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:outline-none focus:border-[#ff7e1a]/40 focus:ring-1 focus:ring-[#ff7e1a]/10 transition-colors"
+          className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:outline-none focus:border-orange-base/40 focus:ring-1 focus:ring-orange-base/10 transition-colors"
         />
       </div>
       <div>
@@ -533,7 +533,7 @@ function BetaWaitingListForm() {
               onClick={() => setRole(r)}
               className={`px-3 py-2.5 rounded-xl text-[12px] font-medium border transition-colors ${
                 role === r
-                  ? "bg-[#ff7e1a]/10 border-[#ff7e1a]/20 text-[#ff7e1a]"
+                  ? "bg-orange-base/10 border-orange-base/20 text-orange-base"
                   : "bg-white/[0.02] border-white/[0.06] text-white/30 hover:text-white/50"
               }`}
             >
@@ -545,7 +545,7 @@ function BetaWaitingListForm() {
       <button
         type="submit"
         disabled={loading || !email || !role}
-        className="w-full py-3 text-[14px] font-medium bg-[#ff7e1a] text-black rounded-xl hover:bg-[#ff9640] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full py-3 text-[14px] font-medium bg-orange-base text-black rounded-xl hover:bg-[var(--orange-light)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {loading ? "Joining..." : "Join Waiting List"}
       </button>

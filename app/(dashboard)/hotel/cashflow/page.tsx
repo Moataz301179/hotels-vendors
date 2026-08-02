@@ -1,8 +1,16 @@
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth/server-auth";
 import { DollarSign, Clock, AlertTriangle, TrendingUp, ArrowUpRight } from "lucide-react";
 
 export default async function HotelCashflowPage() {
+  const user = await requireAuth();
+
+  // G1: TENANT ISOLATION — scoped to the authenticated user's tenant and hotel
   const hotels = await prisma.hotel.findMany({
+    where: {
+      tenantId: user.tenantId,
+      ...(user.hotelId ? { id: user.hotelId } : {}),
+    },
     take: 1,
     orderBy: { createdAt: "desc" },
     select: {
