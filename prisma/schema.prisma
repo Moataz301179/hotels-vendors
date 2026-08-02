@@ -3054,3 +3054,80 @@ enum VerificationStatus {
   REJECTED
   EXPIRED
 }
+
+model MarketingCampaign {
+  id                String   @id @default(cuid())
+  tenantId          String
+  createdById       String
+  title             String
+  channel           String
+  budgetEgyptianPounds Decimal @default(0)
+  startDate         DateTime?
+  endDate           DateTime?
+  targetAudience    String?
+  status            String   @default("draft")
+  content           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([status])
+}
+
+model ContentSchedule {
+  id          String   @id @default(cuid())
+  title       String
+  type        String
+  scheduledAt DateTime
+  url         String?
+  status      String   @default("scheduled")
+  tenantId    String
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([scheduledAt])
+  @@index([type])
+}
+
+model SocialAccount {
+  id           String   @id @default(cuid())
+  platform     String
+  pageId       String
+  pageName     String
+  accessToken  String
+  connectedAt  DateTime @default(now())
+  tenantId     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([platform])
+}
+
+model InvoPartner {
+  id            String   @id @default(cuid())
+  partnerId     String   @unique
+  tenantId      String
+  name          String
+  type          String   @default("unknown")
+  taxId         String?
+  email         String?
+  phone         String?
+  contactName   String?
+  address       String?
+  categories    String[]
+  documents     String[]
+  status        String   @default("pending_review")
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+  reviewerNotes String?
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([name])
+  @@index([type])
+}
