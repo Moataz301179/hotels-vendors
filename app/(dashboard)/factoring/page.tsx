@@ -9,6 +9,7 @@ import {
   ArrowRight, X, Building2, Package, Check, AlertCircle,
 } from "lucide-react";
 import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
+import { FactoringOnboardingBot } from "@/components/ai-assistant/factoring-onboarding-chatbot";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
 import { EmptyState } from "@/components/dashboards/shared/empty-state";
@@ -455,6 +456,7 @@ export default function FinanceDashboardPage() {
         onFetchOffers={fetchOffers}
         onExecuteFunding={executeFunding}
       />
+      <FactoringOnboardingBot />
     </motion.div>
   );
 }

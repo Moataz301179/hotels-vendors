@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CheckoutModal } from "@/components/dashboard/checkout-modal";
 import { FinancialDashboard } from "@/components/dashboard/financial-dashboard";
+import { HotelOnboardingBot } from "@/components/ai-assistant/hotel-onboarding-chatbot";
 
 export default function HotelDashboardPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function HotelDashboardPage() {
       <FinancialDashboard />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      <HotelOnboardingBot />
     </div>
   );
 }
