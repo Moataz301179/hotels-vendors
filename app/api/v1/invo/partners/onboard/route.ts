@@ -1,60 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { requireServiceKey, handleApiError } from "@/lib/api-utils";
+import { onboardPartner, type InvoPartnerInput } from "@/lib/invo/partner-store";
 
-interface Partner {
-  partnerId: string;
-  type: "supplier" | "logistics" | "bank";
-  name: string;
-  taxId: string;
-  email: string;
-  phone: string;
-  contactName: string;
-  address: string;
-  categories: string[];
-  documents: string[];
-  status: "pending_review" | "approved" | "rejected";
-  submittedAt: string;
-  reviewedAt?: string;
-  reviewerNotes?: string;
-}
+/**
+ * POST /api/v1/invo/partners/onboard
+ *
+ * Register a new INVO partner (supplier | logistics | bank).
+ * Persisted to the InvoPartner table via Prisma — NOT in-memory.
+ *
+ * Auth: Bearer INVO_SERVICE_KEY (platform service key).
+ */
 
-const partners: Partner[] = [];
-
-import { requireServiceKey } from "@/lib/api-utils";
-
-function requireAuth(request: NextRequest): void {
-  requireServiceKey(request, "INVO_SERVICE_KEY");
-}
+const OnboardPartnerSchema = z.object({
+  type: z.enum(["supplier", "logistics", "bank"], {
+    error: () => ({ message: "type must be supplier, logistics, or bank" }),
+  }),
+  name: z.string().min(1, "name is required"),
+  taxId: z.string().min(1, "taxId is required"),
+  email: z.string().email("email must be a valid email address").optional().or(z.literal("")),
+  phone: z.string().optional(),
+  contactName: z.string().optional(),
+  address: z.string().optional(),
+  categories: z.array(z.string()).optional(),
+  documents: z.array(z.string()).optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    requireAuth(request);
+    requireServiceKey(request, "INVO_SERVICE_KEY");
 
-    const body = await request.json();
-    const { type, name, taxId, email, phone, contactName, address, categories, documents } = body;
+    const body = await request.json().catch(() => {
+      throw new Error("Invalid JSON body");
+    });
 
-    if (!type || !name || !taxId || !email) {
+    const parsed = OnboardPartnerSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "type, name, taxId, email required" },
+        {
+          success: false,
+          error: "Validation error",
+          details: parsed.error.issues.map((i) => ({
+            path: i.path.join("."),
+            message: i.message,
+          })),
+        },
         { status: 400 }
       );
     }
 
-    const partner: Partner = {
-      partnerId: `part_${Date.now()}`,
-      type,
-      name,
-      taxId,
-      email,
-      phone: phone || "",
-      contactName: contactName || "",
-      address: address || "",
-      categories: categories || [],
-      documents: documents || [],
-      status: "pending_review",
-      submittedAt: new Date().toISOString(),
+    const input: InvoPartnerInput = {
+      type: parsed.data.type,
+      name: parsed.data.name,
+      taxId: parsed.data.taxId,
+      email: parsed.data.email || undefined,
+      phone: parsed.data.phone,
+      contactName: parsed.data.contactName,
+      address: parsed.data.address,
+      categories: parsed.data.categories,
+      documents: parsed.data.documents,
     };
 
-    partners.push(partner);
+    const partner = await onboardPartner(input);
 
     return NextResponse.json(
       {
@@ -68,7 +75,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }
