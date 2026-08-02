@@ -10,6 +10,7 @@ import { createOllama } from "ollama-ai-provider";
 import { prisma } from "@/lib/prisma";
 import { authenticate, validateBody } from "@/lib/api-utils";
 import { enforceQuota, incrementUsage } from "@/lib/ai/quota";
+import { hasEnoughCredits, deductAICredits } from "@/lib/ai/credits";
 import { buildSystemPrompt, type AssistantRole } from "@/components/ai-assistant/prompts";
 import { verifyTenantOwnership } from "@/lib/tenant/scope";
 import { z } from "zod";
@@ -104,10 +105,25 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = validateBody(AskSchema, body);
 
-    // ── 1. Quota check ──
+    // ── 1. Unified Quota + Credits check ──
     const quota = await enforceQuota(auth.userId);
     if (!quota.allowed) {
       return NextResponse.json({ success: false, error: quota.message }, { status: 429 });
+    }
+    const credits = await hasEnoughCredits(auth.userId, auth.tenantId, "ai_assistant");
+    if (!credits.allowed) {
+      return NextResponse.json({
+        success: false,
+        error: "AI credits exhausted",
+        message: `You've used ${credits.balance.usedCredits}/${credits.balance.totalCredits} AI credits this month. Upgrade your plan for more.`,
+        credits: {
+          used: credits.balance.usedCredits,
+          total: credits.balance.totalCredits,
+          available: credits.balance.availableCredits,
+          tier: credits.balance.subscriptionTier,
+        },
+        upgradeUrl: "/settings/subscription",
+      }, { status: 402 });
     }
 
     // ── 2. Extract question ──
@@ -199,6 +215,14 @@ export async function POST(request: NextRequest) {
             },
           });
           await incrementUsage(auth.userId, usage?.totalTokens || 0);
+          await deductAICredits({
+            userId: auth.userId,
+            tenantId: auth.tenantId,
+            feature: "ai_assistant",
+            tokensInput: question.length,
+            tokensOutput: text.length,
+            taskComplexity: "medium",
+          });
         },
       });
 
@@ -222,6 +246,14 @@ export async function POST(request: NextRequest) {
         },
       });
       await incrementUsage(auth.userId, fallbackResult.tokensUsed || 0);
+      await deductAICredits({
+        userId: auth.userId,
+        tenantId: auth.tenantId,
+        feature: "ai_assistant",
+        tokensInput: question.length,
+        tokensOutput: fallbackResult.content.length,
+        taskComplexity: "medium",
+      });
 
       // Wrap fallback result in a streaming response so the frontend always gets SSE
       const fallbackStream = new ReadableStream({
