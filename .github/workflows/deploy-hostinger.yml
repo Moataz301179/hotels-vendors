@@ -20,6 +20,7 @@ jobs:
       REDIS_PASSWORD: 'dev-pass'
       OLLAMA_URL: 'http://ollama:11434'
       OLLAMA_MODEL: 'llama3.2:8b'
+      HOTELSVENDORS_HMAC_SECRET: 'dev-hmac-secret-with-min-32-chars-placeholder'
       # Additional API keys with dev fallbacks
       GROQ_API_KEY: 'dev-replace-with-groq-key'
       OPENROUTER_API_KEY: 'dev-replace-with-openrouter-key'
@@ -49,6 +50,7 @@ jobs:
           REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
           OLLAMA_URL: ${{ env.OLLAMA_URL }}
           OLLAMA_MODEL: ${{ env.OLLAMA_MODEL }}
+          HOTELSVENDORS_HMAC_SECRET: ${{ env.HOTELSVENDORS_HMAC_SECRET }}
           GROQ_API_KEY: ${{ env.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
           KIMI_API_KEY: ${{ env.KIMI_API_KEY }}
