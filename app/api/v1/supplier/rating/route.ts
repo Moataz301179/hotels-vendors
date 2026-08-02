@@ -13,11 +13,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       id: true,
       name: true,
       rating: true,
-      avgRating: true,
-      totalOrders: true,
-      completedOrders: true,
-      onTimeDeliveryRate: true,
-      ratingCount: true,
+      reviewCount: true,
       _count: { select: { orders: true } },
     },
   });
@@ -26,10 +22,16 @@ export const GET = apiRoute(async (request: NextRequest) => {
     return error("Supplier not found", 404);
   }
 
+  // Delivery rate from order history (DELIVERED vs total)
+  const deliveredCount = await prisma.order.count({
+    where: { supplierId: supplier.id, status: "DELIVERED" },
+  });
+  const totalOrders = supplier._count.orders;
+
   // Calculate weighted rating
-  const rating = supplier.avgRating || 0;
+  const rating = supplier.rating ?? 0;
   const orderCount = supplier._count.orders;
-  const deliveryRate = supplier.onTimeDeliveryRate || 0;
+  const deliveryRate = totalOrders > 0 ? deliveredCount / totalOrders : 0;
 
   // Weighted score: 60% rating, 30% delivery rate, 10% order volume factor
   const volumeFactor = Math.min(orderCount / 100, 1);
@@ -40,8 +42,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
       id: supplier.id,
       name: supplier.name,
       rating: Number(rating.toFixed(2)),
-      totalOrders: orderCount,
-      completedOrders: supplier.completedOrders || 0,
+      totalOrders,
+      completedOrders: deliveredCount,
       onTimeDeliveryRate: Number(deliveryRate.toFixed(2)),
       weightedScore: Number(weightedScore.toFixed(2)),
       period: "all_time",

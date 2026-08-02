@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, success } from "@/lib/api-utils";
-import { requirePermission } from "@/lib/auth/rbac";
+import { apiRoute, authenticate, success } from "@/lib/api-utils";
 
 // Social integration data - stubbed as integrations are coming
 export const GET = apiRoute(async (request: NextRequest) => {
-  const auth = await requirePermission(request);
+  const auth = await authenticate(request);
   if (auth.platformRole !== "MARKETING") {
     return new NextResponse("Forbidden", { status: 403 });
   }
@@ -32,7 +31,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 });
 
 export const POST = apiRoute(async (request: NextRequest) => {
-  const auth = await requirePermission(request);
+  const auth = await authenticate(request);
   if (auth.platformRole !== "MARKETING") {
     return new NextResponse("Forbidden", { status: 403 });
   }

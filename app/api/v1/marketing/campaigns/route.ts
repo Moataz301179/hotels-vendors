@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute } from "@/lib/api-utils";
-import { requirePermission } from "@/lib/auth/rbac";
-
-const { PartnerStatus } = require("@prisma/client");
+import { apiRoute, authenticate, success } from "@/lib/api-utils";
+import { z } from "zod";
 
 const CampaignSchema = z.object({
   title: z.string().min(1),
@@ -17,7 +15,7 @@ const CampaignSchema = z.object({
 });
 
 export const GET = apiRoute(async (request: NextRequest) => {
-  const auth = await requirePermission(request);
+  const auth = await authenticate(request);
   if (auth.platformRole !== "MARKETING") {
     return new NextResponse("Forbidden", { status: 403 });
   }
@@ -40,7 +38,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
 });
 
 export const POST = apiRoute(async (request: NextRequest) => {
-  const auth = await requirePermission(request);
+  const auth = await authenticate(request);
   if (auth.platformRole !== "MARKETING") {
     return new NextResponse("Forbidden", { status: 403 });
   }
@@ -65,7 +63,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       content: content || undefined,
       tenantId: auth.tenantId,
       createdById: auth.userId,
-    }),
+    },
   });
 
   return success({

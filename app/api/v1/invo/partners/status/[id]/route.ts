@@ -1,52 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireServiceKey, handleApiError } from "@/lib/api-utils";
+import { getPartnerStatus } from "@/lib/invo/partner-store";
 
-interface Partner {
-  partnerId: string;
-  type: "supplier" | "logistics" | "bank";
-  name: string;
-  taxId: string;
-  email: string;
-  phone: string;
-  contactName: string;
-  address: string;
-  categories: string[];
-  documents: string[];
-  status: "pending_review" | "approved" | "rejected";
-  submittedAt: string;
-  reviewedAt?: string;
-  reviewerNotes?: string;
-}
-
-const partners: Partner[] = [];
-
-import { requireServiceKey } from "@/lib/api-utils";
-
-function requireAuth(request: NextRequest): void {
-  requireServiceKey(request, "INVO_SERVICE_KEY");
-}
-
+/**
+ * GET /api/v1/invo/partners/status/[id]
+ *
+ * Check an INVO partner's onboarding status.
+ * Reads from the InvoPartner table via Prisma — NOT in-memory.
+ *
+ * Auth: Bearer INVO_SERVICE_KEY (platform service key).
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    requireAuth(request);
+    requireServiceKey(request, "INVO_SERVICE_KEY");
 
     const { id } = await params;
-    const partner = partners.find((p) => p.partnerId === id);
+    const partner = await getPartnerStatus(id);
 
     if (!partner) {
-      return NextResponse.json({
-        success: true,
-        data: {
-          partnerId: id,
-          status: "pending_review",
-          type: "supplier",
-          name: "Demo Supplier Co.",
-          taxId: "123456789",
-          submittedAt: new Date().toISOString(),
-        },
-      });
+      return NextResponse.json(
+        { success: false, error: "Partner not found", code: "PARTNER_NOT_FOUND" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
@@ -61,7 +39,7 @@ export async function GET(
         reviewerNotes: partner.reviewerNotes,
       },
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }

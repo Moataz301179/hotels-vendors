@@ -26,10 +26,6 @@ export interface SettlementDetail {
   timestamp: Date;
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 /**
  * Start the smart settlement worker as a continuous background process.
  * Processes pending settlements every 60 seconds.
@@ -137,27 +133,26 @@ async function matchPaymentsToInvoices(): Promise<SettlementResult> {
         continue;
       }
 
-      const paymentAmount = Number(payment.amount ?? 0);
       const invoiceTotal = Number(invoice.total ?? 0);
 
       // Update payment status
       await prisma.payment.update({
         where: { id: payment.id },
-        data: { status: "COMPLETED", paidAt: new Date() },
+        data: { status: "PAID", paidAt: new Date() },
       });
 
       // Check if fully paid
       const existingPayments = await prisma.payment.aggregate({
-        where: { invoiceId: invoice.id, status: "COMPLETED" },
+        where: { invoiceId: invoice.id, status: "PAID" },
         _sum: { amount: true },
       });
 
-      const totalPaid = Number(existingPayments._sum.amount ?? 0);
+      const totalPaid = Number(existingPayments._sum?.amount ?? 0);
 
       if (totalPaid >= invoiceTotal) {
         await prisma.invoice.update({
           where: { id: invoice.id },
-          data: { paymentStatus: "PAID", paidDate: new Date(), status: "PAID" },
+          data: { paymentStatus: "PAID", paidDate: new Date() },
         });
         result.details.push({
           invoiceId: invoice.id,
@@ -170,7 +165,7 @@ async function matchPaymentsToInvoices(): Promise<SettlementResult> {
       } else {
         await prisma.invoice.update({
           where: { id: invoice.id },
-          data: { paymentStatus: "PARTIAL" },
+          data: { paymentStatus: "PARTIALLY_PAID" },
         });
         result.details.push({
           invoiceId: invoice.id,
@@ -201,12 +196,15 @@ async function matchPaymentsToInvoices(): Promise<SettlementResult> {
 async function processFactoringSettlements(): Promise<SettlementResult> {
   const result: SettlementResult = { processed: 0, matched: 0, errors: [], details: [] };
 
-  // Find invoices that were factored and are now paid by hotel
+  // Find invoices that were factored and are now paid by hotel.
+  // "PAID" = factoring company disbursed the advance (current FactoringStatus value).
+  // Skip requests already SETTLED so each invoice is processed only once.
   const factoredInvoices = await prisma.invoice.findMany({
     where: {
-      factoringStatus: "FUNDED",
+      factoringStatus: "PAID",
       paymentStatus: "PAID",
       deletedAt: null,
+      factoringRequests: { isNot: { status: "SETTLED" } },
     },
     take: 50,
   });
@@ -227,42 +225,39 @@ async function processFactoringSettlements(): Promise<SettlementResult> {
       }
 
       // Create settlement transaction for factoring company
+      const settlementAmount = Number(
+        factoringRequest.disbursedAmount ?? factoringRequest.requestedAmount ?? 0
+      );
       const payment = await prisma.payment.create({
         data: {
           paymentNumber: `SETL-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
           currency: invoice.currency || "EGP",
           method: "BANK_TRANSFER",
-          status: "COMPLETED",
+          status: "PAID",
           hotelId: invoice.hotelId,
           invoiceId: invoice.id,
           tenantId: invoice.tenantId,
-          amount: factoringRequest.advancedAmount,
+          amount: settlementAmount,
           paidAt: new Date(),
           referenceCode: `FACTORING_SETTLEMENT_${factoringRequest.id}`,
         },
       });
 
-      // Update factoring request status
+      // Mark the factoring request settled (source of truth; the invoice
+      // factoringStatus stays "PAID" since FactoringStatus has no SETTLED value).
       await prisma.factoringRequest.update({
         where: { id: factoringRequest.id },
         data: { status: "SETTLED", settledAt: new Date() },
-      });
-
-      // Update invoice factoring status
-      await prisma.invoice.update({
-        where: { id: invoice.id },
-        data: { factoringStatus: "SETTLED" },
       });
 
       // Create credit transaction for audit trail
       await prisma.creditTransaction.create({
         data: {
           hotelId: invoice.hotelId,
-          supplierId: invoice.supplierId,
           factoringCompanyId: factoringRequest.factoringCompanyId,
           invoiceId: invoice.id,
-          type: "FACTORING_SETTLEMENT",
-          amount: factoringRequest.advancedAmount,
+          type: "FACTORING_COLLECTION",
+          amount: settlementAmount,
           description: `Factoring settlement for invoice ${invoice.invoiceNumber}`,
           tenantId: invoice.tenantId,
         },
@@ -272,7 +267,7 @@ async function processFactoringSettlements(): Promise<SettlementResult> {
         invoiceId: invoice.id,
         invoiceNumber: invoice.invoiceNumber,
         action: "FACTORING_SETTLED",
-        amount: Number(factoringRequest.advancedAmount),
+        amount: settlementAmount,
         paymentId: payment.id,
         factoringRequestId: factoringRequest.id,
         timestamp: new Date(),
@@ -309,7 +304,7 @@ async function applyCreditRepayments(): Promise<SettlementResult> {
         where: {
           hotelId: facility.hotelId,
           paymentStatus: "PAID",
-          creditTransactions: { none: { type: "CREDIT_REPAID" } },
+          creditTransactions: { none: { type: "CREDIT_REPAY" } },
         },
         take: 20,
       });
@@ -323,11 +318,9 @@ async function applyCreditRepayments(): Promise<SettlementResult> {
         await prisma.creditTransaction.create({
           data: {
             hotelId: facility.hotelId,
-            supplierId: invoice.supplierId,
             factoringCompanyId: facility.factoringCompanyId,
             invoiceId: invoice.id,
-            creditFacilityId: facility.id,
-            type: "CREDIT_REPAID",
+            type: "CREDIT_REPAY",
             amount: invoiceTotal,
             description: `Credit facility repayment for invoice ${invoice.invoiceNumber}`,
             tenantId: invoice.tenantId,
@@ -349,7 +342,7 @@ async function applyCreditRepayments(): Promise<SettlementResult> {
           action: "CREDIT_APPLIED",
           amount: invoiceTotal,
           creditTransactionId: (await prisma.creditTransaction.findFirst({
-            where: { invoiceId: invoice.id, type: "CREDIT_REPAID" },
+            where: { invoiceId: invoice.id, type: "CREDIT_REPAY" },
             orderBy: { createdAt: "desc" },
             select: { id: true },
           }))?.id || "",
@@ -374,11 +367,12 @@ async function applyCreditRepayments(): Promise<SettlementResult> {
 async function reconcileInvoiceStatuses(): Promise<SettlementResult> {
   const result: SettlementResult = { processed: 0, matched: 0, errors: [], details: [] };
 
-  // Find invoices where payment status might be wrong
+  // Find invoices where payment status might be wrong.
+  // InvoiceStatus has no CANCELLED/VOID — skip drafts and credit notes instead.
   const invoices = await prisma.invoice.findMany({
     where: {
       deletedAt: null,
-      status: { notIn: ["CANCELLED", "VOID"] },
+      status: { notIn: ["DRAFT", "CREDIT_NOTE"] },
     },
     take: 200,
   });
@@ -388,21 +382,22 @@ async function reconcileInvoiceStatuses(): Promise<SettlementResult> {
       result.processed++;
 
       const payments = await prisma.payment.aggregate({
-        where: { invoiceId: invoice.id, status: "COMPLETED" },
+        where: { invoiceId: invoice.id, status: "PAID" },
         _sum: { amount: true },
       });
 
-      const totalPaid = Number(payments._sum.amount ?? 0);
+      const totalPaid = Number(payments._sum?.amount ?? 0);
       const invoiceTotal = Number(invoice.total ?? 0);
 
-      let newStatus: "UNPAID" | "PARTIAL" | "PAID" | "OVERPAID" = "UNPAID";
+      // PaymentStatus has no PARTIAL/OVERPAID — map to closest valid values.
+      let newStatus: "UNPAID" | "PARTIALLY_PAID" | "PAID" = "UNPAID";
 
       if (totalPaid === 0) {
         newStatus = "UNPAID";
       } else if (totalPaid >= invoiceTotal) {
-        newStatus = totalPaid > invoiceTotal ? "OVERPAID" : "PAID";
+        newStatus = "PAID";
       } else {
-        newStatus = "PARTIAL";
+        newStatus = "PARTIALLY_PAID";
       }
 
       if (invoice.paymentStatus !== newStatus) {
@@ -414,7 +409,7 @@ async function reconcileInvoiceStatuses(): Promise<SettlementResult> {
         result.details.push({
           invoiceId: invoice.id,
           invoiceNumber: invoice.invoiceNumber,
-          action: newStatus === "OVERPAID" ? "OVERPAID" : newStatus === "PAID" ? "FULLY_PAID" : newStatus,
+          action: newStatus === "PAID" ? (totalPaid > invoiceTotal ? "OVERPAID" : "FULLY_PAID") : "PARTIALLY_PAID",
           amount: totalPaid,
           timestamp: new Date(),
         });
@@ -438,17 +433,17 @@ export async function processInvoiceSettlement(invoiceId: string): Promise<Settl
   if (!invoice) return null;
 
   const payments = await prisma.payment.aggregate({
-    where: { invoiceId: invoice.id, status: "COMPLETED" },
+    where: { invoiceId: invoice.id, status: "PAID" },
     _sum: { amount: true },
   });
 
-  const totalPaid = Number(payments._sum.amount ?? 0);
+  const totalPaid = Number(payments._sum?.amount ?? 0);
   const invoiceTotal = Number(invoice.total ?? 0);
 
   if (totalPaid >= invoiceTotal) {
     await prisma.invoice.update({
       where: { id: invoice.id },
-      data: { paymentStatus: "PAID", paidDate: new Date(), status: "PAID" },
+      data: { paymentStatus: "PAID", paidDate: new Date() },
     });
     return {
       invoiceId: invoice.id,

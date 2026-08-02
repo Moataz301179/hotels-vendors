@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { authenticate } from "@/lib/api-utils";
+import { authenticate, ApiError } from "@/lib/api-utils";
 import { requirePermission } from "@/lib/auth/rbac";
 
 export async function GET(request: NextRequest) {
@@ -30,21 +30,15 @@ export async function GET(request: NextRequest) {
         where: { factoringStatus: { in: ["ACCEPTED", "PAID"] }, createdAt: { gte: startDate } },
         _sum: { total: true },
       }),
-      prisma.order.aggregate({
-        where: { status: { in: ["DELIVERED", "CONFIRMED"] }, createdAt: { gte: startDate } },
-        _sum: { total: true },
-      }),
-      prisma.invoice.aggregate({
-        where: { factoringStatus: { in: ["ACCEPTED", "PAID"] }, createdAt: { gte: startDate } },
-        _sum: { total: true },
-      }),
       prisma.supplier.findMany({
         orderBy: { orders: { _count: "desc" } },
         take: 5,
+        select: { id: true, name: true, _count: { select: { orders: true } } },
       }),
       prisma.hotel.findMany({
         orderBy: { orders: { _count: "desc" } },
         take: 5,
+        select: { id: true, name: true, _count: { select: { orders: true } } },
       }),
       prisma.order.groupBy({
         by: ["status"],
@@ -138,8 +132,8 @@ export async function GET(request: NextRequest) {
         ordersByStatus: ordersByStatus.map((s) => ({ status: s.status, count: s._count })),
       },
     });
-  } catch (error: any) {
-    if (error?.name === "ApiError" || error?.name === "PermissionDeniedError") {
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
       return NextResponse.json({ error: error.message }, { status: error.statusCode || 403 });
     }
     return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });

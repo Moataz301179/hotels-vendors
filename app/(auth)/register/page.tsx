@@ -219,7 +219,7 @@ function RegisterContent() {
           </div>
 
           <div className="pt-1">
-            <RoleBenefits role={form.role} />
+            <RoleBenefits role={form.role === "FACTORING" ? "FACTOR" : form.role} />
           </div>
 
           <div className="space-y-2">

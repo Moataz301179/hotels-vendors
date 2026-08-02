@@ -444,32 +444,35 @@ export default function LogisticsPortalPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {podTrips.map((trip) => (
-                <div key={trip.id} className="rounded-xl border border-border-subtle bg-surface-1 p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <p className="text-sm font-medium text-white">Trip #{trip.id}</p>
-                      <p className="text-xs text-foreground-muted">{trip.origin} → {trip.destination}</p>
+              {podTrips.map((trip) => {
+                const routeLabel = trip.stops.map((s) => s.hotel.name).join(" → ") || "Direct Delivery";
+                return (
+                  <div key={trip.id} className="rounded-xl border border-border-subtle bg-surface-1 p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p className="text-sm font-medium text-white">Trip #{trip.id}</p>
+                        <p className="text-xs text-foreground-muted">{routeLabel}</p>
+                      </div>
+                      <StatusBadge status={trip.status} />
                     </div>
-                    <StatusBadge status={trip.status} />
+                    {trip.completedAt ? (
+                      <div className="flex items-center gap-2 text-xs text-emerald-400">
+                        <CheckCircle2 size={14} /> POD submitted on {new Date(trip.completedAt).toLocaleDateString("en-EG")}
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setSelectedTrip(trip);
+                          setPodDialogOpen(true);
+                        }}
+                        className="mt-2 px-3 py-1.5 rounded-lg bg-accent-base/10 text-accent-base text-xs font-medium hover:bg-accent-base/20 transition-colors"
+                      >
+                        Submit POD
+                      </button>
+                    )}
                   </div>
-                  {trip.podSubmitted ? (
-                    <div className="flex items-center gap-2 text-xs text-emerald-400">
-                      <CheckCircle2 size={14} /> POD submitted on {new Date(trip.podSubmittedAt).toLocaleDateString("en-EG")}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setSelectedTrip(trip);
-                        setPodDialogOpen(true);
-                      }}
-                      className="mt-2 px-3 py-1.5 rounded-lg bg-accent-base/10 text-accent-base text-xs font-medium hover:bg-accent-base/20 transition-colors"
-                    >
-                      Submit POD
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 

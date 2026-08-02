@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   BarChart3, TrendingUp, Users, ShoppingCart, FileText, Landmark,
-  ArrowUpRight, ArrowDownRight, Calendar, Filter, Download, RefreshCw
+  ArrowUpRight, ArrowDownRight, Calendar, Filter, Download, RefreshCw, AlertCircle
 } from "lucide-react";
 
 interface AnalyticsData {

@@ -99,40 +99,15 @@ async function sendInviteEmail(to: string, token: string, tenantName: string): P
 
 // ─── WhatsApp Sender ───────────────────────────────────────────────
 
+import { sendWhatsApp } from "@/lib/notifications/whatsapp";
+
 async function sendInviteWhatsApp(to: string, token: string, tenantName: string): Promise<boolean> {
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://hotelsvendors.com"}/onboarding/delegate/${token}`;
 
-  try {
-    // WhatsApp not configured — skip silently
-    return false;
-    const WHATSAPP_PROVIDER = process.env.WHATSAPP_PROVIDER || "meta";
-    if (WHATSAPP_PROVIDER === "twilio") {
-      const TWILIO_SID = process.env.TWILIO_ACCOUNT_SID || "";
-      const TWILIO_TOKEN = process.env.TWILIO_AUTH_TOKEN || "";
-      const TWILIO_FROM = process.env.TWILIO_WHATSAPP_FROM || "";
-
-      const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Basic ${Buffer.from(`${TWILIO_SID}:${TWILIO_TOKEN}`).toString("base64")}`,
-        },
-        body: new URLSearchParams({
-          From: `whatsapp:${TWILIO_FROM}`,
-          To: `whatsapp:${to}`,
-          Body: `🔐 *HotelsVendors — ETA Credential Invitation*\n\n${tenantName} has invited you to securely submit their ETA API credentials.\n\n⏳ Expires in 24 hours\n🔗 ${inviteUrl}\n\nThis is a one-time secure link. Do not forward.`,
-        }).toString(),
-      });
-      return res.ok;
-    }
-
-    // Meta Cloud API — use template or fallback
-    return false;
-  } catch (err) {
-    console.error("[Delegate Invite] WhatsApp send failed:", err);
-    return false;
-  }
+  return sendWhatsApp({
+    to,
+    body: `🔐 *HotelsVendors — ETA Credential Invitation*\n\n${tenantName} has invited you to securely submit their ETA API credentials.\n\n⏳ Expires in 24 hours\n🔗 ${inviteUrl}\n\nThis is a one-time secure link. Do not forward.`,
+  });
 }
 
 // ─── Route Handler ─────────────────────────────────────────────────

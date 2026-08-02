@@ -57,6 +57,7 @@ model Tenant {
   hotels                 Hotel[]
   hotelSuppliers         HotelSupplier[]
   inventorySnapshots     InventorySnapshot[]
+  invoPartners           InvoPartner[]
   invoSubscriptions      InvoSubscription[]
   invoices               Invoice[]
   journalEntries         JournalEntry[]
