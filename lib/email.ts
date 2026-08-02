@@ -104,7 +104,7 @@ export async function sendContactEmail(params: {
 }
 
 export async function sendInviteEmail(email: string, inviterName: string, token: string): Promise<boolean> {
-  const inviteUrl = `${appUrl}/signup?invite=${token}`
+  const inviteUrl = `${appUrl}/register?invite=${token}`
 
   if (!smtpHost || !smtpUser || !smtpPass) {
     console.log("[EMAIL] SMTP not configured. Invite URL:", inviteUrl)

@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { RoleBenefits } from "@/components/auth/role-benefits";
 import {
   Eye,
   EyeOff,
@@ -157,7 +158,7 @@ function RegisterContent() {
         <div>
           <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
           <p className="text-foreground-secondary text-[14px]">
-            Your account has been created. Redirecting you to sign in...
+            Your account has been created. Please check your email to verify your account before signing in.
           </p>
         </div>
       </div>
@@ -215,6 +216,10 @@ function RegisterContent() {
                 );
               })}
             </div>
+          </div>
+
+          <div className="pt-1">
+            <RoleBenefits role={form.role} />
           </div>
 
           <div className="space-y-2">
