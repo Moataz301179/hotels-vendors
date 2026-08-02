@@ -30,12 +30,12 @@ interface DashboardHeaderProps {
 }
 
 const ROLE_CONFIG: Record<string, { label: string; badgeColor: string }> = {
-  admin: { label: "Platform Admin", badgeColor: "bg-accent-base" },
-  hotel: { label: "Hotel Buyer", badgeColor: "bg-accent-base" },
-  supplier: { label: "Supplier", badgeColor: "bg-[#ff7e1a]" },
-  factoring: { label: "Factoring Partner", badgeColor: "bg-[#c455ff]" },
-  shipping: { label: "Logistics", badgeColor: "bg-[#64b5f6]" },
-  marketing: { label: "Marketing", badgeColor: "bg-[#c455ff]" },
+  admin: { label: "Platform Admin", badgeColor: "bg-role-admin" },
+  hotel: { label: "Hotel Buyer", badgeColor: "bg-role-hotel" },
+  supplier: { label: "Supplier", badgeColor: "bg-orange-base" },
+  factoring: { label: "Factoring Partner", badgeColor: "bg-role-factoring" },
+  shipping: { label: "Logistics", badgeColor: "bg-role-shipping" },
+  marketing: { label: "Marketing", badgeColor: "bg-role-factoring" },
 };
 
 export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: DashboardHeaderProps) {
@@ -43,7 +43,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
   const { totalItems, toggleCart } = useCart();
 
   return (
-    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle">
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-surface-1/90 backdrop-blur-xl border-b border-border-default">
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
@@ -81,7 +81,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
             if (trial.isExpired) return null;
             return (
               <span className="flex items-center gap-1 ml-1 px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider"
-                style={{ backgroundColor: "#ff7e1a18", color: "var(--orange-base)" }}>
+                style={{ backgroundColor: "var(--accent-muted)", color: "var(--accent-base)" }}>
                 <Clock size={10} />
                 Trial {trial.daysRemaining}d
               </span>
@@ -116,7 +116,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
         >
           <ShoppingCart size={18} />
           {totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-[11px] font-bold text-[#07090f] flex items-center justify-center ring-2 ring-[#12121a]">
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-[11px] font-bold text-surface flex items-center justify-center ring-2 ring-[var(--surface-1)]">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}

@@ -363,7 +363,7 @@ export default function AdminBillingPage() {
           <div className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { key: "tierB" as const, label: "Tier B (Standard)", desc: "New & small suppliers", color: "#f59e0b" },
-              { key: "tierA" as const, label: "Tier A (Established)", desc: "Proven track record", color: "#3b82f6" },
+              { key: "tierA" as const, label: "Tier A (Established)", desc: "Proven track record", color: "var(--info)" },
               { key: "tierS" as const, label: "Tier S (Premium)", desc: "Top-volume partners", color: "var(--accent-base)" },
             ].map((tier) => (
               <div key={tier.key} className="p-4 rounded-lg bg-surface-1 border border-border-invisible">

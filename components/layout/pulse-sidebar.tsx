@@ -301,7 +301,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent-base rounded-r-full shadow-[0_0_8px_rgba(245,135,10,0.3)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent-base rounded-r-full shadow-accent" />
                     )}
                     <item.icon size={17} className={isActive ? "text-accent-base" : ""} />
                     <span>{item.label}</span>

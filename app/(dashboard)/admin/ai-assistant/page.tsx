@@ -41,7 +41,7 @@ const INSIGHTS: Insight[] = [
     impact: "high",
     action: "Design referral flow",
     icon: Users,
-    color: "#3b82f6",
+    color: "var(--info)",
   },
   {
     category: "Retention",

@@ -35,7 +35,7 @@ const RECENT_POSTS: SocialPost[] = [
   { id: "2", platform: "Twitter", content: "Hotels waste 30% of storage on inventory. Our shared-route logistics model fixes that.", publishedAt: "5h ago", likes: 23, comments: 5, shares: 14 },
   { id: "3", platform: "LinkedIn", content: "ETA e-invoicing compliance is mandatory. HotelsVendors makes it invisible.", publishedAt: "1d ago", likes: 89, comments: 21, shares: 31 },
   { id: "4", platform: "Twitter", content: "SME suppliers compete with big distributors when logistics overhead drops. That's our Shark-Breaker model.", publishedAt: "2d ago", likes: 56, comments: 8, shares: 19 },
-  { id: "5", platform: "LinkedIn", content: "Case study: How a 15-property hotel chain saves $780K/year through daily ordering.", publishedAt: "3d ago", likes: 134, comments: 42, shares: 57 },
+  { id: "5", platform: "LinkedIn", content: "Case study: How a 15-property hotel chain saves EGP 780K/year through daily ordering.", publishedAt: "3d ago", likes: 134, comments: 42, shares: 57 },
 ];
 
 const PLATFORM_ICON_MAP: Record<string, typeof Globe> = { LinkedIn: Globe, Twitter: Hash };

@@ -47,7 +47,7 @@ export default function BillingHistoryPage() {
       {/* Back link */}
       <Link
         href="/invo/dashboard/subscription"
-        className="inline-flex items-center gap-1.5 text-[13px] text-white/30 hover:text-[#D4A843] transition-colors mb-6"
+        className="inline-flex items-center gap-1.5 text-[13px] text-foreground-muted hover:text-orange-base transition-colors mb-6"
       >
         <ArrowRight size={13} className="rotate-180" />
         Back to Subscription
@@ -55,10 +55,10 @@ export default function BillingHistoryPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[24px] font-medium text-white tracking-tight">
+        <h1 className="text-[24px] font-medium text-foreground tracking-tight">
           Billing History
         </h1>
-        <p className="mt-1 text-[14px] text-white/40">
+        <p className="mt-1 text-[14px] text-foreground-muted">
           Your INVO subscription invoices.
         </p>
       </div>
@@ -66,21 +66,21 @@ export default function BillingHistoryPage() {
       {/* Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-          <p className="text-[12px] text-white/30 mb-1">Total Spent</p>
-          <p className="text-[20px] font-medium text-white tracking-tight">
+          <p className="text-[12px] text-foreground-muted mb-1">Total Spent</p>
+          <p className="text-[20px] font-medium text-foreground tracking-tight">
             EGP {totalSpent.toLocaleString()}
           </p>
         </div>
         <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-          <p className="text-[12px] text-white/30 mb-1">Invoices</p>
-          <p className="text-[20px] font-medium text-white tracking-tight">
+          <p className="text-[12px] text-foreground-muted mb-1">Invoices</p>
+          <p className="text-[20px] font-medium text-foreground tracking-tight">
             {BILLING_HISTORY.length}
           </p>
         </div>
         <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-          <p className="text-[12px] text-white/30 mb-1">Payment Method</p>
-          <p className="text-[14px] font-medium text-white flex items-center gap-2">
-            <Receipt className="w-4 h-4 text-[#D4A843]" />
+          <p className="text-[12px] text-foreground-muted mb-1">Payment Method</p>
+          <p className="text-[14px] font-medium text-foreground flex items-center gap-2">
+            <Receipt className="w-4 h-4 text-orange-base" />
             Auto-debit
           </p>
         </div>
@@ -91,16 +91,16 @@ export default function BillingHistoryPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/[0.06]">
-              <th className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-4 py-3">
+              <th className="text-left text-[11px] font-medium text-foreground-tertiary uppercase tracking-wider px-4 py-3">
                 Date
               </th>
-              <th className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-4 py-3">
+              <th className="text-left text-[11px] font-medium text-foreground-tertiary uppercase tracking-wider px-4 py-3">
                 Description
               </th>
-              <th className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-4 py-3">
+              <th className="text-left text-[11px] font-medium text-foreground-tertiary uppercase tracking-wider px-4 py-3">
                 Amount
               </th>
-              <th className="text-left text-[11px] font-medium text-white/25 uppercase tracking-wider px-4 py-3">
+              <th className="text-left text-[11px] font-medium text-foreground-tertiary uppercase tracking-wider px-4 py-3">
                 Status
               </th>
             </tr>
@@ -111,21 +111,21 @@ export default function BillingHistoryPage() {
                 key={inv.id}
                 className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
               >
-                <td className="px-4 py-3 text-[13px] text-white/50">
+                <td className="px-4 py-3 text-[13px] text-foreground-secondary">
                   {new Date(inv.date).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
                   })}
                 </td>
-                <td className="px-4 py-3 text-[13px] text-white/60">
+                <td className="px-4 py-3 text-[13px] text-foreground">
                   {inv.description}
                 </td>
-                <td className="px-4 py-3 text-[13px] text-white/60">
+                <td className="px-4 py-3 text-[13px] text-foreground">
                   EGP {inv.amount.toLocaleString()}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider border text-emerald-400 bg-emerald-400/10 border-emerald-400/20">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider border text-success bg-success-bg border-success/20">
                     <Check className="w-3 h-3" />
                     {inv.status}
                   </span>
@@ -137,9 +137,9 @@ export default function BillingHistoryPage() {
       </div>
 
       {/* Zero commission note */}
-      <div className="mt-6 p-4 rounded-xl border border-[rgba(212,168,67,0.10)] bg-[rgba(212,168,67,0.03)]">
-        <p className="text-[13px] text-white/40 leading-relaxed">
-          <span className="text-[#D4A843] font-medium">No commission on sales.</span>{" "}
+      <div className="mt-6 p-4 rounded-xl border border-orange-base/10 bg-orange-base/3">
+        <p className="text-[13px] text-foreground-muted leading-relaxed">
+          <span className="text-orange-base font-medium">No commission on sales.</span>{" "}
           You pay a flat monthly subscription to be listed. Factoring service fees
           (1-2%) are only charged when you choose to factor an invoice.
         </p>

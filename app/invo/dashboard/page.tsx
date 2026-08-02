@@ -1,60 +1,34 @@
 export const dynamic = "force-dynamic";
 import { createClient } from "@/lib/supabase/server";
 import { Views } from "@/types/database";
-
-// ── Stripe Palette ──
-const BG_CARD = "#ffffff";
-const BG_PAGE = "#f7f8fa";
-const BORDER = "#e3e8ee";
-const TEXT_PRIMARY = "#1a1f36";
-const TEXT_SECONDARY = "#525f7f";
-const TEXT_MUTED = "#8898aa";
-const ACCENT = "#635bff";
-const ACCENT_LIGHT = "#ededff";
-const SUCCESS = "#00d924";
-const SUCCESS_BG = "#e6f9ed";
-const WARNING = "#ff9b00";
-const WARNING_BG = "#fff7e0";
-const DANGER = "#df1b41";
-const DANGER_BG = "#fde8eb";
-const INFO_BG = "#e0f2fe";
+import { cn } from "@/lib/utils";
 
 type PipelineRow = Views<"v_invoice_pipeline">;
 type RiskRow = Views<"v_risk_dashboard">;
 
+const STATUS_MAP: Record<string, { bg: string; text: string; label: string }> = {
+  paid: { bg: "bg-success-bg", text: "text-success", label: "Paid" },
+  pending: { bg: "bg-warning-bg", text: "text-warning", label: "Pending" },
+  invoiced: { bg: "bg-purple-base/10", text: "text-purple-base", label: "Invoiced" },
+  delivered: { bg: "bg-info-bg", text: "text-info", label: "Delivered" },
+  shipped: { bg: "bg-info-bg", text: "text-info", label: "Shipped" },
+  draft: { bg: "bg-surface-raised", text: "text-foreground-muted", label: "Draft" },
+  funded: { bg: "bg-success-bg", text: "text-success", label: "Funded" },
+  not_submitted: { bg: "bg-surface-raised", text: "text-foreground-muted", label: "Not Submitted" },
+  pending_documents: { bg: "bg-warning-bg", text: "text-warning", label: "Pending Docs" },
+  approved: { bg: "bg-success-bg", text: "text-success", label: "Approved" },
+  rejected: { bg: "bg-error-bg", text: "text-error", label: "Rejected" },
+  high: { bg: "bg-error-bg", text: "text-error", label: "High" },
+  critical: { bg: "bg-error-bg", text: "text-error", label: "Critical" },
+  medium: { bg: "bg-warning-bg", text: "text-warning", label: "Medium" },
+  low: { bg: "bg-success-bg", text: "text-success", label: "Low" },
+  open: { bg: "bg-purple-base/10", text: "text-purple-base", label: "Open" },
+};
+
 function StatusPill({ status }: { status: string }) {
-  const map: Record<string, { bg: string; text: string; label: string }> = {
-    paid: { bg: SUCCESS_BG, text: "#0a7d2b", label: "Paid" },
-    pending: { bg: WARNING_BG, text: "#a16200", label: "Pending" },
-    invoiced: { bg: ACCENT_LIGHT, text: "#4338ca", label: "Invoiced" },
-    delivered: { bg: INFO_BG, text: "#0369a1", label: "Delivered" },
-    shipped: { bg: "#e0f2fe", text: "#0369a1", label: "Shipped" },
-    draft: { bg: "#f0f2f5", text: "#525f7f", label: "Draft" },
-    funded: { bg: SUCCESS_BG, text: "#0a7d2b", label: "Funded" },
-    not_submitted: { bg: "#f0f2f5", text: "#8898aa", label: "Not Submitted" },
-    pending_documents: { bg: WARNING_BG, text: "#a16200", label: "Pending Docs" },
-    approved: { bg: SUCCESS_BG, text: "#0a7d2b", label: "Approved" },
-    rejected: { bg: DANGER_BG, text: "#b0102a", label: "Rejected" },
-    high: { bg: DANGER_BG, text: "#b0102a", label: "High" },
-    critical: { bg: DANGER_BG, text: "#b0102a", label: "Critical" },
-    medium: { bg: WARNING_BG, text: "#a16200", label: "Medium" },
-    low: { bg: SUCCESS_BG, text: "#0a7d2b", label: "Low" },
-    open: { bg: ACCENT_LIGHT, text: "#4338ca", label: "Open" },
-  };
-  const c = map[status] || map.draft;
+  const c = STATUS_MAP[status] || STATUS_MAP.draft;
   return (
-    <span
-      style={{
-        fontSize: "11px",
-        fontWeight: 600,
-        textTransform: "uppercase",
-        letterSpacing: "0.04em",
-        padding: "3px 10px",
-        borderRadius: "4px",
-        backgroundColor: c.bg,
-        color: c.text,
-      }}
-    >
+    <span className={cn("status-pill", c.bg, c.text)}>
       {c.label}
     </span>
   );
@@ -84,204 +58,111 @@ export default async function DashboardPage() {
   const highRisk = risks.filter((r) => r.risk_band === "high" || r.risk_band === "critical").length;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="flex flex-col gap-6">
       {/* Page Header */}
       <div>
-        <h1 style={{ fontSize: "22px", fontWeight: 600, color: TEXT_PRIMARY, margin: 0 }}>
+        <h1 className="text-2xl font-semibold text-foreground">
           INVO Dashboard
         </h1>
-        <p style={{ fontSize: "13px", color: TEXT_SECONDARY, margin: "4px 0 0 0" }}>
+        <p className="text-sm text-foreground-secondary mt-1">
           Marketplace engine overview — real-time data from Supabase
         </p>
       </div>
 
       {/* ── KPI Cards ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "16px",
-        }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {[
           {
             label: "Total Invoiced",
             value: `${totalInvoiced.toLocaleString("en-EG")} EGP`,
             sub: `${pipeline.length} invoices`,
-            color: ACCENT,
-            bg: ACCENT_LIGHT,
+            color: "text-purple-base",
+            bg: "bg-purple-base/10",
           },
           {
             label: "Paid",
             value: totalPaid.toString(),
             sub: "Completed payments",
-            color: SUCCESS,
-            bg: SUCCESS_BG,
+            color: "text-success",
+            bg: "bg-success-bg",
           },
           {
             label: "Pending",
             value: totalPending.toString(),
             sub: "In transit / invoiced",
-            color: WARNING,
-            bg: WARNING_BG,
+            color: "text-warning",
+            bg: "bg-warning-bg",
           },
           {
             label: "Open Alerts",
             value: alerts.length.toString(),
             sub: highRisk > 0 ? `${highRisk} high risk` : "All clear",
-            color: alerts.length > 0 ? DANGER : SUCCESS,
-            bg: alerts.length > 0 ? DANGER_BG : SUCCESS_BG,
+            color: alerts.length > 0 ? "text-error" : "text-success",
+            bg: alerts.length > 0 ? "bg-error-bg" : "bg-success-bg",
           },
           {
             label: "Factoring Eligible",
             value: factoringEligible.toString(),
             sub: "Ready for factoring",
-            color: ACCENT,
-            bg: ACCENT_LIGHT,
+            color: "text-purple-base",
+            bg: "bg-purple-base/10",
           },
           {
             label: "Active Orders",
             value: procurement.length.toString(),
             sub: "Across all states",
-            color: TEXT_SECONDARY,
-            bg: "#f0f2f5",
+            color: "text-foreground-secondary",
+            bg: "bg-surface-raised",
           },
         ].map((kpi) => (
           <div
             key={kpi.label}
-            style={{
-              backgroundColor: BG_CARD,
-              border: `1px solid ${BORDER}`,
-              borderRadius: "8px",
-              padding: "20px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)",
-            }}
+            className="bg-surface border border-border-default rounded-xl p-5 shadow-sm"
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "12px",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: TEXT_MUTED,
-                }}
-              >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-foreground-muted uppercase tracking-[0.05em]">
                 {kpi.label}
               </span>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  backgroundColor: kpi.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: kpi.color,
-                  }}
-                />
+              <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", kpi.bg)}>
+                <div className={cn("w-2 h-2 rounded-full", kpi.color.replace("text-", "bg-"))} />
               </div>
             </div>
-            <div
-              style={{
-                fontSize: "24px",
-                fontWeight: 600,
-                color: TEXT_PRIMARY,
-                marginBottom: "4px",
-              }}
-            >
-              {kpi.value}
-            </div>
-            <div style={{ fontSize: "12px", color: TEXT_MUTED }}>{kpi.sub}</div>
+            <div className="text-2xl font-semibold text-foreground">{kpi.value}</div>
+            <div className="text-xs text-foreground-muted">{kpi.sub}</div>
           </div>
         ))}
       </div>
 
       {/* ── Pipeline Table ── */}
-      <div
-        style={{
-          backgroundColor: BG_CARD,
-          border: `1px solid ${BORDER}`,
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            padding: "16px 20px",
-            borderBottom: `1px solid ${BORDER}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h2 style={{ fontSize: "16px", fontWeight: 600, color: TEXT_PRIMARY, margin: 0 }}>
-            Invoice Pipeline
-          </h2>
-          <span style={{ fontSize: "12px", color: TEXT_MUTED }}>
-            {pipeline.length} records
-          </span>
+      <div className="bg-surface border border-border-default rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-surface-raised">
+          <h2 className="text-sm font-semibold text-foreground">Invoice Pipeline</h2>
+          <span className="text-xs text-foreground-muted">{pipeline.length} records</span>
         </div>
 
         {pipeline.length === 0 ? (
-          <div style={{ padding: "48px 20px", textAlign: "center" }}>
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "12px",
-                backgroundColor: "#f0f2f5",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 12px",
-                fontSize: "20px",
-              }}
-            >
+          <div className="text-center py-12 px-5">
+            <div className="w-12 h-12 rounded-lg bg-surface-raised flex items-center justify-center mx-auto mb-3 text-xl">
               📄
             </div>
-            <p style={{ fontSize: "14px", color: TEXT_SECONDARY, margin: 0 }}>
+            <p className="text-sm text-foreground-secondary">
               No invoices in the pipeline yet.
             </p>
-            <p style={{ fontSize: "12px", color: TEXT_MUTED, margin: "4px 0 0 0" }}>
+            <p className="text-xs text-foreground-muted mt-1">
               Invoices will appear here as orders are created and processed.
             </p>
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", fontSize: "13px", borderCollapse: "collapse" }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
               <thead>
-                <tr style={{ backgroundColor: "#f7f8fa" }}>
+                <tr className="bg-surface-raised">
                   {["Invoice", "Hotel", "Supplier", "Amount", "State", "Qualification", "ETA", "Factoring"].map(
                     (h) => (
                       <th
                         key={h}
-                        style={{
-                          padding: "12px 16px",
-                          textAlign: h === "Amount" ? "right" : "left",
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: TEXT_MUTED,
-                          borderBottom: `1px solid ${BORDER}`,
-                        }}
+                        className="px-4 py-3 text-left text-xs font-medium text-foreground-muted uppercase tracking-[0.05em]"
+                        style={{ textAlign: h === "Amount" ? "right" : "left" }}
                       >
                         {h}
                       </th>
@@ -293,65 +174,25 @@ export default async function DashboardPage() {
                 {pipeline.map((row) => (
                   <tr
                     key={row.invoice_id}
-                    style={{ borderBottom: "1px solid #f0f2f5" }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#f8f9ff")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = "transparent")
-                    }
+                    className="border-b border-border-subtle hover:bg-accent-muted/50 transition-colors"
                   >
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        fontFamily: "monospace",
-                        fontSize: "12px",
-                        color: ACCENT,
-                        fontWeight: 500,
-                      }}
-                    >
+                    <td className="px-4 py-3 font-mono text-xs text-purple-base font-medium">
                       {row.invoice_id?.slice(0, 8)}...
                     </td>
-                    <td style={{ padding: "14px 16px", color: TEXT_PRIMARY }}>
-                      {row.hotel_name || "—"}
-                    </td>
-                    <td style={{ padding: "14px 16px", color: TEXT_SECONDARY }}>
+                    <td className="px-4 py-3 text-foreground">{row.hotel_name || "—"}</td>
+                    <td className="px-4 py-3 text-foreground-secondary">
                       {row.supplier_name || "—"}
                       {row.supplier_verified && (
-                        <span
-                          style={{
-                            marginLeft: "6px",
-                            fontSize: "10px",
-                            color: SUCCESS,
-                          }}
-                        >
-                          ✓
-                        </span>
+                        <span className="ml-1 text-xs text-success">✓</span>
                       )}
                     </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        textAlign: "right",
-                        fontWeight: 600,
-                        color: TEXT_PRIMARY,
-                      }}
-                    >
-                      {(row.face_value || 0).toLocaleString("en-EG")}{" "}
-                      {row.currency || "EGP"}
+                    <td className="px-4 py-3 text-right font-semibold text-foreground">
+                      {(row.face_value || 0).toLocaleString("en-EG")} {row.currency || "EGP"}
                     </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <StatusPill status={row.procurement_state || "draft"} />
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <StatusPill status={row.qualification_status || "pending_documents"} />
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <StatusPill status={row.eta_status || "pending"} />
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <StatusPill status={row.match_status || "not_submitted"} />
-                    </td>
+                    <td className="px-4 py-3"><StatusPill status={row.procurement_state || "draft"} /></td>
+                    <td className="px-4 py-3"><StatusPill status={row.qualification_status || "pending_documents"} /></td>
+                    <td className="px-4 py-3"><StatusPill status={row.eta_status || "pending"} /></td>
+                    <td className="px-4 py-3"><StatusPill status={row.match_status || "not_submitted"} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -362,62 +203,21 @@ export default async function DashboardPage() {
 
       {/* ── Alerts ── */}
       {alerts.length > 0 && (
-        <div
-          style={{
-            backgroundColor: BG_CARD,
-            border: `1px solid ${BORDER}`,
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              padding: "16px 20px",
-              borderBottom: `1px solid ${BORDER}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: TEXT_PRIMARY,
-                margin: 0,
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
+        <div className="bg-surface border border-border-default rounded-xl shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-surface-raised">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               Open Alerts
             </h2>
-            <span style={{ fontSize: "12px", color: TEXT_MUTED }}>
-              {alerts.length} active
-            </span>
+            <span className="text-xs text-foreground-muted">{alerts.length} active</span>
           </div>
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              style={{
-                padding: "14px 20px",
-                borderBottom: `1px solid #f0f2f5`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
+              className="flex items-center justify-between px-5 py-3 border-b border-border-subtle last:border-b-0"
             >
               <div>
-                <div
-                  style={{ fontSize: "13px", fontWeight: 600, color: TEXT_PRIMARY }}
-                >
-                  {alert.title}
-                </div>
-                <div
-                  style={{ fontSize: "12px", color: TEXT_SECONDARY, marginTop: "2px" }}
-                >
-                  {alert.description}
-                </div>
+                <div className="text-sm font-semibold text-foreground">{alert.title}</div>
+                <div className="text-xs text-foreground-secondary mt-0.5">{alert.description}</div>
               </div>
               <StatusPill status={alert.severity} />
             </div>
@@ -427,57 +227,25 @@ export default async function DashboardPage() {
 
       {/* ── Risk Dashboard ── */}
       {risks.length > 0 && (
-        <div
-          style={{
-            backgroundColor: BG_CARD,
-            border: `1px solid ${BORDER}`,
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              padding: "16px 20px",
-              borderBottom: `1px solid ${BORDER}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: TEXT_PRIMARY,
-                margin: 0,
-              }}
-            >
-              Risk Dashboard
-            </h2>
-            <span style={{ fontSize: "12px", color: TEXT_MUTED }}>
-              {risks.length} entities
-            </span>
+        <div className="bg-surface border border-border-default rounded-xl shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-surface-raised">
+            <h2 className="text-sm font-semibold text-foreground">Risk Dashboard</h2>
+            <span className="text-xs text-foreground-muted">{risks.length} entities</span>
           </div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", fontSize: "13px", borderCollapse: "collapse" }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
               <thead>
-                <tr style={{ backgroundColor: "#f7f8fa" }}>
+                <tr className="bg-surface-raised">
                   {["Entity", "Type", "Risk Band", "Overall", "Compliance", "Financial", "Next Review"].map(
                     (h) => (
                       <th
                         key={h}
+                        className="px-4 py-3 text-xs font-medium text-foreground-muted uppercase tracking-[0.05em]"
                         style={{
-                          padding: "12px 16px",
                           textAlign:
                             h === "Overall" || h === "Compliance" || h === "Financial"
                               ? "right"
                               : "left",
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: TEXT_MUTED,
-                          borderBottom: `1px solid ${BORDER}`,
                         }}
                       >
                         {h}
@@ -487,77 +255,42 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {risks.map((row) => (
-                  <tr
-                    key={row.entity_id}
-                    style={{ borderBottom: "1px solid #f0f2f5" }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#f8f9ff")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = "transparent")
-                    }
-                  >
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        fontWeight: 600,
-                        color: TEXT_PRIMARY,
-                      }}
+                {risks.map((row) => {
+                  const overallScore = row.overall_risk_score || 0;
+                  const scoreColor = overallScore >= 70
+                    ? "text-error"
+                    : overallScore >= 40
+                      ? "text-warning"
+                      : "text-success";
+                  return (
+                    <tr
+                      key={row.entity_id}
+                      className="border-b border-border-subtle hover:bg-accent-muted/50 transition-colors"
                     >
-                      {row.entity_name || "—"}
-                    </td>
-                    <td style={{ padding: "14px 16px", color: TEXT_SECONDARY }}>
-                      {row.entity_type || "—"}
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <StatusPill status={row.risk_band || "medium"} />
-                    </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        textAlign: "right",
-                        fontWeight: 600,
-                        color:
-                          (row.overall_risk_score || 0) >= 70
-                            ? DANGER
-                            : (row.overall_risk_score || 0) >= 40
-                            ? WARNING
-                            : SUCCESS,
-                      }}
-                    >
-                      {row.overall_risk_score ?? "—"}
-                    </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        textAlign: "right",
-                        color: TEXT_SECONDARY,
-                      }}
-                    >
-                      {row.compliance_score ?? "—"}
-                    </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        textAlign: "right",
-                        color: TEXT_SECONDARY,
-                      }}
-                    >
-                      {row.financial_score ?? "—"}
-                    </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        textAlign: "right",
-                        fontSize: "12px",
-                        color: TEXT_MUTED,
-                      }}
-                    >
-                      {row.next_review_date || "—"}
-                    </td>
-                  </tr>
-                ))}
+                      <td className="px-4 py-3 font-semibold text-foreground">
+                        {row.entity_name || "—"}
+                      </td>
+                      <td className="px-4 py-3 text-foreground-secondary">
+                        {row.entity_type || "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusPill status={row.risk_band || "medium"} />
+                      </td>
+                      <td className="px-4 py-3 text-right font-semibold">
+                        <span className={scoreColor}>{row.overall_risk_score ?? "—"}</span>
+                      </td>
+                      <td className="px-4 py-3 text-right text-foreground-secondary">
+                        {row.compliance_score ?? "—"}
+                      </td>
+                      <td className="px-4 py-3 text-right text-foreground-secondary">
+                        {row.financial_score ?? "—"}
+                      </td>
+                      <td className="px-4 py-3 text-right text-xs text-foreground-muted">
+                        {row.next_review_date || "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

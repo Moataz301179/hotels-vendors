@@ -134,7 +134,7 @@ export default function AdminSettingsPage() {
               <div key={item.label} className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-2">
                   {item.critical ? (
-                    <AlertTriangle size={14} className="text-[#ef4444]" />
+                    <AlertTriangle size={14} className="text-[var(--error)]" />
                   ) : (
                     <CheckCircle2 size={14} className="text-emerald-400" />
                   )}
@@ -206,7 +206,7 @@ export default function AdminSettingsPage() {
             <button className="px-4 py-2 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors">
               Run Prune Job
             </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-[#ef4444]/20 text-[#ef4444]/70 hover:bg-[#ef4444]/[0.03] transition-colors">
+            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-[var(--error)]/20 text-[var(--error)]/70 hover:bg-[var(--error)]/[0.03] transition-colors">
               Reset Demo Data
             </button>
           </div>

@@ -9,7 +9,7 @@ const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_ORANGE = "#f5870a";
+const ACCENT_ORANGE = "var(--accent-base)";
 
 const AGENT_PIPELINE = [
   { id: "agent_1_ingestion", name: "Ingestion", desc: "Parse and validate incoming invoices", icon: "📥" },
@@ -76,7 +76,7 @@ export default async function AgentsPage() {
               <div className="mt-3">
                 <button
                   className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
-                  style={{ backgroundColor: "rgba(245,135,10,0.10)", color: ACCENT_ORANGE, border: "1px solid rgba(245,135,10,0.20)" }}
+                  style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.10)", color: ACCENT_ORANGE, border: "1px solid rgba(var(--accent-base-rgb),0.20)" }}
                 >
                   Run Agent
                 </button>
@@ -133,7 +133,7 @@ export default async function AgentsPage() {
                     key={log.log_id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(245,135,10,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(var(--accent-base-rgb),0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
                     <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_ORANGE }}>{log.agent_name}</td>

@@ -17,8 +17,8 @@ interface Credential {
 }
 
 const SERVICES = [
-  { id: "oliv", name: "Oliv Finance", color: "#4A7C59" },
-  { id: "eta", name: "Egyptian Tax Authority", color: "#3b82f6", demo: true },
+  { id: "oliv", name: "Oliv Finance", color: "var(--success)" },
+  { id: "eta", name: "Egyptian Tax Authority", color: "var(--info)", demo: true },
   { id: "supabase", name: "Supabase", color: "#10b981" },
   { id: "sentry", name: "Sentry", color: "#8b5cf6" },
   { id: "groq", name: "Groq AI", color: "#f59e0b" },

@@ -62,7 +62,7 @@ export default function CampaignsPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: "Total Campaigns", value: String(CAMPAIGNS.length), icon: Megaphone, color: "#3b82f6" },
+          { label: "Total Campaigns", value: String(CAMPAIGNS.length), icon: Megaphone, color: "var(--info)" },
           { label: "Active", value: String(activeCount), icon: TrendingUp, color: "#10b981" },
           { label: "Total Budget", value: formatEgp(totalBudget), icon: Eye, color: "#f59e0b" },
           { label: "Conversions", value: String(totalConversions), icon: ArrowRightLeft, color: "#8b5cf6" },

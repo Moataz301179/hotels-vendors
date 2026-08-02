@@ -27,10 +27,10 @@ type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
-  { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "#f5870a" },
-  { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "#ff7e1a" },
-  { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "#c455ff" },
-  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "#64b5f6" },
+  { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "var(--accent-base)" },
+  { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "var(--orange-base)" },
+  { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "var(--purple-base)" },
+  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "var(--info)" },
 ];
 
 const GOVERNORATES = [
@@ -133,19 +133,19 @@ function RegisterContent() {
     }
   };
 
-  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all";
+  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-accent-base/30 focus:outline-none focus:ring-1 focus:ring-accent-base/10 transition-all";
 
   const roleColorMap: Record<StakeholderRole, string> = {
-    HOTEL: "#f5870a",
-    SUPPLIER: "#ff7e1a",
-    FACTORING: "#c455ff",
-    LOGISTICS: "#64b5f6",
+    HOTEL: "var(--accent-base)",
+    SUPPLIER: "var(--orange-base)",
+    FACTORING: "var(--purple-base)",
+    LOGISTICS: "var(--info)",
   };
 
   const ptColorMap: Record<string, string> = {
-    SINGLE: "#f5870a",
-    CHAIN: "#4A7C59",
-    MANAGEMENT: "#c455ff",
+    SINGLE: "var(--accent-base)",
+    CHAIN: "var(--success)",
+    MANAGEMENT: "var(--purple-base)",
   };
 
   if (registered) {
@@ -204,7 +204,7 @@ function RegisterContent() {
                     onClick={() => updateForm("role", role.value)}
                     className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[13px] font-medium transition-all ${
                       isSelected
-                        ? "text-[#07090f] border-transparent"
+                        ? "text-surface border-transparent"
                         : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
                     }`}
                     style={isSelected ? { backgroundColor: role.color, borderColor: role.color } : {}}
@@ -321,9 +321,9 @@ function RegisterContent() {
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: "SINGLE", label: "Single Property", icon: Home, color: "#f5870a" },
-                    { value: "CHAIN", label: "Hotel Chain", icon: Building, color: "#4A7C59" },
-                    { value: "MANAGEMENT", label: "Management Co.", icon: Users, color: "#c455ff" },
+                    { value: "SINGLE", label: "Single Property", icon: Home, color: "var(--accent-base)" },
+                    { value: "CHAIN", label: "Hotel Chain", icon: Building, color: "var(--success)" },
+                    { value: "MANAGEMENT", label: "Management Co.", icon: Users, color: "var(--purple-base)" },
                   ].map((pt) => {
                     const Icon = pt.icon;
                     const isSelected = form.propertyType === pt.value;
@@ -333,7 +333,7 @@ function RegisterContent() {
                         type="button"
                         onClick={() => updateForm("propertyType", pt.value)}
                         className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border text-[11px] font-medium transition-all ${
-                          isSelected ? "text-[#07090f] border-transparent" : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                          isSelected ? "text-surface border-transparent" : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
                         }`}
                         style={isSelected ? { backgroundColor: pt.color, borderColor: pt.color } : {}}
                       >
@@ -368,9 +368,9 @@ function RegisterContent() {
                 </div>
               )}
 
-              <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(74,124,89,0.05)", border: "1px solid rgba(74,124,89,0.13)" }}>
+              <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(var(--success-rgb),0.05)", border: "1px solid rgba(var(--success-rgb),0.13)" }}>
                 <p className="text-[12px] text-foreground-secondary leading-relaxed">
-                  <strong style={{ color: "#4A7C59" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then set up Oliv financing for Net-60 payment terms. Suppliers get paid instantly.
+                  <strong style={{ color: "var(--success)" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then set up Oliv financing for Net-60 payment terms. Suppliers get paid instantly.
                 </p>
               </div>
             </>
@@ -379,7 +379,7 @@ function RegisterContent() {
           {form.role === "SUPPLIER" && (
             <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,126,26,0.05)", border: "1px solid rgba(255,126,26,0.13)" }}>
               <p className="text-[12px] text-foreground-secondary leading-relaxed">
-                <strong style={{ color: "#ff7e1a" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for Oliv financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
+                <strong style={{ color: "var(--orange-base)" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for Oliv financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
               </p>
             </div>
           )}
@@ -390,7 +390,7 @@ function RegisterContent() {
                 type="checkbox"
                 checked={form.termsAccepted}
                 onChange={(e) => updateForm("termsAccepted", e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-accent-base focus:ring-accent-base/20"
               />
               <span className="text-[12px] text-foreground-secondary leading-relaxed">
                 I agree to the{" "}
@@ -405,7 +405,7 @@ function RegisterContent() {
                 type="checkbox"
                 checked={form.marketingConsent}
                 onChange={(e) => updateForm("marketingConsent", e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#f5870a] focus:ring-[#f5870a]/20"
+                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-accent-base focus:ring-accent-base/20"
               />
               <span className="text-[12px] text-foreground-secondary leading-relaxed">
                 I agree to receive marketing communications about products, services, and promotions. You can withdraw consent at any time.
@@ -416,7 +416,7 @@ function RegisterContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[13px] font-semibold disabled:opacity-50 transition-all hover:shadow-accent"
             style={{
               backgroundColor: roleColorMap[form.role],
               color: "#ffffff",

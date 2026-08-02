@@ -8,6 +8,7 @@ interface Message {
   content: string;
 }
 
+
 export function SupplierOnboardingBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -34,6 +35,9 @@ export function SupplierOnboardingBot() {
       setInput("");
       setLoading(true);
 
+      // Placeholder assistant message for streaming deltas
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
       try {
         const apiUrl = process.env.NEXT_PUBLIC_VPS_API_URL
           ? `${process.env.NEXT_PUBLIC_VPS_API_URL}/ai/public`
@@ -43,41 +47,44 @@ export function SupplierOnboardingBot() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            question: msg.trim(),
-            context: "supplier_onboarding",
+            messages: [...messages, userMsg],
           }),
         });
 
-        const json = await res.json();
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        if (!json.success) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content: json.error || "I'm sorry, I couldn't process that. Please try again.",
-            },
-          ]);
-          return;
+        const reader = res.body!.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+
+          // Stream is plain text — append each chunk incrementally
+          setMessages((prev) => {
+            const newMsgs = [...prev];
+            const last = newMsgs[newMsgs.length - 1];
+            if (last?.role === "assistant") {
+              last.content += chunk;
+            }
+            return newMsgs;
+          });
         }
-
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: json.data.answer },
-        ]);
       } catch {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "Connection issue detected. Please retry in a moment.",
-          },
-        ]);
+        setMessages((prev) => {
+          const newMsgs = [...prev];
+          const last = newMsgs[newMsgs.length - 1];
+          if (last?.role === "assistant" && !last.content) {
+            last.content = "Connection issue detected. Please retry in a moment.";
+          }
+          return newMsgs;
+        });
       } finally {
         setLoading(false);
       }
     },
-    [input, loading]
+    [input, loading, messages]
   );
 
   return (
@@ -90,10 +97,10 @@ export function SupplierOnboardingBot() {
           title="Talk to Onboarding Agent"
         >
           <div className="relative">
-            <div className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ backgroundColor: "#4A7C59", boxShadow: "0 0 30px rgba(74,124,89,0.3)" }}>
+            <div className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ backgroundColor: "var(--success)", boxShadow: "0 0 30px rgba(var(--success-rgb),0.3)" }}>
               <MessageCircle size={22} className="text-white" />
             </div>
-            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#f5870a] border-2 border-[#0c0c12] animate-pulse" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-base border-2 border-[#0c0c12] animate-pulse" />
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-[#12121a] border border-white/10 text-[11px] text-white/60 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               Talk to Onboarding Agent
             </div>
@@ -107,13 +114,13 @@ export function SupplierOnboardingBot() {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)" }}>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(74,124,89,0.15)" }}>
-                <Sparkles size={16} style={{ color: "#4A7C59" }} />
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(var(--success-rgb),0.15)" }}>
+                <Sparkles size={16} style={{ color: "var(--success)" }} />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Onboarding Agent</p>
                 <p className="text-[10px] text-white/40 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#4A7C59" }} />
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--success)" }} />
                   Supplier Onboarding
                 </p>
               </div>
@@ -138,7 +145,7 @@ export function SupplierOnboardingBot() {
                   }`}
                   style={
                     msg.role === "user"
-                      ? { backgroundColor: "#4A7C59", color: "#ffffff" }
+                      ? { backgroundColor: "var(--accent-base)", color: "var(--surface)" }
                       : { backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }
                   }
                 >
@@ -149,7 +156,7 @@ export function SupplierOnboardingBot() {
             {loading && (
               <div className="flex justify-start">
                 <div className="rounded-2xl px-4 py-3" style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <Loader2 size={16} className="animate-spin" style={{ color: "#4A7C59" }} />
+                  <Loader2 size={16} className="animate-spin" style={{ color: "var(--accent-base)" }} />
                 </div>
               </div>
             )}
@@ -172,13 +179,13 @@ export function SupplierOnboardingBot() {
                 onClick={() => handleSend()}
                 disabled={loading || !input.trim()}
                 className="p-1.5 rounded-lg transition-colors disabled:opacity-30"
-                style={{ backgroundColor: input.trim() ? "#4A7C59" : "transparent" }}
+                style={{ backgroundColor: input.trim() ? "var(--accent-base)" : "transparent" }}
               >
                 <Send size={14} className={input.trim() ? "text-white" : "text-white/20"} />
               </button>
             </div>
             <p className="text-[9px] text-white/15 text-center mt-2 pb-0.5">
-              Powered by HotelsVendors Intelligence Engine
+              Powered by HotelsVendors Intelligence Engine (Ollama llama3.2)
             </p>
           </div>
         </div>

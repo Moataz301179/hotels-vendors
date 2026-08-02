@@ -47,7 +47,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn("border-t border-[var(--border-default)] bg-[var(--surface-raised)] font-medium", className)}
+    className={cn("border-t border-[var(--border-default)] bg-surface-raised font-medium", className)}
     {...props}
   />
 ));
@@ -60,7 +60,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "transition-colors hover:bg-[var(--surface-hover)] data-[state=selected]:bg-[var(--surface-hover)]",
+      "transition-colors hover:bg-surface-hover data-[state=selected]:bg-surface-hover",
       className
     )}
     {...props}
@@ -75,7 +75,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-4 text-left align-middle font-medium text-[var(--foreground-secondary)] [&:has([role=checkbox])]:pr-0",
+      "h-10 px-4 text-left align-middle font-medium text-foreground-secondary [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -89,7 +89,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle text-[var(--foreground)] [&:has([role=checkbox])]:pr-0 density-table", className)}
+    className={cn("p-4 align-middle text-foreground [&:has([role=checkbox])]:pr-0 density-table", className)}
     {...props}
   />
 ));

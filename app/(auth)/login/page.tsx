@@ -51,7 +51,7 @@ export default function LoginPage() {
     }
   };
 
-  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#f5870a]/30 focus:outline-none focus:ring-1 focus:ring-[#f5870a]/10 transition-all";
+  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:border-accent-base/30 focus:outline-none focus:ring-1 focus:ring-accent-base/10 transition-all";
 
   return (
     <div className="space-y-8">
@@ -120,7 +120,7 @@ export default function LoginPage() {
 
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-foreground-muted text-[13px] cursor-pointer hover:text-foreground-secondary transition-colors">
-              <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#f5870a]" />
+              <input type="checkbox" className="w-3.5 h-3.5 rounded border-border-subtle bg-white/[0.03] accent-accent-base" />
               Remember me
             </label>
             <Link href="/forgot-password" className="text-[13px] text-accent-base hover:opacity-80 transition-opacity font-medium">
@@ -131,7 +131,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base text-[#07090f] text-[13px] font-semibold hover:bg-accent-dark disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base text-surface text-[13px] font-semibold hover:bg-accent-dark disabled:opacity-50 transition-all hover:shadow-[0_0_20px_var(--accent-glow)]"
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />

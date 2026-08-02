@@ -18,10 +18,10 @@ interface Product {
 }
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "#f5870a", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" },
-  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "#f5870a", image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400&h=300&fit=crop" },
+  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" },
+  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400&h=300&fit=crop" },
   { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop" },
-  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "#ff7e1a", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" },
+  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" },
 ];
 
 const supplierFeatures = [
@@ -83,7 +83,7 @@ function MarketplaceContent() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,135,10,0.03) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
@@ -101,7 +101,7 @@ function MarketplaceContent() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search products, suppliers, or categories..."
-                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-[#f5870a]/60 transition-all"
+                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-accent-base/60 transition-all"
                 />
                 {query && (
                   <button
@@ -117,7 +117,7 @@ function MarketplaceContent() {
             {query && (
               <p className="text-[12px] text-white/40 mt-3">
                 {hasResults ? (
-                  <>Showing results for <span className="text-[#f5870a] font-medium">&ldquo;{query}&rdquo;</span></>
+                  <>Showing results for <span className="text-accent-base font-medium">&ldquo;{query}&rdquo;</span></>
                 ) : (
                   <>No matches for <span className="text-white font-medium">&ldquo;{query}&rdquo;</span></>
                 )}
@@ -125,7 +125,7 @@ function MarketplaceContent() {
             )}
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>Start Selling <ArrowRight size={14} /></Link>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>Start Selling <ArrowRight size={14} /></Link>
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
           </div>
         </div>
@@ -141,7 +141,7 @@ function MarketplaceContent() {
               { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "#f5870a" }} />
+                <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                 <div>
                   <p className="text-[11px] font-medium text-white/60">{b.label}</p>
                   <p className="text-[9px] text-white/25">{b.desc}</p>
@@ -154,7 +154,7 @@ function MarketplaceContent() {
 
       {/* Product Showcase */}
       <section className="py-16 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(245,135,10,0.04) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(var(--accent-base-rgb),0.04) 0%, transparent 60%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -164,7 +164,7 @@ function MarketplaceContent() {
           </div>
           {loading ? (
             <div className="flex items-center justify-center py-16">
-              <Loader2 size={24} className="animate-spin" style={{ color: "#f5870a" }} />
+              <Loader2 size={24} className="animate-spin" style={{ color: "var(--accent-base)" }} />
             </div>
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -173,13 +173,13 @@ function MarketplaceContent() {
                   <div className="relative h-32 overflow-hidden">
                     <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || "https://images.unsplash.com/photo-1585670149967-b4f4da88cc9f?w=400"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
                     <div className="absolute top-2 left-2">
-                      <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(245,135,10,0.15)", color: "#f5870a" }}>{p.category.replace(/_/g, " ")}</span>
+                      <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.15)", color: "var(--accent-base)" }}>{p.category.replace(/_/g, " ")}</span>
                     </div>
                   </div>
                   <div className="p-3">
                     <h4 className="text-[11px] font-medium text-white mb-1 leading-tight line-clamp-2">{p.name}</h4>
                     <p className="text-[10px] text-white/30 mb-1.5">{p.supplier?.name || "Verified Supplier"}</p>
-                    <p className="text-[12px] font-semibold text-[#f5870a]">{formatPrice(p.unitPrice)}/{p.unitOfMeasure}</p>
+                    <p className="text-[12px] font-semibold text-accent-base">{formatPrice(p.unitPrice)}/{p.unitOfMeasure}</p>
                   </div>
                 </div>
               ))}
@@ -219,8 +219,8 @@ function MarketplaceContent() {
           <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {supplierFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-[#f5870a]/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-4" style={{ color: "#f5870a" }} />
+              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-accent-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
                 <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
               </div>
@@ -234,7 +234,7 @@ function MarketplaceContent() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(245,135,10,0.2)]" style={{ backgroundColor: "#f5870a", color: "#07090f" }}>
+          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
             Register as Supplier <ArrowRight size={14} />
           </Link>
         </div>

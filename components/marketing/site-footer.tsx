@@ -9,7 +9,7 @@ export function SiteFooter() {
   const ar = locale === "ar";
 
   return (
-    <footer className={`border-t py-12 px-6 ${ar ? "font-cairo" : ""}`} style={{ borderColor: "#f5870a18" }}>
+    <footer className={`border-t py-12 px-6 ${ar ? "font-cairo" : ""}`} style={{ borderColor: "var(--accent-base)18" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
           {/* Brand */}
@@ -26,9 +26,9 @@ export function SiteFooter() {
                 : "The world's first AI-driven B2B procurement platform for hospitality. ETA & FRA compliant. Free to start."}
             </p>
             <div className="flex gap-2 flex-wrap">
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "#f5870a44", color: "#f5870a" }}>ETA</span>
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "#ff7e1a44", color: "#ff7e1a" }}>FRA</span>
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "#c455ff44", color: "#c455ff" }}>AML/KYC</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--accent-base)44", color: "var(--accent-base)" }}>ETA</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--orange-base)44", color: "var(--orange-base)" }}>FRA</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--purple-base)44", color: "var(--purple-base)" }}>AML/KYC</span>
             </div>
           </div>
 
@@ -66,10 +66,10 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-white/30" style={{ borderColor: "#f5870a15" }}>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-white/30" style={{ borderColor: "var(--accent-base)15" }}>
           <span>&copy; {new Date().getFullYear()} {ar ? " Restaurants for E-Marketing. جميع الحقوق محفوظة." : "Restaurants for E-Marketing. All rights reserved."}</span>
           <span className="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f5870a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             ETA &middot; FRA &middot; AML/KYC &middot; {ar ? "المدفوعات عبر شركاء PCI-DSS" : "Payments via PCI-DSS partners"} (Oliv, Paymob)

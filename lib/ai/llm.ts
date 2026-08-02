@@ -60,7 +60,7 @@ export async function executeLLM(
     throw new Error("Invalid executeLLM arguments");
   }
 
-  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+  const ollamaUrl = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
   const { temperature = 0.7, maxTokens = 1024, jsonMode = false, timeoutMs = 60000 } = options;
 
@@ -110,26 +110,31 @@ export async function executeLLMStream(
   messages: LLMMessage[],
   options: RouterOptions
 ): Promise<ReadableStream> {
-  const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
+  const ollamaUrl = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "llama3.2:3b";
   const { temperature = 0.7, maxTokens = 1024 } = options;
 
-  const systemMsg = messages.find((m) => m.role === "system")?.content || "";
-  const userMsgs = messages.filter((m) => m.role !== "system").map((m) => m.content).join("\n");
-  const prompt = systemMsg ? `${systemMsg}\n\n${userMsgs}` : userMsgs;
+  // Use /api/chat endpoint (more reliable than /api/generate on this Ollama setup)
+  const chatMessages = messages.map((m) => ({
+    role: m.role as "system" | "user" | "assistant",
+    content: m.content,
+  }));
 
-  const res = await fetch(`${ollamaUrl}/api/generate`, {
+  const res = await fetch(`${ollamaUrl}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: ollamaModel,
-      prompt,
+      messages: chatMessages,
       stream: true,
       options: { temperature, num_predict: maxTokens },
     }),
   });
 
-  if (!res.ok || !res.body) throw new Error("Ollama streaming failed");
+  if (!res.ok || !res.body) {
+    const text = await res.text().catch(() => "no body");
+    throw new Error(`Ollama streaming failed (status ${res.status}): ${text}`);
+  }
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
@@ -147,7 +152,9 @@ export async function executeLLMStream(
           if (line.trim()) {
             try {
               const json = JSON.parse(line);
-              if (json.response) controller.enqueue(new TextEncoder().encode(json.response));
+              if (json.message?.content) {
+                controller.enqueue(new TextEncoder().encode(json.message.content));
+              }
             } catch { /* skip */ }
           }
         }

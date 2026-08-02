@@ -83,8 +83,8 @@ export default function AdminAnalyticsPage() {
         ordersByStatus: [
           { status: "Completed", count: 798, color: "#10b981" },
           { status: "Pending", count: 23, color: "#f59e0b" },
-          { status: "In Transit", count: 15, color: "#3b82f6" },
-          { status: "Rejected", count: 26, color: "#ef4444" },
+          { status: "In Transit", count: 15, color: "var(--info)" },
+          { status: "Rejected", count: 26, color: "var(--error)" },
           { status: "Cancelled", count: 8, color: "#6b7280" },
         ],
       });
@@ -161,7 +161,7 @@ export default function AdminAnalyticsPage() {
               { label: "Total Revenue", value: formatEGP(data.totalRevenue), change: `+${data.monthlyGrowth}%`, up: true, color: "var(--accent-base)" },
               { label: "Platform Fees", value: formatEGP(data.platformFees), change: "+18.2%", up: true, color: "#f59e0b" },
               { label: "Factoring Volume", value: formatEGP(data.factoringVolume), change: "+24.5%", up: true, color: "#8b5cf6" },
-              { label: "Avg Order Value", value: formatEGP(data.avgOrderValue), change: "+5.3%", up: true, color: "#3b82f6" },
+              { label: "Avg Order Value", value: formatEGP(data.avgOrderValue), change: "+5.3%", up: true, color: "var(--info)" },
               { label: "Total Orders", value: data.totalOrders.toLocaleString(), change: "+12.8%", up: true, color: "#10b981" },
               { label: "Active Users", value: data.activeUsers.toLocaleString(), change: "+8.4%", up: true, color: "#ec4899" },
               { label: "Suppliers", value: data.totalSuppliers.toLocaleString(), change: "+15.2%", up: true, color: "#06b6d4" },

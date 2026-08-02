@@ -50,9 +50,9 @@ export function InvoDashboardShell({
       {/* Main Content */}
       <div className="flex flex-col flex-1 min-w-0">
         {/* Header */}
-        <header className="flex-shrink-0 h-14 border-b border-[rgba(212,168,67,0.08)] bg-black flex items-center justify-between px-4 sm:px-6">
+        <header className="flex-shrink-0 h-14 border-b border-[rgba(var(--orange-base-rgb),0.08)] bg-black flex items-center justify-between px-4 sm:px-6">
           <button
-            className="md:hidden p-2 rounded-lg text-white/40 hover:text-[#D4A843] hover:bg-[rgba(212,168,67,0.08)] transition-colors"
+            className="md:hidden p-2 rounded-lg text-white/40 hover:text-orange-base hover:bg-[rgba(var(--orange-base-rgb),0.08)] transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             <Menu size={20} />
@@ -65,8 +65,8 @@ export function InvoDashboardShell({
               {user.tenantName || user.name}
             </span>
             <div className="flex items-center gap-2 pl-3 border-l border-white/[0.06]">
-              <div className="w-8 h-8 rounded-lg bg-[rgba(212,168,67,0.15)] flex items-center justify-center">
-                <span className="text-[12px] font-medium text-[#D4A843]">
+              <div className="w-8 h-8 rounded-lg bg-[rgba(var(--orange-base-rgb),0.15)] flex items-center justify-center">
+                <span className="text-[12px] font-medium text-orange-base">
                   {user.name?.charAt(0)?.toUpperCase() || "S"}
                 </span>
               </div>

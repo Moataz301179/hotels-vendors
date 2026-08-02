@@ -6,7 +6,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-border-invisible bg-[#050505]">
+    <footer className="border-t border-border-invisible bg-background">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
@@ -92,7 +92,7 @@ export function MarketingFooter() {
         {/* Data Privacy & Cookie Clause */}
         <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)" }}>
           <div className="flex items-start gap-3">
-            <Lock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "rgba(132,204,22,0.5)" }} />
+            <Lock className="w-4 h-4 flex-shrink-0 mt-0.5 text-success" />
             <div>
               <p className="text-[11px] text-foreground-muted leading-relaxed">
                 <strong className="text-foreground-tertiary">Data Isolation & Privacy Commitment:</strong> HotelsVendors processes enterprise financial data exclusively as a technical data orchestrator under explicit data processing agreements. All corporate transaction data, invoice payloads, and ETA submission records are handled with AES-256-GCM encryption at rest and TLS 1.3 in transit. Data is logically isolated per tenant with zero cross-contenant exposure. Session cookies are strictly necessary for platform operation and do not track user behavior for advertising purposes. Full compliance with Egyptian data protection regulations. For data processing inquiries, contact the Data Controller at <span className="text-foreground-secondary">privacy@hotelsvendors.com</span>.
@@ -124,15 +124,15 @@ export function MarketingFooter() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-[12px] text-foreground-muted">
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-[#84cc16]" />
+              <Shield className="w-3.5 h-3.5 text-[var(--success)]" />
               Bank-grade security
             </span>
             <span className="flex items-center gap-1.5">
-              <FileCheck className="w-3.5 h-3.5 text-[#84cc16]" />
+              <FileCheck className="w-3.5 h-3.5 text-[var(--success)]" />
               ETA compliant
             </span>
             <span className="flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-[#84cc16]" />
+              <Lock className="w-3.5 h-3.5 text-[var(--success)]" />
               Data isolated
             </span>
           </div>

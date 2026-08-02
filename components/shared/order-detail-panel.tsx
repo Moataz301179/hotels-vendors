@@ -189,7 +189,7 @@ export function OrderDetailPanel({
           {order.status === "PENDING_APPROVAL" && onApprove && (
             <button
               onClick={() => onApprove(order)}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base text-[#07090f] text-xs font-semibold hover:bg-accent-light transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-accent-base text-surface text-xs font-semibold hover:bg-accent-light transition-colors"
             >
               <Check size={14} />
               Approve

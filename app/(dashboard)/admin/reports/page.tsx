@@ -17,11 +17,11 @@ interface ReportData {
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "#f59e0b",
-  APPROVED: "#3b82f6",
+  APPROVED: "var(--info)",
   CONFIRMED: "#10b981",
   IN_TRANSIT: "#06b6d4",
   DELIVERED: "#8b5cf6",
-  CANCELLED: "#ef4444",
+  CANCELLED: "var(--error)",
   DISPUTED: "#f97316",
 };
 
@@ -34,7 +34,7 @@ export default function AdminReportsPage() {
   const kpiCards = [
     { label: "Total GMV", value: data ? formatEgp(data.gmv.total) : "—", icon: Wallet, color: "var(--accent-base)" },
     { label: "Monthly GMV", value: data ? formatEgp(data.gmv.monthly) : "—", icon: TrendingUp, color: "#10b981" },
-    { label: "Weekly GMV", value: data ? formatEgp(data.gmv.weekly) : "—", icon: TrendingUp, color: "#3b82f6" },
+    { label: "Weekly GMV", value: data ? formatEgp(data.gmv.weekly) : "—", icon: TrendingUp, color: "var(--info)" },
     { label: "Platform Fees", value: data ? formatEgp(data.factoring.totalPlatformFees) : "—", icon: BarChart3, color: "#f59e0b" },
     { label: "New Users (30d)", value: data ? String(data.userGrowth.newUsers30d) : "—", icon: Users, color: "#8b5cf6" },
     { label: "ETA Compliant (DEMO)", value: data ? `${data.eta.filter((e) => ["ACCEPTED", "VALIDATED"].includes(e.status)).reduce((s, e) => s + e.count, 0)} invoices` : "—", icon: FileCheck, color: "#06b6d4" },

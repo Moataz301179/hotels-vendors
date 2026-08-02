@@ -15,7 +15,7 @@ const MODULES = [
   {
     group: "Operations",
     items: [
-      { label: "Procurement Dashboard", desc: "Inventory alerts, consumption trends & restock predictions", icon: LayoutDashboard, to: "/procurement", color: "#3b82f6" },
+      { label: "Procurement Dashboard", desc: "Inventory alerts, consumption trends & restock predictions", icon: LayoutDashboard, to: "/procurement", color: "var(--info)" },
       { label: "Approval Matrix", desc: "AI-driven PO evaluation, CFO overrides & payment triggers", icon: ShieldCheck, to: "/admin/suppliers/pipeline", color: "#8b5cf6" },
       { label: "Bulk Scheduler", desc: "Recurring procurement orders & automated supply runs", icon: CalendarClock, to: "/scheduler", color: "#06b6d4" },
       { label: "Dock Receiving", desc: "Barcode-scan incoming shipments & log discrepancies", icon: ScanBarcode, to: "/orders", color: "#10b981" },
@@ -25,7 +25,7 @@ const MODULES = [
     group: "Finance & Compliance",
     items: [
       { label: "Finance & Liquidity", desc: "Credit facilities, factoring pipeline & PO-ETA reconciliation", icon: Wallet, to: "/factoring", color: "#f59e0b" },
-      { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
+      { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "var(--error)" },
       { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
       { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "var(--accent-base)" },
       { label: "Billing & Payouts", desc: "Fee configuration, tier commissions, referral & payout schedules", icon: Wallet, to: "/admin/billing", color: "#06b6d4" },
@@ -35,7 +35,7 @@ const MODULES = [
     group: "Intelligence",
     items: [
       { label: "Data Explorer", desc: "Cross-tenant search across users, suppliers, hotels, orders & products", icon: Search, to: "/admin/explorer", color: "#6366f1" },
-      { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#f5870a" },
+      { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "var(--accent-base)" },
       { label: "Reports", desc: "Platform-wide analytics, GMV tracking & KPI dashboards", icon: PieChart, to: "/admin/reports", color: "#8b5cf6" },
       { label: "Analytics & Insights", desc: "User metrics, order analytics, revenue trends & growth KPIs", icon: BarChart3, to: "/admin/analytics", color: "var(--purple-base)" },
     ],
@@ -45,14 +45,14 @@ const MODULES = [
     items: [
       { label: "Credentials & Secrets", desc: "API keys, webhook secrets, .env config & Oliv/ETA credentials", icon: ShieldCheck, to: "/admin/credentials", color: "#f59e0b" },
       { label: "AI Assistant", desc: "Generative suggestions for improvements, growth & enhancements", icon: Brain, to: "/admin/ai-assistant", color: "var(--purple-base)" },
-      { label: "User Management", desc: "Users, roles, permissions & tenant administration", icon: Users, to: "/admin/users", color: "#3b82f6" },
-      { label: "Logs & Audit", desc: "System logs, security events & compliance audit trail", icon: Activity, to: "/admin/logs", color: "#ef4444" },
+      { label: "User Management", desc: "Users, roles, permissions & tenant administration", icon: Users, to: "/admin/users", color: "var(--info)" },
+      { label: "Logs & Audit", desc: "System logs, security events & compliance audit trail", icon: Activity, to: "/admin/logs", color: "var(--error)" },
     ],
   },
   {
     group: "AI Agent Core",
     items: [
-      { label: "Grok Brain", desc: "Real-time agent execution monitor — watch tools, screenshots & results", icon: Brain, to: "/admin/grok-brain", color: "#ef4444" },
+      { label: "Grok Brain", desc: "Real-time agent execution monitor — watch tools, screenshots & results", icon: Brain, to: "/admin/grok-brain", color: "var(--error)" },
       { label: "Orchestrator", desc: "Strategic command center for AI agent squads", icon: BarChart3, to: "/admin/orchestrator", color: "#f59e0b" },
       { label: "Swarm", desc: "Job queue management, approvals & agent health", icon: Activity, to: "/admin/swarm", color: "#10b981" },
     ],
@@ -60,7 +60,7 @@ const MODULES = [
 ];
 
 const PORTAL_SWITCHER = [
-  { label: "Hotel Portal", desc: "Browse as hotel buyer", icon: Hotel, to: "/hotel", color: "#3b82f6", bg: "#3b82f615" },
+  { label: "Hotel Portal", desc: "Browse as hotel buyer", icon: Hotel, to: "/hotel", color: "var(--info)", bg: "var(--info)15" },
   { label: "Supplier Portal", desc: "Browse as supplier", icon: Store, to: "/supplier", color: "#f59e0b", bg: "#f59e0b15" },
   { label: "Factoring Portal", desc: "Browse as factoring company", icon: Landmark, to: "/factoring", color: "#8b5cf6", bg: "#8b5cf615" },
   { label: "Shipping Portal", desc: "Browse as logistics provider", icon: Truck, to: "/shipping", color: "#10b981", bg: "#10b98115" },
@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
   const stats = pulse
     ? [
         { label: "Pending Approvals", value: pulse.pendingApprovals, color: "#f59e0b", trend: null },
-        { label: "Active Orders", value: pulse.activeOrders, color: "#3b82f6", trend: null },
+        { label: "Active Orders", value: pulse.activeOrders, color: "var(--info)", trend: null },
         { label: "ETA Invoices", value: pulse.etaInvoices, color: "#10b981", trend: null },
         { label: "Credit Lines", value: pulse.creditLines, color: "#8b5cf6", trend: null },
         { label: "Total Users", value: pulse.totalUsers, color: "#ec4899", trend: null },

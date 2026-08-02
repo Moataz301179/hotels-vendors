@@ -35,7 +35,7 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          "relative inline-flex items-center justify-center overflow-hidden rounded-full bg-[var(--surface-raised)] border border-[var(--border-default)] shrink-0",
+          "relative inline-flex items-center justify-center overflow-hidden rounded-full bg-surface-raised border border-[var(--border-default)] shrink-0",
           sizeMap[size],
           className
         )}
@@ -49,7 +49,7 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             onError={() => setError(true)}
           />
         ) : (
-          <span className="font-medium text-[var(--foreground-secondary)]">
+          <span className="font-medium text-foreground-secondary">
             {initials}
           </span>
         )}

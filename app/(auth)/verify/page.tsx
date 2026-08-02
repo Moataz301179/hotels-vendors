@@ -48,14 +48,14 @@ function VerifyContent() {
   return (
     <div className="text-center space-y-6 py-4">
       <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${
-        status === "loading" ? "bg-[#f5870a]/10 border border-[#f5870a]/20" :
-        status === "success" ? "bg-[#f5870a]/10 border border-[#f5870a]/20" :
+        status === "loading" ? "bg-accent-base/10 border border-accent-base/20" :
+        status === "success" ? "bg-accent-base/10 border border-accent-base/20" :
         "bg-red-500/10 border border-red-500/20"
       }`}>
         {status === "loading" ? (
-          <Loader2 className="w-8 h-8 text-[#f5870a] animate-spin" />
+          <Loader2 className="w-8 h-8 text-accent-base animate-spin" />
         ) : status === "success" ? (
-          <CheckCircle2 className="w-8 h-8 text-[#f5870a]" />
+          <CheckCircle2 className="w-8 h-8 text-accent-base" />
         ) : (
           <XCircle className="w-8 h-8 text-red-400" />
         )}
@@ -70,14 +70,14 @@ function VerifyContent() {
 
       {status === "success" && (
         <button onClick={() => router.push("/login")}
-          className="px-6 py-3 rounded-xl text-[13px] font-semibold bg-[#f5870a] text-[#07090f] hover:bg-[#f5870a]/90 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]">
+          className="px-6 py-3 rounded-xl text-[13px] font-semibold bg-accent-base text-surface hover:bg-accent-base/90 transition-all hover:shadow-accent">
           Sign in to your account
         </button>
       )}
 
       {status === "error" && (
         <Link href="/login"
-          className="inline-block px-6 py-3 rounded-xl text-[13px] font-semibold bg-[#f5870a] text-[#07090f] hover:bg-[#f5870a]/90 transition-all hover:shadow-[0_0_20px_rgba(245,135,10,0.15)]">
+          className="inline-block px-6 py-3 rounded-xl text-[13px] font-semibold bg-accent-base text-surface hover:bg-accent-base/90 transition-all hover:shadow-accent">
           Back to login
         </Link>
       )}
@@ -87,7 +87,7 @@ function VerifyContent() {
 
 export default function VerifyPage() {
   return (
-    <Suspense fallback={<div className="w-full text-center py-12"><Loader2 className="w-8 h-8 animate-spin mx-auto text-[#f5870a]" /></div>}>
+    <Suspense fallback={<div className="w-full text-center py-12"><Loader2 className="w-8 h-8 animate-spin mx-auto text-accent-base" /></div>}>
       <VerifyContent />
     </Suspense>
   )

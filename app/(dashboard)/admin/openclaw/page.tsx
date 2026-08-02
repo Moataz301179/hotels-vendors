@@ -65,12 +65,12 @@ export default async function OpenClawHubPage() {
     switch (status) {
       case "active": return "var(--accent-base)";
       case "paused": return "var(--orange-base)";
-      case "failed": return "#ef4444";
+      case "failed": return "var(--error)";
       case "passed": return "var(--accent-base)";
       case "COMPLETED": return "var(--accent-base)";
-      case "RUNNING": return "#60a5fa";
+      case "RUNNING": return "var(--info)";
       case "PENDING": return "var(--orange-base)";
-      case "FAILED": return "#ef4444";
+      case "FAILED": return "var(--error)";
       default: return "var(--text-muted)";
     }
   };
@@ -79,11 +79,11 @@ export default async function OpenClawHubPage() {
     switch (status) {
       case "active":
       case "passed":
-      case "COMPLETED": return "rgba(52,211,153,0.08)";
+      case "COMPLETED": return "rgba(var(--success-rgb),0.08)";
       case "paused":
       case "PENDING": return "rgba(251,191,36,0.08)";
       case "failed":
-      case "FAILED": return "rgba(239,68,68,0.08)";
+      case "FAILED": return "rgba(var(--error-rgb),0.08)";
       case "RUNNING": return "rgba(96,165,250,0.08)";
       default: return "rgba(255,255,255,0.03)";
     }
@@ -93,11 +93,11 @@ export default async function OpenClawHubPage() {
     switch (status) {
       case "active":
       case "passed":
-      case "COMPLETED": return "rgba(52,211,153,0.20)";
+      case "COMPLETED": return "rgba(var(--success-rgb),0.20)";
       case "paused":
       case "PENDING": return "rgba(251,191,36,0.20)";
       case "failed":
-      case "FAILED": return "rgba(239,68,68,0.20)";
+      case "FAILED": return "rgba(var(--error-rgb),0.20)";
       case "RUNNING": return "rgba(96,165,250,0.20)";
       default: return "rgba(255,255,255,0.06)";
     }
@@ -127,8 +127,8 @@ export default async function OpenClawHubPage() {
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
               data.health.gateway && data.health.automation
-                ? "bg-[rgba(52,211,153,0.08)] text-emerald-400 border-[rgba(52,211,153,0.20)]"
-                : "bg-[rgba(239,68,68,0.08)] text-[#ef4444] border-[rgba(239,68,68,0.20)]"
+                ? "bg-[rgba(var(--success-rgb),0.08)] text-emerald-400 border-[rgba(var(--success-rgb),0.20)]"
+                : "bg-[rgba(var(--error-rgb),0.08)] text-error border-[rgba(var(--error-rgb),0.20)]"
             }`}
           >
             <Activity size={12} />
@@ -143,8 +143,8 @@ export default async function OpenClawHubPage() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${data.health.gateway ? "bg-[rgba(52,211,153,0.10)]" : "bg-[rgba(239,68,68,0.10)]"}`}>
-                <Zap size={16} className={data.health.gateway ? "text-emerald-400" : "text-[#ef4444]"} />
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${data.health.gateway ? "bg-[rgba(var(--success-rgb),0.10)]" : "bg-[rgba(var(--error-rgb),0.10)]"}`}>
+                <Zap size={16} className={data.health.gateway ? "text-emerald-400" : "text-error"} />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Gateway</p>
@@ -154,7 +154,7 @@ export default async function OpenClawHubPage() {
             {data.health.gateway ? (
               <CheckCircle2 size={16} className="text-emerald-400" />
             ) : (
-              <XCircle size={16} className="text-[#ef4444]" />
+              <XCircle size={16} className="text-error" />
             )}
           </div>
           <div className="space-y-2">
@@ -164,7 +164,7 @@ export default async function OpenClawHubPage() {
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-foreground-muted">Status</span>
-              <span className={data.health.gateway ? "text-emerald-400" : "text-[#ef4444]"}>
+              <span className={data.health.gateway ? "text-emerald-400" : "text-error"}>
                 {data.health.gateway ? "Operational" : "Unreachable"}
               </span>
             </div>
@@ -175,8 +175,8 @@ export default async function OpenClawHubPage() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${data.health.automation ? "bg-[rgba(52,211,153,0.10)]" : "bg-[rgba(239,68,68,0.10)]"}`}>
-                <Terminal size={16} className={data.health.automation ? "text-emerald-400" : "text-[#ef4444]"} />
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${data.health.automation ? "bg-[rgba(var(--success-rgb),0.10)]" : "bg-[rgba(var(--error-rgb),0.10)]"}`}>
+                <Terminal size={16} className={data.health.automation ? "text-emerald-400" : "text-error"} />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Automation</p>
@@ -186,7 +186,7 @@ export default async function OpenClawHubPage() {
             {data.health.automation ? (
               <CheckCircle2 size={16} className="text-emerald-400" />
             ) : (
-              <XCircle size={16} className="text-[#ef4444]" />
+              <XCircle size={16} className="text-error" />
             )}
           </div>
           <div className="space-y-2">
@@ -196,7 +196,7 @@ export default async function OpenClawHubPage() {
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-foreground-muted">Status</span>
-              <span className={data.health.automation ? "text-emerald-400" : "text-[#ef4444]"}>
+              <span className={data.health.automation ? "text-emerald-400" : "text-error"}>
                 {data.health.automation ? "Operational" : "Unreachable"}
               </span>
             </div>
@@ -207,7 +207,7 @@ export default async function OpenClawHubPage() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[rgba(2,35,73,0.15)] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[rgba(0,0,0,0.15)] flex items-center justify-center">
                 <Camera size={16} className="text-accent-base" />
               </div>
               <div>
@@ -217,12 +217,12 @@ export default async function OpenClawHubPage() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <div className="text-center p-2 rounded-lg bg-[rgba(52,211,153,0.06)] border border-[rgba(52,211,153,0.12)]">
+            <div className="text-center p-2 rounded-lg bg-[rgba(var(--success-rgb),0.06)] border border-[rgba(var(--success-rgb),0.12)]">
               <p className="text-lg font-bold text-emerald-400">{data.screenshots.filter(s => s.status === "passed").length}</p>
               <p className="text-[9px] text-foreground-muted uppercase">Passed</p>
             </div>
-            <div className="text-center p-2 rounded-lg bg-[rgba(239,68,68,0.06)] border border-[rgba(239,68,68,0.12)]">
-              <p className="text-lg font-bold text-[#ef4444]">{data.screenshots.filter(s => s.status === "failed").length}</p>
+            <div className="text-center p-2 rounded-lg bg-[rgba(var(--error-rgb),0.06)] border border-[rgba(var(--error-rgb),0.12)]">
+              <p className="text-lg font-bold text-error">{data.screenshots.filter(s => s.status === "failed").length}</p>
               <p className="text-[9px] text-foreground-muted uppercase">Failed</p>
             </div>
             <div className="text-center p-2 rounded-lg bg-surface-1 border border-border-subtle">

@@ -14,9 +14,9 @@ const badgeVariants = cva(
         default:
           "border-transparent bg-[var(--accent-700)]/20 text-[var(--accent-400)]",
         secondary:
-          "border-transparent bg-[var(--surface-raised)] text-[var(--foreground-secondary)]",
+          "border-transparent bg-surface-raised text-foreground-secondary",
         outline:
-          "border-[var(--border-default)] text-[var(--foreground-secondary)]",
+          "border-[var(--border-default)] text-foreground-secondary",
         success:
           "border-transparent bg-[var(--success)]/15 text-[var(--success)]",
         warning:

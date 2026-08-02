@@ -27,7 +27,7 @@ export function MarketingNav() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-border ${
         scrolled
-          ? "bg-black/95 backdrop-blur-sm"
+          ? "bg-canvas/95 backdrop-blur-sm border-b border-border-subtle"
           : "bg-transparent"
       }`}
     >
@@ -60,8 +60,8 @@ export function MarketingNav() {
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(132,204,22,0.15)]"
-            style={{ backgroundColor: "var(--accent-base)", color: "#000000" }}
+            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-accent"
+            style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}
           >
             Get Started
           </Link>
@@ -76,7 +76,7 @@ export function MarketingNav() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden bg-black/98 border-t border-white/5 backdrop-blur-md animate-fade-in-up">
+        <div className="lg:hidden bg-canvas/98 border-t border-border-subtle backdrop-blur-md animate-fade-in-up">
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
               <Link

@@ -23,7 +23,7 @@ const FLOW_STEPS = [
     subtitle: "Browse catalog, select quantities, submit PO",
     actor: "Hotel Procurement",
     icon: Building2,
-    color: "#f5870a",
+    color: "var(--accent-base)",
     details: [
       "Search 1,000+ verified hospitality SKUs",
       "Multi-property cart with budget controls",
@@ -37,7 +37,7 @@ const FLOW_STEPS = [
     subtitle: "Accept order, pick/pack, dispatch via shared logistics",
     actor: "Supplier",
     icon: Factory,
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
     details: [
       "One-click order acceptance",
       "Real-time inventory sync",
@@ -51,7 +51,7 @@ const FLOW_STEPS = [
     subtitle: "Three-way match: PO + Delivery Note + Invoice",
     actor: "System",
     icon: FileText,
-    color: "#c455ff",
+    color: "var(--purple-base)",
     details: [
       "Cryptographic ETA UUID + digital signature",
       "Three-way match validated in seconds",
@@ -65,7 +65,7 @@ const FLOW_STEPS = [
     subtitle: "Supplier clicks 'Get Financed' → up to EGP 10M in 48h",
     actor: "Oliv × Supplier",
     icon: Landmark,
-    color: "#4A7C59",
+    color: "var(--success)",
     details: [
       "Pre-approved credit engine processes any volume",
       "No paperwork — digital contract signing",
@@ -90,12 +90,12 @@ const FLOW_STEPS = [
 ];
 
 const KEY_METRICS = [
-  { label: "Max Pre-Approval", value: "EGP 10M", icon: CreditCard, color: "#4A7C59" },
-  { label: "Funding Speed", value: "48 Hours", icon: Clock, color: "#f5870a" },
-  { label: "Invoice Volume", value: "Unlimited", icon: RefreshCw, color: "#c455ff" },
-  { label: "Paperwork", value: "Zero", icon: FileText, color: "#ff7e1a" },
+  { label: "Max Pre-Approval", value: "EGP 10M", icon: CreditCard, color: "var(--success)" },
+  { label: "Funding Speed", value: "48 Hours", icon: Clock, color: "var(--accent-base)" },
+  { label: "Invoice Volume", value: "Unlimited", icon: RefreshCw, color: "var(--purple-base)" },
+  { label: "Paperwork", value: "Zero", icon: FileText, color: "var(--orange-base)" },
   { label: "ETA Compliance", value: "100%", icon: Shield, color: "#64b5f6" },
-  { label: "Hotel Payment Terms", value: "Net-60", icon: Calendar, color: "#f5870a" },
+  { label: "Hotel Payment Terms", value: "Net-60", icon: Calendar, color: "var(--accent-base)" },
 ];
 
 const SUPPLIER_BENEFITS = [
@@ -145,8 +145,8 @@ function BenefitCard({ benefit }: { benefit: typeof SUPPLIER_BENEFITS[0] }) {
   const Icon = benefit.icon;
   return (
     <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5 hover:border-white/[0.10] transition-all">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "#4A7C5912", border: "1px solid #4A7C5922" }}>
-        <Icon size={20} style={{ color: "#4A7C59" }} />
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: "rgba(var(--success-rgb),0.12)", border: "1px solid rgba(var(--success-rgb),0.22)" }}>
+        <Icon size={20} style={{ color: "var(--success)" }} />
       </div>
       <h3 className="text-[14px] font-semibold text-white mb-1">{benefit.title}</h3>
       <p className="text-[13px] text-white/40 leading-relaxed">{benefit.desc}</p>
@@ -159,20 +159,20 @@ export default function FlowPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
             <OlivLogo size="xs" variant="green" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>HotelsVendors × Oliv Partnership</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>HotelsVendors × Oliv Partnership</span>
           </div>
           <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
-            From Order to Cash in <span style={{ color: "#4A7C59" }}>48 Hours</span>
+            From Order to Cash in <span style={{ color: "var(--success)" }}>48 Hours</span>
           </h1>
           <p className="text-[16px] text-white/40 max-w-2xl mx-auto mb-10 leading-relaxed">
             Place an order. Get ETA-compliant invoice. Click "Get Financed." Supplier paid in 48h. Hotel pays at net-60. <br />Zero paperwork. Unlimited invoice volume. Up to EGP 10M pre-approval.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               <OlivLogo size="xs" variant="dark" />
               Learn About Financing <ArrowRight size={14} />
             </Link>
@@ -184,7 +184,7 @@ export default function FlowPage() {
       </section>
 
       {/* Key Metrics */}
-      <section className="py-10 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-10 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {KEY_METRICS.map((m) => {
@@ -207,7 +207,7 @@ export default function FlowPage() {
       <section className="py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Complete Journey</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--accent-base)" }}>Complete Journey</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Five Steps. One Platform. Zero Friction.</h2>
           </div>
           <div className="space-y-6">
@@ -219,11 +219,11 @@ export default function FlowPage() {
       </section>
 
       {/* Supplier Benefits */}
-      <section className="py-20 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-20 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="mx-auto max-w-5xl px-6">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#ff7e1a" }}>For Suppliers</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--orange-base)" }}>For Suppliers</span>
               <h2 className="text-3xl md:text-4xl font-semibold text-white">Get Paid Now. Grow Faster.</h2>
             </div>
             <OlivLogo size="md" variant="green" />
@@ -241,7 +241,7 @@ export default function FlowPage() {
         <div className="mx-auto max-w-5xl px-6">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>For Hotels</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--accent-base)" }}>For Hotels</span>
               <h2 className="text-3xl md:text-4xl font-semibold text-white">Extend Terms. Strengthen Supply Chain.</h2>
             </div>
             <BrandLogo variant="light" size="md" showText={false} />
@@ -255,24 +255,24 @@ export default function FlowPage() {
       </section>
 
       {/* How Financing Works Detail */}
-      <section className="py-20 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-20 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="mx-auto max-w-4xl px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#4A7C59" }}>Oliv Credit Engine</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>Oliv Credit Engine</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Handles Any Invoice Volume. Instantly.</h2>
           </div>
-          <div className="rounded-2xl border bg-[#12121a] p-8" style={{ borderColor: "#4A7C5922" }}>
+          <div className="rounded-2xl border bg-[#12121a] p-8" style={{ borderColor: "rgba(var(--success-rgb),0.22)" }}>
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#4A7C5908", border: "1px solid #4A7C5918" }}>
-                <div className="text-[36px] font-bold mb-1" style={{ color: "#4A7C59" }}>10M+</div>
+              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "rgba(var(--success-rgb),0.08)", border: "1px solid rgba(var(--success-rgb),0.18)" }}>
+                <div className="text-[36px] font-bold mb-1" style={{ color: "var(--success)" }}>10M+</div>
                 <div className="text-[13px] text-white/40">EGP Pre-Approval Limit</div>
               </div>
-              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#f5870a08", border: "1px solid #f5870a18" }}>
-                <div className="text-[36px] font-bold mb-1" style={{ color: "#f5870a" }}>48h</div>
+              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.08)", border: "1px solid var(--accent-base)18" }}>
+                <div className="text-[36px] font-bold mb-1" style={{ color: "var(--accent-base)" }}>48h</div>
                 <div className="text-[13px] text-white/40">Funds in Account</div>
               </div>
-              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#c455ff08", border: "1px solid #c455ff18" }}>
-                <div className="text-[36px] font-bold mb-1" style={{ color: "#c455ff" }}>∞</div>
+              <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "var(--purple-base)08", border: "1px solid var(--purple-base)18" }}>
+                <div className="text-[36px] font-bold mb-1" style={{ color: "var(--purple-base)" }}>∞</div>
                 <div className="text-[13px] text-white/40">Invoices Processed</div>
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function FlowPage() {
             Join 100+ suppliers and 20+ hotel groups already transacting on HotelsVendors. First financing referral is free.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.3)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.3)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               <OlivLogo size="xs" variant="dark" />
               Apply for Oliv Financing <ExternalLink size={14} />
             </a>

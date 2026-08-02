@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Shield -->
-  <path d="M16 2.5 4 8.3v7.9c0 5.8 4.2 11.3 12 13.3 7.8-2 12-7.5 12-13.3V8.3L16 2.5z" fill="rgba(20,184,166,0.10)" stroke="#f5870a" stroke-width="0.8"/>
-  <!-- H letterform -->
-  <path d="M11 9.5v13M21 9.5v13M11 16h10" stroke="#f5870a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Decorative diagonal -->
-  <path d="M5 12l22 10" stroke="#f5870a" stroke-width="0.6" opacity="0.25"/>
-  <path d="M5 16l18 8" stroke="#f5870a" stroke-width="0.6" opacity="0.25"/>
-</svg>

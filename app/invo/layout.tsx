@@ -2,17 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-// ── Stripe Palette ──
-const BG_PAGE = "#f7f8fa";
-const BG_SURFACE = "#ffffff";
-const BG_SIDEBAR = "#fafbfc";
-const BORDER = "#e3e8ee";
-const TEXT_PRIMARY = "#1a1f36";
-const TEXT_SECONDARY = "#525f7f";
-const TEXT_MUTED = "#8898aa";
-const ACCENT = "#635bff";
-const ACCENT_LIGHT = "#ededff";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/invo/dashboard", label: "Dashboard" },
@@ -27,32 +17,20 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
 
   return (
-    <div
-      className="min-h-screen flex"
-      style={{ backgroundColor: BG_PAGE, color: TEXT_PRIMARY }}
-    >
+    <div className="min-h-screen flex bg-canvas text-foreground font-sans">
       {/* ── Sidebar ── */}
-      <aside
-        className="w-60 shrink-0 flex flex-col border-r hidden md:flex"
-        style={{ backgroundColor: BG_SIDEBAR, borderColor: BORDER }}
-      >
+      <aside className="w-60 shrink-0 flex flex-col border-r hidden md:flex bg-surface-raised border-border-subtle">
         {/* Logo */}
-        <div className="px-5 py-5 border-b" style={{ borderColor: BORDER }}>
+        <div className="px-5 py-5 border-b border-border-subtle">
           <Link href="/invo/dashboard" className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold"
-              style={{ backgroundColor: ACCENT, color: "#ffffff" }}
-            >
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold bg-purple-base text-[var(--text-primary)]">
               HV
             </div>
             <div>
-              <span className="text-sm font-semibold tracking-tight" style={{ color: TEXT_PRIMARY }}>
+              <span className="text-sm font-semibold text-foreground tracking-tight">
                 HotelsVendors
               </span>
-              <span
-                className="block text-[10px] font-medium uppercase tracking-wider"
-                style={{ color: ACCENT }}
-              >
+              <span className="block text-[10px] font-medium uppercase tracking-wider text-purple-base">
                 INVO Layer
               </span>
             </div>
@@ -67,12 +45,11 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors"
-                style={{
-                  backgroundColor: isActive ? ACCENT_LIGHT : "transparent",
-                  color: isActive ? ACCENT : TEXT_SECONDARY,
-                  fontWeight: isActive ? 600 : 400,
-                }}
+                className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors",
+                  isActive
+                    ? "bg-purple-base/10 text-purple-base font-semibold"
+                    : "text-foreground-secondary hover:text-foreground hover:bg-white/[0.03]"
+                )}
               >
                 {item.label}
               </Link>
@@ -81,18 +58,12 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
         </nav>
 
         {/* Footer badge */}
-        <div className="px-4 py-4 border-t" style={{ borderColor: BORDER }}>
-          <div
-            className="rounded-lg px-3 py-2.5 text-center"
-            style={{ backgroundColor: ACCENT_LIGHT }}
-          >
-            <div
-              className="text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: ACCENT }}
-            >
+        <div className="px-4 py-4 border-t border-border-subtle">
+          <div className="rounded-lg px-3 py-2.5 text-center bg-purple-base/10">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-purple-base">
               Marketplace Engine
             </div>
-            <div className="text-[10px] mt-0.5" style={{ color: TEXT_MUTED }}>
+            <div className="text-[10px] mt-0.5 text-foreground-muted">
               Supabase · Live
             </div>
           </div>
@@ -102,15 +73,12 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
       {/* ── Main Content ── */}
       <main className="flex-1 overflow-auto">
         {/* Header */}
-        <header
-          className="sticky top-0 z-10 px-6 py-3 border-b flex items-center justify-between"
-          style={{ backgroundColor: BG_SURFACE, borderColor: BORDER }}
-        >
+        <header className="sticky top-0 z-10 px-6 py-3 border-b flex items-center justify-between bg-surface border-border-subtle">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-[12px]" style={{ color: TEXT_MUTED }}>
+          <div className="flex items-center gap-2 text-[12px] text-foreground-muted">
             <span>INVO</span>
             <span>/</span>
-            <span style={{ color: TEXT_SECONDARY, fontWeight: 500 }}>
+            <span className="text-foreground-secondary font-medium">
               {(() => {
                 const last = pathname.split("/").pop() || "dashboard";
                 return last.charAt(0).toUpperCase() + last.slice(1);
@@ -119,13 +87,10 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-[12px]" style={{ color: TEXT_MUTED }}>
+            <span className="text-[12px] text-foreground-muted">
               Supabase · INVO
             </span>
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold"
-              style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}
-            >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold bg-purple-base/10 text-purple-base">
               U
             </div>
           </div>

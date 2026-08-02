@@ -21,7 +21,7 @@ const ONBOARDING_STEPS = [
     title: "Register (2 minutes)",
     desc: "Fill in your name, email, password, Tax ID, city, and governorate. Select 'Supplier' as your account type.",
     icon: FileText,
-    color: "#f5870a",
+    color: "var(--accent-base)",
     detail: "Tax ID is your Egyptian Tax Identification Number. You can find it on your tax certificate.",
   },
   {
@@ -29,7 +29,7 @@ const ONBOARDING_STEPS = [
     title: "Complete Your Profile",
     desc: "Add your company name, commercial register, and product categories. Upload your logo and business documents.",
     icon: Building2,
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
     detail: "A complete profile gets 3x more hotel views. Hotels prefer suppliers with verified documents.",
   },
   {
@@ -37,7 +37,7 @@ const ONBOARDING_STEPS = [
     title: "List Your Products",
     desc: "Upload SKUs, set fixed prices & stock levels. No bidding — you control your pricing. Start receiving orders immediately.",
     icon: Package,
-    color: "#c455ff",
+    color: "var(--purple-base)",
     detail: "List at least 5 products to start getting orders. Fixed pricing builds trust with hotel buyers.",
   },
 ];
@@ -47,29 +47,29 @@ const PAYMENT_STEPS = [
     step: "A",
     title: "Fulfill an Order",
     desc: "A hotel places a PO. You accept, deliver, and the invoice is verified by HotelsVendors.",
-    color: "#f5870a",
+    color: "var(--accent-base)",
   },
   {
     step: "B",
     title: "Click 'Get Financed'",
     desc: "From your dashboard, submit the verified invoice to Oliv. Approval takes minutes.",
-    color: "#4A7C59",
+    color: "var(--success)",
   },
   {
     step: "C",
     title: "Receive Cash in 48h",
     desc: "Oliv deposits funds to your bank account. Your credit limit resets for the next cycle.",
-    color: "#ff7e1a",
+    color: "var(--orange-base)",
   },
 ];
 
 const BENEFITS = [
-  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.", color: "#f5870a" },
-  { icon: Shield, title: "Zero Recourse Risk", desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.", color: "#4A7C59" },
-  { icon: RefreshCw, title: "Unlimited Invoice Volume", desc: "Credit engine processes any number of invoices. Revolving facility grows with you.", color: "#c455ff" },
-  { icon: ExternalLink, title: "No Tech Integration", desc: "Works through HotelsVendors dashboard. One click to apply. No API needed.", color: "#ff7e1a" },
+  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.", color: "var(--accent-base)" },
+  { icon: Shield, title: "Zero Recourse Risk", desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.", color: "var(--success)" },
+  { icon: RefreshCw, title: "Unlimited Invoice Volume", desc: "Credit engine processes any number of invoices. Revolving facility grows with you.", color: "var(--purple-base)" },
+  { icon: ExternalLink, title: "No Tech Integration", desc: "Works through HotelsVendors dashboard. One click to apply. No API needed.", color: "var(--orange-base)" },
   { icon: Factory, title: "Coastal Hotel Demand", desc: "Access 480+ hotels in Sharm El-Sheikh, Hurghada, Cairo, Alexandria. High-velocity orders.", color: "#64b5f6" },
-  { icon: Landmark, title: "FRA Regulated & Backed", desc: "Oliv holds Egypt's first digital factoring license. Suez Canal Bank EGP 30M facility.", color: "#4A7C59" },
+  { icon: Landmark, title: "FRA Regulated & Backed", desc: "Oliv holds Egypt's first digital factoring license. Suez Canal Bank EGP 30M facility.", color: "var(--success)" },
 ];
 
 const FAQ = [
@@ -86,25 +86,25 @@ export default function SupplierJoinPage() {
     <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
             <OlivLogo size="xs" variant="green" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>
               Oliv Partnership Active
             </span>
           </div>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
             Sell to Hotels.<br />
-            <span style={{ color: "#4A7C59" }}>Get Paid in 48 Hours.</span>
+            <span style={{ color: "var(--success)" }}>Get Paid in 48 Hours.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             List your hospitality products on Egypt&apos;s largest B2B procurement platform.
-            Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "#4A7C59" }}>Oliv finances it instantly</strong>.
-            Up to <strong style={{ color: "#f5870a" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
+            Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "var(--success)" }}>Oliv finances it instantly</strong>.
+            Up to <strong style={{ color: "var(--accent-base)" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
             <a href="#how-it-works" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -115,12 +115,12 @@ export default function SupplierJoinPage() {
       </section>
 
       {/* Trust Bar */}
-      <section className="py-6 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-6 border-y" style={{ borderColor: "var(--success)18" }}>
         <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-6 text-[12px] text-white/30">
-          <span className="flex items-center gap-2"><Landmark size={14} style={{ color: "#4A7C59" }} /> FRA Licensed Digital Factoring</span>
-          <span className="flex items-center gap-2"><Shield size={14} style={{ color: "#4A7C59" }} /> Suez Canal Bank EGP 30M Facility</span>
-          <span className="flex items-center gap-2"><CheckCircle2 size={14} style={{ color: "#4A7C59" }} /> 48-Hour Funding SLA</span>
-          <span className="flex items-center gap-2"><Zap size={14} style={{ color: "#4A7C59" }} /> Non-Recourse by Design</span>
+          <span className="flex items-center gap-2"><Landmark size={14} style={{ color: "var(--success)" }} /> FRA Licensed Digital Factoring</span>
+          <span className="flex items-center gap-2"><Shield size={14} style={{ color: "var(--success)" }} /> Suez Canal Bank EGP 30M Facility</span>
+          <span className="flex items-center gap-2"><CheckCircle2 size={14} style={{ color: "var(--success)" }} /> 48-Hour Funding SLA</span>
+          <span className="flex items-center gap-2"><Zap size={14} style={{ color: "var(--success)" }} /> Non-Recourse by Design</span>
         </div>
       </section>
 
@@ -128,7 +128,7 @@ export default function SupplierJoinPage() {
       <section id="how-it-works" className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#f5870a" }}>Start in 3 Simple Steps</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--accent-base)" }}>Start in 3 Simple Steps</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">From Registration to First Order</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 mb-12">
@@ -148,7 +148,7 @@ export default function SupplierJoinPage() {
             })}
           </div>
           <div className="text-center">
-            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Create Your Supplier Account <ArrowRight size={14} />
             </Link>
           </div>
@@ -156,10 +156,10 @@ export default function SupplierJoinPage() {
       </section>
 
       {/* How Payment Works */}
-      <section className="py-20 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-20 border-y" style={{ borderColor: "var(--success)18" }}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#4A7C59" }}>Payment Flow</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>Payment Flow</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">From Invoice to Cash in 48 Hours</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 mb-12">
@@ -175,7 +175,7 @@ export default function SupplierJoinPage() {
           </div>
           <div className="text-center">
             <p className="text-[13px] text-white/30 mb-4">After your first verified invoice, apply for Oliv financing from your dashboard.</p>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               <OlivLogo size="xs" variant="dark" />
               See Financing Details <ArrowRight size={14} />
             </Link>
@@ -186,27 +186,27 @@ export default function SupplierJoinPage() {
       {/* Credit Line Highlight */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="rounded-2xl border p-8 md:p-12 text-center" style={{ borderColor: "#4A7C5922", backgroundColor: "#4A7C5906" }}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "#4A7C5933", backgroundColor: "#4A7C5910" }}>
+          <div className="rounded-2xl border p-8 md:p-12 text-center" style={{ borderColor: "var(--success)22", backgroundColor: "var(--success)06" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
               <OlivLogo size="xs" variant="green" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#4A7C59" }}>Oliv Invoice Financing</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>Oliv Invoice Financing</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-semibold text-white mb-5">The Credit Engine That Scales With You</h2>
             <p className="text-[14px] text-white/40 max-w-xl mx-auto mb-8 leading-relaxed">
               Unlike traditional factoring, Oliv&apos;s credit engine evaluates your business performance — not just individual invoices.
-              One approval unlocks a <strong style={{ color: "#4A7C59" }}>revolving facility up to EGP 10M</strong> that handles any invoice volume.
+              One approval unlocks a <strong style={{ color: "var(--success)" }}>revolving facility up to EGP 10M</strong> that handles any invoice volume.
             </p>
             <div className="grid sm:grid-cols-3 gap-6 mb-8">
               <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-                <div className="text-[24px] font-bold mb-1" style={{ color: "#4A7C59" }}>10M+</div>
+                <div className="text-[24px] font-bold mb-1" style={{ color: "var(--success)" }}>10M+</div>
                 <div className="text-[12px] text-white/40">Max Credit Line (EGP)</div>
               </div>
               <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-                <div className="text-[24px] font-bold mb-1" style={{ color: "#f5870a" }}>48h</div>
+                <div className="text-[24px] font-bold mb-1" style={{ color: "var(--accent-base)" }}>48h</div>
                 <div className="text-[12px] text-white/40">Funding Speed</div>
               </div>
               <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
-                <div className="text-[24px] font-bold mb-1" style={{ color: "#c455ff" }}>0</div>
+                <div className="text-[24px] font-bold mb-1" style={{ color: "var(--purple-base)" }}>0</div>
                 <div className="text-[12px] text-white/40">Recourse Risk</div>
               </div>
             </div>
@@ -215,10 +215,10 @@ export default function SupplierJoinPage() {
       </section>
 
       {/* Key Benefits */}
-      <section className="py-20 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-20 border-y" style={{ borderColor: "var(--success)18" }}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#4A7C59" }}>Why Suppliers Choose Us</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>Why Suppliers Choose Us</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Built for Egyptian Hospitality Suppliers</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -239,7 +239,7 @@ export default function SupplierJoinPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 border-y" style={{ borderColor: "#4A7C5918" }}>
+      <section className="py-20 border-y" style={{ borderColor: "var(--success)18" }}>
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-2xl font-semibold text-white text-center mb-10">Frequently Asked Questions</h2>
           <div className="space-y-4">
@@ -262,7 +262,7 @@ export default function SupplierJoinPage() {
             unlock Oliv financing on your first verified invoice.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#4A7C59", color: "#ffffff" }}>
+            <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
             <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

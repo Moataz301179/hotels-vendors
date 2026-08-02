@@ -89,7 +89,7 @@ function ShipmentProgress({ status }: { status: string }) {
     COMPLETED: 100, CANCELLED: 0,
   };
   const progress = progressMap[status] || 0;
-  const color = progress >= 100 ? "#10B981" : status === "DELAYED" ? "#EF4444" : progress > 50 ? "var(--accent-base)" : "#60a5fa";
+  const color = progress >= 100 ? "var(--success)" : status === "DELAYED" ? "var(--error)" : progress > 50 ? "var(--accent-base)" : "var(--info)";
   return (
     <div className="w-full">
       <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
