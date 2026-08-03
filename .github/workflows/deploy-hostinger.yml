@@ -43,7 +43,6 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || '' }}
           ETA_API_BASE_URL: ${{ secrets.ETA_API_BASE_URL || 'https://api.it.example' }}
           ETA_API_KEY: ${{ secrets.ETA_API_KEY || '' }}
-          HOTELSVENDORS_HMAC_SECRET: ${{ secrets.HOTELSVENDORS_HMAC_SECRET || 'dev-hmac-secret-min-32-chars' }}
         run: npm run build
 
       - name: Deploy to Hostinger VPS (PM2)
