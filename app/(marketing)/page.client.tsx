@@ -190,10 +190,9 @@ export default function MarketingPage() {
             </div>
           </div>
         </div>
-      </section>
-
-        {/* ═══════════ HOTEL SUPPLIES CAROUSEL ═══════════ */}
+        {/* ═══════════ HOTEL SUPPLIES CAROUSEL — placed in empty space above the hero image, next to the hero section content ═══════════ */}
         <HotelSuppliesCarousel />
+      </section>
 
         {/* ═══════════ HERO IMAGE (below the fold, full-width on all screens) ═══════════ */}
         <section className="w-full">
