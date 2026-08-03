@@ -3,7 +3,7 @@ name: Deploy to Hostinger VPS (PM2)
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch:        # allows manual runs from the UI
 
 permissions:
   contents: read
@@ -25,29 +25,28 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build Next.js application
+      - name: Build Next.js
         env:
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET || 'dev-session-secret' }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/dev_db' }}
-          REDIS_URL: ${{ secrets.REDIS_URL || 'redis://localhost:6379' }}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD || 'dev-pass' }}
-          OLLAMA_URL: ${{ secrets.OLLAMA_URL || 'http://localhost:11434' }}
-          OLLAMA_MODEL: ${{ secrets.OLLAMA_MODEL || 'llama3.2:8b' }}
-          HOTELSVENDORS_HMAC_SECRET: ${{ secrets.HOTELSVENDORS_HMAC_SECRET || 'dev-hmac-secret-min-32-chars' }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || '' }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || '' }}
-          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY || '' }}
-          XAI_API_KEY: ${{ secrets.XAI_API_KEY || '' }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || '' }}
-          ETA_API_BASE_URL: ${{ secrets.ETA_API_BASE_URL || 'https://api.it.example' }}
-          ETA_API_KEY: ${{ secrets.ETA_API_KEY || '' }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          OLLAMA_URL: ${{ secrets.OLLAMA_URL }}
+          OLLAMA_MODEL: ${{ secrets.OLLAMA_MODEL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ETA_API_BASE_URL: ${{ secrets.ETA_API_BASE_URL }}
+          ETA_API_KEY: ${{ secrets.ETA_API_KEY }}
+          HOTELSVENDORS_HMAC_SECRET: ${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
         run: npm run build
 
       - name: Deploy to Hostinger VPS (PM2)
         env:
-          HOSTINGER_SSH_USER: ${{ secrets.HOSTINGER_USER }}
+          HOSTINGER_SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
           HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           HOSTINGER_IP: ${{ secrets.HOSTINGER_IP }}
           HOSTINGER_TARGET_DIR: /var/www/hotelsvendors-v2
@@ -57,20 +56,35 @@ jobs:
           echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
             set -e
             cd /var/www/hotelsvendors-v2
+            
+            echo "Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
+            
+            echo "Stopping existing app (if any)..."
+            pm2 stop hotels-vendors || true
+            pm2 delete hotels-vendors || true
+            
+            echo "Installing dependencies..."
             npm ci --legacy-peer-deps
+            
+            echo "Generating Prisma client..."
             npx prisma generate
+            
+            echo "Building Next.js application..."
             npm run build
-            if pm2 describe hotels-vendors > /dev/null 2>&1; then
-              pm2 reload hotels-vendors --env production
+            
+            echo "Starting application..."
+            if pm2 list | grep -q "hotels-vendors"; then
+              pm2 start ecosystem.config.js --env production
             else
               pm2 start ecosystem.config.js --env production --name hotels-vendors
             fi
             pm2 save
+            
             echo "Deployment completed"
           EOF
 
