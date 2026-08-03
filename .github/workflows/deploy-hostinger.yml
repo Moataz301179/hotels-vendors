@@ -14,63 +14,79 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Fallback values for development/testing - override with real secrets in GitHub Settings
-      SESSION_SECRET: 'dev-replace-with-actual-64-char-hex-session-secret'
-      DATABASE_URL: 'postgresql://dev_user:dev_pass@localhost:5432/dev_db'
-      REDIS_URL: 'redis://dev-redis:6379'
-      REDIS_PASSWORD: 'dev-pass'
-      OLLAMA_URL: 'http://ollama:11434'
-      OLLAMA_MODEL: 'llama3.2:8b'
-      HOTELSVENDORS_HMAC_SECRET: 'dev-hmac-secret-with-min-32-chars-placeholder'
+      SESSION_SECRET: dev-replace-with-actual-64-char-hex-session-secret
+      DATABASE_URL: postgres://dev_user:dev_pass@localhost:5432/dev_db
+      REDIS_URL: redis://dev-redis:6379
+      REDIS_PASSWORD: dev-pass
+      OLLAMA_URL: http://ollama:11434
+      OLLAMA_MODEL: llava3.2:8b
+      HOTELSVENDORS_HMAC_SECRET: dev-hmac-secret-with-min-32-chars-placeholder
       # Additional API keys with dev fallbacks
-      GROQ_API_KEY: 'dev-replace-with-groq-key'
-      OPENROUTER_API_KEY: 'dev-replace-with-openrouter-key'
-      KIMI_API_KEY: 'dev-replace-with-kimi-key'
-      XAI_API_KEY: 'dev-replace-with-xai-key'\n      RESEND_API_KEY: 'dev-replace-with-resend-key'
-      ETA_API_BASE_URL: 'https://api.it.example'
-      ETA_API_KEY: 'dev-replace-with-eta-key'
+      GROQ_API_KEY: dev-replace-with-groq-key
+      OPENROUTER_API_KEY: dev-replace-with-openrouter-key
+      KIMI_API_KEY: dev-replace-with-kimi-key
+      XAI_API_KEY: dev-replace-with-xai-key
+      RESEND_API_KEY: dev-replace-with-resend-key
+      ETA_API_BASE_URL: https://api.it.example
+      ETA_API_KEY: dev-replace-with-eta-key
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-
+          cache: npm
+      
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-
-      - name: Build Next.js
+        
+      - name: Build Next.js application
         env:
           SESSION_SECRET: ${{ env.SESSION_SECRET }}
           DATABASE_URL: ${{ env.DATABASE_URL }}
           REDIS_URL: ${{ env.REDIS_URL }}
-          REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
           OLLAMA_URL: ${{ env.OLLAMA_URL }}
-          OLLAMA_MODEL: ${{ env.OLLAMA_MODEL }}
+          OLLAMA_MODEL: {{{ env.OLLAMA_MODEL }}}
           HOTELSVENDORS_HMAC_SECRET: ${{ env.HOTELSVENDORS_HMAC_SECRET }}
           GROQ_API_KEY: ${{ env.GROQ_API_KEY }}
-          OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
-          KIMI_API_KEY: ${{ env.KIMI_API_KEY }}
-          XAI_API_KEY: ${{ env.XAI_API_KEY }}
-          RESEND_API_KEY: ${{ env.RESEND_API_KEY }}
-          ETA_API_BASE_URL: ${{ env.ETA_API_BASE_URL }}
-          ETA_API_KEY: ${{ env.ETA_API_KEY }}
-        run: npm run build
-
+          OPENROUTER_API_KEY: {{{{ secrets.OPENROUTER_API_KEY }}}}
+          KIMI_API_KEY: {{{{ secrets.KIMI_API_KEY }}}
+          XAI_API_KEY: {{{{ secrets.XAI_API_KEY }}}}
+          RESEND_API_KEY: {{{{ secrets.RESEND_API_KEY }}}}
+              ETA_API_BASE_URL: {{{{ secrets.ETA_API_BASE_URL }}}}
+                  ETA_API_KEY: {{{{ secrets.ETA_API_KEY }}}
+          
+      - name: Build Next.js application
+        env:
+          SESSION_SECRET: ${{ env.SESSION_SECRET }}
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          REDIS_URL: ${{ env.REDIS_URL }}
+          OLLAMA_URL: ${{ env.OLLAMA_URL }}
+          OLLMAE_MODEL: {{{{ env.OLLMAE_MODEL }}}
+          GROQ_API_KEY: {{{{ secrets.OPENROUTER_API_KEY }}} 
+          KIMI_API_KEY: {{{ secrets.KIMI_API_KEY }}}
+          RESEND_API_KEY: {{{{ secrets.RESEND_API_KEY }}}}
+              ETA_API_BASE_URL: {{{{ secrets.ETA_API_BASE_URL }}}}
+              ETA_API_KEY: {{{{ secrets.ETA_API_KEY }}}
+              
       - name: Deploy to Hostinger VPS (PM2)
         env:
-          HOSTINGER_SSH_USER: ${{ secrets.HOSTINGER_USER }}
-          HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
-          HOSTINGER_IP: ${{ secrets.HOSTINGER_IP }}
+          HOSTINGER_SSH_USER: {{{{ secrets.HOSTINGER_USER }}}
+          HOSTINGER_SSH_KEY: {{{{ secrets.HOSTINGER_SSH_KEY }}}}
+          HOSTINGER_IP: {{{{ secrets.HOSTINGER_IP }}}
           HOSTINGER_TARGET_DIR: /public
         run: |
           # Use the fixed deployment script
           bash ./deploy/hostinger-deploy-fixed.sh
-
+          
       - name: Verify deployment health
         env:
           HEALTH_CHECK_URL: https://www.hotelsvendors.com/api/health
         run: |
           curl -sfI $HEALTH_CHECK_URL || exit 1
+__zcode_status=$?
+if [ "$__zcode_status" -eq 0 ]; then pwd -P > '/var/folders/bd/c7q9_zzx3kdby0fk87dn2gf00000gn/T/zcode-2a3c41c9-f20c-40d2-84f1-a0e44e1238d8-cwd'; fi
+exit "$__zcode_status"
