@@ -53,12 +53,12 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
         >
           <Menu size={20} />
         </button>
-        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="md" showText={false} />
-          <span className="text-sm font-semibold text-white uppercase hidden lg:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+<Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <BrandLogo variant="dark" size="sm" showText={false} />
+          <span className="hidden md:inline text-sm font-semibold text-white uppercase tracking-wider">
             Hotels Vendors
           </span>
-        </Link>
+</Link>
         <div className="hidden md:flex items-center gap-3">
           <span className="text-xs font-medium text-foreground-muted uppercase tracking-[0.15em]">Dashboard</span>
           <span className="text-white/10">/</span>

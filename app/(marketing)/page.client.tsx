@@ -116,13 +116,19 @@ export default function MarketingPage() {
   return (
     <main className="min-h-screen bg-canvas text-foreground font-sans">
 
-      {/* ═══════════ HERO ═══════════ */}
+{/* ═══════════ HERO ═══════════ */}
       <section className="pt-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-20">
-          {/* ── Mobile & Desktop: Oliv carousel replaces hero image on the right ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* ── Mobile-first: Oliv carousel first on mobile, side-by-side on desktop ── */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 items-center">
+            {/* Mobile: Oliv carousel FIRST (order-1), then content (order-2) */}
+            {/* Desktop: Content on left, carousel on right */}
+            <div className="order-2 lg:order-1 animate-fade-in-up animation-delay-200">
+              <OlivAdCarousel />
+            </div>
+
             {/* Left: Text content */}
-            <div className="space-y-6">
+            <div className="order-1 lg:order-2 space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent-base animate-pulse" />
               {t("hero.badge")}
@@ -136,8 +142,14 @@ export default function MarketingPage() {
               {t("hero.subtitle")}
             </p>
 
+            {/* Primary CTA Button — immediately visible below heading */}
+            <Link href="/register" className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg bg-accent-base text-surface hover:bg-accent-light transition-colors animate-fade-in-up animation-delay-150">
+              {t("hero.startFree")}
+              <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+            </Link>
+
             {/* Interactive search bar — app-like entry point */}
-            <form onSubmit={handleSearch} className="flex items-stretch gap-2 max-w-xl mx-auto mb-8 animate-fade-in-up animation-delay-150">
+            <form onSubmit={handleSearch} className="flex items-stretch gap-2 max-w-xl mx-auto mb-8 animate-fade-in-up animation-delay-200">
               <div className="relative flex-1">
                 <Search className={`absolute top-1/2 -translate-y-1/2 text-white/40 ${ar ? "right-3" : "left-3"}`} size={18} />
                 <input
@@ -155,35 +167,26 @@ export default function MarketingPage() {
               </button>
             </form>
 
-            <div className="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-200">
+            <div className="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-300">
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>ETA</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-muted)" }}>FRA</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--purple-muted)", color: "var(--purple-base)", background: "var(--purple-muted)" }}>ISO 27001</span>
               <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>{t("hero.freeToStart")}</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-300">
-              <Link href="/register" className="text-sm px-8 py-3.5 font-semibold rounded-lg inline-flex items-center justify-center gap-2 bg-accent-base text-surface hover:bg-accent-light transition-colors">
-                {t("hero.startFree")}
-                <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-              </Link>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-400">
               <Link href="/sandbox" className="text-sm px-8 py-3.5 font-semibold rounded-lg border inline-flex items-center justify-center gap-2 bg-surface-1 hover:bg-surface-2 transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
                 {t("hero.exploreSandbox")}
               </Link>
             </div>
 
             {/* Animated stat counters — visible on all screen sizes */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/5 animate-fade-in-up animation-delay-400">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/5 animate-fade-in-up animation-delay-500">
               <StatCounter end={200} suffix="+" label={t("hero.stats.hotels")} />
               <StatCounter end={1200} suffix="+" label={t("hero.stats.suppliers")} />
               <StatCounter end={2} suffix="B" label={t("hero.stats.gmv")} />
               <StatCounter end={48} suffix="h" label={t("hero.stats.delivery")} />
             </div>
-          </div>
-
-          {/* Right: Oliv Ad Carousel (replaces hero image) */}
-          <div className="mt-12 lg:mt-0 animate-fade-in-up animation-delay-200">
-            <OlivAdCarousel />
           </div>
         </div>
       </div>

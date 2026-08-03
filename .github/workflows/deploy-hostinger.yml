@@ -25,8 +25,7 @@ jobs:
       GROQ_API_KEY: 'dev-replace-with-groq-key'
       OPENROUTER_API_KEY: 'dev-replace-with-openrouter-key'
       KIMI_API_KEY: 'dev-replace-with-kimi-key'
-      XAI_API_KEY: 'dev-replace-with-xai-key'
-      RESEND_API_KEY: 'dev-replace-with-resend-key'
+      XAI_API_KEY: 'dev-replace-with-xai-key'\n      RESEND_API_KEY: 'dev-replace-with-resend-key'
       ETA_API_BASE_URL: 'https://api.it.example'
       ETA_API_KEY: 'dev-replace-with-eta-key'
     steps:
@@ -67,7 +66,8 @@ jobs:
           HOSTINGER_IP: ${{ secrets.HOSTINGER_IP }}
           HOSTINGER_TARGET_DIR: /public
         run: |
-          bash ./deploy/hostinger-deploy.sh
+          # Use the fixed deployment script
+          bash ./deploy/hostinger-deploy-fixed.sh
 
       - name: Verify deployment health
         env:
