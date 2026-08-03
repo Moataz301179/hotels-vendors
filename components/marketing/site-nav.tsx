@@ -113,7 +113,7 @@ export function SiteNav() {
         <BrandLogo variant={logoVariant} size="sm" showText={false} className="md:hidden" />
         {/* Desktop: icon + wordmark */}
         <span className="hidden md:flex items-center gap-2.5">
-          <BrandLogo variant={logoVariant} size="md" showText={false} />
+          <BrandLogo variant={logoVariant} size="xl" showText={false} />
           <span className="font-semibold uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", color: textColor }}>
             Hotels Vendors
           </span>

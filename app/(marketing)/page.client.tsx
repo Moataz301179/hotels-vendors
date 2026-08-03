@@ -192,22 +192,23 @@ export default function MarketingPage() {
       </section>
 
         {/* ═══════════ HERO IMAGE (below the fold, full-width on all screens) ═══════════ */}
-        <div className="w-full px-6 md:px-12 pb-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
-              <img
-                src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
-                alt="Hotel procurement platform"
-                className="w-full h-48 sm:h-64 md:h-80 object-cover object-center"
-                width={1920}
-                height={1080}
-              />
-              {/* Gradient overlay for text legibility below */}
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(12,12,18,0.95) 100%)" }} />
+        <section className="w-full">
+          <div className="px-6 md:px-12 pb-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
+                <img
+                  src="/hero-bg.png"
+                  alt="Hotel procurement platform"
+                  className="w-full h-48 sm:h-64 md:h-80 object-cover object-center"
+                  width={1069}
+                  height={1008}
+                />
+                {/* Gradient overlay for text legibility */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(12,12,18,0.95) 100%)" }} />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* ═══════════ PLATFORM OVERVIEW — Dashboard Mockup ═══════════ */}
       <section className="relative py-20 bg-surface-2">
