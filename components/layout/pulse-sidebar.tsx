@@ -217,7 +217,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
     return (
       <div className="h-full flex flex-col items-center py-4 border-r border-border-subtle bg-surface-1">
         <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/[0.05] transition-colors">
-          <BrandLogo variant="dark" size="md" showText={false} />
+          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
         </Link>
         <button
           onClick={onToggle}
@@ -266,7 +266,7 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-border-invisible">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <BrandLogo variant="dark" size="md" showText={false} />
+          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
           <span className="text-sm font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
             Hotels Vendors
           </span>

@@ -6,7 +6,7 @@ export function AuthLeftPanel() {
   return (
     <aside className="hidden lg:flex w-[480px] shrink-0 flex-col justify-between p-12 relative overflow-hidden bg-surface">
       <div className="relative z-10">
-        <BrandLogo variant="dark" size="md" showText={false} />
+        <BrandLogo variant="dark" size="md" showText={false} iconOnly />
       </div>
 
       <div className="relative z-10 space-y-6">

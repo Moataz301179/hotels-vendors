@@ -110,10 +110,10 @@ export function SiteNav() {
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-border-subtle bg-canvas/90 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
         {/* Mobile: icon-only, smaller */}
-        <BrandLogo variant={logoVariant} size="sm" showText={false} className="md:hidden" />
-        {/* Desktop: icon + wordmark */}
+        <BrandLogo variant={logoVariant} size="sm" showText={false} iconOnly className="md:hidden" />
+        {/* Desktop: icon + wordmark (icon has no text — no duplication) */}
         <span className="hidden md:flex items-center gap-2.5">
-          <BrandLogo variant={logoVariant} size="xl" showText={false} />
+          <BrandLogo variant={logoVariant} size="xl" showText={false} iconOnly />
           <span className="font-semibold uppercase text-[15px]" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", color: textColor }}>
             Hotels Vendors
           </span>

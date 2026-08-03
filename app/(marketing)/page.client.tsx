@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { OlivAdCarousel } from "@/components/marketing/oliv-ad-carousel";
+import { HotelSuppliesCarousel } from "@/components/marketing/hotel-supplies-carousel";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
 import {
@@ -190,6 +191,9 @@ export default function MarketingPage() {
           </div>
         </div>
       </section>
+
+        {/* ═══════════ HOTEL SUPPLIES CAROUSEL ═══════════ */}
+        <HotelSuppliesCarousel />
 
         {/* ═══════════ HERO IMAGE (below the fold, full-width on all screens) ═══════════ */}
         <section className="w-full">
@@ -991,7 +995,7 @@ export default function MarketingPage() {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(to right, var(--accent-base) 1px, transparent 1px), linear-gradient(to bottom, var(--accent-base) 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" showText={false} /></div>
+          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" showText={false} iconOnly /></div>
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-foreground">
             {t("cta.headline1")}<br /><span className="text-foreground">{t("cta.headline2")}</span>
           </h2>

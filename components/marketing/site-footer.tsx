@@ -15,7 +15,7 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5 mb-3" dir="ltr">
-              <BrandLogo variant="dark" size="md" showText={false} />
+              <BrandLogo variant="dark" size="md" showText={false} iconOnly />
               <span className="font-semibold text-white uppercase text-[15px]" style={{ letterSpacing: "0.2em" }}>
                 Hotels Vendors
               </span>

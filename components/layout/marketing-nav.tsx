@@ -33,7 +33,7 @@ export function MarketingNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="md" showText={false} />
+          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
           <span className="hidden md:inline font-semibold text-[15px] text-white uppercase tracking-wider">
             Hotels Vendors
           </span>

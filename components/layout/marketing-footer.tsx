@@ -12,7 +12,7 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="sm" showText={false} />
+              <BrandLogo variant="dark" size="sm" showText={false} iconOnly />
               <span className="text-[14px] font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
                 Hotels Vendors
               </span>

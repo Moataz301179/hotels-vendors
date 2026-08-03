@@ -295,6 +295,19 @@ export const homepage = {
     "olivCarousel.slide4.badge": "FRA Licensed",
     "olivCarousel.slide4.ctaText": "Finance Now — Code CHV000",
     "olivCarousel.slide4.qrText": "Scan to register\nwith code CHV000",
+
+    // ── Hotel Supplies Carousel ──
+    "supplies.badge": "Hotel Essentials",
+    "supplies.title": "Every Category Your Property Needs",
+    "supplies.shopCategory": "Shop category",
+    "supplies.linen": "Linen",
+    "supplies.bathroom": "Bathroom",
+    "supplies.kitchen": "Kitchen",
+    "supplies.cleaning": "Cleaning",
+    "supplies.furniture": "Furniture",
+    "supplies.hvac": "HVAC",
+    "supplies.bedding": "Bedding",
+    "supplies.poolSpa": "Pool & Spa",
   } as const,
 
   ar: {
@@ -593,6 +606,19 @@ export const homepage = {
     "olivCarousel.slide4.badge": "مرخص FRA",
     "olivCarousel.slide4.ctaText": "التمويل الآن — الكود CHV000",
     "olivCarousel.slide4.qrText": "امسح للتسجيل\nبكود CHV000",
+
+    // ── Hotel Supplies Carousel ──
+    "supplies.badge": "احتياجات الفنادق",
+    "supplies.title": "كل فئة تحتاجها ملكيتك",
+    "supplies.shopCategory": "تصفح الفئة",
+    "supplies.linen": "مفروشات",
+    "supplies.bathroom": "الحمامات",
+    "supplies.kitchen": "المطابخ",
+    "supplies.cleaning": "التنظيف",
+    "supplies.furniture": "الأثاث",
+    "supplies.hvac": "التكييف",
+    "supplies.bedding": "بياضات الأسرة",
+    "supplies.poolSpa": "المسابح والسبا",
   } as const,
 } as const;
 

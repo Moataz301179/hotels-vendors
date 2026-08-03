@@ -54,7 +54,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
           <Menu size={20} />
         </button>
 <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="lg" showText={false} />
+          <BrandLogo variant="dark" size="lg" showText={false} iconOnly />
           <span className="hidden md:inline text-sm font-semibold text-white uppercase tracking-wider">
             Hotels Vendors
           </span>

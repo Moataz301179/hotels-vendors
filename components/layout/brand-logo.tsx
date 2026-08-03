@@ -6,6 +6,7 @@ interface BrandLogoProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   showText?: boolean;
   showTagline?: boolean;
+  iconOnly?: boolean;
 }
 
 const SIZE_MAP = {
@@ -22,9 +23,12 @@ export function BrandLogo({
   size = "md",
   showText = true,
   showTagline = false,
+  iconOnly = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const logoSrc = variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
+  const logoSrc = iconOnly
+    ? "/logo-icon.svg"
+    : variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
@@ -33,8 +37,12 @@ export function BrandLogo({
         alt="HotelsVendors"
         width={dims.icon}
         height={dims.icon}
-        className="object-contain shrink-0"
-        style={{ width: dims.icon, height: dims.icon }}
+        className={cn("object-contain shrink-0", iconOnly ? "w-auto h-auto" : "")}
+        style={
+          iconOnly
+            ? { height: dims.icon, width: "auto" }
+            : { width: dims.icon, height: dims.icon }
+        }
       />
       {showText && (
         <div className="flex flex-col items-center gap-1 mt-2">

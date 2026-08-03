@@ -35,10 +35,8 @@ interface OlivAdSlide {
 // The Oliv click API route already injects referral code CHV000
 const OLIV_CLICK_URL = "/api/v1/oliv/click?ref=CHV000";
 
-// QR code that encodes the Oliv apply URL with referral code CHV000
-const OLIV_APPLY_QR =
-  "https://api.qrserver.com/v1/api/qr-code/?size=160x160&data=" +
-  encodeURIComponent("https://oliv.finance/apply?ref=CHV000&source=hotelsvendors");
+// QR code that encodes the Oliv apply URL with referral code CHV000 (locally generated)
+const OLIV_APPLY_QR = "/oliv-qr.svg";
 
 // Static slide skeleton — translatable strings are injected inside the component
 const SLIDE_SKELETON: Omit<OlivAdSlide, "title" | "subtitle" | "badge" | "ctaText" | "qrText">[] = [
