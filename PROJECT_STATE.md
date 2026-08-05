@@ -4,20 +4,17 @@
 
 ### Deployment
 - **GitHub repo:** `Moataz301179/hotels-vendors` (default branch: `main`)
-- **Vercel project:** `hotels-vendors` → auto-deploys from `main`
+- **Deploy target:** Hostinger VPS under **PM2** (NO Vercel, NO Docker) — app `hotels-vendors`, dir `/var/www/hotelsvendors-v2`, port 3003, Nginx in front
 - **Production domain:** `https://hotelsvendors.com`
-- **Vercel dashboard:** https://vercel.com/moatazs-projects-592573bb/hotels-vendors
+- **Pipeline:** push to `main` → GitHub Actions `.github/workflows/deploy.yml` (job `deploy-hostinger`) → SSH → `npm ci --legacy-peer-deps` → `npx prisma generate` → `npm run build` → `pm2 reload ecosystem.config.js --env production` → health check `https://www.hotelsvendors.com/api/health` (expect 200)
+- **PM2 config:** `ecosystem.config.js` (fork mode, max 1.5GB/worker, restart on crash)
 
 ### Workflow (MANDATORY — NEVER SKIP)
-1. All code is written in worktree: `/Users/Moataz/hotels-vendors/.claude/worktrees/hotels-vendors-main/`
-2. After committing in worktree, sync to main:
-   ```
-   cd /Users/Moataz/hotels-vendors
-   git checkout worktree-hotels-vendors-main -- <changed-files>
-   git add -A && git commit -m "..." && git push origin main
-   ```
-3. Vercel auto-deploys. Verify at hotelsvendors.com — check for `readyState: "READY"`, NOT just "deployed"
-4. **NEVER say "deployed" without verifying the live site actually works**
+1. Work directly on `main`. Commit there — the old Vercel worktree sync flow is DEAD.
+2. `git add -A && git commit -m "..." && git push origin main`
+3. Push triggers auto-deploy via GitHub Actions. Watch the run (`gh run watch`) — both `ci` and `deploy-hostinger` jobs must be green.
+4. Verify live: `curl -s -o /dev/null -w "%{http_code}" https://www.hotelsvendors.com/api/health` → `200`
+5. **NEVER say "deployed" without the Actions run passing AND the health check returning 200.**
 
 ### Database
 - **Stack:** Prisma 6 + `PrismaPg` adapter + `pg` Pool (in `lib/prisma.ts`)

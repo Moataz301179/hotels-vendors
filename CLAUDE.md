@@ -51,16 +51,22 @@
 
 ## ⚠️ CRITICAL: Deployment Rules (MUST FOLLOW)
 
-**Vercel is connected to GitHub repo `Moataz301179/hotels-vendors` (default branch: `main`).**
-**Every push to `main` triggers an automatic production deployment.**
+**Deployment is NOT Vercel and NOT Docker. Production runs on a Hostinger VPS under PM2.**
+**Pipeline: every push to `main` → GitHub Actions `.github/workflows/deploy.yml` → SSH to VPS → `npm ci` → `prisma generate` → `npm run build` → `pm2 reload` → health check.**
+
+Repo: `Moataz301179/hotels-vendors` (default branch: `main`). VPS: `/var/www/hotelsvendors-v2`, app name `hotels-vendors` (PM2), port 3003, Nginx in front, domain https://www.hotelsvendors.com.
 
 After EVERY code change session:
-1. Commit changes in the worktree
-2. Sync to main: `git checkout worktree-hotels-vendors-main -- <files>`
-3. Commit + push to main: `git add -A && git commit -m "..." && git push origin main`
-4. Vercel auto-deploys — verify at https://hotelsvendors.com
+1. Commit on `main` (work directly on `main`; there is no Vercel worktree sync anymore)
+2. Push: `git add -A && git commit -m "..." && git push origin main`
+3. GitHub Actions runs `ci` then `deploy-hostinger`. Verify the workflow run passes:
+   - `gh run watch` (or GitHub Actions tab) — both `ci` and `deploy-hostinger` jobs must be green
+   - Health check: `curl -s -o /dev/null -w "%{http_code}" https://www.hotelsvendors.com/api/health` → expect `200`
+4. **NEVER say "deployed" without the GitHub Actions `deploy-hostinger` job succeeding AND the health check returning 200.**
 
-**NEVER commit only to the worktree. `main` must always be current.**
+Common PM2 commands on the VPS (via SSH): `pm2 status`, `pm2 logs hotels-vendors`, `pm2 reload hotels-vendors`, `pm2 monit`. PM2 config lives in `ecosystem.config.js`.
+
+**Manual deploy (if needed):** use GitHub Actions "Deploy to Production" workflow_dispatch, or from the VPS run `cd /var/www/hotelsvendors-v2 && git pull && npm ci --legacy-peer-deps && npx prisma generate && npm run build && pm2 reload ecosystem.config.js --env production`.
 
 ## ⚠️ Strict Verification Checklist (BEFORE declaring any task complete)
 

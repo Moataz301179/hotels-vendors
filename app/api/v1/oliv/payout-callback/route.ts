@@ -12,11 +12,40 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { verifyReferralToken } from "@/lib/fintech/anti-bypass/layer1-referral-token";
+import { deriveOlivStatusFromPayoutStatus, syncOlivSupplierStatus } from "@/lib/fintech/oliv-status-sync";
+import { validateBody } from "@/lib/api-utils";
 
 const WEBHOOK_SECRET = process.env.OLIV_WEBHOOK_SECRET || "";
-const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
+const LIABILITY_DISCLAIMER =
+  "Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults.";
+
+const ReferralTokenSchema = z.object({
+  signature: z.string().min(1),
+  payload: z.string().min(1),
+  partnerId: z.string().min(1),
+  tokenVersion: z.string().min(1),
+  generatedAt: z.string().min(1),
+  expiresAt: z.string().min(1),
+});
+
+const PayoutCallbackSchema = z.object({
+  referralToken: ReferralTokenSchema,
+  etaUuid: z.string().min(1),
+  supplierTaxId: z.string().min(1),
+  olivTransactionId: z.string().min(1),
+  olivReferenceNumber: z.string().min(1).optional(),
+  payoutStatus: z.enum(["APPROVED", "DISBURSED", "SETTLED", "REJECTED", "DEFAULTED"]),
+  disbursedAmount: z.coerce.number().nonnegative(),
+  factoringFee: z.coerce.number().nonnegative(),
+  advanceRate: z.coerce.number().nonnegative(),
+  disbursementDate: z.string().min(1),
+  expectedSettlementDate: z.string().min(1),
+  notes: z.string().optional(),
+}).passthrough();
 
 function verifyOlivSignature(
   payload: string,
@@ -28,6 +57,9 @@ function verifyOlivSignature(
     .createHmac("sha256", WEBHOOK_SECRET)
     .update(`${timestamp}.${payload}`)
     .digest("hex");
+  if (signature.length !== expected.length) {
+    return false;
+  }
   return crypto.timingSafeEqual(
     Buffer.from(signature),
     Buffer.from(expected)
@@ -67,12 +99,12 @@ export async function POST(request: NextRequest) {
         },
       });
       return NextResponse.json(
-        { error: "Invalid signature" },
+        { error: "Invalid signature", disclaimer: LIABILITY_DISCLAIMER },
         { status: 401 }
       );
     }
 
-    const body = JSON.parse(rawBody);
+    const body = validateBody(PayoutCallbackSchema, JSON.parse(rawBody));
 
     // LAYER 2 CORE: Verify referral token
     const tokenVerification = verifyReferralToken(body.referralToken);
@@ -101,6 +133,7 @@ export async function POST(request: NextRequest) {
         {
           error: "Unauthorized reconciliation",
           detail: "Missing or invalid HotelsVendors referral token",
+          disclaimer: LIABILITY_DISCLAIMER,
         },
         { status: 403 }
       );
@@ -110,7 +143,7 @@ export async function POST(request: NextRequest) {
 
     if (tokenPayload.etaUuid !== body.etaUuid) {
       return NextResponse.json(
-        { error: "ETA UUID mismatch — tampering detected" },
+        { error: "ETA UUID mismatch — tampering detected", disclaimer: LIABILITY_DISCLAIMER },
         { status: 403 }
       );
     }
@@ -128,13 +161,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const supplier = await prisma.supplier.findUnique({
+      where: { taxId: body.supplierTaxId },
+      select: { id: true, tenantId: true },
+    });
+
+    if (!supplier) {
+      return NextResponse.json(
+        {
+          error: "Unknown supplier tax ID",
+          detail: "Cannot reconcile payout for a supplier outside the platform registry",
+          disclaimer: LIABILITY_DISCLAIMER,
+        },
+        { status: 404 }
+      );
+    }
+
     // Process payout
     const platformFee = Math.round(body.disbursedAmount * 0.02 * 100) / 100;
     const netDisbursement = Math.round((body.disbursedAmount - platformFee) * 100) / 100;
 
     const factoringTx = await prisma.factoringTransaction.create({
       data: {
-        tenantId: "SYSTEM",
+        tenantId: supplier.tenantId,
         etaUuid: body.etaUuid,
         supplierTaxId: body.supplierTaxId,
         hotelTaxId: tokenPayload.hotelTaxId,
@@ -155,7 +204,7 @@ export async function POST(request: NextRequest) {
         netDisbursement: netDisbursement,
         processedAt: new Date(),
         callbackTimestamp: new Date(),
-        rawCallback: body,
+        rawCallback: body as Prisma.InputJsonValue,
         commissionRate: 0.02,
         commissionAmount: platformFee,
         commissionStatus: "PENDING",
@@ -164,7 +213,7 @@ export async function POST(request: NextRequest) {
 
     await prisma.auditLog.create({
       data: {
-        tenantId: "SYSTEM",
+        tenantId: supplier.tenantId,
         actorId: "OLIV_CALLBACK",
         actionType: "UPDATE",
         entityName: "INVOICE",
@@ -180,9 +229,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    const derivedStatus = deriveOlivStatusFromPayoutStatus(body.payoutStatus);
+    if (derivedStatus) {
+      await syncOlivSupplierStatus({
+        supplierId: supplier.id,
+        status: derivedStatus,
+        source: "oliv-payout-callback",
+        syncedAt: new Date(body.disbursementDate),
+      });
+    }
+
     await prisma.ledgerEntry.create({
       data: {
-        tenantId: "SYSTEM",
+        tenantId: supplier.tenantId,
         entityType: "PLATFORM_FEE",
         entityId: body.olivTransactionId,
         entryType: "PLATFORM_FEE",
@@ -208,7 +267,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("[LAYER-2] Callback error:", error);
     return NextResponse.json(
-      { error: "Internal processing error" },
+      { error: "Internal processing error", disclaimer: LIABILITY_DISCLAIMER },
       { status: 500 }
     );
   }

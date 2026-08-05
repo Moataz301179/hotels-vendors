@@ -4,6 +4,7 @@ import { apiRoute, success, error, audit } from "@/lib/api-utils";
 import { isWebhookIpAllowed, getClientIp } from "@/lib/security/webhook-whitelist";
 import { checkWebhookReplay, markWebhookProcessed, olivEventId } from "@/lib/security/webhook-idempotency";
 import { releaseCredit } from "@/lib/credit-gate";
+import { deriveOlivStatusFromFacilityEvent, syncOlivSupplierStatus } from "@/lib/fintech/oliv-status-sync";
 
 export const dynamic = "force-dynamic";
 
@@ -298,7 +299,7 @@ async function handleCreditFacilityEvent(
     await prisma.supplier.update({
       where: { id: supplier.id },
       data: {
-        olivStatus: "APPROVED",
+        olivStatus: "ACTIVE",
         olivSyncAt: new Date(),
       },
     });
@@ -332,6 +333,17 @@ async function handleCreditFacilityEvent(
         data: { status: "SUSPENDED", lastSyncedAt: new Date() },
       });
     }
+  }
+
+  const derivedStatus = deriveOlivStatusFromFacilityEvent(eventType);
+  if (derivedStatus) {
+    await syncOlivSupplierStatus({
+      supplierId: supplier.id,
+      status: derivedStatus,
+      source: eventType,
+      syncedAt: new Date(),
+      olivUserId: typeof supplierId === "string" ? supplierId : undefined,
+    });
   }
 
   // Audit log

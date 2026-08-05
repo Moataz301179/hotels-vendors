@@ -1,0 +1,248 @@
+// Prisma Schema Changes — New/Modified Models for Internal Requisition → PO → Invoice Flow
+// Apply via: npx prisma migrate dev --name "add_requisition_po_invoice_flow"
+
+// ═══════════════════════════════════════════════════════════════════
+// NEW MODELS
+// ═══════════════════════════════════════════════════════════════════
+
+// Internal Requisition — Housekeeping scan-to-request
+model InternalRequisition {
+  id                String    @id @default(cuid())
+  requisitionNumber String    @unique
+  status            RequisitionStatus @default(DRAFT)
+  outletId          String
+  propertyId        String
+  hotelId           String
+  tenantId          String
+  requesterId       String    // Dept Staff who scanned
+  approverId        String?   // Dept Manager who approved
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  rejectionReason   String?
+  notes             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  // Link to PO when converted
+  purchaseOrderId   String?   @unique
+  purchaseOrder     PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
+
+  items             RequisitionItem[]
+  outlet            Outlet    @relation(fields: [outletId], references: [id])
+  property          Property  @relation(fields: [propertyId], references: [id])
+  hotel             Hotel     @relation(fields: [hotelId], references: [id])
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requester         User      @relation(fields: [requesterId], references: [id])
+  approver          User?     @relation(fields: [approverId], references: [id])
+
+  @@index([tenantId, status])
+  @@index([outletId, createdAt])
+  @@index([hotelId, createdAt])
+  @@index([purchaseOrderId])
+}
+
+enum RequisitionStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  CONVERTED_TO_PO
+  CANCELLED
+}
+
+model RequisitionItem {
+  id                   String   @id @default(cuid())
+  requisitionId        String
+  productId            String
+  quantity             Int
+  unitOfMeasure        String
+  notes                String?
+  estimatedUnitPrice   Decimal? @db.Decimal(12, 2)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  deletedAt            DateTime?
+
+  requisition          InternalRequisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  product              Product             @relation(fields: [productId], references: [id])
+
+  @@index([requisitionId])
+  @@index([productId])
+}
+
+// Purchase Order — Enhanced with requisition link
+model PurchaseOrder {
+  id                    String        @id @default(cuid())
+  poNumber              String        @unique
+  status                POStatus      @default(DRAFT)
+  requisitionId         String?       @unique  // Link back to originating requisition
+  requisition           InternalRequisition? @relation(fields: [requisitionId], references: [id])
+
+  hotelId               String
+  supplierId            String
+  propertyId            String?
+  outletId              String?
+  tenantId              String
+  requesterId           String        // Procurement user who created PO
+  approverId            String?       // Finance who approved payment
+
+  deliveryDate          DateTime?
+  deliveryInstructions  String?
+  paymentTerms          String?       // Net-30, Net-60, etc.
+  subtotal              Decimal?      @db.Decimal(12, 2)
+  vatAmount             Decimal?      @db.Decimal(12, 2)
+  total                 Decimal?      @db.Decimal(12, 2)
+
+  // Authority Matrix snapshot at approval
+  authoritySnapshot     Json?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  deletedAt             DateTime?
+
+  hotel                 Hotel         @relation(fields: [hotelId], references: [id])
+  supplier              Supplier      @relation(fields: [supplierId], references: [id])
+  property              Property?     @relation(fields: [propertyId], references: [id])
+  outlet                Outlet?       @relation(fields: [outletId], references: [id])
+  tenant                Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requester             User          @relation(fields: [requesterId], references: [id])
+  approver              User?         @relation(fields: [approverId], references: [id])
+  items                 PurchaseOrderItem[]
+  invoices              Invoice[]
+
+  @@index([tenantId, status])
+  @@index([hotelId, createdAt])
+  @@index([supplierId, createdAt])
+  @@index([requisitionId])
+}
+
+enum POStatus {
+  DRAFT
+  SENT_TO_SUPPLIER
+  ACCEPTED
+  REJECTED
+  PARTIALLY_DELIVERED
+  DELIVERED
+  INVOICED
+  PAYMENT_APPROVED
+  PAID
+  CANCELLED
+}
+
+model PurchaseOrderItem {
+  id                 String   @id @default(cuid())
+  purchaseOrderId    String
+  productId          String
+  quantity           Int
+  unitPrice          Decimal  @db.Decimal(12, 2)
+  total              Decimal  @db.Decimal(12, 2)
+  receivedQuantity   Int      @default(0)
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  deletedAt          DateTime?
+
+  purchaseOrder      PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  product            Product       @relation(fields: [productId], references: [id])
+
+  @@index([purchaseOrderId])
+  @@index([productId])
+}
+
+// Notification — For push/real-time alerts
+model Notification {
+  id        String             @id @default(cuid())
+  tenantId  String
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?              // Deep-link params, entity IDs
+  readAt    DateTime?
+  sentAt    DateTime           @default(now())
+  createdAt DateTime           @default(now())
+
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant    Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId, readAt])
+  @@index([userId, createdAt])
+}
+
+enum NotificationType {
+  REQUISITION_SUBMITTED
+  REQUISITION_APPROVED
+  REQUISITION_REJECTED
+  PO_CREATED
+  PO_ACCEPTED
+  PO_REJECTED
+  INVOICE_RECEIVED
+  INVOICE_APPROVED
+  DELIVERY_SCHEDULED
+  DELIVERY_COMPLETED
+  PAYMENT_DUE
+  PAYMENT_RECEIVED
+  CREDIT_LINE_AVAILABLE
+  SYSTEM_ALERT
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MODIFIED EXISTING MODELS (Additions only — no breaking changes)
+// ═══════════════════════════════════════════════════════════════════
+
+// Invoice — Add missing states + credit-line payment link + PO link
+model Invoice {
+  // ... existing fields (id, invoiceNumber, etaUuid, etaStatus, etc.) ...
+
+  // ADD THESE FIELDS:
+  purchaseOrderId       String?               @unique
+  purchaseOrder         PurchaseOrder?        @relation(fields: [purchaseOrderId], references: [id])
+
+  // Credit-line payment tracking
+  creditLinePaymentId   String?
+  creditLineStatus      CreditLinePaymentStatus @default(NOT_INITIATED)
+  creditLinePaidAt      DateTime?
+
+  // ETA compliance (ensure these exist)
+  etaSubmissionId       String?               @unique
+  etaValidatedAt        DateTime?
+
+  @@index([purchaseOrderId])
+  @@index([creditLinePaymentId])
+}
+
+enum CreditLinePaymentStatus {
+  NOT_INITIATED
+  REDIRECTED_TO_OLIV
+  PAYMENT_PENDING
+  PAID
+  FAILED
+  EXPIRED
+}
+
+// User — Add outletId for dept staff, ensure roleId FK
+model User {
+  // ... existing fields ...
+  outletId          String?
+  outlet            Outlet?     @relation(fields: [outletId], references: [id])
+  // roleId already exists as FK to Role (good)
+  // platformRole enum can remain for reference but roleId is authoritative
+}
+
+// Role — Add new tenant-scoped role names (via seed, not enum)
+// The Role model uses string name, so new roles added via seed script
+
+// ProductCategory — Already matches spec: F_AND_B, CONSUMABLES, GUEST_SUPPLIES, FFE, SERVICES
+// Mobile hardcoded categories must align: ["All", "F&B", "Consumables", "Guest Supplies", "FF&E", "Services"]
+
+// Order — DEPRECATE in favor of PurchaseOrder + InternalRequisition
+// Keep for backward compat; add migration script to map existing Orders → PurchaseOrders
+
+// ═══════════════════════════════════════════════════════════════════
+// INDEXES FOR PERFORMANCE
+// ═══════════════════════════════════════════════════════════════════
+
+// Add to existing models as needed:
+// model Hotel { @@index([tenantId, city]) }
+// model Supplier { @@index([tenantId, city]) }
+// model Product { @@index([tenantId, category, status]) }
