@@ -7,7 +7,7 @@ export const translations = {
     // Navigation
     nav: {
       catalog: "Catalog",
-      suppliers: "Suppliers",
+      suppliers: "Vendors",
       solutions: "Solutions",
       pricing: "Pricing",
       about: "About",
@@ -24,9 +24,14 @@ export const translations = {
       ctaSecondary: "Explore Catalog",
       stats: {
         skus: "SKUs",
-        suppliers: "Suppliers",
+        suppliers: "Vendors",
         gmv: "EGP GMV",
         delivery: "Delivery",
+      },
+      invoQR: {
+        title: "Scan to Install Invo",
+        subtitle: "The operational layer for hotel procurement teams.",
+        hook: "Hotel staff scan items → request replenishment → the procurement cycle runs itself.",
       },
     },
     // Trust bar
@@ -283,9 +288,14 @@ export const translations = {
       ctaSecondary: "تصفح الكتالوج",
       stats: {
         skus: "صنف",
-        suppliers: "مورد",
+        suppliers: "موردون",
         gmv: "مليار جنيه",
         delivery: "ساعة توصيل",
+      },
+      invoQR: {
+        title: "امسح لتثبيت إنفو",
+        subtitle: "الطبقة التشغيلية لفرق مشتريات الفنادق.",
+        hook: "موظفو الفندق يمسحون الأصناف ← يطلبون إعادة التزويد ← دورة المشتريات تعمل ذاتياً.",
       },
     },
     // Trust bar

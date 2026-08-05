@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { OlivAdCarousel } from "@/components/marketing/oliv-ad-carousel";
 import { HotelSuppliesCarousel } from "@/components/marketing/hotel-supplies-carousel";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
@@ -184,9 +183,80 @@ export default function MarketingPage() {
               </div>
             </div>
 
-            {/* RIGHT: Oliv Ad Carousel */}
+            {/* RIGHT: Invo App-Install QR Card */}
             <div className="animate-fade-in-up animation-delay-200">
-              <OlivAdCarousel />
+              <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
+                <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center" style={{ borderColor: "var(--border-accent)" }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 100 100"
+                      className="w-full h-full"
+                    >
+                      <rect width="100" height="100" fill="#0c0c12"/>
+                      <rect x="10" y="10" width="80" height="80" fill="#ffffff"/>
+                      <rect x="15" y="15" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="25" y="15" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="35" y="15" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="45" y="15" width="7" height="7" fill="#ffffff"/>
+                      <rect x="55" y="15" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="65" y="15" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="75" y="15" width="7" height="7" fill="#ffffff"/>
+                      <rect x="15" y="25" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="25" y="25" width="7" height="7" fill="#ffffff"/>
+                      <rect x="35" y="25" width="7" height="7" fill="#ffffff"/>
+                      <rect x="45" y="25" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="55" y="25" width="7" height="7" fill="#ffffff"/>
+                      <rect x="65" y="25" width="7" height="7" fill="#ffffff"/>
+                      <rect x="75" y="25" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="15" y="35" width="7" height="7" fill="#ffffff"/>
+                      <rect x="25" y="35" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="35" y="35" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="45" y="35" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="55" y="35" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="65" y="35" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="75" y="35" width="7" height="7" fill="#ffffff"/>
+                      <rect x="15" y="45" width="7" height="7" fill="#ffffff"/>
+                      <rect x="25" y="45" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="35" y="45" width="7" height="7" fill="#ffffff"/>
+                      <rect x="45" y="45" width="7" height="7" fill="#ffffff"/>
+                      <rect x="55" y="45" width="7" height="7" fill="#ffffff"/>
+                      <rect x="65" y="45" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="75" y="45" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="15" y="55" width="7" height="7" fill="#ffffff"/>
+                      <rect x="25" y="55" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="35" y="55" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="45" y="55" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="55" y="55" width="7" height="7" fill="#ffffff"/>
+                      <rect x="65" y="55" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="75" y="55" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="15" y="65" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="25" y="65" width="7" height="7" fill="#ffffff"/>
+                      <rect x="35" y="65" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="45" y="65" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="55" y="65" width="7" height="7" fill="#ffffff"/>
+                      <rect x="65" y="65" width="7" height="7" fill="#ffffff"/>
+                      <rect x="75" y="65" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="15" y="75" width="7" height="7" fill="#ffffff"/>
+                      <rect x="25" y="75" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="35" y="75" width="7" height="7" fill="#ffffff"/>
+                      <rect x="45" y="75" width="7" height="7" fill="#ffffff"/>
+                      <rect x="55" y="75" width="7" height="7" fill="#0c0c12"/>
+                      <rect x="65" y="75" width="7" height="7" fill="#ffffff"/>
+                      <rect x="75" y="75" width="7" height="7" fill="#ffffff"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                    {t("hero.invoQR.title")}
+                  </h3>
+                  <p className="text-sm md:text-base text-foreground-secondary mb-4 max-w-xs mx-auto leading-relaxed">
+                    {t("hero.invoQR.subtitle")}
+                  </p>
+                  <p className="text-xs md:text-sm text-accent-base font-medium">
+                    {t("hero.invoQR.hook")}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1029,7 +1099,7 @@ const STEPS = [
     color: "var(--accent-base)",
     icon: FileText,
     items: [
-      { icon: ShoppingCart, text: "Browse supplier catalogs" },
+      { icon: ShoppingCart, text: "Browse vendor catalogs" },
       { icon: Building2, text: "Select items & quantities" },
       { icon: FileText, text: "Submit purchase order" },
     ],

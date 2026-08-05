@@ -109,17 +109,28 @@ rg -n "#[0-9a-fA-F]{3,8}|oklch\(" app components --glob '*.tsx' --glob '*.ts' --
 
 ## Phase 1: Prisma Schema + Seed (Days 4–6)
 
+> **NOTE (D2 pivot):** The catalog is RFQ-driven, NOT fixed-price listings (see
+> `docs/planning/DECISION_RECORD_2026-08-04.md`). RFQ/Quote models are baked in HERE so we
+> never create fixed-price columns we'd have to migrate away from. Fixed-price fields must NOT
+> be introduced.
+
 ### Scope
 - New models: `InternalRequisition`, `RequisitionItem`, `PurchaseOrder`, `PurchaseOrderItem`, `Notification`
+- **NEW (RFQ pivot):** `QuoteRequest`, `QuoteRequestItem`, `Quote` (vendor offer), `QuoteLine`,
+  `VendorTrustScore` — the catalog is request-for-quotation. A hotel states a need → qualified
+  vendors quote → AI scores → Authority Matrix selects. Price fields are quote-based, not a
+  fixed price list.
 - Modified models: `Invoice` (add PO link, credit-line fields, ETA fields), `User` (add `outletId`)
-- Enums: `RequisitionStatus`, `POStatus`, `CreditLinePaymentStatus`, `NotificationType`
-- Seed script: 29 permissions + 8 roles with mappings
+- Enums: `RequisitionStatus`, `POStatus`, `CreditLinePaymentStatus`, `NotificationType`,
+  `QuoteRequestStatus` (DRAFT → OPEN → QUOTING → AWARDED → CLOSED), `QuoteStatus`
+- Seed script: 29 permissions + 8 roles with mappings (+ RFQ permissions: `vendor:quote:create`,
+  `hotel:rfq:create`, `hotel:rfq:award`, `ai:rfq:match` if role-seeded)
 
 ### Files to Create/Modify
 | File | Action |
 |------|--------|
-| `prisma/schema.prisma` | Add new models + modify existing |
-| `prisma/seed.ts` | Add RBAC seed (from `RBAC_PERMISSION_SEED.ts`) |
+| `prisma/schema.prisma` | Add new models + modify existing (incl. RFQ/Quote per D2) |
+| `prisma/seed.ts` | Add RBAC seed (from `RBAC_PERMISSION_SEED.ts`) + RFQ permissions |
 | `docs/planning/PRISMA_SCHEMA_CHANGES.prisma` | Reference for exact changes |
 
 ### Verification Gates
@@ -164,6 +175,11 @@ All `api/v1/` routes with Zod validation + `requirePermission()` + tenant scopin
 | `/api/v1/hotel/requisitions/:id/approve` | POST | `hotel:requisition:approve` | Manager approve |
 | `/api/v1/hotel/requisitions/:id/reject` | POST | `hotel:requisition:approve` | Manager reject |
 | `/api/v1/hotel/requisitions/:id/convert` | POST | `hotel:po:create` | Convert to PO |
+| `/api/v1/hotel/rfqs` | POST | `hotel:rfq:create` | Open quote request (D2 RFQ pivot) |
+| `/api/v1/hotel/rfqs/:id/quotes` | GET | `hotel:rfq:read` | Compare quotes on an RFQ |
+| `/api/v1/hotel/rfqs/:id/award` | POST | `hotel:rfq:award` | Award winner → PO |
+| `/api/v1/vendor/quotes` | POST | `vendor:quote:create` | Vendor submits quote |
+| `/api/v1/vendor/quotes/:id` | PATCH | `vendor:quote:update` | Vendor edits quote (while OPEN) |
 | `/api/v1/hotel/purchase-orders` | GET | `hotel:po:read` | List POs |
 | `/api/v1/hotel/purchase-orders` | POST | `hotel:po:create` | Create PO |
 | `/api/v1/hotel/purchase-orders/:id` | GET | `hotel:po:read` | Get PO |
@@ -185,6 +201,11 @@ app/api/v1/hotel/requisitions/[id]/route.ts
 app/api/v1/hotel/requisitions/[id]/approve/route.ts
 app/api/v1/hotel/requisitions/[id]/reject/route.ts
 app/api/v1/hotel/requisitions/[id]/convert/route.ts
+app/api/v1/hotel/rfqs/route.ts
+app/api/v1/hotel/rfqs/[id]/quotes/route.ts
+app/api/v1/hotel/rfqs/[id]/award/route.ts
+app/api/v1/vendor/quotes/route.ts
+app/api/v1/vendor/quotes/[id]/route.ts
 app/api/v1/hotel/purchase-orders/route.ts
 app/api/v1/hotel/purchase-orders/[id]/route.ts
 app/api/v1/hotel/purchase-orders/[id]/approve-payment/route.ts
@@ -200,8 +221,10 @@ app/api/v1/events/stream/route.ts
 lib/validators/requisition.ts
 lib/validators/purchase-order.ts
 lib/validators/invoice.ts
+lib/validators/rfq.ts
 lib/services/requisition.ts
 lib/services/purchase-order.ts
+lib/services/rfq.ts
 lib/services/oliv-checkout.ts
 lib/services/sse.ts
 middleware.ts  # Tenant injection + route protection
@@ -237,14 +260,88 @@ npm run test
 
 ---
 
-## Phase 3: Mobile Redesign (Days 11–20)
+## Phase 2.5: RFQ Core + AI Automation + Role Dashboards (Days 11–14)
+
+> **Purpose (D2 pivot — SINGLE OWNER, not spread across phases):** Build the RFQ engine end to
+> end so every role's dashboard renders against ONE coherent system. This phase owns schema-behavior-
+> permissions-AI-dashboards together, preventing the partial-slice bugs that come from splitting it.
+> Fixed-price catalog mechanic is GONE; this replaces it.
+>
+> **Terminology (D1):** user-facing copy = "vendor" (never "supplier" except internal code/DB).
+
+### Scope
+1. **RFQ lifecycle (core mechanic):**
+   - Hotel/operator opens a quote request (web dashboard or mobile scan-to-replenish feeding it)
+     → `QuoteRequestStatus: OPEN`
+   - AI matches qualified vendors by `VendorTrustScore` + capability + locality → invites 3–5
+   - Vendors submit `Quote` (price, delivery, quality) → `QUOTING`
+   - AI scores bids on **Total Cost of Procurement (TCP)** — not lowest price alone
+   - Authority Matrix evaluates award → auto/dual approval per value threshold (G3)
+   - Winner → `PurchaseOrder` auto-created → existing PO flow continues (finance/factoring/shipping)
+
+2. **AI automation (from `docs/ai-bidding-strategic-refinement.md`, RFQ-primary):**
+   - `VendorTrustScore` auto-computed (registration authenticity, financial stability, digital
+     footprint, peer network, certifications) — onboarding 14 days → 48h
+   - Predictive Demand feeds quote requests; Price Intelligence monitors anomalies;
+     Conversational Procurement parses "we need X for N rooms" → QuoteRequest
+   - AI scoring + matching live in `lib/ai/rfq-*.ts`; model-router fallback chain (AGENTS.md)
+
+3. **Role dashboards (rendered by role + permission, NOT one layout):**
+   - **Hotel/operator:** create RFQ, compare quotes (TCP view), award
+   - **Vendor:** view invites, submit/edit quotes while OPEN, trust-score card
+   - **Finance:** credit + factoring on the winning quote (Oliv CTA when due)
+   - **Shipping:** fulfill the awarded PO
+   - **Admin:** RFQ health, fee tracking, vendor score audits
+   - Each dashboard reads permissions from `requirePermission`, tenant-scoped (G1/G2/G8)
+
+4. **Terminology pass:** user-facing dashboard copy uses "vendor" (D1). No fixed-price messaging.
+
+### Files to Create/Modify
+```
+lib/ai/rfq-match.ts            # vendor matching + invite (Trust Score)
+lib/ai/rfq-score.ts            # TCP scoring of bids
+lib/ai/rfq-price-intel.ts      # price anomaly monitoring (Phase 2.5 scope: minimal stub→real)
+lib/services/rfq.ts            # lifecycle service (open → quote → award)
+lib/services/vendor-trust.ts   # Trust Score computation
+app/(dashboard)/hotel/rfqs/    # hotel RFQ screens (list, create, compare, award)
+app/(dashboard)/vendor/quotes/ # vendor quote screens (invites, submit, edit)
+app/(dashboard)/finance/       # factoring on awarded quotes (Oliv CTA)
+app/(dashboard)/shipping/      # fulfillment of awarded POs
+```
+
+### Verification Gates
+```bash
+# 1. Full RFQ happy path (curl, 4 roles):
+#    hotel creates RFQ → AI invites → vendor quotes → AI scores → award → PO created
+#    Each step: 401 unauth / 403 wrong-role / 200 correct-role
+# 2. Tenant isolation: hotel A cannot see hotel B quotes
+# 3. Authority Matrix: award above threshold requires dual approval (G3)
+# 4. Build + lint + tsc green
+# 5. No "fixed pricing, no bidding" string anywhere in dashboard copy (grep)
+```
+
+### Acceptance Criteria
+- [ ] RFQ lifecycle end-to-end works across all 4 roles, tenant-scoped
+- [ ] AI match/score uses TCP, not lowest-price-only
+- [ ] Authority Matrix governs award; above-threshold = dual approval
+- [ ] Mobile scan-to-replenish (Phase 3) can POST into the same RFQ flow (contract stable)
+- [ ] All dashboards render by role + permission (single source: RBAC seed)
+- [ ] Terminology = vendor in all user-facing copy
+- [ ] Build + lint + tsc green; no fixed-price messaging remains
+
+---
+
+## Phase 3: Mobile Redesign (Days 15–24)
+
+> **Builds against the SETTLED RFQ model from Phase 2.5** — the mobile scan-to-replenish flow
+> POSTs into the same QuoteRequest flow, nothing is reworked.
 
 ### Scope
 Complete rewrite of mobile screens per `INVO_UX_SCREENS.md`. Monorepo setup.
 
 ### Milestones
 
-#### 3A: Monorepo + Shared Packages (Days 11–13)
+#### 3A: Monorepo + Shared Packages (Days 15–17)
 - [ ] Create `hotels-vendors-monorepo/` structure
 - [ ] Extract `@hotels-vendors/api-contracts` from web Zod schemas
 - [ ] Extract `@hotels-vendors/ui-primitives` from web/mobile themes
@@ -252,20 +349,20 @@ Complete rewrite of mobile screens per `INVO_UX_SCREENS.md`. Monorepo setup.
 - [ ] Configure pnpm workspaces + Turborepo
 - [ ] Update mobile `package.json` with new dependencies
 
-#### 3B: Auth + Onboarding Gateway (Days 14–15)
+#### 3B: Auth + Onboarding Gateway (Days 18–19)
 - [ ] `LoginScreen` / `RegisterScreen` (polish existing)
 - [ ] `OnboardingGatewayScreen` — Role selection cards
 - [ ] Supplier path → `OlivActivationScreen` (enhance existing)
 - [ ] Hotel path → Direct to Home tabs
 - [ ] Deep link scheme `invo://` configured
 
-#### 3C: Hotel Home + Scan Flow (Days 16–17)
+#### 3C: Hotel Home + Scan Flow (Days 20–21)
 - [ ] `HotelHomeScreen` — Scan FAB, stats cards, insight card, activity feed
 - [ ] `ScanScreen` — Camera + barcode scanner (`expo-camera`, `expo-barcode-scanner`)
 - [ ] `RequisitionReviewScreen` — Post-scan confirmation
 - [ ] Offline queue for scans (local AsyncStorage + sync indicator)
 
-#### 3D: Requisitions + Approvals + Catalog (Days 18–19)
+#### 3D: Requisitions + Approvals + RFQ (Days 22–24)
 - [ ] `RequisitionsScreen` — List with status badges, pull-to-refresh
 - [ ] `RequisitionDetailScreen` — Full view with actions
 - [ ] `ApprovalsScreen` (Manager) — Budget bar, pending/approved lists, approve/reject modals
@@ -328,7 +425,7 @@ eas build --profile development --platform android
 
 ---
 
-## Phase 4: Approval + PO + Supplier Flows + Push (Days 21–28)
+## Phase 4: Approval + PO + Supplier Flows + Push (Days 25–32)
 
 ### Scope
 End-to-end integration, real-time sync, push notifications.
@@ -370,7 +467,7 @@ End-to-end integration, real-time sync, push notifications.
 
 ---
 
-## Phase 5: Finance + Oliv Redirect (Days 29–35)
+## Phase 5: Finance + Oliv Redirect (Days 33–39)
 
 ### Scope
 Complete credit-line payment flow, Oliv sandbox → production readiness.
@@ -420,7 +517,7 @@ OLIV_WEBHOOK_TOKEN=<sandbox_webhook_token>
 
 ---
 
-## Phase 6: Web Dashboard Read-Views (Days 36–42)
+## Phase 6: Web Dashboard Read-Views (Days 40–46)
 
 ### Scope
 Server-rendered dashboard pages for all roles in `app/(dashboard)/[role]/`.
@@ -497,13 +594,14 @@ If any phase fails verification **3 times**, escalate:
 |-------|----------|------------|
 | 0.5. Deep Cleanup | 2 days | 2 days |
 | 0.7. PM Governance | 2 days | 4 days |
-| 1. Prisma + Seed | 3 days | 7 days |
-| 2. Backend Routes + RBAC | 7 days | 14 days |
-| 3. Mobile Redesign | 10 days | 24 days |
-| 4. Flows + Push | 8 days | 32 days |
-| 5. Finance + Oliv | 7 days | 39 days |
-| 6. Web Dashboards | 7 days | 46 days |
-| **Total** | **46 days (8 weeks)** | |
+| 1. Prisma + Seed (incl. RFQ models) | 3 days | 7 days |
+| 2. Backend Routes + RBAC (incl. RFQ routes) | 7 days | 14 days |
+| 2.5. RFQ Core + AI + Role Dashboards | 4 days | 18 days |
+| 3. Mobile Redesign (vs settled RFQ) | 10 days | 28 days |
+| 4. Flows + Push | 8 days | 36 days |
+| 5. Finance + Oliv | 7 days | 43 days |
+| 6. Web Dashboards | 7 days | 50 days |
+| **Total** | **50 days (~9 weeks)** | |
 
 **Buffer**: +2 weeks for integration issues, Oliv credential delays, design iterations.
 **Target**: Production ready in **8-10 weeks** from approval.

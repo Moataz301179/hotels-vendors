@@ -74,3 +74,22 @@ Common PM2 commands on the VPS (via SSH): `pm2 status`, `pm2 logs hotels-vendors
 - **Liability Disclaimer:** Every transaction failure pathway must log and output the mandatory disclaimer: *"Restaurants for E-Marketing operates strictly as a technical data orchestrator. Zero liability for counterparty collection defaults."*
 - **Test Before Complete:** Before declaring a task complete, run `npx vitest run` to ensure zero regressions. For financial/decimal calculations, verify zero arithmetic errors with explicit tolerance checks.
 - **No Duplicate Repos/Projects:** Never create duplicate GitHub repos or Vercel projects. Use only `Moataz301179/hotels-vendors` (GitHub) and `hotels-vendors` (Vercel).
+
+---
+
+## 🔒 Marketing Positions (Locked — 2026-08-04)
+
+- **Hero** = Product + Invo app-install QR card only. Never rebuild a hero Oliv carousel.
+- **Oliv funding story** lives ONLY in: marketing posts (FB/WA/LI) + `/financing/oliv` landing page + in-app CTA in Invo mobile app (Phase 3).
+- **Hero right-side** IS the Invo app-install QR card (hotel staff scan → install → scan items → replenishment cycle). Do not replace with generic imagery.
+- **Terminology**: "vendor" everywhere in user-facing copy (not "supplier"). Internal/technical may stay `supplier`.
+- **Catalog messaging**: RFQ + AI automation ("Request a quote. AI matches the right vendors and automates the cycle."). No "Fixed pricing, no bidding" claim.
+- **Oliv CTA tracking**: Both `/financing/oliv` CTAs route through `/api/v1/oliv/click` → appends `ref=CHV000` → redirects to `https://oliv.finance/apply?ref=CHV000&source=hotelsvendors`.
+
+## Marketing Positions (Locked — 2026-08-04)
+- **Hero** = Product + Invo app-install QR card only. Never rebuild a hero Oliv carousel.
+- **Oliv funding story** lives ONLY in: marketing posts (FB/WA/LI, see `docs/marketing/oliv-social-ads.md`) + `/financing/oliv` landing page + in-app CTA in the Invo mobile app (Phase 3).
+- **Hero right-side** IS the Invo app-install QR card (hotel staff scan → install → scan items → replenishment cycle). Do not replace with generic imagery.
+- **Terminology**: "vendor" everywhere in user-facing copy (not "supplier"). Internal/technical identifiers may stay `supplier`.
+- **Catalog messaging**: RFQ + AI automation ("Request a quote. AI matches the right vendors and automates the cycle."). No "Fixed pricing, no bidding" claim.
+- **Oliv CTA tracking**: Both `/financing/oliv` CTAs route through `/api/v1/oliv/click` → appends `ref=CHV000` → redirects to `https://oliv.finance/apply?ref=CHV000&source=hotelsvendors`.

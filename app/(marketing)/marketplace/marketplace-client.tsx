@@ -24,13 +24,13 @@ const categories = [
   { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" },
 ];
 
-const supplierFeatures = [
-  { icon: Upload, title: "Catalog Upload", desc: "Upload your catalog with fixed prices. Set per-hotel or per-group pricing." },
-  { icon: ShoppingCart, title: "PO Matching", desc: "Receive purchase orders directly from hotel procurement teams." },
-  { icon: Banknote, title: "24-Hour Payment", desc: "Get paid in 24 hours via embedded factoring." },
+const vendorFeatures = [
+  { icon: Upload, title: "Catalog Management", desc: "Upload your catalog. Hotels request quotes — AI matches the right vendors." },
+  { icon: ShoppingCart, title: "RFQ Matching", desc: "Receive quote requests directly from hotel procurement teams." },
+  { icon: Banknote, title: "48-Hour Payment", desc: "Get paid in 48 hours via embedded factoring." },
   { icon: FileCheck, title: "ETA Invoicing", desc: "Every invoice is auto-generated with RSA-2048 signing and UUID tracking." },
-  { icon: BarChart3, title: "Sales Analytics", desc: "Track orders, revenue, and buyer behavior across properties." },
-  { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified supplier badge." },
+  { icon: BarChart3, title: "Sales Analytics", desc: "Track quote requests, revenue, and buyer behavior across properties." },
+  { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified vendor badge." },
 ];
 
 function formatPrice(price: number): string {
@@ -87,10 +87,10 @@ function MarketplaceContent() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            {products.length}+ Products. Verified<br />Suppliers. <span className="text-white">Zero Collection Chases.</span>
+            {products.length}+ Products. Verified<br />Vendors. <span className="text-white">Zero Collection Chases.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Egypt&apos;s largest hospitality procurement catalog. Fixed-price listings, ETA-compliant invoicing, and 24-hour settlement via embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
+            Egypt&apos;s largest hospitality procurement catalog. Request quotes, AI matches the right vendors, and the cycle automates. Built for vendors who are done waiting 90 days to get paid.
           </p>
           <div className="max-w-2xl mb-8">
             <div className="flex gap-2">
@@ -216,9 +216,9 @@ function MarketplaceContent() {
       {/* Supplier Features */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
+          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Vendors Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {supplierFeatures.map((f) => (
+            {vendorFeatures.map((f) => (
               <div key={f.title} className="rounded-xl p-6 transition-all hover:border-accent-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
                 <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
@@ -233,9 +233,9 @@ function MarketplaceContent() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
+          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join our vendors already transacting on HotelsVendors. Get paid in 48 hours, not 90.</p>
           <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-            Register as Supplier <ArrowRight size={14} />
+            Register as Vendor <ArrowRight size={14} />
           </Link>
         </div>
       </section>

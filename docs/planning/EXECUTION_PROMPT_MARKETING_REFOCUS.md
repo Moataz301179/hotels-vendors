@@ -77,6 +77,19 @@ Create: `docs/marketing/oliv-social-ads.md`
 - Note the hero right-side IS the Invo app-install QR card (hotel staff scan → install → scan
   items → replenishment cycle). Do not replace it with generic imagery.
 
+### 5. Terminology + RFQ copy (approved pivots — D1/D2 in the decision record)
+- Use **"vendor"** everywhere in user-facing copy; replace visible "supplier" words in:
+  hero stats (`t("hero.stats.suppliers")` label → "vendors"), "Browse supplier catalogs"
+  (line ~1032), and any hero/carousel/CTA strings in this file. Do NOT rename code
+  identifiers, DB fields, API contracts, or internals — copy only, this pass.
+- Catalog messaging reflects **RFQ + AI automation**, NOT "fixed-price listings":
+  in the hero and any catalog copy touched here, drop the "Fixed pricing, no bidding"
+  claim (see `app/(marketing)/marketplace/marketplace-client.tsx` line ~93) and reframe
+  to: "Request a quote. AI matches the right vendors and automates the cycle." Keep
+  changes scoped to the marketing files in THIS task (hero/client + marketplace copy);
+  the schema/API/catalog-engine rewrite is a separate phase.
+- Do NOT update AGENTS.md here (conflict resolution is a separate scoped task).
+
 ## Constraints
 - Use existing design tokens/globals.css only (G7 dark glassmorphism). No raw hex in components,
   no new deps. No landing-page marketing UI inside dashboards.
@@ -95,6 +108,8 @@ Create: `docs/marketing/oliv-social-ads.md`
    302 redirect with `ref=CHV000` in the Location header (curl -I).
 3. ADS: `docs/marketing/oliv-social-ads.md` exists with 3 posts x (EN + AR), each containing the
    48h + same-day hooks.
-4. LOCK: both CLAUDE.md and PROJECT_STATE.md contain the locked marketing positions note.
-5. COMMIT: single commit `chore(marketing): refocus oliv to landing page + ads, invo-install-qr hero`.
-6. BLOCKERS: none, or list them.
+4. COPY: visible "supplier" gone from the touched files (replaced with "vendor"), and no
+   "Fixed pricing, no bidding" claim remains in the touched marketing copy — show grep proof.
+5. LOCK: both CLAUDE.md and PROJECT_STATE.md contain the locked marketing positions note.
+6. COMMIT: single commit `chore(marketing): refocus oliv to landing page + ads, invo-install-qr hero`.
+7. BLOCKERS: none, or list them.
