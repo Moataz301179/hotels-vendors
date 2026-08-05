@@ -330,7 +330,7 @@ export const MobileRegisterSchema = z.object({
   taxId: z.string().optional(),
   commercialReg: z.string().optional(),
   marketingConsent: z.boolean().default(false),
-  termsAccepted: z.literal(true, { error: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
+  termsAccepted: z.literal(true, { error: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }).optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
 }).superRefine((data, ctx) => {
   // Require either type or role

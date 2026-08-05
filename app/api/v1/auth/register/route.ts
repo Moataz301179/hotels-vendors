@@ -64,7 +64,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   // Mobile registration: verify OTP first
   if (isMobileRegistration) {
-    const verifyResult = await verifyOtp(normalizedPhone!, data.otpCode!, "REGISTER");
+    let verifyResult = await verifyOtp(normalizedPhone!, data.otpCode!, "REGISTER");
+    if (!verifyResult.success) {
+      verifyResult = await verifyOtp(normalizedPhone!, data.otpCode!, "LOGIN");
+    }
     if (!verifyResult.success) {
       return error("Invalid or expired code", 400);
     }
