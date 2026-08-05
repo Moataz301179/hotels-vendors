@@ -65,7 +65,7 @@ export const common = {
     english: "English",
   },
   ar: {
-    appName: "هوتيلز فيندورز",
+    appName: "Hotels Vendors",
     tagline: "أذكى معاً",
     search: "بحث",
     filter: "تصفية",

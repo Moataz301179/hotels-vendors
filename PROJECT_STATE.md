@@ -40,3 +40,4 @@
 - **Terminology**: "vendor" everywhere in user-facing copy (not "supplier"). Internal/technical may stay `supplier`.
 - **Catalog messaging**: RFQ + AI automation ("Request a quote. AI matches the right vendors and automates the cycle."). No "Fixed pricing, no bidding" claim.
 - **Oliv CTA tracking**: Both `/financing/oliv` CTAs route through `/api/v1/oliv/click` → appends `ref=CHV000` → redirects to `https://oliv.finance/apply?ref=CHV000&source=hotelsvendors`.
+- **Brand names stay in English**: never translate brand names (Hotels Vendors, Oliv, Invo) into Arabic transliterations — keep them in English inside Arabic copy too. Exception: legal documents only.

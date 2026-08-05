@@ -293,7 +293,7 @@ export const translations = {
         delivery: "ساعة توصيل",
       },
       invoQR: {
-        title: "امسح لتثبيت إنفو",
+        title: "امسح لتثبيت Invo",
         subtitle: "الطبقة التشغيلية لفرق مشتريات الفنادق.",
         hook: "موظفو الفندق يمسحون الأصناف ← يطلبون إعادة التزويد ← دورة المشتريات تعمل ذاتياً.",
       },
@@ -469,7 +469,7 @@ export const translations = {
     },
     // About page
     about: {
-      title: "عن هوتيلز فيندورز",
+      title: "عن Hotels Vendors",
       subtitle: "بنية المشتريات الفندقية B2B في مصر",
       mission: "مهمتنا",
       missionText: "تمكين الفنادق المصرية بمنصة مشتريات رقمية تقلل التكاليف وتوافق المتطلبات الضريبية وتربطها بموردين موثوقين.",
@@ -512,11 +512,11 @@ export const translations = {
     // Extended Footer
     footerExtended: {
       about: "عن المنصة",
-      aboutText: "هوتيلز فيندورز هي أول منصة مشتريات فندقية B2B في مصر، مصممة خصيصاً لصناعة الفنادق المصرية.",
+      aboutText: "Hotels Vendors هي أول منصة مشتريات فندقية B2B في مصر، مصممة خصيصاً لصناعة الفنادق المصرية.",
       products: "المنتجات",
       marketplace: "السوق",
       factoringService: "تمويل الفواتير",
-      invo: "إنفو",
+      invo: "Invo",
       complianceSolution: "الامتثال",
       resources: "الموارد",
       blog: "المدونة",
