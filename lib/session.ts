@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getRedis } from "./redis";
 import { prisma } from "./prisma";
 import { createHash, randomBytes } from "crypto";
@@ -211,5 +211,19 @@ export async function clearSession(): Promise<void> {
 
 export async function getSessionToken(): Promise<string | undefined> {
   const cookieStore = await cookies();
-  return cookieStore.get(SESSION_COOKIE)?.value;
+  const cookieToken = cookieStore.get(SESSION_COOKIE)?.value;
+  if (cookieToken) return cookieToken;
+
+  // Mobile/API clients authenticate via Authorization: Bearer header
+  try {
+    const headersList = await headers();
+    const auth = headersList.get("authorization");
+    if (auth?.startsWith("Bearer ")) {
+      return auth.slice(7).trim();
+    }
+  } catch {
+    // headers() is unavailable outside a request scope (e.g. server actions/tests)
+  }
+
+  return undefined;
 }
