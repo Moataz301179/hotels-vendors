@@ -11,13 +11,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This is a **Digital Procurement Hub for the B2B hotel sector**. It is not a simple landing page. The platform connects four core actor types:
 
 1. **Hotels** — buyers procuring goods and services.
-2. **Suppliers** — sellers listing fixed prices and available quantities (no bidding).
+2. **Suppliers** — vendors submitting quotes against hotel quote requests (RFQ-driven catalog).
 3. **Shipping / Logistics Providers** — fulfilling delivery and reducing overhead.
 4. **Factoring Companies** — providing liquidity and credit facilitation.
 
 ### Core Business Logic
 
-- **Fixed Pricing:** Suppliers list fixed prices and quantities. There is no bidding mechanism.
+- **RFQ-Driven Catalog:** Hotels state a need; suppliers submit quotes; AI matches, scores (Total Cost of Procurement), and the Authority Matrix selects. No fixed-price list.
 - **Negotiated Credit:** Credit terms are negotiated per-hotel, not global.
 - **Factoring Integration:** Factoring companies inject liquidity into the transaction flow.
 - **Shark-Breaker Model:** The platform empowers SME suppliers to compete with large distributors by reducing logistics overhead and enabling faster shipping.
@@ -186,7 +186,7 @@ Before writing code for any of the domains below, the assigned agent must produc
 ### 1. Fintech Architect
 **Scope:** Factoring flows, credit logic, pricing engines, transactional fee calculation.
 
-- Design the data model for fixed-price supplier catalogs, per-hotel credit terms, and factoring liquidity injections.
+- Design the data model for RFQ-driven catalogs (QuoteRequest/Quote), per-hotel credit terms, and factoring liquidity injections.
 - Propose the database schema (PostgreSQL, MySQL, or other) and ORM (Prisma, Drizzle, or other).
 - Implement idempotency keys and double-entry safeguards for all monetary mutations.
 - Define the fee-calculation service and ensure it is audit-logged.

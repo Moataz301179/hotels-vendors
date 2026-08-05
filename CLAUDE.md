@@ -4,7 +4,7 @@
 **Read `PROJECT_STATE.md` before doing anything else.** It contains the current deployment state, known incomplete work, and critical rules. Not reading it causes repeated mistakes, wasted sessions, and broken deployments.
 
 ## Business Model
-- **Fixed-price catalogs** (no bidding/auctions)
+- **RFQ-driven catalogs** (hotel states need → vendors quote → AI match/score → Authority Matrix selects)
 - **Per-hotel negotiated credit limits** (Net-30, Net-60 terms)
 - **Embedded invoice factoring** (suppliers get paid early, platform takes a spread)
 - **Shark-Breaker shared coastal logistics** (consolidated delivery to Red Sea resorts)
