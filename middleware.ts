@@ -109,6 +109,12 @@ const ROLE_DEFAULT_PATH: Record<string, string> = {
 
 /* ── Helpers ── */
 
+function extractBearerToken(request: NextRequest): string | undefined {
+  const auth = request.headers.get("authorization");
+  if (!auth || !auth.startsWith("Bearer ")) return undefined;
+  return auth.slice(7).trim();
+}
+
 function isPublicPath(path: string): boolean {
   if (PUBLIC_PATHS.includes(path)) return true;
   return PUBLIC_PREFIXES.some((prefix) => path.startsWith(prefix));
@@ -218,11 +224,15 @@ export async function middleware(request: NextRequest) {
     return addSecurityHeaders(NextResponse.next());
   }
 
-  // Read session cookie
-  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  // Read session cookie (or Bearer token for API clients)
+  const bearerToken = extractBearerToken(request);
+  const isApi = isApiPath(pathname);
+  const token = isApi
+    ? request.cookies.get(SESSION_COOKIE)?.value || bearerToken
+    : request.cookies.get(SESSION_COOKIE)?.value;
 
   // ── API routes: require valid session ──
-  if (isApiPath(pathname)) {
+  if (isApi) {
     if (!token) {
       return addSecurityHeaders(NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }));
     }
@@ -242,7 +252,8 @@ export async function middleware(request: NextRequest) {
       pathname === "/api/v1/auth/register" ||
       pathname === "/api/v1/oliv/webhook" ||
       pathname.startsWith("/api/webhooks");
-    if (isStateChanging && !isExemptPath) {
+    // Bearer-authenticated requests cannot be CSRF'd (browsers can't set Authorization headers cross-origin)
+    if (isStateChanging && !isExemptPath && !bearerToken) {
       const csrfResult = await csrfMiddleware(request);
       if (csrfResult) return addSecurityHeaders(csrfResult);
     }
