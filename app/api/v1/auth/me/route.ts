@@ -32,6 +32,10 @@ export const GET = apiRoute(async (_request: NextRequest) => {
     role: user.role,
     platformRole: user.platformRole,
     hotelId: user.hotelId || null,
+    tenantId: user.tenantId || null,
+    phone: user.phone,
+    phoneVerifiedAt: user.phoneVerifiedAt,
+    supplierId: user.supplierId,
     canOverride: user.canOverride,
     permissions,
     hotel: user.hotel

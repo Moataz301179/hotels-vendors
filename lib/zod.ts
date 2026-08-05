@@ -314,6 +314,51 @@ export const BusinessRegisterSchema = z.object({
   }
 });
 
+/* ── Mobile Register Schema (new) ── */
+export const MobileRegisterSchema = z.object({
+  // One of type or role required
+  type: z.enum(["hotel", "supplier", "factoring", "shipping"]).optional(),
+  role: z.enum(["HOTEL", "SUPPLIER", "FACTORING", "SHIPPING"]).optional(),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email().optional(), // optional for mobile
+  password: passwordStrength,
+  phone: z.string().min(1, "Phone is required"),
+  otpCode: z.string().length(6, "OTP code must be 6 digits"),
+  city: z.string().optional(),
+  governorate: z.string().optional(),
+  address: z.string().optional(),
+  taxId: z.string().optional(),
+  commercialReg: z.string().optional(),
+  marketingConsent: z.boolean().default(false),
+  termsAccepted: z.literal(true, { error: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
+  accountType: z.enum(["individual", "business"]).default("business"),
+}).superRefine((data, ctx) => {
+  // Require either type or role
+  if (!data.type && !data.role) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Either type or role is required",
+      path: ["type"],
+    });
+  }
+  // Require phone
+  if (!data.phone) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Phone is required",
+      path: ["phone"],
+    });
+  }
+  // Require otpCode
+  if (!data.otpCode) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "OTP code is required",
+      path: ["otpCode"],
+    });
+  }
+});
+
 export const LoginSchema = z.object({
   email: z.string().email("Valid email is required").or(
     z.string().min(1).refine(val => val.toLowerCase() === "admin", {
@@ -321,6 +366,33 @@ export const LoginSchema = z.object({
     })
   ),
   password: z.string().min(1, "Password is required"),
+});
+
+/* ── Mobile Login Schema (accepts phone as identifier) ── */
+export const MobileLoginSchema = z.object({
+  identifier: z.string().min(1, "Email or phone is required"), // email or phone
+  password: z.string().min(1, "Password is required"),
+});
+
+/* ── OTP Schemas ── */
+export const SendOtpSchema = z.object({
+  phone: z.string().min(1, "Phone is required"),
+  purpose: z.enum(["LOGIN", "REGISTER"]).default("LOGIN"),
+});
+
+export const VerifyOtpSchema = z.object({
+  phone: z.string().min(1, "Phone is required"),
+  code: z.string().length(6, "Code must be 6 digits"),
+  purpose: z.enum(["LOGIN", "REGISTER"]).default("LOGIN"),
+});
+
+export const OtpLoginSchema = z.object({
+  phone: z.string().min(1, "Phone is required"),
+  code: z.string().length(6, "Code must be 6 digits"),
+});
+
+export const RefreshSchema = z.object({
+  refreshToken: z.string().min(1, "Refresh token is required"),
 });
 
 /* ── Query Params ── */

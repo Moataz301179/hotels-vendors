@@ -1,6 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getRedis } from "./redis";
+import { prisma } from "./prisma";
+import { createHash, randomBytes } from "crypto";
 
 const SESSION_COOKIE = "hv_session";
 
@@ -60,16 +62,29 @@ export async function revokeToken(token: string): Promise<void> {
   }
 }
 
+/**
+ * Private helper to sign a JWT token with given parameters
+ */
+async function signToken(
+  userId: string,
+  platformRole: string,
+  tenantId: string,
+  ttl: string,
+  type: "access" | "refresh"
+): Promise<string> {
+  return new SignJWT({ userId, platformRole, tenantId, type })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(ttl)
+    .sign(SECRET);
+}
+
 export async function createSession(
   userId: string,
   platformRole: string,
   tenantId: string
 ): Promise<string> {
-  const token = await new SignJWT({ userId, platformRole, tenantId })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("24h")
-    .sign(SECRET);
+  const token = await signToken(userId, platformRole, tenantId, "24h", "access");
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
@@ -81,6 +96,28 @@ export async function createSession(
   });
 
   return token;
+}
+
+/**
+ * Create a session pair (access token + refresh token) for mobile/API clients
+ * Does NOT set cookies - returns tokens for client to store
+ */
+export async function createSessionPair(
+  userId: string,
+  platformRole: string,
+  tenantId: string
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const accessToken = await signToken(userId, platformRole, tenantId, "24h", "access");
+  const refreshToken = await signToken(userId, platformRole, tenantId, "30d", "refresh");
+
+  // Store refresh token hash on user for rotation validation
+  const refreshTokenHash = createHash("sha256").update(refreshToken).digest("hex");
+  await prisma.user.update({
+    where: { id: userId },
+    data: { refreshTokenHash },
+  });
+
+  return { accessToken, refreshToken };
 }
 
 export async function verifySession(
@@ -103,6 +140,64 @@ export async function verifySession(
   } catch {
     return null;
   }
+}
+
+/**
+ * Verify a refresh token and return its payload
+ */
+export async function verifyRefreshToken(token: string): Promise<{ userId: string; platformRole: string; tenantId: string } | null> {
+  try {
+    const { payload } = await jwtVerify(token, SECRET, {
+      clockTolerance: 60,
+    });
+
+    // Must be a refresh token
+    if (payload.type !== "refresh") return null;
+
+    const userId = payload.userId as string;
+    const platformRole = payload.platformRole as string;
+    const tenantId = payload.tenantId as string;
+    if (!userId || !platformRole || !tenantId) return null;
+
+    // Verify the token hash matches what's stored on the user
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { refreshTokenHash: true, status: true },
+    });
+
+    if (!user || user.status !== "ACTIVE") return null;
+    if (!user.refreshTokenHash) return null;
+
+    const tokenHash = createHash("sha256").update(token).digest("hex");
+    if (tokenHash !== user.refreshTokenHash) return null;
+
+    return { userId, platformRole, tenantId };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Rotate session pair: verify refresh token, issue new pair, update hash
+ */
+export async function rotateSessionPair(refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> {
+  const payload = await verifyRefreshToken(refreshToken);
+  if (!payload) return null;
+
+  // Revoke the old refresh token by clearing the hash (new one will be set)
+  await prisma.user.update({
+    where: { id: payload.userId },
+    data: { refreshTokenHash: null },
+  });
+
+  // Create new session pair
+  const { accessToken, refreshToken: newRefreshToken } = await createSessionPair(
+    payload.userId,
+    payload.platformRole,
+    payload.tenantId
+  );
+
+  return { accessToken, refreshToken: newRefreshToken };
 }
 
 export async function clearSession(): Promise<void> {

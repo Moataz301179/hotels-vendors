@@ -216,7 +216,7 @@ model User {
   email                  String                   @unique
   name                   String
   companyName            String?
-  phone                  String?
+  phone                  String?                  @unique
   role                   UserRole                 @default(DEPARTMENT_HEAD)
   status                 UserStatus               @default(ACTIVE)
   sector                 UserSector?
@@ -236,6 +236,7 @@ model User {
   lastActive             DateTime?
   accountType            AccountType              @default(BUSINESS)
   emailVerifiedAt        DateTime?
+  phoneVerifiedAt        DateTime?
   marketingConsent       Boolean                  @default(false)
   termsAcceptedAt        DateTime?
   privacyPolicyVersion   String?
@@ -249,6 +250,7 @@ model User {
   transferToken          String?                  @unique(map: "User_transfer_token_uniq")
   transferExpiresAt      DateTime?
   deletedAt              DateTime?
+  refreshTokenHash       String?
   aiUsage                AiUsage?
   carts                  Cart?
   consentRecords         ConsentRecord[]
@@ -1498,6 +1500,23 @@ model PasswordResetToken {
   deletedAt DateTime?
 
   @@index([deletedAt], map: "PasswordResetToken_deleted_idx")
+}
+
+model OtpVerification {
+  id          String    @id @default(cuid())
+  phone       String
+  purpose     String    // LOGIN | REGISTER
+  provider    String    // twilio | mock
+  codeHash    String?   // mock only (sha256 of code); null for twilio
+  expiresAt   DateTime
+  attempts    Int       @default(0)
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  uuid        String?   @unique(map: "OtpVerification_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+
+  @@index([phone, purpose, createdAt])
+  @@index([deletedAt], map: "OtpVerification_deleted_idx")
 }
 
 model RefreshToken {

@@ -1,11 +1,15 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
-import { BusinessRegisterSchema } from "@/lib/zod";
+import { BusinessRegisterSchema, MobileRegisterSchema } from "@/lib/zod";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, welcomeTemplate, emailVerificationTemplate } from "@/lib/notifications/email";
 import { randomBytes, createHash } from "crypto";
+import { verifyOtp } from "@/lib/auth/otp";
+import { normalizePhone, isValidEgyptianPhone, phoneToIdentifier } from "@/lib/auth/phone";
+import { createSessionPair } from "@/lib/session";
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
@@ -24,14 +28,67 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }
 
   const body = await request.json();
-  const data = validateBody(BusinessRegisterSchema, body);
 
-  // Check if email is already registered
-  const existingUser = await prisma.user.findUnique({
-    where: { email: data.email },
-  });
-  if (existingUser) {
-    return error("An account with this email already exists. Please login or use a different email.", 409);
+  // Detect if mobile-style registration (has phone + otpCode)
+  const isMobileRegistration = body.phone && body.otpCode;
+  const schema = isMobileRegistration ? MobileRegisterSchema : BusinessRegisterSchema;
+  const data = validateBody(
+    schema as z.ZodSchema<{
+      type?: "hotel" | "supplier" | "factoring" | "shipping";
+      role?: "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING";
+      name: string;
+      email?: string;
+      password: string;
+      phone?: string;
+      otpCode?: string;
+      city?: string;
+      governorate?: string;
+      address?: string;
+      taxId?: string;
+      commercialReg?: string;
+      marketingConsent?: boolean;
+      termsAccepted: true;
+      accountType?: "individual" | "business";
+    }>,
+    body
+  );
+
+  // Handle phone validation for mobile registration
+  let normalizedPhone: string | null = null;
+  if (data.phone) {
+    normalizedPhone = normalizePhone(data.phone);
+    if (!isValidEgyptianPhone(normalizedPhone)) {
+      return error("Invalid Egyptian mobile number format", 400);
+    }
+  }
+
+  // Mobile registration: verify OTP first
+  if (isMobileRegistration) {
+    const verifyResult = await verifyOtp(normalizedPhone!, data.otpCode!, "REGISTER");
+    if (!verifyResult.success) {
+      return error("Invalid or expired code", 400);
+    }
+  }
+
+  // Check if email is already registered (only if email is provided and not a placeholder)
+  const emailToUse = data.email || (normalizedPhone ? phoneToIdentifier(normalizedPhone) : null);
+  if (emailToUse && !emailToUse.endsWith("@hotelsvendors.local")) {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: emailToUse },
+    });
+    if (existingUser) {
+      return error("An account with this email already exists. Please login or use a different email.", 409);
+    }
+  }
+
+  // Check if phone is already registered
+  if (normalizedPhone) {
+    const existingPhoneUser = await prisma.user.findUnique({
+      where: { phone: normalizedPhone },
+    });
+    if (existingPhoneUser) {
+      return error("An account with this mobile number already exists.", 409);
+    }
   }
 
   const passwordHash = await hashPassword(data.password);
@@ -40,12 +97,18 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let supplier;
   let factoringCompany;
 
-  const platformRole = data.type.toUpperCase() as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN";
+  // Map mobile role to legacy type
+  let type = data.type;
+  if (!type && data.role) {
+    type = data.role.toLowerCase() as "hotel" | "supplier" | "factoring" | "shipping";
+  }
+
+  const platformRole = (type?.toUpperCase() || data.role || "HOTEL") as "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING" | "ADMIN";
   const isIndividual = data.accountType === "individual";
   const accountType = isIndividual ? "INDIVIDUAL" : "BUSINESS";
 
-  // Generate tenant slug — no longer depends on taxId
-  const tenantSlug = `${data.type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  // Generate tenant slug
+  const tenantSlug = `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const uniquePlaceholder = `PENDING-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
   // 1. Create Tenant first — every entity belongs to a tenant
@@ -70,8 +133,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
+  // Determine city/governorate with defaults
+  const city = data.city || "Cairo";
+  const governorate = data.governorate || "Cairo";
+
   const userBase = {
-    email: data.email,
+    email: emailToUse!,
     name: data.name,
     passwordHash,
     platformRole,
@@ -82,50 +149,52 @@ export const POST = apiRoute(async (request: NextRequest) => {
     marketingConsent: data.marketingConsent ?? false,
     termsAcceptedAt: new Date(),
     privacyPolicyVersion: process.env.PRIVACY_POLICY_VERSION || "1.0",
+    phone: normalizedPhone,
+    phoneVerifiedAt: isMobileRegistration ? new Date() : null,
   };
 
-  if (data.type === "hotel") {
+  if (type === "hotel") {
     hotel = await prisma.hotel.create({
       data: {
         name: data.name,
         taxId: data.taxId || uniquePlaceholder,
-        city: data.city || "Cairo",
-        governorate: data.governorate || "Cairo",
+        city,
+        governorate,
         address: data.address,
         commercialReg: data.commercialReg,
-        email: data.email,
+        email: emailToUse!,
         tenantId: tenant.id,
       },
     });
     await prisma.user.create({
       data: { ...userBase, hotelId: hotel.id },
     });
-  } else if (data.type === "supplier") {
+  } else if (type === "supplier") {
     supplier = await prisma.supplier.create({
       data: {
         name: data.name,
         taxId: data.taxId || uniquePlaceholder,
-        email: data.email,
-        city: data.city || "Cairo",
-        governorate: data.governorate || "Cairo",
+        email: emailToUse!,
+        city,
+        governorate,
         address: data.address,
         commercialReg: data.commercialReg,
-        phone: data.phone,
+        phone: normalizedPhone,
         tenantId: tenant.id,
-        status: "ACTIVE", // Auto-approve for testing
+        status: "ACTIVE",
         tier: "CORE",
       },
     });
     await prisma.user.create({
       data: { ...userBase, supplierId: supplier.id },
     });
-  } else if (data.type === "factoring") {
+  } else if (type === "factoring") {
     factoringCompany = await prisma.factoringCompany.create({
       data: {
         name: data.name,
         taxId: data.taxId || uniquePlaceholder,
-        contactEmail: data.email,
-        contactPhone: data.phone,
+        contactEmail: emailToUse!,
+        contactPhone: normalizedPhone,
         tenantId: tenant.id,
         status: "ACTIVE",
       },
@@ -141,55 +210,64 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }
 
   const user = await prisma.user.findUnique({
-    where: { email: data.email },
+    where: { email: emailToUse! },
   });
 
   if (!user) {
     throw new Error("User creation failed");
   }
 
-  // Generate email verification token (hash before storage)
-  const verifyToken = generateToken();
-  const verifyTokenHash = hashToken(verifyToken);
-  await prisma.emailVerificationToken.create({
-    data: {
-      email: data.email,
-      token: verifyTokenHash,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-    },
-  });
+  // Generate email verification token (only for real emails, not placeholders)
+  const isPlaceholderEmail = emailToUse?.endsWith("@hotelsvendors.local");
+  let verifyToken: string | null = null;
+  let verifyTokenHash: string | null = null;
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hotels-vendors.com";
-
-  // Send welcome email
-  try {
-    const welcome = welcomeTemplate({
-      name: data.name,
-      loginUrl: `${baseUrl}/login`,
+  if (!isPlaceholderEmail) {
+    verifyToken = generateToken();
+    verifyTokenHash = hashToken(verifyToken);
+    await prisma.emailVerificationToken.create({
+      data: {
+        email: emailToUse!,
+        token: verifyTokenHash,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      },
     });
-    await sendEmail({
-      to: [data.email],
-      subject: welcome.subject,
-      html: welcome.html,
-    });
-  } catch {
-    // Non-blocking: log but don't fail registration
-    console.error("[Register] Failed to send welcome email to", data.email);
   }
 
-  // Send verification email
-  try {
-    const verification = emailVerificationTemplate({
-      name: data.name,
-      verificationUrl: `${baseUrl}/verify-email?token=${verifyToken}`,
-    });
-    await sendEmail({
-      to: [data.email],
-      subject: verification.subject,
-      html: verification.html,
-    });
-  } catch {
-    console.error("[Register] Failed to send verification email to", data.email);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hotelsvendors.com";
+
+  // Send welcome email (skip for placeholder emails)
+  if (!isPlaceholderEmail) {
+    try {
+      const welcome = welcomeTemplate({
+        name: data.name,
+        loginUrl: `${baseUrl}/login`,
+      });
+      await sendEmail({
+        to: [emailToUse!],
+        subject: welcome.subject,
+        html: welcome.html,
+      });
+    } catch {
+      console.error("[Register] Failed to send welcome email to", emailToUse);
+    }
+
+    // Send verification email
+    if (verifyToken) {
+      try {
+        const verification = emailVerificationTemplate({
+          name: data.name,
+          verificationUrl: `${baseUrl}/verify-email?token=${verifyToken}`,
+        });
+        await sendEmail({
+          to: [emailToUse!],
+          subject: verification.subject,
+          html: verification.html,
+        });
+      } catch {
+        console.error("[Register] Failed to send verification email to", emailToUse);
+      }
+    }
   }
 
   await audit({
@@ -199,14 +277,33 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: tenant.id,
     actorId: user.id,
     actorRole: user.platformRole,
-    afterState: { email: user.email, platformRole: user.platformRole, type: data.type, accountType, tenantId: tenant.id },
+    afterState: { email: user.email, platformRole: user.platformRole, type, accountType, tenantId: tenant.id, phone: normalizedPhone },
     ipAddress: request.headers.get("x-forwarded-for") || null,
     userAgent: request.headers.get("user-agent"),
   });
 
+  // Issue session pair for mobile (so user lands logged in)
+  const { accessToken, refreshToken } = await createSessionPair(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
+
+  // Build response user object matching mobile app expectations
+  const userResponse = {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    platformRole: user.platformRole,
+    tenantId: user.tenantId,
+    phone: user.phone,
+    phoneVerifiedAt: user.phoneVerifiedAt,
+    supplierId: user.supplierId,
+    hotelId: user.hotelId,
+  };
+
   return success({
-    message: "Registration successful. Please check your email to verify your account before logging in.",
-    user: { id: user.id, email: user.email, name: user.name, role: user.role, platformRole: user.platformRole, accountType: user.accountType },
+    message: isMobileRegistration ? "Registration successful" : "Registration successful. Please check your email to verify your account before logging in.",
+    accessToken,
+    refreshToken,
+    user: userResponse,
     hotel,
     supplier,
     factoringCompany,
