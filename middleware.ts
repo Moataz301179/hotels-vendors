@@ -36,6 +36,7 @@ const PUBLIC_PATHS = [
   "/register",
   "/forgot-password",
   "/verify-email",
+  "/onboarding",
   "/catalog",
   "/sandbox",
   "/demo",

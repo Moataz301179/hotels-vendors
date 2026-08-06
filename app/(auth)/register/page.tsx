@@ -214,7 +214,7 @@ function RegisterContent() {
       const data = await res.json();
       if (data.success) {
         setRegistered(true);
-        setTimeout(() => router.push("/login"), 2000);
+        setTimeout(() => router.push("/onboarding"), 2000);
       } else {
         setError(data.error || "Registration failed");
       }
@@ -249,7 +249,7 @@ function RegisterContent() {
       <div>
         <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
         <p className="text-foreground-secondary text-[14px]">
-          Your account has been created successfully. Redirecting to sign in...
+          Your account has been created successfully. Redirecting to onboarding...
         </p>
       </div>
       </div>

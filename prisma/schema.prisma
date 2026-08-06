@@ -96,6 +96,7 @@ model Tenant {
    Workspace              Workspace[]
    goodsReceiptNotes      GoodsReceiptNote[]
    pushTokens            PushToken[]
+   onboardingProgress    OnboardingProgress[]
 
    @@index([deletedAt], map: "Tenant_deleted_idx")
   @@index([parentTenantId], map: "Tenant_parent_idx")
@@ -265,19 +266,20 @@ model User {
   conversations          Conversation[]
   Notification           Notification[]
   NotificationPreference NotificationPreference[]
-  orders                 Order[]
-  approvals              OrderApproval[]
-  reviews                ProductReview[]
-  refreshTokens          RefreshToken[]
-  sampleRequests         SampleRequest[]
-  factoringCompany       FactoringCompany?        @relation(fields: [factoringCompanyId], references: [id])
-  hotel                  Hotel?                   @relation(fields: [hotelId], references: [id])
-  assignedRole           Role                     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  supplier               Supplier?                @relation(fields: [supplierId], references: [id])
-  tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+   orders                 Order[]
+   approvals              OrderApproval[]
+   reviews                ProductReview[]
+   refreshTokens          RefreshToken[]
+   sampleRequests         SampleRequest[]
+   factoringCompany       FactoringCompany?        @relation(fields: [factoringCompanyId], references: [id])
+   hotel                  Hotel?                   @relation(fields: [hotelId], references: [id])
+   assignedRole           Role                     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+   supplier               Supplier?                @relation(fields: [supplierId], references: [id])
+   tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
    addresses              UserAddress[]
-    pushTokens            PushToken[]
-    carrierProfile         CarrierProfile?
+   pushTokens             PushToken[]
+   carrierProfile         CarrierProfile?
+   onboardingProgress     OnboardingProgress?
 
   @@index([sector])
   @@index([tenantId])
@@ -2378,6 +2380,28 @@ model Workspace {
   @@index([tenantId])
 }
 
+/// Tracks onboarding progress per user. Each step is a JSON field that records
+/// whether the step is complete, what data was submitted, and when it was completed.
+/// Web is the master source; mobile reads from the same API.
+model OnboardingProgress {
+  id             String              @id @default(cuid())
+  userId         String              @unique
+  tenantId       String
+  platformRole   PlatformRole
+  overallStatus  OnboardingStatus    @default(IN_PROGRESS)
+  completedAt    DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  uuid           String?             @unique(map: "OnboardingProgress_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt      DateTime?
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant         Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tenantId])
+  @@index([deletedAt], map: "OnboardingProgress_deleted_idx")
+}
+
 model PlatformSettings {
   id                   String   @id @default(cuid())
   createdAt            DateTime @default(now())
@@ -3110,6 +3134,13 @@ enum VerificationStatus {
   VERIFIED
   REJECTED
   EXPIRED
+}
+
+enum OnboardingStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
 }
 
 model MarketingCampaign {
