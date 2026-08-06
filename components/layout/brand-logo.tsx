@@ -1,3 +1,4 @@
+import { Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -31,46 +32,21 @@ export function BrandLogo({
     : variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
 
   return (
-    <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
-      <img
-        src={logoSrc}
-        alt="HotelsVendors"
-        width={dims.icon}
-        height={dims.icon}
-        className={cn("object-contain shrink-0", iconOnly ? "w-auto h-auto" : "")}
-        style={
-          iconOnly
-            ? { height: dims.icon, width: "auto" }
-            : { width: dims.icon, height: dims.icon }
-        }
-      />
+    <div className={cn("inline-flex items-center gap-2 shrink-0", className)}>
+      <div className="w-8 h-8 rounded-lg bg-accent-base flex items-center justify-center">
+        <Zap className="w-5 h-5 text-white" />
+      </div>
       {showText && (
-        <div className="flex flex-col items-center gap-1 mt-2">
-          <span
-            className="font-semibold uppercase whitespace-nowrap"
-            style={{
-              fontSize: dims.text,
-              color: "var(--foreground)",
-              letterSpacing: "0.05em",
-              fontFamily: "var(--font-display), system-ui, sans-serif",
-            }}
-          >
-            Hotels Vendors
-          </span>
-          {showTagline && (
-            <span
-              className="uppercase whitespace-nowrap"
-              style={{
-                fontSize: dims.tagline,
-                color: "var(--foreground-muted)",
-                letterSpacing: "0.05em",
-                fontFamily: "var(--font-display), system-ui, sans-serif",
-              }}
-            >
-              The Market Changer
-            </span>
-          )}
-        </div>
+        <span
+          className="font-medium tracking-tight whitespace-nowrap"
+          style={{
+            fontSize: dims.text,
+            color: "var(--foreground)",
+            fontFamily: "var(--font-display), system-ui, sans-serif",
+          }}
+        >
+          INVO
+        </span>
       )}
     </div>
   );

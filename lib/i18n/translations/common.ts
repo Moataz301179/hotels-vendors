@@ -1,6 +1,6 @@
 export const common = {
   en: {
-    appName: "Hotels Vendors",
+    appName: "INVO",
     tagline: "Smarter Together",
     search: "Search",
     filter: "Filter",
@@ -65,7 +65,7 @@ export const common = {
     english: "English",
   },
   ar: {
-    appName: "Hotels Vendors",
+    appName: "INVO",
     tagline: "أذكى معاً",
     search: "بحث",
     filter: "تصفية",

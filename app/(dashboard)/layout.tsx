@@ -10,8 +10,8 @@ const SESSION_COOKIE = "hv_session";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dashboard — Hotels Vendors",
-    template: "%s — Hotels Vendors",
+    default: "Dashboard — INVO",
+    template: "%s — INVO",
   },
   description:
     "Role-specific command center for the Egyptian hospitality procurement hub.",

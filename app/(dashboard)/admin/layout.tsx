@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Command Center — Hotels Vendors",
+  title: "Command Center — INVO",
   description: "Platform administrator dashboard for the Egyptian hospitality procurement hub",
 };
 

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Social Media — Hotels Vendors",
+  title: "Social Media — INVO",
   description:
-    "Connect with Hotels Vendors on social media. Follow our journey building Egypt's first smart hospitality procurement platform.",
+    "Connect with INVO on social media. Follow our journey building Egypt's first smart hospitality procurement platform.",
 };
 
 export default function SocialMediaLayout({
