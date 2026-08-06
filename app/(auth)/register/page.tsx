@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RoleBenefits } from "@/components/auth/role-benefits";
@@ -22,10 +22,15 @@ import {
   Home,
   Building,
   Users,
+  Smartphone,
+  Send,
+  Timer,
+  CheckCircle,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
+type OtpStep = "phone" | "verify" | "details";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "var(--accent-base)" },
@@ -60,10 +65,18 @@ function RegisterContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [registered, setRegistered] = useState(false);
 
+  // OTP flow state
+  const [otpStep, setOtpStep] = useState<OtpStep>("phone");
+  const [otpCooldown, setOtpCooldown] = useState(0);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    phone: "",
     role: initialRole as StakeholderRole,
     city: "",
     governorate: "",
@@ -71,11 +84,87 @@ function RegisterContent() {
     numberOfProperties: "1",
     marketingConsent: false,
     termsAccepted: false,
+    otpCode: "",
   });
+
+  // Countdown timer for OTP cooldown
+  useEffect(() => {
+    if (otpCooldown > 0) {
+      const timer = setTimeout(() => setOtpCooldown((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [otpCooldown]);
 
   const updateForm = (field: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setError("");
+    setOtpError("");
+  };
+
+  // Send OTP code
+  const handleSendOtp = async () => {
+    if (!form.phone) {
+      setOtpError("Please enter your mobile number");
+      return;
+    }
+
+    setLoading(true);
+    setOtpError("");
+
+    try {
+      const res = await fetch("/api/v1/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: form.phone, purpose: "REGISTER" }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setOtpSent(true);
+        setOtpStep("verify");
+        setOtpCooldown(60);
+        if (data.devCode) {
+          setDevOtpCode(data.devCode);
+        }
+      } else {
+        setOtpError(data.error || "Failed to send code");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Verify OTP and proceed
+  const handleVerifyOtp = async () => {
+    if (!form.otpCode || form.otpCode.length !== 6) {
+      setOtpError("Please enter the 6-digit code");
+      return;
+    }
+
+    setLoading(true);
+    setOtpError("");
+
+    try {
+      const res = await fetch("/api/v1/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: form.phone, code: form.otpCode, purpose: "REGISTER" }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setOtpStep("details");
+        setOtpError("");
+      } else {
+        setOtpError(data.error || "Invalid or expired code");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,23 +172,23 @@ function RegisterContent() {
     setLoading(true);
     setError("");
 
-    if (!form.name || !form.email || !form.password) {
-      setError("Please fill in all required fields");
+    if (!form.name) {
+      setError("Name is required");
       setLoading(false);
       return;
     }
-    if (form.password.length < 8 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/[0-9]/.test(form.password)) {
-      setError("Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number");
-      setLoading(false);
-      return;
-    }
-    if (!form.city || !form.governorate) {
-      setError("City and Governorate are required for logistics routing");
+    if (!form.password) {
+      setError("Password is required");
       setLoading(false);
       return;
     }
     if (!form.termsAccepted) {
       setError("You must accept the Terms of Service and Privacy Policy");
+      setLoading(false);
+      return;
+    }
+    if (otpStep !== "details") {
+      setError("Please verify your mobile number first");
       setLoading(false);
       return;
     }
@@ -109,12 +198,14 @@ function RegisterContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: form.role.toLowerCase(),
+          role: form.role === "LOGISTICS" ? "SHIPPING" : form.role,
           name: form.name,
-          email: form.email,
+          email: form.email || undefined,
           password: form.password,
-          city: form.city,
-          governorate: form.governorate,
+          phone: form.phone,
+          otpCode: form.otpCode,
+          city: form.city || undefined,
+          governorate: form.governorate || undefined,
           accountType: "business",
           marketingConsent: form.marketingConsent,
           termsAccepted: form.termsAccepted,
@@ -155,12 +246,12 @@ function RegisterContent() {
         <div className="w-20 h-20 rounded-full border flex items-center justify-center mx-auto" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)" }}>
           <CheckCircle2 size={40} style={{ color: "var(--accent-base)" }} />
         </div>
-        <div>
-          <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
-          <p className="text-foreground-secondary text-[14px]">
-            Your account has been created. Please check your email to verify your account before signing in.
-          </p>
-        </div>
+      <div>
+        <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
+        <p className="text-foreground-secondary text-[14px]">
+          Your account has been created successfully. Redirecting to sign in...
+        </p>
+      </div>
       </div>
     );
   }
@@ -184,11 +275,30 @@ function RegisterContent() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-subtle bg-surface-1 p-6 sm:p-8">
+       <div className="rounded-2xl border border-subtle bg-surface-1 p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
             <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400 text-[13px]">
               {error}
+            </div>
+          )}
+
+          {otpStep === "phone" && (
+            <div className="flex items-center gap-2 text-[12px] text-foreground-muted">
+              <div className="w-5 h-5 rounded-full bg-accent-base text-surface flex items-center justify-center">1</div>
+              <span>Verify your mobile number</span>
+            </div>
+          )}
+          {otpStep === "verify" && (
+            <div className="flex items-center gap-2 text-[12px] text-foreground-muted">
+              <div className="w-5 h-5 rounded-full bg-accent-base text-surface flex items-center justify-center">2</div>
+              <span>Enter the code sent to your phone</span>
+            </div>
+          )}
+          {otpStep === "details" && (
+            <div className="flex items-center gap-2 text-[12px] text-success">
+              <CheckCircle size={16} />
+              <span>Mobile verified</span>
             </div>
           )}
 
@@ -241,7 +351,101 @@ function RegisterContent() {
 
           <div className="space-y-2">
             <label className="block text-[13px] font-medium text-foreground-secondary">
-              Email <span className="text-red-400">*</span>
+              Mobile Number <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <Smartphone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
+              <input
+                type="tel"
+                inputMode="tel"
+                value={form.phone}
+                onChange={(e) => updateForm("phone", e.target.value)}
+                placeholder="+20 10 1234 5678"
+                required
+                className={fieldCls}
+              />
+            </div>
+          </div>
+
+          {otpStep === "verify" && (
+            <>
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-foreground-secondary">
+                  Verification Code
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={form.otpCode}
+                    onChange={(e) => updateForm("otpCode", e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="6-digit code"
+                    maxLength={6}
+                    className={fieldCls}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={loading || form.otpCode.length !== 6}
+                    className="px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-accent-base/20 transition-all disabled:opacity-50"
+                  >
+                    Verify
+                  </button>
+                </div>
+                {devOtpCode && (
+                  <p className="text-[11px] text-foreground-muted">
+                    Dev code: <span className="font-mono text-accent-base">{devOtpCode}</span>
+                  </p>
+                )}
+                {otpError && (
+                  <p className="text-[12px] text-red-400">{otpError}</p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={loading || otpCooldown > 0}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/[0.03] border border-accent-base/20 text-accent-base text-[13px] font-medium hover:bg-accent-base/5 transition-all disabled:opacity-50"
+              >
+                {otpCooldown > 0 ? (
+                  <>
+                    <Timer size={14} className="animate-pulse" />
+                    Resend in {otpCooldown}s
+                  </>
+                ) : (
+                  <>
+                    <Send size={14} />
+                    Resend code
+                  </>
+                )}
+              </button>
+            </>
+          )}
+
+          {otpStep === "phone" && (
+            <button
+              type="button"
+              onClick={handleSendOtp}
+              disabled={loading || !form.phone}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-accent-base/20 text-[13px] font-medium transition-all disabled:opacity-50"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              Send verification code
+            </button>
+          )}
+
+          {otpStep === "verify" && otpSent && !otpError && (
+            <div className="flex items-center gap-2 text-[12px] text-success">
+              <CheckCircle size={14} />
+              <span>Phone number verified</span>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label className="block text-[13px] font-medium text-foreground-secondary">
+              Email <span className="text-foreground-muted">(optional)</span>
             </label>
             <div className="relative">
               <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
@@ -250,10 +454,12 @@ function RegisterContent() {
                 value={form.email}
                 onChange={(e) => updateForm("email", e.target.value)}
                 placeholder="you@company.com"
-                required
                 className={fieldCls}
               />
             </div>
+            <p className="text-[11px] text-foreground-muted">
+              Required for email verification and receipts. Can be added later in profile settings.
+            </p>
           </div>
 
           <div className="space-y-2">

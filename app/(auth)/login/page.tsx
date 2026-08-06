@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -10,6 +10,9 @@ import {
   Lock,
   ArrowRight,
   Loader2,
+  Smartphone,
+  Send,
+  Timer,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -19,6 +22,22 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // OTP login mode
+  const [useOtp, setUseOtp] = useState(false);
+  const [otpPhone, setOtpPhone] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpCooldown, setOtpCooldown] = useState(0);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (otpCooldown > 0) {
+      const timer = setTimeout(() => setOtpCooldown((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [otpCooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,12 +49,16 @@ export default function LoginPage() {
       const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: resolvedEmail, password }),
+        body: JSON.stringify({ identifier: resolvedEmail, password }),
       });
       const data = await res.json();
 
       if (data.success) {
         const role = data.user?.platformRole;
+        if (data.accessToken) {
+          localStorage.setItem("accessToken", data.accessToken);
+          if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
+        }
         if (role === "ADMIN") router.push("/admin");
         else if (role === "SUPPLIER") router.push("/supplier");
         else if (role === "FACTORING") router.push("/factoring");
@@ -46,6 +69,75 @@ export default function LoginPage() {
       }
     } catch {
       setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendOtp = async () => {
+    if (!otpPhone) {
+      setOtpError("Please enter your mobile number");
+      return;
+    }
+
+    setLoading(true);
+    setOtpError("");
+
+    try {
+      const res = await fetch("/api/v1/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: otpPhone, purpose: "LOGIN" }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setOtpSent(true);
+        setOtpCooldown(60);
+        if (data.devCode) setDevOtpCode(data.devCode);
+      } else {
+        setOtpError(data.error || "Failed to send code");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOtpLogin = async () => {
+    if (!otpCode || otpCode.length !== 6) {
+      setOtpError("Please enter the 6-digit code");
+      return;
+    }
+
+    setLoading(true);
+    setOtpError("");
+
+    try {
+      const res = await fetch("/api/v1/auth/otp-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: otpPhone, code: otpCode }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        if (data.accessToken) {
+          localStorage.setItem("accessToken", data.accessToken);
+          if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
+        }
+        const role = data.user?.platformRole;
+        if (role === "ADMIN") router.push("/admin");
+        else if (role === "SUPPLIER") router.push("/supplier");
+        else if (role === "FACTORING") router.push("/factoring");
+        else if (role === "SHIPPING") router.push("/shipping");
+        else router.push("/hotel");
+      } else {
+        setOtpError(data.error || "Invalid code or account not found");
+      }
+    } catch {
+      setOtpError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -78,7 +170,7 @@ export default function LoginPage() {
 
           <div className="space-y-2">
             <label className="block text-[13px] font-medium text-foreground-secondary">
-              Email or Username
+              Email or Mobile Number
             </label>
             <div className="relative">
               <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
@@ -86,8 +178,7 @@ export default function LoginPage() {
                 type="text"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                placeholder="you@hotel.com or admin"
-                required
+                placeholder="you@hotel.com or +201012345678"
                 className={fieldCls}
               />
             </div>
@@ -142,6 +233,113 @@ export default function LoginPage() {
               </>
             )}
           </button>
+
+          <div className="relative py-3">
+            <div className="absolute inset-0 flex items-center"><div className="flex-1 border-t border-white/[0.06]"></div></div>
+            <div className="relative flex justify-center text-[11px] text-foreground-muted uppercase tracking-[0.15em]">
+              Or continue with
+            </div>
+            <div className="absolute inset-0 flex items-center"><div className="flex-1 border-t border-white/[0.06]"></div></div>
+          </div>
+
+          {!useOtp ? (
+            <button
+              type="button"
+              onClick={() => setUseOtp(true)}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-white/[0.06] text-[13px] font-medium text-foreground hover:bg-white/[0.03] transition-all"
+            >
+              <Smartphone size={16} />
+              Sign in with mobile & OTP
+            </button>
+          ) : (
+            <div className="space-y-3">
+              {!otpSent ? (
+                <>
+                  <div className="relative">
+                    <Smartphone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={otpPhone}
+                      onChange={(e) => setOtpPhone(e.target.value)}
+                      placeholder="+20 10 1234 5678"
+                      className={fieldCls}
+                    />
+                  </div>
+                  {otpError && (
+                    <p className="text-[12px] text-red-400">{otpError}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={loading || !otpPhone}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base text-surface text-[13px] font-semibold hover:bg-accent-dark disabled:opacity-50 transition-all"
+                  >
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                    Send verification code
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="6-digit code"
+                    maxLength={6}
+                    className={fieldCls}
+                  />
+                  </div>
+                  {devOtpCode && (
+                    <p className="text-[11px] text-foreground-muted">
+                      Dev code: <span className="font-mono text-accent-base">{devOtpCode}</span>
+                    </p>
+                  )}
+                  {otpError && (
+                    <p className="text-[12px] text-red-400">{otpError}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleOtpLogin}
+                    disabled={loading || otpCode.length !== 6}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-base text-surface text-[13px] font-semibold hover:bg-accent-dark disabled:opacity-50 transition-all"
+                  >
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
+                    Sign In with OTP
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={loading || otpCooldown > 0}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-[12px] text-foreground-muted hover:border-accent-base/20 transition-all disabled:opacity-50"
+                  >
+                    {otpCooldown > 0 ? (
+                      <>
+                        <Timer size={12} className="animate-pulse" />
+                        Resend in {otpCooldown}s
+                      </>
+                    ) : (
+                      <>
+                        <Send size={12} />
+                        Resend code
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
+              <button
+                type="button"
+                onClick={() => { setUseOtp(false); setOtpSent(false); setOtpCode(""); setOtpError(""); setDevOtpCode(null); }}
+                className="text-[12px] text-foreground-muted hover:text-foreground-secondary text-center w-full"
+              >
+                Back to password login
+              </button>
+            </div>
+          )}
         </form>
       </div>
 
