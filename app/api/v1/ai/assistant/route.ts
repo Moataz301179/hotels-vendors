@@ -227,12 +227,14 @@ export async function POST(request: NextRequest) {
       });
 
       const streamResponse = result.toDataStreamResponse();
+      const responseHeaders = new Headers();
+      streamResponse.headers.forEach((value, key) => {
+        responseHeaders.set(key, value);
+      });
+      responseHeaders.set("X-Conversation-Id", conversationId);
       return new Response(streamResponse.body, {
         status: streamResponse.status,
-        headers: {
-          ...Object.fromEntries(streamResponse.headers),
-          "X-Conversation-Id": conversationId,
-        },
+        headers: responseHeaders,
       });
     } catch (err) {
       console.error("[Workspace AI] Ollama streaming failed:", err);
