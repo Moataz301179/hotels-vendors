@@ -8,125 +8,40 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Background Layers — Dark reference ── */
+  /* Background Layers */
   --bg-canvas: #0c0c12;
   --bg-surface-1: #12121a;
   --bg-surface-2: #1a1a24;
   --bg-surface-3: #22222e;
 
-  --background: #0c0c12;
-  --surface: #12121a;
-  --surface-raised: #1a1a24;
-  --surface-hover: #22222e;
-
-  /* ── Text Hierarchy ── */
+  /* Text */
   --text-primary: #ffffff;
   --text-secondary: #a0a0b0;
   --text-tertiary: #7a7a92;
   --text-muted: #797994;
 
-  --foreground: #ffffff;
-  --foreground-rgb: 255, 255, 255;
-  --foreground-secondary: #a0a0b0;
-  --foreground-secondary-rgb: 160, 160, 176;
-  --foreground-tertiary: #7a7a92;
-  --foreground-tertiary-rgb: 122, 122, 146;
-  --foreground-muted: #797994;
-  --foreground-muted-rgb: 121, 121, 148;
+  /* Accent (Deep Indigo) */
+  --accent-base: #312e81;
+  --accent-light: #4338ca;
+  --accent-dark: #1e1b4b;
+  --accent-muted: rgba(49, 46, 129, 0.1);
 
-  /* ── Borders ── */
-  --border-invisible: rgba(255, 255, 255, 0.03);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(99, 102, 241, 0.20);
-  /* Aliases used by UI primitives (Button, Card, Input, Badge, Separator, Table) */
-  --border-default: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.15);
+  /* Status Badges - High Contrast */
+  --status-success-bg: rgba(5, 150, 105, 0.1);
+  --status-success-text: #34d399;
+  --status-success-border: rgba(5, 150, 105, 0.3);
 
-  /* ── Accent Scale (derived from --accent-base indigo) ── */
-  --accent-400: var(--accent-light);
-  --accent-500: var(--accent-base);
-  --accent-600: #4F46E5;
-  --accent-700: #4338CA;
+  --status-warning-bg: rgba(245, 158, 11, 0.1);
+  --status-warning-text: #fbbf24;
+  --status-warning-border: rgba(245, 158, 11, 0.3);
 
-  /* ── Glassmorphism tokens ── */
-  --glass-bg: rgba(18, 18, 26, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  --status-error-bg: rgba(220, 38, 38, 0.1);
+  --status-error-text: #f87171;
+  --status-error-border: rgba(220, 38, 38, 0.3);
 
-  /* ── Role-specific semantic colors ── */
-  --role-hotel: var(--accent-base);
-  --role-factoring: var(--purple-base);
-  --role-shipping: var(--info);
-  --role-admin: var(--accent-base);
-
-  /* ── Primary: Deep Indigo (#312E81) ── */
-  --accent-base: #312E81;
-  --accent-base-rgb: 49, 46, 129;
-  --accent-light: #4338CA;
-  --accent-dark: #1E1B4B;
-  --accent-muted: rgba(49, 46, 129, 0.10);
-  --accent-glow: rgba(49, 46, 129, 0.12);
-
-  /* ── Royal Blue #6366F1 ── */
-  --orange-base: #6366F1;
-  --orange-base-rgb: 99, 102, 241;
-  --orange-light: #818CF8;
-  --orange-dark: #4F46E5;
-  --orange-muted: rgba(99, 102, 241, 0.10);
-  --orange-glow: rgba(99, 102, 241, 0.12);
-
-  /* ── Purple #8B5CF6 ── */
-  --purple-base: #8B5CF6;
-  --purple-base-rgb: 139, 92, 246;
-  --purple-light: #A78BFA;
-  --purple-dark: #7C3AED;
-  --purple-muted: rgba(139, 92, 246, 0.10);
-  --purple-glow: rgba(139, 92, 246, 0.12);
-
-  /* ── Semantic ── */
-  --error: #DC2626;
-  --error-rgb: 220, 38, 38;
-  --error-bg: rgba(220, 38, 38, 0.10);
-  --success: #059669;
-  --success-rgb: 5, 150, 105;
-  --success-bg: rgba(5, 150, 105, 0.10);
-  --warning: #F59E0B;
-  --warning-rgb: 245, 158, 11;
-  --warning-bg: rgba(245, 158, 11, 0.10);
-  --info: #3B82F6;
-  --info-rgb: 59, 130, 246;
-  --info-bg: rgba(59, 130, 246, 0.10);
-  --accent-bg: rgba(49, 46, 129, 0.10);
-
-  /* ── Shadows ── */
-  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-green: 0 0 40px rgba(49, 46, 129, 0.08);
-  --shadow-glow-orange: 0 0 40px rgba(99, 102, 241, 0.08);
-  --shadow-glow-purple: 0 0 40px rgba(139, 92, 246, 0.08);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-
-  /* ── Hero overlays (dark for dark mode) ── */
-  --hero-overlay-rgb: 12, 12, 18;
-  --hero-text-rgb: 255, 255, 255;
-
-  /* ── Font-size type scale ── */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-md: 1.125rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-2xl: 2rem;
-  --font-size-3xl: 2.5rem;
-  --font-size-4xl: 3rem;
-
-  /* ── Layout ── */
-  --header-height: 64px;
-  --sidebar-width: 280px;
-  --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
-
-  /* ── Density Scale (comfortable = default) ── */
-  --density-scale: 1;
+  --status-info-bg: rgba(59, 130, 246, 0.1);
+  --status-info-text: #60a5fa;
+  --status-info-border: rgba(59, 130, 246, 0.3);
 }
 
 :root[data-density="compact"] {
