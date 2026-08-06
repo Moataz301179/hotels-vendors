@@ -1,30 +1,33 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Shield, FileCheck, Lock } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-border-invisible bg-background">
+    <footer className="border-t border-white/10 text-white" style={{ backgroundColor: "var(--accent-base)" }}>
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="sm" showText={false} iconOnly />
-              <span className="text-[14px] font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-                Hotels Vendors
-              </span>
+              <Image
+                src="/logo-white.svg"
+                alt="HotelsVendors"
+                width={156}
+                height={36}
+                className="h-9 w-auto object-contain"
+              />
             </div>
-            <p className="text-[12px] text-foreground-muted leading-relaxed max-w-xs">
+            <p className="text-[12px] text-white/70 leading-relaxed max-w-xs">
               Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.
             </p>
           </div>
 
           {/* Platform */}
           <div>
-            <h4 className="text-[11px] font-medium text-foreground-muted uppercase tracking-wider mb-4">Platform</h4>
+            <h4 className="text-[11px] font-medium text-white/70 uppercase tracking-wider mb-4">Platform</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "Platform", href: "/platform" },
@@ -33,7 +36,7 @@ export function MarketingFooter() {
                 { label: "Logistics", href: "/logistics-service" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-foreground-muted hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/70 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -43,7 +46,7 @@ export function MarketingFooter() {
 
           {/* Stakeholders */}
           <div>
-            <h4 className="text-[11px] font-medium text-foreground-muted uppercase tracking-wider mb-4">Stakeholders</h4>
+            <h4 className="text-[11px] font-medium text-white/70 uppercase tracking-wider mb-4">Stakeholders</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "Hotels", href: "/hotels" },
@@ -51,7 +54,7 @@ export function MarketingFooter() {
                 { label: "Pricing", href: "/pricing" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-foreground-muted hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/70 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -61,7 +64,7 @@ export function MarketingFooter() {
 
           {/* Company */}
           <div>
-            <h4 className="text-[11px] font-medium text-foreground-muted uppercase tracking-wider mb-4">Company</h4>
+            <h4 className="text-[11px] font-medium text-white/70 uppercase tracking-wider mb-4">Company</h4>
             <ul className="space-y-2.5">
               {[
                 { label: "About", href: "/about" },
@@ -70,7 +73,7 @@ export function MarketingFooter() {
                 { label: "Get Started", href: "/register" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-[13px] text-foreground-muted hover:text-white transition-colors">
+                  <Link href={item.href} className="text-[13px] text-white/70 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -82,9 +85,9 @@ export function MarketingFooter() {
         {/* Legal Foundation Block */}
         <div className="border-t border-border-invisible pt-6 pb-4">
           <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-            <p className="text-[11px] text-foreground-muted leading-relaxed text-center">
-              Platform owned and operated by <strong className="text-foreground-tertiary">Restaurants for E-Marketing</strong><br />
-              Tax ID: <span className="text-foreground-muted">704226146</span> · Unified Commercial Registry Number: <span className="text-foreground-muted">105300900196948</span>
+            <p className="text-[11px] text-white/70 leading-relaxed text-center">
+              Platform owned and operated by <strong className="text-white/90">Restaurants for E-Marketing</strong><br />
+              Tax ID: <span className="text-white/70">704226146</span> · Unified Commercial Registry Number: <span className="text-white/70">105300900196948</span>
             </p>
           </div>
         </div>
@@ -94,23 +97,23 @@ export function MarketingFooter() {
           <div className="flex items-start gap-3">
             <Lock className="w-4 h-4 flex-shrink-0 mt-0.5 text-success" />
             <div>
-              <p className="text-[11px] text-foreground-muted leading-relaxed">
-                <strong className="text-foreground-tertiary">Data Isolation & Privacy Commitment:</strong> HotelsVendors processes enterprise financial data exclusively as a technical data orchestrator under explicit data processing agreements. All corporate transaction data, invoice payloads, and ETA submission records are handled with AES-256-GCM encryption at rest and TLS 1.3 in transit. Data is logically isolated per tenant with zero cross-contenant exposure. Session cookies are strictly necessary for platform operation and do not track user behavior for advertising purposes. Full compliance with Egyptian data protection regulations. For data processing inquiries, contact the Data Controller at <span className="text-foreground-secondary">privacy@hotelsvendors.com</span>.
+              <p className="text-[11px] text-white/70 leading-relaxed">
+                <strong className="text-white/90">Data Isolation & Privacy Commitment:</strong> HotelsVendors processes enterprise financial data exclusively as a technical data orchestrator under explicit data processing agreements. All corporate transaction data, invoice payloads, and ETA submission records are handled with AES-256-GCM encryption at rest and TLS 1.3 in transit. Data is logically isolated per tenant with zero cross-contenant exposure. Session cookies are strictly necessary for platform operation and do not track user behavior for advertising purposes. Full compliance with Egyptian data protection regulations. For data processing inquiries, contact the Data Controller at <span className="text-white/80">privacy@hotelsvendors.com</span>.
               </p>
               <div className="flex items-center gap-3 mt-3">
                 <button
                   type="button"
-                  className="text-[10px] text-foreground-muted hover:text-foreground-secondary transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30"
+                  className="text-[10px] text-white/70 hover:text-white/80 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30"
                   onClick={() => { /* cookie preference trigger — opens cookie settings modal */ }}
                 >
                   Cookie Preferences
                 </button>
                 <span className="text-white/10">|</span>
-                <Link href="/compliance" className="text-[10px] text-foreground-muted hover:text-foreground-secondary transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
+                <Link href="/compliance" className="text-[10px] text-white/70 hover:text-white/80 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
                   Data Policy
                 </Link>
                 <span className="text-white/10">|</span>
-                <Link href="/compliance" className="text-[10px] text-foreground-muted hover:text-foreground-secondary transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
+                <Link href="/compliance" className="text-[10px] text-white/70 hover:text-white/80 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
                   DPA Terms
                 </Link>
               </div>
@@ -119,10 +122,10 @@ export function MarketingFooter() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-foreground-muted">
+          <p className="text-[12px] text-white/70">
             &copy; {new Date().getFullYear()} HotelsVendors. All rights reserved.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[12px] text-foreground-muted">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[12px] text-white/70">
             <span className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-[var(--success)]" />
               Bank-grade security

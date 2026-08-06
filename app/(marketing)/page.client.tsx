@@ -184,14 +184,14 @@ export default function MarketingPage() {
               </div>
             </div>
 
-            {/* RIGHT: Invo App-Install QR Card */}
+            {/* RIGHT: Oliv App-Install QR Card */}
             <div className="animate-fade-in-up animation-delay-200">
               <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
                 <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
                   <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center p-4" style={{ borderColor: "var(--border-accent)" }}>
                     <Image
                       src="/oliv-qr.svg"
-                      alt="Download INVO app - Scan QR code"
+                      alt="Download Oliv app - Scan QR code"
                       width={160}
                       height={160}
                       className="w-full h-auto object-contain"
@@ -204,17 +204,17 @@ export default function MarketingPage() {
                     {t("hero.invoQR.subtitle")}
                   </p>
                   <div className="flex gap-3 justify-center">
-                    <a href="https://apps.apple.com/app/invo" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
+                    <a href="https://apps.apple.com/us/app/oliv-finance/id6475942316" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.1,8.1l-1.9,2.7l0,0c-0.5-1-1.4-2-2.4-2.7l0,0c1.2-0.9,2-2.4,2-4.2c0-0.2,0-0.5,0-0.7C17,1,15.3,0,13.5,0c-0.2,0-0.5,0-0.7,0.1c0,0-0.1,0-0.1,0C9.8,1,8,2.8,8,5.1c0,0-3.1,0-3.4,4.7c-0.1,0.5-0.3,1-0.6,1.5c-1.8,0.1-3.5,0.9-4.8,2.2c0-0.2,0-0.4,0-0.7C-0.1,11.3,0.1,9.8,1.3,8.5c0.9-0.9,2-1.6,3.3-2c-0.1-0.5-0.3-1-0.5-1.5C4.1,4.9,4,4.8,4,4.7c0-0.1,0-0.2,0-0.3C4,3.2,4.8,2.1,6,1.6c0.1,0.2,0.2,0.4,0.4,0.6l0.4,0.4C7.2,2.5,8,3.1,8.7,3.9C8.9,4.1,9,4.3,9,4.6c0,0,3.2,0,4.1,0.7C14,4.6,15,5.7,15.7,7c0,0,0,0,0,0c0.5-0.4,1.2-0.7,1.9-0.9c0.1-0.5,0.3-1,0.5-1.5c0.1-0.4,0.2-0.7,0.3-1.1c0.1,0.3,0.2,0.5,0.3,0.8c0.2,0.5,0.4,1,0.6,1.5c0.1-0.1,0.2-0.2,0.3-0.3c0.2-0.2,0.4-0.5,0.7-0.7c0.1,0.2,0.2,0.5,0.4,0.7C17.2,5.6,18,6.6,18.1,8.1z"/></svg>
                       iOS
                     </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.invo" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18,3.5A2,2 0 0,0,16.5,2H7.5A2,2 0 0,0,5.5,4V20A2,2 0 0,0,7.5,22H16.5A2,2 0 0,0,18,20V4C18,3.72 17.89,3.45 17.72,3.26C17.89,2.89 18,2.5 18,2A2,2 0 0,0,16,0H8A2,2 0 0,0,6,2V6H8V2H16C16,2.55 15.89,2.95 15.62,3.31C16,3.19 16.37,3 16.78,3H18Z"/></svg>
+                    <a href="https://play.google.com/store/apps/details?id=finance.oliv.oliv" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18,3.5A2,2 0 0,0,16.5,2H7.5A2,2 0 0,0,5.5,4V20A2,2 0 0,0,7.5,22H16.5A2,2 0 0,0,18,20V4C18,3.72 17.89,3.45 17.72,3.26C17.89,2.89 18,2.5 18,2A2,2 0 0,0,16,0H8A2,2 0 0,0,6,2V4H8V2H16C16,2.55 15.89,2.95 15.62,3.31C16,3.19 16.37,3 16.78,3H18Z"/></svg>
                       Android
                     </a>
                   </div>
-                  <Link href="/invo" className="inline-block mt-3 text-xs text-accent-base hover:opacity-80">
-                    Learn about INVO →
+                  <Link href="/financing/oliv" className="inline-block mt-3 text-xs text-accent-base hover:opacity-80">
+                    Learn about Oliv →
                   </Link>
                 </div>
               </div>
@@ -1066,9 +1066,6 @@ export default function MarketingPage() {
             <Link href="/register" className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg inline-flex items-center justify-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
               {t("cta.startFree")}
             </Link>
-            <Link href="/sandbox" className="font-semibold cursor-pointer text-base gap-2 rounded-lg border inline-flex items-center justify-center px-10 py-3 bg-surface-1 hover:bg-surface-2 transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
-              {t("cta.bookDemo")}
-            </Link>
           </div>
         </div>
       </section>
@@ -1169,7 +1166,7 @@ const STEPS = [
 export function SandboxCarousel() {
   const [active, setActive] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { locale, isRTL } = useLanguage();
+  const { locale } = useLanguage();
   const ar = locale === "ar";
 
   const resetTimer = () => {

@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
-import { ThemeModeToggle, getStoredMode } from "@/components/theme/mode-toggle";
+import { ThemeModeToggle } from "@/components/theme/mode-toggle";
 import { useLanguage } from "@/lib/i18n/language-context";
 
 interface DropdownItem {
@@ -87,29 +87,16 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const { locale } = useLanguage();
   const ar = locale === "ar";
   const groups = getGroups(ar);
 
-  useEffect(() => {
-    setTheme(getStoredMode());
-    const observer = new MutationObserver(() => {
-      const isLight = document.documentElement.getAttribute("data-theme") === "light";
-      setTheme(isLight ? "light" : "dark");
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
 
-  const isLight = theme === "light";
-  const logoVariant = isLight ? "dark" : "light";
-  const textColor = isLight ? "var(--foreground)" : "var(--foreground)";
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-border-subtle bg-canvas/90 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-3 border-b border-white/10 ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--accent-base)" }}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
-        <BrandLogo variant={logoVariant} size="md" showText />
+        <Image src="/logo-white.svg" alt="HotelsVendors" width={156} height={36} className="h-9 w-auto object-contain" priority />
       </Link>
 
       {/* Desktop nav */}
@@ -143,9 +130,9 @@ export function SiteNav() {
         </Link>
         <Link
           href="/register"
-          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-accent-base text-surface ${ar ? "font-cairo" : ""}`}
+          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-white text-[#2a088c] hover:bg-white/90 transition-colors ${ar ? "font-cairo" : ""}`}
         >
-          {ar ? "جرّب التجربة" : "Try the Demo"}
+          {ar ? "ابدأ الآن" : "Get Started"}
         </Link>
       </div>
 
@@ -160,7 +147,7 @@ export function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="absolute top-full left-0 right-0 border-b border-border-subtle px-6 py-4 flex flex-col gap-4 md:hidden bg-surface-1">
+        <div className="absolute top-full left-0 right-0 border-b border-white/10 px-6 py-4 flex flex-col gap-4 md:hidden" style={{ backgroundColor: "var(--accent-base)" }}>
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
               <span className="text-xs text-white/30 uppercase tracking-widest font-semibold">{g.label}</span>
@@ -207,7 +194,7 @@ export function SiteNav() {
               onClick={() => setOpen(false)}
               className={`text-sm px-4 py-2 font-semibold rounded-md bg-accent-base text-surface text-center ${ar ? "font-cairo" : ""}`}
             >
-            {ar ? "جرّب التجربة" : "Try the Demo"}
+            {ar ? "ابدأ الآن" : "Get Started"}
           </Link>
         </div>
       )}

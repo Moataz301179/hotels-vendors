@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,18 +25,21 @@ export function MarketingNav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-border ${
-        scrolled
-          ? "bg-canvas/95 backdrop-blur-sm border-b border-border-subtle"
-          : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/10 ${
+        scrolled ? "backdrop-blur-sm" : ""
       }`}
+      style={{ backgroundColor: "var(--accent-base)" }}
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
-          <span className="hidden md:inline font-semibold text-[15px] text-white uppercase tracking-wider">
-            Hotels Vendors
-          </span>
+          <Image
+            src="/logo-white.svg"
+            alt="HotelsVendors"
+            width={156}
+            height={36}
+            className="h-9 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
@@ -44,7 +47,7 @@ export function MarketingNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="px-4 py-2 text-[14px] font-medium rounded-lg text-foreground-tertiary hover:text-white transition-colors"
+              className="px-4 py-2 text-[14px] font-medium rounded-lg text-white/90 hover:text-white transition-colors"
             >
               {item.label}
             </Link>
@@ -54,21 +57,20 @@ export function MarketingNav() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/login"
-            className="text-[14px] font-medium text-foreground-tertiary hover:text-white transition-colors"
+            className="text-[14px] font-medium text-white/90 hover:text-white transition-colors"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 font-medium rounded-lg transition-all hover:shadow-accent"
-            style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}
+            className="text-[13px] py-2 px-5 font-semibold rounded-lg bg-white text-[#2a088c] transition-all hover:bg-white/90 hover:shadow-accent"
           >
             Get Started
           </Link>
         </div>
 
         <button
-          className="lg:hidden p-2 rounded-lg text-foreground-tertiary hover:text-white transition-colors"
+          className="lg:hidden p-2 rounded-lg text-white/90 hover:text-white transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -76,13 +78,13 @@ export function MarketingNav() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden bg-canvas/98 border-t border-border-subtle backdrop-blur-md animate-fade-in-up">
+        <div className="lg:hidden border-t border-white/10 backdrop-blur-md animate-fade-in-up" style={{ backgroundColor: "var(--accent-base)" }}>
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="block py-2.5 text-[14px] font-medium text-foreground-tertiary hover:text-white transition-colors"
+                className="block py-2.5 text-[14px] font-medium text-white/90 hover:text-white transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}

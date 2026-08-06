@@ -2,6 +2,9 @@
   "name": "hotels-vendors",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "workspaces": [
     "packages/*"
   ],
@@ -22,7 +25,7 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "turbo": "turbo",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.179",

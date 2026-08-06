@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { useLanguage } from "@/lib/i18n/language-context";
 
 export function SiteFooter() {
@@ -9,13 +9,13 @@ export function SiteFooter() {
   const ar = locale === "ar";
 
   return (
-    <footer className={`border-t py-12 px-6 ${ar ? "font-cairo" : ""}`} style={{ borderColor: "var(--accent-base)18" }}>
+    <footer className={`border-t py-12 px-6 text-white ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--accent-base)", borderColor: "rgba(255,255,255,0.14)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
           {/* Brand */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5 mb-3" dir="ltr">
-              <BrandLogo variant="dark" size="md" showText />
+              <Image src="/logo-white.svg" alt="HotelsVendors" width={156} height={36} className="h-9 w-auto object-contain" />
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">
               {ar

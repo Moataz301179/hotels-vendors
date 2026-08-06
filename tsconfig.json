@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -14,12 +17,60 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@hotels-vendors/api-contracts": ["./packages/api-contracts/src"],
-      "@hotels-vendors/ui-primitives": ["./packages/ui-primitives/src"],
-      "@hotels-vendors/auth": ["./packages/auth/src"],
-      "@hotels-vendors/utils": ["./packages/utils/src"]
-    }
+      "@/*": [
+        "./*"
+      ],
+      "@hotels-vendors/api-contracts": [
+        "./packages/api-contracts/src"
+      ],
+      "@hotels-vendors/ui-primitives": [
+        "./packages/ui-primitives/src"
+      ],
+      "@hotels-vendors/auth": [
+        "./packages/auth/src"
+      ],
+      "@hotels-vendors/utils": [
+        "./packages/utils/src"
+      ]
+    },
+    "allowJs": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "exclude": ["node_modules", ".next", "mobile/node_modules", "docs", "lib/seed.ts", "prisma/seed*.ts", "scripts", "data", "deploy", "e2e", "fixes", "front-end", "harness", "marketing", "research", "services", "src", "templates", "test-results", "tests", "types", "workspace"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "mobile/node_modules",
+    "docs",
+    "lib/seed.ts",
+    "prisma/seed*.ts",
+    "scripts",
+    "data",
+    "deploy",
+    "e2e",
+    "fixes",
+    "front-end",
+    "harness",
+    "marketing",
+    "research",
+    "services",
+    "src",
+    "templates",
+    "test-results",
+    "tests",
+    "types",
+    "workspace"
+  ],
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

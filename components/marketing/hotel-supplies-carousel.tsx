@@ -29,14 +29,14 @@ export function HotelSuppliesCarousel() {
   const [canScrollRight, setCanScrollRight] = useState(true);
 
   const supplies: SupplyItem[] = [
-    { id: 1, photo: "photo-xPG_A_VpJ20", alt: "Premium cotton hotel linen", label: t("supplies.linen"), color: "var(--accent-base)", href: "/marketplace?category=linen" },
-    { id: 2, photo: "photo-hBf_zAzImYg", alt: "Luxury bathroom amenities and towels", label: t("supplies.bathroom"), color: "var(--orange-base)", href: "/marketplace?category=bathroom" },
-    { id: 3, photo: "photo-ZAdMOsS81aY", alt: "Commercial kitchen equipment and supplies", label: t("supplies.kitchen"), color: "var(--purple-base)", href: "/marketplace?category=kitchen" },
-    { id: 4, photo: "photo-ZzTIk_ifVLM", alt: "Professional cleaning supplies and equipment", label: t("supplies.cleaning"), color: "var(--accent-base)", href: "/marketplace?category=cleaning" },
-    { id: 5, photo: "photo-gTA4bkiD2Xw", alt: "Hotel furniture and guest room furnishings", label: t("supplies.furniture"), color: "var(--orange-base)", href: "/marketplace?category=furniture" },
-    { id: 6, photo: "photo-SimSA1JbMt8", alt: "HVAC systems and climate control equipment", label: t("supplies.hvac"), color: "var(--purple-base)", href: "/marketplace?category=hvac" },
-    { id: 7, photo: "photo-gZTq_MmqPk8", alt: "Premium bedding and mattress protectors", label: t("supplies.bedding"), color: "var(--accent-base)", href: "/marketplace?category=bedding" },
-    { id: 8, photo: "photo-sGD2N2NZqsI", alt: "Pool and spa maintenance equipment", label: t("supplies.poolSpa"), color: "var(--orange-base)", href: "/marketplace?category=pool-spa" },
+    { id: 1, photo: "photo-1524758631624-e2822e304c36", alt: "Premium cotton hotel linen", label: t("supplies.linen"), color: "var(--accent-base)", href: "/marketplace?category=linen" },
+    { id: 2, photo: "photo-1564540583246-934409427776", alt: "Luxury bathroom amenities and towels", label: t("supplies.bathroom"), color: "var(--orange-base)", href: "/marketplace?category=bathroom" },
+    { id: 3, photo: "photo-1571896349842-33c89424de2d", alt: "Commercial kitchen equipment and supplies", label: t("supplies.kitchen"), color: "var(--purple-base)", href: "/marketplace?category=kitchen" },
+    { id: 4, photo: "photo-1585421514284-efb74c2b69ba", alt: "Professional cleaning supplies and equipment", label: t("supplies.cleaning"), color: "var(--accent-base)", href: "/marketplace?category=cleaning" },
+    { id: 5, photo: "photo-1616627547584-bf28cee262db", alt: "Hotel furniture and guest room furnishings", label: t("supplies.furniture"), color: "var(--orange-base)", href: "/marketplace?category=furniture" },
+    { id: 6, photo: "photo-1581094794329-c8112a89af12", alt: "HVAC systems and climate control equipment", label: t("supplies.hvac"), color: "var(--purple-base)", href: "/marketplace?category=hvac" },
+    { id: 7, photo: "photo-1631049307264-da0ec9d70304", alt: "Premium bedding and mattress protectors", label: t("supplies.bedding"), color: "var(--accent-base)", href: "/marketplace?category=bedding" },
+    { id: 8, photo: "photo-1571896349842-33c89424de2d", alt: "Pool and spa maintenance equipment", label: t("supplies.poolSpa"), color: "var(--orange-base)", href: "/marketplace?category=pool-spa" },
   ];
 
   const checkScroll = () => {

@@ -20,9 +20,9 @@ export const homepage = {
     "hero.freeToStart": "Free to Start",
     "hero.startFree": "Start Free",
     "hero.exploreSandbox": "Explore Sandbox",
-    "hero.invoQR.title": "Scan to Open INVO",
-    "hero.invoQR.subtitle": "Access your procurement dashboard on mobile — manage orders, approve requests, and track deliveries on the go.",
-    "hero.invoQR.hook": "Download INVO App →",
+    "hero.invoQR.title": "Get Instant Cash Flow",
+    "hero.invoQR.subtitle": "Scan to download Oliv — partner with HotelsVendors for instant invoice financing. Get paid in 48 hours.",
+    "hero.invoQR.hook": "Download Oliv App →",
 
     // ── Platform Overview ──
     "overview.title": "The Procurement Platform, At a Glance",
@@ -266,7 +266,6 @@ export const homepage = {
     "cta.subtitle": "Start free today. Explore the sandbox. Let our AI agents guide your onboarding. No commitment, no subscription — just results.",
     "cta.tagline": "First B2B AI-driven procurement platform for hospitality in Egypt and the region.",
     "cta.startFree": "Start Free — No Card Needed",
-    "cta.bookDemo": "Book a Demo",
 
     // ── Sandbox Carousel ──
     "carousel.badge": "Platform Demo",
@@ -334,9 +333,9 @@ export const homepage = {
     "hero.freeToStart": "مجاني للبدء",
     "hero.startFree": "ابدأ مجاناً",
     "hero.exploreSandbox": "جرّب المنصة",
-    "hero.invoQR.title": "امسح لفتح INVO",
-    "hero.invoQR.subtitle": "ادخل لوحة المشتريات على الجوال — أدر الطلبات، وافق على الطلبات، وتتبع التوصيل أثناء التنقل.",
-    "hero.invoQR.hook": "تحميل تطبيق INVO ←",
+    "hero.invoQR.title": "استفد بتدفيق نقدي فوري",
+    "hero.invoQR.subtitle": "امسح لتنزيل Oliv - شريك HotelsVendors للتمويل الفوري للفواتير. احصل على أموالك خلال 48 ساعة.",
+    "hero.invoQR.hook": "تحميل تطبيق Oliv ←",
 
     // ── Platform Overview ──
     "overview.title": "منصة المشتريات بالكامل",
@@ -580,7 +579,6 @@ export const homepage = {
     "cta.subtitle": "ابدأ مجاناً اليوم. جرّب المنصة التجريبية. وكلاء الذكاء الاصطناعي يرشدونك خطوة بخطوة — بدون التزام، بدون اشتراك، فقط نتائج ملموسة.",
     "cta.tagline": "أول منصة مشتريات B2B بالذكاء الاصطناعي لقطاع الضيافة في مصر والمنطقة.",
     "cta.startFree": "ابدأ مجاناً — بدون بطاقة",
-    "cta.bookDemo": "احجز عرضاً",
 
     // ── Sandbox Carousel ──
     "carousel.badge": "عرض المنصة",

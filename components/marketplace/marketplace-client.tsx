@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -27,6 +28,7 @@ import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-ima
 import { MarketingNav } from "@/components/layout/marketing-nav";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { MarketplaceAdRail } from "@/components/marketplace/marketplace-ad-rail";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
 
@@ -49,11 +51,12 @@ function ProductImage({ product }: { product: MarketplaceProduct }) {
 
   if (resolved.type === "url" && !error) {
     return (
-      <img
+      <Image
         src={resolved.src}
         alt={product.name}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        loading="lazy"
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+        className="object-cover group-hover:scale-105 transition-transform duration-500"
         onError={() => setError(true)}
       />
     );
@@ -339,6 +342,8 @@ export default function MarketplacePage() {
         </div>
       </div>
 
+      <MarketplaceAdRail />
+
       {/* Main Layout */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-6">
@@ -376,8 +381,8 @@ export default function MarketplacePage() {
                       isActive ? "text-white bg-white/[0.06] border border-white/[0.08]" : "text-white/50 hover:text-white/80 hover:bg-white/[0.03]"
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/[0.06]">
-                      <img src={CAT_IMAGES[cat.id] || CAT_IMAGES.fb} alt={cat.label} className="w-full h-full object-cover" />
+                    <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/[0.06]">
+                      <Image src={CAT_IMAGES[cat.id] || CAT_IMAGES.fb} alt={cat.label} fill sizes="32px" className="object-cover" />
                     </div>
                     <span className="text-left">{cat.label}</span>
                     <span className="ml-auto text-[10px] text-white/25">{count}</span>
