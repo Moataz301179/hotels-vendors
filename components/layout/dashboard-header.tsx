@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Settings, Menu, ShoppingCart, HeartPulse, ScrollText, Clock } from "lucide-react";
+import { Settings, Menu, ShoppingCart, HeartPulse, ScrollText, Clock, Zap } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { UserDropdown } from "./user-dropdown";
 import { useCart } from "@/components/cart/cart-context";
@@ -53,12 +53,17 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
         >
           <Menu size={20} />
         </button>
-<Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="lg" showText={false} iconOnly />
-          <span className="hidden md:inline text-sm font-semibold text-white uppercase tracking-wider">
-            Hotels Vendors
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-accent-base flex items-center justify-center">
+            <Zap className="w-5 h-5 text-white" />
+          </div>
+          <span className="hidden md:inline text-[17px] font-medium tracking-tight text-white">
+            INVO
           </span>
-</Link>
+          <span className="hidden sm:inline text-[11px] font-medium text-white/30 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+            by HotelsVendors
+          </span>
+        </Link>
         <div className="hidden md:flex items-center gap-3">
           <span className="text-xs font-medium text-foreground-muted uppercase tracking-[0.15em]">Dashboard</span>
           <span className="text-white/10">/</span>

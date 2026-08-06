@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
+import { Menu, X, Zap } from "lucide-react";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,9 +32,14 @@ export function MarketingNav() {
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
-          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
-          <span className="hidden md:inline font-semibold text-[15px] text-white uppercase tracking-wider">
-            Hotels Vendors
+          <div className="w-8 h-8 rounded-lg bg-accent-base flex items-center justify-center">
+            <Zap className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-[17px] font-medium tracking-tight text-white">
+            INVO
+          </span>
+          <span className="hidden sm:inline text-[11px] font-medium text-white/30 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+            by HotelsVendors
           </span>
         </Link>
 

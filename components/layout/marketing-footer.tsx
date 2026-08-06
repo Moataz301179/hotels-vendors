@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, FileCheck, Lock } from "lucide-react";
-import { BrandLogo } from "@/components/layout/brand-logo";
+import { Shield, FileCheck, Lock, Zap } from "lucide-react";
 
 export function MarketingFooter() {
   return (
@@ -12,9 +11,14 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <BrandLogo variant="dark" size="sm" showText={false} iconOnly />
-              <span className="text-[14px] font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-                Hotels Vendors
+              <div className="w-8 h-8 rounded-lg bg-accent-base flex items-center justify-center">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-[17px] font-medium tracking-tight text-white">
+                INVO
+              </span>
+              <span className="hidden sm:inline text-[11px] font-medium text-white/30 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+                by HotelsVendors
               </span>
             </div>
             <p className="text-[12px] text-foreground-muted leading-relaxed max-w-xs">

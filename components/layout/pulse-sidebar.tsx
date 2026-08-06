@@ -266,9 +266,14 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-border-invisible">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <BrandLogo variant="dark" size="md" showText={false} iconOnly />
-          <span className="text-sm font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
-            Hotels Vendors
+          <div className="w-8 h-8 rounded-lg bg-accent-base flex items-center justify-center">
+            <Zap className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-[17px] font-medium tracking-tight text-white">
+            INVO
+          </span>
+          <span className="hidden sm:inline text-[11px] font-medium text-white/30 px-1.5 py-0.5 rounded border border-white/10 tracking-wider">
+            by HotelsVendors
           </span>
         </Link>
         <button
