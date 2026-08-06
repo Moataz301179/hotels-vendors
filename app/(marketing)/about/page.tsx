@@ -20,6 +20,7 @@ import {
   FileCheck,
   Lock,
   TrendingUp,
+  Mail,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -97,7 +98,7 @@ const HOW_IT_WORKS = [
 ];
 
 const TEAM_ROLES = [
-  { role: "Chief Executive Officer", focus: "Hospitality & Strategy", color: "var(--accent-base)" },
+  { role: "Founder & CEO", name: "Moataz Ghani", email: "moatazceo@hotelsvendors.com", focus: "Hospitality & Strategy", color: "var(--accent-base)" },
   { role: "Chief Technology Officer", focus: "Platform & Engineering", color: "var(--orange-base)" },
   { role: "Chief Operating Officer", focus: "Marketplace & Growth", color: "var(--purple-base)" },
 ];
@@ -250,6 +251,12 @@ export default function AboutPage() {
                   <Users size={22} />
                 </div>
                 <p className="text-[13px] font-semibold text-white mb-1">{t.role}</p>
+                {t.name && <p className="text-[12px] text-white/70 mb-1">{t.name}</p>}
+                {t.email && (
+                  <a href={`mailto:${t.email}`} className="flex items-center justify-center gap-1.5 text-[10px] text-white/40 hover:text-accent-base transition-colors">
+                    <Mail size={11} /> {t.email}
+                  </a>
+                )}
                 <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>{t.focus}</p>
               </div>
             ))}

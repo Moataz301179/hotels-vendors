@@ -18,8 +18,8 @@ const CONTACT_METHODS = [
   {
     icon: Mail,
     title: "Email Us",
-    desc: "For general inquiries and support",
-    value: "info@hotelsvendors.com",
+    desc: "For support and help",
+    value: "support@hotelsvendors.com",
     color: "var(--accent-base)",
   },
   {
