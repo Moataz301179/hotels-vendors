@@ -58,6 +58,9 @@ model Tenant {
   hotelSuppliers         HotelSupplier[]
   inventorySnapshots     InventorySnapshot[]
   invoPartners           InvoPartner[]
+  scheduledOrders        ScheduledOrder[]
+  inventoryReconciliations InventoryReconciliation[]
+  consumptionForecasts   ConsumptionForecast[]
   invoSubscriptions      InvoSubscription[]
   invoices               Invoice[]
   journalEntries         JournalEntry[]
@@ -183,6 +186,9 @@ model Hotel {
   tripStops            TripStop[]
   users                User[]
   goodsReceiptNotes    GoodsReceiptNote[]
+  scheduledOrders      ScheduledOrder[]
+  inventoryReconciliations InventoryReconciliation[]
+  consumptionForecasts ConsumptionForecast[]
 
   @@index([tenantId])
   @@index([city])
@@ -327,6 +333,7 @@ model Supplier {
   audits               SupplierAudit[]
   users                User[]
   goodsReceiptNotes    GoodsReceiptNote[]
+  scheduledOrders      ScheduledOrder[]
 
   @@index([tenantId])
   @@index([city])
@@ -391,6 +398,10 @@ model Product {
   seasonalities      ProductSeasonality[]
   ProductTierPrice   ProductTierPrice[]
   grnLineItems       GrnLineItem[]
+  scheduledOrderItems ScheduledOrderItem[]
+  reconciliationItems ReconciliationLineItem[]
+  consumptionForecasts ConsumptionForecast[]
+  variations         ProductVariation[]
 
   @@index([tenantId])
   @@index([supplierId])
@@ -480,7 +491,9 @@ model Order {
   items                  OrderItem[]
   ReturnRequest          ReturnRequest[]
   tripStops              TripStop[]
-  goodsReceiptNotes      GoodsReceiptNote[]
+  goodsReceiptNotes    GoodsReceiptNote[]
+  scheduledOrderId     String?
+  scheduledOrder       ScheduledOrder?   @relation(fields: [scheduledOrderId], references: [id])
 
   @@index([tenantId])
   @@index([hotelId])
@@ -3170,4 +3183,197 @@ model InvoPartner {
   @@index([tenantId])
   @@index([name])
   @@index([type])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCHEDULED ORDERS — Recurring/repeat procurement
+// ═══════════════════════════════════════════════════════════════
+
+enum ScheduleFrequency {
+  DAILY
+  WEEKLY
+  BI_WEEKLY
+  MONTHLY
+  QUARTERLY
+  CUSTOM
+}
+
+enum ScheduleStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model ScheduledOrder {
+  id              String            @id @default(cuid())
+  tenantId        String
+  hotelId         String
+  propertyId      String?
+  outletId        String?
+  supplierId      String
+  frequency       ScheduleFrequency
+  cronExpression  String?           // For CUSTOM frequency: "0 9 1 * *" = 1st of month at 9am
+  nextRunAt       DateTime
+  lastRunAt       DateTime?
+  status          ScheduleStatus    @default(ACTIVE)
+  name            String            // e.g. "Monthly cleaning supplies"
+  notes           String?
+  autoSubmit      Boolean           @default(false) // If true, auto-create order without approval
+  maxOrderValue   Decimal?          @db.Decimal(14, 2) // Cap per order
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  hotel           Hotel             @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  supplier        Supplier          @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  uuid            String?           @unique(map: "ScheduledOrder_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  items           ScheduledOrderItem[]
+  generatedOrders Order[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([supplierId])
+  @@index([nextRunAt])
+  @@index([status])
+}
+
+model ScheduledOrderItem {
+  id                String          @id @default(cuid())
+  scheduledOrderId  String
+  productId         String
+  quantity          Int
+  unitPrice         Decimal?        @db.Decimal(12, 2)
+  notes             String?
+  scheduledOrder    ScheduledOrder  @relation(fields: [scheduledOrderId], references: [id], onDelete: Cascade)
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([scheduledOrderId])
+  @@index([productId])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INVENTORY RECONCILIATION — Beginning/Ending inventory tracking
+// ═══════════════════════════════════════════════════════════════
+
+enum ReconciliationStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  ADJUSTED
+}
+
+model InventoryReconciliation {
+  id              String                @id @default(cuid())
+  tenantId        String
+  hotelId         String
+  propertyId      String?
+  period          String                // "2026-01" or "2026-Q1"
+  periodStart     DateTime
+  periodEnd       DateTime
+  status          ReconciliationStatus  @default(DRAFT)
+  notes           String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  tenant          Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  hotel           Hotel                 @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  uuid            String?               @unique(map: "InventoryReconciliation_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+  lineItems       ReconciliationLineItem[]
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([period])
+  @@index([status])
+}
+
+model ReconciliationLineItem {
+  id                    String                  @id @default(cuid())
+  reconciliationId      String
+  productId             String
+  beginningQuantity     Int                     // Stock at period start
+  endingQuantity        Int                     // Stock at period end (physical count)
+  receivedQuantity      Int                     @default(0) // Total received during period
+  consumedQuantity      Int                     @default(0) // Calculated: beginning + received - ending
+  wasteQuantity         Int                     @default(0) // Expired, damaged, stolen
+  varianceQuantity      Int                     @default(0) // Difference from expected
+  varianceReason        String?                 // Explanation for variance
+  unitCost              Decimal?                @db.Decimal(12, 2)
+  totalValue            Decimal?                @db.Decimal(14, 2)
+  reconciliation        InventoryReconciliation @relation(fields: [reconciliationId], references: [id], onDelete: Cascade)
+  product               Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+
+  @@index([reconciliationId])
+  @@index([productId])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONSUMPTION FORECAST — Monthly averages, variance, occupancy correlation
+// ═══════════════════════════════════════════════════════════════
+
+model ConsumptionForecast {
+  id                    String    @id @default(cuid())
+  tenantId              String
+  hotelId               String
+  productId             String
+  month                 String    // "2026-01"
+  year                  Int
+  monthNum              Int       // 1-12
+  occupancyRate         Float     // Hotel occupancy % for this month (0-100)
+  avgDailyConsumption   Float     // Average daily consumption
+  totalConsumption      Float     // Total consumed in month
+  monthlyForecast       Float     // AI forecast for this month
+  forecastAccuracy      Float?    // |actual - forecast| / forecast * 100
+  consumptionPerRoom    Float     // Consumption per available room
+  consumptionPerOccupiedRoom Float // Consumption per occupied room
+  trendDirection        String    @default("STABLE") // UP, DOWN, STABLE
+  seasonalityFactor     Float     @default(1.0) // Multiplier from ProductSeasonality
+  notes                 String?
+  tenant                Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  hotel                 Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  product               Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([tenantId, hotelId, productId, month])
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([productId])
+  @@index([month])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PRODUCT VARIATIONS — Size, color, packaging variants
+// ═══════════════════════════════════════════════════════════════
+
+model ProductVariation {
+  id              String    @id @default(cuid())
+  productId       String
+  sku             String    @unique // e.g. "CLEAN-001-5L"
+  name            String    // e.g. "5L variant"
+  variantType     String    // SIZE, COLOR, PACKAGING, GRADE
+  variantValue    String    // "5L", "Blue", "Bulk", "Premium"
+  unitPrice       Decimal?  @db.Decimal(12, 2)
+  stockQuantity   Int       @default(0)
+  minOrderQty     Int       @default(1)
+  barcode         String?   // GS1/EGS barcode
+  weight          Float?    // in kg
+  dimensions      String?   // "30x20x15 cm"
+  isActive        Boolean   @default(true)
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  uuid            String?   @unique(map: "ProductVariation_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt       DateTime?
+
+  @@index([productId])
+  @@index([variantType])
+  @@index([sku])
 }
