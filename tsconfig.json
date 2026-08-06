@@ -21,5 +21,5 @@
       "@hotels-vendors/utils": ["./packages/utils/src"]
     }
   },
-  "exclude": ["node_modules", ".next", "mobile/node_modules", "docs", "lib/seed.ts", "prisma/seed*.ts"]
+  "exclude": ["node_modules", ".next", "mobile/node_modules", "docs", "lib/seed.ts", "prisma/seed*.ts", "scripts", "data", "deploy", "e2e", "fixes", "front-end", "harness", "marketing", "research", "services", "src", "templates", "test-results", "tests", "types", "workspace"]
 }
