@@ -9,6 +9,8 @@ import { apiRoute, authenticate, success, error, audit, requirePermission } from
 import { parseExcelBuffer, isValidExcelBuffer, generateTemplateBuffer } from "@/lib/parsers/excel-parser";
 import { parseAndMapColumns } from "@/lib/ai/catalog-importer";
 
+type FormDataEntryValue = string | File;
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
@@ -21,7 +23,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   await requirePermission(auth, "product:create");
 
-  const formData = await request.formData();
+  const formData = await request.formData() as unknown as Map<string, FormDataEntryValue>;
   const file = formData.get("file") as File | null;
   const action = formData.get("action") as string | null; // "template" for download
 
