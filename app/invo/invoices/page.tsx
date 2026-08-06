@@ -36,10 +36,10 @@ export default async function InvoicesPage() {
     .limit(100);
 
   const invoiceList = invoices || [];
-  const totalFaceValue = invoiceList.reduce((sum, inv) => sum + (inv.face_value || 0), 0);
-  const qualified = invoiceList.filter((inv) => inv.qualification_status === "qualified").length;
-  const pending = invoiceList.filter((inv) => inv.qualification_status === "pending_documents").length;
-  const etaSubmitted = invoiceList.filter((inv) => inv.eta_status === "submitted").length;
+  const totalFaceValue = invoiceList.reduce((sum: number, inv: any) => sum + (inv.face_value || 0), 0);
+  const qualified = invoiceList.filter((inv: any) => inv.qualification_status === "qualified").length;
+  const pending = invoiceList.filter((inv: any) => inv.qualification_status === "pending_documents").length;
+  const etaSubmitted = invoiceList.filter((inv: any) => inv.eta_status === "submitted").length;
 
   return (
     <div className="space-y-6">
@@ -85,7 +85,7 @@ export default async function InvoicesPage() {
                 </tr>
               </thead>
               <tbody>
-                {invoiceList.map((inv) => (
+                {invoiceList.map((inv: any) => (
                   <tr
                     key={inv.id}
                     className="border-t transition-colors"

@@ -28,11 +28,11 @@ export default async function AgentsPage() {
 
   const auditLog = auditRes.data || [];
   const alerts = alertsRes.data || [];
-  const openAlerts = alerts.filter((a) => a.status === "open").length;
+  const openAlerts = alerts.filter((a: any) => a.status === "open").length;
 
   // Count actions per agent
   const agentCounts: Record<string, number> = {};
-  auditLog.forEach((log) => {
+  auditLog.forEach((log: any) => {
     agentCounts[log.agent_name] = (agentCounts[log.agent_name] || 0) + 1;
   });
 
@@ -49,7 +49,7 @@ export default async function AgentsPage() {
         <KPICard title="Total Actions" value={auditLog.length} icon={<Bot className="w-4 h-4" />} />
         <KPICard title="Open Alerts" value={openAlerts} accent={openAlerts > 0} icon={<AlertTriangle className="w-4 h-4" />} />
         <KPICard title="Pipeline Steps" value={4} icon={<Play className="w-4 h-4" />} />
-        <KPICard title="Last 24h" value={auditLog.filter((l) => {
+        <KPICard title="Last 24h"         value={auditLog.filter((l: any) => {
           const d = new Date(l.created_at);
           return Date.now() - d.getTime() < 86400000;
         }).length} accent icon={<CheckCircle className="w-4 h-4" />} />
@@ -61,7 +61,7 @@ export default async function AgentsPage() {
           <h2 className="text-sm font-bold">Agent Pipeline</h2>
         </div>
         <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {AGENT_PIPELINE.map((agent, i) => (
+          {AGENT_PIPELINE.map((agent: any, i: number) => (
             <div
               key={agent.id}
               className="rounded-xl p-5 text-center"
@@ -128,7 +128,7 @@ export default async function AgentsPage() {
                 </tr>
               </thead>
               <tbody>
-                {auditLog.map((log) => (
+                {auditLog.map((log: any) => (
                   <tr
                     key={log.log_id}
                     className="border-t transition-colors"

@@ -191,7 +191,7 @@ export default function InvoPage() {
       {/* STATS STRIP */}
       <section className="border-y border-white/[0.04]">
         <div className="stat-strip max-w-5xl mx-auto">
-          {STATS.map((s) => (
+          {STATS.map((s: any) => (
             <div key={s.label} className="stat-strip-item">
               <s.icon className="w-5 h-5 text-orange-base/30 mx-auto mb-2" />
               <div className="stat-strip-value">{s.value}</div>
@@ -214,7 +214,7 @@ export default function InvoPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {FEATURES.map((f) => (
+            {FEATURES.map((f: any) => (
               <div key={f.title} className="surface-card p-7 hover-lift group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-base/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10 flex items-start gap-5">
@@ -247,7 +247,7 @@ export default function InvoPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {HOW_IT_WORKS.map((step) => (
+            {HOW_IT_WORKS.map((step: any) => (
               <div key={step.num} className="surface-card p-6 hover-lift">
                 <div className="text-[36px] font-medium text-orange-base/15 leading-none mb-4">
                   {step.num}
@@ -279,7 +279,7 @@ export default function InvoPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {PRICING.map((p) => (
+            {PRICING.map((p: any) => (
               <div
                 key={p.tier}
                 className={`surface-card p-7 flex flex-col hover-lift ${
@@ -298,7 +298,7 @@ export default function InvoPage() {
                 </div>
                 <p className="text-[13px] text-white/30 mb-6">{p.desc}</p>
                 <ul className="space-y-3 mb-8 flex-1">
-                  {p.features.map((feat) => (
+                  {p.features.map((feat: any) => (
                     <li key={feat} className="flex items-start gap-2.5 text-[13px] text-white/50">
                       <Check className="w-4 h-4 text-orange-base shrink-0 mt-0.5" />
                       {feat}

@@ -30,9 +30,9 @@ export default async function OrdersPage() {
     .limit(100);
 
   const orderList = orders || [];
-  const totalValue = orderList.reduce((sum, o) => sum + (o.total_value || 0), 0);
-  const draftCount = orderList.filter((o) => o.procurement_state === "draft").length;
-  const disputedCount = orderList.filter((o) => o.procurement_state === "disputed").length;
+  const totalValue = orderList.reduce((sum: number, o: any) => sum + (o.total_value || 0), 0);
+  const draftCount = orderList.filter((o: any) => o.procurement_state === "draft").length;
+  const disputedCount = orderList.filter((o: any) => o.procurement_state === "disputed").length;
 
   return (
     <div className="space-y-6">
@@ -82,7 +82,7 @@ export default async function OrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                {orderList.map((order) => (
+                {orderList.map((order: any) => (
                   <tr
                     key={order.id}
                     className="border-t border-border-subtle transition-colors cursor-pointer hover:bg-surface-hover"

@@ -188,64 +188,14 @@ export default function MarketingPage() {
             <div className="animate-fade-in-up animation-delay-200">
               <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
                 <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center" style={{ borderColor: "var(--border-accent)" }}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 100 100"
-                      className="w-full h-full"
-                    >
-                      <rect width="100" height="100" fill="#0c0c12"/>
-                      <rect x="10" y="10" width="80" height="80" fill="#ffffff"/>
-                      <rect x="15" y="15" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="25" y="15" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="35" y="15" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="45" y="15" width="7" height="7" fill="#ffffff"/>
-                      <rect x="55" y="15" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="65" y="15" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="75" y="15" width="7" height="7" fill="#ffffff"/>
-                      <rect x="15" y="25" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="25" y="25" width="7" height="7" fill="#ffffff"/>
-                      <rect x="35" y="25" width="7" height="7" fill="#ffffff"/>
-                      <rect x="45" y="25" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="55" y="25" width="7" height="7" fill="#ffffff"/>
-                      <rect x="65" y="25" width="7" height="7" fill="#ffffff"/>
-                      <rect x="75" y="25" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="15" y="35" width="7" height="7" fill="#ffffff"/>
-                      <rect x="25" y="35" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="35" y="35" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="45" y="35" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="55" y="35" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="65" y="35" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="75" y="35" width="7" height="7" fill="#ffffff"/>
-                      <rect x="15" y="45" width="7" height="7" fill="#ffffff"/>
-                      <rect x="25" y="45" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="35" y="45" width="7" height="7" fill="#ffffff"/>
-                      <rect x="45" y="45" width="7" height="7" fill="#ffffff"/>
-                      <rect x="55" y="45" width="7" height="7" fill="#ffffff"/>
-                      <rect x="65" y="45" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="75" y="45" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="15" y="55" width="7" height="7" fill="#ffffff"/>
-                      <rect x="25" y="55" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="35" y="55" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="45" y="55" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="55" y="55" width="7" height="7" fill="#ffffff"/>
-                      <rect x="65" y="55" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="75" y="55" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="15" y="65" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="25" y="65" width="7" height="7" fill="#ffffff"/>
-                      <rect x="35" y="65" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="45" y="65" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="55" y="65" width="7" height="7" fill="#ffffff"/>
-                      <rect x="65" y="65" width="7" height="7" fill="#ffffff"/>
-                      <rect x="75" y="65" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="15" y="75" width="7" height="7" fill="#ffffff"/>
-                      <rect x="25" y="75" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="35" y="75" width="7" height="7" fill="#ffffff"/>
-                      <rect x="45" y="75" width="7" height="7" fill="#ffffff"/>
-                      <rect x="55" y="75" width="7" height="7" fill="#0c0c12"/>
-                      <rect x="65" y="75" width="7" height="7" fill="#ffffff"/>
-                      <rect x="75" y="75" width="7" height="7" fill="#ffffff"/>
-                    </svg>
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center p-4" style={{ borderColor: "var(--border-accent)" }}>
+                    <Image
+                      src="/oliv-qr.svg"
+                      alt="Download INVO app - Scan QR code"
+                      width={160}
+                      height={160}
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
                   <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                     {t("hero.invoQR.title")}
@@ -253,9 +203,19 @@ export default function MarketingPage() {
                   <p className="text-sm md:text-base text-foreground-secondary mb-4 max-w-xs mx-auto leading-relaxed">
                     {t("hero.invoQR.subtitle")}
                   </p>
-                  <p className="text-xs md:text-sm text-accent-base font-medium">
-                    {t("hero.invoQR.hook")}
-                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <a href="https://apps.apple.com/app/invo" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.1,8.1l-1.9,2.7l0,0c-0.5-1-1.4-2-2.4-2.7l0,0c1.2-0.9,2-2.4,2-4.2c0-0.2,0-0.5,0-0.7C17,1,15.3,0,13.5,0c-0.2,0-0.5,0-0.7,0.1c0,0-0.1,0-0.1,0C9.8,1,8,2.8,8,5.1c0,0-3.1,0-3.4,4.7c-0.1,0.5-0.3,1-0.6,1.5c-1.8,0.1-3.5,0.9-4.8,2.2c0-0.2,0-0.4,0-0.7C-0.1,11.3,0.1,9.8,1.3,8.5c0.9-0.9,2-1.6,3.3-2c-0.1-0.5-0.3-1-0.5-1.5C4.1,4.9,4,4.8,4,4.7c0-0.1,0-0.2,0-0.3C4,3.2,4.8,2.1,6,1.6c0.1,0.2,0.2,0.4,0.4,0.6l0.4,0.4C7.2,2.5,8,3.1,8.7,3.9C8.9,4.1,9,4.3,9,4.6c0,0,3.2,0,4.1,0.7C14,4.6,15,5.7,15.7,7c0,0,0,0,0,0c0.5-0.4,1.2-0.7,1.9-0.9c0.1-0.5,0.3-1,0.5-1.5c0.1-0.4,0.2-0.7,0.3-1.1c0.1,0.3,0.2,0.5,0.3,0.8c0.2,0.5,0.4,1,0.6,1.5c0.1-0.1,0.2-0.2,0.3-0.3c0.2-0.2,0.4-0.5,0.7-0.7c0.1,0.2,0.2,0.5,0.4,0.7C17.2,5.6,18,6.6,18.1,8.1z"/></svg>
+                      iOS
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.invo" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18,3.5A2,2 0 0,0,16.5,2H7.5A2,2 0 0,0,5.5,4V20A2,2 0 0,0,7.5,22H16.5A2,2 0 0,0,18,20V4C18,3.72 17.89,3.45 17.72,3.26C17.89,2.89 18,2.5 18,2A2,2 0 0,0,16,0H8A2,2 0 0,0,6,2V6H8V2H16C16,2.55 15.89,2.95 15.62,3.31C16,3.19 16.37,3 16.78,3H18Z"/></svg>
+                      Android
+                    </a>
+                  </div>
+                  <Link href="/invo" className="inline-block mt-3 text-xs text-accent-base hover:opacity-80">
+                    Learn about INVO →
+                  </Link>
                 </div>
               </div>
             </div>

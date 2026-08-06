@@ -49,13 +49,13 @@ export default async function DashboardPage() {
   const procurement = (procurementRes.data || []) as any[];
   const alerts = alertsRes.data || [];
 
-  const totalInvoiced = pipeline.reduce((sum, r) => sum + (r.face_value || 0), 0);
-  const totalPaid = pipeline.filter((r) => r.procurement_state === "paid").length;
-  const totalPending = pipeline.filter((r) =>
+  const totalInvoiced = pipeline.reduce((sum: number, r: any) => sum + (r.face_value || 0), 0);
+  const totalPaid = pipeline.filter((r: any) => r.procurement_state === "paid").length;
+  const totalPending = pipeline.filter((r: any) =>
     ["invoiced", "delivered", "shipped"].includes(r.procurement_state || "")
   ).length;
-  const factoringEligible = pipeline.filter((r) => r.factoring_eligible).length;
-  const highRisk = risks.filter((r) => r.risk_band === "high" || r.risk_band === "critical").length;
+  const factoringEligible = pipeline.filter((r: any) => r.factoring_eligible).length;
+  const highRisk = risks.filter((r: any) => r.risk_band === "high" || r.risk_band === "critical").length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
             color: "text-foreground-secondary",
             bg: "bg-surface-raised",
           },
-        ].map((kpi) => (
+        ].map((kpi: any) => (
           <div
             key={kpi.label}
             className="bg-surface border border-border-default rounded-xl p-5 shadow-sm"
@@ -171,7 +171,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {pipeline.map((row) => (
+                {pipeline.map((row: any) => (
                   <tr
                     key={row.invoice_id}
                     className="border-b border-border-subtle hover:bg-accent-muted/50 transition-colors"
@@ -210,7 +210,7 @@ export default async function DashboardPage() {
             </h2>
             <span className="text-xs text-foreground-muted">{alerts.length} active</span>
           </div>
-          {alerts.map((alert) => (
+          {alerts.map((alert: any) => (
             <div
               key={alert.id}
               className="flex items-center justify-between px-5 py-3 border-b border-border-subtle last:border-b-0"
@@ -255,7 +255,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {risks.map((row) => {
+                {risks.map((row: any) => {
                   const overallScore = row.overall_risk_score || 0;
                   const scoreColor = overallScore >= 70
                     ? "text-error"

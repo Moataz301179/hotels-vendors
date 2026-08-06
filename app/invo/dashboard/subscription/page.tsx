@@ -142,7 +142,7 @@ export default function SubscriptionPage() {
             </div>
             <p className="text-[12px] text-foreground-muted mb-5">{plan.desc}</p>
             <ul className="space-y-2.5 mb-6 flex-1">
-              {plan.features.map((feat) => (
+              {plan.features.map((feat: any) => (
                 <li
                   key={feat}
                   className="flex items-start gap-2 text-[13px] text-foreground-secondary"

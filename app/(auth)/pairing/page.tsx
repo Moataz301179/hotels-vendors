@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Zap, ArrowRight, Loader2, CheckCircle2, X, RotateCcw } from "lucide-react";
 
-export default function PairingPage() {
+function PairingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
@@ -157,5 +157,13 @@ export default function PairingPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function PairingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PairingContent />
+    </Suspense>
   );
 }

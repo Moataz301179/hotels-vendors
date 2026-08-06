@@ -99,7 +99,7 @@ export default async function FactoringPage() {
           </h2>
           {data?.factorableInvoices && data.factorableInvoices.length > 0 ? (
             <div className="space-y-3">
-              {data.factorableInvoices.map((inv) => (
+              {data.factorableInvoices.map((inv: any) => (
                 <div
                   key={inv.id}
                   className="p-4 rounded-xl border border-orange-base/20 bg-orange-base/[0.02]"
@@ -160,7 +160,7 @@ export default async function FactoringPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.requests.map((req) => (
+                  {data.requests.map((req: any) => (
                     <tr
                       key={req.id}
                       className="border-b border-border-subtle/50 hover:bg-white/[0.02] transition-colors"

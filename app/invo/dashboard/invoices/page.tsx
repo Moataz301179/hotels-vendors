@@ -30,9 +30,9 @@ async function getInvoices() {
 
     const stats = {
       total: invoices.length,
-      paid: invoices.filter((i) => i.paymentStatus === "PAID").length,
-      pending: invoices.filter((i) => i.paymentStatus === "PENDING" || !i.paymentStatus).length,
-      factored: invoices.filter((i) => i.factoringStatus === "PAID").length,
+      paid: invoices.filter((i: any) => i.paymentStatus === "PAID").length,
+      pending: invoices.filter((i: any) => i.paymentStatus === "PENDING" || !i.paymentStatus).length,
+      factored: invoices.filter((i: any) => i.factoringStatus === "PAID").length,
     };
 
     return { invoices, stats };
@@ -129,7 +129,7 @@ export default async function InvoicesPage() {
               </tr>
             </thead>
             <tbody>
-              {data.invoices.map((inv) => (
+              {data.invoices.map((inv: any) => (
                 <tr
                   key={inv.id}
                   className="border-b border-border-subtle/50 hover:bg-white/[0.02] transition-colors"

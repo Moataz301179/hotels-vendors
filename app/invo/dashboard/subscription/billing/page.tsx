@@ -40,7 +40,7 @@ const BILLING_HISTORY = [
 ];
 
 export default function BillingHistoryPage() {
-  const totalSpent = BILLING_HISTORY.reduce((sum, inv) => sum + inv.amount, 0);
+  const totalSpent = BILLING_HISTORY.reduce((sum: number, inv: any) => sum + inv.amount, 0);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
@@ -106,7 +106,7 @@ export default function BillingHistoryPage() {
             </tr>
           </thead>
           <tbody>
-            {BILLING_HISTORY.map((inv) => (
+            {BILLING_HISTORY.map((inv: any) => (
               <tr
                 key={inv.id}
                 className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"

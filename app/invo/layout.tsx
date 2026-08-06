@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: "/marketplace", label: "Marketplace" },
   { href: "/invo/orders", label: "Orders" },
   { href: "/invo/invoices", label: "Invoices" },
-  { href: "/invo/factoring", label: "Factoring" },
+  { href: "/financing/oliv", label: "Oliv Factoring" },
   { href: "/invo/agents", label: "Agents" },
 ];
 
@@ -22,24 +22,22 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
       <aside className="w-60 shrink-0 flex flex-col border-r hidden md:flex bg-surface-raised border-border-subtle">
         {/* Logo */}
         <div className="px-5 py-5 border-b border-border-subtle">
-          <Link href="/invo/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold bg-purple-base text-[var(--text-primary)]">
-              HV
-            </div>
-            <div>
-              <span className="text-sm font-semibold text-foreground tracking-tight">
-                HotelsVendors
-              </span>
-              <span className="block text-[10px] font-medium uppercase tracking-wider text-purple-base">
-                INVO Layer
-              </span>
-            </div>
-          </Link>
+           <Link href="/invo/dashboard" className="flex items-center gap-2.5">
+             <img src="/oliv-logo.png" alt="Oliv" className="w-8 h-8 object-contain" />
+             <div>
+               <span className="text-sm font-semibold text-foreground tracking-tight">
+                 INVO
+               </span>
+               <span className="block text-[10px] font-medium uppercase tracking-wider text-purple-base">
+                 Liquidity Layer
+               </span>
+             </div>
+           </Link>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.map((item: any) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
@@ -61,10 +59,10 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
         <div className="px-4 py-4 border-t border-border-subtle">
           <div className="rounded-lg px-3 py-2.5 text-center bg-purple-base/10">
             <div className="text-[10px] font-semibold uppercase tracking-wider text-purple-base">
-              Marketplace Engine
+              Liquidity Layer
             </div>
             <div className="text-[10px] mt-0.5 text-foreground-muted">
-              Supabase · Live
+              Powered by Oliv
             </div>
           </div>
         </div>
@@ -88,7 +86,7 @@ export default function InvoLayout({ children }: { children: React.ReactNode }) 
 
           <div className="flex items-center gap-4">
             <span className="text-[12px] text-foreground-muted">
-              Supabase · INVO
+              Oliv Integration
             </span>
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold bg-purple-base/10 text-purple-base">
               U

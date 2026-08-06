@@ -95,8 +95,9 @@ model Tenant {
   users                  User[]
    Workspace              Workspace[]
    goodsReceiptNotes      GoodsReceiptNote[]
-   pushTokens            PushToken[]
-   onboardingProgress    OnboardingProgress[]
+pushTokens            PushToken[]
+  pairingCodes             PairingCode[]
+  onboardingProgress    OnboardingProgress[]
 
    @@index([deletedAt], map: "Tenant_deleted_idx")
   @@index([parentTenantId], map: "Tenant_parent_idx")
@@ -277,8 +278,9 @@ model User {
    supplier               Supplier?                @relation(fields: [supplierId], references: [id])
    tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
    addresses              UserAddress[]
-   pushTokens             PushToken[]
-   carrierProfile         CarrierProfile?
+pushTokens             PushToken[]
+  pairingCodes             PairingCode[]
+  carrierProfile         CarrierProfile?
    onboardingProgress     OnboardingProgress?
 
   @@index([sector])

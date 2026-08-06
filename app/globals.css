@@ -192,11 +192,11 @@
   --orange-muted: rgba(234, 88, 12, 0.06);
   --orange-glow: rgba(234, 88, 12, 0.06);
 
-  --purple-base: #2a088c;
-  --purple-light: #3a18a0;
-  --purple-dark: #1a066c;
-  --purple-muted: rgba(42, 8, 140, 0.06);
-  --purple-glow: rgba(42, 8, 140, 0.06);
+  --purple-base: #8B5CF6;
+  --purple-light: #A78BDA;
+  --purple-dark: #7C3AED;
+  --purple-muted: rgba(139, 92, 246, 0.06);
+  --purple-glow: rgba(139, 92, 246, 0.08);
 
   /* ── Semantic ── */
   --error: #dc2626;
@@ -230,8 +230,8 @@
   /* ── Secondary accents (light overrides) ── */
   --orange-base: #ea580c;
   --orange-base-rgb: 234, 88, 12;
-  --purple-base: #2a088c;
-  --purple-base-rgb: 42, 8, 140;
+  --purple-base: #8B5CF6;
+  --purple-base-rgb: 139, 92, 246;
 
   /* ── Hero overlay (light for light mode) ── */
   --hero-overlay-rgb: 255, 255, 255;

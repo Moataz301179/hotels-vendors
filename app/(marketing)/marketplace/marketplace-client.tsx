@@ -110,12 +110,11 @@ function MarketplaceContent() {
       id: product.id,
       name: product.name,
       price: product.unitPrice,
-      quantity: product.minOrderQuantity || 1,
-      unit: product.unitOfMeasure,
+      unitPrice: product.unitPrice,
       supplierId: product.supplier?.id || "",
       supplierName: product.supplier?.name || "Verified Supplier",
-      image: getProductImage(product.name, product.category),
-    });
+      image: (() => { const r = getProductImage({ name: product.name, category: product.category }); return r.type === "url" ? r.src : ""; })(),
+    }, product.minOrderQuantity || 1);
   };
 
   return (
@@ -221,7 +220,7 @@ function MarketplaceContent() {
                   className="shrink-0 px-4 py-2 rounded-lg text-[12px] font-medium transition-all whitespace-nowrap"
                   style={activeCategory === cat.code ? { backgroundColor: "var(--accent-base)", color: "var(--surface)" } : { border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}
                 >
-                  {cat.label.en} ({count})
+                  {cat.label} ({count})
                 </button>
               );
             })}
@@ -236,7 +235,7 @@ function MarketplaceContent() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2">
-                {activeCategory ? HOTEL_CATEGORIES.find((c) => c.code === activeCategory)?.label.en || "Products" : "All Products"}
+                {activeCategory ? HOTEL_CATEGORIES.find((c) => c.code === activeCategory)?.label || "Products" : "All Products"}
               </h2>
               <p className="text-[13px] text-white/40">{filteredProducts.length} products available</p>
             </div>
@@ -249,7 +248,8 @@ function MarketplaceContent() {
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredProducts.slice(0, 32).map((product) => {
-                const img = getProductImage(product.name, product.category);
+                const resolved = getProductImage({ name: product.name, category: product.category });
+                const img = resolved.type === "url" ? resolved.src : "";
                 return (
                   <div key={product.id} className="group rounded-xl overflow-hidden border transition-all hover:border-white/15 hover:shadow-lg cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                     {/* Image */}
@@ -343,10 +343,10 @@ function MarketplaceContent() {
                     className="group relative rounded-xl overflow-hidden border text-left transition-all hover:scale-[1.02] hover:border-white/15"
                     style={{ borderColor: "rgba(255,255,255,0.06)" }}
                   >
-                    <img src={img} alt={cat.label.en} className="w-full h-28 object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
+                    <img src={img} alt={cat.label} className="w-full h-28 object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/70 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h3 className="text-[12px] font-semibold text-white mb-0.5">{cat.label.en}</h3>
+                      <h3 className="text-[12px] font-semibold text-white mb-0.5">{cat.label}</h3>
                       <p className="text-[10px] text-white/30">{count} products</p>
                     </div>
                   </button>
