@@ -17,21 +17,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNotifications, type Notification, type NotificationType } from "./notification-context";
 
 const TYPE_ICON: Record<NotificationType, React.ReactNode> = {
-  info: <Info size={14} className="text-blue-400" />,
+  info: <Info size={14} className="text-white" />,
   success: <CheckCircle2 size={14} className="text-emerald-400" />,
   warning: <AlertTriangle size={14} className="text-amber-400" />,
   error: <AlertCircle size={14} className="text-red-400" />,
-  order: <ShoppingCart size={14} className="text-accent-base" />,
-  message: <MessageSquare size={14} className="text-cyan-400" />,
+  order: <ShoppingCart size={14} className="text-white" />,
+  message: <MessageSquare size={14} className="text-white" />,
 };
 
 const TYPE_BG: Record<NotificationType, string> = {
-  info: "bg-blue-400/10",
+  info: "bg-white/10",
   success: "bg-emerald-400/10",
   warning: "bg-amber-400/10",
   error: "bg-red-400/10",
   order: "bg-accent-base/20",
-  message: "bg-cyan-400/10",
+  message: "bg-white/10",
 };
 
 function formatTimeAgo(timestamp: number): string {

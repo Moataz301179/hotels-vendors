@@ -35,7 +35,7 @@ interface InvoiceDetailPanelProps {
 const paymentConfig: Record<string, { bg: string; text: string; dot: string; label: string }> = {
   PAID: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Paid" },
   UNPAID: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Unpaid" },
-  PARTIAL: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Partial" },
+  PARTIAL: { bg: "bg-white/10", text: "text-white", dot: "bg-white", label: "Partial" },
   REFUNDED: { bg: "bg-white/10", text: "text-foreground-muted", dot: "bg-white/40", label: "Refunded" },
 };
 

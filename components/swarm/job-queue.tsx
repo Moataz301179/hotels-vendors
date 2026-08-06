@@ -24,7 +24,7 @@ interface JobQueueProps {
 
 const statusConfig: Record<string, { color: string; label: string }> = {
   PENDING: { color: "text-white/50", label: "Pending" },
-  SCHEDULED: { color: "text-blue-400", label: "Scheduled" },
+  SCHEDULED: { color: "text-white", label: "Scheduled" },
   RUNNING: { color: "text-emerald-400", label: "Running" },
   WAITING_APPROVAL: { color: "text-amber-400", label: "Needs Approval" },
   COMPLETED: { color: "text-emerald-400", label: "Completed" },

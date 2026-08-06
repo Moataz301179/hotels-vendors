@@ -201,7 +201,7 @@ export function ProductCard({
 
         {/* Temp Badge */}
         {tempBadge && (
-          <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-[10px] text-blue-300 font-medium">
+          <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-[10px] text-white font-medium">
             {tempBadge}
           </div>
         )}

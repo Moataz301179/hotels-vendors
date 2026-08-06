@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "INVO",
+    "slug": "invo-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "invo",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/invo-mobile"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hotelsvendors.invo",
+      "infoPlist": {
+        "NSCameraUsageDescription": "INVO needs camera access to scan barcodes and invoices",
+        "NSPhotoLibraryUsageDescription": "INVO needs photo library access to upload invoices",
+        "NSFaceIDUsageDescription": "INVO uses Face ID to secure your account"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.hotelsvendors.invo",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
+      ]
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-notifications",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0B0F1A"
+        }
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "invo-mobile-project"
+      }
+    }
+  }
+}

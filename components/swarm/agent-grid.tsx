@@ -23,7 +23,7 @@ interface AgentGridProps {
 const squadColors: Record<string, string> = {
   director: "text-purple-400 border-purple-500/30 bg-purple-500/10",
   growth: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
-  operations: "text-blue-400 border-blue-500/30 bg-blue-500/10",
+  operations: "text-white border-white/30 bg-white/10",
   intelligence: "text-amber-400 border-amber-500/30 bg-amber-500/10",
   execution: "text-rose-400 border-rose-500/30 bg-rose-500/10",
 };
@@ -97,7 +97,7 @@ export function AgentGrid({ agents, onTriggerAgent }: AgentGridProps) {
                 <span className="text-emerald-400">● Running</span>
               )}
               {agent.status === "idle" && (
-                <span className="text-blue-400">● Idle</span>
+                <span className="text-white">● Idle</span>
               )}
               {agent.status === "error" && (
                 <span className="text-red-400">● Error</span>

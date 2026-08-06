@@ -1,0 +1,16 @@
+{
+  "name": "@hotels-vendors/api-contracts",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

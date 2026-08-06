@@ -1,0 +1,48 @@
+{
+  "cli": {
+    "version": ">= 5.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      }
+    },
+    "production": {
+      "ios": {
+        "autoIncrement": true,
+        "releaseChannel": "production"
+      },
+      "android": {
+        "autoIncrement": true,
+        "releaseChannel": "production"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "your-apple-id@email.com",
+        "appId": "com.hotelsvendors.invo"
+      },
+      "android": {
+        "serviceAccountKey": "path/to/service-account-key.json",
+        "track": "internal"
+      }
+    }
+  }
+}

@@ -41,7 +41,7 @@ interface OrderDetailPanelProps {
 
 const statusConfig: Record<string, { bg: string; text: string; dot: string; label: string }> = {
   PENDING_APPROVAL: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending Approval" },
-  APPROVED: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Approved" },
+  APPROVED: { bg: "bg-white/10", text: "text-white", dot: "bg-white", label: "Approved" },
   CONFIRMED: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "Confirmed" },
   IN_TRANSIT: { bg: "bg-accent-base/10", text: "text-accent-base", dot: "bg-accent-base", label: "In Transit" },
   DELIVERED: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Delivered" },

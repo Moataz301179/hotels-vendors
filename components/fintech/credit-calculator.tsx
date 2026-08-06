@@ -86,7 +86,7 @@ function Input({ label, value, onChange, step = "1", icon }: { label: string; va
 
 function MetricCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   const colors: Record<string, string> = {
-    emerald: "text-emerald-400", amber: "text-amber-400", blue: "text-blue-400", purple: "text-purple-400",
+    emerald: "text-emerald-400", amber: "text-amber-400", blue: "text-white", purple: "text-purple-400",
   };
   return (
     <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">

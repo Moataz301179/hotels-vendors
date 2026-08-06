@@ -117,7 +117,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
               const count = eventsBySeverity[sev] || 0;
               const colors: Record<string, string> = {
                 DEBUG: "bg-white/5 text-white/30",
-                INFO: "bg-blue-500/10 text-blue-400",
+                INFO: "bg-white/10 text-white",
                 WARNING: "bg-amber-500/10 text-amber-400",
                 ERROR: "bg-red-500/10 text-red-400",
                 CRITICAL: "bg-red-500/20 text-red-400 border border-red-500/30",
