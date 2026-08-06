@@ -226,7 +226,14 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      return result.toDataStreamResponse();
+      const streamResponse = result.toDataStreamResponse();
+      return new Response(streamResponse.body, {
+        status: streamResponse.status,
+        headers: {
+          ...Object.fromEntries(streamResponse.headers),
+          "X-Conversation-Id": conversationId,
+        },
+      });
     } catch (err) {
       console.error("[Workspace AI] Ollama streaming failed:", err);
 
@@ -262,10 +269,13 @@ export async function POST(request: NextRequest) {
           controller.close();
         },
       });
-      return new Response(fallbackStream, {
-        status: 200,
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
+       return new Response(fallbackStream, {
+         status: 200,
+         headers: {
+           "Content-Type": "text/plain; charset=utf-8",
+           "X-Conversation-Id": conversationId,
+         },
+       });
     }
   } catch (error) {
     console.error("[Workspace AI] Error:", error);
