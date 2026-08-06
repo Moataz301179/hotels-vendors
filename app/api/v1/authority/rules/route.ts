@@ -6,21 +6,22 @@ import { z } from "zod";
 
 const CreateRuleSchema = z.object({
   name: z.string().min(1),
+  role: z.enum(["OWNER", "REGIONAL_GM", "GM", "FINANCIAL_CONTROLLER", "DEPARTMENT_HEAD", "CLERK", "RECEIVING_CLERK"]),
   priority: z.number().int().min(0).max(9999),
   minValue: z.number().min(0),
   maxValue: z.number().min(0),
   hotelRiskTier: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullable().optional(),
-  hotelTier: z.enum(["ECONOMY", "STANDARD", "PREMIUM", "LUXURY", "CORE"]).nullable().optional(),
-  supplierTier: z.enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"]).nullable().optional(),
-  requesterRole: z.enum(["CLERK", "DEPARTMENT_HEAD", "GM", "FINANCIAL_CONTROLLER", "ADMIN"]).nullable().optional(),
+  hotelTier: z.enum(["CORE", "PREMIER", "COASTAL"]).nullable().optional(),
+  supplierTier: z.string().nullable().optional(),
+  requesterRole: z.enum(["OWNER", "REGIONAL_GM", "GM", "FINANCIAL_CONTROLLER", "DEPARTMENT_HEAD", "CLERK", "RECEIVING_CLERK"]).nullable().optional(),
   requiresPaymentGuarantee: z.boolean().default(true),
   requiresEtaValidation: z.boolean().default(true),
   requiresDualSignOff: z.boolean().default(false),
   action: z.enum([
     "AUTO_APPROVE", "APPROVE", "ROUTE_TO_GM", "ROUTE_TO_FINANCIAL_CONTROLLER",
-    "REQUIRE_OWNER", "DUAL_SIGN_OFF", "REJECT", "REQUIRE_PAYMENT_GUARANTEE", "SMART_FIX_REQUIRED",
+    "DUAL_SIGN_OFF", "REJECT", "REQUIRE_OWNER",
   ]),
-  routeToRole: z.enum(["CLERK", "DEPARTMENT_HEAD", "GM", "FINANCIAL_CONTROLLER", "ADMIN"]).nullable().optional(),
+  routeToRole: z.enum(["OWNER", "REGIONAL_GM", "GM", "FINANCIAL_CONTROLLER", "DEPARTMENT_HEAD", "CLERK", "RECEIVING_CLERK"]).nullable().optional(),
   isActive: z.boolean().default(true),
 });
 
@@ -49,7 +50,21 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const rule = await prisma.authorityRule.create({
     data: {
-      ...data,
+      name: data.name,
+      role: data.role,
+      priority: data.priority,
+      minValue: String(data.minValue),
+      maxValue: String(data.maxValue),
+      hotelRiskTier: data.hotelRiskTier ?? undefined,
+      hotelTier: data.hotelTier ?? undefined,
+      supplierTier: data.supplierTier ?? undefined,
+      requesterRole: data.requesterRole ?? undefined,
+      requiresPaymentGuarantee: data.requiresPaymentGuarantee,
+      requiresEtaValidation: data.requiresEtaValidation,
+      requiresDualSignOff: data.requiresDualSignOff,
+      action: data.action,
+      routeToRole: data.routeToRole ?? undefined,
+      isActive: data.isActive,
       tenantId: auth.tenantId,
     },
   });
