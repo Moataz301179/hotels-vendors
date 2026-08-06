@@ -44,7 +44,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
     return success({
       message: "Code sent",
-      devCode: result.devCode, // Only present in non-production mock mode
+      // Dev-only: mock provider surfaces the code for local testing.
+      // Never expose in production, regardless of provider config.
+      devCode: process.env.NODE_ENV !== "production" ? result.devCode : undefined,
     });
   } catch (err) {
     if (err instanceof Error && err.message.includes("60 seconds")) {

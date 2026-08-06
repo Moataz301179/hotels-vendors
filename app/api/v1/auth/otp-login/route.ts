@@ -6,9 +6,15 @@ import { verifyOtp, normalizePhone } from "@/lib/auth/otp";
 import { isValidEgyptianPhone } from "@/lib/auth/phone";
 import { audit } from "@/lib/api-utils";
 import { createSessionPair } from "@/lib/session";
+import { checkRateLimit } from "@/lib/redis";
 
 export const POST = apiRoute(async (request: NextRequest) => {
   const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+
+  const rateLimit = await checkRateLimit(`otp-login:${clientIp}`, 60, 5);
+  if (!rateLimit.allowed) {
+    return error("Too many login attempts. Please try again later.", 429);
+  }
 
   const body = await request.json();
   const data = validateBody(OtpLoginSchema, body);

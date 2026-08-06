@@ -106,7 +106,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
     supplierId: user.supplierId,
   };
 
-  const responseData: Record<string, unknown> = { token, user: userResponse };
+  const responseData: Record<string, unknown> = { token, accessToken: token, user: userResponse };
   if (refreshToken) responseData.refreshToken = refreshToken;
   // Keep `token` for web back-compat
   if (isWebLogin) responseData.token = token;

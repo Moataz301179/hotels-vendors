@@ -16,7 +16,7 @@ export const GET = apiRoute(async (_request: NextRequest) => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    include: { hotel: true, approvals: { take: 5, orderBy: { createdAt: "desc" } } },
+    include: { hotel: true, supplier: true },
   });
 
   if (!user) {
@@ -29,6 +29,7 @@ export const GET = apiRoute(async (_request: NextRequest) => {
     id: user.id,
     email: user.email,
     name: user.name,
+    companyName: user.companyName,
     role: user.role,
     platformRole: user.platformRole,
     hotelId: user.hotelId || null,
@@ -44,6 +45,17 @@ export const GET = apiRoute(async (_request: NextRequest) => {
           name: user.hotel.name,
           tier: user.hotel.tier,
           city: user.hotel.city,
+        }
+      : null,
+    supplier: user.supplier
+      ? {
+          id: user.supplier.id,
+          name: user.supplier.name,
+          legalName: user.supplier.legalName,
+          city: user.supplier.city,
+          governorate: user.supplier.governorate,
+          status: user.supplier.status,
+          tier: user.supplier.tier,
         }
       : null,
   });

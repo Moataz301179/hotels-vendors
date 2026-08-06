@@ -55,11 +55,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const passwordHash = await hashPassword(password);
 
-  // Wrap password update + token deletion in a transaction
+  // Wrap password update + token deletion + refresh-token revocation in a transaction
   await prisma.$transaction([
     prisma.user.update({
       where: { id: user.id },
-      data: { passwordHash },
+      data: { passwordHash, refreshTokenHash: null },
     }),
     prisma.passwordResetToken.delete({ where: { id: resetToken.id } }),
   ]);
