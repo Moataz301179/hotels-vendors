@@ -58,6 +58,7 @@ model Tenant {
   hotelSuppliers         HotelSupplier[]
   inventorySnapshots     InventorySnapshot[]
   invoPartners           InvoPartner[]
+  carrierProfiles        CarrierProfile[]
   scheduledOrders        ScheduledOrder[]
   inventoryReconciliations InventoryReconciliation[]
   consumptionForecasts   ConsumptionForecast[]
@@ -275,7 +276,8 @@ model User {
   supplier               Supplier?                @relation(fields: [supplierId], references: [id])
   tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
    addresses              UserAddress[]
-   pushTokens            PushToken[]
+    pushTokens            PushToken[]
+    carrierProfile         CarrierProfile?
 
   @@index([sector])
   @@index([tenantId])
@@ -883,7 +885,7 @@ model LogisticsHub {
 model Trip {
   id                 String              @id @default(cuid())
   tripNumber         String              @unique
-  hubId              String
+  hubId              String?
   driverName         String?
   driverPhone        String?
   vehiclePlate       String?
@@ -898,7 +900,7 @@ model Trip {
   uuid               String?             @unique(map: "Trip_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   deletedAt          DateTime?
   consolidatedOrders ConsolidatedOrder[]
-  hub                LogisticsHub        @relation(fields: [hubId], references: [id])
+  hub                LogisticsHub?       @relation(fields: [hubId], references: [id])
   tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   stops              TripStop[]
 
@@ -2459,6 +2461,7 @@ enum UserRole {
   DEPARTMENT_HEAD
   CLERK
   RECEIVING_CLERK
+  LOGISTICS_COORDINATOR
 }
 
 enum PlatformRole {
@@ -2474,6 +2477,7 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+  PENDING_VERIFICATION
 }
 
 enum UserSector {
@@ -3376,4 +3380,50 @@ model ProductVariation {
   @@index([productId])
   @@index([variantType])
   @@index([sku])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CARRIER PROFILE — Shipping provider onboarding and management
+// ═══════════════════════════════════════════════════════════════
+
+enum CarrierStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+model CarrierProfile {
+  id                    String        @id @default(cuid())
+  userId                String        @unique
+  tenantId              String
+  city                  String
+  governorate           String
+  address               String?
+  taxId                 String?
+  vehicleCount          Int           @default(1)
+  zones                 String[]      // Cities/governorates this carrier covers
+  vehicleTypes          String[]      // Van, Truck, Motorcycle, Refrigerated
+  maxWeight             Float?        // Max kg per vehicle
+  temperatureControlled Boolean       @default(false)
+  rating                Float         @default(0)
+  reviewCount           Int           @default(0)
+  status                CarrierStatus @default(PENDING_VERIFICATION)
+  verifiedAt            DateTime?
+  verifiedBy            String?
+  insuranceExpiry       DateTime?
+  licenseExpiry         DateTime?
+  documents             String[]      // Document URLs
+  notes                 String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  uuid                  String?       @unique(map: "CarrierProfile_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt             DateTime?
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant                Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status])
+  @@index([city])
 }
