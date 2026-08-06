@@ -89,10 +89,11 @@ model Tenant {
   trips                  Trip[]
   tripStops              TripStop[]
   users                  User[]
-  Workspace              Workspace[]
-  goodsReceiptNotes      GoodsReceiptNote[]
+   Workspace              Workspace[]
+   goodsReceiptNotes      GoodsReceiptNote[]
+   pushTokens            PushToken[]
 
-  @@index([deletedAt], map: "Tenant_deleted_idx")
+   @@index([deletedAt], map: "Tenant_deleted_idx")
   @@index([parentTenantId], map: "Tenant_parent_idx")
   @@index([uuid])
   @@index([verificationStatus], map: "Tenant_verification_idx")
@@ -267,7 +268,8 @@ model User {
   assignedRole           Role                     @relation(fields: [roleId], references: [id], onDelete: Cascade)
   supplier               Supplier?                @relation(fields: [supplierId], references: [id])
   tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  addresses              UserAddress[]
+   addresses              UserAddress[]
+   pushTokens            PushToken[]
 
   @@index([sector])
   @@index([tenantId])
@@ -396,6 +398,24 @@ model Product {
   @@index([status])
   @@index([createdAt])
   @@index([deletedAt], map: "Product_deleted_idx")
+}
+
+model PushToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tenantId  String
+  token     String   @unique
+  platform  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  uuid      String?  @unique(map: "PushToken_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform])
+  @@index([deletedAt], map: "PushToken_deleted_idx")
+  @@index([userId])
 }
 
 model ProductSeasonality {
