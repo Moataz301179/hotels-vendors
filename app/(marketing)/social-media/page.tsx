@@ -66,7 +66,7 @@ export default function SocialMediaPage() {
               variants={fadeUp}
               className="mt-6 text-[16px] text-white/40 max-w-xl leading-relaxed"
             >
-              Hotels Vendors is building the digital infrastructure for Egyptian
+              INVO is building the digital infrastructure for Egyptian
               hospitality. We are entering a limited 1-week beta on May 18, 2026.
               Join the waiting list to be among the first to experience it.
             </motion.p>
@@ -108,7 +108,7 @@ export default function SocialMediaPage() {
                 <span className="text-white/30">May 18 — May 25, 2026</span>
               </h2>
               <p className="mt-4 text-[15px] text-white/40 leading-relaxed max-w-lg">
-                We are opening Hotels Vendors to a select group of early adopters.
+                We are opening INVO to a select group of early adopters.
                 Get priority access, direct support from our team, and lifetime
                 benefits as a founding member.
               </p>
@@ -231,7 +231,7 @@ export default function SocialMediaPage() {
               {
                 icon: Camera,
                 title: "Behind the Scenes",
-                desc: "Product development updates, team stories, and the making of Hotels Vendors.",
+                desc: "Product development updates, team stories, and the making of INVO.",
               },
               {
                 icon: MessageSquare,
@@ -446,7 +446,7 @@ export default function SocialMediaPage() {
             </h2>
             <p className="mt-4 text-[16px] text-white/35 max-w-md mx-auto">
               Whether you are a hotel, supplier, or logistics provider — there is
-              a place for you on Hotels Vendors.
+              a place for you on INVO.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link

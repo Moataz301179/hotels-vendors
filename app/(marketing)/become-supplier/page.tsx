@@ -163,7 +163,7 @@ export default function SupplierOnboardingPage() {
             </div>
             <h1 className="text-3xl font-medium text-white mb-4">Application Submitted</h1>
             <p className="text-white/40 text-lg mb-10 max-w-md mx-auto">
-              Thank you for applying to join Hotels Vendors. Our compliance team will review your application within 2–3 business days.
+              Thank you for applying to join INVO. Our compliance team will review your application within 2–3 business days.
             </p>
 
             <div className="p-6 rounded-2xl bg-[#12121a] border border-white/[0.06] text-left space-y-4 mb-10">
