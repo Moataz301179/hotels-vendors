@@ -260,7 +260,6 @@ export const DeliverySchema = z.object({
   trackingUrl: z.string().url().optional(),
 });
 
-export type PaginationParams = z.infer<typeof PaginationParamsSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type LoginCredentials = z.infer<typeof LoginCredentialsSchema>;
 export type OtpLogin = z.infer<typeof OtpLoginSchema>;
