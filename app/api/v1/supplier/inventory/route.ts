@@ -11,6 +11,13 @@ export const GET = apiRoute(async (request: NextRequest) => {
 
   const where: Record<string, unknown> = { tenantId: auth.tenantId };
 
+  if (query.search) {
+    where.OR = [
+      { name: { contains: query.search } },
+      { sku: { contains: query.search } },
+    ];
+  }
+
   const [products, total] = await Promise.all([
     prisma.product.findMany({
       where,

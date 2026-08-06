@@ -39,9 +39,17 @@ export const GET = apiRoute(async (request: NextRequest) => {
     createdAt: { gte: periodStart },
   };
 
-  if (auth.platformRole === "SUPPLIER") {
-    whereClause.supplierId = auth.tenantId;
-  } else if (auth.platformRole === "HOTEL") {
+   if (auth.platformRole === "SUPPLIER") {
+     const user = await prisma.user.findUnique({
+       where: { id: auth.userId },
+       select: { supplierId: true },
+     });
+     if (user?.supplierId) {
+       whereClause.supplierId = user.supplierId;
+     } else {
+       whereClause.tenantId = auth.tenantId;
+     }
+   } else if (auth.platformRole === "HOTEL") {
     whereClause.hotel = { tenantId: auth.tenantId };
   } else {
     whereClause.tenantId = auth.tenantId;

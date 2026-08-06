@@ -13,8 +13,8 @@ const DepositSchema = z.object({
 });
 
 export const POST = apiRoute(async (request: NextRequest) => {
-  const auth = await authenticate(request);
-  await requirePermission(auth, "order:read");
+   const auth = await authenticate(request);
+   await requirePermission(auth, "payment:create");
   const body = await request.json();
   const data = validateBody(DepositSchema, body);
 

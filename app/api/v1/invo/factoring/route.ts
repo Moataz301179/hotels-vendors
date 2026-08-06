@@ -120,6 +120,9 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "invoice:factor");
+
     const { searchParams } = new URL(req.url);
     const parsed = InvoFactoringQuerySchema.safeParse(Object.fromEntries(searchParams));
     if (!parsed.success) {
@@ -130,6 +133,23 @@ export async function GET(req: NextRequest) {
     }
     const { hotel_id, status, limit } = parsed.data;
 
+    // Tenant scoping: restrict to hotels belonging to the caller's tenant.
+    // Non-admin callers may only see their own tenant's factoring requests.
+    if (auth.platformRole !== "ADMIN") {
+      const tenantHotels = await prisma.hotel.findMany({
+        where: { tenantId: auth.tenantId },
+        select: { id: true },
+      });
+      const hotelIds = tenantHotels.map((h) => h.id);
+      if (hotel_id && !hotelIds.includes(hotel_id)) {
+        return NextResponse.json({ error: "Unauthorized hotel" }, { status: 403 });
+      }
+      if (!hotel_id && hotelIds.length === 0) {
+        return NextResponse.json({ requests: [] });
+      }
+      var scopedHotelIds = hotel_id ? [hotel_id] : hotelIds;
+    }
+
     const supabase = await createClient();
     let query = supabase
       .from("factoring_requests")
@@ -137,7 +157,11 @@ export async function GET(req: NextRequest) {
       .order("created_at", { ascending: false })
       .limit(limit);
 
-    if (hotel_id) query = query.eq("hotel_id", hotel_id);
+    if (auth.platformRole !== "ADMIN") {
+      query = query.in("hotel_id", scopedHotelIds!);
+    } else if (hotel_id) {
+      query = query.eq("hotel_id", hotel_id);
+    }
     if (status) query = query.eq("status", status);
 
     const { data, error } = await query;

@@ -22,6 +22,11 @@ export const GET = apiRoute(async (request: NextRequest, { params }: { params?: 
       items: { include: { product: { select: { id: true, name: true, sku: true, unitOfMeasure: true } } } },
       approvals: { include: { approver: { select: { id: true, name: true, role: true } } }, orderBy: { createdAt: "desc" } },
       invoices: { select: { id: true, invoiceNumber: true, total: true, status: true, etaStatus: true } },
+      tripStops: { include: { trip: { select: { tripNumber: true, driverName: true, driverPhone: true, vehiclePlate: true, status: true, arrivalDate: true } } }, orderBy: { stopOrder: "asc" } },
+      goodsReceiptNotes: {
+        select: { id: true, grnNumber: true, status: true, receivedAt: true, vehiclePlate: true, deliveryNoteRef: true, notes: true },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 

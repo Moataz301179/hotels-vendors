@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, authenticate, requirePermission, success, error } from "@/lib/api-utils";
+import { apiRoute, authenticate, requirePermission, requireIdempotencyKey, audit, success, error } from "@/lib/api-utils";
 import { createEscrowDeposit, releaseEscrowToken, getEscrowStatus } from "@/lib/payments/paymob-escrow";
 import { z } from "zod";
 
@@ -31,6 +31,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
     return error("Invoice not found", 404);
   }
 
+  await requireIdempotencyKey(request, {
+    userId: auth.userId,
+    action: "ESCROW_CREATE",
+    amount: Number(invoice.total),
+  });
+
   const result = await createEscrowDeposit({
     invoiceId: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
@@ -44,8 +50,20 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: auth.tenantId,
   });
 
+  await audit({
+    entityType: "ESCROW",
+    entityId: invoice.id,
+    action: "ESCROW_CREATE",
+    tenantId: auth.tenantId,
+    actorId: auth.userId,
+    actorRole: auth.platformRole,
+    afterState: { invoiceId: invoice.id, amount: Number(invoice.total) },
+    ipAddress: request.headers.get("x-forwarded-for") || null,
+    userAgent: request.headers.get("user-agent"),
+  });
+
   return success(result);
-});
+}, { rateLimit: "financial" });
 
 export const PUT = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
@@ -62,6 +80,12 @@ export const PUT = apiRoute(async (request: NextRequest) => {
     return error("Invoice not found", 404);
   }
 
+  await requireIdempotencyKey(request, {
+    userId: auth.userId,
+    action: "ESCROW_RELEASE",
+    amount: Number(invoice.total),
+  });
+
   const result = await releaseEscrowToken({
     invoiceId: data.invoiceId,
     releaseType: data.releaseType,
@@ -70,8 +94,20 @@ export const PUT = apiRoute(async (request: NextRequest) => {
     coApproverId: data.coApproverId,
   });
 
+  await audit({
+    entityType: "ESCROW",
+    entityId: data.invoiceId,
+    action: "ESCROW_RELEASE",
+    tenantId: auth.tenantId,
+    actorId: auth.userId,
+    actorRole: auth.platformRole,
+    afterState: { invoiceId: data.invoiceId, releaseType: data.releaseType },
+    ipAddress: request.headers.get("x-forwarded-for") || null,
+    userAgent: request.headers.get("user-agent"),
+  });
+
   return success(result);
-});
+}, { rateLimit: "financial" });
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
