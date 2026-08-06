@@ -169,7 +169,7 @@ export const NotificationSchema = z.object({
   title: z.string(),
   body: z.string(),
   read: z.boolean().default(false),
-  data: z.record(z.unknown()).optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const CatalogItemSchema = z.object({
