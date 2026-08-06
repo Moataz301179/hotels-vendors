@@ -20,6 +20,9 @@ export const homepage = {
     "hero.freeToStart": "Free to Start",
     "hero.startFree": "Start Free",
     "hero.exploreSandbox": "Explore Sandbox",
+    "hero.invoQR.title": "Scan to Open INVO",
+    "hero.invoQR.subtitle": "Access your procurement dashboard on mobile — manage orders, approve requests, and track deliveries on the go.",
+    "hero.invoQR.hook": "Download INVO App →",
 
     // ── Platform Overview ──
     "overview.title": "The Procurement Platform, At a Glance",
@@ -331,6 +334,9 @@ export const homepage = {
     "hero.freeToStart": "مجاني للبدء",
     "hero.startFree": "ابدأ مجاناً",
     "hero.exploreSandbox": "جرّب المنصة",
+    "hero.invoQR.title": "امسح لفتح INVO",
+    "hero.invoQR.subtitle": "ادخل لوحة المشتريات على الجوال — أدر الطلبات، وافق على الطلبات، وتتبع التوصيل أثناء التنقل.",
+    "hero.invoQR.hook": "تحميل تطبيق INVO ←",
 
     // ── Platform Overview ──
     "overview.title": "منصة المشتريات بالكامل",
