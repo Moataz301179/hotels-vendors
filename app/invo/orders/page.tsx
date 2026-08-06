@@ -4,8 +4,23 @@ import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import Link from "next/link";
 import { Package, Clock, CheckCircle, XCircle } from "lucide-react";
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
+import { redirect } from "next/navigation";
+import { getJwtSecret } from "@/lib/session";
+
+const SESSION_COOKIE = "hv_session";
 
 export default async function OrdersPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!token) redirect("/login");
+  try {
+    await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
+  } catch {
+    redirect("/login");
+  }
+
   const supabase = await createClient();
 
   const { data: orders } = await supabase

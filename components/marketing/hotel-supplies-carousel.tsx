@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 
@@ -120,13 +121,14 @@ export function HotelSuppliesCarousel() {
               style={{ borderColor: `${s.color}33` }}
             >
               <div className="relative h-40 overflow-hidden">
-                <img
+                <Image
                   src={`https://images.unsplash.com/${s.photo}?w=400&q=75&fm=webp`}
                   alt={s.alt}
-                  className="w-full h-full object-cover opacity-60 group-hover:opacity-75 transition-opacity duration-300"
-                  width={400}
-                  height={160}
+                  fill
+                  sizes="(max-width: 640px) 280px, 320px"
+                  placeholder="blur"
                   loading="lazy"
+                  className="object-cover opacity-60 group-hover:opacity-75 transition-opacity duration-300"
                 />
                 <div
                   className="absolute inset-0"

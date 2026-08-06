@@ -3,6 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { FileText, CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
+import { redirect } from "next/navigation";
+import { getJwtSecret } from "@/lib/session";
+
+const SESSION_COOKIE = "hv_session";
 
 const BG_CARD = "var(--bg-surface-1)";
 const BORDER = "rgba(255,255,255,0.06)";
@@ -12,6 +18,15 @@ const TEXT_MUTED = "#6C757D";
 const ACCENT_ORANGE = "var(--accent-base)";
 
 export default async function InvoicesPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!token) redirect("/login");
+  try {
+    await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
+  } catch {
+    redirect("/login");
+  }
+
   const supabase = await createClient();
 
   const { data: invoices } = await supabase
