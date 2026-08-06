@@ -45,7 +45,7 @@ async function gracefulShutdown(signal: string): Promise<void> {
     logger.error({ signal }, "Shutdown timed out — forcing exit");
     process.exit(1);
   }, SHUTDOWN_TIMEOUT_MS);
-  timeout.unref();
+  (timeout as unknown as { unref(): void }).unref();
 
   try {
     // Execute all registered shutdown callbacks in parallel
