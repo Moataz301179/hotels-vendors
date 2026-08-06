@@ -1579,6 +1579,23 @@ model RefreshToken {
   @@index([deletedAt], map: "RefreshToken_deleted_idx")
 }
 
+model PairingCode {
+  id           String    @id @default(cuid())
+  code         Int       @unique
+  userId       String
+  tenantId     String
+  expiresAt    DateTime
+  usedAt       DateTime?
+  linkedUserId String?
+  createdAt    DateTime  @default(now())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([code])
+  @@index([expiresAt])
+}
+
 model UserAddress {
   id          String    @id @default(cuid())
   userId      String

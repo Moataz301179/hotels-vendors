@@ -13,6 +13,7 @@ import {
   Smartphone,
   Send,
   Timer,
+  Zap,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -347,6 +348,13 @@ export default function LoginPage() {
         Don&apos;t have an account?{" "}
         <Link href="/register" className="text-accent-base hover:opacity-80 font-medium transition-opacity">
           Create one
+        </Link>
+      </p>
+
+      <p className="text-center text-[13px] text-foreground-muted mt-4">
+        Registered on INVO mobile app?{" "}
+        <Link href="/pairing" className="inline-flex items-center gap-1.5 text-accent-base hover:opacity-80 font-medium transition-opacity">
+          <Zap size={14} /> Pair Account
         </Link>
       </p>
     </div>
