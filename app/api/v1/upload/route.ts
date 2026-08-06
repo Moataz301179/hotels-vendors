@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     await authenticate(request);
 
     const formData = await request.formData();
-    const files = formData.getAll("files") as File[];
+    const files = formData.getAll("files") as unknown as File[];
 
     if (!files || files.length === 0) {
       return NextResponse.json(
