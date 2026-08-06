@@ -39,7 +39,6 @@ const PUBLIC_PATHS = [
   "/onboarding",
   "/catalog",
   "/sandbox",
-  "/demo",
 
   "/hotels",
   "/hotels/join",
@@ -213,11 +212,6 @@ export async function middleware(request: NextRequest) {
       url.pathname = `/invo${pathname}`;
       return addSecurityHeaders(NextResponse.rewrite(url));
     }
-  }
-
-  // Redirect legacy /demo and /demo/checkout to /sandbox
-  if (pathname === "/demo" || pathname.startsWith("/demo/")) {
-    return addSecurityHeaders(NextResponse.redirect(new URL("/sandbox", request.url)));
   }
 
   // Allow public paths without auth
