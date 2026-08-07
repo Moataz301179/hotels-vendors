@@ -186,9 +186,8 @@ export default function MarketingPage() {
             <div className="animate-fade-in-up animation-delay-200">
               <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
                 <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl flex items-center justify-center" style={{ background: "var(--orange-base)15", border: "1px dashed var(--orange-base)40" }}>
+                   <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl flex items-center justify-center" style={{ background: "var(--orange-base)15", border: "1px dashed var(--orange-base)40" }}>
                     <span className="text-[10px] text-orange-base uppercase tracking-wider">INVO App</span>
-                  </div>
                   </div>
                   <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                     {t("hero.invoQR.title")}
@@ -477,6 +476,7 @@ export default function MarketingPage() {
                 <div className="aspect-[16/10] bg-surface-1 flex items-center justify-center" style={{ background: "var(--accent-base)10" }}>
                   <span className="text-xs uppercase tracking-wider" style={{ color: "var(--accent-base)" }}>Dashboard Preview</span>
                 </div>
+              </div>
             </div>
           )}
 
