@@ -43,7 +43,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
   const { totalItems, toggleCart } = useCart();
 
   return (
-    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-surface-1/90 backdrop-blur-xl border-b border-border-default">
+    <header className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-30 bg-[var(--header-bg)] border-b border-border-default">
       {/* Left: Mobile Menu + Logo */}
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
@@ -54,7 +54,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
           <Menu size={20} />
         </button>
 <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="lg" showText={false} iconOnly />
+          <BrandLogo variant="light" size="lg" showText={false} iconOnly />
           <span className="hidden md:inline text-sm font-semibold text-white uppercase tracking-wider">
             Hotels Vendors
           </span>

@@ -164,20 +164,26 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-            {messages.map((msg, i) => (
+{messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed ${
-                    msg.role === "user" ? "text-white" : "text-white/70"
-                  }`}
-                  style={
-                    msg.role === "user"
-                      ? { backgroundColor: `var(${accentVar})`, color: "var(--surface)" }
-                      : { backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }
-                  }
-                >
-                  {msg.content}
-                </div>
+                {msg.role === "user" ? (
+                  <div
+                    className="max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed text-white"
+                    style={{ backgroundColor: `var(${accentVar})`, color: "#ffffff" }}
+                  >
+                    {msg.content}
+                  </div>
+                ) : (
+                  <div
+                    className="max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed text-white"
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid rgba(255, 255, 255, 0.10)"
+                    }}
+                  >
+                    {msg.content}
+                  </div>
+                )}
               </div>
             ))}
             {loading && (

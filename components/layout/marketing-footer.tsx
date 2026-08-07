@@ -6,7 +6,7 @@ import { Shield, FileCheck, Lock } from "lucide-react";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-white/10 text-white" style={{ backgroundColor: "var(--accent-base)" }}>
+    <footer className="border-t border-white/10 text-white bg-[var(--header-bg)]">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}

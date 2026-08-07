@@ -26,6 +26,14 @@
   --accent-dark: #1e1b4b;
   --accent-muted: rgba(49, 46, 129, 0.1);
 
+  /* Additional Accent Colors */
+  --accent-lime: #84cc16;
+  --accent-yellow: #fcd34d;
+  --accent-turquoise: #08b8a3;
+  --accent-orange: #f97316;
+  --accent-white: #ffffff;
+  --header-bg: #0c0c12;
+
   /* Status Badges - High Contrast */
   --status-success-bg: rgba(5, 150, 105, 0.1);
   --status-success-text: #34d399;
@@ -99,19 +107,32 @@
   --accent-dark: #1a066c;
   --accent-muted: rgba(42, 8, 140, 0.10);
   --accent-glow: rgba(42, 8, 140, 0.08);
+  --header-bg: #2a088c;
 
   /* ── Secondary accents (light overrides) ── */
-  --orange-base: #ea580c;
-  --orange-light: #f97316;
-  --orange-dark: #c2410c;
-  --orange-muted: rgba(234, 88, 12, 0.06);
-  --orange-glow: rgba(234, 88, 12, 0.06);
+  --orange-base: #f97316;
+  --orange-light: #fb923c;
+  --orange-dark: #ea580c;
+  --orange-muted: rgba(249, 115, 22, 0.10);
+  --orange-glow: rgba(249, 115, 22, 0.08);
 
-  --purple-base: #8B5CF6;
-  --purple-light: #A78BDA;
-  --purple-dark: #7C3AED;
-  --purple-muted: rgba(139, 92, 246, 0.06);
-  --purple-glow: rgba(139, 92, 246, 0.08);
+  --lime-base: #84cc16;
+  --lime-light: #a3e635;
+  --lime-dark: #65a30d;
+  --lime-muted: rgba(132, 204, 22, 0.10);
+  --lime-glow: rgba(132, 204, 22, 0.08);
+
+  --yellow-base: #fcd34d;
+  --yellow-light: #ffe663;
+  --yellow-dark: #f59e0b;
+  --yellow-muted: rgba(252, 211, 77, 0.10);
+  --yellow-glow: rgba(252, 211, 77, 0.08);
+
+  --turquoise-base: #08b8a3;
+  --turquoise-light: #1fe3c1;
+  --turquoise-dark: #069f85;
+  --turquoise-muted: rgba(8, 184, 163, 0.10);
+  --turquoise-glow: rgba(8, 184, 163, 0.08);
 
   /* ── Semantic ── */
   --error: #dc2626;

@@ -27,8 +27,8 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
   const logoSrc = iconOnly
-    ? "/logo-icon.svg"
-    : variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
+    ? "/logo-white.svg"
+    : variant === "light" ? "/logo-white.svg" : "/logo-white.svg";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
