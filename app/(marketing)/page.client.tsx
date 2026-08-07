@@ -100,7 +100,6 @@ export default function MarketingPage() {
   useScrollReveal();
   const { t, locale } = useTranslation("homepage");
   const router = useRouter();
-  const [layer, setLayer] = useState<"hv" | "invo">("hv");
   const [tab, setTab] = useState<"hotel" | "vendor" | "chat">("hotel");
   const [query, setQuery] = useState("");
 
@@ -412,109 +411,6 @@ export default function MarketingPage() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ═══════════ DUAL LAYERS ═══════════ */}
-      <section id="invo" className="py-24 border-y border-border-invisible">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12 animate-on-scroll">
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--purple-base)" }}>
-              {t("dual.badge")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
-              {t("dual.title")}
-            </h2>
-            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto text-balance">
-              {t("dual.subtitle")}
-            </p>
-          </div>
-
-          {/* Layer switcher */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex border rounded-xl p-1 gap-1 bg-canvas" style={{ borderColor: "var(--border-accent)" }}>
-              <button onClick={() => setLayer("hv")} className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer" style={{ background: layer === "hv" ? "var(--accent-base)" : "transparent", color: layer === "hv" ? "var(--bg-canvas)" : "rgba(160,160,176,1)" }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /></svg>
-                HotelsVendors
-              </button>
-              <button onClick={() => setLayer("invo")} className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer" style={{ background: layer === "invo" ? "var(--orange-base)" : "transparent", color: layer === "invo" ? "var(--bg-canvas)" : "rgba(160,160,176,1)" }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
-                INVO
-              </button>
-            </div>
-          </div>
-
-          {/* HotelsVendors Layer */}
-          {layer === "hv" && (
-            <div className="grid md:grid-cols-2 gap-10 items-center rtl-reverse">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>
-                  {t("hv.badge")}
-                </div>
-                <h3 className="text-3xl font-extrabold mb-4 text-foreground">
-                  {t("hv.title")}
-                </h3>
-                <p className="text-foreground-secondary leading-relaxed mb-6">
-                  {t("hv.desc")}
-                </p>
-                <ul className="flex flex-col gap-3">
-                  {[
-                    t("hv.feature1"),
-                    t("hv.feature2"),
-                    t("hv.feature3"),
-                    t("hv.feature4"),
-                    t("hv.feature5"),
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
-                  ))}
-                </ul>
-                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
-                  {t("hv.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                </Link>
-              </div>
-              <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "var(--border-accent)", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
-                <div className="aspect-[16/10] bg-surface-1 flex items-center justify-center" style={{ background: "var(--accent-base)10" }}>
-                  <span className="text-xs uppercase tracking-wider" style={{ color: "var(--accent-base)" }}>Dashboard Preview</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* INVO Layer */}
-          {layer === "invo" && (
-            <div className="grid md:grid-cols-2 gap-10 items-center rtl-reverse">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-widest uppercase mb-4" style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-base)10" }}>
-                  {t("invo.badge")}
-                </div>
-                <h3 className="text-3xl font-extrabold mb-4 text-foreground">
-                  {t("invo.title")}
-                </h3>
-                <p className="text-foreground-secondary leading-relaxed mb-6">
-                  {t("invo.desc")}
-                </p>
-                <ul className="flex flex-col gap-3">
-                  {[
-                    t("invo.feature1"),
-                    t("invo.feature2"),
-                    t("invo.feature3"),
-                    t("invo.feature4"),
-                    t("invo.feature5"),
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
-                  ))}
-                </ul>
-                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-orange-base text-surface hover:bg-[#ff9640] transition-colors">
-                  {t("invo.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                </Link>
-              </div>
-              <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "var(--orange-base)33", boxShadow: "0 0 40px 2px var(--orange-base)18" }}>
-                <div className="aspect-[16/10] flex items-center justify-center" style={{ background: "var(--orange-base)10" }}>
-                  <span className="text-xs uppercase tracking-wider" style={{ color: "var(--orange-base)" }}>Marketplace Preview</span>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
