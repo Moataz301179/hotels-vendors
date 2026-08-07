@@ -1,0 +1,2 @@
+ps: Use this command to deploy via SSH with saved credentials:
+sshpass -p 'Moziagent.3011' ssh root@187.77.181.3 'cd /var/www/hotelsvendors && git fetch && git checkout main && git pull && npm ci --legacy-peer-deps && npm run build && pm2 restart hotelsvendors-production'
