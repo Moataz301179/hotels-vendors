@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { HotelSuppliesCarousel } from "@/components/marketing/hotel-supplies-carousel";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
@@ -188,14 +186,9 @@ export default function MarketingPage() {
             <div className="animate-fade-in-up animation-delay-200">
               <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
                 <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center p-4" style={{ borderColor: "var(--border-accent)" }}>
-                    <Image
-                      src="/oliv-qr.svg"
-                      alt="Download Oliv app - Scan QR code"
-                      width={160}
-                      height={160}
-                      className="w-full h-auto object-contain"
-                    />
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl flex items-center justify-center" style={{ background: "var(--orange-base)15", border: "1px dashed var(--orange-base)40" }}>
+                    <span className="text-[10px] text-orange-base uppercase tracking-wider">INVO App</span>
+                  </div>
                   </div>
                   <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                     {t("hero.invoQR.title")}
@@ -229,18 +222,7 @@ export default function MarketingPage() {
         <section className="w-full">
           <div className="px-6 md:px-12 pb-12">
             <div className="max-w-7xl mx-auto">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
-                <Image
-                  src="/hero-bg-1920w.webp"
-                  alt="HotelsVendors dashboard showing procurement analytics for Red Sea resort"
-                  fill
-                  priority={false}
-                  placeholder="blur"
-                  blurDataURL="data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoUAAoAPzmEuVOvKKWisAgB4CcJZQCw7BDzGWbk5WVIQAD+QE/gm1fJTARb9KfIVCkvzRo69ekKJkcooF+xC6IoS1fKkCW0Nq7IAyi7N+ZqQnOATrmEzQJyAAA="
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover object-center"
-                />
-                {/* Gradient overlay for text legibility */}
+              <div className="rounded-2xl shadow-2xl ring-1 ring-white/5" style={{ background: "linear-gradient(135deg, var(--accent-base), var(--orange-base))" }}>
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(12,12,18,0.95) 100%)" }} />
               </div>
             </div>
@@ -372,28 +354,21 @@ export default function MarketingPage() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
           {[
-            { img: "photo-1616627547584-bf28cee262db", name: t("products.linen.name"), price: t("products.linen.price"), color: "var(--accent-base)", alt: "Premium Egyptian cotton hotel linens and bedding" },
-            { img: "photo-1564540583246-934409427776", name: t("products.bathroom.name"), price: t("products.bathroom.price"), color: "var(--orange-base)", alt: "Luxury bathroom amenities and towels on marble countertop" },
-            { img: "photo-1556909114-f6e7ad7d3136", name: t("products.kitchen.name"), price: t("products.kitchen.price"), color: "var(--purple-base)", alt: "Commercial kitchen equipment and stainless steel appliances" },
-            { img: "photo-1585421514284-efb74c2b69ba", name: t("products.cleaning.name"), price: t("products.cleaning.price"), color: "var(--accent-base)", alt: "Professional cleaning supplies and housekeeping equipment" },
-            { img: "photo-1524758631624-e2822e304c36", name: t("products.furniture.name"), price: t("products.furniture.price"), color: "var(--orange-base)", alt: "Guest room furniture with coastal resort aesthetic" },
-            { img: "photo-1581094794329-c8112a89af12", name: t("products.hvac.name"), price: t("products.hvac.price"), color: "var(--purple-base)", alt: "HVAC systems and climate control for coastal hotels" },
-            { img: "photo-1631049307264-da0ec9d70304", name: t("products.bedding.name"), price: t("products.bedding.price"), color: "var(--accent-base)", alt: "Luxury hotel bedding ensemble with Egyptian cotton" },
-            { img: "photo-1571896349842-33c89424de2d", name: t("products.spa.name"), price: t("products.spa.price"), color: "var(--orange-base)", alt: "Pool and spa maintenance equipment with Red Sea view" },
+            { name: t("products.linen.name"), price: t("products.linen.price"), color: "var(--accent-base)" },
+            { name: t("products.bathroom.name"), price: t("products.bathroom.price"), color: "var(--orange-base)" },
+            { name: t("products.kitchen.name"), price: t("products.kitchen.price"), color: "var(--purple-base)" },
+            { name: t("products.cleaning.name"), price: t("products.cleaning.price"), color: "var(--accent-base)" },
+            { name: t("products.furniture.name"), price: t("products.furniture.price"), color: "var(--orange-base)" },
+            { name: t("products.hvac.name"), price: t("products.hvac.price"), color: "var(--purple-base)" },
+            { name: t("products.bedding.name"), price: t("products.bedding.price"), color: "var(--accent-base)" },
+            { name: t("products.spa.name"), price: t("products.spa.price"), color: "var(--orange-base)" },
           ].map((p) => (
             <div key={p.name} className="animate-on-scroll group">
               <div className="rounded-xl border overflow-hidden bg-surface-1 transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${p.color}22` }}>
-                <div className="relative h-36 overflow-hidden">
-                  <Image
-                    src={`https://images.unsplash.com/${p.img}?w=400&q=75&fm=webp`}
-                    alt={p.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    placeholder="blur"
-                    loading="lazy"
-                    className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface-1 via-transparent to-transparent" />
+                <div className="h-36 flex items-center justify-center" style={{ background: `${p.color}15`, border: `1px dashed ${p.color}33` }}>
+                  <div className="text-center">
+                    <div className="text-sm font-semibold" style={{ color: p.color }}>{p.name}</div>
+                  </div>
                 </div>
                 <div className="px-4 py-3">
                    <div className="text-sm font-semibold text-foreground mb-0.5">{p.name}</div>
@@ -499,21 +474,9 @@ export default function MarketingPage() {
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "var(--border-accent)", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1646645409452-866ad2fb64e4?crop=entropy&cs=tinysrgb&fit=max&fm=webp&q=80&w=1080"
-                  alt="HotelsVendors hotel procurement dashboard showing orders, vendors, and spend analytics"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  placeholder="blur"
-                  loading="lazy"
-                  className="object-cover opacity-70"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-1 via-surface-1/40 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "var(--border-accent)", background: "rgba(0,0,0,0.75)" }}>
-                  <div className="text-xs font-semibold mb-1" style={{ color: "var(--accent-base)" }}>app.hotelsvendors.com/hotel/dashboard</div>
-                  <div className="text-sm font-semibold text-foreground">{t("hv.cardTitle")}</div>
+                <div className="aspect-[16/10] bg-surface-1 flex items-center justify-center" style={{ background: "var(--accent-base)10" }}>
+                  <span className="text-xs uppercase tracking-wider" style={{ color: "var(--accent-base)" }}>Dashboard Preview</span>
                 </div>
-              </div>
             </div>
           )}
 
@@ -546,19 +509,8 @@ export default function MarketingPage() {
                 </Link>
               </div>
               <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: "var(--orange-base)33", boxShadow: "0 0 40px 2px var(--orange-base)18" }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1690935986319-c11e6cae84f7?crop=entropy&cs=tinysrgb&fit=max&fm=webp&q=80&w=1080"
-                  alt="INVO vendor marketplace showing product catalog and supplier listings"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  placeholder="blur"
-                  loading="lazy"
-                  className="object-cover opacity-70"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-1 via-surface-1/40 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "var(--orange-muted)", background: "rgba(0,0,0,0.75)" }}>
-                  <div className="text-xs font-semibold mb-1" style={{ color: "var(--orange-base)" }}>app.hotelsvendors.com/invo/marketplace</div>
-                  <div className="text-sm font-semibold text-foreground">{t("invo.cardTitle")}</div>
+                <div className="aspect-[16/10] flex items-center justify-center" style={{ background: "var(--orange-base)10" }}>
+                  <span className="text-xs uppercase tracking-wider" style={{ color: "var(--orange-base)" }}>Marketplace Preview</span>
                 </div>
               </div>
             </div>
@@ -1052,7 +1004,7 @@ export default function MarketingPage() {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(to right, var(--accent-base) 1px, transparent 1px), linear-gradient(to bottom, var(--accent-base) 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-          <div className="flex justify-center mb-6"><BrandLogo variant="dark" size="lg" showText={false} iconOnly /></div>
+          <div className="flex justify-center mb-6" style={{ background: "var(--accent-base)15", border: "1px dashed var(--accent-base)40", width: 48, height: 48, borderRadius: 8, marginLeft: "auto", marginRight: "auto" }}></div>
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-foreground">
             {t("cta.headline1")}<br /><span className="text-foreground">{t("cta.headline2")}</span>
           </h2>
