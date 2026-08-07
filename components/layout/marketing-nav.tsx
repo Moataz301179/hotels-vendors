@@ -33,7 +33,7 @@ export function MarketingNav() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
           <Image
-            src="/oliv-logo-white.png"
+            src="/logo-white.svg"
             alt="INVO"
             width={156}
             height={36}

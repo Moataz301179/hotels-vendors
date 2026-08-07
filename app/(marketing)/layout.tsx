@@ -58,7 +58,7 @@ const JSON_LD = {
     "value": "105300900196948"
   },
   "url": "https://hotelsvendors.com",
-   "logo": "https://hotelsvendors.com/oliv-logo-white.png",
+   "logo": "https://hotelsvendors.com/logo-white.svg",
   "description": "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
   "address": {
     "@type": "PostalAddress",

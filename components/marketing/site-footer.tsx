@@ -15,7 +15,7 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2.5 mb-3" dir="ltr">
-              <Image src="/oliv-logo-white.png" alt="INVO" width={156} height={36} className="h-9 w-auto object-contain" />
+              <Image src="/logo-white.svg" alt="INVO" width={156} height={36} className="h-9 w-auto object-contain" />
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-4">
               {ar

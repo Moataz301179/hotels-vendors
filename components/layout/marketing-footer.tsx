@@ -13,7 +13,7 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
                 <Image
-                  src="/oliv-logo-white.png"
+                  src="/logo-white.svg"
                   alt="INVO"
                   width={156}
                   height={36}

@@ -96,7 +96,7 @@ export function SiteNav() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-3 border-b border-white/10 ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--accent-base)" }}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
-        <Image src="/oliv-logo-white.png" alt="INVO" width={156} height={36} className="h-9 w-auto object-contain" priority />
+        <Image src="/logo-white.svg" alt="INVO" width={156} height={36} className="h-9 w-auto object-contain" priority />
       </Link>
 
       {/* Desktop nav */}
