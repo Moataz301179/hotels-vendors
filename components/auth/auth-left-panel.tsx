@@ -33,7 +33,7 @@ export function AuthLeftPanel() {
 
       <div className="relative z-10 text-foreground-tertiary">
            <p className="text-xs">
-          &copy; {new Date().getFullYear()} INVO
+          &copy; {new Date().getFullYear()} HotelsVendors
         </p>
       </div>
 

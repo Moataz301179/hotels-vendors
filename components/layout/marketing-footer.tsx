@@ -14,7 +14,7 @@ export function MarketingFooter() {
             <div className="flex items-center gap-2.5 mb-4">
                 <Image
                   src="/logo-white.svg"
-                  alt="INVO"
+                  alt="HotelsVendors"
                   width={156}
                   height={36}
                   className="h-9 w-auto object-contain"

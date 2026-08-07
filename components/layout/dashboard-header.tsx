@@ -56,7 +56,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <BrandLogo variant="light" size="lg" showText={false} iconOnly />
             <span className="hidden md:inline text-sm font-semibold text-white uppercase tracking-wider">
-            INVO
+            Hotels Vendors
           </span>
 </Link>
         <div className="hidden md:flex items-center gap-3">

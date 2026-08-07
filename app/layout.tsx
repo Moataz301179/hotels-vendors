@@ -74,7 +74,7 @@ export const metadata: Metadata = {
            url: "/logo-white.svg",
         width: 1200,
         height: 630,
-        alt: "INVO — B2B Procurement & Fintech for Egyptian Hospitality",
+        alt: "HotelsVendors — The Market Changer",
       },
     ],
   },
