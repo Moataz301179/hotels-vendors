@@ -63,7 +63,7 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
       </button>
       {open && (
         <div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-surface-1 border border-border-subtle rounded-xl shadow-2xl backdrop-blur-xl"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-surface-1 border border-border-subtle rounded-xl shadow-2xl"
         >
           <div className="py-2">
             {group.items.map((item) => (
@@ -94,7 +94,7 @@ export function SiteNav() {
 
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-3 border-b border-white/10 ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--accent-base)" }}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-3 border-b border-white/10 transition-all duration-300 ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--header-bg)" }}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
         <Image src="/logo-white.svg" alt="HotelsVendors" width={156} height={36} className="h-9 w-auto object-contain" priority />
       </Link>
@@ -147,7 +147,7 @@ export function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="absolute top-full left-0 right-0 border-b border-white/10 px-6 py-4 flex flex-col gap-4 md:hidden" style={{ backgroundColor: "var(--accent-base)" }}>
+         <div className="absolute top-full left-0 right-0 border-b border-white/10 px-6 py-4 flex flex-col gap-4 md:hidden" style={{ backgroundColor: "var(--header-bg)" }}>
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
               <span className="text-xs text-white/30 uppercase tracking-widest font-semibold">{g.label}</span>

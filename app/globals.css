@@ -107,7 +107,7 @@
   --accent-dark: #1a066c;
   --accent-muted: rgba(42, 8, 140, 0.10);
   --accent-glow: rgba(42, 8, 140, 0.08);
-  --header-bg: #2a088c;
+  --header-bg: #ffffff;
 
   /* ── Secondary accents (light overrides) ── */
   --orange-base: #f97316;

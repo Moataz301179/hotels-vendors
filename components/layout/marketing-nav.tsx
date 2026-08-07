@@ -1,19 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export function MarketingNav() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const pathname = usePathname();
+  const ar = pathname.startsWith("/ar");
 
   const navLinks = [
     { label: "Platform", href: "/platform" },
@@ -25,10 +21,8 @@ export function MarketingNav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/10 ${
-        scrolled ? "backdrop-blur-sm" : ""
-      }`}
-      style={{ backgroundColor: "var(--accent-base)" }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/10 ${ar ? "font-cairo" : ""}`}
+      style={{ backgroundColor: "var(--header-bg)" }}
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
@@ -78,7 +72,7 @@ export function MarketingNav() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-white/10 backdrop-blur-md animate-fade-in-up" style={{ backgroundColor: "var(--accent-base)" }}>
+        <div className="lg:hidden border-t border-white/10 animate-fade-in-up" style={{ backgroundColor: "var(--header-bg)" }}>
           <div className="px-6 py-5 space-y-1">
             {navLinks.map((item) => (
               <Link
