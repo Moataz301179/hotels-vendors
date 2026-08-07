@@ -33,8 +33,8 @@ export function MarketingNav() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 relative z-10">
           <Image
-            src="/logo-white.svg"
-            alt="HotelsVendors"
+            src="/oliv-logo-white.png"
+            alt="INVO"
             width={156}
             height={36}
             className="h-9 w-auto object-contain"

@@ -12,13 +12,13 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <Image
-                src="/logo-white.svg"
-                alt="HotelsVendors"
-                width={156}
-                height={36}
-                className="h-9 w-auto object-contain"
-              />
+                <Image
+                  src="/oliv-logo-white.png"
+                  alt="INVO"
+                  width={156}
+                  height={36}
+                  className="h-9 w-auto object-contain"
+                />
             </div>
             <p className="text-[12px] text-white/70 leading-relaxed max-w-xs">
               Egypt&apos;s B2B procurement operating system for hospitality. AI-powered, ETA-compliant, built for scale.
