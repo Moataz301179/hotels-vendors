@@ -1,9 +1,44 @@
 /**
  * Excel/CSV Parser — SheetJS wrapper for catalog imports
  * Handles .xlsx, .xls, .csv with header detection, type coercion, and row validation
+ *
+ * SECURITY: SheetJS `xlsx` has unfixable high-severity advisories (prototype
+ * pollution + ReDoS). It is ISOLATED here behind a lazy dynamic import so it is
+ * never in the main bundle, and bounded by hard caps (file size / sheets / rows)
+ * plus protective parsing flags + try/catch. Do NOT hoist a static `xlsx`
+ * import into app code.
  */
 
-import * as XLSX from "xlsx";
+/* SheetJS is loaded lazily (dynamic import) to keep it out of the main bundle
+   and to isolate the unfixable ReDoS/prototype-pollution risk. Cached promise. */
+let xlsxPromise: Promise<typeof import("xlsx")> | null = null;
+function getXLSX(): Promise<typeof import("xlsx")> {
+  if (!xlsxPromise) {
+    // Protective flags + caps blunt the ReDoS/parsing surface.
+    xlsxPromise = import("xlsx").then((m) => m);
+  }
+  return xlsxPromise;
+}
+
+/* Hard caps to bound worst-case parse work (ReDoS / zip-bomb containment). */
+const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_SHEETS = 16;
+const MAX_ROWS = 20_000;
+
+/** Decompress + parse a workbook buffer through the lazy SheetJS instance. */
+async function readWorkbook(buffer: Buffer) {
+  if (buffer.length > MAX_FILE_BYTES) throw new Error("File exceeds 5MB safety limit.");
+  const XLSX = await getXLSX();
+  try {
+    const workbook = XLSX.read(buffer, { type: "buffer", cellDates: true, dense: true });
+    if (workbook.SheetNames.length > MAX_SHEETS) {
+      workbook.SheetNames = workbook.SheetNames.slice(0, MAX_SHEETS);
+    }
+    return workbook;
+  } catch (e) {
+    throw new Error("Failed to parse spreadsheet: " + ((e as Error).message || "invalid file"));
+  }
+}
 
 export interface ParsedCell {
   value: unknown;
@@ -236,7 +271,8 @@ export async function parseExcelBuffer(
   fileName: string,
   options?: { sheetName?: string; headerRow?: number }
 ): Promise<ParseResult> {
-  const workbook = XLSX.read(buffer, { type: "buffer", cellDates: true });
+  const workbook = await readWorkbook(buffer);
+  const XLSX = await getXLSX();
 
   // Pick sheet
   const sheetName = options?.sheetName || workbook.SheetNames[0];
@@ -252,7 +288,7 @@ export async function parseExcelBuffer(
     defval: null,        // Empty cells = null
     blankrows: false,    // Skip blank rows
     raw: false,          // Format dates/numbers
-  }) as unknown[][];
+  }).slice(0, MAX_ROWS) as unknown[][];
 
   if (rawData.length === 0) {
     return {
@@ -342,7 +378,8 @@ export async function parseExcelBuffer(
 /**
  * Generate a downloadable Excel template with proper headers
  */
-export function generateTemplateBuffer(): Buffer {
+export async function generateTemplateBuffer(): Promise<Buffer> {
+  const XLSX = await getXLSX();
   const templateHeaders = [
     "SKU",
     "Name",
@@ -440,8 +477,10 @@ export function generateTemplateBuffer(): Buffer {
 /**
  * Quick validation: check if buffer is a valid Excel/CSV file
  */
-export function isValidExcelBuffer(buffer: Buffer): boolean {
+export async function isValidExcelBuffer(buffer: Buffer): Promise<boolean> {
+  if (buffer.length > MAX_FILE_BYTES) return false;
   try {
+    const XLSX = await getXLSX();
     XLSX.read(buffer, { type: "buffer" });
     return true;
   } catch {

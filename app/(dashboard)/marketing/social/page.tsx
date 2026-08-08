@@ -10,8 +10,8 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  Image,
   CalendarDays,
+  Image as ImageIcon,
 } from "lucide-react";
 import { useApi } from "@/lib/hooks/use-api";
 
@@ -215,7 +215,7 @@ export default function SocialMediaPage() {
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="flex flex-wrap items-center gap-1 border-b border-slate-100 px-4 py-3">
             <span className="text-sm font-semibold mr-2 flex items-center gap-2">
-              <Image size={15} className="text-blue-600" />
+              <ImageIcon size={15} className="text-blue-600" />
               Post Feed
             </span>
             {feedTabs.map((tab) => (
@@ -242,7 +242,7 @@ export default function SocialMediaPage() {
 
           {!loading && filteredPosts.length === 0 ? (
             <div className="px-5 py-12 text-center">
-              <Image size={32} className="mx-auto text-slate-300 mb-2" />
+              <ImageIcon size={32} className="mx-auto text-slate-300 mb-2" />
               <p className="text-sm text-slate-500">No posts in this view.</p>
               <p className="text-xs text-slate-400 mt-1">Compose a post above to see it here.</p>
             </div>

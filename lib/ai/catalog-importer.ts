@@ -388,8 +388,8 @@ export function getImportJob(jobId: string): ImportJob | undefined {
 /**
  * Generate downloadable Excel template
  */
-export function getTemplateBuffer(): Buffer {
-  return generateTemplateBuffer();
+export async function getTemplateBuffer(): Promise<Buffer> {
+  return await generateTemplateBuffer();
 }
 
 /**

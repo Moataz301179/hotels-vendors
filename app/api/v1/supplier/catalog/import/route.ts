@@ -29,7 +29,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   // Handle template download
   if (action === "template") {
-    const buffer = generateTemplateBuffer();
+    const buffer = await generateTemplateBuffer();
     return new Response(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -57,7 +57,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const buffer = Buffer.from(arrayBuffer);
 
   // Quick validation
-  if (!isValidExcelBuffer(buffer)) {
+  if (!await isValidExcelBuffer(buffer)) {
     return error("Invalid or corrupted Excel/CSV file", 400);
   }
 
@@ -115,7 +115,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   // Template download via GET
   const searchParams = request.nextUrl.searchParams;
   if (searchParams.get("template") === "true") {
-    const buffer = generateTemplateBuffer();
+    const buffer = await generateTemplateBuffer();
     return new Response(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
