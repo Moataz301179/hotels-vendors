@@ -106,6 +106,17 @@ export default function MarketingPage() {
                 <StatCounter end={847} suffix="M" label="EGP GMV" />
                 <StatCounter end={48} suffix="h" label="Avg. Delivery" />
               </div>
+
+              {/* Partner strip */}
+              <div className="flex items-center gap-4 pt-4 animate-fade-in-up animation-delay-400">
+                <span className="text-[10px] text-foreground-muted tracking-wider uppercase">Factoring Partner</span>
+                <img src="/oliv-logo-white.png" alt="Oliv Finance" className="h-5 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+                <span className="text-[10px] text-foreground-muted">·</span>
+                <span className="text-[10px] text-foreground-muted tracking-wider uppercase">Payments via</span>
+                <span className="text-[10px] text-white/50 font-medium">Paymob</span>
+                <span className="text-[10px] text-white/50 font-medium">InstaPay</span>
+                <span className="text-[10px] text-white/50 font-medium">Fawry</span>
+              </div>
             </div>
 
             {/* RIGHT — Dual Layer Visual */}
