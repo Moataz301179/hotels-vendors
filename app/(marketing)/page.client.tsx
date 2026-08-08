@@ -262,19 +262,21 @@ export default function MarketingPage() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
           {[
-            { name: "Premium Linens", price: "From EGP 450", color: "var(--accent-base)" },
-            { name: "Bathroom Amenities", price: "From EGP 35/set", color: "var(--orange-base)" },
-            { name: "Kitchen Equipment", price: "From EGP 2,100", color: "var(--purple-base)" },
-            { name: "Cleaning Supplies", price: "From EGP 80/L", color: "var(--accent-base)" },
-            { name: "Guest Room Furniture", price: "From EGP 3,500", color: "var(--orange-base)" },
-            { name: "HVAC & Engineering", price: "From EGP 15,000", color: "var(--purple-base)" },
-            { name: "Hotel Bedding", price: "From EGP 1,200", color: "var(--accent-base)" },
-            { name: "Pool & Spa Supplies", price: "From EGP 550", color: "var(--orange-base)" },
+            { name: "Premium Linens", price: "From EGP 450", color: "var(--accent-base)", img: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=300&fit=crop" },
+            { name: "Bathroom Amenities", price: "From EGP 35/set", color: "var(--orange-base)", img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=300&fit=crop" },
+            { name: "Kitchen Equipment", price: "From EGP 2,100", color: "var(--purple-base)", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop" },
+            { name: "Cleaning Supplies", price: "From EGP 80/L", color: "var(--accent-base)", img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop" },
+            { name: "Guest Room Furniture", price: "From EGP 3,500", color: "var(--orange-base)", img: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop" },
+            { name: "HVAC & Engineering", price: "From EGP 15,000", color: "var(--purple-base)", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop" },
+            { name: "Hotel Bedding", price: "From EGP 1,200", color: "var(--accent-base)", img: "https://images.unsplash.com/photo-1559599189-fe84dea4eb79?w=400&h=300&fit=crop" },
+            { name: "Pool & Spa Supplies", price: "From EGP 550", color: "var(--orange-base)", img: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=300&fit=crop" },
           ].map((c) => (
             <div key={c.name} className="animate-on-scroll group">
               <div className="rounded-xl border overflow-hidden bg-surface-1 transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${c.color}22` }}>
-                <div className="h-36 flex items-center justify-center" style={{ background: `${c.color}15`, border: `1px dashed ${c.color}33` }}>
-                  <div className="text-center"><div className="text-sm font-semibold" style={{ color: c.color }}>{c.name}</div></div>
+                <div className="h-36 relative overflow-hidden">
+                  <img src={c.img} alt={c.name} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" loading="lazy" />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${c.color}40, transparent 60%)` }} />
+                  <div className="absolute bottom-3 left-3 text-xs font-semibold text-white drop-shadow-lg">{c.name}</div>
                 </div>
                 <div className="px-4 py-3">
                   <div className="text-sm font-semibold text-foreground mb-0.5">{c.name}</div>
