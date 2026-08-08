@@ -20,6 +20,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts",
+    "seed:catalog": "tsx prisma/seed-catalog.ts",
     "swarm": "tsx scripts/swarm-dev.ts",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",

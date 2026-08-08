@@ -274,64 +274,57 @@ function MarketplaceContent() {
                 const resolved = getProductImage({ name: product.name, category: product.category });
                 const img = resolved.type === "url" ? resolved.src : "";
                 return (
-                  <div key={product.id} className="group rounded-xl overflow-hidden border transition-all hover:border-white/15 hover:shadow-lg cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
-                    {/* Image */}
-                    <div className="relative h-36 overflow-hidden">
-                      <img src={img} alt={product.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-transparent to-transparent opacity-60" />
+                  <div key={product.id} className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-400 hover:shadow-sm transition-all cursor-pointer flex flex-col">
+                    {/* Image — fixed aspect, overflow-hidden, relative, fallback-safe */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                      {img ? (
+                        <img src={img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-slate-100">
+                          <Package size={28} className="text-slate-300" />
+                        </div>
+                      )}
                       {/* Category badge */}
                       <div className="absolute top-2.5 left-2.5">
-                        <span className="text-[9px] font-medium px-2 py-0.5 rounded-full backdrop-blur-sm" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.2)", color: "var(--accent-base)" }}>
+                        <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-slate-800/80 text-slate-100">
                           {product.category.replace(/_/g, " ")}
                         </span>
                       </div>
                       {/* Stock badge */}
                       {product.inStock === false && (
                         <div className="absolute top-2.5 right-2.5">
-                          <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(220,38,38,0.2)", color: "#ef4444" }}>
+                          <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-red-600/90 text-white">
                             Out of Stock
                           </span>
                         </div>
                       )}
-                      {/* Hover cart button */}
+                      {/* Add cart — always visible on white card */}
                       <button
                         onClick={(e) => handleAddToCart(e, product)}
-                        className="absolute bottom-2.5 right-2.5 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all translate-y-1 group-hover:translate-y-0"
-                        style={{ backgroundColor: "var(--accent-base)" }}
+                        className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-[11px] font-semibold hover:bg-slate-800 transition-colors"
                         aria-label={`Add ${product.name} to cart`}
                       >
-                        <ShoppingCart size={14} className="text-white" />
+                        <ShoppingCart size={12} /> Add
                       </button>
                     </div>
 
-                    {/* Info */}
-                    <div className="p-3">
-                      <h4 className="text-[12px] font-medium text-white mb-1 leading-tight line-clamp-2 min-h-[28px]">
+                    {/* Info — white body, emerald price */}
+                    <div className="p-3.5 bg-white flex flex-col flex-1">
+                      <h4 className="text-[13px] font-semibold text-slate-900 leading-tight line-clamp-2 min-h-[32px]">
                         {product.name}
                       </h4>
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        {product.supplier?.rating && (
-                          <div className="flex items-center gap-0.5">
-                            <Star size={10} className="fill-yellow-500 text-yellow-500" />
-                            <span className="text-[10px] text-white/50">{product.supplier.rating.toFixed(1)}</span>
-                          </div>
-                        )}
-                        {product.supplier?.city && (
-                          <span className="flex items-center gap-0.5 text-[10px] text-white/30">
-                            <MapPin size={9} /> {product.supplier.city}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[10px] text-white/30 mb-2">{product.supplier?.name || "Verified Supplier"}</p>
-                      <div className="flex items-end justify-between">
+                      {product.supplier?.name && (
+                        <p className="text-[11px] text-slate-500 mt-1">{product.supplier.name}</p>
+                      )}
+                      <div className="mt-auto pt-2 flex items-end justify-between">
                         <div>
-                          <p className="text-[13px] font-semibold" style={{ color: "var(--accent-base)" }}>
+                          <p className="text-lg font-bold text-emerald-600 leading-none">
                             {formatPrice(product.unitPrice)}
                           </p>
-                          <p className="text-[9px] text-white/25">/ {product.unitOfMeasure}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">/ {product.unitOfMeasure}</p>
                         </div>
                         {product.minOrderQuantity && product.minOrderQuantity > 1 && (
-                          <span className="text-[9px] text-white/25">MOQ: {product.minOrderQuantity}</span>
+                          <span className="text-[9px] text-slate-400">MOQ: {product.minOrderQuantity}</span>
                         )}
                       </div>
                     </div>
