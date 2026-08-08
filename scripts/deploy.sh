@@ -1,14 +1,20 @@
 #!/bin/bash
 # Hotelsvendors deployment script
 # This script is called by cron every 5 minutes
-# It ensures the app is running and reloads if needed
+# It ensures the app is running, reloads if needed, and fixes static assets
 
 APP_DIR="/var/www/hotelsvendors-v2"
 cd "$APP_DIR"
 
-# Check if .env is missing in standalone directory (standalone server.js needs it)
+# Ensure .env exists in standalone directory (standalone server.js needs it)
 if [ ! -f "$APP_DIR/.next/standalone/.env" ]; then
     cp "$APP_DIR/.env" "$APP_DIR/.next/standalone/.env" 2>/dev/null || true
+fi
+
+# Ensure static assets are available for Nginx (Next.js 16 standalone doesn't include them)
+if [ ! -d "$APP_DIR/.next/standalone/.next/static" ] && [ -d "$APP_DIR/.next/static" ]; then
+    mkdir -p "$APP_DIR/.next/standalone/.next/static"
+    cp -r "$APP_DIR/.next/static/"* "$APP_DIR/.next/standalone/.next/static/" 2>/dev/null || true
 fi
 
 # Health check for web app
