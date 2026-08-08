@@ -7,15 +7,20 @@ module.exports = {
       instances: 1,
       exec_mode: "fork",
       env: {
+        NODE_ENV: "development",
+        PORT: 3003,
+        HOST: "0.0.0.0",
+      },
+      env_production: {
         NODE_ENV: "production",
         PORT: 3003,
         HOST: "0.0.0.0",
-        DATABASE_URL: "postgresql://hotels_vendors:DBPASS@localhost:5432/hotels_vendors",
+        DATABASE_URL: "postgresql://hotels_vendors:DBPASS@localhost:5432/hotels_vendors?schema=public&connection_limit=10&pool_timeout=30",
         SESSION_SECRET: "3b7e2e5b7dd999deca3e3eb5f6a6ca5b547b6c59c56df567d9915bdbd0677830",
         HOTELSVENDORS_HMAC_SECRET: "3b7e2e5b7dd999deca3e3eb5f6a6ca5b547b6c59c56df567d9915bdbd0677830",
         REDIS_URL: "redis://:REDISPASS@localhost:6380",
         DATABASE_HOST: "localhost",
-        DATABASE_PORT: "5432"
+        DATABASE_PORT: "5432",
       },
       error_file: "/var/log/hotelsvendors/error.log",
       out_file: "/var/log/hotelsvendors/out.log",
@@ -27,7 +32,7 @@ module.exports = {
       min_uptime: "10s",
       watch: false,
       kill_timeout: 5000,
-      listen_timeout: 10000
+      listen_timeout: 10000,
     },
     {
       name: "hotels-vendors-os",
@@ -36,8 +41,7 @@ module.exports = {
       args: "src.main:app --host 0.0.0.0 --port 8001",
       exec_interpreter: "none",
       exec_mode: "fork",
-      max_memory_restart: "512M",
-      env: {
+      env_production: {
         PYTHONPATH: "/var/www/hotelsvendors-v2/backend_os",
         DB_HOST: "localhost",
         DB_PORT: "5432",
@@ -47,7 +51,7 @@ module.exports = {
         REDIS_HOST: "localhost",
         REDIS_PORT: "6380",
         REDIS_PASSWORD: "REDISPASS",
-        DATABASE_URL: "postgresql://hotels_vendors:DBPASS@localhost:5432/hotels_vendors"
+        DATABASE_URL: "postgresql://hotels_vendors:DBPASS@localhost:5432/hotels_vendors",
       },
       error_file: "/var/log/hotelsvendors-os/error.log",
       out_file: "/var/log/hotelsvendors-os/out.log",
@@ -58,7 +62,7 @@ module.exports = {
       min_uptime: "10s",
       watch: false,
       kill_timeout: 5000,
-      listen_timeout: 10000
-    }
-  ]
+      listen_timeout: 10000,
+    },
+  ],
 };

@@ -1,0 +1,20 @@
+# Test files - tested via vitest, not lint
+tests/
+e2e/
+scripts/
+prisma/seed-*.ts
+src/scripts/
+
+# Type declaration files
+types/
+
+# Build artifacts
+.next/
+build/
+coverage/
+out/
+
+# Config files (may use any types for flexibility)
+*.config.*
+*.config.ts
+*.config.js
