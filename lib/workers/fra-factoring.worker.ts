@@ -129,6 +129,7 @@ export async function processFactoringRequest(payload: FactoringPayload) {
     const feeRate = 0.021; // 2.1% platform fee
     const fee = Math.round(amount * feeRate * 100) / 100;
     const net = amount - fee;
+    const now = new Date();
 
     await prisma.factoringTransaction.create({
       data: {
@@ -136,17 +137,19 @@ export async function processFactoringRequest(payload: FactoringPayload) {
         etaUuid,
         supplierTaxId: supplierId,
         hotelTaxId: hotelId,
+        referralTokenSignature: `standalone-${Date.now().toString(36)}`,
+        referralTokenPayload: JSON.stringify({ invoiceId, amount, supplierId }),
+        referralTokenGeneratedAt: now,
+        referralTokenExpiresAt: new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
+        callbackTimestamp: now,
         olivTransactionId: payout.reference,
         payoutStatus: "DISBURSED",
         disbursedAmount: amount,
         factoringFee: fee,
         advanceRate: 0.85,
-        disbursementDate: new Date(),
-        expectedSettlementDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-        platformFeeRate: feeRate,
-        platformFeeAmount: fee,
-        netDisbursement: net,
-        processedAt: new Date(),
+        disbursementDate: now,
+        expectedSettlementDate: new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000),
+        processedAt: now,
       },
     });
 
