@@ -3,6 +3,18 @@ import { prisma } from "@/lib/prisma";
 
 const REFERRAL_CODE = "CHV000";
 
+/* Real, verified live destinations for the Oliv app (not the dead /apply API path). */
+const OLIV_PLAY_STORE = "https://play.google.com/store/apps/details?id=finance.oliv.oliv&referrer=utm_source%3Dhotelsvendors%26ref%3DCHV000";
+const OLIV_APP_STORE = "https://apps.apple.com/us/app/oliv-finance/id6475942316";
+const OLIV_WEB = "https://oliv.finance/";
+
+function detectPlatform(userAgent: string): "android" | "ios" | "web" {
+  const ua = userAgent.toLowerCase();
+  if (/android/.test(ua)) return "android";
+  if (/iphone|ipad|ipod/.test(ua)) return "ios";
+  return "web";
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,10 +25,10 @@ export async function GET(request: NextRequest) {
 
     const leadId = `OLIV-${Date.now().toString(36).toUpperCase()}`;
 
-    const companyName = orderId
-      ? `Order ${orderId} - Oliv CTA`
-      : "Oliv CTA Click";
+    const companyName = orderId ? `Order ${orderId} - Oliv CTA` : "Oliv CTA Click";
 
+    // Server-side attribution is ALWAYS recorded before any redirect, so the
+    // CHV000 referral + commission is captured regardless of where the user lands.
     await prisma.leadCapture.create({
       data: {
         companyName,
@@ -37,20 +49,18 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const olivParams = new URLSearchParams({
-      ref: REFERRAL_CODE,
-      source: "hotelsvendors",
-    });
-    if (orderId) olivParams.set("order", orderId);
-    if (amount) olivParams.set("amount", amount);
-    if (invoiceId) olivParams.set("invoice", invoiceId);
-    if (supplierId) olivParams.set("supplier", supplierId);
+    // Route to the correct, VALID destination based on device.
+    const ua = request.headers.get("user-agent") || "";
+    const platform = detectPlatform(ua);
 
-    const olivUrl = `https://oliv.finance/apply?${olivParams.toString()}`;
+    const target = platform === "android" ? OLIV_PLAY_STORE
+      : platform === "ios" ? OLIV_APP_STORE
+      : OLIV_WEB;
 
-    return NextResponse.redirect(olivUrl, 302);
+    return NextResponse.redirect(target, 302);
   } catch (error) {
     console.error("[Oliv Click] Error:", error);
-    return NextResponse.redirect(`https://oliv.finance/apply?ref=${REFERRAL_CODE}&source=hotelsvendors`, 302);
+    // Safe fallback: never send users to the broken /apply path.
+    return NextResponse.redirect(OLIV_WEB, 302);
   }
 }
