@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { AudienceRouter } from "@/components/marketing/audience-router";
 import {
   ArrowRight, Shield, Landmark, Truck, Store, Hotel, Building2,
   Gavel, FileUp, Calculator, Cpu, CreditCard, CheckCircle2,
@@ -151,6 +152,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ═════════════ SMART INTENT ROUTER ═════════════ */}
+      <AudienceRouter />
 
       {/* ═════════════ TRUSTED BY STRIP ═════════════ */}
       <section className="border-b border-slate-200 bg-white">
