@@ -251,3 +251,38 @@ export async function redisHealth(): Promise<{ status: string; latencyMs: number
     return { status: "unavailable", latencyMs: 0 };
   }
 }
+
+/* ── Cache-aside helper for hot reads ───────────────────────────────────────
+   getOrSetCache(key, ttlSeconds, loader) returns cached JSON if fresh, else
+   runs loader, stores it, and returns. Safe/transparent: on any Redis failure
+   it degrades to invoking loader directly (never crashes the request). */
+export async function getOrSetCache<T>(key: string, ttlSeconds: number, loader: () => Promise<T>): Promise<T> {
+  const r = getRedis();
+  if (!r || !redisAvailable) {
+    return loader();
+  }
+  try {
+    const cached = await r.get(key);
+    if (cached !== null) {
+      try { return JSON.parse(cached) as T; } catch { /* fallthrough */ }
+    }
+    const value = await loader();
+    const json = JSON.stringify(value);
+    // Best-effort; TTL floors at 1s to avoid immediate expiry.
+    await r.set(key, json, "EX", Math.max(ttlSeconds, 1));
+    return value;
+  } catch {
+    // Any Redis error → transparent fallback to the live loader path.
+    return loader();
+  }
+}
+
+export async function invalidateCache(key: string): Promise<void> {
+  const r = getRedis();
+  if (!r || !redisAvailable) return;
+  try { await r.del(key); } catch {}
+}
+
+export function cacheKey(...parts: (string | number)[]): string {
+  return `hv:cache:${parts.join(":")}`;
+}

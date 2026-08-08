@@ -37,6 +37,19 @@ export async function GET() {
   const allHealthy = Object.values(checks).every((c) => c.status === "ok");
   const totalLatency = Date.now() - start;
 
+  // Failure alerting: notify owner (Telegram/WhatsApp via configurable webhook)
+  // when a critical dependency is down — solo-founder-ops, no paid monitoring needed.
+  if (!allHealthy) {
+    const failing = Object.entries(checks).filter(([, c]) => c.status === "error").map(([k]) => k);
+    const alertUrl = process.env.HEALTH_ALERT_WEBHOOK; // Telegram bot API / WhatsApp / Slack hook
+    if (alertUrl) {
+      const payload = {
+        text: `⚠️ [HotelsVendors] health alert ${new Date().toISOString()}\nfailed: ${failing.join(", ")}\nchecks: ${JSON.stringify(checks)}`,
+      };
+      fetch(alertUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
+    }
+  }
+
   return NextResponse.json(
     {
       status: allHealthy ? "healthy" : "unhealthy",

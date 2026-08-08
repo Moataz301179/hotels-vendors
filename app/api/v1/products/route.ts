@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { transformManyToMarketplace, toPrismaCategory } from "@/lib/marketplace/category-mapper";
 import { z } from "zod";
 import { authenticate, requirePermission } from "@/lib/api-utils";
+import { getOrSetCache, cacheKey } from "@/lib/redis";
 
 // ── GET: Public Catalog ───────────────────────────────────────
 
@@ -79,42 +80,63 @@ export async function GET(request: NextRequest) {
       where.supplierId = supplierId;
     }
 
-    const [products, total] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        take: limit,
-        skip: (page - 1) * limit,
-        include: {
-          supplier: {
-            select: {
-              id: true,
-              name: true,
-              tier: true,
-              rating: true,
-              reviewCount: true,
-              city: true,
+    // Cache only the hot public-catalog path (no search, no per-supplier filter).
+    // Search/filter queries bypass cache and go straight to DB.
+    const isCacheable = !search && !supplierId && page <= 5;
+    const cacheTtl = category ? 120 : 60;
+
+    const buildResponse = async () => {
+      const [products, total] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+          take: limit,
+          skip: (page - 1) * limit,
+          include: {
+            supplier: {
+              select: {
+                id: true,
+                name: true,
+                tier: true,
+                rating: true,
+                reviewCount: true,
+                city: true,
+              },
             },
           },
-        },
-      }),
-      prisma.product.count({ where }),
-    ]);
+        }),
+        prisma.product.count({ where }),
+      ]);
 
-    const marketplaceProducts = transformManyToMarketplace(products as unknown as Parameters<typeof transformManyToMarketplace>[0]);
+      const marketplaceProducts = transformManyToMarketplace(products as unknown as Parameters<typeof transformManyToMarketplace>[0]);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        products: marketplaceProducts,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit),
+      return NextResponse.json({
+        success: true,
+        data: {
+          products: marketplaceProducts,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+          },
         },
-      },
-    });
+      });
+    };
+
+    if (!isCacheable) {
+      return buildResponse();
+    }
+    // Cache-aside: serve from Redis when fresh; transparent fallback on failure.
+    const cachedJson = await getOrSetCache<string | null>(
+      cacheKey("products", (category || "").toLowerCase() || "all", page, limit, String(status || "ACTIVE")),
+      Math.max(cacheTtl, 1),
+      async () => (await buildResponse()).text()
+    ).catch(() => null);
+    if (cachedJson != null) {
+      return new NextResponse(cachedJson, { headers: { "Content-Type": "application/json" } });
+    }
+    return buildResponse();
   } catch (error) {
     console.error("Products API error:", error);
     return NextResponse.json(

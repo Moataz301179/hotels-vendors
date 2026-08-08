@@ -24,6 +24,16 @@ export const GET = apiRoute(async (request: NextRequest) => {
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   const body = await request.json().catch(() => ({}));
+  const { runDiscoveryActor } = await import("@/lib/sourcing/apify");
+  const { enqueueSourceJob } = await import("@/lib/queue");
+
+  // Enqueue as a durable job first (deduped by key); fall back to inline.
+  const queued = await enqueueSourceJob({
+    type: "apify-discovery", jobKey: "apify-discovery", payload: body.inputs,
+  });
+  if (queued.enqueued) {
+    return success({ queued: true, jobId: queued.jobId, note: "Discovery run queued; results will ingest as real supplier leads." }, 202);
+  }
   const result = await runDiscoveryActor(body.inputs);
   if (!result.started) {
     return success({
