@@ -67,7 +67,7 @@ module.exports = {
     {
       name: "hv-sourcing-worker",
       cwd: "/var/www/hotelsvendors-v2",
-      script: "./node_modules/.bin/tsx",
+      script: "/usr/bin/tsx",
       args: "scripts/queue-worker.ts",
       exec_interpreter: "none",
       exec_mode: "fork",
