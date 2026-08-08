@@ -23,9 +23,9 @@ export function SiteFooter() {
                 : "The world's first AI-driven B2B procurement platform for hospitality. ETA & FRA compliant. Free to start."}
             </p>
             <div className="flex gap-2 flex-wrap">
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--accent-base)44", color: "var(--accent-base)" }}>ETA</span>
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--orange-base)44", color: "var(--orange-base)" }}>FRA</span>
-              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--purple-base)44", color: "var(--purple-base)" }}>AML/KYC</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--hv-accent-green-border)", color: "var(--hv-accent-green-ink)", backgroundColor: "var(--hv-accent-green-bg)" }}>ETA</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--hv-accent-amber-border)", color: "var(--hv-accent-amber-ink)", backgroundColor: "var(--hv-accent-amber-bg)" }}>FRA</span>
+              <span className="text-xs px-2 py-0.5 rounded-full border font-semibold" style={{ borderColor: "var(--hv-accent-amber-border)", color: "var(--hv-accent-amber-ink)", backgroundColor: "var(--hv-accent-amber-bg)" }}>AML/KYC</span>
             </div>
           </div>
 

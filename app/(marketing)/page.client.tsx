@@ -12,16 +12,8 @@ import { CommandCenter } from "@/components/marketing/command-center";
 import {
   ArrowRight, Shield, Landmark, Truck, Store, Hotel, Building2,
   Gavel, FileUp, Calculator, Cpu, CreditCard, CheckCircle2,
-  Package, Banknote, TrendingUp, Sparkles,
+  Package, Banknote, TrendingUp, Sparkles, Shirt, Bath, UtensilsCrossed,
 } from "lucide-react";
-
-/* Explicit 1-to-1 category → image mapping (no reused URLs, no generic fallback). */
-const CATEGORY_IMAGE_MAP: Record<string, string> = {
-  linen: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=600&q=80",
-  bathroom: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
-  kitchen: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
-  cleaning: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80",
-};
 
 /* ── Count-up for live-feeling metrics ── */
 function useCountUp(end: number, duration = 1500) {
@@ -95,15 +87,13 @@ export default function LandingPage() {
                 Not a marketplace with AI flags — a full procurement &amp; supply-chain stack
               </div>
               <h1 className="mt-5 text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.08]">
-                Buy with the technology the<br className="hidden sm:block" /> giants couldn't ship.
-                <span className="block text-blue-600 mt-1">Factories in. 48h cash out.</span>
+                One platform to buy and get paid.
+                <span className="block text-blue-600 mt-1">Procurement &amp; 48h financing in-house.</span>
               </h1>
               <p className="mt-4 text-slate-600 text-base lg:text-lg max-w-xl leading-relaxed">
-                We're not another marketplace bolting on AI. We built the entire in-house
-                procurement stack — RFQ auctions, multi-tier approval, ETA e-invoice and
-                FRA-compliant e-factoring — with the one thing global suites still can't
-                integrate into their own products: <span className="font-semibold text-slate-900">real, local factoring on delivery</span>.
-                That's real cost reduction and a compliant, auditable supply chain — end to end.
+                Hotels run RFQs, approvals, and ETA compliance from the web; suppliers
+                fulfill and cash out in 48 hours. The full procurement and factoring
+                stack — not a marketplace with AI tacked on.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link href="/register?type=hotel" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors">
@@ -220,21 +210,21 @@ export default function LandingPage() {
         />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { key: "linen", name: "Premium Linens", meta: "High-thread Egyptian cotton hotel bedding", price: "From EGP 450" },
-            { key: "bathroom", name: "Bathroom Amenities", meta: "Luxury bathroom vanity & rolled towels", price: "From EGP 35/set" },
-            { key: "kitchen", name: "Commercial Kitchen", meta: "Stainless steel hotel restaurant equipment", price: "From EGP 2,100" },
-            { key: "cleaning", name: "Cleaning & Chemicals", meta: "Professional housekeeping supplies & sanitizers", price: "From EGP 80/L" },
+            { icon: Shirt, name: "Linens & Textiles", meta: "Bedding, towels, tablecloths" },
+            { icon: Bath, name: "Guest Amenities", meta: "Toiletries, slippers, minibar" },
+            { icon: UtensilsCrossed, name: "Commercial Kitchen", meta: "F&B, cookware, chinaware, glassware" },
+            { icon: Sparkles, name: "Housekeeping & Cleaning", meta: "Chemicals, carts, sanitation" },
           ].map((c) => (
-            <Link key={c.name} href="/categories" className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:border-slate-400 hover:shadow-sm transition-all">
-              <div className="h-48 w-full overflow-hidden bg-slate-100">
-                <img src={CATEGORY_IMAGE_MAP[c.key]} alt={c.name} onError={(e)=>{e.currentTarget.style.display="none";}} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+            <Link key={c.name} href="/categories" className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-400 hover:shadow-sm transition-all">
+              <div className="p-6 flex flex-col items-start gap-3 bg-gradient-to-br from-slate-50 to-slate-100 border-b border-slate-100 min-h-[140px]">
+                <div className="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center">
+                  <c.icon size={18} className="text-white" />
+                </div>
+                <div className="text-base font-bold text-slate-900 mt-auto">{c.name}</div>
               </div>
               <div className="p-4 bg-white">
-                <div className="flex items-center justify-between">
-                  <div className="text-base font-bold text-slate-900">{c.name}</div>
-                  <span className="text-xs bg-slate-100 text-slate-800 font-semibold px-2 py-1 rounded">{c.price}</span>
-                </div>
-                <div className="text-xs text-slate-500 mt-1">{c.meta}</div>
+                <div className="text-xs text-slate-500">{c.meta}</div>
+                <div className="mt-2 text-xs font-semibold text-blue-600 group-hover:underline">Browse category →</div>
               </div>
             </Link>
           ))}

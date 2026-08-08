@@ -44,6 +44,17 @@
   --hv-danger-border: #fecaca;
   --hv-danger-ink: #991b1b;
 
+  /* Accent — amber & green for badges, icons, and outlined frames.
+     Used as tasteful highlights across status pills and icon chips. */
+  --hv-accent-amber: #d97706;         /* amber-600 — AI / hospitality accent */
+  --hv-accent-amber-bg: #fffbeb;      /* amber-50 */
+  --hv-accent-amber-border: #fde68a;  /* amber-200 */
+  --hv-accent-amber-ink: #92400e;     /* amber-800 */
+  --hv-accent-green: #059669;         /* emerald-600 — liquidity / verified */
+  --hv-accent-green-bg: #ecfdf5;      /* emerald-50 */
+  --hv-accent-green-border: #a7f3d0;  /* emerald-200 */
+  --hv-accent-green-ink: #065f46;     /* emerald-800 */
+
   /* Terminal (embedded dark panel is ALLOWED per spec) */
   --hv-term: #0f172a;
   --hv-term-ink: #e2e8f0;

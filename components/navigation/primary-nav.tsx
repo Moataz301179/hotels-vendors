@@ -23,45 +23,45 @@ interface NavGroup {
 
 const GROUPS: NavGroup[] = [
   {
-    label: "Buy Smarter",
+    label: "Buy",
     children: [
-      { href: "/marketplace", icon: Store, label: "Marketplace Catalog", desc: "Thousands of real supplier SKUs, cross-vendor pricing" },
-      { href: "/rfq", icon: Gavel, label: "Bid & Source", desc: "RFQ auctions — volume bids, hybrid FIXED/RFQ pricing" },
-      { href: "/ai-catalog", icon: FileUp, label: "AI Catalog Ingestion", desc: "Upload price sheets; items auto-mapped & enriched" },
-      { href: "/categories", icon: Store, label: "Category Hubs", desc: "Linens, Kitchen, HVAC, Amenities, OS&E +" },
+      { href: "/marketplace", icon: Store, label: "Marketplace", desc: "Thousands of real supplier SKUs, cross-vendor pricing" },
+      { href: "/rfq", icon: Gavel, label: "Source & Bid", desc: "RFQ auctions — volume bids, hybrid FIXED/RFQ pricing" },
+      { href: "/ai-catalog", icon: FileUp, label: "AI Ingestion", desc: "Upload price sheets; items auto-mapped & enriched" },
+      { href: "/categories", icon: Store, label: "Categories", desc: "Linens, Kitchen, HVAC, Amenities, OS&E +" },
     ],
   },
   {
-    label: "Stay Compliant",
+    label: "Compliance",
     children: [
       { href: "/eta-compliance", icon: ShieldCheck, label: "ETA E-Invoicing", desc: "Clear e-invoices in real time — no rejected lines" },
-      { href: "/fra-shield", icon: ShieldCheck, label: "FRA Regulatory Shield", desc: "Non-duplication checks & auditable registries" },
-      { href: "/payment-rails", icon: Link2, label: "Payment Rails", desc: "InstaPay · Paymob · Fawry · SWIFT — local & cross-border" },
+      { href: "/fra-shield", icon: ShieldCheck, label: "FRA Shield", desc: "Non-duplication checks & auditable registries" },
+      { href: "/payment-rails", icon: Link2, label: "Payment Rails", desc: "InstaPay · Paymob · Fawry · SWIFT" },
     ],
   },
   {
-    label: "Get Paid in 48h",
+    label: "Finance",
     children: [
-      { href: "/factoring-service", icon: Banknote, label: "Reverse Factoring", desc: "Cash out on delivery — no more 60-day waits" },
-      { href: "/oliv-financing", icon: CreditCard, label: "Oliv Partner Liquidity", desc: "EGP 10M pool · promo CHV000" },
-      { href: "/yield-calculator", icon: Calculator, label: "Cost/Yield Calculator", desc: "Model discount rates & margin impact" },
+      { href: "/factoring-service", icon: Banknote, label: "Factoring", desc: "Cash out on delivery — no more 60-day waits" },
+      { href: "/oliv-financing", icon: CreditCard, label: "Oliv Liquidity", desc: "EGP 10M pool · promo CHV000" },
+      { href: "/yield-calculator", icon: Calculator, label: "Yield Models", desc: "Model discount rates & margin impact" },
     ],
   },
   {
-    label: "Run Supply Chain",
+    label: "Logistics",
     children: [
-      { href: "/logistics-service", icon: Truck, label: "Carrier Network", desc: "Egypt corridor runs — cost + timing to city" },
-      { href: "/erp-integrations", icon: Cpu, label: "ERP Integrations", desc: "SAP, Odoo, Oracle Opera & accounting sync" },
-      { href: "/dashboard/carrier", icon: Truck, label: "Fleet Ops Dashboard", desc: "Live shipments, providers, dock GRN" },
+      { href: "/logistics-service", icon: Truck, label: "Carriers", desc: "Egypt corridor runs — cost + timing to city" },
+      { href: "/erp-integrations", icon: Cpu, label: "ERP Sync", desc: "SAP, Odoo, Oracle Opera & accounting" },
+      { href: "/dashboard/carrier", icon: Truck, label: "Fleet Ops", desc: "Live shipments, providers, dock GRN" },
     ],
   },
   {
-    label: "Who It's For",
+    label: "Solutions",
     children: [
-      { href: "/hotels/join", icon: Hotel, label: "Hotels & Resorts", desc: "Approval matrix, budget locks, food-cost control" },
-      { href: "/suppliers/join", icon: Factory, label: "Suppliers & Mills", desc: "INVO app — fulfill & cash out in 48h" },
-      { href: "/funders", icon: Landmark, label: "Funders & Banks", desc: "Risk-graded receivable portfolios" },
-      { href: "/invo", icon: Phone, label: "Get the INVO App", desc: "Mobile fulfillment for every supplier" },
+      { href: "/hotels/join", icon: Hotel, label: "Hotels", desc: "Approval matrix, budget locks, food-cost control" },
+      { href: "/suppliers/join", icon: Factory, label: "Suppliers", desc: "INVO app — fulfill & cash out in 48h" },
+      { href: "/funders", icon: Landmark, label: "Funders", desc: "Risk-graded receivable portfolios" },
+      { href: "/invo", icon: Phone, label: "INVO App", desc: "Mobile fulfillment for every supplier" },
     ],
   },
 ];
@@ -127,8 +127,12 @@ export function PrimaryNav() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          <Link href="/login" className="text-sm px-4 py-2 text-slate-200 hover:text-white transition-colors">Sign In</Link>
-          <Link href="/register" className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">Get Started</Link>
+          <Link href="/invo" className="text-sm px-4 py-2 text-slate-200 hover:text-white transition-colors inline-flex items-center gap-1.5">
+            <Phone size={14} /> Get the INVO App
+          </Link>
+          <Link href="/register" className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+            Get Started
+          </Link>
         </div>
 
         <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-slate-200 p-2" aria-label="Toggle menu">
@@ -148,7 +152,7 @@ export function PrimaryNav() {
               ))}
             </div>
           ))}
-          <Link href="/login" className="text-sm text-slate-200 mt-2">Sign In</Link>
+          <Link href="/invo" className="text-sm text-slate-200 mt-2 inline-flex items-center gap-1.5"><Phone size={14} /> Get the INVO App</Link>
           <Link href="/register" className="text-sm text-center bg-blue-600 text-white rounded-md py-2.5 font-semibold">Get Started</Link>
         </div>
       )}
