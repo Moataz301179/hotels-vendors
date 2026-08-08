@@ -171,18 +171,21 @@ export default function LandingPage() {
         />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { name: "Premium Linens", img: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=300&fit=crop", meta: "2,340 SKUs · MOQ 50" },
-            { name: "Bathroom Amenities", img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=300&fit=crop", meta: "1,180 SKUs · MOQ 200" },
-            { name: "Commercial Kitchen", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop", meta: "3,850 SKUs · MOQ 2" },
-            { name: "Cleaning & Chemicals", img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop", meta: "1,960 SKUs · MOQ 20L" },
+            { name: "Premium Linens", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop", meta: "High-thread Egyptian cotton hotel bedding", price: "From EGP 450" },
+            { name: "Bathroom Amenities", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop", meta: "Luxury bathroom vanity & rolled towels", price: "From EGP 35/set" },
+            { name: "Commercial Kitchen", img: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop", meta: "Stainless steel hotel restaurant equipment", price: "From EGP 2,100" },
+            { name: "Cleaning & Chemicals", img: "https://images.unsplash.com/photo-1556912167-f556f1f39fdf?w=800&h=600&fit=crop", meta: "Professional housekeeping supplies & sanitizers", price: "From EGP 80/L" },
           ].map((c) => (
-            <Link key={c.name} href="/categories" className="group bg-white border border-slate-200 rounded-lg overflow-hidden hover:border-slate-300 transition-colors">
-              <div className="h-32 bg-slate-100 overflow-hidden">
-                <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+            <Link key={c.name} href="/categories" className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:border-slate-400 hover:shadow-sm transition-all">
+              <div className="h-48 w-full overflow-hidden bg-slate-100">
+                <img src={c.img} alt={c.name} onError={(e)=>{e.currentTarget.style.display="none";}} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
-              <div className="p-3.5">
-                <div className="text-sm font-semibold text-slate-900">{c.name}</div>
-                <div className="text-[11px] text-slate-500 mt-1">{c.meta}</div>
+              <div className="p-4 bg-white">
+                <div className="flex items-center justify-between">
+                  <div className="text-base font-bold text-slate-900">{c.name}</div>
+                  <span className="text-xs bg-slate-100 text-slate-800 font-semibold px-2 py-1 rounded">{c.price}</span>
+                </div>
+                <div className="text-xs text-slate-500 mt-1">{c.meta}</div>
               </div>
             </Link>
           ))}

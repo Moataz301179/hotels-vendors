@@ -9,7 +9,7 @@ export function SiteFooter() {
   const ar = locale === "ar";
 
   return (
-    <footer className={`border-t py-12 px-6 text-white ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "var(--accent-base)", borderColor: "rgba(255,255,255,0.14)" }}>
+    <footer className={`border-t py-12 px-6 text-slate-300 ${ar ? "font-cairo" : ""}`} style={{ backgroundColor: "#080C14", borderColor: "#1e293b" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-10">
           {/* Brand */}
@@ -34,29 +34,29 @@ export function SiteFooter() {
             <div>
               <div className="font-semibold mb-3 text-white">{ar ? "المنتج" : "Platform"}</div>
               <ul className="flex flex-col gap-2">
-                <li><Link href="/marketplace" className="text-white/45 hover:text-white transition-colors">HotelsVendors</Link></li>
-                <li><Link href="/marketplace" className="text-white/45 hover:text-white transition-colors">INVO {ar ? "السوق" : "Marketplace"}</Link></li>
-                <li><Link href="/sandbox" className="text-white/45 hover:text-white transition-colors">{ar ? "كلاء الذكاء الاصطناعي" : "AI Agents"}</Link></li>
-                <li><Link href="/factoring-service" className="text-white/45 hover:text-white transition-colors">{ar ? "التمويل العكسي" : "Reverse Factoring"}</Link></li>
-                <li><Link href="/financing/oliv" className="text-white/45 hover:text-white transition-colors">Oliv {ar ? "التمويل" : "Financing"}</Link></li>
-                <li><Link href="/suppliers/join" className="text-white/45 hover:text-white transition-colors">{ar ? "للموردين" : "For Suppliers"}</Link></li>
-                <li><Link href="/hotels/join" className="text-white/45 hover:text-white transition-colors">{ar ? "للفنادق" : "For Hotels"}</Link></li>
-                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "الامتثال" : "Compliance"}</Link></li>
+                <li><Link href="/marketplace" className="text-slate-300 hover:text-white transition-colors">HotelsVendors</Link></li>
+                <li><Link href="/marketplace" className="text-slate-300 hover:text-white transition-colors">INVO {ar ? "السوق" : "Marketplace"}</Link></li>
+                <li><Link href="/sandbox" className="text-slate-300 hover:text-white transition-colors">{ar ? "كلاء الذكاء الاصطناعي" : "AI Agents"}</Link></li>
+                <li><Link href="/factoring-service" className="text-slate-300 hover:text-white transition-colors">{ar ? "التمويل العكسي" : "Reverse Factoring"}</Link></li>
+                <li><Link href="/financing/oliv" className="text-slate-300 hover:text-white transition-colors">Oliv {ar ? "التمويل" : "Financing"}</Link></li>
+                <li><Link href="/suppliers/join" className="text-slate-300 hover:text-white transition-colors">{ar ? "للموردين" : "For Suppliers"}</Link></li>
+                <li><Link href="/hotels/join" className="text-slate-300 hover:text-white transition-colors">{ar ? "للفنادق" : "For Hotels"}</Link></li>
+                <li><Link href="/compliance" className="text-slate-300 hover:text-white transition-colors">{ar ? "الامتثال" : "Compliance"}</Link></li>
               </ul>
             </div>
             <div>
               <div className="font-semibold mb-3 text-white">{ar ? "الشركة" : "Company"}</div>
               <ul className="flex flex-col gap-2">
-                <li><Link href="/about" className="text-white/45 hover:text-white transition-colors">{ar ? "عنّا" : "About"}</Link></li>
-                <li><Link href="/contact" className="text-white/45 hover:text-white transition-colors">{ar ? "تواصل معنا" : "Contact"}</Link></li>
+                <li><Link href="/about" className="text-slate-300 hover:text-white transition-colors">{ar ? "عنّا" : "About"}</Link></li>
+                <li><Link href="/contact" className="text-slate-300 hover:text-white transition-colors">{ar ? "تواصل معنا" : "Contact"}</Link></li>
               </ul>
             </div>
             <div>
               <div className="font-semibold mb-3 text-white">{ar ? "قانوني" : "Legal"}</div>
               <ul className="flex flex-col gap-2">
-                <li><Link href="/privacy" className="text-white/45 hover:text-white transition-colors">{ar ? "سياسة الخصوصية" : "Privacy Policy"}</Link></li>
-                <li><Link href="/terms" className="text-white/45 hover:text-white transition-colors">{ar ? "شروط الخدمة" : "Terms of Service"}</Link></li>
-                <li><Link href="/compliance" className="text-white/45 hover:text-white transition-colors">{ar ? "الامتثال" : "Compliance"}</Link></li>
+                <li><Link href="/privacy" className="text-slate-300 hover:text-white transition-colors">{ar ? "سياسة الخصوصية" : "Privacy Policy"}</Link></li>
+                <li><Link href="/terms" className="text-slate-300 hover:text-white transition-colors">{ar ? "شروط الخدمة" : "Terms of Service"}</Link></li>
+                <li><Link href="/compliance" className="text-slate-300 hover:text-white transition-colors">{ar ? "الامتثال" : "Compliance"}</Link></li>
               </ul>
             </div>
           </div>

@@ -65,7 +65,7 @@ function MegaMenu({ group }: { group: NavGroup }) {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button className="flex items-center gap-1 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors cursor-pointer bg-transparent py-2">
+      <button className="flex items-center gap-1 text-sm font-medium text-slate-200 hover:text-white transition-colors cursor-pointer bg-transparent py-2">
         {group.label}
         <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -102,42 +102,42 @@ function MegaMenu({ group }: { group: NavGroup }) {
 export function PrimaryNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A] border-b border-slate-800">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-5 lg:px-8 h-16">
         <Link href="/" className="flex items-center shrink-0">
-          <Image src="/logo-white.svg" alt="HotelsVendors" width={150} height={34} className="h-8 w-auto invert" priority />
+          <Image src="/logo-white.svg" alt="HotelsVendors" width={150} height={34} className="h-8 w-auto" priority />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7">
           {GROUPS.map((g) => <MegaMenu key={g.label} group={g} />)}
-          <Link href="/sandbox" className="text-sm font-medium text-slate-700 hover:text-slate-900">Demo</Link>
-          <Link href="/pricing" className="text-sm font-medium text-slate-700 hover:text-slate-900">Pricing</Link>
+          <Link href="/sandbox" className="text-sm font-medium text-slate-200 hover:text-white transition-colors">Demo</Link>
+          <Link href="/pricing" className="text-sm font-medium text-slate-200 hover:text-white transition-colors">Pricing</Link>
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          <Link href="/login" className="text-sm px-4 py-2 text-slate-600 hover:text-slate-900">Sign In</Link>
-          <Link href="/register" className="text-sm px-4 py-2 bg-slate-900 text-white rounded-md font-semibold hover:bg-slate-800">Get Started</Link>
+          <Link href="/login" className="text-sm px-4 py-2 text-slate-200 hover:text-white transition-colors">Sign In</Link>
+          <Link href="/register" className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">Get Started</Link>
         </div>
 
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-slate-600 p-2" aria-label="Toggle menu">
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-slate-200 p-2" aria-label="Toggle menu">
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white px-5 py-4 flex flex-col gap-5">
+        <div className="lg:hidden border-t border-slate-800 bg-[#0F172A] px-5 py-4 flex flex-col gap-5">
           {GROUPS.map((g) => (
             <div key={g.label}>
               <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1.5">{g.label}</div>
               {g.children.map((c) => (
-                <Link key={c.href} href={c.href} onClick={() => setMobileOpen(false)} className="block text-sm text-slate-700 py-1.5">
+                <Link key={c.href} href={c.href} onClick={() => setMobileOpen(false)} className="block text-sm text-slate-200 hover:text-white py-1.5">
                   {c.label}
                 </Link>
               ))}
             </div>
           ))}
-          <Link href="/login" className="text-sm text-slate-700 mt-2">Sign In</Link>
-          <Link href="/register" className="text-sm text-center bg-slate-900 text-white rounded-md py-2.5 font-semibold">Get Started</Link>
+          <Link href="/login" className="text-sm text-slate-200 mt-2">Sign In</Link>
+          <Link href="/register" className="text-sm text-center bg-blue-600 text-white rounded-md py-2.5 font-semibold">Get Started</Link>
         </div>
       )}
     </header>
