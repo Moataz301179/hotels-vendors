@@ -71,8 +71,9 @@ jobs:
             echo "[2/8] Installing dependencies..."
             npm ci --legacy-peer-deps
 
-            echo "[3/8] Generating Prisma client..."
+            echo "[3/8] Generating Prisma client + syncing schema...\n"
             npx prisma generate
+            npx prisma db push --accept-data-loss 2>&1 | tail -5
 
             echo "[4/8] Building application (standalone)..."
             NEXT_TELEMETRY_DISABLED=1 npm run build
