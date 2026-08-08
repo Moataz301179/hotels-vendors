@@ -541,7 +541,7 @@ function hashString(str: string): number {
 
 export function getProductImage(product: { name: string; category: string; sku?: string }): { type: "url"; src: string } | { type: "gradient"; colors: string[]; initials: string } {
   const name = product.name.toLowerCase();
-  const category = product.category as string;
+  const category = (product.category as string).toLowerCase();
 
   // 1) Try exact keyword match
   for (const [keyword, url] of Object.entries(KEYWORD_MAP)) {
@@ -584,6 +584,6 @@ export function getProductImage(product: { name: string; category: string; sku?:
 }
 
 export function getCategoryImage(categoryId: string): string {
-  const pool = CATEGORY_IMAGE_POOLS[categoryId];
+  const pool = CATEGORY_IMAGE_POOLS[(categoryId || "").toLowerCase()];
   return pool?.[0] || CATEGORY_IMAGE_POOLS.fb[0];
 }
