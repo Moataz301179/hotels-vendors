@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import { RoleBenefits } from "@/components/auth/role-benefits";
 
 type Role = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
@@ -43,6 +44,54 @@ const ROLE_HOOKS: Record<Role, React.ReactNode> = {
       Connect provider API keys for live bookings · dock-slot scheduling · GRN reconciliation.
     </div>
   ),
+};
+
+/* ═══ ROLE PITCH — procurement tech, "as reimagined" for the chosen role ═══ */
+const ROLE_PITCH: Record<Role, { kicker: string; line: string; highlights: string[]; statement: string }> = {
+  HOTEL: {
+    kicker: "Procurement, as reimagined for Hotel Leaders",
+    line: "Replace spreadsheets, back-and-forth emails, and 90-day waits with an automated, compliant spend engine.",
+    highlights: [
+      "Multi-tier approval matrix — Chef → F&B → Procurement → Finance, auto-routed by dollar threshold",
+      "Departmental budget locks + AI spend forecast before you commit a single order",
+      "Native ETA e-invoicing & e-Waybill compliance, submission-ready",
+      "Consolidated supplier catalogs with hybrid FIXED / RFQ pricing",
+    ],
+    statement: "Stop losing margin to manual procurement. See your whole portfolio in one console — and approve from anywhere, in seconds.",
+  },
+  SUPPLIER: {
+    kicker: "Fulfillment, as reimagined for Suppliers",
+    line: "Stop waiting 60–90 days to get paid. Ship once, cash out in 48 hours.",
+    highlights: [
+      "Live order inbox with one-tap accept & fulfill from the INVO app",
+      "48h early cash-out via Oliv — promo code CHV000, Suez Canal Bank pool",
+      "0% platform subscription fee — keep more of every order",
+      "ETA-compliant invoicing generated automatically, no paperwork",
+    ],
+    statement: "List free, get real orders, and get paid in 48 hours. Built for suppliers tired of financing their buyers' cash flow.",
+  },
+  FACTORING: {
+    kicker: "Liquidity, as reimagined for Financial Partners",
+    line: "License a live, FRA-compliant reverse-factoring book of ETA-verified receivables.",
+    highlights: [
+      "FRA-compliant e-factoring registry with single-instance invoice locks",
+      "Automated credit-risk reliability index per hotel TRN (0–100)",
+      "Suez Canal Bank facility integration for pooled liquidity",
+      "48h reverse-factoring pool across Egyptian hospitality suppliers",
+    ],
+    statement: "Deploy capital into verified, ETA-connected receivables with institutional-grade risk controls — not blind SME debt.",
+  },
+  LOGISTICS: {
+    kicker: "Logistics, as reimagined for Carriers",
+    line: "From manual dispatch and lost paperwork to a live, reconciled delivery network.",
+    highlights: [
+      "Connect provider API keys for live bookings immediately",
+      "Dock-slot scheduling & e-Waybill QR verification",
+      "GRN reconciliation that flags shortages and auto-issues credit notes",
+      "Real-time tracking & notifications for every involved party",
+    ],
+    statement: "Run an honest, reconciled carrier operation — fewer disputes, faster payments, no more chasing missing signatures.",
+  },
 };
 
 interface FormState {
@@ -116,8 +165,11 @@ function RegisterInner() {
 
   return (
     <div>
-      {/* 4-tier role selector */}
-      <div className="grid grid-cols-2 gap-2 mb-5">
+      {/* ═══ ROLE SELECTOR (first step, before the form) ═══ */}
+      <div className="mb-1">
+        <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-2">Join as…</div>
+      </div>
+      <div className="grid grid-cols-2 gap-2 mb-6">
         {ROLES.map((r) => {
           const sel = role === r.id;
           return (
@@ -133,6 +185,22 @@ function RegisterInner() {
             </button>
           );
         })}
+      </div>
+
+      {/* ═══ ROLE PITCH — procurement tech, as reimagined for this role ═══ */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">{ROLE_PITCH[role].kicker}</div>
+        <h3 className="text-lg font-bold text-slate-900 leading-tight mb-2">{ROLE_PITCH[role].line}</h3>
+        <ul className="space-y-1.5 mb-3">
+          {ROLE_PITCH[role].highlights.map((h) => (
+            <li key={h} className="flex items-start gap-2 text-[13px] text-slate-700">
+              <CheckCircle2 size={14} className="text-emerald-600 mt-0.5 shrink-0" /> {h}
+            </li>
+          ))}
+        </ul>
+        <div className="text-[13px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+          {ROLE_PITCH[role].statement}
+        </div>
       </div>
 
       {/* Promotional hooks */}
