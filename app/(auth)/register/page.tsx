@@ -8,11 +8,11 @@ import { RoleBenefits } from "@/components/auth/role-benefits";
 
 type Role = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
 
-const ROLES: { id: Role; label: string; sub: string; emoji: string }[] = [
-  { id: "HOTEL", label: "Hotel / Property", sub: "Buy, approve, comply", emoji: "🏨" },
-  { id: "SUPPLIER", label: "Supplier / Vendor", sub: "List, fulfill, cash out", emoji: "🚜" },
-  { id: "FACTORING", label: "Factoring Partner", sub: "Fund verified invoices", emoji: "🏦" },
-  { id: "LOGISTICS", label: "Logistics Provider", sub: "Deliver & reconcile", emoji: "🚚" },
+const ROLES: { id: Role; label: string; sub: string; emoji: string; layer: "HV Web" | "INVO Mobile" }[] = [
+  { id: "HOTEL", label: "Hotel / Property", sub: "Buy, approve, comply", emoji: "🏨", layer: "HV Web" },
+  { id: "SUPPLIER", label: "Supplier / Vendor", sub: "List, fulfill, cash out", emoji: "🚜", layer: "INVO Mobile" },
+  { id: "FACTORING", label: "Factoring Partner", sub: "Fund verified invoices", emoji: "🏦", layer: "HV Web" },
+  { id: "LOGISTICS", label: "Logistics Provider", sub: "Deliver & reconcile", emoji: "🚚", layer: "INVO Mobile" },
 ];
 
 const FIELD_LABELS: Record<Role, { name: string; cr: string; booking: string; extra?: { label: string; placeholder: string } }> = {
@@ -167,9 +167,10 @@ function RegisterInner() {
     <div>
       {/* ═══ ROLE SELECTOR (first step, before the form) ═══ */}
       <div className="mb-1">
-        <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-2">Join as…</div>
+        <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-1">1 · Choose your role</div>
+        <p className="text-xs text-slate-500 mb-2">Every role registers on one primary layer for its account &amp; records. You'll use both apps day-to-day.</p>
       </div>
-      <div className="grid grid-cols-2 gap-2 mb-6">
+      <div className="grid grid-cols-2 gap-2 mb-3">
         {ROLES.map((r) => {
           const sel = role === r.id;
           return (
@@ -182,9 +183,19 @@ function RegisterInner() {
             >
               <div className="text-sm font-semibold">{r.emoji} {r.label}</div>
               <div className={`text-[10px] ${sel ? "text-slate-300" : "text-slate-400"}`}>{r.sub}</div>
+              <div className={`mt-1 inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded font-semibold ${
+                r.layer === "INVO Mobile"
+                  ? "bg-amber-100 text-amber-800 border border-amber-200"
+                  : "bg-blue-100 text-blue-800 border border-blue-200"
+              }`}>Registers on: {r.layer}</div>
             </button>
           );
         })}
+      </div>
+      <div className="mb-6 text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-500">
+        <span className="font-semibold text-slate-700">Two-layer registration:</span> Hotels &amp; Factoring partners register on the
+        HotelsVendors web layer; Suppliers &amp; Logistics providers register on the INVO mobile layer. Regardless of where you
+        register, hotels and suppliers use <span className="font-medium">both apps</span> — web for control &amp; compliance, mobile for the field.
       </div>
 
       {/* ═══ ROLE PITCH — procurement tech, as reimagined for this role ═══ */}
