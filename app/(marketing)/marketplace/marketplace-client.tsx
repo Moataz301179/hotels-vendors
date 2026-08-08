@@ -62,8 +62,9 @@ function MarketplaceContent() {
       try {
         const res = await fetch("/api/v1/products?limit=200");
         const json = await res.json();
-        if (json.success && json.data?.data) {
-          setProducts(json.data.data);
+        const list = json.data?.products ?? json.data?.data ?? [];
+        if (Array.isArray(list)) {
+          setProducts(list);
         }
       } catch { /* ignore */ }
       setLoading(false);
