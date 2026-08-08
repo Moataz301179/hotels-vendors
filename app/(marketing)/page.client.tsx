@@ -7,11 +7,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { AudienceRouter } from "@/components/marketing/audience-router";
+import { InteractiveSandbox } from "@/components/marketing/interactive-sandbox";
 import {
   ArrowRight, Shield, Landmark, Truck, Store, Hotel, Building2,
   Gavel, FileUp, Calculator, Cpu, CreditCard, CheckCircle2,
   Package, Banknote, TrendingUp, Sparkles,
 } from "lucide-react";
+
+/* Explicit 1-to-1 category → image mapping (no reused URLs, no generic fallback). */
+const CATEGORY_IMAGE_MAP: Record<string, string> = {
+  linen: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=600&q=80",
+  bathroom: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+  kitchen: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
+  cleaning: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80",
+};
 
 /* ── Count-up for live-feeling metrics ── */
 function useCountUp(end: number, duration = 1500) {
@@ -175,14 +184,14 @@ export default function LandingPage() {
         />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { name: "Premium Linens", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop", meta: "High-thread Egyptian cotton hotel bedding", price: "From EGP 450" },
-            { name: "Bathroom Amenities", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop", meta: "Luxury bathroom vanity & rolled towels", price: "From EGP 35/set" },
-            { name: "Commercial Kitchen", img: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop", meta: "Stainless steel hotel restaurant equipment", price: "From EGP 2,100" },
-            { name: "Cleaning & Chemicals", img: "https://images.unsplash.com/photo-1556912167-f556f1f39fdf?w=800&h=600&fit=crop", meta: "Professional housekeeping supplies & sanitizers", price: "From EGP 80/L" },
+            { key: "linen", name: "Premium Linens", meta: "High-thread Egyptian cotton hotel bedding", price: "From EGP 450" },
+            { key: "bathroom", name: "Bathroom Amenities", meta: "Luxury bathroom vanity & rolled towels", price: "From EGP 35/set" },
+            { key: "kitchen", name: "Commercial Kitchen", meta: "Stainless steel hotel restaurant equipment", price: "From EGP 2,100" },
+            { key: "cleaning", name: "Cleaning & Chemicals", meta: "Professional housekeeping supplies & sanitizers", price: "From EGP 80/L" },
           ].map((c) => (
             <Link key={c.name} href="/categories" className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:border-slate-400 hover:shadow-sm transition-all">
               <div className="h-48 w-full overflow-hidden bg-slate-100">
-                <img src={c.img} alt={c.name} onError={(e)=>{e.currentTarget.style.display="none";}} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                <img src={CATEGORY_IMAGE_MAP[c.key]} alt={c.name} onError={(e)=>{e.currentTarget.style.display="none";}} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
               <div className="p-4 bg-white">
                 <div className="flex items-center justify-between">
@@ -364,6 +373,18 @@ export default function LandingPage() {
             <p><span className="text-slate-500">[compliance]</span> e-Waybill EWB-88K2F9 generated · QR attached · <span className="text-emerald-400">verified</span></p>
             <p><span className="text-slate-500">[factoring]</span> FRA audit passed · EGP 14,400 payout <span className="text-emerald-400">approved in 38h</span></p>
           </div>
+        </div>
+      </section>
+
+      {/* ═════════════ INTERACTIVE SANDBOX ═════════════ */}
+      <section className="bg-[#F8FAFC] border-t border-slate-200 py-16">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8">
+          <SectionHeader
+            kicker="Try Before You Buy"
+            title="Run the platform before you sign up"
+            sub="A live, interactive micro-app — simulate approval chains, 48h cash-out, and dock scans with real-time trace."
+          />
+          <InteractiveSandbox />
         </div>
       </section>
 
