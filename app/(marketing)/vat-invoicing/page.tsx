@@ -153,6 +153,7 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
 
 function ComplianceSandbox() {
   const [taxId, setTaxId] = useState("")
+  const [company, setCompany] = useState("")
   const [amount, setAmount] = useState("")
   const [result, setResult] = useState<Record<string, unknown> | null>(null)
   const [loading, setLoading] = useState(false)
@@ -165,9 +166,9 @@ function ComplianceSandbox() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           companyTaxId: taxId,
-          companyName: "Demo Company",
+          companyName: company || "—", // use the user's real company input, not a fake
           invoiceAmount: parseFloat(amount) || 0,
-          items: [{ description: "Demo Item", quantity: 1, unitPrice: parseFloat(amount) || 0, vatRate: 14 }],
+          items: [{ description: "Invoice line item", quantity: 1, unitPrice: parseFloat(amount) || 0, vatRate: 14 }],
         }),
       })
       const data = await res.json()

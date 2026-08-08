@@ -1,78 +1,97 @@
 "use client";
 
-/* /rfq — Hybrid RFQ Engine (flagship)
-   Genuine flow: pick product → instant-buy vs RFQ toggle → submit to /api/v1/rfq
-   → see bids. Wired to the real backend, not a shell. */
+/* RFQ Engine — dynamic. Loads REAL products from the catalog API.
+   No hardcoded SAMPLE_PRODUCTS, no fake bids. When no real supplier catalog is
+   connected, shows an honest empty state with a path to connect sources. */
 
-import { useState } from "react";
-import { Gavel, Plus, Minus, Send, CheckCircle2, Loader2, ShoppingCart, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Gavel, Search, ArrowRight, Package, RefreshCw } from "lucide-react";
 
-interface Bid {
-  supplier: string;
-  unitPrice: number;
-  discount: string;
-  deliveryDays: number;
-  total: number;
+interface CatalogProduct {
+  id: string; sku?: string; name: string; category?: string;
+  unitPrice?: number; supplier?: { id?: string; name?: string } | null;
+  minOrderQuantity?: number;
 }
 
-const SAMPLE_PRODUCTS = [
-  { id: "p1", sku: "LIN-001", name: "Egyptian Cotton Sheets 400TC", category: "Premium Linens", company: "El Nile Textiles", unitPrice: 72, rfqThreshold: 150, mode: "HYBRID" as const },
-  { id: "p2", sku: "AMN-018", name: "Hotel Shampoo 30ml Bulk", category: "Bathroom Amenities", company: "Delta Chem", unitPrice: 3.5, rfqThreshold: 500, mode: "HYBRID" as const },
-  { id: "p3", sku: "KIT-003", name: "Convection Oven 6-Level", category: "Commercial Kitchen", company: "Cairo Catering Equip", unitPrice: 18400, rfqThreshold: 3, mode: "HYBRID" as const },
-];
+interface RealBid {
+  supplier: string; unitPrice: number; deliveryDays: number; total: number;
+}
 
 export default function RfqPage() {
-  const [selectedId, setSelectedId] = useState(SAMPLE_PRODUCTS[0].id);
-  const [qty, setQty] = useState(200);
-  const [targetPrice, setTargetPrice] = useState("");
-  const [deliveryWindow, setDeliveryWindow] = useState("2 weeks");
+  const [products, setProducts] = useState<CatalogProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
+
+  const [selectedId, setSelectedId] = useState("");
+  const [qty, setQty] = useState(10);
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
-  const [result, setResult] = useState<Bid[]>([]);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [bids, setBids] = useState<RealBid[]>([]);
+  const [msg, setMsg] = useState("");
 
-  const product = SAMPLE_PRODUCTS.find((p) => p.id === selectedId)!;
-
-  function evaluateMode() {
-    if (product.mode === "HYBRID" && product.rfqThreshold && qty >= product.rfqThreshold) return "rfq";
-    return "fixed";
+  async function load() {
+    setLoading(true); setError("");
+    try {
+      const res = await fetch("/api/v1/products?limit=50");
+      const d = await res.json();
+      const list: CatalogProduct[] = d?.data?.products ?? [];
+      setProducts(list);
+      if (list.length > 0) setSelectedId((prev) => prev || list[0].id);
+    } catch {
+      setError("Could not load the catalog right now.");
+    } finally {
+      setLoading(false);
+    }
   }
+  useEffect(() => { load(); }, []);
 
-  async function handleSubmit() {
-    setStatus("submitting");
-    setErrorMsg("");
+  const product = products.find((p) => p.id === selectedId) || null;
+  const q = query.trim().toLowerCase();
+  const visible = q ? products.filter((p) => p.name.toLowerCase().includes(q) || (p.category || "").toLowerCase().includes(q) || (p.supplier?.name || "").toLowerCase().includes(q)) : products;
+
+  // Hybrid mode: MOQ/stock-driven — above a bulk threshold we auction.
+  const threshold = product?.minOrderQuantity && product.minOrderQuantity > 1 ? Math.max(20, product.minOrderQuantity * 2) : 50;
+  const isRfq = !!product && qty >= threshold;
+
+  async function submit() {
+    if (!product) return;
+    setStatus("submitting"); setMsg("");
     try {
       const res = await fetch("/api/v1/rfq", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId: product.id,
-          supplierId: "sup-linen-01",
+          supplierId: product.supplier?.id || "",
           requestedQty: qty,
-          targetPrice: targetPrice ? Number(targetPrice) : undefined,
-          deliveryTimeline: deliveryWindow,
+          supplierName: product.supplier?.name || "",
         }),
       });
-      const data = await res.json();
-      if (data.success) {
-        // Simulate competitive bids returning to the buyer (real flow: supplier inbox)
-        const bids: Bid[] = [
-          { supplier: "Luxe Linen Co.", unitPrice: qty >= 200 ? 66 : 70, discount: "8%", deliveryDays: 3, total: (qty >= 200 ? 66 : 70) * qty },
-          { supplier: "NileMills SAE", unitPrice: qty >= 200 ? 63 : 68, discount: "12%", deliveryDays: 5, total: (qty >= 200 ? 63 : 68) * qty },
-          { supplier: "DeltaTex", unitPrice: 69, discount: "4%", deliveryDays: 2, total: 69 * qty },
-        ].sort((a, b) => a.unitPrice - b.unitPrice);
-        setResult(bids);
+      const d = await res.json();
+      if (d.success) {
+        // Only present bids actually returned by the engine (real auction flow).
+        // If none returned, show the queued state rather than inventing prices.
+        const returned = d?.data?.bids ?? d?.data?.quotes ?? [];
+        if (Array.isArray(returned) && returned.length > 0) {
+          setBids(returned.map((b: any) => ({
+            supplier: b.supplier || b.supplierName || "Supplier",
+            unitPrice: Number(b.unitPrice ?? b.price ?? 0),
+            deliveryDays: Number(b.deliveryDays ?? b.leadTimeDays ?? 0),
+            total: Number(b.total ?? 0),
+          })).sort((a: RealBid, b: RealBid) => a.unitPrice - b.unitPrice));
+        } else {
+          setBids([]);
+        }
         setStatus("done");
+        setMsg(d.success === true ? d.data?.message || "RFQ created — suppliers notified." : "");
       } else {
-        setStatus("error");
-        setErrorMsg(data.error || "RFQ submission failed");
+        setStatus("error"); setMsg(d.error || "RFQ submission failed.");
       }
     } catch {
-      setStatus("error");
-      setErrorMsg("Network error — could not reach RFQ API");
+      setStatus("error"); setMsg("Network error — could not reach the RFQ API.");
     }
   }
-
-  const currentMode = evaluateMode();
 
   return (
     <main className="bg-slate-50 min-h-screen pt-16">
@@ -83,133 +102,104 @@ export default function RfqPage() {
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mt-1">Buy fixed, or auction a bulk quote</h1>
           <p className="text-slate-600 text-sm mt-2 max-w-2xl">
-            Below the RFQ threshold you get instant checkout pricing. Above it, your request is auctioned across suppliers and competitive bids return here.
+            Browse real supplier catalog. Below the bulk threshold you get instant checkout pricing; above it, the request is auctioned to suppliers and their real bids return here.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Product select */}
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h2 className="text-sm font-semibold text-slate-900 mb-3">1. Select product</h2>
-            <div className="space-y-2">
-              {SAMPLE_PRODUCTS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => { setSelectedId(p.id); setStatus("idle"); setResult([]); }}
-                  className={`w-full text-left p-3 rounded border transition-colors ${selectedId === p.id ? "border-slate-900 bg-slate-50" : "border-slate-200 bg-white"}`}
-                >
-                  <div className="text-sm font-medium text-slate-900">{p.name}</div>
-                  <div className="text-[11px] text-slate-500 mt-0.5">{p.category} · EGP {p.unitPrice}/unit · MOQ {p.rfqThreshold}</div>
-                </button>
-              ))}
+        {/* Feedback banner */}
+        {error && <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">Could not load the catalog. <button onClick={load} className="inline-flex items-center gap-1 font-semibold underline"><RefreshCw size={12} /> Retry</button></div>}
+
+        {/* Empty / dynamic state */}
+        {loading ? (
+          <div className="bg-white border border-slate-200 rounded-lg p-12 text-center text-slate-400 text-sm">Loading real catalog…</div>
+        ) : products.length === 0 ? (
+          <div className="bg-white border border-dashed border-slate-300 rounded-xl p-12 text-center">
+            <Package size={30} className="mx-auto text-slate-300 mb-3" />
+            <h2 className="text-lg font-bold text-slate-900">No supplier catalog connected yet</h2>
+            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+              The RFQ engine needs real supplier stock to quote against. This page shows live catalog only — connect a supplier portal or API key, or onboard as a vendor, to activate bulk auctioning.
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800">
+                Join as Supplier <ArrowRight size={14} />
+              </Link>
+              <Link href="/marketplace" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50">
+                Browse marketplace
+              </Link>
             </div>
           </div>
-
-          {/* Quantity + mode */}
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <h2 className="text-sm font-semibold text-slate-900 mb-3">2. Configure order</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-slate-600 mb-1.5">Quantity</label>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setQty(Math.max(1, qty - 10))} className="p-2 border border-slate-200 rounded hover:bg-slate-50"><Minus size={14} /></button>
-                  <div className="flex-1 text-center py-2 border border-slate-200 rounded font-semibold text-slate-900 text-lg tabular-nums">{qty}</div>
-                  <button onClick={() => setQty(qty + 10)} className="p-2 border border-slate-200 rounded hover:bg-slate-50"><Plus size={14} /></button>
-                </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {/* Product select (real) */}
+            <div className="bg-white border border-slate-200 rounded-lg p-4">
+              <h2 className="text-sm font-semibold text-slate-900 mb-3">1. Select product</h2>
+              <div className="relative mb-3">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search real catalog…"
+                  className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
               </div>
-
-              {/* Pricing mode pill */}
-              <div className={`rounded p-3 border text-xs ${currentMode === "rfq" ? "bg-blue-50 border-blue-200 text-blue-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"}`}>
-                {currentMode === "rfq" ? (
-                  <div className="flex items-start gap-2">
-                    <Gavel size={14} className="mt-0.5 shrink-0" />
-                    <div>
-                      <div className="font-semibold">RFQ Mode Active</div>
-                      <div>Quantity {qty} ≥ threshold {product.rfqThreshold}. Your request will be auctioned to suppliers.</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-start gap-2">
-                    <ShoppingCart size={14} className="mt-0.5 shrink-0" />
-                    <div>
-                      <div className="font-semibold">Instant Checkout</div>
-                      <div>Below threshold — buy now at EGP {product.unitPrice}/unit.</div>
-                    </div>
-                  </div>
-                )}
+              <div className="space-y-2 max-h-80 overflow-auto">
+                {visible.slice(0, 30).map((p) => (
+                  <button key={p.id} onClick={() => { setSelectedId(p.id); setStatus("idle"); setBids([]); }}
+                    className={`w-full text-left p-3 rounded border transition-colors ${selectedId === p.id ? "border-slate-900 bg-slate-50" : "border-slate-200 bg-white hover:border-slate-300"}`}>
+                    <div className="text-sm font-medium text-slate-900">{p.name}</div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">{p.category || "Catalog"} · {p.supplier?.name || "Verified Supplier"}</div>
+                  </button>
+                ))}
+                {visible.length === 0 && <div className="text-xs text-slate-400 text-center py-6">No items match "{query}".</div>}
               </div>
+            </div>
 
-              {currentMode === "rfq" && (
-                <div className="space-y-3">
+            {/* Configure */}
+            <div className="bg-white border border-slate-200 rounded-lg p-4">
+              <h2 className="text-sm font-semibold text-slate-900 mb-3">2. Configure order</h2>
+              {product ? (
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-xs text-slate-600 mb-1.5">Target price / unit (EGP)</label>
-                    <input type="number" value={targetPrice} onChange={(e) => setTargetPrice(e.target.value)} placeholder={`Current: EGP ${product.unitPrice}`} className="w-full px-3 py-2 border border-slate-200 rounded text-sm" />
+                    <label className="block text-xs text-slate-600 mb-1.5">Quantity</label>
+                    <input type="number" min={1} value={qty} onChange={(e) => { setQty(Number(e.target.value) || 0); setStatus("idle"); }}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                   </div>
-                  <div>
-                    <label className="block text-xs text-slate-600 mb-1.5">Delivery window</label>
-                    <select value={deliveryWindow} onChange={(e) => setDeliveryWindow(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded text-sm bg-white">
-                      <option>2 weeks</option><option>Within 10 days</option><option>Within 5 days</option><option>End of month</option>
-                    </select>
+                  <div className="text-xs text-slate-500">Unit pricing: <span className="font-semibold text-slate-900">EGP {product.unitPrice ?? "—"}</span> · Bulk auction at qty ≥ {threshold}</div>
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${isRfq ? "bg-amber-50 text-amber-800 border-amber-200" : "bg-emerald-50 text-emerald-800 border-emerald-200"}`}>
+                    {isRfq ? "RFQ auction mode" : "Instant fixed checkout"}
                   </div>
                 </div>
+              ) : (
+                <div className="text-sm text-slate-400">Select a product to configure.</div>
+              )}
+              <button onClick={submit} disabled={!product || status === "submitting"}
+                className="w-full mt-5 py-3 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 disabled:opacity-40 transition-colors">
+                {status === "submitting" ? "Sending…" : isRfq ? "Auction Request →" : "Request Quote"}
+              </button>
+              {msg && <div className="mt-2 text-xs text-emerald-700">{msg}</div>}
+              {status === "error" && <div className="mt-2 text-xs text-red-600">{msg}</div>}
+            </div>
+
+            {/* Real bids */}
+            <div className="bg-white border border-slate-200 rounded-lg p-4">
+              <h2 className="text-sm font-semibold text-slate-900 mb-3">3. Supplier bids</h2>
+              {status === "done" && bids.length > 0 ? (
+                <div className="space-y-2">
+                  {bids.map((b, i) => (
+                    <div key={i} className="border border-slate-200 rounded-lg p-3 flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium text-slate-900">{b.supplier}</div>
+                        <div className="text-[11px] text-slate-500">{b.deliveryDays} day delivery</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-bold text-slate-900 tabular-nums">EGP {b.unitPrice.toLocaleString()}</div>
+                        <div className="text-[11px] text-slate-400">total EGP {b.total.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : status === "done" ? (
+                <div className="text-sm text-slate-500 py-6 text-center">RFQ created. Suppliers are being notified — real bids will appear here as they respond.</div>
+              ) : (
+                <div className="text-sm text-slate-400 py-6 text-center">Bids from the live auction appear here.</div>
               )}
             </div>
-          </div>
-
-          {/* Submit */}
-          <div className="bg-white border border-slate-200 rounded-lg p-4 flex flex-col">
-            <h2 className="text-sm font-semibold text-slate-900 mb-3">3. {currentMode === "rfq" ? "Launch auction" : "Checkout"}</h2>
-            <div className="flex-1 space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-slate-500">Product</span><span className="text-slate-900 font-medium">{product.name}</span></div>
-              <div className="flex justify-between"><span className="text-slate-500">Quantity</span><span className="text-slate-900 font-medium">{qty}</span></div>
-              <div className="flex justify-between"><span className="text-slate-500">Est. value</span><span className="text-slate-900 font-medium">EGP {(product.unitPrice * qty).toLocaleString()}</span></div>
-            </div>
-
-            <button
-              onClick={handleSubmit}
-              disabled={status === "submitting"}
-              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 disabled:opacity-50"
-            >
-              {status === "submitting" ? <Loader2 size={15} className="animate-spin" /> : currentMode === "rfq" ? <Gavel size={15} /> : <Zap size={15} />}
-              {currentMode === "rfq" ? "Submit to RFQ / Auction" : "Instant Purchase"}
-            </button>
-
-            {status === "error" && <div className="mt-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded p-2">{errorMsg}</div>}
-            {status === "done" && <div className="mt-3 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded p-2 flex items-center gap-1.5"><CheckCircle2 size={13} /> RFQ received — bids below.</div>}
-          </div>
-        </div>
-
-        {/* Bids result */}
-        {status === "done" && result.length > 0 && (
-          <div className="mt-8 bg-white border border-slate-200 rounded-lg overflow-hidden">
-            <div className="px-4 py-3 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-slate-900">Competitive Bids — {product.name} × {qty}</h2>
-              <span className="text-[11px] text-slate-500">15-min auction window</span>
-            </div>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-[11px] text-slate-500 uppercase bg-slate-50">
-                  <th className="text-left font-medium px-4 py-2">Supplier</th>
-                  <th className="text-right font-medium px-4 py-2">Unit Price</th>
-                  <th className="text-right font-medium px-4 py-2">Discount</th>
-                  <th className="text-right font-medium px-4 py-2">Delivery</th>
-                  <th className="text-right font-medium px-4 py-2">Total</th>
-                  <th className="text-right font-medium px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {result.map((b, i) => (
-                  <tr key={i} className="hover:bg-slate-50">
-                    <td className="px-4 py-2.5 font-medium text-slate-900">{b.supplier}</td>
-                    <td className="px-4 py-2.5 text-right text-slate-900 tabular-nums">EGP {b.unitPrice}</td>
-                    <td className="px-4 py-2.5 text-right"><span className="text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">{b.discount}</span></td>
-                    <td className="px-4 py-2.5 text-right text-slate-600">{b.deliveryDays} days</td>
-                    <td className="px-4 py-2.5 text-right font-semibold text-slate-900 tabular-nums">EGP {b.total.toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right"><button className="text-xs px-3 py-1.5 rounded bg-slate-900 text-white hover:bg-slate-800">Accept</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         )}
       </div>

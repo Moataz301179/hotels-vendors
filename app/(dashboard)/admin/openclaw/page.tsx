@@ -1,9 +1,8 @@
 import { Metadata } from "next";
 import {
-  Activity, Globe, Bot, Camera, Workflow, Settings,
+  Activity, Globe, Bot, Workflow, Settings,
   CheckCircle2, XCircle, ArrowUpRight, Zap, Clock,
-  Shield, Terminal, ImageIcon, Play, Pause, RefreshCw,
-  Link2, ExternalLink, AlertTriangle,
+  Shield, Terminal, ImageIcon, Link2, AlertTriangle,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { checkOpenClawHealth } from "@/lib/integrations/openclaw";
@@ -40,22 +39,7 @@ async function getOpenClawData() {
     jobCounts.map((j) => [j.status, j._count.status])
   );
 
-  // Mock workflow data (replace with real data when available)
-  const workflows = [
-    { id: "wf-1", name: "Landing Page Screenshot", status: "active", lastRun: "2m ago", frequency: "On push", type: "visual-test" },
-    { id: "wf-2", name: "Catalog Visual Regression", status: "active", lastRun: "15m ago", frequency: "Hourly", type: "visual-test" },
-    { id: "wf-3", name: "Auth Flow Automation", status: "paused", lastRun: "2h ago", frequency: "Daily", type: "e2e-test" },
-    { id: "wf-4", name: "Supplier Onboarding Check", status: "active", lastRun: "5m ago", frequency: "Real-time", type: "validation" },
-  ];
-
-  const screenshots = [
-    { id: "ss-1", name: "Landing Page — Desktop", status: "passed", timestamp: "2m ago", size: "1920×1080" },
-    { id: "ss-2", name: "Landing Page — Mobile", status: "passed", timestamp: "2m ago", size: "375×812" },
-    { id: "ss-3", name: "Catalog — Grid View", status: "failed", timestamp: "15m ago", size: "1920×1080" },
-    { id: "ss-4", name: "Login Page", status: "passed", timestamp: "1h ago", size: "1920×1080" },
-  ];
-
-  return { recentJobs, statusCounts, health, workflows, screenshots };
+  return { recentJobs, statusCounts, health };
 }
 
 export default async function OpenClawHubPage() {
@@ -63,10 +47,6 @@ export default async function OpenClawHubPage() {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case "active": return "var(--accent-base)";
-      case "paused": return "var(--orange-base)";
-      case "failed": return "var(--error)";
-      case "passed": return "var(--accent-base)";
       case "COMPLETED": return "var(--accent-base)";
       case "RUNNING": return "var(--info)";
       case "PENDING": return "var(--orange-base)";
@@ -77,12 +57,8 @@ export default async function OpenClawHubPage() {
 
   const statusBg = (status: string) => {
     switch (status) {
-      case "active":
-      case "passed":
       case "COMPLETED": return "rgba(var(--success-rgb),0.08)";
-      case "paused":
       case "PENDING": return "rgba(251,191,36,0.08)";
-      case "failed":
       case "FAILED": return "rgba(var(--error-rgb),0.08)";
       case "RUNNING": return "rgba(96,165,250,0.08)";
       default: return "rgba(255,255,255,0.03)";
@@ -91,12 +67,8 @@ export default async function OpenClawHubPage() {
 
   const statusBorder = (status: string) => {
     switch (status) {
-      case "active":
-      case "passed":
       case "COMPLETED": return "rgba(var(--success-rgb),0.20)";
-      case "paused":
       case "PENDING": return "rgba(251,191,36,0.20)";
-      case "failed":
       case "FAILED": return "rgba(var(--error-rgb),0.20)";
       case "RUNNING": return "rgba(96,165,250,0.20)";
       default: return "rgba(255,255,255,0.06)";
@@ -208,21 +180,21 @@ export default async function OpenClawHubPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[rgba(0,0,0,0.15)] flex items-center justify-center">
-                <Camera size={16} className="text-accent-base" />
+                <Terminal size={16} className="text-accent-base" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Visual Tests</p>
-                <p className="text-[10px] text-foreground-muted">Today</p>
+                <p className="text-sm font-semibold text-white">Agent Jobs</p>
+                <p className="text-[10px] text-foreground-muted">All time</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="text-center p-2 rounded-lg bg-[rgba(var(--success-rgb),0.06)] border border-[rgba(var(--success-rgb),0.12)]">
-              <p className="text-lg font-bold text-emerald-400">{data.screenshots.filter(s => s.status === "passed").length}</p>
-              <p className="text-[9px] text-foreground-muted uppercase">Passed</p>
+              <p className="text-lg font-bold text-emerald-400">{data.statusCounts["COMPLETED"] || 0}</p>
+              <p className="text-[9px] text-foreground-muted uppercase">Completed</p>
             </div>
             <div className="text-center p-2 rounded-lg bg-[rgba(var(--error-rgb),0.06)] border border-[rgba(var(--error-rgb),0.12)]">
-              <p className="text-lg font-bold text-error">{data.screenshots.filter(s => s.status === "failed").length}</p>
+              <p className="text-lg font-bold text-error">{data.statusCounts["FAILED"] || 0}</p>
               <p className="text-[9px] text-foreground-muted uppercase">Failed</p>
             </div>
             <div className="text-center p-2 rounded-lg bg-surface-1 border border-border-subtle">
@@ -242,36 +214,50 @@ export default async function OpenClawHubPage() {
               <Workflow size={14} className="text-foreground-muted" />
               Automation Workflows
             </h2>
-            <button className="text-[10px] text-foreground-muted hover:text-foreground-secondary transition-colors flex items-center gap-1">
-              <RefreshCw size={10} /> Refresh
-            </button>
           </div>
-          <div className="space-y-2">
-            {data.workflows.map((wf) => (
-              <div key={wf.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-surface-1 transition-colors group">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: statusColor(wf.status) }}
-                  />
-                  <div>
-                    <p className="text-sm text-white">{wf.name}</p>
-                    <p className="text-[10px] text-foreground-muted">{wf.frequency} · {wf.type}</p>
+          {data.recentJobs.length > 0 ? (
+            <div className="space-y-2">
+              {data.recentJobs.map((job) => (
+                <div key={job.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-surface-1 transition-colors group">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ background: statusColor(job.status) }}
+                    />
+                    <div>
+                      <p className="text-sm text-white">{job.jobName}</p>
+                      <p className="text-[10px] text-foreground-muted">{job.squad} · {job.jobType}</p>
+                    </div>
                   </div>
+                  <span
+                    className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                    style={{
+                      background: statusBg(job.status),
+                      color: statusColor(job.status),
+                      border: `1px solid ${statusBorder(job.status)}`,
+                    }}
+                  >
+                    {job.status}
+                  </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] text-foreground-muted">{wf.lastRun}</span>
-                  <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    {wf.status === "paused" ? (
-                      <Play size={14} className="text-emerald-400" />
-                    ) : (
-                      <Pause size={14} className="text-[#fbbf24]" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Workflow size={20} className="text-foreground-muted mb-2" />
+              <p className="text-sm text-white">No automation runs yet</p>
+              <p className="text-xs text-foreground-muted mt-1 max-w-[320px]">
+                Connect a source or run a job in the Swarm Center to see automation activity here.
+              </p>
+              <Link
+                href="/admin/swarm"
+                className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors"
+              >
+                <Bot size={12} />
+                Swarm Center
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Recent Screenshots */}
@@ -281,40 +267,13 @@ export default async function OpenClawHubPage() {
               <ImageIcon size={14} className="text-foreground-muted" />
               Recent Screenshots
             </h2>
-            <Link href="#" className="text-[10px] text-foreground-muted hover:text-foreground-secondary transition-colors flex items-center gap-1">
-              View All <ArrowUpRight size={10} />
-            </Link>
           </div>
-          <div className="space-y-2">
-            {data.screenshots.map((ss) => (
-              <div key={ss.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-surface-1 transition-colors group">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ background: statusBg(ss.status), border: `1px solid ${statusBorder(ss.status)}` }}
-                  >
-                    <Camera size={14} style={{ color: statusColor(ss.status) }} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-white">{ss.name}</p>
-                    <p className="text-[10px] text-foreground-muted">{ss.size} · {ss.timestamp}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                    style={{
-                      background: statusBg(ss.status),
-                      color: statusColor(ss.status),
-                      border: `1px solid ${statusBorder(ss.status)}`,
-                    }}
-                  >
-                    {ss.status}
-                  </span>
-                  <ExternalLink size={12} className="text-foreground-muted group-hover:text-foreground-muted transition-opacity cursor-pointer" />
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <ImageIcon size={20} className="text-foreground-muted mb-2" />
+            <p className="text-sm text-white">No screenshots yet</p>
+            <p className="text-xs text-foreground-muted mt-1 max-w-[320px]">
+              No visual capture runs yet — run a visual-test job to see screenshots here.
+            </p>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, TrendingUp, Wallet, Package, Users, FileCheck, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { BarChart3, TrendingUp, Wallet, Users, FileCheck, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useApi } from "@/lib/hooks/use-api";
 
@@ -25,11 +25,15 @@ const STATUS_COLORS: Record<string, string> = {
   DISPUTED: "#f97316",
 };
 
+const NO_DATA_MESSAGE = "No data yet — this report populates as transactions occur";
+
 export default function AdminReportsPage() {
-  const { data, loading, error } = useApi<ReportData>("/api/v1/admin/reports");
+  const { data, loading, error, refetch } = useApi<ReportData>("/api/v1/admin/reports");
 
   const formatEgp = (v: number) => `EGP ${(v / 1000000).toFixed(2)}M`;
   const formatEgpK = (v: number) => `EGP ${(v / 1000).toFixed(0)}K`;
+
+  const totalEtaInvoices = data ? data.eta.reduce((s, e) => s + e.count, 0) : 0;
 
   const kpiCards = [
     { label: "Total GMV", value: data ? formatEgp(data.gmv.total) : "—", icon: Wallet, color: "var(--accent-base)" },
@@ -37,7 +41,7 @@ export default function AdminReportsPage() {
     { label: "Weekly GMV", value: data ? formatEgp(data.gmv.weekly) : "—", icon: TrendingUp, color: "var(--info)" },
     { label: "Platform Fees", value: data ? formatEgp(data.factoring.totalPlatformFees) : "—", icon: BarChart3, color: "#f59e0b" },
     { label: "New Users (30d)", value: data ? String(data.userGrowth.newUsers30d) : "—", icon: Users, color: "#8b5cf6" },
-    { label: "ETA Compliant (DEMO)", value: data ? `${data.eta.filter((e) => ["ACCEPTED", "VALIDATED"].includes(e.status)).reduce((s, e) => s + e.count, 0)} invoices` : "—", icon: FileCheck, color: "#06b6d4" },
+    { label: "ETA Invoices", value: data ? `${totalEtaInvoices} invoices` : "—", icon: FileCheck, color: "#06b6d4" },
   ];
 
   return (
@@ -57,8 +61,17 @@ export default function AdminReportsPage() {
       </div>
 
       <div className="px-6 py-6 space-y-6">
-        {error && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">{error}</div>
+        {error && !loading && (
+          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px] flex items-center justify-between gap-4">
+            <span>{error}</span>
+            <button
+              onClick={refetch}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 text-[12px] font-medium hover:bg-red-500/25 transition-colors"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Retry
+            </button>
+          </div>
         )}
 
         {/* KPI Cards */}
@@ -85,23 +98,27 @@ export default function AdminReportsPage() {
           <div className="p-5 rounded-xl bg-surface-1 border border-border-subtle">
             <h3 className="text-[14px] font-semibold text-white mb-4">Orders by Status (30d)</h3>
             <div className="space-y-3">
-              {data?.orders?.map((o) => (
-                <div key={o.status} className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: STATUS_COLORS[o.status] || "#8B5CF6" }} />
-                  <span className="text-[12px] text-foreground-secondary w-28 capitalize">{o.status.toLowerCase()}</span>
-                  <div className="flex-1 h-2 rounded-full bg-surface-2 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${Math.max(2, (o.count / (data.orders.reduce((s, x) => s + x.count, 0) || 1)) * 100)}%`,
-                        backgroundColor: STATUS_COLORS[o.status] || "#8B5CF6",
-                      }}
-                    />
+              {data?.orders?.length ? (
+                data.orders.map((o) => (
+                  <div key={o.status} className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: STATUS_COLORS[o.status] || "#8B5CF6" }} />
+                    <span className="text-[12px] text-foreground-secondary w-28 capitalize">{o.status.toLowerCase()}</span>
+                    <div className="flex-1 h-2 rounded-full bg-surface-2 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${Math.max(2, (o.count / (data.orders.reduce((s, x) => s + x.count, 0) || 1)) * 100)}%`,
+                          backgroundColor: STATUS_COLORS[o.status] || "#8B5CF6",
+                        }}
+                      />
+                    </div>
+                    <span className="text-[12px] font-medium text-white w-12 text-right">{o.count}</span>
+                    <span className="text-[11px] text-foreground-muted w-20 text-right">{formatEgpK(o.value)}</span>
                   </div>
-                  <span className="text-[12px] font-medium text-white w-12 text-right">{o.count}</span>
-                  <span className="text-[11px] text-foreground-muted w-20 text-right">{formatEgpK(o.value)}</span>
-                </div>
-              )) || <p className="text-[12px] text-foreground-muted py-4 text-center">No data</p>}
+                ))
+              ) : (
+                <p className="text-[12px] text-foreground-muted py-4 text-center">{NO_DATA_MESSAGE}</p>
+              )}
             </div>
           </div>
 
@@ -109,16 +126,20 @@ export default function AdminReportsPage() {
           <div className="p-5 rounded-xl bg-surface-1 border border-border-subtle">
             <h3 className="text-[14px] font-semibold text-white mb-4">Top Hotels by GMV (30d)</h3>
             <div className="space-y-2.5">
-              {data?.topHotels?.map((h, i) => (
-                <div key={h.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-1">
-                  <span className="text-[11px] font-bold text-foreground-muted w-4">{i + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-white truncate">{h.name}</p>
-                    <p className="text-[11px] text-foreground-muted">{h.orderCount} orders</p>
+              {data?.topHotels?.length ? (
+                data.topHotels.map((h, i) => (
+                  <div key={h.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-1">
+                    <span className="text-[11px] font-bold text-foreground-muted w-4">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-medium text-white truncate">{h.name}</p>
+                      <p className="text-[11px] text-foreground-muted">{h.orderCount} orders</p>
+                    </div>
+                    <span className="text-[12px] font-semibold text-emerald-400">{formatEgpK(h.gmv)}</span>
                   </div>
-                  <span className="text-[12px] font-semibold text-emerald-400">{formatEgpK(h.gmv)}</span>
-                </div>
-              )) || <p className="text-[12px] text-foreground-muted py-4 text-center">No data</p>}
+                ))
+              ) : (
+                <p className="text-[12px] text-foreground-muted py-4 text-center">{NO_DATA_MESSAGE}</p>
+              )}
             </div>
           </div>
 
@@ -126,16 +147,20 @@ export default function AdminReportsPage() {
           <div className="p-5 rounded-xl bg-surface-1 border border-border-subtle">
             <h3 className="text-[14px] font-semibold text-white mb-4">Top Suppliers by GMV (30d)</h3>
             <div className="space-y-2.5">
-              {data?.topSuppliers?.map((s, i) => (
-                <div key={s.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-1">
-                  <span className="text-[11px] font-bold text-foreground-muted w-4">{i + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-white truncate">{s.name}</p>
-                    <p className="text-[11px] text-foreground-muted">{s.orderCount} orders</p>
+              {data?.topSuppliers?.length ? (
+                data.topSuppliers.map((s, i) => (
+                  <div key={s.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-1">
+                    <span className="text-[11px] font-bold text-foreground-muted w-4">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-medium text-white truncate">{s.name}</p>
+                      <p className="text-[11px] text-foreground-muted">{s.orderCount} orders</p>
+                    </div>
+                    <span className="text-[12px] font-semibold text-emerald-400">{formatEgpK(s.gmv)}</span>
                   </div>
-                  <span className="text-[12px] font-semibold text-emerald-400">{formatEgpK(s.gmv)}</span>
-                </div>
-              )) || <p className="text-[12px] text-foreground-muted py-4 text-center">No data</p>}
+                ))
+              ) : (
+                <p className="text-[12px] text-foreground-muted py-4 text-center">{NO_DATA_MESSAGE}</p>
+              )}
             </div>
           </div>
 
@@ -143,20 +168,24 @@ export default function AdminReportsPage() {
           <div className="p-5 rounded-xl bg-surface-1 border border-border-subtle">
             <h3 className="text-[14px] font-semibold text-white mb-4">Product Categories</h3>
             <div className="space-y-3">
-              {data?.categories?.map((c) => (
-                <div key={c.category} className="flex items-center gap-3">
-                  <span className="text-[12px] text-foreground-secondary flex-1">{c.category}</span>
-                  <div className="w-24 h-2 rounded-full bg-surface-2 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-accent-base/60 transition-all"
-                      style={{
-                        width: `${Math.max(2, (c.count / (data.categories.reduce((s, x) => s + x.count, 0) || 1)) * 100)}%`,
-                      }}
-                    />
+              {data?.categories?.length ? (
+                data.categories.map((c) => (
+                  <div key={c.category} className="flex items-center gap-3">
+                    <span className="text-[12px] text-foreground-secondary flex-1">{c.category}</span>
+                    <div className="w-24 h-2 rounded-full bg-surface-2 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-accent-base/60 transition-all"
+                        style={{
+                          width: `${Math.max(2, (c.count / (data.categories.reduce((s, x) => s + x.count, 0) || 1)) * 100)}%`,
+                        }}
+                      />
+                    </div>
+                    <span className="text-[12px] font-medium text-white w-8 text-right">{c.count}</span>
                   </div>
-                  <span className="text-[12px] font-medium text-white w-8 text-right">{c.count}</span>
-                </div>
-              )) || <p className="text-[12px] text-foreground-muted py-4 text-center">No data</p>}
+                ))
+              ) : (
+                <p className="text-[12px] text-foreground-muted py-4 text-center">{NO_DATA_MESSAGE}</p>
+              )}
             </div>
           </div>
         </div>

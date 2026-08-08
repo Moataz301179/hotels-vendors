@@ -391,8 +391,8 @@ export default function LandingPage() {
       {/* ═════════════ TERMINAL ═════════════ */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 py-16">
         <SectionHeader
-          kicker="Live system"
-          title="Proof, not promises"
+          kicker="Live execution"
+          title="The platform in operation"
           sub="Real execution traces from the autonomous engine — compliance, dispatch, and factoring happening automatically."
         />
         <div className="bg-slate-900 rounded-lg p-4 font-mono text-[11px] leading-relaxed">
