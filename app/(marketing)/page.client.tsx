@@ -9,7 +9,7 @@ import { useLanguage } from "@/lib/i18n/language-context";
 import {
   FileText, CheckCircle2, Truck, CreditCard, ChevronRight, ChevronLeft,
   ShoppingCart, Package, MapPin, Building2, Search, Smartphone, Monitor,
-  ArrowRight, Shield, Zap, BarChart3, Landmark, Bot, TrendingUp,
+  ArrowRight, Shield, Zap, BarChart3, Landmark, Bot, TrendingUp, Sparkles,
 } from "lucide-react";
 
 /* ── Count-Up Animation ── */
@@ -56,133 +56,150 @@ export default function MarketingPage() {
 
   return (
     <main id="main-content">
-      {/* ═══════════ HERO — Dual Layer Architecture ═══════════ */}
-      <section className="pt-20">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+      {/* ═══════════ HERO — Glassmorphic Enterprise B2B ═══════════ */}
+      <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-28 overflow-hidden">
+        {/* Ambient radial glow background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.12) 0%, rgba(16,185,129,0.06) 30%, rgba(12,12,18,0) 70%)",
+        }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full blur-[120px] pointer-events-none" style={{
+          background: "radial-gradient(circle, rgba(37,99,235,0.10) 0%, rgba(16,185,129,0.04) 40%, transparent 70%)",
+        }} />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* LEFT */}
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in"
-                style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-base animate-pulse" />
-                Egypt & MENA — AI-Native B2B Hotel Procurement
+              {/* Trust Pill Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border animate-fade-in text-xs font-medium tracking-wide"
+                style={{ borderColor: "rgba(16,185,129,0.3)", background: "rgba(16,185,129,0.08)", color: "#34d399" }}>
+                <Sparkles size={13} className="text-emerald-400" />
+                ETA Tax Compliant & FRA Regulated Platform
               </div>
 
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground leading-tight mb-4 animate-fade-in-up">
-                Two Layers.<br />
-                <span className="text-foreground">One Platform</span>
-                <span className="text-foreground">.</span>
+              {/* High-Contrast Typography */}
+              <h1 className="text-4xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight animate-fade-in-up">
+                The AI-Powered<br />
+                <span className="bg-gradient-to-r from-blue-400 via-emerald-400 to-blue-300 bg-clip-text text-transparent">
+                  Procurement Engine
+                </span>
+                <span className="text-white">.</span>
               </h1>
 
-              <p className="text-base md:text-lg max-w-xl leading-relaxed animate-fade-in-up animation-delay-100"
-                style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
-                <strong style={{ color: "var(--accent-base)" }}>HotelsVendors Web</strong> — buyer control panel for hotels.
-                RFQ-driven procurement, authority matrix approvals, embedded factoring, ETA compliance.
-                <br /><br />
-                <strong style={{ color: "var(--orange-base)" }}>INVO Mobile</strong> — supplier marketplace app.
-                Scan-to-request, real-time inventory, housekeeping workflow, instant factoring.
+              <p className="text-base lg:text-lg max-w-xl leading-relaxed text-white/60 animate-fade-in-up animation-delay-100">
+                Hotels manage RFQs, approvals, and ETA compliance from the Web.
+                Suppliers scan, fulfill, and cash-out from INVO Mobile.
+                One real-time data layer, zero friction.
               </p>
 
-              <a href="/register"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg bg-accent-base text-surface hover:bg-accent-light transition-colors animate-fade-in-up animation-delay-150">
-                Start Free <ArrowRight size={18} />
-              </a>
+              {/* CTAs */}
+              <div className="flex items-center gap-4 animate-fade-in-up animation-delay-150">
+                <a href="/register"
+                  className="inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-xl text-white text-sm transition-all duration-300 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+                  style={{ background: "linear-gradient(135deg, #2563eb, #10b981)" }}>
+                  Get Started Free
+                  <ArrowRight size={16} />
+                </a>
+                <a href="/sandbox"
+                  className="inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-xl text-sm transition-all duration-300 hover:bg-white/[0.06]"
+                  style={{ border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)" }}>
+                  Explore Sandbox
+                </a>
+              </div>
 
-              <div className="flex flex-wrap gap-3 mt-4 animate-fade-in-up animation-delay-200">
-                <span className="px-3 py-1 rounded-full border text-xs font-medium"
-                  style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>ETA</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium"
-                  style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-muted)" }}>FRA</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium"
-                  style={{ borderColor: "var(--purple-muted)", color: "var(--purple-base)", background: "var(--purple-muted)" }}>ISO 27001</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium"
-                  style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>Free to Start</span>
+              {/* Compliance badges */}
+              <div className="flex flex-wrap gap-2 pt-2 animate-fade-in-up animation-delay-200">
+                {["ETA Compliant", "FRA Licensed", "ISO 27001", "PCI-DSS"].map((b) => (
+                  <span key={b} className="px-3 py-1 rounded-full border text-[11px] font-medium bg-white/[0.03] border-white/[0.08] text-white/50">
+                    {b}
+                  </span>
+                ))}
               </div>
 
               {/* Live metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl pt-8 border-t border-white/5 animate-fade-in-up animation-delay-300">
-                <StatCounter end={1247} label="Hotels Onboarded" />
-                <StatCounter end={3892} label="Verified Suppliers" />
-                <StatCounter end={847} suffix="M" label="EGP GMV" />
-                <StatCounter end={48} suffix="h" label="Avg. Delivery" />
-              </div>
-
-              {/* Partner strip */}
-              <div className="flex items-center gap-4 pt-4 animate-fade-in-up animation-delay-400">
-                <span className="text-[10px] text-foreground-muted tracking-wider uppercase">Factoring Partner</span>
-                <img src="/oliv-logo-white.png" alt="Oliv Finance" className="h-5 w-auto opacity-70 hover:opacity-100 transition-opacity" />
-                <span className="text-[10px] text-foreground-muted">·</span>
-                <span className="text-[10px] text-foreground-muted tracking-wider uppercase">Payments via</span>
-                <span className="text-[10px] text-white/50 font-medium">Paymob</span>
-                <span className="text-[10px] text-white/50 font-medium">InstaPay</span>
-                <span className="text-[10px] text-white/50 font-medium">Fawry</span>
+              <div className="grid grid-cols-4 gap-4 max-w-lg pt-6 border-t border-white/[0.06] animate-fade-in-up animation-delay-300">
+                <StatCounter end={1247} label="Hotels" />
+                <StatCounter end={3892} label="Suppliers" />
+                <StatCounter end={847} suffix="M" label="GMV" />
+                <StatCounter end={48} suffix="h" label="Payout" />
               </div>
             </div>
 
-            {/* RIGHT — Dual Layer Visual */}
-            <div className="animate-fade-in-up animation-delay-200 space-y-4">
-              {/* Web Dashboard Card */}
-              <div className="rounded-2xl border overflow-hidden bg-surface-1"
-                style={{ borderColor: "var(--accent-base)33", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle">
+            {/* RIGHT — Glassmorphic Dashboard Card */}
+            <div className="animate-fade-in-up animation-delay-200">
+              <div className="relative rounded-2xl border overflow-hidden backdrop-blur-xl"
+                style={{
+                  background: "rgba(18,18,26,0.6)",
+                  borderColor: "rgba(255,255,255,0.08)",
+                  boxShadow: "0 0 80px rgba(37,99,235,0.08), 0 0 40px rgba(16,185,129,0.06)",
+                }}>
+                {/* Terminal header */}
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06]">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
-                  <span className="flex-1 text-center text-[10px] text-foreground-muted font-mono">
-                    <Monitor size={12} className="inline mr-1" /> HotelsVendors Web — Buyer Control
-                  </span>
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#10b981" }} />
+                  <span className="flex-1 text-center text-[10px] text-white/30 font-mono">app.hotelsvendors.com — Live Dashboard</span>
                 </div>
-                <div className="p-4">
+
+                <div className="p-5 space-y-4">
+                  {/* Live PO feed */}
+                  <div className="flex items-center justify-between p-3 rounded-lg border border-white/[0.06] bg-white/[0.02]">
+                    <div>
+                      <div className="text-xs text-white/50">Meridian Cairo · Order #HV-9921</div>
+                      <div className="text-sm font-semibold text-white mt-0.5">Egyptian Cotton Sheets × 200</div>
+                    </div>
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-medium border bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                      ETA Verified
+                    </span>
+                  </div>
+
+                  {/* Metric grid */}
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: "Active Orders", val: "34", sub: "+8%", color: "var(--accent-base)" },
-                      { label: "Monthly Spend", val: "EGP 182K", sub: "Forecast EGP 168K", color: "var(--orange-base)" },
-                      { label: "Vendor Network", val: "47", sub: "via INVO", color: "var(--purple-base)" },
-                      { label: "Factoring", val: "6", sub: "2 pending 48h", color: "var(--accent-base)" },
+                      { label: "Monthly Spend", val: "EGP 182K", trend: "↓8%", color: "#10b981" },
+                      { label: "Active Orders", val: "34", trend: "↑12%", color: "#2563eb" },
+                      { label: "Vendors", val: "47", trend: "via INVO", color: "#8b5cf6" },
+                      { label: "Factoring", val: "6 active", trend: "2 pending", color: "#f59e0b" },
                     ].map((c) => (
-                      <div key={c.label} className="rounded-lg border bg-canvas/60 p-3" style={{ borderColor: `${c.color}22` }}>
-                        <div className="text-[10px] text-foreground-muted">{c.label}</div>
-                        <div className="text-base font-semibold text-foreground mt-0.5">{c.val}</div>
-                        <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
+                      <div key={c.label} className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-3">
+                        <div className="text-[10px] text-white/30">{c.label}</div>
+                        <div className="text-base font-semibold text-white mt-0.5">{c.val}</div>
+                        <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.trend}</div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Factoring Cash-Out preview */}
+                  <div className="rounded-xl border overflow-hidden" style={{ borderColor: "rgba(16,185,129,0.2)", background: "rgba(16,185,129,0.04)" }}>
+                    <div className="flex items-center justify-between px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                          <Landmark size={14} className="text-emerald-400" />
+                        </div>
+                        <div>
+                          <div className="text-xs text-white/80 font-medium">Request 48h Factoring Cash-Out</div>
+                          <div className="text-[10px] text-white/40">Invoice INV-2847 · EGP 14,400</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399" }}>
+                        <span>2.1% fee · Net EGP 14,098</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* INVO Mobile App Card */}
-              <div className="rounded-2xl border overflow-hidden bg-surface-1 flex"
-                style={{ borderColor: "var(--orange-base)33" }}>
-                <div className="flex-1 p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Smartphone size={16} style={{ color: "var(--orange-base)" }} />
-                    <span className="text-xs font-semibold" style={{ color: "var(--orange-base)" }}>INVO Mobile</span>
-                    <span className="text-[10px] text-foreground-muted ml-auto">Supplier App</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { label: "Scan Invoice", icon: "📸" },
-                      { label: "Housekeeping", icon: "🧹" },
-                      { label: "Marketplace", icon: "🏪" },
-                      { label: "Factoring", icon: "💳" },
-                    ].map((f) => (
-                      <div key={f.label} className="rounded-lg border border-white/5 bg-canvas/60 p-2 flex items-center gap-2">
-                        <span className="text-sm">{f.icon}</span>
-                        <span className="text-[11px] text-foreground-secondary">{f.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* QR to Oliv */}
-                <div className="w-28 p-3 flex flex-col items-center justify-center border-l border-white/5">
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=https%3A%2F%2Fwww.hotelsvendors.com%2Foliv%2Freferral"
-                    alt="Scan for Oliv" className="w-20 h-20 rounded" />
-                  <span className="text-[8px] text-foreground-muted mt-1 text-center">Scan · CHV000</span>
-                </div>
+              {/* Partner strip below card */}
+              <div className="flex items-center gap-3 mt-4 px-1">
+                <span className="text-[10px] text-white/20 tracking-wider uppercase">Partner Ecosystem</span>
+                <img src="/oliv-logo-white.png" alt="Oliv" className="h-4 w-auto opacity-50 hover:opacity-75 transition-opacity" />
+                <span className="text-[10px] text-white/15">·</span>
+                <span className="text-[10px] text-white/20">Paymob · InstaPay · Fawry</span>
               </div>
             </div>
           </div>
         </div>
+
         <HotelSuppliesCarousel />
       </section>
 
