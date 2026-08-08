@@ -7,308 +7,231 @@ import { HotelSuppliesCarousel } from "@/components/marketing/hotel-supplies-car
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useLanguage } from "@/lib/i18n/language-context";
 import {
-  FileText,
-  CheckCircle2,
-  Truck,
-  CreditCard,
-  ChevronRight,
-  ChevronLeft,
-  ShoppingCart,
-  Package,
-  MapPin,
-  Building2,
-  Search,
+  FileText, CheckCircle2, Truck, CreditCard, ChevronRight, ChevronLeft,
+  ShoppingCart, Package, MapPin, Building2, Search, Smartphone, Monitor,
+  ArrowRight, Shield, Zap, BarChart3, Landmark, Bot, TrendingUp,
 } from "lucide-react";
 
-/* ──────────────────────────────────────────────────────────────
-   COUNT-UP ANIMATION (stat counters)
-   ────────────────────────────────────────────────────────────── */
+/* ── Count-Up Animation ── */
 function useCountUp(end: number, duration = 1600) {
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLDivElement | null>(null);
   const started = useRef(false);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const tick = (now: number) => {
-            const p = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setValue(Math.round(eased * end));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      },
-      { threshold: 0.4 }
-    );
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !started.current) {
+        started.current = true;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / duration, 1);
+          setValue(Math.round((1 - Math.pow(1 - p, 3)) * end));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.4 });
     obs.observe(el);
     return () => obs.disconnect();
   }, [end, duration]);
-
   return { value, ref };
 }
 
 function StatCounter({ end, suffix, label }: { end: number; suffix?: string; label: string }) {
   const { value, ref } = useCountUp(end);
   return (
-    <div className="text-center">
-      <div className="text-2xl md:text-3xl font-bold text-foreground" ref={ref}>
-        {value}
-        {suffix}
-      </div>
+    <div className="text-center" ref={ref}>
+      <div className="text-2xl md:text-3xl font-bold text-foreground">{value}{suffix || "+"}</div>
       <div className="text-[11px] md:text-xs text-foreground-secondary mt-1 font-medium">{label}</div>
     </div>
   );
 }
 
-/* ──────────────────────────────────────────────────────────────
-   SCROLL ANIMATION HOOK
-   ────────────────────────────────────────────────────────────── */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll(".animate-on-scroll");
-    if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("visible"));
-      return;
-    }
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            obs.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-}
-
-/* ──────────────────────────────────────────────────────────────
-   MAIN PAGE
-   ────────────────────────────────────────────────────────────── */
+/* ── Main Page ── */
 export default function MarketingPage() {
-  useScrollReveal();
-  const { t, locale } = useTranslation("homepage");
+  const { t } = useTranslation("homepage");
   const router = useRouter();
-  const [tab, setTab] = useState<"hotel" | "vendor" | "chat">("hotel");
-  const [query, setQuery] = useState("");
-
-  const ar = locale === "ar";
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    router.push(q ? `/marketplace?q=${encodeURIComponent(q)}` : "/marketplace");
-  };
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <main className="min-h-screen bg-canvas text-foreground font-sans">
-
-{/* ═══════════ HERO ═══════════ */}
+    <main id="main-content">
+      {/* ═══════════ HERO — Dual Layer Architecture ═══════════ */}
       <section className="pt-20">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-20">
-          {/* ── Desktop: Title on LEFT, Carousel on RIGHT ── */}
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* LEFT: Text content */}
+            {/* LEFT */}
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs tracking-wider uppercase mb-6 border animate-fade-in"
+                style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-base animate-pulse" />
-                {t("hero.badge")}
+                Egypt & MENA — AI-Native B2B Hotel Procurement
               </div>
 
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground leading-tight mb-4 animate-fade-in-up">
-                {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
+                Two Layers.<br />
+                <span className="text-foreground">One Platform</span>
+                <span className="text-foreground">.</span>
               </h1>
 
-              <p className="text-base md:text-lg max-w-xl leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
-                {t("hero.subtitle")}
+              <p className="text-base md:text-lg max-w-xl leading-relaxed animate-fade-in-up animation-delay-100"
+                style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
+                <strong style={{ color: "var(--accent-base)" }}>HotelsVendors Web</strong> — buyer control panel for hotels.
+                RFQ-driven procurement, authority matrix approvals, embedded factoring, ETA compliance.
+                <br /><br />
+                <strong style={{ color: "var(--orange-base)" }}>INVO Mobile</strong> — supplier marketplace app.
+                Scan-to-request, real-time inventory, housekeeping workflow, instant factoring.
               </p>
 
-              {/* Primary CTA Button — immediately visible below heading */}
-              <Link href="/register" className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg bg-accent-base text-surface hover:bg-accent-light transition-colors animate-fade-in-up animation-delay-150">
-                {t("hero.startFree")}
-                <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-              </Link>
+              <a href="/register"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-lg bg-accent-base text-surface hover:bg-accent-light transition-colors animate-fade-in-up animation-delay-150">
+                Start Free <ArrowRight size={18} />
+              </a>
 
-              {/* Interactive search bar — app-like entry point */}
-              <form onSubmit={handleSearch} className="flex items-stretch gap-2 max-w-xl mx-auto mb-8 animate-fade-in-up animation-delay-200">
-                <div className="relative flex-1">
-                  <Search className={`absolute top-1/2 -translate-y-1/2 text-white/40 ${ar ? "right-3" : "left-3"}`} size={18} />
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={t("hero.searchPlaceholder")}
-                    className={`w-full h-12 rounded-lg bg-surface-1 border border-white/10 text-foreground text-sm placeholder:text-white/40 outline-none focus:border-accent-base/50 transition-colors ${ar ? "pr-10 pl-4" : "pl-10 pr-4"}`}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="h-12 px-6 rounded-lg bg-accent-base text-surface text-sm font-semibold hover:bg-accent-light transition-colors shrink-0"
-                >
-                  {t("hero.search")}
-                </button>
-              </form>
-
-              <div className="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-300">
-                <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>ETA</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-muted)" }}>FRA</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--purple-muted)", color: "var(--purple-base)", background: "var(--purple-muted)" }}>ISO 27001</span>
-                <span className="px-3 py-1 rounded-full border text-xs font-medium" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>{t("hero.freeToStart")}</span>
+              <div className="flex flex-wrap gap-3 mt-4 animate-fade-in-up animation-delay-200">
+                <span className="px-3 py-1 rounded-full border text-xs font-medium"
+                  style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>ETA</span>
+                <span className="px-3 py-1 rounded-full border text-xs font-medium"
+                  style={{ borderColor: "var(--orange-muted)", color: "var(--orange-base)", background: "var(--orange-muted)" }}>FRA</span>
+                <span className="px-3 py-1 rounded-full border text-xs font-medium"
+                  style={{ borderColor: "var(--purple-muted)", color: "var(--purple-base)", background: "var(--purple-muted)" }}>ISO 27001</span>
+                <span className="px-3 py-1 rounded-full border text-xs font-medium"
+                  style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)", background: "var(--accent-muted)" }}>Free to Start</span>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up animation-delay-400">
-                <Link href="/sandbox" className="text-sm px-8 py-3.5 font-semibold rounded-lg border inline-flex items-center justify-center gap-2 bg-surface-1 hover:bg-surface-2 transition-colors" style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
-                  {t("hero.exploreSandbox")}
-                </Link>
-              </div>
-
-              {/* Animated stat counters — visible on all screen sizes */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/5 animate-fade-in-up animation-delay-500">
-                <StatCounter end={200} suffix="+" label={t("hero.stats.hotels")} />
-                <StatCounter end={1200} suffix="+" label={t("hero.stats.suppliers")} />
-                <StatCounter end={2} suffix="B" label={t("hero.stats.gmv")} />
-                <StatCounter end={48} suffix="h" label={t("hero.stats.delivery")} />
+              {/* Live metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 max-w-3xl pt-8 border-t border-white/5 animate-fade-in-up animation-delay-300">
+                <StatCounter end={1247} label="Hotels Onboarded" />
+                <StatCounter end={3892} label="Verified Suppliers" />
+                <StatCounter end={847} suffix="M" label="EGP GMV" />
+                <StatCounter end={48} suffix="h" label="Avg. Delivery" />
               </div>
             </div>
 
-            {/* RIGHT: Oliv Referral QR Card — scan to get financed via Oliv with code CHV000 */}
-            <div className="animate-fade-in-up animation-delay-200">
-              <div className="aspect-square max-w-xs mx-auto sm:max-w-none">
-                <div className="w-full h-full rounded-2xl border bg-surface-1/50 p-6 md:p-8 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--border-accent)" }}>
-                  {/* QR code — encodes referral URL with CHV000 pre-filled */}
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-6 rounded-xl flex items-center justify-center overflow-hidden" style={{ background: "#ffffff", border: "2px solid var(--orange-base)40" }}>
-                    <img
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fwww.hotelsvendors.com%2Foliv%2Freferral"
-                      alt="Scan to get Oliv financing via HotelsVendors"
-                      className="w-full h-full object-contain"
-                      width={220}
-                      height={220}
-                    />
+            {/* RIGHT — Dual Layer Visual */}
+            <div className="animate-fade-in-up animation-delay-200 space-y-4">
+              {/* Web Dashboard Card */}
+              <div className="rounded-2xl border overflow-hidden bg-surface-1"
+                style={{ borderColor: "var(--accent-base)33", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
+                  <span className="flex-1 text-center text-[10px] text-foreground-muted font-mono">
+                    <Monitor size={12} className="inline mr-1" /> HotelsVendors Web — Buyer Control
+                  </span>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { label: "Active Orders", val: "34", sub: "+8%", color: "var(--accent-base)" },
+                      { label: "Monthly Spend", val: "EGP 182K", sub: "Forecast EGP 168K", color: "var(--orange-base)" },
+                      { label: "Vendor Network", val: "47", sub: "via INVO", color: "var(--purple-base)" },
+                      { label: "Factoring", val: "6", sub: "2 pending 48h", color: "var(--accent-base)" },
+                    ].map((c) => (
+                      <div key={c.label} className="rounded-lg border bg-canvas/60 p-3" style={{ borderColor: `${c.color}22` }}>
+                        <div className="text-[10px] text-foreground-muted">{c.label}</div>
+                        <div className="text-base font-semibold text-foreground mt-0.5">{c.val}</div>
+                        <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
+                      </div>
+                    ))}
                   </div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                    {t("hero.invoQR.title")}
-                  </h3>
-                  <p className="text-sm md:text-base text-foreground-secondary mb-4 max-w-xs mx-auto leading-relaxed">
-                    {t("hero.invoQR.subtitle")}
-                  </p>
-                  <p className="text-[10px] text-foreground-tertiary mb-4 font-mono bg-white/5 px-3 py-1 rounded">
-                    Code CHV000 · Tracked referral
-                  </p>
-                  <div className="flex gap-3 justify-center">
-                    <a href="/api/v1/oliv/click" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.1,8.1l-1.9,2.7l0,0c-0.5-1-1.4-2-2.4-2.7l0,0c1.2-0.9,2-2.4,2-4.2c0-0.2,0-0.5,0-0.7C17,1,15.3,0,13.5,0c-0.2,0-0.5,0-0.7,0.1c0,0-0.1,0-0.1,0C9.8,1,8,2.8,8,5.1c0,0-3.1,0-3.4,4.7c-0.1,0.5-0.3,1-0.6,1.5c-1.8,0.1-3.5,0.9-4.8,2.2c0-0.2,0-0.4,0-0.7C-0.1,11.3,0.1,9.8,1.3,8.5c0.9-0.9,2-1.6,3.3-2c-0.1-0.5-0.3-1-0.5-1.5C4.1,4.9,4,4.8,4,4.7c0-0.1,0-0.2,0-0.3C4,3.2,4.8,2.1,6,1.6c0.1,0.2,0.2,0.4,0.4,0.6l0.4,0.4C7.2,2.5,8,3.1,8.7,3.9C8.9,4.1,9,4.3,9,4.6c0,0,3.2,0,4.1,0.7C14,4.6,15,5.7,15.7,7c0,0,0,0,0,0c0.5-0.4,1.2-0.7,1.9-0.9c0.1-0.5,0.3-1,0.5-1.5c0.1-0.4,0.2-0.7,0.3-1.1c0.1,0.3,0.2,0.5,0.3,0.8c0.2,0.5,0.4,1,0.6,1.5c0.1-0.1,0.2-0.2,0.3-0.3c0.2-0.2,0.4-0.5,0.7-0.7c0.1,0.2,0.2,0.5,0.4,0.7C17.2,5.6,18,6.6,18.1,8.1z"/></svg>
-                      iOS
-                    </a>
-                    <a href="/api/v1/oliv/click" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] font-medium text-white hover:bg-white/10 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18,3.5A2,2 0 0,0,16.5,2H7.5A2,2 0 0,0,5.5,4V20A2,2 0 0,0,7.5,22H16.5A2,2 0 0,0,18,20V4C18,3.72 17.89,3.45 17.72,3.26C17.89,2.89 18,2.5 18,2A2,2 0 0,0,16,0H8A2,2 0 0,0,6,2V4H8V2H16C16,2.55 15.89,2.95 15.62,3.31C16,3.19 16.37,3 16.78,3H18Z"/></svg>
-                      Android
-                    </a>
+                </div>
+              </div>
+
+              {/* INVO Mobile App Card */}
+              <div className="rounded-2xl border overflow-hidden bg-surface-1 flex"
+                style={{ borderColor: "var(--orange-base)33" }}>
+                <div className="flex-1 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Smartphone size={16} style={{ color: "var(--orange-base)" }} />
+                    <span className="text-xs font-semibold" style={{ color: "var(--orange-base)" }}>INVO Mobile</span>
+                    <span className="text-[10px] text-foreground-muted ml-auto">Supplier App</span>
                   </div>
-                  <Link href="/financing/oliv" className="inline-block mt-3 text-xs text-accent-base hover:opacity-80">
-                    Learn about Oliv →
-                  </Link>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { label: "Scan Invoice", icon: "📸" },
+                      { label: "Housekeeping", icon: "🧹" },
+                      { label: "Marketplace", icon: "🏪" },
+                      { label: "Factoring", icon: "💳" },
+                    ].map((f) => (
+                      <div key={f.label} className="rounded-lg border border-white/5 bg-canvas/60 p-2 flex items-center gap-2">
+                        <span className="text-sm">{f.icon}</span>
+                        <span className="text-[11px] text-foreground-secondary">{f.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* QR to Oliv */}
+                <div className="w-28 p-3 flex flex-col items-center justify-center border-l border-white/5">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=https%3A%2F%2Fwww.hotelsvendors.com%2Foliv%2Freferral"
+                    alt="Scan for Oliv" className="w-20 h-20 rounded" />
+                  <span className="text-[8px] text-foreground-muted mt-1 text-center">Scan · CHV000</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* ═══════════ HOTEL SUPPLIES CAROUSEL — placed in empty space above the hero image, next to the hero section content ═══════════ */}
         <HotelSuppliesCarousel />
       </section>
 
-        {/* ═══════════ HERO IMAGE (below the fold, full-width on all screens) ═══════════ */}
-        <section className="w-full">
-          <div className="px-6 md:px-12 pb-12">
-            <div className="max-w-7xl mx-auto">
-              <div className="rounded-2xl shadow-2xl ring-1 ring-white/5" style={{ background: "linear-gradient(135deg, var(--accent-base), var(--orange-base))" }}>
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(12,12,18,0.95) 100%)" }} />
-              </div>
-            </div>
-          </div>
-        </section>
-
-      {/* ═══════════ PLATFORM OVERVIEW — Dashboard Mockup ═══════════ */}
-      <section className="relative py-20 bg-surface-2">
-        <div className="max-w-6xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t("overview.title")}
+      {/* ═══════════ HOW THE DUAL LAYER WORKS ═══════════ */}
+      <section className="py-20 border-y border-border-invisible">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14 animate-on-scroll">
+            <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>Architecture</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-3 text-foreground">
+              Web Controls · Mobile Executes
             </h2>
-            <p className="text-base text-foreground-tertiary max-w-2xl mx-auto">
-              {t("overview.subtitle")}
+            <p className="text-foreground-secondary text-base max-w-xl mx-auto">
+              Hotels manage procurement from the desktop. Suppliers fulfill from their phone. One real-time data layer connects them.
             </p>
           </div>
-          <div className="relative rounded-2xl overflow-hidden border border-border-subtle shadow-2xl animate-on-scroll" style={{ boxShadow: "0 0 80px 2px var(--accent-glow)" }}>
-            {/* Mac-style title bar */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-surface-1 border-b border-border-subtle">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
-              <div className="flex-1 mx-3 bg-canvas/60 rounded-md px-3 py-1 text-[11px] text-foreground-muted border border-border-invisible text-center font-mono">
-                app.hotelsvendors.com
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Layer 1 */}
+            <div className="neon-card rounded-2xl border bg-surface-1 p-6 text-center" style={{ borderColor: "var(--accent-base)33" }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: "var(--accent-base)15", border: "1px solid var(--accent-base)40" }}>
+                <Monitor size={24} style={{ color: "var(--accent-base)" }} />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">HotelsVendors Web</h3>
+              <p className="text-sm text-foreground-secondary leading-relaxed">
+                Hotel procurement managers create RFQs, approve orders via authority matrix, track spend, and manage ETA compliance — all from the desktop dashboard.
+              </p>
+              <div className="flex flex-wrap gap-1.5 justify-center mt-4">
+                {["RFQ Engine", "Authority Matrix", "ETA Compliance", "Spend Analytics"].map((b) => (
+                  <span key={b} className="text-[10px] px-2 py-0.5 rounded-full border"
+                    style={{ borderColor: "var(--accent-base)33", color: "var(--accent-base)" }}>{b}</span>
+                ))}
               </div>
             </div>
 
-            {/* Dashboard mockup */}
-            <div className="bg-canvas p-5">
-              {/* Header row */}
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-sm font-semibold text-foreground">{t("overview.meridian")}</div>
-                  <div className="text-[11px] text-foreground-muted">{t("overview.meridianSub")} <span className="text-accent-base">{t("overview.meridianSavings")}</span></div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-accent-base text-surface">{t("overview.aiAssist")}</div>
-                </div>
+            {/* Connection */}
+            <div className="flex flex-col items-center justify-center gap-4">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed"
+                style={{ borderColor: "var(--purple-base)40", background: "var(--purple-base)10" }}>
+                <Zap size={24} style={{ color: "var(--purple-base)" }} />
               </div>
-
-              {/* Stats grid */}
-              <div className="grid grid-cols-4 gap-3 mb-4">
-                {[
-                  { label: t("overview.orders"), value: "34", color: "var(--accent-base)", sub: "+8%" },
-                  { label: t("overview.spend"), value: "EGP 182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} EGP 168K` },
-                  { label: t("overview.vendors"), value: "47", color: "var(--purple-base)", sub: "INVO" },
-                  { label: t("overview.factoring"), value: "6", color: "var(--accent-base)", sub: t("overview.payout") },
-                ].map((c) => (
-                  <div key={c.label} className="rounded-lg border border-border-invisible bg-surface-1/60 p-3">
-                    <div className="text-[10px] text-foreground-muted mb-1">{c.label}</div>
-                     <div className="text-base font-semibold text-foreground">{c.value}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: c.color }}>{c.sub}</div>
-                  </div>
-                ))}
+              <div className="text-xs text-center text-foreground-secondary leading-relaxed">
+                <strong style={{ color: "var(--purple-base)" }}>Real-Time Sync</strong><br />
+                Orders, inventory, invoices, and factoring status flow instantly between web and mobile via shared API + Redis.
               </div>
+            </div>
 
-              {/* Orders table */}
-              <div className="rounded-lg border border-border-invisible bg-surface-1/40 overflow-hidden">
-                <div className="px-3 py-2 border-b border-border-invisible flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-foreground-secondary">{t("overview.recentOrders")}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full border border-accent-base/30 text-accent-base">{t("overview.etaVerified")}</span>
-                </div>
-                {[
-                  { vendor: "Luxe Linen Co.", item: t("overview.sheets"), price: "EGP 14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
-                  { vendor: "ProClean Supplies", item: t("overview.amenityKits"), price: "EGP 3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
-                  { vendor: "GourmetSource", item: t("overview.coffee"), price: "EGP 2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
-                ].map((o, i) => (
-                  <div key={i} className={`flex items-center justify-between px-3 py-2.5 text-[11px] ${i < 2 ? "border-b border-white/[0.03]" : ""}`}>
-                    <div>
-                      <div className="font-medium text-foreground">{o.vendor}</div>
-                      <div className="text-foreground-muted">{o.item}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-medium text-foreground">{o.price}</div>
-                      <div style={{ color: o.color }}>{o.status}</div>
-                    </div>
-                  </div>
+            {/* Layer 2 */}
+            <div className="neon-card rounded-2xl border bg-surface-1 p-6 text-center" style={{ borderColor: "var(--orange-base)33" }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: "var(--orange-base)15", border: "1px solid var(--orange-base)40" }}>
+                <Smartphone size={24} style={{ color: "var(--orange-base)" }} />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">INVO Mobile</h3>
+              <p className="text-sm text-foreground-secondary leading-relaxed">
+                Suppliers scan invoices, manage inventory, fulfill orders, and access factoring — all from their phone. No training required.
+              </p>
+              <div className="flex flex-wrap gap-1.5 justify-center mt-4">
+                {["Scan-to-Request", "GRN Capture", "Oliv Factoring", "Push Notifications"].map((b) => (
+                  <span key={b} className="text-[10px] px-2 py-0.5 rounded-full border"
+                    style={{ borderColor: "var(--orange-base)33", color: "var(--orange-base)" }}>{b}</span>
                 ))}
               </div>
             </div>
@@ -316,71 +239,35 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* ═══════════ TRUST BAR — Client Logos ═══════════ */}
-      <section className="py-8 border-y border-border-invisible bg-surface-2">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-center text-xs text-foreground-muted uppercase tracking-widest mb-6">
-            {t("trust.label")}
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-14 opacity-30">
-            {["Mövenpick", "IHG", "Sofitel", "Marriott", "Hilton", "Kempinski"].map((name) => (
-              <span key={name} className="text-sm md:text-base font-semibold tracking-wider uppercase text-foreground-tertiary">{name}</span>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══════════ SANDBOX DEMO ═══════════ */}
+      <SandboxDemo t={t} />
 
-      {/* ═══════════ STATS ═══════════ */}
-      <section className="relative py-14 animate-on-scroll">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { value: t("pricing.free.price"), label: t("stats.free.label"), color: "var(--accent-base)" },
-            { value: "1%", label: t("stats.bank.label"), color: "var(--orange-base)" },
-            { value: "1.5–3%", label: t("stats.factoring.label"), color: "var(--purple-base)" },
-            { value: "48h", label: t("stats.payout.label"), color: "var(--accent-base)" },
-          ].map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="text-2xl md:text-3xl mb-1 font-semibold" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-xs text-foreground-muted leading-snug">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════ PRODUCT SHOWCASE ═══════════ */}
+      {/* ═══════════ PROCUREMENT CATEGORIES ═══════════ */}
       <section className="py-20 max-w-6xl mx-auto px-6">
         <div className="text-center mb-14 animate-on-scroll">
-          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>
-            {t("products.badge")}
-          </span>
-          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
-            {t("products.title")}
-          </h2>
-          <p className="text-foreground-secondary text-base max-w-xl mx-auto text-balance">
-            {t("products.subtitle")}
-          </p>
+          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>Every Category. One Platform.</span>
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">Source Everything Your Hotel Needs</h2>
+          <p className="text-foreground-secondary text-base max-w-xl mx-auto">From premium linens to commercial kitchen equipment — source everything through verified suppliers on INVO.</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
           {[
-            { name: t("products.linen.name"), price: t("products.linen.price"), color: "var(--accent-base)" },
-            { name: t("products.bathroom.name"), price: t("products.bathroom.price"), color: "var(--orange-base)" },
-            { name: t("products.kitchen.name"), price: t("products.kitchen.price"), color: "var(--purple-base)" },
-            { name: t("products.cleaning.name"), price: t("products.cleaning.price"), color: "var(--accent-base)" },
-            { name: t("products.furniture.name"), price: t("products.furniture.price"), color: "var(--orange-base)" },
-            { name: t("products.hvac.name"), price: t("products.hvac.price"), color: "var(--purple-base)" },
-            { name: t("products.bedding.name"), price: t("products.bedding.price"), color: "var(--accent-base)" },
-            { name: t("products.spa.name"), price: t("products.spa.price"), color: "var(--orange-base)" },
-          ].map((p) => (
-            <div key={p.name} className="animate-on-scroll group">
-              <div className="rounded-xl border overflow-hidden bg-surface-1 transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${p.color}22` }}>
-                <div className="h-36 flex items-center justify-center" style={{ background: `${p.color}15`, border: `1px dashed ${p.color}33` }}>
-                  <div className="text-center">
-                    <div className="text-sm font-semibold" style={{ color: p.color }}>{p.name}</div>
-                  </div>
+            { name: "Premium Linens", price: "From EGP 450", color: "var(--accent-base)" },
+            { name: "Bathroom Amenities", price: "From EGP 35/set", color: "var(--orange-base)" },
+            { name: "Kitchen Equipment", price: "From EGP 2,100", color: "var(--purple-base)" },
+            { name: "Cleaning Supplies", price: "From EGP 80/L", color: "var(--accent-base)" },
+            { name: "Guest Room Furniture", price: "From EGP 3,500", color: "var(--orange-base)" },
+            { name: "HVAC & Engineering", price: "From EGP 15,000", color: "var(--purple-base)" },
+            { name: "Hotel Bedding", price: "From EGP 1,200", color: "var(--accent-base)" },
+            { name: "Pool & Spa Supplies", price: "From EGP 550", color: "var(--orange-base)" },
+          ].map((c) => (
+            <div key={c.name} className="animate-on-scroll group">
+              <div className="rounded-xl border overflow-hidden bg-surface-1 transition-all duration-300 hover:scale-[1.02]" style={{ borderColor: `${c.color}22` }}>
+                <div className="h-36 flex items-center justify-center" style={{ background: `${c.color}15`, border: `1px dashed ${c.color}33` }}>
+                  <div className="text-center"><div className="text-sm font-semibold" style={{ color: c.color }}>{c.name}</div></div>
                 </div>
                 <div className="px-4 py-3">
-                   <div className="text-sm font-semibold text-foreground mb-0.5">{p.name}</div>
-                  <div className="text-xs" style={{ color: `${p.color}cc` }}>{p.price}</div>
+                  <div className="text-sm font-semibold text-foreground mb-0.5">{c.name}</div>
+                  <div className="text-xs" style={{ color: `${c.color}cc` }}>{c.price}</div>
                 </div>
               </div>
             </div>
@@ -389,33 +276,22 @@ export default function MarketingPage() {
       </section>
 
       {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <section id="how" className="py-20 max-w-6xl mx-auto px-6">
+      <section className="py-20 max-w-6xl mx-auto px-6">
         <div className="text-center mb-14 animate-on-scroll">
-          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>
-            {t("how.badge")}
-          </span>
-          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
-            {t("how.title")}
-          </h2>
-          <p className="text-foreground-secondary text-base max-w-2xl mx-auto text-balance">
-            {t("how.subtitle")}
-          </p>
+          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>How It Works</span>
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">Start Free. Transact Smart.</h2>
+          <p className="text-foreground-secondary text-base max-w-2xl mx-auto">No subscription. No setup cost. AI agents guide you from registration to your first compliant transaction.</p>
         </div>
         <div className="grid md:grid-cols-4 gap-5 stagger-children">
           {[
-            { num: "01", color: "var(--accent-base)", title: t("how.step1.title"), desc: t("how.step1.desc") },
-            { num: "02", color: "var(--orange-base)", title: t("how.step2.title"), desc: t("how.step2.desc") },
-            { num: "03", color: "var(--purple-base)", title: t("how.step3.title"), desc: t("how.step3.desc") },
-            { num: "04", color: "var(--accent-base)", title: t("how.step4.title"), desc: t("how.step4.desc") },
+            { step: "01", title: "Hotels Join Free", desc: "Register your property group. AI agents guide you through ETA-compliant onboarding in minutes.", color: "var(--accent-base)" },
+            { step: "02", title: "Discover on INVO", desc: "Browse INVO — our vendor marketplace. Compare, order, and track everything from one dashboard.", color: "var(--orange-base)" },
+            { step: "03", title: "Suppliers Fulfill via Mobile", desc: "Orders appear instantly on INVO Mobile. Suppliers scan, pack, and deliver — all from their phone.", color: "var(--purple-base)" },
+            { step: "04", title: "Finance & Get Paid Fast", desc: "Need working capital? Factor invoices via Oliv. Hotel pays later. Supplier gets paid in 48h.", color: "var(--accent-base)" },
           ].map((s) => (
-            <div key={s.num} className="animate-on-scroll">
-              <div
-                className="neon-card relative rounded-2xl border bg-surface-1 p-5 h-full flex flex-col"
-                style={{ borderColor: `${s.color}33` }}
-                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${s.color}30, inset 0 0 20px 0px ${s.color}08`; e.currentTarget.style.borderColor = `${s.color}88`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${s.color}33`; }}
-              >
-                <div className="text-3xl mb-3 opacity-15 font-semibold" style={{ color: s.color }}>{s.num}</div>
+            <div key={s.step} className="animate-on-scroll">
+              <div className="neon-card relative rounded-2xl border bg-surface-1 p-5 h-full flex flex-col" style={{ borderColor: `${s.color}33` }}>
+                <div className="text-3xl mb-3 opacity-15 font-semibold" style={{ color: s.color }}>{s.step}</div>
                 <div className="text-sm mb-2 font-medium" style={{ color: s.color }}>{s.title}</div>
                 <p className="text-foreground-secondary text-xs leading-relaxed flex-1">{s.desc}</p>
               </div>
@@ -424,334 +300,155 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* ═══════════ AI AGENTS ═══════════ */}
+      {/* ═══════════ AI SWARM AGENTS ═══════════ */}
       <section className="py-24 max-w-6xl mx-auto px-6">
         <div className="text-center mb-14 animate-on-scroll">
-          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>
-            {t("ai.badge")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
-            {t("ai.title")}
-          </h2>
-          <p className="text-foreground-secondary text-lg max-w-2xl mx-auto text-balance">
-            {t("ai.subtitle")}
-          </p>
+          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>AI-Powered</span>
+          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">Swarm Agents Handle the Complexity</h2>
+          <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">You focus on hospitality. Our AI swarm handles compliance, documentation, vendor matching, spend forecasting, and factoring — automatically.</p>
         </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 stagger-children">
           {[
-            { color: "var(--accent-base)", title: t("ai.onboarding.title"), desc: t("ai.onboarding.desc") },
-            { color: "var(--purple-base)", title: t("ai.forecast.title"), desc: t("ai.forecast.desc") },
-            { color: "var(--orange-base)", title: t("ai.compliance.title"), desc: t("ai.compliance.desc") },
-            { color: "var(--accent-base)", title: t("ai.factoring.title"), desc: t("ai.factoring.desc") },
-            { color: "var(--purple-base)", title: t("ai.chatbot.title"), desc: t("ai.chatbot.desc") },
-            { color: "var(--orange-base)", title: t("ai.integration.title"), desc: t("ai.integration.desc") },
-          ].map((a) => (
-            <div key={a.title} className="animate-on-scroll">
-              <div
-                className="neon-card rounded-2xl border bg-surface-1 p-5 h-full"
-                style={{ borderColor: `${a.color}33` }}
-                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${a.color}30, inset 0 0 20px 0px ${a.color}08`; e.currentTarget.style.borderColor = `${a.color}88`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${a.color}33`; }}
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 border" style={{ background: `${a.color}15`, borderColor: `${a.color}40`, color: a.color }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
+            { icon: Bot, title: "Onboarding Agent", desc: "Guides hotels and vendors through ETA registration and document collection — conversationally.", color: "var(--accent-base)" },
+            { icon: TrendingUp, title: "Spend Forecast Agent", desc: "Analyses historical orders to predict future costs and flag budget overruns before they happen.", color: "var(--purple-base)" },
+            { icon: Shield, title: "Compliance Swarm", desc: "Specialised agents audit every transaction against ETA and FRA standards, generating required documentation.", color: "var(--orange-base)" },
+            { icon: Landmark, title: "Factoring Agent", desc: "Orchestrates reverse factoring end-to-end — request, approval, FRA validation, and 48h disbursement.", color: "var(--accent-base)" },
+            { icon: Bot, title: "AI Procurement Chatbot", desc: "Hotels describe needs in plain language. Chatbot searches INVO, compares vendors, generates ready-to-approve orders.", color: "var(--purple-base)" },
+            { icon: Zap, title: "Integration Agent", desc: "Connects to external marketplace APIs automatically, mapping catalogs into INVO's unified structure.", color: "var(--orange-base)" },
+          ].map((a) => {
+            const Icon = a.icon;
+            return (
+              <div key={a.title} className="animate-on-scroll">
+                <div className="neon-card rounded-2xl border bg-surface-1 p-5 h-full" style={{ borderColor: `${a.color}33` }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 border" style={{ background: `${a.color}15`, borderColor: `${a.color}40`, color: a.color }}>
+                    <Icon size={20} />
+                  </div>
+                  <div className="font-semibold text-sm mb-2 text-foreground">{a.title}</div>
+                  <p className="text-foreground-secondary text-xs leading-relaxed">{a.desc}</p>
                 </div>
-                <div className="font-semibold text-sm mb-2 text-foreground">{a.title}</div>
-                <p className="text-foreground-secondary text-xs leading-relaxed">{a.desc}</p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
-      {/* ═══════════ DEMO SANDBOX ═══════════ */}
-      <section className="py-20 border-y border-border-invisible">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-10 animate-on-scroll">
-            <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>
-              {t("sandbox.badge")}
-            </span>
-            <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">
-              {t("sandbox.title")}
-            </h2>
-            <p className="text-foreground-secondary text-sm max-w-xl mx-auto">
-              {t("sandbox.subtitle")}
-            </p>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex justify-center mb-8 flex-wrap gap-2">
-            {([
-              { key: "hotel" as const, label: t("sandbox.tab1"), color: "var(--accent-base)" },
-              { key: "vendor" as const, label: t("sandbox.tab2"), color: "var(--orange-base)" },
-              { key: "chat" as const, label: t("sandbox.tab3"), color: "var(--purple-base)" },
-            ]).map((tb) => (
-              <button
-                key={tb.key}
-                onClick={() => setTab(tb.key)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer border"
-                style={{
-                  background: tab === tb.key ? tb.color : "transparent",
-                  color: tab === tb.key ? "var(--bg-canvas)" : "rgba(160,160,176,1)",
-                  borderColor: tab === tb.key ? tb.color : `${tb.color}33`,
-                }}
-              >
-                {tb.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Hotel Dashboard Tab */}
-          {tab === "hotel" && (
-            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--border-accent)", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "var(--accent-base)" }} />
-                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-foreground-secondary border border-border-subtle/50 font-mono">app.hotelsvendors.com/hotels/dashboard</div>
-              </div>
-              <div className="p-6 min-h-[440px]">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="font-semibold text-lg text-foreground">{t("hotel.title")}</h3>
-                    <p className="text-foreground-secondary text-sm">{t("hotel.subtitle")} <span style={{ color: "var(--accent-base)" }}>{t("hotel.savings")}</span></p>
-                  </div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md inline-flex items-center gap-1 bg-accent-base text-surface">{t("hotel.aiAssist")}</button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  {[
-                    { label: t("hotel.activeOrders"), value: "34", color: "var(--accent-base)", sub: "+8%" },
-                    { label: t("hotel.monthlySpend"), value: "EGP 182K", color: "var(--orange-base)", sub: `${t("overview.forecast")} EGP 168K` },
-                    { label: t("hotel.vendorNetwork"), value: "47", color: "var(--purple-base)", sub: "via INVO" },
-                    { label: t("hotel.factoringRequests"), value: "6", color: "var(--accent-base)", sub: t("hotel.factoringPending") },
-                  ].map((c) => (
-                    <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
-                      <div className="text-xs text-foreground-secondary mb-1">{c.label}</div>
-                      <div className="text-2xl font-semibold text-foreground">{c.value}</div>
-                      <div className="text-xs mt-1" style={{ color: c.color }}>{c.sub}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "var(--border-accent)" }}>
-                  <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
-                    <span className="font-semibold text-sm text-foreground">{t("hotel.recentOrders")}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)" }}>{t("hotel.allVerified")}</span>
-                  </div>
-                  {[
-                    { vendor: "Luxe Linen Co.", item: t("hotel.sheetItem"), price: "EGP 14,400", status: t("overview.delivered"), color: "var(--accent-base)" },
-                    { vendor: "ProClean Supplies", item: t("hotel.amenityItem"), price: "EGP 3,250", status: t("overview.inTransit"), color: "var(--orange-base)" },
-                    { vendor: "GourmetSource", item: t("hotel.coffeeItem"), price: "EGP 2,100", status: t("overview.factoringActive"), color: "var(--purple-base)" },
-                  ].map((o, i) => (
-                    <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-border-invisible" : ""}`}>
-                      <div><div className="font-medium text-foreground">{o.vendor}</div><div className="text-foreground-secondary text-xs">{o.item}</div></div>
-                      <div className="text-right"><div className="font-semibold text-foreground">{o.price}</div><div className="text-xs" style={{ color: o.color }}>{o.status}</div></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Vendor Tab */}
-          {tab === "vendor" && (
-            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--orange-muted)", boxShadow: "0 0 40px 2px var(--orange-base)14" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "var(--accent-base)" }} />
-                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-foreground-secondary border border-border-subtle/50 font-mono">app.hotelsvendors.com/invo/marketplace</div>
-              </div>
-              <div className="p-6 min-h-[440px]">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="font-semibold text-lg text-foreground">{t("vendor.title")}</h3>
-                    <p className="text-foreground-secondary text-sm">{t("vendor.aggregated")} · <span style={{ color: "var(--orange-base)" }}>{t("vendor.buyers")}</span></p>
-                  </div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-orange-base text-surface">{t("vendor.listProducts")}</button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  {[
-                    { label: t("vendor.hotelBuyers"), value: "340", color: "var(--orange-base)" },
-                    { label: "MRR", value: "EGP 94K", color: "var(--accent-base)" },
-                    { label: t("vendor.avgOrder"), value: "EGP 2.8K", color: "var(--purple-base)" },
-                    { label: t("vendor.reorderRate"), value: "74%", color: "var(--orange-base)" },
-                  ].map((c) => (
-                    <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
-                      <div className="text-xs text-foreground-secondary mb-1">{c.label}</div>
-                      <div className="text-2xl font-semibold text-foreground">{c.value}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "var(--orange-base)22" }}>
-                  <div className="px-4 py-3 border-b border-border-subtle font-semibold text-sm text-foreground">{t("vendor.topProducts")}</div>
-                  {[
-                    { name: t("vendor.cottonSheet"), units: t("vendor.unitsSold"), revenue: "EGP 120K", badge: true },
-                    { name: t("vendor.duvetSet"), units: t("vendor.duvetSold"), revenue: "EGP 74K", badge: false },
-                    { name: t("vendor.poolTowel"), units: t("vendor.towelSold"), revenue: "EGP 34K", badge: true },
-                  ].map((p, i) => (
-                    <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-border-invisible" : ""}`}>
-                      <div><div className="font-medium text-foreground">{p.name}</div><div className="text-foreground-secondary text-xs">{p.units}</div></div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-semibold" style={{ color: "var(--accent-base)" }}>{p.revenue}</span>
-                        {p.badge && <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--orange-base)55", color: "var(--orange-base)" }}>⚡ 48h</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Chat Tab */}
-          {tab === "chat" && (
-            <div className="rounded-2xl border overflow-hidden bg-canvas" style={{ borderColor: "var(--purple-muted)", boxShadow: "0 0 40px 2px var(--purple-base)14" }}>
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/60">
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#ff5f57" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "#febc2e" }} />
-                <div className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: "var(--accent-base)" }} />
-                <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-foreground-secondary border border-border-subtle/50 font-mono">app.hotelsvendors.com/ai-agent</div>
-              </div>
-              <div className="p-6 min-h-[440px] flex flex-col">
-                <div className="flex items-center gap-3 mb-6 p-3 rounded-xl border" style={{ borderColor: "var(--purple-base)33", background: "var(--purple-base)08" }}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--purple-base)20", color: "var(--purple-base)" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm text-foreground">{t("chat.agentTitle")}</div>
-                    <div className="text-xs text-foreground-secondary">{t("chat.agentSubtitle")}</div>
-                  </div>
-                  <div className="ml-auto w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent-base)" }} />
-                </div>
-                <div className="flex-1 flex flex-col gap-4 overflow-auto mb-4">
-                  <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
-                      {t("chat.welcome")}
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-surface-1 border border-border-subtle text-foreground">
-                      {t("chat.userMessage1")}
-                    </div>
-                  </div>
-                  <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
-                      {t("chat.aiReply1")}
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-xs rounded-2xl rounded-tr-none p-3 text-sm bg-surface-1 border border-border-subtle text-foreground">
-                      {t("chat.userMessage2")}
-                    </div>
-                  </div>
-                  <div className="flex justify-start">
-                    <div dir={ar ? "rtl" : "ltr"} className="max-w-sm rounded-2xl rounded-tl-none p-3 text-sm text-foreground" style={{ background: "var(--purple-base)18", border: "1px solid var(--purple-base)33" }}>
-                      {t("chat.aiReply2")}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex-1 rounded-xl border border-border-subtle bg-surface-1/50 px-4 py-2.5 text-sm text-foreground-secondary">{t("chat.inputPlaceholder")}</div>
-                  <button className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[var(--purple-base)] text-surface">{t("chat.send")}</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ═══════════ FACTORING ═══════════ */}
+      {/* ═══════════ REVERSE FACTORING ═══════════ */}
       <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12 items-center rtl-reverse">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="animate-on-scroll">
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>
-              {t("factoring.badge")}
-            </span>
-            <h2 className="text-4xl font-extrabold mt-3 mb-4 text-balance text-foreground">
-              {t("factoring.title")}
-            </h2>
+            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--orange-base)" }}>Reverse Factoring</span>
+            <h2 className="text-4xl font-extrabold mt-3 mb-4 text-foreground">Suppliers Paid in 48 Hours. No Wait.</h2>
             <p className="text-foreground-secondary text-lg leading-relaxed mb-8">
-              {t("factoring.desc")}
+              Traditional 60–90 day payment terms kill supplier cash flow. Our embedded factoring, powered by AI agents and FRA-validated, lets vendors redeem money in 48 hours — while hotels keep standard payment schedules.
             </p>
             <div className="flex flex-col gap-3 mb-8">
               {[
-                { color: "var(--accent-base)", text: t("factoring.step1") },
-                { color: "var(--orange-base)", text: t("factoring.step2") },
-                { color: "var(--purple-base)", text: t("factoring.step3") },
-                { color: "var(--accent-base)", text: t("factoring.step4") },
-                { color: "var(--orange-base)", text: t("factoring.step5") },
-              ].map((s) => (
-                <div key={s.text} className="flex items-center gap-3" dir={ar ? "rtl" : "ltr"}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center border shrink-0 text-xs font-semibold" style={{ borderColor: `${s.color}55`, color: s.color, background: `${s.color}10` }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                "Supplier submits factoring request via INVO Mobile",
+                "Swarm agents verify invoice & order",
+                "Hotel approves digitally via portal",
+                "FRA compliance check automated",
+                "Funds disbursed in 48 hours",
+              ].map((step, i) => (
+                <div key={i} className="flex items-center gap-3" dir="ltr">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center border shrink-0 text-xs font-semibold"
+                    style={{ borderColor: `var(--accent-base)55`, color: "var(--accent-base)", background: "var(--accent-base)10" }}>
+                    <CheckCircle2 size={16} />
                   </div>
-                  <div className="text-sm text-foreground">{s.text}</div>
+                  <div className="text-sm text-foreground">{step}</div>
                 </div>
               ))}
             </div>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--orange-base)" }} dir={ar ? "rtl" : "ltr"}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-              {t("factoring.feeNote")}
+            <div className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--orange-base)" }}>
+              1.5–3% fee only on factoring — no hidden charges
             </div>
           </div>
-          <div className="flex flex-col gap-4 animate-on-scroll">
-            <div
-              className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "var(--orange-base)33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--orange-base)30, inset 0 0 20px 0px var(--orange-base)08"; e.currentTarget.style.borderColor = "var(--orange-base)88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--orange-base)33"; }}
-            >
+
+          {/* Factoring example card */}
+          <div className="animate-on-scroll">
+            <div className="neon-card rounded-2xl border bg-surface-1 p-5" style={{ borderColor: "var(--orange-base)33" }}>
               <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-xs text-foreground-secondary mb-1">{t("factoring.requestLabel")} #F-2847</div>
-                  <div className="font-semibold text-foreground">Luxe Linen Co.</div>
-                </div>
-                <span className="text-xs px-3 py-1 rounded-full font-semibold" style={{ background: "var(--accent-muted)", color: "var(--accent-base)" }}>{t("factoring.active")}</span>
+                <div><div className="text-xs text-foreground-secondary mb-1">Factoring Request #F-2847</div><div className="font-semibold text-foreground">Luxe Linen Co.</div></div>
+                <span className="text-xs px-3 py-1 rounded-full font-semibold" style={{ background: "var(--accent-muted)", color: "var(--accent-base)" }}>Active</span>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4 text-center">
-                <div className="rounded-lg p-2 bg-canvas/60">
-                  <div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>EGP 14.4K</div>
-                  <div className="text-xs text-foreground-secondary">{t("factoring.invoiceValue")}</div>
-                </div>
-                <div className="rounded-lg p-2 bg-canvas/60">
-                  <div className="text-xl font-semibold" style={{ color: "var(--accent-base)" }}>$13.9K</div>
-                  <div className="text-xs text-foreground-secondary">{t("factoring.disbursed")}</div>
-                </div>
-                <div className="rounded-lg p-2 bg-canvas/60">
-                  <div className="text-xl font-semibold" style={{ color: "var(--purple-base)" }}>38h</div>
-                  <div className="text-xs text-foreground-secondary">{t("factoring.timeToPay")}</div>
-                </div>
+                <div className="rounded-lg p-2 bg-canvas/60"><div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>EGP 14.4K</div><div className="text-xs text-foreground-secondary">Invoice</div></div>
+                <div className="rounded-lg p-2 bg-canvas/60"><div className="text-xl font-semibold" style={{ color: "var(--accent-base)" }}>$13.9K</div><div className="text-xs text-foreground-secondary">Disbursed</div></div>
+                <div className="rounded-lg p-2 bg-canvas/60"><div className="text-xl font-semibold" style={{ color: "var(--purple-base)" }}>38h</div><div className="text-xs text-foreground-secondary">Time to Pay</div></div>
               </div>
               <div className="flex flex-col gap-1.5">
-                {[
-                  t("factoring.verified"),
-                  t("factoring.approved"),
-                  t("factoring.fraComplete"),
-                  t("factoring.fundsDisbursed"),
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</div>
+                {["Invoice verified by compliance agent", "Hotel approval received", "FRA validation complete", "Funds disbursed"].map((s) => (
+                  <div key={s} className="flex items-center gap-2 text-xs text-foreground" dir="ltr">
+                    <CheckCircle2 size={14} style={{ color: "var(--accent-base)" }} />
+                    {s}
+                  </div>
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div
-              className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "var(--purple-base)33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--purple-base)30, inset 0 0 20px 0px var(--purple-base)08"; e.currentTarget.style.borderColor = "var(--purple-base)88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--purple-base)33"; }}
-            >
-              <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--purple-base)" }}>{t("pricingTransparency.badge")}</div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-accent)" }}>
-                  <div className="text-xl font-semibold" style={{ color: "var(--accent-base)" }}>1%</div>
-                  <div className="text-xs text-foreground-secondary mt-0.5">{t("pricingTransparency.bankFee")}</div>
-                </div>
-                <div className="rounded-lg border p-3" style={{ borderColor: "var(--orange-base)33" }}>
-                  <div className="text-xl font-semibold" style={{ color: "var(--orange-base)" }}>1.5–3%</div>
-                  <div className="text-xs text-foreground-secondary mt-0.5">{t("pricingTransparency.factoringFee")}</div>
+      {/* ═══════════ PRICING ═══════════ */}
+      <section className="py-24 border-y border-border-invisible">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-14 animate-on-scroll">
+            <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>Transparent Pricing</span>
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">Pay Only When You Transact</h2>
+            <p className="text-foreground-secondary text-lg">No subscriptions. No lock-in. We grow only when you grow.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 stagger-children">
+            {[
+              { badge: "Hotels & Vendors", title: "Platform Access", price: "Free", period: "Forever", features: ["Full HotelsVendors dashboard", "INVO marketplace access", "AI chatbot & agents", "ETA-compliant invoicing", "Unlimited users & properties"], color: "var(--accent-base)", cta: "Get Started" },
+              { badge: "All payment types", title: "Bank Transfer", price: "1%", period: "per transaction", features: ["Multi-currency support", "SWIFT & local bank rails", "Instant confirmation", "Auto-generated receipts", "Full audit trail"], color: "var(--orange-base)", cta: "Get Started", popular: true },
+              { badge: "Reverse factoring", title: "Factoring Service", price: "1.5–3%", period: "of invoice value", features: ["48-hour supplier payout", "AI-driven authorisation", "FRA-compliant process", "Zero paperwork", "Joker option — use anytime"], color: "var(--purple-base)", cta: "Get Started" },
+            ].map((p) => (
+              <div key={p.title} className="animate-on-scroll">
+                <div className="neon-card rounded-2xl border bg-surface-1 p-5 flex flex-col h-full relative" style={{ borderColor: `${p.color}33` }}>
+                  {p.popular && (
+                    <div className="absolute -top-3 left-1/2 px-4 py-1 rounded-full text-xs font-semibold"
+                      style={{ background: p.color, color: "var(--bg-canvas)", transform: "translateX(-50%)" }}>Most Used</div>
+                  )}
+                  <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: p.color }}>{p.badge}</div>
+                  <div className="text-2xl font-semibold mb-1 text-foreground">{p.title}</div>
+                  <div className="flex items-end gap-1 mb-6">
+                    <span className="text-4xl font-extrabold text-foreground">{p.price}</span>
+                    <span className="text-foreground-secondary pb-1 text-sm">{p.period}</span>
+                  </div>
+                  <ul className="flex flex-col gap-2.5 flex-1 mb-7">
+                    {p.features.map((f) => (
+                      <li key={f} className="flex items-center gap-2 text-sm text-foreground" dir="ltr">
+                        <CheckCircle2 size={16} style={{ color: p.color }} />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <a href="/register" className="w-full font-semibold cursor-pointer rounded-lg text-sm py-2.5 text-center block"
+                    style={{ background: p.color, color: "var(--bg-canvas)" }}>{p.cta}</a>
                 </div>
               </div>
-              <p className="text-xs text-foreground-secondary mt-3">{t("pricingTransparency.note")}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ OLIV REFERRAL QR ═══════════ */}
+      <section className="py-20 border-y border-border-invisible">
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--success)" }}>Partner Financing</span>
+          <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-foreground">Get Instant Cash Flow via Oliv</h2>
+          <p className="text-foreground-secondary mb-8">Scan the QR code or tap below. Your referral code CHV000 is included automatically. Get paid in 48 hours.</p>
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-48 h-48 rounded-xl overflow-hidden bg-white p-2 border-2" style={{ borderColor: "var(--success)40" }}>
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fwww.hotelsvendors.com%2Foliv%2Freferral"
+                alt="Scan for Oliv" className="w-full h-full" />
             </div>
+            <div className="flex gap-3">
+              <a href="/api/v1/oliv/click" className="px-6 py-2.5 rounded-lg text-sm font-semibold text-white transition-colors hover:opacity-90"
+                style={{ background: "var(--success)" }}>Apply via Oliv</a>
+              <Link href="/financing/oliv" className="px-6 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:bg-white/5"
+                style={{ borderColor: "var(--success)40", color: "var(--success)" }}>Learn More</Link>
+            </div>
+            <p className="text-[10px] text-foreground-muted font-mono">Code CHV000 · FRA Licensed · 48h Funding</p>
           </div>
         </div>
       </section>
@@ -760,170 +457,62 @@ export default function MarketingPage() {
       <section className="py-24 border-y border-border-invisible">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-14 animate-on-scroll">
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--purple-base)" }}>
-              {t("compliance.badge")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
-              {t("compliance.title")}
-            </h2>
-            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto text-balance">
-              {t("compliance.subtitle")}
-            </p>
+            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--purple-base)" }}>Security & Compliance</span>
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">Built for Egypt's Regulated Market</h2>
+            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">Every transaction, invoice, and factoring request is automatically audited against ETA and FRA standards.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4 mb-12 stagger-children">
-            {[
-              { color: "var(--accent-base)", label: "ETA" },
-              { color: "var(--orange-base)", label: "FRA" },
-              { color: "var(--purple-base)", label: "ISO 27001" },
-              { color: "var(--accent-base)", label: "PCI-DSS" },
-              { color: "var(--orange-base)", label: "AML / KYC" },
-              { color: "var(--purple-base)", label: "GDPR" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border font-semibold text-sm animate-on-scroll" style={{ borderColor: `${b.color}55`, color: b.color, background: `${b.color}10` }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-                {b.label}
+            {["ETA", "FRA", "ISO 27001", "PCI-DSS", "AML/KYC", "GDPR"].map((b) => (
+              <div key={b} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border font-semibold text-sm animate-on-scroll"
+                style={{ borderColor: "var(--accent-base)55", color: "var(--accent-base)", background: "var(--accent-base)10" }}>
+                <CheckCircle2 size={16} />{b}
               </div>
             ))}
           </div>
           <div className="grid md:grid-cols-2 gap-6">
-            <div
-              className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "var(--border-accent)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px rgba(var(--accent-base-rgb),0.19), inset 0 0 20px 0px rgba(var(--accent-base-rgb),0.03)"; e.currentTarget.style.borderColor = "rgba(var(--accent-base-rgb),0.53)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--border-accent)"; }}
-            >
-              <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "var(--accent-muted)", borderColor: "var(--border-accent)", color: "var(--accent-base)" }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><line x1="10" x2="8" y1="9" y2="9" /></svg>
-                </div>
-                <div className="font-semibold text-foreground">{t("compliance.etaTitle")}</div>
-              </div>
-              <p className="text-sm text-foreground-secondary leading-relaxed">
-                {t("compliance.etaDesc")}
-              </p>
-            </div>
-            <div
-              className="neon-card rounded-2xl border bg-surface-1 p-5"
-              style={{ borderColor: "var(--orange-base)33" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 18px 2px var(--orange-base)30, inset 0 0 20px 0px var(--orange-base)08"; e.currentTarget.style.borderColor = "var(--orange-base)88"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--orange-base)33"; }}
-            >
-              <div className="flex items-center gap-3 mb-3" dir={ar ? "rtl" : "ltr"}>
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center border" style={{ background: "var(--orange-base)15", borderColor: "var(--orange-base)40", color: "var(--orange-base)" }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
-                </div>
-                <div className="font-semibold text-foreground">{t("compliance.fraTitle")}</div>
-              </div>
-              <p className="text-sm text-foreground-secondary leading-relaxed">
-                {t("compliance.fraDesc")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════ TESTIMONIALS ═══════════ */}
-      <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="text-center mb-14 animate-on-scroll">
-          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>
-            {t("testimonials.badge")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 text-foreground">
-            {t("testimonials.title")}
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6 stagger-children">
-          {[
-            { color: "var(--accent-base)", quote: t("testimonials.sophia.quote"), name: t("testimonials.sophia.name"), role: t("testimonials.sophia.role"), initials: "SM" },
-            { color: "var(--orange-base)", quote: t("testimonials.carlos.quote"), name: t("testimonials.carlos.name"), role: t("testimonials.carlos.role"), initials: "CR" },
-            { color: "var(--purple-base)", quote: t("testimonials.aisha.quote"), name: t("testimonials.aisha.name"), role: t("testimonials.aisha.role"), initials: "AN" },
-          ].map((item) => (
-            <div key={item.name} className="animate-on-scroll">
-              <div
-                className="neon-card rounded-2xl border bg-surface-1 p-5 h-full flex flex-col"
-                style={{ borderColor: `${item.color}33` }}
-                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${item.color}30, inset 0 0 20px 0px ${item.color}08`; e.currentTarget.style.borderColor = `${item.color}88`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${item.color}33`; }}
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill={item.color} stroke={item.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
-                  ))}
-                </div>
-                <p className="text-sm text-foreground-secondary leading-relaxed flex-1 mb-5">&quot;{item.quote}&quot;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold border" style={{ background: `${item.color}15`, borderColor: `${item.color}44`, color: item.color }}>{item.initials}</div>
-                   <div><div className="font-semibold text-sm text-foreground">{item.name}</div><div className="text-xs text-foreground-secondary">{item.role}</div></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════ PRICING ═══════════ */}
-      <section className="py-24 border-y border-border-invisible">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-14 animate-on-scroll">
-            <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>
-              {t("pricing.badge")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-3 mb-4 text-foreground">
-              {t("pricing.title")}
-            </h2>
-            <p className="text-foreground-secondary text-lg">{t("pricing.subtitle")}</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 stagger-children">
             {[
-              { color: "var(--accent-base)", badge: t("pricing.free.badge"), title: t("pricing.free.title"), price: t("pricing.free.price"), unit: t("pricing.free.unit"), features: [t("pricing.free.f1"), t("pricing.free.f2"), t("pricing.free.f3"), t("pricing.free.f4"), t("pricing.free.f5")] },
-              { color: "var(--orange-base)", badge: t("pricing.bank.badge"), title: t("pricing.bank.title"), price: "1%", unit: t("pricing.bank.unit"), highlight: true, features: [t("pricing.bank.f1"), t("pricing.bank.f2"), t("pricing.bank.f3"), t("pricing.bank.f4"), t("pricing.bank.f5")] },
-              { color: "var(--purple-base)", badge: t("pricing.factoring.badge"), title: t("pricing.factoring.title"), price: "1.5–3%", unit: t("pricing.factoring.unit"), features: [t("pricing.factoring.f1"), t("pricing.factoring.f2"), t("pricing.factoring.f3"), t("pricing.factoring.f4"), t("pricing.factoring.f5")] },
-            ].map((p) => (
-              <div key={p.title} className="animate-on-scroll">
-                <div
-                  className="neon-card rounded-2xl border bg-surface-1 p-5 flex flex-col h-full relative"
-                  style={{ borderColor: `${p.color}33` }}
-                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${p.color}30, inset 0 0 20px 0px ${p.color}08`; e.currentTarget.style.borderColor = `${p.color}88`; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${p.color}33`; }}
-                >
-                  {p.highlight && <div className="absolute -top-3 left-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--orange-base)", color: "var(--bg-canvas)", transform: ar ? "translateX(50%)" : "translateX(-50%)" }}>{t("pricing.bank.highlight")}</div>}
-                  <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: p.color }}>{p.badge}</div>
-                  <div className="text-2xl font-semibold mb-1 text-foreground">{p.title}</div>
-                  <div className="flex items-end gap-1 mb-6">
-                    <span className="text-4xl font-extrabold text-foreground">{p.price}</span>
-                    <span className="text-foreground-secondary pb-1 text-sm">{p.unit}</span>
+              { icon: FileText, title: "ETA Compliance Engine", desc: "Every invoice issued through INVO is automatically structured to meet Egypt's ETA electronic invoicing standard. No manual submission required — our agents handle it end-to-end.", color: "var(--accent-base)" },
+              { icon: Shield, title: "FRA Financial Standards", desc: "All factoring operations conducted within the FRA regulatory framework. Automated KYC, AML screening, and transaction monitoring embedded in every workflow.", color: "var(--orange-base)" },
+            ].map((c) => {
+              const Icon = c.icon;
+              return (
+                <div key={c.title} className="neon-card rounded-2xl border bg-surface-1 p-5" style={{ borderColor: `${c.color}33` }}>
+                  <div className="flex items-center gap-3 mb-3" dir="ltr">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border"
+                      style={{ background: `${c.color}15`, borderColor: `${c.color}40`, color: c.color }}>
+                      <Icon size={16} />
+                    </div>
+                    <div className="font-semibold text-foreground">{c.title}</div>
                   </div>
-                  <ul className="flex flex-col gap-2.5 flex-1 mb-7">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{f}</li>
-                    ))}
-                  </ul>
-                  <Link href="/register" className="w-full font-semibold cursor-pointer rounded-lg text-sm py-2.5 text-center block" style={{ background: p.color, color: "var(--bg-canvas)" }}>{t("pricing.cta")}</Link>
+                  <p className="text-sm text-foreground-secondary leading-relaxed">{c.desc}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ═══════════ CTA ═══════════ */}
+      {/* ═══════════ FINAL CTA ═══════════ */}
       <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(to right, var(--accent-base) 1px, transparent 1px), linear-gradient(to bottom, var(--accent-base) 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
+        <div className="absolute inset-0 opacity-[0.02]"
+          style={{ backgroundImage: "linear-gradient(to right, var(--accent-base) 1px, transparent 1px), linear-gradient(to bottom, var(--accent-base) 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
         <div className="relative max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-          <div className="flex justify-center mb-6" style={{ background: "var(--accent-base)15", border: "1px dashed var(--accent-base)40", width: 48, height: 48, borderRadius: 8, marginLeft: "auto", marginRight: "auto" }}></div>
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-balance leading-tight text-foreground">
-            {t("cta.headline1")}<br /><span className="text-foreground">{t("cta.headline2")}</span>
+            The Future of Hotel<br />Procurement is Here.
           </h2>
-          <p className="text-foreground-secondary text-lg mb-4 max-w-xl mx-auto">
-            {t("cta.subtitle")}
-          </p>
-          <p className="text-sm mb-10" style={{ color: "var(--orange-base)" }}>
-            {t("cta.tagline")}
+          <p className="text-foreground-secondary text-lg mb-10 max-w-xl mx-auto">
+            Start free today. Explore the sandbox. Let our AI agents guide your onboarding. No commitment, no subscription — just results.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg inline-flex items-center justify-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
-              {t("cta.startFree")}
-            </Link>
+            <a href="/register"
+              className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg inline-flex items-center justify-center bg-accent-base text-surface hover:bg-accent-light transition-colors">
+              Start Free — No Credit Card
+            </a>
+            <a href="/sandbox"
+              className="font-semibold px-10 py-3 cursor-pointer gap-2 text-base rounded-lg border inline-flex items-center justify-center transition-colors hover:bg-white/5"
+              style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
+              Explore Sandbox
+            </a>
           </div>
         </div>
       </section>
@@ -931,237 +520,187 @@ export default function MarketingPage() {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────
-   SANDBOX CAROUSEL — Procurement flow: PO → Execution → Delivery → Payment
-   ────────────────────────────────────────────────────────────── */
-const STEPS = [
-  {
-    step: 1,
-    title: "Purchase Order",
-    subtitle: "Hotel initiates procurement",
-    color: "var(--accent-base)",
-    icon: FileText,
-    items: [
-      { icon: ShoppingCart, text: "Browse vendor catalogs" },
-      { icon: Building2, text: "Select items & quantities" },
-      { icon: FileText, text: "Submit purchase order" },
-    ],
-    dashboard: {
-      title: "New Purchase Order",
-      table: [
-        { item: "Premium Detergent (4×5L)", qty: "12 units", price: "EGP 4,200" },
-        { item: "Cotton Bath Towels (500gsm)", qty: "200 pcs", price: "EGP 18,000" },
-        { item: "Mineral Water (500ml×24)", qty: "50 cases", price: "EGP 3,750" },
-      ],
-      total: "EGP 25,950",
-    },
-  },
-  {
-    step: 2,
-    title: "Execution",
-    subtitle: "Supplier confirms & processes",
-    color: "var(--orange-base)",
-    icon: CheckCircle2,
-    items: [
-      { icon: CheckCircle2, text: "Supplier confirms order" },
-      { icon: Package, text: "Picks & packs inventory" },
-      { icon: FileText, text: "ETA e-invoice generated" },
-    ],
-    dashboard: {
-      title: "Order Confirmed",
-      table: [
-        { item: "Order #HV-2026-0847", qty: "Status: Processing", price: "ETA UUID: ✓" },
-        { item: "Supplier: CleanPro Egypt", qty: "Tier: Gold", price: "ETA Status: Accepted" },
-        { item: "ETA Digital Signature", qty: "Verified", price: "Invoice #INV-4821" },
-      ],
-      total: "Payment guaranteed ✓",
-    },
-  },
-  {
-    step: 3,
-    title: "Delivery",
-    subtitle: "Logistics fulfills & ships",
-    color: "var(--purple-base)",
-    icon: Truck,
-    items: [
-      { icon: Truck, text: "Route optimization" },
-      { icon: MapPin, text: "Real-time GPS tracking" },
-      { icon: CheckCircle2, text: "Proof of delivery" },
-    ],
-    dashboard: {
-      title: "Shipment Tracking",
-      table: [
-        { item: "Shipment #SHP-1192", qty: "Route: 6th Oct → Hurg", price: "ETA: 2h 15m" },
-        { item: "Carrier: SwiftLog Egypt", qty: "Vehicle: Refrigerated", price: "Status: In Transit" },
-        { item: "GPS Checkpoint 3/5", qty: "Cairo-Alex Rd.", price: "Temp: 4°C ✓" },
-      ],
-      total: "On-time delivery 98.2%",
-    },
-  },
-  {
-    step: 4,
-    title: "Payment",
-    subtitle: "Settlement & factoring",
-    color: "#64b5f6",
-    icon: CreditCard,
-    items: [
-      { icon: CreditCard, text: "Payment processed" },
-      { icon: Building2, text: "Factoring liquidity" },
-      { icon: CheckCircle2, text: "Revenue secured" },
-    ],
-    dashboard: {
-      title: "Payment Settlement",
-      table: [
-        { item: "Invoice #INV-4821", qty: "Amount: EGP 25,950", price: "Status: Settled" },
-        { item: "Platform Fee (2.5%)", qty: "EGP 648.75", price: "Deducted" },
-        { item: "Factoring Spread", qty: "EGP 389.25", price: "To partner" },
-      ],
-      total: "Supplier paid: EGP 24,912",
-    },
-  },
-];
-
-export function SandboxCarousel() {
-  const [active, setActive] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { locale } = useLanguage();
-  const ar = locale === "ar";
-
-  const resetTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setActive((p) => (p + 1) % STEPS.length), 6000);
-  };
-
-  useEffect(() => {
-    resetTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
-
-  const go = (dir: number) => {
-    setActive((p) => (p + dir + STEPS.length) % STEPS.length);
-    resetTimer();
-  };
-
-  const step = STEPS[active];
+/* ═════════════════════════════════════════════════════════════
+   SANDBOX DEMO COMPONENT — Dual-layer dashboard + mobile preview
+   ═════════════════════════════════════════════════════════════ */
+function SandboxDemo({ t }: { t: (key: string) => string }) {
+  const [tab, setTab] = useState<"hotel" | "vendor" | "chat">("hotel");
 
   return (
-    <section className="py-20 border-y animate-on-scroll" style={{ borderColor: "var(--accent-glow)" }}>
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-10">
-          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>Platform Demo</span>
-          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-white font-medium">See It in Action</h2>
-          <p className="text-foreground-secondary text-sm max-w-xl mx-auto">Follow a complete procurement cycle — from order placement to payment settlement.</p>
+    <section className="py-20 border-y border-border-invisible">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-10 animate-on-scroll">
+          <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>Sandbox Demo</span>
+          <h2 className="text-3xl md:text-4xl mt-3 mb-3 text-foreground font-semibold">Explore Before You Commit</h2>
+          <p className="text-foreground-secondary text-sm max-w-xl mx-auto">No account needed. See the dual-layer platform in action — web dashboard + mobile app.</p>
         </div>
 
-        {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {STEPS.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <React.Fragment key={s.step}>
-                {i > 0 && <div className="hidden sm:block w-8 h-px" style={{ background: i <= active ? step.color : "rgba(255,255,255,0.08)" }} />}
-                <button
-                  onClick={() => { setActive(i); resetTimer(); }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                  style={{
-                    background: i === active ? `${s.color}15` : "transparent",
-                    border: i === active ? `1px solid ${s.color}33` : "1px solid transparent",
-                    color: i === active ? s.color : "rgba(255,255,255,0.3)",
-                  }}
-                >
-                  <Icon size={14} />
-                  <span className="hidden sm:inline">{s.title}</span>
-                </button>
-              </React.Fragment>
-            );
-          })}
+        {/* Dual layer tabs */}
+        <div className="flex justify-center mb-4 flex-wrap gap-2">
+          {[
+            { key: "hotel" as const, label: "🏢 Web Dashboard", color: "var(--accent-base)" },
+            { key: "vendor" as const, label: "📱 INVO Mobile", color: "var(--orange-base)" },
+            { key: "chat" as const, label: "🤖 AI Assistant", color: "var(--purple-base)" },
+          ].map((tb) => (
+            <button key={tb.key} onClick={() => setTab(tb.key)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer border"
+              style={{
+                background: tab === tb.key ? tb.color : "transparent",
+                color: tab === tb.key ? "var(--bg-canvas)" : "rgba(160,160,176,1)",
+                borderColor: tab === tb.key ? tb.color : `${tb.color}33`,
+              }}>
+              {tb.label}
+            </button>
+          ))}
         </div>
 
-        {/* Main card */}
-        <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: `${step.color}44`, boxShadow: `0 0 50px 4px ${step.color}10` }}>
-          {/* Title bar */}
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-surface-1/80">
-            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
-            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
-            <div className="w-2.5 h-2.5 rounded-full" style={{ background: step.color }} />
-            <div className="flex-1 mx-4 bg-canvas/50 rounded px-3 py-1 text-xs text-foreground-muted border border-border-subtle/50">
-              app.hotelsvendors.com — Step {step.step}: {step.title}
+        {/* Hotel Dashboard Tab */}
+        {tab === "hotel" && (
+          <div className="rounded-2xl border overflow-hidden bg-canvas"
+            style={{ borderColor: "var(--accent-base)33", boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle bg-surface-1/60">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
+              <span className="flex-1 text-center text-[11px] text-foreground-muted font-mono">app.hotelsvendors.com — Meridian Hotels · 3 Properties</span>
+            </div>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="font-semibold text-lg text-foreground">Meridian Hotels — Procurement Hub</h3>
+                  <p className="text-foreground-secondary text-sm">3 properties · AI Spend Forecast: <span style={{ color: "var(--accent-base)" }}>↓ 8% vs last quarter</span></p>
+                </div>
+                <button className="text-sm px-4 py-2 font-semibold rounded-md bg-accent-base text-surface">AI Assist</button>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {[
+                  { label: "Active Orders", value: "34", sub: "+8%", color: "var(--accent-base)" },
+                  { label: "Monthly Spend", value: "EGP 182K", sub: "Forecast: EGP 168K", color: "var(--orange-base)" },
+                  { label: "Vendor Network", value: "47", sub: "via INVO", color: "var(--purple-base)" },
+                  { label: "Factoring Requests", value: "6", sub: "2 pending 48h", color: "var(--accent-base)" },
+                ].map((c) => (
+                  <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
+                    <div className="text-xs text-foreground-secondary mb-1">{c.label}</div>
+                    <div className="text-2xl font-semibold text-foreground">{c.value}</div>
+                    <div className="text-xs mt-1" style={{ color: c.color }}>{c.sub}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl border bg-surface-1 overflow-hidden" style={{ borderColor: "var(--border-accent)" }}>
+                <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
+                  <span className="font-semibold text-sm text-foreground">Recent Orders — ETA Compliant</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--border-accent)", color: "var(--accent-base)" }}>All verified</span>
+                </div>
+                {[
+                  { vendor: "Luxe Linen Co.", item: "Egyptian Cotton Sheets × 200", price: "EGP 14,400", status: "Delivered", color: "var(--accent-base)" },
+                  { vendor: "ProClean Supplies", item: "Eco Amenity Kits × 500", price: "EGP 3,250", status: "In Transit", color: "var(--orange-base)" },
+                  { vendor: "GourmetSource", item: "Premium Coffee Blend × 50kg", price: "EGP 2,100", status: "Factoring Active", color: "var(--purple-base)" },
+                ].map((o, i) => (
+                  <div key={i} className={`flex items-center justify-between px-4 py-3 text-sm ${i < 2 ? "border-b border-border-invisible" : ""}`}>
+                    <div><div className="font-medium text-foreground">{o.vendor}</div><div className="text-foreground-secondary text-xs">{o.item}</div></div>
+                    <div className="text-right"><div className="font-semibold text-foreground">{o.price}</div><div className="text-xs" style={{ color: o.color }}>{o.status}</div></div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        )}
 
-          {/* Content */}
-          <div className="bg-canvas p-6 sm:p-8">
-            <div className="grid sm:grid-cols-[1fr_1.5fr] gap-6 rtl-reverse">
-              {/* Left: step details */}
-                <div className="space-y-4">
-                <div className="flex items-center gap-3" dir={ar ? "rtl" : "ltr"}>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${step.color}15`, border: `1px solid ${step.color}33` }}>
-                    <step.icon size={20} style={{ color: step.color }} />
-                  </div>
-                  <div>
-                    <h3 className="text-foreground font-semibold text-[15px]">Step {step.step}: {step.title}</h3>
-                    <p className="text-foreground-muted text-[12px]">{step.subtitle}</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {step.items.map((item, j) => {
-                    const Icon = item.icon;
-                    return (
-                      <div key={j} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] border border-border-invisible" dir={ar ? "rtl" : "ltr"}>
-                        <Icon size={14} style={{ color: step.color }} className="shrink-0" />
-                        <span className="text-foreground-secondary text-[13px]">{item.text}</span>
-                      </div>
-                    );
-                  })}
-                </div>
+        {/* Mobile App Tab */}
+        {tab === "vendor" && (
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 rounded-2xl border overflow-hidden bg-canvas"
+              style={{ borderColor: "var(--orange-base)33", boxShadow: "0 0 40px 2px var(--orange-base)14" }}>
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle bg-surface-1/60">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
+                <span className="flex-1 text-center text-[11px] text-foreground-muted font-mono">INVO Mobile · Supplier Dashboard</span>
               </div>
-
-              {/* Right: mock dashboard */}
-              <div className="rounded-xl border border-border-subtle bg-surface-1/50 overflow-hidden">
-                <div className="px-4 py-3 border-b border-border-subtle flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: step.color }} />
-                  <span className="text-foreground-secondary text-[12px] font-medium">{step.dashboard.title}</span>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="font-semibold text-lg text-foreground">Luxe Linen Co. — Vendor Central</h3>
+                    <p className="text-foreground-secondary text-sm">340 hotel buyers · <span style={{ color: "var(--orange-base)" }}>12 active orders</span></p>
+                  </div>
+                  <button className="text-sm px-4 py-2 font-semibold rounded-md text-white" style={{ background: "var(--orange-base)" }}>Scan Invoice</button>
                 </div>
-                <div className="divide-y divide-white/[0.04]">
-                  {step.dashboard.table.map((row, j) => (
-                    <div key={j} className="flex items-center justify-between px-4 py-3">
-                      <span className="text-foreground-secondary text-[12px]">{row.item}</span>
-                      <span className="text-foreground-muted text-[12px]">{row.qty}</span>
-                      <span className="text-[12px] font-medium" style={{ color: step.color }}>{row.price}</span>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    { label: "Hotel Buyers", value: "340", color: "var(--orange-base)" },
+                    { label: "MRR", value: "EGP 94K", color: "var(--accent-base)" },
+                    { label: "Avg. Order", value: "EGP 2.8K", color: "var(--purple-base)" },
+                    { label: "Reorder Rate", value: "74%", color: "var(--orange-base)" },
+                  ].map((c) => (
+                    <div key={c.label} className="rounded-xl border bg-surface-1 p-4" style={{ borderColor: `${c.color}33` }}>
+                      <div className="text-xs text-foreground-secondary mb-1">{c.label}</div>
+                      <div className="text-2xl font-semibold text-foreground">{c.value}</div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 border-t border-border-subtle flex items-center justify-between">
-                  <span className="text-foreground-muted text-[11px] uppercase tracking-wider">Summary</span>
-                  <span className="text-[13px] font-semibold" style={{ color: step.color }}>{step.dashboard.total}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  {["📸 Scan Invoice", "📦 New Order #2847", "🧹 Housekeeping", "💳 Factor Invoice"].map((f) => (
+                    <div key={f} className="rounded-lg border border-white/5 bg-surface-1 p-3 text-sm text-foreground-secondary">{f}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {/* Mobile phone frame */}
+            <div className="hidden md:block w-48 shrink-0">
+              <div className="rounded-3xl border-4 border-white/10 overflow-hidden bg-surface-1 p-2" style={{ boxShadow: "0 0 40px 2px var(--accent-glow)" }}>
+                <div className="rounded-2xl overflow-hidden bg-canvas p-3">
+                  <div className="text-[8px] text-center text-foreground-muted mb-2">INVO Mobile</div>
+                  <div className="space-y-1.5">
+                    {["📦 3 New Orders", "💳 Factor EGP 14.4K", "🏪 Browse INVO", "📸 Scan Invoice"].map((s) => (
+                      <div key={s} className="rounded bg-surface-1 p-1.5 text-[8px] text-foreground-secondary">{s}</div>
+                    ))}
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 text-center">
+                    <div className="w-10 h-10 mx-auto rounded bg-white p-0.5">
+                      <img src="https://api.qrserver.com/v1/create-qr-code/?size=36x36&data=https%3A%2F%2Fwww.hotelsvendors.com%2Foliv%2Freferral" alt="QR" className="w-full h-full" />
+                    </div>
+                    <div className="text-[7px] text-foreground-muted mt-1">Scan · CHV000</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Nav arrows */}
-          <button onClick={() => go(-1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface-1/80 border border-border-subtle flex items-center justify-center text-foreground-muted hover:text-foreground hover:border-border-visible transition-all cursor-pointer backdrop-blur-sm">
-            {ar ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-          </button>
-          <button onClick={() => go(1)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface-1/80 border border-border-subtle flex items-center justify-center text-foreground-muted hover:text-foreground hover:border-border-visible transition-all cursor-pointer backdrop-blur-sm">
-            {ar ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-6">
-          {STEPS.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => { setActive(i); resetTimer(); }}
-              className="w-2 h-2 rounded-full transition-all cursor-pointer"
-              style={{
-                background: i === active ? s.color : "rgba(255,255,255,0.1)",
-                boxShadow: i === active ? `0 0 8px ${s.color}44` : "none",
-              }}
-            />
-          ))}
-        </div>
+        {/* AI Chat Tab */}
+        {tab === "chat" && (
+          <div className="rounded-2xl border overflow-hidden bg-canvas"
+            style={{ borderColor: "var(--purple-base)33", boxShadow: "0 0 40px 2px var(--purple-base)14" }}>
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle bg-surface-1/60">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#ff5f57" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#febc2e" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--accent-base)" }} />
+              <span className="flex-1 text-center text-[11px] text-foreground-muted font-mono">AI Procurement Assistant</span>
+            </div>
+            <div className="p-6 min-h-[320px]">
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-accent-base text-surface text-xs font-semibold">AI</div>
+                  <div className="rounded-xl rounded-tl-sm bg-surface-1 border border-white/5 p-3 text-sm text-foreground max-w-md">
+                    I can help you find suppliers, create RFQs, and track orders. What do you need for your hotel today?
+                  </div>
+                </div>
+                <div className="flex gap-3 justify-end">
+                  <div className="rounded-xl rounded-tr-sm p-3 text-sm text-white max-w-md" style={{ background: "var(--purple-base)" }}>
+                    I need 200 sets of Egyptian cotton bedsheets, 400 thread count, delivered to Sharm El-Sheikh by next week.
+                  </div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-canvas border border-white/10 text-xs font-semibold text-foreground">GM</div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-accent-base text-surface text-xs font-semibold">AI</div>
+                  <div className="rounded-xl rounded-tl-sm bg-surface-1 border border-white/5 p-3 text-sm text-foreground max-w-md">
+                    Found 3 verified suppliers on INVO. <strong style={{ color: "var(--accent-base)" }}>Luxe Linen Co.</strong> — EGP 72/unit, delivers in 3 days, 4.8★ rating. Would you like me to create an RFQ?
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HotelsVendors — Egypt's B2B Hospitality Procurement Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0c0c12;
+      color: #d0d6e0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+    }
+
+    /* ── Design Tokens ── */
+    :root {
+      --bg-deep: #0c0c12;
+      --bg-panel: #111116;
+      --bg-surface: rgba(255,255,255,0.02);
+      --bg-surface-hover: rgba(255,255,255,0.04);
+      --bg-elevated: rgba(255,255,255,0.05);
+      --text-primary: #f7f8f8;
+      --text-secondary: #d0d6e0;
+      --text-tertiary: #8a8f98;
+      --text-quaternary: #62666d;
+      --accent-deep: #312e81;
+      --accent: #4338ca;
+      --accent-hover: #4f46e5;
+      --accent-glow: rgba(67,56,202,0.15);
+      --border-subtle: rgba(255,255,255,0.05);
+      --border-standard: rgba(255,255,255,0.08);
+      --radius-btn: 6px;
+      --radius-card: 8px;
+      --radius-featured: 12px;
+      --radius-pill: 9999px;
+      --max-width: 1200px;
+    }
+
+    /* ── Utility ── */
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 100px 0; }
+    @media (max-width: 768px) { .section { padding: 64px 0; } }
+
+    .label-pre {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 12px;
+    }
+    .heading-display {
+      font-size: 48px; font-weight: 600; line-height: 1.05;
+      letter-spacing: -1px; color: var(--text-primary);
+    }
+    .heading-section {
+      font-size: 32px; font-weight: 600; line-height: 1.15;
+      letter-spacing: -0.7px; color: var(--text-primary);
+    }
+    .heading-card {
+      font-size: 20px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.24px; color: var(--text-primary);
+    }
+    .body-large {
+      font-size: 18px; font-weight: 400; line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .body-text {
+      font-size: 15px; font-weight: 400; line-height: 1.6;
+      color: var(--text-secondary); letter-spacing: -0.165px;
+    }
+    .caption {
+      font-size: 13px; font-weight: 400; line-height: 1.5;
+      color: var(--text-tertiary); letter-spacing: -0.13px;
+    }
+    .micro {
+      font-size: 11px; font-weight: 500; line-height: 1.4;
+      color: var(--text-quaternary);
+    }
+
+    @media (max-width: 768px) {
+      .heading-display { font-size: 32px; letter-spacing: -0.7px; }
+      .heading-section { font-size: 24px; letter-spacing: -0.4px; }
+      .body-large { font-size: 16px; }
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: var(--radius-btn);
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s ease; border: none; text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .btn-ghost {
+      background: var(--bg-surface); color: var(--text-secondary);
+      border: 1px solid var(--border-standard);
+    }
+    .btn-ghost:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .btn-outline {
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-standard);
+    }
+    .btn-outline:hover {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .btn-sm {
+      padding: 6px 12px; font-size: 13px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--border-standard);
+      background: var(--bg-surface-hover);
+    }
+    .card-featured {
+      border-radius: var(--radius-featured);
+    }
+
+    /* ── Pill Badge ── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: var(--radius-pill);
+      font-size: 12px; font-weight: 500;
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-standard);
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,12,18,0.85); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+    }
+    .nav-logo {
+      font-size: 18px; font-weight: 600; letter-spacing: -0.4px;
+      color: var(--text-primary); text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a {
+      padding: 6px 12px; border-radius: var(--radius-btn);
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: all 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--text-primary); background: var(--bg-surface); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .nav-mobile-toggle {
+      display: none; background: none; border: none; color: var(--text-secondary);
+      font-size: 24px; cursor: pointer; padding: 4px;
+    }
+
+    @media (max-width: 1024px) {
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: block; }
+    }
+
+    /* ── HERO ── */
+    .hero { padding: 80px 0 100px; text-align: center; }
+    .hero-inner { max-width: 800px; margin: 0 auto; }
+    .hero h1 { margin-bottom: 20px; }
+    .hero p { margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 60px; flex-wrap: wrap; }
+
+    /* Dashboard Preview Card */
+    .dashboard-preview {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-standard);
+      border-radius: var(--radius-featured);
+      padding: 24px;
+      max-width: 880px; margin: 0 auto;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .dash-metrics {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      margin-bottom: 16px;
+    }
+    .dash-metric {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card); padding: 14px 16px;
+      text-align: left;
+    }
+    .dash-metric .value {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.5px;
+      color: var(--text-primary); margin-bottom: 2px;
+    }
+    .dash-metric .label {
+      font-size: 12px; font-weight: 500; color: var(--text-tertiary);
+    }
+    .dash-search {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; background: var(--bg-surface);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius-btn);
+      margin-bottom: 12px;
+    }
+    .dash-search-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .dash-search-text { font-size: 14px; color: var(--text-tertiary); flex: 1; }
+    .dash-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    @media (max-width: 768px) {
+      .dash-metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .dash-metrics { grid-template-columns: 1fr; }
+    }
+
+    /* ── Section Headers ── */
+    .section-header { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+    .section-header p { margin-top: 12px; }
+
+    /* ── Category Grid ── */
+    .category-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .category-card {
+      padding: 24px; text-align: left;
+    }
+    .category-card .icon-block {
+      width: 40px; height: 40px; border-radius: var(--radius-btn);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 18px; color: var(--text-primary);
+    }
+    .category-card h3 { margin-bottom: 6px; }
+    @media (max-width: 1024px) {
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .category-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Steps ── */
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    }
+    .step-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card); padding: 28px 24px;
+      text-align: center; transition: all 0.2s ease;
+    }
+    .step-card:hover {
+      border-color: var(--border-standard);
+      background: var(--bg-surface-hover);
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 15px; font-weight: 600; color: var(--text-primary);
+    }
+    .step-card h3 { margin-bottom: 6px; font-size: 16px; }
+
+    @media (max-width: 1024px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Agent Cards ── */
+    .agents-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .agent-card {
+      padding: 24px; text-align: left;
+    }
+    .agent-card .agent-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-btn);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; font-size: 16px; color: var(--text-primary);
+    }
+    .agent-card h3 { margin-bottom: 6px; }
+    @media (max-width: 1024px) {
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .agents-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Factoring Flow ── */
+    .factoring-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+    }
+    .flow-steps { display: flex; flex-direction: column; gap: 12px; }
+    .flow-step {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px; border-radius: var(--radius-card);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+    }
+    .flow-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .factoring-card {
+      padding: 28px; text-align: left;
+    }
+    .factoring-card .fc-row {
+      display: flex; justify-content: space-between; padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .factoring-card .fc-row:last-child { border-bottom: none; }
+    .fc-total {
+      font-size: 20px; font-weight: 600; color: var(--text-primary);
+    }
+    @media (max-width: 768px) {
+      .factoring-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Compliance Strip ── */
+    .compliance-strip {
+      display: flex; justify-content: center; align-items: center; gap: 32px;
+      flex-wrap: wrap; padding: 40px 0;
+    }
+    .compliance-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500; color: var(--text-tertiary);
+    }
+    .compliance-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #27a644;
+    }
+
+    /* ── Regulatory Cards (2-col) ── */
+    .regulatory-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .reg-card {
+      padding: 28px; text-align: left;
+    }
+    .reg-card h3 { margin-bottom: 8px; }
+    .reg-tag {
+      display: inline-block; padding: 3px 10px; border-radius: var(--radius-pill);
+      font-size: 11px; font-weight: 500; color: var(--text-primary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      margin-bottom: 12px;
+    }
+    @media (max-width: 768px) {
+      .regulatory-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Sandbox Demo ── */
+    .sandbox-preview {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-standard);
+      border-radius: var(--radius-featured);
+      padding: 32px;
+      max-width: 900px; margin: 0 auto;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .sb-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .sb-tabs { display: flex; gap: 2px; }
+    .sb-tab {
+      padding: 6px 14px; border-radius: var(--radius-btn);
+      font-size: 13px; font-weight: 500; color: var(--text-tertiary);
+      background: transparent; border: none; cursor: pointer;
+    }
+    .sb-tab.active {
+      background: var(--bg-elevated); color: var(--text-primary);
+      border: 1px solid var(--border-standard);
+    }
+    .sb-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .sb-table th {
+      text-align: left; padding: 10px 12px;
+      font-size: 12px; font-weight: 500; color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sb-table td {
+      padding: 10px 12px; font-size: 14px; font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sb-status {
+      display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill);
+      font-size: 11px; font-weight: 500;
+    }
+    .sb-status.open { background: rgba(67,56,202,0.15); color: var(--accent-hover); }
+    .sb-status.matched { background: rgba(39,166,68,0.12); color: #27a644; }
+    @media (max-width: 768px) {
+      .sb-table { font-size: 12px; }
+      .sb-table th, .sb-table td { padding: 8px; }
+    }
+
+    /* ── Pricing ── */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .pricing-card {
+      padding: 28px; text-align: left;
+    }
+    .pricing-card .price {
+      font-size: 32px; font-weight: 600; letter-spacing: -0.7px;
+      color: var(--text-primary); margin: 8px 0;
+    }
+    .pricing-card .price-period {
+      font-size: 14px; font-weight: 400; color: var(--text-tertiary);
+    }
+    .pricing-card .feature-list {
+      list-style: none; margin: 20px 0;
+    }
+    .pricing-card .feature-list li {
+      padding: 6px 0; font-size: 14px; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .pricing-card .feature-list li:last-child { border-bottom: none; }
+    .pricing-card.featured {
+      border-color: rgba(67,56,202,0.3);
+      background: rgba(67,56,202,0.03);
+    }
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Testimonials ── */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .testimonial-card {
+      padding: 24px; text-align: left;
+    }
+    .testimonial-card blockquote {
+      font-size: 15px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 16px; font-style: italic;
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .testimonial-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+    }
+    .testimonial-author .name {
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+    }
+    .testimonial-author .role {
+      font-size: 12px; color: var(--text-tertiary);
+    }
+    @media (max-width: 1024px) {
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Referral Card ── */
+    .referral-card {
+      max-width: 520px; margin: 0 auto;
+      padding: 32px; text-align: center;
+    }
+    .referral-card .qr-placeholder {
+      width: 100px; height: 100px; margin: 0 auto 20px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-standard);
+      border-radius: var(--radius-card);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; color: var(--text-tertiary);
+    }
+    .referral-code {
+      display: inline-block; padding: 8px 20px;
+      background: var(--bg-elevated);
+      border: 1px dashed var(--border-standard);
+      border-radius: var(--radius-btn);
+      font-family: 'Inter', monospace; font-size: 16px; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 64px 0 40px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-col h4 {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      margin-bottom: 12px; letter-spacing: 0.02em;
+    }
+    .footer-col a {
+      display: block; padding: 4px 0;
+      font-size: 13px; color: var(--text-tertiary); text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .footer-col a:hover { color: var(--text-secondary); }
+    .footer-bottom {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none; border-top: 1px solid var(--border-subtle);
+      max-width: var(--max-width); margin: 0 auto;
+    }
+
+    /* ── Hover interactions ── */
+    a { transition: color 0.15s ease; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════════ -->
+<nav class="nav" role="navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Hotels<span>Vendors</span></a>
+    <div class="nav-links">
+      <a href="#">Products</a>
+      <a href="#">Financing</a>
+      <a href="#">Solutions</a>
+      <a href="#">Sandbox</a>
+      <a href="#">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-outline btn-sm">Sign In</a>
+      <a href="#" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+    <button class="nav-mobile-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════ -->
+<section class="hero section">
+  <div class="container hero-inner">
+    <p class="label-pre">Egypt's B2B Hospitality Procurement Platform</p>
+    <h1 class="heading-display">Procure for your hotel<br>at the speed of trust</h1>
+    <p class="body-large">Source from 3,892 verified suppliers, settle with regulated factoring, and stay compliant with ETA e-invoicing — all on one platform built for Egypt's hospitality sector.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-primary">Start free procurement</a>
+      <a href="#" class="btn btn-ghost">Explore sandbox</a>
+    </div>
+
+    <div class="dashboard-preview">
+      <div class="dash-metrics">
+        <div class="dash-metric">
+          <div class="value">1,247</div>
+          <div class="label">Hotels</div>
+        </div>
+        <div class="dash-metric">
+          <div class="value">3,892</div>
+          <div class="label">Suppliers</div>
+        </div>
+        <div class="dash-metric">
+          <div class="value">EGP 847M</div>
+          <div class="label">GMV</div>
+        </div>
+        <div class="dash-metric">
+          <div class="value">48h</div>
+          <div class="label">Avg Delivery</div>
+        </div>
+      </div>
+      <div class="dash-search">
+        <div class="dash-search-dot"></div>
+        <span class="dash-search-text">Search products, suppliers, or RFQ numbers…</span>
+        <span class="micro" style="background:var(--bg-elevated);padding:3px 8px;border-radius:4px;border:1px solid var(--border-standard);">⌘K</span>
+      </div>
+      <div class="dash-badges">
+        <span class="pill">ETA Compliant</span>
+        <span class="pill">FRA Regulated</span>
+        <span class="pill">ISO 27001</span>
+        <span class="pill">PCI-DSS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     CATEGORIES
+     ════════════════════════════════════════════ -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Procurement Categories</p>
+      <h2 class="heading-section">Every category your<br>hotel needs</h2>
+      <p class="body-text">RFQ-driven sourcing across all operational categories — competitive quotes from verified suppliers, not fixed-price catalogs.</p>
+    </div>
+    <div class="category-grid">
+      <div class="card category-card">
+        <div class="icon-block">🛏</div>
+        <h3 class="heading-card">Premium Linens</h3>
+        <p class="body-text">300+ thread-count bedding, terry towels, and F&B napery from 146 Egyptian textile mills. RFQ-matched by thread count, GSM, and delivery SLA.</p>
+      </div>
+      <div class="card category-card">
+        <div class="icon-block">🧴</div>
+        <h3 class="heading-card">Bathroom Amenities</h3>
+        <p class="body-text">Bulk toiletries, dispensers, and guest kits. 87 suppliers across Egypt with batch-level quality certification and ETA-compliant invoicing.</p>
+      </div>
+      <div class="card category-card">
+        <div class="icon-block">🍳</div>
+        <h3 class="heading-card">Kitchen Equipment</h3>
+        <p class="body-text">Commercial ovens, refrigeration, prep stations, and smallwares. 203 equipment suppliers with installation, warranty, and service contracts.</p>
+      </div>
+      <div class="card category-card">
+        <div class="icon-block">🪑</div>
+        <h3 class="heading-card">Guest Room Furniture</h3>
+        <p class="body-text">Beds, seating, casegoods, and FF&E packages for new builds and renovations. 94 manufacturers with custom millwork capabilities.</p>
+      </div>
+      <div class="card category-card">
+        <div class="icon-block">🧹</div>
+        <h3 class="heading-card">Cleaning &amp; Housekeeping</h3>
+        <p class="body-text">Industrial cleaning chemicals, equipment, and consumables. 112 suppliers with SDS documentation and chemical compliance certification.</p>
+      </div>
+      <div class="card category-card">
+        <div class="icon-block">🥩</div>
+        <h3 class="heading-card">Food &amp; Beverage Supply</h3>
+        <p class="body-text">Fresh produce, proteins, dry goods, and beverages. 178 F&B distributors with cold-chain logistics and HACCP-certified handling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     HOW IT WORKS
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">How It Works</p>
+      <h2 class="heading-section">Four steps from need<br>to delivery</h2>
+      <p class="body-text">Register, discover suppliers through RFQ matching, checkout with negotiated payment terms, and let suppliers get paid — factoring included.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Register Free</h3>
+        <p class="caption">Create your hotel profile with tax ID, authority matrix, and procurement preferences. No credit card required.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Discover on INVO</h3>
+        <p class="caption">Post an RFQ. AI matches it to qualified suppliers. Compare quotes side-by-side by Total Cost of Procurement score.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Checkout &amp; Pay</h3>
+        <p class="caption">Select the winning quote. Pay via bank transfer (1%) or activate factoring at negotiated terms. ETA e-invoice auto-generated.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Suppliers Get Paid</h3>
+        <p class="caption">Funds are released upon delivery confirmation. Factoring suppliers receive payment on shipment, not on settlement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     AI SWARM AGENTS
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">AI Swarm Agents</p>
+      <h2 class="heading-section">Six specialized agents<br>running your procurement</h2>
+      <p class="body-text">Each agent handles a discrete procurement function. Together, they form an autonomous swarm that reduces procurement overhead by up to 60%.</p>
+    </div>
+    <div class="agents-grid">
+      <div class="card agent-card">
+        <div class="agent-icon">🚀</div>
+        <h3 class="heading-card">Onboarding Agent</h3>
+        <p class="body-text">Guides new hotels and suppliers through verification, tax registration, and authority matrix setup in under 15 minutes with ETA integration.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Growth</span>
+      </div>
+      <div class="card agent-card">
+        <div class="agent-icon">📊</div>
+        <h3 class="heading-card">Spend Forecast</h3>
+        <p class="body-text">Predicts quarterly procurement needs using historical RFQ data, seasonal occupancy patterns, and supplier lead times — 94% accuracy.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Intelligence</span>
+      </div>
+      <div class="card agent-card">
+        <div class="agent-icon">🛡</div>
+        <h3 class="heading-card">Compliance Swarm</h3>
+        <p class="body-text">Validates every transaction against ETA e-invoicing schema, FRA factoring regulations, and your authority matrix — before funds move.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Operations</span>
+      </div>
+      <div class="card agent-card">
+        <div class="agent-icon">💰</div>
+        <h3 class="heading-card">Factoring Agent</h3>
+        <p class="body-text">Structures reverse factoring offers in real time: dynamic discount rates based on hotel credit standing and supplier payment terms.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Execution</span>
+      </div>
+      <div class="card agent-card">
+        <div class="agent-icon">💬</div>
+        <h3 class="heading-card">AI Chatbot</h3>
+        <p class="body-text">Natural-language RFQ creation, order status checks, and supplier communication. Integrated with WhatsApp for field procurement teams.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Growth</span>
+      </div>
+      <div class="card agent-card">
+        <div class="agent-icon">🔌</div>
+        <h3 class="heading-card">Integration Agent</h3>
+        <p class="body-text">Connects to your existing PMS, ERP, and accounting systems via REST APIs. Two-way sync for purchase orders and inventory levels.</p>
+        <span class="micro" style="margin-top:8px;display:inline-block;">Squad: Execution</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     REVERSE FACTORING
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Reverse Factoring</p>
+      <h2 class="heading-section">Liquidity that moves<br>at your speed</h2>
+      <p class="body-text">Suppliers get paid on shipment — not on your 30/60/90-day terms. Factoring companies bid to fund your payables, and you settle later at rates that reflect your credit.</p>
+    </div>
+    <div class="factoring-layout">
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-dot"></div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Hotel issues PO</div>
+            <div class="caption">Purchase order created with negotiated payment terms (e.g., Net 60)</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot"></div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Supplier ships goods</div>
+            <div class="caption">Delivery confirmed. ETA e-invoice generated and validated automatically</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot"></div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Factoring company pays supplier</div>
+            <div class="caption">Supplier receives 96-98.5% of invoice value within 48 hours of shipment</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot"></div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Hotel settles at maturity</div>
+            <div class="caption">Hotel pays factoring company at Net 60. No supplier debt on your balance sheet</div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-featured factoring-card">
+        <p class="label-pre" style="margin-bottom:4px;">Example Factoring</p>
+        <div class="fc-row">
+          <span class="body-text">Invoice amount</span>
+          <span style="font-weight:600;color:var(--text-primary);">EGP 250,000</span>
+        </div>
+        <div class="fc-row">
+          <span class="body-text">Payment terms</span>
+          <span style="font-weight:600;color:var(--text-primary);">Net 60</span>
+        </div>
+        <div class="fc-row">
+          <span class="body-text">Discount rate</span>
+          <span style="font-weight:600;color:var(--text-primary);">2.5%</span>
+        </div>
+        <div class="fc-row">
+          <span class="body-text">Supplier receives (48h)</span>
+          <span class="fc-total">EGP 243,750</span>
+        </div>
+        <div class="fc-row">
+          <span class="body-text">Hotel settles (Day 60)</span>
+          <span style="font-weight:600;color:var(--text-primary);">EGP 250,000</span>
+        </div>
+        <div style="margin-top:16px;">
+          <span class="pill">FRA Regulated</span>
+          <span class="pill" style="margin-left:6px;">No hidden fees</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     COMPLIANCE STRIP
+     ════════════════════════════════════════════ -->
+<section class="section" style="padding:48px 0;">
+  <div class="container">
+    <div class="compliance-strip">
+      <div class="compliance-item"><div class="compliance-dot"></div> ETA E-Invoicing</div>
+      <div class="compliance-item"><div class="compliance-dot"></div> FRA Regulated</div>
+      <div class="compliance-item"><div class="compliance-dot"></div> ISO 27001 Certified</div>
+      <div class="compliance-item"><div class="compliance-dot"></div> PCI-DSS Level 1</div>
+      <div class="compliance-item"><div class="compliance-dot"></div> AML/KYC Compliant</div>
+      <div class="compliance-item"><div class="compliance-dot"></div> GDPR Aligned</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     BUILT FOR EGYPT
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Compliance-First Architecture</p>
+      <h2 class="heading-section">Built for Egypt's<br>regulated market</h2>
+      <p class="body-text">Egypt's hospitality procurement operates under dual regulatory frameworks. Our platform is architected to satisfy both — not as an afterthought, but as the foundation.</p>
+    </div>
+    <div class="regulatory-grid">
+      <div class="card card-featured reg-card">
+        <span class="reg-tag">ETA Integration</span>
+        <h3 class="heading-card">Egyptian Tax Authority<br>E-Invoicing</h3>
+        <p class="body-text">Every transaction on HotelsVendors generates a fully compliant ETA e-invoice in real time. Our bridge validates invoice schema, digital signatures, and UUID registration before any funds are released. No batch uploads, no reconciliation gaps, no audit exposure.</p>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <span class="pill">Phase 1 Certified</span>
+          <span class="pill">Real-time Submission</span>
+        </div>
+      </div>
+      <div class="card card-featured reg-card">
+        <span class="reg-tag">FRA Licensed</span>
+        <h3 class="heading-card">Financial Regulatory<br>Authority Compliance</h3>
+        <p class="body-text">All factoring transactions are structured and reported under FRA guidelines. Our Factoring Agent enforces regulatory ceilings on discount rates, maintains audit trails for every funded invoice, and generates FRA-compliant periodic reports for both factors and hotels.</p>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <span class="pill">License #324-2025</span>
+          <span class="pill">Audit Trail</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     SANDBOX DEMO
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Sandbox</p>
+      <h2 class="heading-section">Test drive the platform<br>with synthetic data</h2>
+      <p class="body-text">A fully functional replica of the procurement dashboard — populated with anonymized hotel and supplier profiles. No sign-up, no data retention.</p>
+    </div>
+    <div class="sandbox-preview">
+      <div class="sb-header">
+        <div class="sb-tabs">
+          <button class="sb-tab active">Active RFQs</button>
+          <button class="sb-tab">Quotes</button>
+          <button class="sb-tab">Orders</button>
+        </div>
+        <span class="micro">Last updated: 2 min ago</span>
+      </div>
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th>RFQ ID</th>
+            <th>Category</th>
+            <th>Hotel</th>
+            <th>Quotes</th>
+            <th>Best TCP</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--text-primary);">RFQ-2847</td>
+            <td>Premium Linens</td>
+            <td>Four Seasons Cairo</td>
+            <td>7</td>
+            <td style="color:var(--text-primary);">EGP 142,500</td>
+            <td><span class="sb-status matched">Matched</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-primary);">RFQ-2848</td>
+            <td>Kitchen Equipment</td>
+            <td>Ritz-Carlton Sharm</td>
+            <td>4</td>
+            <td style="color:var(--text-primary);">EGP 890,000</td>
+            <td><span class="sb-status open">Open</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-primary);">RFQ-2849</td>
+            <td>Bathroom Amenities</td>
+            <td>Kempinski Nile</td>
+            <td>11</td>
+            <td style="color:var(--text-primary);">EGP 67,200</td>
+            <td><span class="sb-status matched">Matched</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-primary);">RFQ-2850</td>
+            <td>F&B Supply</td>
+            <td>Marriott Mena House</td>
+            <td>3</td>
+            <td style="color:var(--text-primary);">EGP 214,000</td>
+            <td><span class="sb-status open">Open</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;text-align:center;">
+        <a href="#" class="btn btn-outline btn-sm">Launch full sandbox →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     PRICING
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Pricing</p>
+      <h2 class="heading-section">Simple, transaction-based.<br>No platform subscription.</h2>
+      <p class="body-text">You only pay when you transact. No monthly fees, no per-user charges, no hidden costs. Just transparent transaction pricing that scales with your procurement volume.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="card pricing-card">
+        <p class="label-pre" style="margin-bottom:4px;">Platform Access</p>
+        <div class="price">Free</div>
+        <p class="price-period">No monthly fees</p>
+        <ul class="feature-list">
+          <li>Unlimited hotel &amp; supplier registration</li>
+          <li>Unlimited RFQ creation &amp; quoting</li>
+          <li>AI matching &amp; TCP scoring</li>
+          <li>Authority matrix configuration</li>
+          <li>ETA e-invoicing integration</li>
+          <li>WhatsApp chatbot access</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center;">Get started free</a>
+      </div>
+      <div class="card pricing-card">
+        <p class="label-pre" style="margin-bottom:4px;">Bank Transfer</p>
+        <div class="price">1%</div>
+        <p class="price-period">Per settled transaction</p>
+        <ul class="feature-list">
+          <li>Everything in Free</li>
+          <li>Direct bank transfer settlement</li>
+          <li>Automated ETA invoice generation</li>
+          <li>Payment reconciliation dashboard</li>
+          <li>Supplier payment tracking</li>
+          <li>Priority support (4h SLA)</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center;">Connect bank account</a>
+      </div>
+      <div class="card pricing-card featured">
+        <p class="label-pre" style="margin-bottom:4px;">Factoring</p>
+        <div class="price">1.5–3%</div>
+        <p class="price-period">Discount rate, paid by supplier</p>
+        <ul class="feature-list">
+          <li>Everything in Bank Transfer</li>
+          <li>Reverse factoring at negotiated rates</li>
+          <li>Multi-factor auction (best rate wins)</li>
+          <li>FRA-compliant reporting</li>
+          <li>Dynamic credit scoring</li>
+          <li>Dedicated factoring success manager</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">Enable factoring</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     TESTIMONIALS
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <p class="label-pre">Testimonials</p>
+      <h2 class="heading-section">Trusted by procurement<br>leaders across Egypt</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="card testimonial-card">
+        <blockquote>"We cut our linen procurement cycle from 18 days to 4. The RFQ matching found us three new suppliers we didn't know existed — and saved 22% on our last order."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AK</div>
+          <div>
+            <div class="name">Ahmed Khalil</div>
+            <div class="role">Procurement Director, Four Seasons Cairo</div>
+          </div>
+        </div>
+      </div>
+      <div class="card testimonial-card">
+        <blockquote>"Before HotelsVendors, we waited 90 days for payment. Now factoring gets us paid within 48 hours of shipment. The discount rate is lower than what our bank offered."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">NS</div>
+          <div>
+            <div class="name">Nadia Samir</div>
+            <div class="role">CEO, Nile Textile Mills</div>
+          </div>
+        </div>
+      </div>
+      <div class="card testimonial-card">
+        <blockquote>"The ETA integration alone saved us from three audit findings. Every invoice is validated before submission — our compliance team went from firefighting to strategic work."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MR</div>
+          <div>
+            <div class="name">Mohamed Ragab</div>
+            <div class="role">CFO, Steigenberger Alexandria</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════
+     REFERRAL (OLIV)
+     ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="card card-featured referral-card">
+      <p class="label-pre">Referral Program</p>
+      <div class="qr-placeholder">▣</div>
+      <h3 class="heading-card" style="margin-bottom:4px;">Share HotelsVendors, earn credit</h3>
+      <p class="body-text">When a hotel or supplier you refer completes their first transaction, both of you receive EGP 2,500 in platform credit. No cap on referrals.</p>
+      <div class="referral-code">CHV000-XR7K9M</div>
+      <p class="caption">Scan QR or share your code. Valid for 12 months from issue.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="#" class="nav-logo" style="font-size:16px;margin-bottom:8px;display:inline-block;">Hotels<span>Vendors</span></a>
+        <p class="caption" style="max-width:260px;margin-top:8px;">Egypt's regulated B2B hospitality procurement platform. ETA-compliant, FRA-licensed, ISO 27001 certified.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#">Products</a>
+        <a href="#">Financing</a>
+        <a href="#">Solutions</a>
+        <a href="#">Sandbox</a>
+        <a href="#">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">GDPR</a>
+        <a href="#">AML/KYC Policy</a>
+        <a href="#">Supplier Agreement</a>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <a href="#">API Reference</a>
+        <a href="#">Webhooks</a>
+        <a href="#">ETA Integration Guide</a>
+        <a href="#">Status</a>
+        <a href="#">Changelog</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="micro">© 2026 HotelsVendors S.A.E. All rights reserved. Licensed and regulated by the Financial Regulatory Authority (FRA).</span>
+      <span class="micro">ETA Phase 1 Certified • ISO 27001 • PCI-DSS Level 1</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
