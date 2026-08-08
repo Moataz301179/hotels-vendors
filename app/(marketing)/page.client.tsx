@@ -262,13 +262,13 @@ export default function LandingPage() {
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {[
-            { name: "MarketPulse", d: "Price anomaly detection & EGP FX indexing" },
-            { name: "DynamicDeal", d: "Multi-vendor RFQ auctioneer & negotiator" },
-            { name: "DockInspector", d: "Delivery scans reconciled against POs" },
-            { name: "CashFlowAgent", d: "Dynamic factoring rates & FRA registry locks" },
-            { name: "QualitySpec", d: "Egyptian alternative substitution for imports" },
-            { name: "ComplianceGuard", d: "ETA e-invoice + e-Waybill generation" },
-            { name: "ResilienceRoute", d: "Consolidated freight for Red Sea corridors" },
+            { name: "MarketPulse", d: "FX & commodity inflation guard — flags price anomalies +15%, tracks EGP rate" },
+            { name: "DynamicDeal", d: "Swarm group-buying negotiator — runs bulk RFQ auctions to unlock discounts" },
+            { name: "DockInspector", d: "INVO Mobile camera scan-to-credit-note — detects damage, issues instant credits" },
+            { name: "CashFlowAgent", d: "Oliv 48h factoring & FRA registry engine — dynamic rates, single-instance locks" },
+            { name: "QualitySpec", d: "Technical spec & Egyptian import matcher — cheaper local alternatives" },
+            { name: "ComplianceGuard", d: "ETA e-invoicing & highway e-Waybill QR generator" },
+            { name: "ResilienceRoute", d: "Shared freight pooling & dock-slot booking across resort corridors" },
           ].map((a, i) => (
             <div key={a.name} className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
               <div className="flex items-center justify-between">
@@ -281,7 +281,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ═════════════ PLATFORM / DUAL LAYER ═════════════ */}
+      {/* ═════════════ PLATFORM AI CAPABILITIES ═════════════ */}
+      <section className="border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16">
+          <SectionHeader
+            kicker="Platform AI Capabilities"
+            title="Five AI engines working for your bottom line"
+            sub="Beyond order processing — predictive, autonomous engines that prevent stockouts, aggregate buying power, and protect margin against inflation and FX swings."
+          />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { name: "Predictive PMS Demand Engine", d: "Syncs with hotel occupancy to auto-draft POs before stock runs out." },
+              { name: "Dynamic Swarm Group Buying", d: "Aggregates demand across regional hotel clusters to unlock 20%+ manufacturer discounts." },
+              { name: "INVO Dock Inspector (Vision)", d: "Camera scan-to-GRN that auto-issues instant credit notes for damaged or missing goods." },
+              { name: "EGP Inflation & FX Guard", d: "Predictive commodity tracking alerts buyers to lock pricing before market spikes." },
+              { name: "Voice-to-PO Concierge", d: "WhatsApp / INVO voice-note parsing converts spoken requests into budgeted line-item POs." },
+              { name: "48h Reverse-Factoring Pool", d: "Oliv-powered earliest-payout engine with FRA registry and promo code CHV000." },
+            ].map((c, i) => (
+              <div key={c.name} className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+                <div className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold w-fit mb-2">Capability {i + 1}</div>
+                <div className="text-sm font-semibold text-slate-900">{c.name}</div>
+                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{c.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       <section className="border-y border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16">
           <SectionHeader

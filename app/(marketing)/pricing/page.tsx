@@ -44,6 +44,9 @@ const tiers = [
       "Multi-property management",
       "Embedded factoring (net-60)",
       "Shared-route logistics",
+      "INVO Mobile Vision Dock Inspector (Auto Credit Notes)",
+      "Dynamic Swarm Group Buying (18–25% Bulk Discounts)",
+      "ETA E-Invoicing & Highway E-Waybill QR Generator",
       "10 user seats",
       "Priority support",
     ],
@@ -110,6 +113,17 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* Supplier Free-Tier Banner */}
+      <section className="pt-6">
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="rounded-xl px-5 py-4 text-center border" style={{ backgroundColor: "#0B0F17", borderColor: "rgba(16,185,129,0.3)" }}>
+            <p className="text-[13px] font-semibold" style={{ color: "#34d399" }}>
+              FOR SUPPLIERS &amp; MANUFACTURERS: 100% Free Forever · Zero Listing Fees · 48h Cash-Out via Oliv (Promo CHV000)
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Tiers */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6">
@@ -136,8 +150,8 @@ export default function PricingPage() {
                 <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
-                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "var(--accent-base)" }} />
-                      <span className="text-[12px] text-white/50">{f}</span>
+                      <Check size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#34d399" }} />
+                      <span className="text-[12px] text-slate-300">{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -168,8 +182,8 @@ export default function PricingPage() {
               { q: "Can I switch plans later?", a: "Yes. Upgrade or downgrade at any time. No penalties, no data loss, no lock-in contracts." },
             ].map((faq) => (
               <div key={faq.q} className="rounded-xl p-5" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <h3 className="text-[13px] font-medium text-white mb-2">{faq.q}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{faq.a}</p>
+                <h3 className="text-[13px] font-medium mb-2" style={{ color: "#ffffff" }}>{faq.q}</h3>
+                <p className="text-[12px] leading-relaxed" style={{ color: "#cbd5e1" }}>{faq.a}</p>
               </div>
             ))}
           </div>
