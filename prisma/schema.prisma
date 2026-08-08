@@ -3521,3 +3521,80 @@ model RfqRequest {
   @@index([supplierId])
   @@index([status])
 }
+
+model Shipment {
+  id               String    @id @default(cuid())
+  tenantId         String
+  orderIds         String[]
+  corridor         String
+  truckType        String
+  vehicleNumber    String?
+  driverName       String?
+  driverMobile     String?
+  originHub        String
+  destinationHub   String
+  dispatchDate     DateTime?
+  estimatedArrival DateTime?
+  totalWeightKg    Float?
+  orderCount       Int       @default(0)
+  status           String    @default("PLANNED")
+  waybillId        String?
+  qrCode           String?
+  savingsPercent   Float?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  uuid             String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([corridor])
+  @@index([status])
+}
+
+model DockSlot {
+  id            String    @id @default(cuid())
+  slotId        String    @unique
+  tenantId      String
+  hotelId       String
+  hotelName     String?
+  date          String
+  startTime     String
+  endTime       String
+  orderId       String?
+  carrierName   String?
+  driverName    String?
+  vehicleNumber String?
+  status        String    @default("AVAILABLE")
+  geofenceAlert Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  uuid          String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt     DateTime?
+
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([date])
+  @@index([status])
+}
+
+model CorridorRoute {
+  id               String    @id @default(cuid())
+  corridorName     String    @unique
+  scheduleDays     String[]
+  truckTypes       String[]
+  originHubs       String[]
+  destinationHubs  String[]
+  isActive         Boolean   @default(true)
+  baseRateEgp      Float?
+  perKgRateEgp     Float?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  uuid             String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt        DateTime?
+
+  @@index([corridorName])
+}
