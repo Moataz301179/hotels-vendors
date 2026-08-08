@@ -388,28 +388,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ═════════════ TERMINAL ═════════════ */}
-      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-16">
-        <SectionHeader
-          kicker="Live execution"
-          title="The platform in operation"
-          sub="Real execution traces from the autonomous engine — compliance, dispatch, and factoring happening automatically."
-        />
-        <div className="bg-slate-900 rounded-lg p-4 font-mono text-[11px] leading-relaxed">
-          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-700">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-400" /><span className="w-2.5 h-2.5 rounded-full bg-amber-400" /><span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-            <span className="text-slate-400 ml-2">hotelsvendors-agent — swarm logs</span>
-          </div>
-          <div className="space-y-1.5 text-slate-300">
-            <p><span className="text-slate-500">[onboarding]</span> ETA Tax ID #382-910-112 <span className="text-emerald-400">verified in 42s</span> · FRA <span className="text-emerald-400">cleared</span></p>
-            <p><span className="text-slate-500">[catalog]</span> AI ingestion: 1,203 products auto-enriched · 100% tax compliant</p>
-            <p><span className="text-slate-500">[dispatch]</span> Mobile push → Order #HV-8812 <span className="text-blue-400">accepted by supplier in 3m</span></p>
-            <p><span className="text-slate-500">[compliance]</span> e-Waybill EWB-88K2F9 generated · QR attached · <span className="text-emerald-400">verified</span></p>
-            <p><span className="text-slate-500">[factoring]</span> FRA audit passed · EGP 14,400 payout <span className="text-emerald-400">approved in 38h</span></p>
-          </div>
-        </div>
-      </section>
-
       {/* ═════════════ ENTERPRISE COMMAND CENTER (alternating bg) ═════════════ */}
       <CommandCenter />
 

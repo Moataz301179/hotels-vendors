@@ -51,27 +51,41 @@ export default function AdminCredentialsPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"services" | "webhooks" | "env" | "docs">("services");
 
-  const loadCredentials = async () => {
+  const loadCredentials = async (): Promise<ServiceCredential[]> => {
+    const res = await fetch("/api/v1/admin/credentials");
+    const json = (await res.json()) as ApiResponse;
+    if (json.success && json.data) return json.data;
+    throw new Error(json.error ?? "Unable to load connection status.");
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await loadCredentials();
+        if (!cancelled) setServices(data);
+      } catch (e) {
+        if (!cancelled) setLoadError(e instanceof Error ? e.message : "Unable to load connection status.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const refresh = async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await fetch("/api/v1/admin/credentials");
-      const json = (await res.json()) as ApiResponse;
-      if (json.success && json.data) {
-        setServices(json.data);
-      } else {
-        setLoadError(json.error ?? "Unable to load connection status.");
-      }
-    } catch {
-      setLoadError("Unable to load connection status. Check your network and try again.");
+      setServices(await loadCredentials());
+    } catch (e) {
+      setLoadError(e instanceof Error ? e.message : "Unable to load connection status.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    loadCredentials();
-  }, []);
 
   const configuredCount = services.filter((s) => s.status === "configured").length;
 
@@ -139,7 +153,7 @@ export default function AdminCredentialsPage() {
               <p className="text-sm text-foreground-secondary mb-1">Could not load connection status</p>
               <p className="text-[12px] text-foreground-muted mb-4">{loadError}</p>
               <button
-                onClick={() => loadCredentials()}
+                onClick={() => refresh()}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent-base text-white text-[12px] font-medium hover:bg-accent-base/90 transition-colors"
               >
                 <RefreshCw className="w-3.5 h-3.5" /> Retry
@@ -152,7 +166,7 @@ export default function AdminCredentialsPage() {
                   {configuredCount} of {services.length} services connected
                 </p>
                 <button
-                  onClick={() => loadCredentials()}
+                  onClick={() => refresh()}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 border border-border-subtle text-foreground-tertiary text-[11px] hover:bg-surface-2 transition-colors"
                 >
                   <RefreshCw className="w-3 h-3" /> Refresh
