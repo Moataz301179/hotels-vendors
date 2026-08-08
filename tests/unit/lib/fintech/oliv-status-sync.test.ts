@@ -1,4 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// Mock prisma — these tests only test pure functions
+vi.mock("@/lib/prisma", () => ({
+  prisma: {
+    supplier: { findUnique: vi.fn() },
+    $transaction: vi.fn(),
+  },
+}));
+
 import {
   deriveOlivStatusFromFacilityEvent,
   deriveOlivStatusFromPayoutStatus,

@@ -18,8 +18,15 @@ const {
   mockFindMany: vi.fn(),
   mockCreate: vi.fn(),
   mockUpdate: vi.fn(),
-  mockQueryRaw: vi.fn(),
-  mockTransaction: vi.fn(),
+  mockQueryRaw: vi.fn().mockResolvedValue([{ id: "order-1", status: "DRAFT" }]),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mockTransaction: vi.fn((cb: any) => cb({
+    user: { findUnique: mockFindUnique },
+    order: { findUnique: mockFindUnique, update: mockUpdate },
+    orderApproval: { create: mockCreate },
+    auditLog: { create: mockCreate },
+    $queryRaw: mockQueryRaw,
+  })),
   mockAssessRisk: vi.fn(),
   mockGenerateSmartFixes: vi.fn(),
   mockValidateForFactoring: vi.fn(),

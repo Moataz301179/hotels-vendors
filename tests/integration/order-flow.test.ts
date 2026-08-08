@@ -4,35 +4,43 @@ import { Decimal } from "@prisma/client/runtime/library";
 // ── Prisma mock (inline in vi.mock to avoid hoisting issues) ──
 
 vi.mock("@/lib/prisma", () => {
+  // Define shared mock functions so mockTx and prismaMock use the same ones
+  const mockOrderUpdate = vi.fn();
+  const mockOrderFindUnique = vi.fn();
+  const mockOrderCreate = vi.fn();
+  const mockOrderApprovalCreate = vi.fn();
+  const mockAuditLogCreate = vi.fn();
+  const mockQueryRawImpl = vi.fn().mockResolvedValue([{ id: "order-1", status: "DRAFT" }]);
+
   const mockTx = {
     order: {
-      findUnique: vi.fn(),
-      update: vi.fn(),
-      create: vi.fn(),
+      findUnique: mockOrderFindUnique,
+      update: mockOrderUpdate,
+      create: mockOrderCreate,
     },
-    orderApproval: { create: vi.fn() },
-    auditLog: { create: vi.fn() },
-    $queryRaw: vi.fn(),
+    orderApproval: { create: mockOrderApprovalCreate },
+    auditLog: { create: mockAuditLogCreate },
+    $queryRaw: mockQueryRawImpl,
   };
 
   const prismaMock = {
-    $transaction: vi.fn((fn: (tx: typeof mockTx) => Promise<unknown>) => fn(mockTx)),
+    $transaction: vi.fn((fn: (tx: unknown) => Promise<unknown>) => fn(mockTx)),
     order: {
-      findUnique: vi.fn(),
+      findUnique: mockOrderFindUnique,
       findMany: vi.fn(),
-      create: vi.fn(),
-      update: vi.fn(),
+      create: mockOrderCreate,
+      update: mockOrderUpdate,
       count: vi.fn(),
     },
     orderItem: { create: vi.fn(), findMany: vi.fn() },
     invoice: { create: vi.fn(), findUnique: vi.fn(), findMany: vi.fn() },
-    orderApproval: { create: vi.fn() },
+    orderApproval: { create: mockOrderApprovalCreate },
     user: { findUnique: vi.fn() },
-    auditLog: { create: vi.fn() },
+    auditLog: { create: mockAuditLogCreate },
     hotel: { findUnique: vi.fn(), update: vi.fn() },
     authorityRule: { findMany: vi.fn() },
     supplier: { findUnique: vi.fn() },
-    $queryRaw: vi.fn(),
+    $queryRaw: mockQueryRawImpl,
   };
 
   // Attach mockTx to prismaMock so tests can access it

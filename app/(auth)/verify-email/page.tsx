@@ -10,20 +10,18 @@ function VerifyEmailForm() {
   const token = searchParams.get("token");
   const emailParam = searchParams.get("email");
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [message, setMessage] = useState("Verifying your email...");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
+  const [message, setMessage] = useState(token ? "Verifying your email..." : "Invalid or missing verification token.");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState("");
   const [email, setEmail] = useState(emailParam || "");
 
   useEffect(() => {
     if (!token) {
-      setStatus("error");
-      setMessage("Invalid or missing verification token.");
       return;
     }
 
-    fetch("/api/v1/auth/verify-email", {
+    void fetch("/api/v1/auth/verify-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
