@@ -281,11 +281,14 @@ export default function LandingPage() {
             { name: "ResilienceRoute", d: "Shared freight pooling & dock-slot booking across resort corridors" },
           ].map((a, i) => (
             <div key={a.name} className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold text-slate-900">{a.name}</div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-medium">Agent {i + 1}</span>
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="w-8 h-8 rounded bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+                  <Sparkles size={14} className="text-amber-700" />
+                </div>
+                <div className="text-sm font-semibold text-slate-900 flex-1">{a.name}</div>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-medium">Agent {i + 1}</span>
               </div>
-              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{a.d}</p>
+              <p className="text-xs text-slate-500 leading-relaxed">{a.d}</p>
             </div>
           ))}
         </div>
