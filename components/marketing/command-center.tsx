@@ -26,7 +26,7 @@ const AGENT_EVENTS: { tag: string; txt: string; ok?: boolean }[] = [
 const ETA_STATUS = [
   { label: "e-Invoice JSON", state: "Valid", ok: true },
   { label: "e-Waybill QR", state: "Verified", ok: true },
-  { label: "ETA Tax ID #382-910-112", state: "Cleared", ok: true },
+  { label: "Real Tax ID", state: "On connect", ok: false },
 ];
 
 export function CommandCenter() {
@@ -138,7 +138,7 @@ export function CommandCenter() {
           <div className="rounded-xl border border-slate-800 bg-[#090D16] p-4 font-mono text-[11px] font-medium flex flex-col">
             <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-800">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" /><span className="w-2.5 h-2.5 rounded-full bg-amber-500/70" /><span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
-              <span className="text-slate-400 ml-1">hotslvendors-agent — live</span>
+              <span className="text-slate-400 ml-1">hotslvendors-agent</span><span className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">illustrative demo — connects live when suppliers onboard</span>
             </div>
             <div className="space-y-2 flex-1 overflow-hidden">
               {trace.map((line, i) => {
