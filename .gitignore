@@ -69,3 +69,6 @@ crew/
 # macOS
 .DS_Store
 **/.DS_Store
+
+# hermes config (may contain credentials)
+.hermes/
