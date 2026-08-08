@@ -6,6 +6,7 @@ import { NotificationProvider } from "@/components/notifications/notification-co
 import { LanguageProvider } from "@/lib/i18n/language-context";
 import { SkipLink } from "@/components/shared/skip-link";
 import { CookieConsentBanner } from "@/components/shared/cookie-consent-banner";
+import { CartProvider } from "@/components/cart/cart-context";
 import { initServer } from "@/lib/startup";
 
 // Register graceful shutdown handlers (runs once per server instance)
@@ -213,7 +214,9 @@ export default function RootLayout({
         <SkipLink />
         <LanguageProvider>
           <NotificationProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <CartProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </CartProvider>
           </NotificationProvider>
         </LanguageProvider>
         <CookieConsentBanner />
