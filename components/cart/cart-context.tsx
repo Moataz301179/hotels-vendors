@@ -52,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated])
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
-  const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  const totalPrice = Math.round(items.reduce((sum, i) => sum + i.price * i.quantity, 0) * 100) / 100
   const subtotal = totalPrice
 
   const addItem = useCallback((item: Omit<CartItem, "quantity">, qty = 1) => {
