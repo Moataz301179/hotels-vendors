@@ -82,6 +82,12 @@ jobs:
             if [ ! -d .next/standalone/public ]; then
               cp -r public .next/standalone/public
             fi
+            # Copy .next/static/ to standalone/.next/static/ (Next.js standalone
+            # doesn't always copy this, causing 404s on CSS/JS chunks)
+            if [ ! -d .next/standalone/.next/static ]; then
+              mkdir -p .next/standalone/.next
+              cp -r .next/static .next/standalone/.next/static
+            fi
             # Copy .env to standalone dir for server.js to load at startup
             if [ ! -f .next/standalone/.env ]; then
               cp .env .next/standalone/.env 2>/dev/null || true
