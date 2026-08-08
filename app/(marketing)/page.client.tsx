@@ -74,8 +74,19 @@ export default function LandingPage() {
   return (
     <main className="bg-slate-50 min-h-screen">
       {/* ═════════════ HERO ═════════════ */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-20 pb-16 lg:pt-24 lg:pb-20">
+      <section className="border-b border-slate-200 relative overflow-hidden bg-white">
+        {/* Core-related background image with a clean readability overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1800&q=80"
+            alt="Elegant hotel lobby"
+            className="w-full h-full object-cover opacity-[0.07]"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/90 to-white" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pt-20 pb-16 lg:pt-24 lg:pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: value proposition */}
             <div>
@@ -109,7 +120,7 @@ export default function LandingPage() {
             </div>
 
             {/* Right: dense live PO intake panel */}
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-slate-50">
                 <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Live Purchase Order</div>
                 <span className="text-[11px] text-slate-400 font-mono">#HV-9921 · Meridian Cairo</span>
@@ -159,6 +170,25 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* ═══ HOOK STRIP — dual architecture drivers (centered) ═══ */}
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { icon: Building2, title: "HotelsVendors Web OS", d: "Multi-property procurement · approval matrix · budget locks · ETA compliance", cta: "/platform" },
+              { icon: Package, title: "INVO Mobile App", d: "Supplier execution · dock camera GRN · 48h Oliv cash-out (CHV000)", cta: "/invo" },
+              { icon: Cpu, title: "AI Swarm Agents", d: "Pricing, RFQ auction, dock inspection, factoring, ETA — running 24/7", cta: "/sandbox" },
+            ].map((h) => (
+              <Link key={h.title} href={h.cta} className="group bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-3 hover:border-slate-400 hover:shadow-sm transition-all">
+                <div className="w-9 h-9 rounded bg-slate-900 flex items-center justify-center shrink-0">
+                  <h.icon size={16} className="text-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{h.title}</div>
+                  <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">{h.d}</div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
