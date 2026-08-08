@@ -345,18 +345,16 @@ export default function LoginPage() {
       </div>
 
       <p className="text-center text-[13px] text-foreground-muted">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-accent-base hover:opacity-80 font-medium transition-opacity">
-          Create one
-        </Link>
+        Don&apos;t have an account? Your account works on both Web and INVO Mobile.
       </p>
-
-      <p className="text-center text-[13px] text-foreground-muted mt-4">
-        Registered on INVO mobile app?{" "}
-        <Link href="/pairing" className="inline-flex items-center gap-1.5 text-accent-base hover:opacity-80 font-medium transition-opacity">
-          <Zap size={14} /> Pair Account
+      <div className="flex justify-center gap-3 mt-3">
+        <Link href="/register?type=hotel" className="px-4 py-2 rounded-lg border border-white/[0.08] text-[12px] font-medium text-white/60 hover:text-white hover:border-white/[0.15] transition-all">
+          Register as Hotel
         </Link>
-      </p>
+        <Link href="/register?type=supplier" className="px-4 py-2 rounded-lg border border-white/[0.08] text-[12px] font-medium text-white/60 hover:text-white hover:border-white/[0.15] transition-all">
+          Register as Supplier
+        </Link>
+      </div>
     </div>
   );
 }
