@@ -1,0 +1,51 @@
+/* HotelsVendors — FRESH Design System Foundation v2.0
+   Pure flat, high-density enterprise procurement UI.
+   Tokens only. No component styles here. Rebuilt from zero,
+   not derived from the old dark theme. */
+
+:root {
+  /* Canvas */
+  --hv-canvas: #f8fafc;          /* off-white slate */
+  --hv-surface: #ffffff;         /* solid white cards */
+  --hv-subtle: #f1f5f9;          /* slate-100 */
+
+  /* Typography */
+  --hv-ink: #0f172a;             /* slate-900 — headlines & data */
+  --hv-ink-2: #334155;           /* slate-700 — table headers, specs */
+  --hv-ink-3: #475569;           /* slate-600 — secondary labels */
+  --hv-muted: #94a3b8;           /* slate-400 — captions */
+
+  /* Borders — crisp 1px, zero shadows */
+  --hv-border: #e2e8f0;          /* slate-200 */
+  --hv-border-strong: #cbd5e1;   /* slate-300 */
+
+  /* Brand */
+  --hv-blue: #2563eb;            /* solid royal blue — primary action */
+  --hv-blue-soft: #eff6ff;       /* blue-50 pill bg */
+
+  /* Status — solid fills, no gradients */
+  --hv-success: #059669;         /* emerald-600 */
+  --hv-success-bg: #ecfdf5;      /* emerald-50 */
+  --hv-success-border: #a7f3d0;  /* emerald-200 */
+  --hv-success-ink: #065f46;     /* emerald-800 */
+
+  --hv-warning: #d97706;
+  --hv-warning-bg: #fffbeb;
+  --hv-warning-border: #fde68a;
+  --hv-warning-ink: #92400e;
+
+  --hv-info: #2563eb;
+  --hv-info-bg: #eff6ff;
+  --hv-info-border: #bfdbfe;
+  --hv-info-ink: #1e40af;
+
+  --hv-danger: #dc2626;
+  --hv-danger-bg: #fef2f2;
+  --hv-danger-border: #fecaca;
+  --hv-danger-ink: #991b1b;
+
+  /* Terminal (embedded dark panel is ALLOWED per spec) */
+  --hv-term: #0f172a;
+  --hv-term-ink: #e2e8f0;
+  --hv-term-accent: #34d399;
+}

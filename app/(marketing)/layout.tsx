@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { SiteNav } from "@/components/marketing/site-nav";
+import { PrimaryNav } from "@/components/navigation/primary-nav";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SupplierOnboardingBot } from "@/components/ai-assistant/supplier-onboarding-chatbot";
 
@@ -107,7 +107,7 @@ export default function MarketingLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
       />
-      <SiteNav />
+      <PrimaryNav />
       <main id="main-content">{children}</main>
       <SiteFooter />
       <SupplierOnboardingBot />
