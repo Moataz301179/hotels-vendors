@@ -580,7 +580,8 @@ export default function MarketingPage() {
 /* ═════════════════════════════════════════════════════════════
    SANDBOX DEMO COMPONENT — Flat solid dual-layer dashboard preview
    ═════════════════════════════════════════════════════════════ */
-function SandboxDemo({ t }: { t: (key: string) => string }) {
+function SandboxDemo(_props: { t: (key: string) => string }) {
+  void _props;
   const [tab, setTab] = useState<"hotel" | "vendor" | "chat">("hotel");
 
   return (
