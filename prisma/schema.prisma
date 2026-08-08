@@ -3544,7 +3544,9 @@ model Shipment {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   uuid             String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  deletedAt        DateTime?  @@index([tenantId])
+  deletedAt        DateTime?
+
+  @@index([tenantId])
   @@index([corridor])
   @@index([status])
 }
@@ -3567,7 +3569,9 @@ model DockSlot {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   uuid          String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  deletedAt     DateTime?  @@index([tenantId])
+  deletedAt     DateTime?
+
+  @@index([tenantId])
   @@index([hotelId])
   @@index([date])
   @@index([status])
