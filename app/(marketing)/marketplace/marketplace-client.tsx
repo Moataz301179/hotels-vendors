@@ -48,6 +48,25 @@ function formatPrice(price: number): string {
   return "EGP " + price.toLocaleString("en-EG");
 }
 
+/* Normalize category codes to canonical uppercase (fb→FB, ffe→FFE, ose→OSE, gra→GRA) */
+const CODE_ALIASES: Record<string, string> = {
+  fb: "FB", fbe: "FB", food: "FB", kitchen: "FB",
+  hk: "HK", house: "HK", housekeeping: "HK", cleaning: "HK",
+  ffe: "FFE", furniture: "FFE", fixtures: "FFE",
+  ose: "OSE", operating: "OSE", supplies: "OSE",
+  gra: "GRA", guest: "GRA", amenity: "GRA", amenities: "GRA",
+  lin: "LIN", linen: "LIN", textiles: "LIN",
+  eng: "ENG", engineering: "ENG", maintenance: "ENG",
+  spa: "SPA", recreation: "SPA",
+  it: "IT", tech: "IT",
+  sec: "SEC", safety: "SEC", security: "SEC",
+};
+function normalizeCode(code: string): string {
+  const c = (code || "").trim();
+  if (!c) return code;
+  return CODE_ALIASES[c.toLowerCase()] || c.toUpperCase();
+}
+
 function MarketplaceContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "";
@@ -63,9 +82,12 @@ function MarketplaceContent() {
         const res = await fetch("/api/v1/products?limit=200");
         const json = await res.json();
         const list = json.data?.products ?? json.data?.data ?? [];
-        if (Array.isArray(list)) {
-          setProducts(list);
-        }
+        // Normalize category codes to canonical uppercase (ffe→FFE, fb→FB, gra→GRA, ose→OSE)
+        const normalized = (Array.isArray(list) ? list : []).map((p) => ({
+          ...p,
+          category: normalizeCode(p.category),
+        }));
+        setProducts(normalized);
       } catch { /* ignore */ }
       setLoading(false);
     }
