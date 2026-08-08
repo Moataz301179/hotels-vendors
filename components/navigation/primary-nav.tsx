@@ -7,7 +7,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, ChevronDown, Store, Gavel, FileUp, ShieldCheck, Calculator, Banknote, Link2, Hotel, Factory, Truck, Cpu, CreditCard, Landmark } from "lucide-react";
+import { Menu, X, ChevronDown, Store, Gavel, FileUp, ShieldCheck, Calculator, Banknote, Link2, Hotel, Factory, Truck, Cpu, CreditCard, Landmark, Phone } from "lucide-react";
 
 interface NavChild {
   href: string;
@@ -23,33 +23,45 @@ interface NavGroup {
 
 const GROUPS: NavGroup[] = [
   {
-    label: "Products",
+    label: "Buy Smarter",
     children: [
-      { href: "/marketplace", icon: Store, label: "Marketplace", desc: "Verified suppliers & bulk SKUs" },
-      { href: "/categories", icon: Store, label: "Category Hubs", desc: "Linens, Kitchen, HVAC, Amenities" },
-      { href: "/rfq", icon: Gavel, label: "Hybrid RFQ Engine", desc: "Volume bids & multi-vendor auctions" },
-      { href: "/ai-catalog", icon: FileUp, label: "AI Catalog Ingestion", desc: "Import price sheets, LLM auto-mapping" },
-      { href: "/eta-compliance", icon: ShieldCheck, label: "ETA Compliance", desc: "e-Invoice validation & e-Waybills" },
+      { href: "/marketplace", icon: Store, label: "Marketplace Catalog", desc: "Thousands of real supplier SKUs, cross-vendor pricing" },
+      { href: "/rfq", icon: Gavel, label: "Bid & Source", desc: "RFQ auctions — volume bids, hybrid FIXED/RFQ pricing" },
+      { href: "/ai-catalog", icon: FileUp, label: "AI Catalog Ingestion", desc: "Upload price sheets; items auto-mapped & enriched" },
+      { href: "/categories", icon: Store, label: "Category Hubs", desc: "Linens, Kitchen, HVAC, Amenities, OS&E +" },
     ],
   },
   {
-    label: "Financing",
+    label: "Stay Compliant",
     children: [
-      { href: "/factoring-service", icon: Banknote, label: "48h Reverse Factoring", desc: "Supplier liquidity via verified GRN" },
-      { href: "/yield-calculator", icon: Calculator, label: "Yield Calculator", desc: "1.5%–3.0% discount simulator" },
-      { href: "/fra-shield", icon: ShieldCheck, label: "FRA Shield", desc: "Non-duplication registry checks" },
-      { href: "/payment-rails", icon: Link2, label: "Payment Rails", desc: "InstaPay, Paymob, Fawry, SWIFT" },
-      { href: "/oliv-financing", icon: CreditCard, label: "Oliv Financing", desc: "Up to EGP 10M credit line" },
+      { href: "/eta-compliance", icon: ShieldCheck, label: "ETA E-Invoicing", desc: "Clear e-invoices in real time — no rejected lines" },
+      { href: "/fra-shield", icon: ShieldCheck, label: "FRA Regulatory Shield", desc: "Non-duplication checks & auditable registries" },
+      { href: "/payment-rails", icon: Link2, label: "Payment Rails", desc: "InstaPay · Paymob · Fawry · SWIFT — local & cross-border" },
     ],
   },
   {
-    label: "Solutions",
+    label: "Get Paid in 48h",
     children: [
-      { href: "/hotels/join", icon: Hotel, label: "For Hotels & Resorts", desc: "Spend forecasting & budget guardrails" },
-      { href: "/suppliers/join", icon: Factory, label: "For Suppliers & Mills", desc: "INVO Mobile fulfillment & cash-out" },
-      { href: "/funders", icon: Landmark, label: "For Funders & Banks", desc: "Risk-graded portfolios & invoice locks" },
-      { href: "/logistics-service", icon: Truck, label: "For Carriers", desc: "ePOD scanning & ETA e-Waybill" },
-      { href: "/erp-integrations", icon: Cpu, label: "ERP Integrations", desc: "SAP, Odoo, Oracle Opera, accounting" },
+      { href: "/factoring-service", icon: Banknote, label: "Reverse Factoring", desc: "Cash out on delivery — no more 60-day waits" },
+      { href: "/oliv-financing", icon: CreditCard, label: "Oliv Partner Liquidity", desc: "EGP 10M pool · promo CHV000" },
+      { href: "/yield-calculator", icon: Calculator, label: "Cost/Yield Calculator", desc: "Model discount rates & margin impact" },
+    ],
+  },
+  {
+    label: "Run Supply Chain",
+    children: [
+      { href: "/logistics-service", icon: Truck, label: "Carrier Network", desc: "Egypt corridor runs — cost + timing to city" },
+      { href: "/erp-integrations", icon: Cpu, label: "ERP Integrations", desc: "SAP, Odoo, Oracle Opera & accounting sync" },
+      { href: "/dashboard/carrier", icon: Truck, label: "Fleet Ops Dashboard", desc: "Live shipments, providers, dock GRN" },
+    ],
+  },
+  {
+    label: "Who It's For",
+    children: [
+      { href: "/hotels/join", icon: Hotel, label: "Hotels & Resorts", desc: "Approval matrix, budget locks, food-cost control" },
+      { href: "/suppliers/join", icon: Factory, label: "Suppliers & Mills", desc: "INVO app — fulfill & cash out in 48h" },
+      { href: "/funders", icon: Landmark, label: "Funders & Banks", desc: "Risk-graded receivable portfolios" },
+      { href: "/invo", icon: Phone, label: "Get the INVO App", desc: "Mobile fulfillment for every supplier" },
     ],
   },
 ];

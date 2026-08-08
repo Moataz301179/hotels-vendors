@@ -4,9 +4,22 @@ import Link from "next/link";
 import { Suspense, useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, Search, X, Loader2, ShoppingCart, Star, MapPin, Package, Shield, Clock, FileCheck, Truck, Banknote, BarChart3, Upload } from "lucide-react";
-import { getProductImage } from "@/lib/marketplace/product-images";
 import { HOTEL_CATEGORIES } from "@/lib/marketplace/categories";
 import { useCart } from "@/components/cart/cart-context";
+
+/* REAL product image — returns the actual sourced image (from supplier scraper/
+   webhook/API). Returns "" when the product has no real image so the card shows
+   a neutral placeholder. NO stock/category substitution. */
+function realProductImage(images?: string | string[]): string {
+  if (!images) return "";
+  // Runtime value is a string[] (from API JSON.parse); type says string. Handle both.
+  const list: unknown[] = Array.isArray(images) ? images : String(images).split(",");
+  for (const item of list) {
+    const s = String(item ?? "").trim();
+    if (/^https?:\/\//.test(s)) return s;
+  }
+  return "";
+}
 
 interface Product {
   id: string;
@@ -17,23 +30,10 @@ interface Product {
   unitPrice: number;
   unitOfMeasure: string;
   minOrderQuantity?: number;
-  images?: string;
+  images?: string | string[];
   inStock?: boolean;
   supplier?: { id: string; name: string; city?: string; tier?: string; rating?: number };
 }
-
-const CATEGORY_IMAGES: Record<string, string> = {
-  FB: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop",
-  CONSUMABLES: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=600&h=400&fit=crop",
-  GUEST_SUPPLIES: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop",
-  FFE: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=400&fit=crop",
-  OSE: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=600&h=400&fit=crop",
-  LINEN: "https://images.unsplash.com/photo-1629949009765-69764abb390e?w=600&h=400&fit=crop",
-  ENGINEERING: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop",
-  SPA: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=400&fit=crop",
-  IT: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop",
-  SAFETY: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
-};
 
 const VENDOR_FEATURES = [
   { icon: Upload, title: "Catalog Management", desc: "Upload your catalog. Hotels request quotes — AI matches the right vendors." },
@@ -136,7 +136,7 @@ function MarketplaceContent() {
       unitPrice: product.unitPrice,
       supplierId: product.supplier?.id || "",
       supplierName: product.supplier?.name || "Verified Supplier",
-      image: (() => { const r = getProductImage({ name: product.name, category: product.category }); return r.type === "url" ? r.src : ""; })(),
+      image: realProductImage(product.images),
     }, product.minOrderQuantity || 1);
   };
 
@@ -271,8 +271,9 @@ function MarketplaceContent() {
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredProducts.slice(0, 32).map((product) => {
-                const resolved = getProductImage({ name: product.name, category: product.category });
-                const img = resolved.type === "url" ? resolved.src : "";
+                // Use ONLY the product's real sourced image (from supplier scraper/
+                // webhook/API). No stock-substitution. Empty string → neutral placeholder.
+                const img = realProductImage(product.images);
                 return (
                   <div key={product.id} className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-400 hover:shadow-sm transition-all cursor-pointer flex flex-col">
                     {/* Image — fixed aspect, overflow-hidden, relative, fallback-safe */}
@@ -351,15 +352,13 @@ function MarketplaceContent() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {HOTEL_CATEGORIES.map((cat) => {
                 const count = categoryCounts[cat.code] || 0;
-                const img = CATEGORY_IMAGES[cat.code] || CATEGORY_IMAGES.FB;
                 return (
                   <button
                     key={cat.code}
                     onClick={() => setActiveCategory(cat.code)}
                     className="group relative rounded-xl overflow-hidden border text-left transition-all hover:scale-[1.02] hover:border-white/15"
-                    style={{ borderColor: "rgba(255,255,255,0.06)" }}
+                    style={{ borderColor: "rgba(255,255,255,0.06)", background: "linear-gradient(135deg,#1a1a24,#12121a)" }}
                   >
-                    <img src={img} alt={cat.label} className="w-full h-28 object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/70 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-3">
                       <h3 className="text-[12px] font-semibold text-white mb-0.5">{cat.label}</h3>

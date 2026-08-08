@@ -92,16 +92,18 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 text-[11px] font-semibold">
                 <Sparkles size={12} />
-                ETA Verified &amp; FRA Regulated — Egypt's hospitality procurement infrastructure
+                Not a marketplace with AI flags — a full procurement &amp; supply-chain stack
               </div>
               <h1 className="mt-5 text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.08]">
-                Buy smarter.<br />
-                <span className="text-blue-600">Get paid in 48h.</span>
+                Buy with the technology the<br className="hidden sm:block" /> giants couldn't ship.
+                <span className="block text-blue-600 mt-1">Factories in. 48h cash out.</span>
               </h1>
-              <p className="mt-4 text-slate-600 text-base lg:text-lg max-w-lg leading-relaxed">
-                Hotels control procurement, approvals, and ETA compliance from the web.
-                Suppliers fulfill and cash out from the INVO app.
-                One unified platform, zero friction, AI agents running the complexity.
+              <p className="mt-4 text-slate-600 text-base lg:text-lg max-w-xl leading-relaxed">
+                We're not another marketplace bolting on AI. We built the entire in-house
+                procurement stack — RFQ auctions, multi-tier approval, ETA e-invoice and
+                FRA-compliant e-factoring — with the one thing global suites still can't
+                integrate into their own products: <span className="font-semibold text-slate-900">real, local factoring on delivery</span>.
+                That's real cost reduction and a compliant, auditable supply chain — end to end.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link href="/register?type=hotel" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors">
@@ -112,17 +114,20 @@ export default function LandingPage() {
                 </Link>
               </div>
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-5 pt-6 border-t border-slate-100">
-                <Metric end={1247} label="Hotels" />
-                <Metric end={3892} label="Suppliers" />
-                <Metric end={847} suffix="M" label="EGP GMV" />
+                <Metric end={1247} label="Hotels" suffix="*" />
+                <Metric end={3892} label="Suppliers" suffix="*" />
+                <Metric end={847} suffix="M EGP*" label="GMV" />
                 <Metric end={48} suffix="h" label="Payout" />
+                <div className="col-span-full text-[10px] text-slate-400 mt-1">
+                  *Illustrative targets — populated live as hotels &amp; suppliers onboard.
+                </div>
               </div>
             </div>
 
             {/* Right: dense live PO intake panel */}
             <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-slate-50">
-                <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Live Purchase Order</div>
+                <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-2">Live Purchase Order <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 font-medium normal-case">sample UI</span></div>
                 <span className="text-[11px] text-slate-400 font-mono">#HV-9921 · Meridian Cairo</span>
               </div>
               <table className="w-full text-xs">
