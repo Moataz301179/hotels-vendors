@@ -112,13 +112,12 @@ export async function seedKnownHotels(): Promise<number> {
     }
   }
 
-  await storeMemory({
-    agentId: "lead-scout",
-    agentName: "Lead Scout",
-    content: `Seeded ${created} known Egyptian hotels into lead pipeline. Total: ${knownHotels.length}`,
-    memoryType: "LEAD",
-    category: "lead",
-  });
+  await storeMemory(
+    platformTenantId,
+    "lead",
+    `seed-${Date.now()}`,
+    { agentId: "lead-scout", agentName: "Lead Scout", content: `Seeded ${created} known Egyptian hotels into lead pipeline. Total: ${knownHotels.length}`, memoryType: "LEAD", category: "lead" }
+  );
 
   return created;
 }
