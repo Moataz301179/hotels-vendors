@@ -464,6 +464,71 @@ export default function MarketingPage() {
         </div>
       </section>
 
+      {/* ═══════════ PLATFORM CAPABILITIES — Real Infrastructure ═══════════ */}
+      <section className="py-20 border-y border-border-invisible">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14 animate-on-scroll">
+            <span className="text-xs tracking-widest uppercase" style={{ color: "var(--accent-base)" }}>Platform Engine</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-3 text-foreground">AI-Powered Infrastructure, Not Just a Marketplace</h2>
+            <p className="text-foreground-secondary text-base max-w-2xl mx-auto">Every feature is built — from catalog ingestion to automated order forwarding. Here's what runs under the hood.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 stagger-children">
+            {/* AI Catalog Ingestion */}
+            <div className="neon-card rounded-2xl border bg-surface-1 p-6" style={{ borderColor: "var(--accent-base)33" }}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center border" style={{ background: "var(--accent-base)15", borderColor: "var(--accent-base)40", color: "var(--accent-base)" }}>
+                  <FileText size={20} />
+                </div>
+                <div>
+                  <div className="font-semibold text-foreground">AI Catalog Ingestion Pipeline</div>
+                  <div className="text-xs text-foreground-muted">Supplier Excel/CSV → LLM Enrichment → Marketplace</div>
+                </div>
+              </div>
+              <div className="bg-canvas/60 rounded-lg p-3 mb-3 text-xs font-mono text-foreground-secondary">
+                <span className="text-foreground-muted">$</span> npx tsx scripts/import-catalog.ts --file <span style={{ color: "var(--accent-base)" }}>supplier-pricelist.xlsx</span> --supplier-id luxe-linen<br />
+                <span style={{ color: "var(--success)" }}>✓</span> Parsed 1,247 rows · <span style={{ color: "var(--accent-base)" }}>✓</span> AI enriched 1,203 products · <span style={{ color: "var(--orange-base)" }}>⚠</span> 44 flagged for review<br />
+                <span style={{ color: "var(--success)" }}>✓</span> Imported to marketplace · SKUs generated · Descriptions written · Pricing optimized
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {["Excel/CSV/PDF Parser", "LLM Column Mapping", "SKU Auto-Generation", "Bulk DB Insert", "Sync Workers"].map((f) => (
+                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--accent-base)22", color: "var(--accent-base)" }}>{f}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* RFQ / Instant Checkout Engine */}
+            <div className="neon-card rounded-2xl border bg-surface-1 p-6" style={{ borderColor: "var(--orange-base)33" }}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center border" style={{ background: "var(--orange-base)15", borderColor: "var(--orange-base)40", color: "var(--orange-base)" }}>
+                  <ShoppingCart size={20} />
+                </div>
+                <div>
+                  <div className="font-semibold text-foreground">Hybrid Pricing Engine</div>
+                  <div className="text-xs text-foreground-muted">FIXED checkout · RFQ threshold · Auto-negotiation</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="rounded-lg border border-white/5 bg-canvas/60 p-3">
+                  <div className="text-xs font-semibold" style={{ color: "var(--success)" }}>FIXED Mode</div>
+                  <div className="text-[10px] text-foreground-muted mt-1">Standard items · Instant checkout · Add to Cart</div>
+                  <div className="text-xs mt-2 font-mono" style={{ color: "var(--accent-base)" }}>EGP 72/unit</div>
+                </div>
+                <div className="rounded-lg border border-white/5 bg-canvas/60 p-3">
+                  <div className="text-xs font-semibold" style={{ color: "var(--orange-base)" }}>RFQ Mode</div>
+                  <div className="text-[10px] text-foreground-muted mt-1">Bulk orders · Quantity threshold · Auto-quote</div>
+                  <div className="text-xs mt-2 font-mono" style={{ color: "var(--orange-base)" }}>Request Quote →</div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {["Order Forwarding", "Supplier Webhook", "cXML/Email Dispatch", "Taager API", "Auto RFQ to Suppliers"].map((f) => (
+                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-full border" style={{ borderColor: "var(--orange-base)22", color: "var(--orange-base)" }}>{f}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════ COMPLIANCE ═══════════ */}
       <section className="py-24 border-y border-border-invisible">
         <div className="max-w-6xl mx-auto px-6">
