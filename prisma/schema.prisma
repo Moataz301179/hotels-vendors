@@ -388,6 +388,9 @@ model Product {
   images             String?
   specs              String?
   status             ProductStatus        @default(ACTIVE)
+  source             ProductSource        @default(FIXTURE)
+  sourceProvider     String?              // e.g. "catalog-sync", "aggregator:maxab", "webhook"
+  sourceKey          String?              // external vendor/sku identity for dedupe
   supplierId         String
   tenantId           String
   createdAt          DateTime             @default(now())
@@ -2568,6 +2571,16 @@ enum ProductCategory {
   GUEST_SUPPLIES
   FFE
   SERVICES
+}
+
+// Defines where a product actually came from. FIXTURE = never shown as real
+// marketplace stock; only supplier-synced / aggregated / webhook rows are real.
+enum ProductSource {
+  FIXTURE
+  SUPPLIER_SYNC   // supplier pushed via catalog-sync API/webhook with API key
+  ECOMMERCE       // product acquired from an ecommerce platform connector
+  DROPSHIP        // affiliate/dropship aggregator margin product
+  MANUAL
 }
 
 enum ProductStatus {

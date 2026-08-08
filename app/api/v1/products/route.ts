@@ -52,9 +52,13 @@ export async function GET(request: NextRequest) {
 
     const where: Record<string, unknown> = {};
 
-    // Always filter by ACTIVE for public catalog unless explicitly overridden
-    if (status) {
-      where.status = status;
+    // NO-FAKE-DATA RULE: public catalog must NEVER surface FIXTURE rows.
+    const includeFixtures = new URL(request.url).searchParams.get("includeFixtures") === "1";
+    if (includeFixtures) {
+      where.status = status ?? "ACTIVE";
+    } else {
+      where.NOT = [{ source: "FIXTURE" as any }];
+      where.status = "ACTIVE";
     }
 
     if (search) {

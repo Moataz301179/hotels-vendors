@@ -1,216 +1,317 @@
-import { Metadata } from "next";
-import {
-  Settings, Bell, Shield, Globe, Palette, Database,
-  Save, RotateCcw, CheckCircle2, AlertTriangle,
-} from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Platform Settings",
+import { useCallback, useEffect, useState } from "react";
+import { Building2, Save, Settings, Shield, FileCheck } from "lucide-react";
+
+// ─── Types ───────────────────────────────────────────────
+
+interface AdminSettings {
+  platformName: string;
+  defaultCurrency: string;
+  locale: string;
+  taxId: string;
+  eInvoicingEnabled: boolean;
+  factoringMinRate: number;
+  factoringMaxRate: number;
+}
+
+const DEFAULT_SETTINGS: AdminSettings = {
+  platformName: "Hotels Vendors",
+  defaultCurrency: "EGP",
+  locale: "en",
+  taxId: "",
+  eInvoicingEnabled: false,
+  factoringMinRate: 1.5,
+  factoringMaxRate: 5,
 };
 
-export default function AdminSettingsPage() {
+// ─── Small presentational helpers ───────────────────────
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="max-w-[1000px] mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-8 animate-fade-in-up">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Settings size={22} className="text-accent-base" />
-            <span className="gradient-text-animated">Platform Settings</span>
-          </h1>
-          <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
-            Configure global platform behavior, notifications, and compliance
-          </p>
+    <label className="block space-y-1.5">
+      <span className="text-sm font-medium text-slate-700">{label}</span>
+      {children}
+      {hint ? <span className="block text-xs text-slate-400">{hint}</span> : null}
+    </label>
+  );
+}
+
+const inputClass =
+  "w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 " +
+  "placeholder:text-slate-400 shadow-sm transition-colors " +
+  "focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60";
+
+function SectionCard({
+  icon,
+  title,
+  description,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-5 flex items-start gap-3">
+        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          {icon}
         </div>
-        <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors">
-            <RotateCcw size={12} />
-            Reset
-          </button>
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-2 text-foreground-secondary hover:bg-surface-2 transition-colors">
-            <Save size={12} />
-            Save Changes
-          </button>
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          <p className="text-xs text-slate-500">{description}</p>
         </div>
       </div>
+      <div className="space-y-4">{children}</div>
+    </section>
+  );
+}
 
-      {/* Settings Grid */}
-      <div className="space-y-4 animate-fade-in-up">
-        {/* General */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
-              <Globe size={16} className="text-foreground-muted" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white">General</h2>
-              <p className="text-[10px] text-foreground-muted">Platform name, timezone, and defaults</p>
-            </div>
+// ─── Page ────────────────────────────────────────────────
+
+export default function AdminSettingsPage() {
+  const [form, setForm] = useState<AdminSettings>(DEFAULT_SETTINGS);
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  // Load existing settings (graceful: keep defaults on failure)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/v1/admin/settings", {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        const data = (json.data ?? json) as Partial<AdminSettings>;
+        if (!cancelled) {
+          setForm((prev) => ({ ...prev, ...data }));
+        }
+      } catch {
+        // ignore load failures; defaults let the user still edit & save
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const update = useCallback(
+    <K extends keyof AdminSettings>(key: K, value: AdminSettings[K]) => {
+      setForm((prev) => ({ ...prev, [key]: value }));
+    },
+    []
+  );
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSaving(true);
+      setError(null);
+      setToast(null);
+      try {
+        const res = await fetch("/api/v1/admin/settings", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        setToast("Settings saved successfully");
+        window.setTimeout(() => setToast(null), 3000);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to save settings");
+      } finally {
+        setSaving(false);
+      }
+    },
+    [form]
+  );
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <div className="mx-auto max-w-4xl px-6 py-8">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Admin Settings
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Platform configuration, ETA compliance and factoring rates
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Platform Name</label>
+          {loading ? (
+            <span className="text-xs text-slate-400">Loading…</span>
+          ) : null}
+        </div>
+
+        {/* Toast */}
+        <div aria-live="polite" className="mb-6">
+          {toast ? (
+            <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+              <Save size={16} />
+              {toast}
+            </div>
+          ) : error ? (
+            <div className="flex items-center rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              {error}
+            </div>
+          ) : null}
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* General */}
+          <SectionCard
+            icon={<Settings size={18} />}
+            title="General"
+            description="Core platform identity and regional defaults"
+          >
+            <Field label="Platform name">
               <input
-                type="text"
-                defaultValue="Hotels Vendors"
-                className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white placeholder-foreground-muted focus:outline-none focus:border-accent-base/50 transition-colors"
+                className={inputClass}
+                value={form.platformName}
+                onChange={(e) => update("platformName", e.target.value)}
+                placeholder="e.g. Hotels Vendors"
               />
+            </Field>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field label="Default currency">
+                <select
+                  className={inputClass}
+                  value={form.defaultCurrency}
+                  onChange={(e) => update("defaultCurrency", e.target.value)}
+                >
+                  <option value="EGP">EGP — Egyptian Pound</option>
+                  <option value="USD">USD — US Dollar</option>
+                  <option value="EUR">EUR — Euro</option>
+                </select>
+              </Field>
+              <Field label="Locale">
+                <select
+                  className={inputClass}
+                  value={form.locale}
+                  onChange={(e) => update("locale", e.target.value)}
+                >
+                  <option value="en">English</option>
+                  <option value="ar">Arabic</option>
+                </select>
+              </Field>
             </div>
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Default Currency</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
-                <option value="EGP">EGP — Egyptian Pound</option>
-                <option value="USD">USD — US Dollar</option>
-                <option value="EUR">EUR — Euro</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Timezone</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
-                <option value="Africa/Cairo">Africa/Cairo (UTC+2)</option>
-                <option value="UTC">UTC</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Default Language</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
-                <option value="en">English</option>
-                <option value="ar">العربية (Arabic)</option>
-              </select>
-            </div>
-          </div>
-        </div>
+          </SectionCard>
 
-        {/* Notifications */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
-              <Bell size={16} className="text-foreground-muted" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white">Notifications</h2>
-              <p className="text-[10px] text-foreground-muted">Alert channels and thresholds</p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {[
-              { label: "New tenant registration", desc: "Email + Dashboard", enabled: true },
-              { label: "Order value exceeds threshold", desc: "Authority Matrix alert", enabled: true },
-              { label: "ETA submission failure", desc: "Dead-letter queue notification", enabled: true },
-              { label: "Security anomaly detected", desc: "Immediate escalation", enabled: true },
-              { label: "Supplier document expiry", desc: "30-day advance warning", enabled: false },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between py-2">
-                <div>
-                  <p className="text-sm text-white">{item.label}</p>
-                  <p className="text-[10px] text-foreground-muted">{item.desc}</p>
-                </div>
-                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-emerald-400/20" : "bg-surface-2"}`}>
-                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-emerald-400" : "left-0.5 bg-surface-1"}`} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Compliance */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
-              <Shield size={16} className="text-foreground-muted" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white">Compliance & Security</h2>
-              <p className="text-[10px] text-foreground-muted">ETA, Authority Matrix, and data policies</p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {[
-              { label: "ETA e-invoicing mandatory", desc: "All invoices must pass ETA validation", enabled: true, critical: false },
-              { label: "Authority Matrix enforcement", desc: "Multi-level approval for orders", enabled: true, critical: false },
-              { label: "Cross-tenant isolation", desc: "Strict data boundary enforcement", enabled: true, critical: true },
-              { label: "Audit log retention", desc: "Keep logs for 7 years", enabled: true, critical: false },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  {item.critical ? (
-                    <AlertTriangle size={14} className="text-[var(--error)]" />
-                  ) : (
-                    <CheckCircle2 size={14} className="text-emerald-400" />
-                  )}
-                  <div>
-                    <p className="text-sm text-white">{item.label}</p>
-                    <p className="text-[10px] text-foreground-muted">{item.desc}</p>
-                  </div>
-                </div>
-                <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${item.enabled ? "bg-emerald-400/20" : "bg-surface-2"}`}>
-                  <div className={`absolute top-0.5 w-4 h-4 rounded-full transition-all ${item.enabled ? "right-0.5 bg-emerald-400" : "left-0.5 bg-surface-1"}`} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Appearance */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
-              <Palette size={16} className="text-foreground-muted" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white">Appearance</h2>
-              <p className="text-[10px] text-foreground-muted">Theme and branding</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Brand Color</label>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg border border-border-subtle" style={{ background: "var(--accent-base)" }} />
-                <input
-                  type="text"
-                  defaultValue="#8B0000"
-                  className="flex-1 px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white font-mono focus:outline-none focus:border-accent-base/50 transition-colors"
+          {/* ETA Compliance */}
+          <SectionCard
+            icon={<Shield size={18} />}
+            title="ETA Compliance"
+            description="Egyptian Tax Authority e-invoicing configuration"
+          >
+            <Field label="Tax ID" hint="Vendor tax registration number (optional)">
+              <input
+                className={inputClass}
+                value={form.taxId}
+                onChange={(e) => update("taxId", e.target.value)}
+                placeholder="e.g. 123-456-789"
+              />
+            </Field>
+            <label className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 bg-slate-50/50 px-4 py-3">
+              <span className="flex items-center gap-3">
+                <FileCheck size={18} className="text-slate-400" />
+                <span>
+                  <span className="block text-sm font-medium text-slate-700">
+                    E-Invoicing
+                  </span>
+                  <span className="block text-xs text-slate-500">
+                    Submit invoices to the ETA in real time
+                  </span>
+                </span>
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={form.eInvoicingEnabled}
+                onClick={() => update("eInvoicingEnabled", !form.eInvoicingEnabled)}
+                className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
+                  form.eInvoicingEnabled ? "bg-blue-600" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
+                    form.eInvoicingEnabled ? "left-[22px]" : "left-0.5"
+                  }`}
                 />
-              </div>
-            </div>
-            <div>
-              <label className="block text-[11px] text-foreground-muted mb-1.5">Dashboard Theme</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-surface-1 border border-border-subtle text-sm text-white focus:outline-none focus:border-accent-base/50 transition-colors">
-                <option value="dark">Dark (Default)</option>
-                <option value="light">Light</option>
-                <option value="system">System</option>
-              </select>
-            </div>
-          </div>
-        </div>
+              </button>
+            </label>
+          </SectionCard>
 
-        {/* Database */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center">
-              <Database size={16} className="text-foreground-muted" />
+          {/* Factor Rates */}
+          <SectionCard
+            icon={<Building2 size={18} />}
+            title="Factor Rates"
+            description="Liquidity discount range offered to factoring partners (48h)"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field label="Min factoring % (48h)">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  className={inputClass}
+                  value={form.factoringMinRate}
+                  onChange={(e) =>
+                    update("factoringMinRate", Number(e.target.value))
+                  }
+                />
+              </Field>
+              <Field label="Max factoring % (48h)">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  className={inputClass}
+                  value={form.factoringMaxRate}
+                  onChange={(e) =>
+                    update("factoringMaxRate", Number(e.target.value))
+                  }
+                />
+              </Field>
             </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white">Database & Backups</h2>
-              <p className="text-[10px] text-foreground-muted">Maintenance and data export</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors">
-              Export Tenant Data
-            </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors">
-              Export Audit Log
-            </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-border-subtle text-foreground-secondary hover:bg-surface-1 hover:text-white transition-colors">
-              Run Prune Job
-            </button>
-            <button className="px-4 py-2 rounded-lg text-xs font-medium border border-[var(--error)]/20 text-[var(--error)]/70 hover:bg-[var(--error)]/[0.03] transition-colors">
-              Reset Demo Data
+            <p className="text-xs text-slate-400">
+              Rates are shown as a percentage discount applied to 48-hour
+              factoring settlements.
+            </p>
+          </SectionCard>
+
+          {/* Save */}
+          <div className="flex items-center justify-end gap-3">
+            <button
+              type="submit"
+              disabled={saving}
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-60"
+            >
+              <Save size={16} />
+              {saving ? "Saving…" : "Save changes"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
