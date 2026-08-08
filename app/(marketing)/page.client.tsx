@@ -377,6 +377,28 @@ export default function LandingPage() {
             <Landmark size={15} /> Explore Oliv financing
           </Link>
         </div>
+
+        {/* Onboarding hooks */}
+        <div className="mt-10 grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
+          <div className="bg-white border border-slate-200 rounded-lg p-5 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+              <span className="text-emerald-700 font-bold text-sm">0%</span>
+            </div>
+            <div>
+              <div className="text-sm font-bold text-slate-900">Free forever platform</div>
+              <div className="text-xs text-slate-500 mt-0.5">No subscription for hotels &amp; suppliers. Pay only on transaction value.</div>
+            </div>
+          </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-blue-100 border border-blue-300 flex items-center justify-center shrink-0">
+              <Landmark size={16} className="text-blue-700" />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-slate-900">CHV000 Activated</div>
+              <div className="text-xs text-slate-600 mt-0.5">Suez Canal Bank EGP 10M Facility · referral code CHV000 live on all Oliv actions</div>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );

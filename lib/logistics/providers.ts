@@ -48,11 +48,24 @@ export function resolveProvider(
   isExpress: boolean,
   connectedKeys: string[]
 ): ProviderConfig | null {
+  // Region → known hub cities, so freight carriers covering "Red Sea" match Sharm/Hurghada etc.
+  const HUB_REGION: Record<string, string> = {
+    "Sharm El Sheikh": "Sinai", "Dahab": "Sinai", "Nuweiba": "Sinai", "Taba": "Sinai",
+    "Hurghada": "Red Sea", "El Gouna": "Red Sea", "Safaga": "Red Sea", "Soma Bay": "Red Sea", "Marsa Alam": "Red Sea",
+    "Aswan": "Upper Egypt", "Luxor": "Upper Egypt", "Minya": "Upper Egypt", "Assiut": "Upper Egypt", "Sohag": "Upper Egypt", "Qena": "Upper Egypt",
+    "Alexandria": "Alexandria", "Matruh": "Matruh",
+  };
+  const hubRegion = HUB_REGION[destinationCity] || "";
+
   const candidates = EGYPT_PROVIDERS.filter(
     (p) =>
       connectedKeys.includes(p.id) &&
       (p.deliveryTypes.includes(isExpress ? "express" : "regular")) &&
-      (p.coverage.some((c) => c === "Nationwide" || c.includes(destinationCity) || destinationCity.includes(c)))
+      (p.coverage.some((c) =>
+        c === "Nationwide" ||
+        c.includes(destinationCity) || destinationCity.includes(c) ||
+        (hubRegion && (c.includes(hubRegion) || hubRegion.includes(c)))
+      ))
   );
 
   if (preferredId) {

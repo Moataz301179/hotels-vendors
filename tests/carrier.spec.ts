@@ -24,8 +24,16 @@ describe("Egyptian provider registry", () => {
     expect(ids).toContain("sprint");
   });
 
-  it("should resolve a freight provider for resort corridors", () => {
+  it("should route a Red Sea resort corridor to a freight carrier", () => {
+    // Hurghada maps to "Red Sea" region → Naqla (freight) should win.
     const p = resolveProvider(null, "Hurghada", false, ["bosta", "naqla"]);
+    expect(p?.type).toBe("freight");
+    expect(p?.id).toBe("naqla");
+  });
+
+  it("should route Sinai resort corridor to a freight carrier", () => {
+    // Sharm El Sheikh maps to "Sinai" → Naqla (freight) wins.
+    const p = resolveProvider(null, "Sharm El Sheikh", false, ["bosta", "naqla"]);
     expect(p?.type).toBe("freight");
     expect(p?.id).toBe("naqla");
   });
