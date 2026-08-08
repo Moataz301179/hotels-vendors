@@ -8,6 +8,34 @@ interface Message {
   content: string;
 }
 
+/* ── #39a Session memory — persist last 10 turns in sessionStorage ──────── */
+const MEM_KEY = "hv-chat-memory";
+function loadMemory(): Message[] {
+  try {
+    const raw = sessionStorage.getItem(MEM_KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) return parsed.slice(-12); }
+  } catch {}
+  return [];
+}
+function saveMemory(msgs: Message[]) {
+  try { sessionStorage.setItem(MEM_KEY, JSON.stringify(msgs.slice(-12))); } catch {}
+}
+
+/* ── #39c Tone persona — grounded, empathetic; validates pain then acts ──── */
+const SYSTEM_PROMPT =
+  "You are the HotelsVendors AI Concierge. You are grounded, empathetic, and an expert in Egyptian hospitality B2B, " +
+  "ETA e-invoicing, and Oliv reverse factoring. Always tailor advice to whether the user is a Hotel Buyer or Vendor. " +
+  "If the user mentions financial stress, long payment terms, or inventory shortages, first validate their pain point " +
+  "sympathetically before giving the technical answer. Always end responses with one clear, low-friction next step.";
+
+/* ── #39b Proactive suggestion chips (context-aware) ────────────────────── */
+const SUGGESTIONS = [
+  "📄 How do I upload my Excel price list?",
+  "💳 How does code CHV000 unlock 48h payouts?",
+  "📜 Check my ETA e-Invoice JSON schema",
+  "🚚 How do I connect a carrier for delivery?",
+];
+
 export interface BotConfig {
   icon: React.ElementType;
   accentVar: string; // CSS custom property name e.g. "--accent-base" or "--success"
@@ -19,9 +47,10 @@ export interface BotConfig {
 
 export function BaseOnboardingBot({ config }: { config: BotConfig }) {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: config.initialMessage },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const mem = loadMemory();
+    return mem.length > 0 ? mem : [{ role: "assistant", content: config.initialMessage }];
+  });
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -29,6 +58,9 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Persist last 10 turns on every change
+  useEffect(() => { saveMemory(messages); }, [messages]);
 
   const handleSend = useCallback(
     async (text?: string) => {
@@ -50,7 +82,14 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
         const res = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: [...messages, userMsg] }),
+          body: JSON.stringify({
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              // Inject recent session memory so the concierge stays in context
+              ...loadMemory().slice(-12),
+              userMsg,
+            ],
+          }),
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -85,7 +124,7 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
         setLoading(false);
       }
     },
-    [input, loading, messages]
+    [input, loading]
   );
 
   const Icon = config.icon;
@@ -198,6 +237,22 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Proactive suggestion chips */}
+          {!loading && (
+            <div className="px-4 pb-2 shrink-0 flex flex-wrap gap-1.5">
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => handleSend(s)}
+                  className="px-2.5 py-1.5 rounded-full text-[10px] transition-colors"
+                  style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Input */}
           <div className="px-4 pb-3 pt-2 shrink-0">

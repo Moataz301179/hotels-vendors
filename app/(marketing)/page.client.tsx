@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { AudienceRouter } from "@/components/marketing/audience-router";
 import { InteractiveSandbox } from "@/components/marketing/interactive-sandbox";
+import { CommandCenter } from "@/components/marketing/command-center";
 import {
   ArrowRight, Shield, Landmark, Truck, Store, Hotel, Building2,
   Gavel, FileUp, Calculator, Cpu, CreditCard, CheckCircle2,
@@ -375,6 +376,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ═════════════ ENTERPRISE COMMAND CENTER (alternating bg) ═════════════ */}
+      <CommandCenter />
 
       {/* ═════════════ INTERACTIVE SANDBOX ═════════════ */}
       <section className="bg-[#F8FAFC] border-t border-slate-200 py-16">
