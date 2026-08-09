@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || "REDACTED";
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OLLAMA_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
