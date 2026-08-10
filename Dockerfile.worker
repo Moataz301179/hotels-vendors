@@ -1,0 +1,22 @@
+# Hotels Vendors — Swarm Worker Docker Image
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json* ./
+RUN npm ci --legacy-peer-deps
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Install tsx for TypeScript execution
+RUN npm install -g tsx
+
+ENV NODE_ENV=production
+ENV WORKER_MODE=swarm
+
+CMD ["tsx", "lib/swarm/worker-entry.ts"]
