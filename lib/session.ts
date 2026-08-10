@@ -118,3 +118,43 @@ export async function getSessionToken(): Promise<string | undefined> {
   const cookieStore = await cookies();
   return cookieStore.get(SESSION_COOKIE)?.value;
 }
+
+/**
+ * ISSUE a paired session: a short-lived access token + a longer-lived
+ * refresh token. Used by OTP login flow where a refresh token must
+ * persist past page reloads.
+ */
+export async function createSessionPair(
+  userId: string,
+  platformRole: string,
+  tenantId: string
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const accessToken = await createSession(userId, platformRole, tenantId);
+
+  const REFRESH_COOKIE = "hv_refresh";
+  const refreshToken = await new SignJWT({ userId, platformRole, tenantId })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("30d")
+    .sign(SECRET);
+
+  const cookieStore = await cookies();
+  cookieStore.set(REFRESH_COOKIE, refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+  });
+
+  return { accessToken, refreshToken };
+}
+
+/** Verify a refresh token and rotate a new access-token pair. */
+export async function refreshSessionPair(
+  refreshToken: string
+): Promise<{ accessToken: string; refreshToken: string } | null> {
+  const payload = await verifySession(refreshToken);
+  if (!payload) return null;
+  return createSessionPair(payload.userId, payload.platformRole, payload.tenantId);
+}

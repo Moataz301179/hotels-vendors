@@ -323,6 +323,29 @@ export const LoginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+/* ── OTP / Phone Auth Schemas ── */
+const EGYPTIAN_PHONE = /^\s*(?:\+?20|0)(10|11|12|15)\d{8}\s*$/;
+
+export const SendOtpSchema = z.object({
+  phone: z.string().min(1, "Phone number is required"),
+  purpose: z.enum(["LOGIN", "REGISTER", "PASSWORD_RESET", "MFA"]).default("LOGIN"),
+});
+
+export const OtpLoginSchema = SendOtpSchema.extend({
+  code: z.string().min(4, "Verification code is required"),
+});
+
+export const VerifyOtpSchema = z.object({
+  phone: z.string().min(1, "Phone number is required"),
+  code: z.string().min(4, "Verification code is required"),
+  purpose: z.enum(["LOGIN", "REGISTER", "PASSWORD_RESET", "MFA"]).default("LOGIN"),
+});
+
+export const isValidEgyptianPhoneSchema = z
+  .string()
+  .min(1)
+  .refine((val) => EGYPTIAN_PHONE.test(val), { message: "Invalid Egyptian phone" });
+
 /* ── Query Params ── */
 export const PaginationSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
