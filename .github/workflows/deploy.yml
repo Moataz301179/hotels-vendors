@@ -72,6 +72,12 @@ jobs:
             echo "[1/5] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
+            APP_DIR=/var/www/hotelsvendors-v2/hotels-vendors
+            if [ ! -d "$APP_DIR" ]; then
+              echo "  ERROR: app dir $APP_DIR missing"
+              exit 1
+            fi
+            cd "$APP_DIR"
 
             echo "[2/6] Installing dependencies..."
             npm ci --legacy-peer-deps
