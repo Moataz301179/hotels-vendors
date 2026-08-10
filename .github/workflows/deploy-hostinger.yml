@@ -51,6 +51,17 @@ jobs:
             NEXT_TELEMETRY_DISABLED=1 npm run build
 
             echo "[5/5] Restarting PM2 process..."
+            # Ensure static assets + public + env are available to the standalone server (nginx serves /_next/static from here)
+            if [ ! -d .next/standalone/.next/static ]; then
+              mkdir -p .next/standalone/.next
+              cp -r .next/static .next/standalone/.next/static
+            fi
+            if [ ! -d .next/standalone/public ] && [ -d public ]; then
+              cp -r public .next/standalone/public
+            fi
+            if [ ! -f .next/standalone/.env ] && [ -f .env ]; then
+              cp .env .next/standalone/.env
+            fi
             if pm2 describe hotels-vendors > /dev/null 2>&1; then
               pm2 reload ecosystem.config.js --env production
             else
