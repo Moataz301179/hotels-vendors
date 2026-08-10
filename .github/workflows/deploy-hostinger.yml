@@ -1,8 +1,11 @@
 name: Deploy to Hostinger VPS (PM2)
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Manual deploy only — auto-deploy handled by deploy.yml (Deploy to Production)"
+        required: false
 
 jobs:
   deploy:

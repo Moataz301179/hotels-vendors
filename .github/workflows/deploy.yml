@@ -17,6 +17,9 @@ jobs:
   ci:
     name: CI Gate
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hotels-vendors
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,7 +36,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           SESSION_SECRET: "dummy-for-ci-build-only"
-          DATABASE_URL: "postgresql://dummy:placeholder@localhost:5432/dummy"
+          DATABASE_URL: "postgresql://dummy:***@localhost:5432/dummy"
           HOTELSVENDORS_HMAC_SECRET: "dummy-hmac-secret-for-ci-build-only-32chars-minimum"
           ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 
