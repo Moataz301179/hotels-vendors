@@ -196,6 +196,18 @@ function setupDefaultMocks(orderOverrides: Record<string, unknown> = {}) {
 describe("Authority Matrix", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default $transaction to run the callback with a tx that reuses the shared
+    // mock fns — matches the transactional recordApproval / adminOverride paths.
+    mockQueryRaw.mockResolvedValue([{ id: "order-1", status: "DRAFT", paymentGuaranteed: false, paymentGuaranteeMethod: null, tenantId: "tenant-1" }]);
+    mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+      const tx = {
+        $queryRaw: mockQueryRaw,
+        order: { update: mockUpdate },
+        orderApproval: { create: mockCreate },
+        auditLog: { create: mockCreate },
+      };
+      return fn(tx);
+    });
   });
 
   describe("evaluateAuthority", () => {

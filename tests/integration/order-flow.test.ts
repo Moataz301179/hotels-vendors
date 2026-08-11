@@ -544,51 +544,59 @@ describe("Order Flow Integration", () => {
 
   describe("Order approval actions", () => {
     it("should record APPROVED and set status", async () => {
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({ id: "order-1", status: "APPROVED" });
+      const tx = getMockTx();
+      tx.$queryRaw.mockResolvedValue([{ id: "order-1", status: "PENDING_APPROVAL" }]);
+      tx.orderApproval.create.mockResolvedValue({});
+      tx.order.update.mockResolvedValue({ id: "order-1", status: "APPROVED" });
 
       await recordApproval("order-1", "gm-1", "tenant-1", "APPROVED", "Budget OK");
 
-      expect(prisma.orderApproval.create).toHaveBeenCalledWith({
+      expect(tx.orderApproval.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           orderId: "order-1",
           approverId: "gm-1",
           action: "APPROVED",
         }),
       });
-      expect(prisma.order.update).toHaveBeenCalledWith({
+      expect(tx.order.update).toHaveBeenCalledWith({
         where: { id: "order-1" },
         data: { status: "APPROVED" },
       });
     });
 
     it("should record REJECTED and set status", async () => {
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({});
+      const tx = getMockTx();
+      tx.$queryRaw.mockResolvedValue([{ id: "order-1", status: "PENDING_APPROVAL" }]);
+      tx.orderApproval.create.mockResolvedValue({});
+      tx.order.update.mockResolvedValue({});
 
       await recordApproval("order-1", "gm-1", "tenant-1", "REJECTED", "Budget exceeded");
 
-      expect(prisma.order.update).toHaveBeenCalledWith({
+      expect(tx.order.update).toHaveBeenCalledWith({
         where: { id: "order-1" },
         data: { status: "REJECTED" },
       });
     });
 
     it("should record ESCALATED and keep PENDING_APPROVAL", async () => {
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({});
+      const tx = getMockTx();
+      tx.$queryRaw.mockResolvedValue([{ id: "order-1", status: "PENDING_APPROVAL" }]);
+      tx.orderApproval.create.mockResolvedValue({});
+      tx.order.update.mockResolvedValue({});
 
       await recordApproval("order-1", "gm-1", "tenant-1", "ESCALATED");
 
-      expect(prisma.order.update).toHaveBeenCalledWith({
+      expect(tx.order.update).toHaveBeenCalledWith({
         where: { id: "order-1" },
         data: { status: "PENDING_APPROVAL" },
       });
     });
 
     it("should write tamper-proof audit entry", async () => {
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({});
+      const tx = getMockTx();
+      tx.$queryRaw.mockResolvedValue([{ id: "order-1", status: "PENDING_APPROVAL" }]);
+      tx.orderApproval.create.mockResolvedValue({});
+      tx.order.update.mockResolvedValue({});
 
       await recordApproval("order-1", "gm-1", "tenant-1", "APPROVED", "OK");
 
@@ -934,11 +942,13 @@ describe("Order Flow Integration", () => {
 
     it("should handle rejection and resubmission flow", async () => {
       // Reject
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({ ...makeOrder(), status: "REJECTED" });
+      const tx = getMockTx();
+      tx.$queryRaw.mockResolvedValue([{ id: "order-1", status: "PENDING_APPROVAL" }]);
+      tx.orderApproval.create.mockResolvedValue({});
+      tx.order.update.mockResolvedValue({ ...makeOrder(), status: "REJECTED" });
 
       await recordApproval("order-1", "gm-1", "tenant-1", "REJECTED", "Budget exceeded");
-      expect(prisma.order.update).toHaveBeenLastCalledWith({
+      expect(tx.order.update).toHaveBeenLastCalledWith({
         where: { id: "order-1" },
         data: { status: "REJECTED" },
       });
@@ -948,11 +958,10 @@ describe("Order Flow Integration", () => {
       expect(validateStatusTransition("DRAFT", "PENDING_APPROVAL").valid).toBe(true);
 
       // Approve on resubmission
-      prisma.orderApproval.create.mockResolvedValue({});
-      prisma.order.update.mockResolvedValue({ ...makeOrder(), status: "APPROVED" });
+      tx.order.update.mockResolvedValue({ ...makeOrder(), status: "APPROVED" });
 
       await recordApproval("order-1", "gm-1", "tenant-1", "APPROVED", "Revised budget approved");
-      expect(prisma.order.update).toHaveBeenLastCalledWith({
+      expect(tx.order.update).toHaveBeenLastCalledWith({
         where: { id: "order-1" },
         data: { status: "APPROVED" },
       });
