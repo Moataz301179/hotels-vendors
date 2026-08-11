@@ -161,8 +161,11 @@ export default function RootLayout({
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
                   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                     window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                        console.warn('SW registration failed:', err);
+                      // Remove any previously-registered service worker so the
+                      // browser can never serve stale cached assets. The retire
+                      // sw.js clears old caches and unregisters itself.
+                      navigator.serviceWorker.getRegistrations().then(function(regs) {
+                        regs.forEach(function(reg) { reg.unregister(); });
                       });
                     });
                   }

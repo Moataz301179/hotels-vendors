@@ -1,30 +1,21 @@
 /**
- * HotelsVendors Service Worker — network-first (stale content is the enemy).
+ * HotelsVendors Service Worker — RETIREMENT build.
  *
- * WHY network-first: a cache-first SW (as was used before, "wasla-v5") served
- * stale HTML/CSS/JS indefinitely after the first load, so users kept seeing an
- * old version of the app long after new builds deployed. Navigation always
- * hits the network and falls back to the cache only when offline. Sub-resources
- * (CSS/JS/fonts) are managed with a short-lived runtime cache, never a stale
- * immutable shell.
+ * The previous cache-first SW ("wasla-v5") caused users to see stale, broken
+ * versions of the app indefinitely: it served old CSS/JS from cache after every
+ * deploy. The reliable fix is to STOP using a service worker for caching.
  *
- * To bust an existing old SW: bump CACHE_VERSION and the file contents —
- * activating this new script calls skipWaiting() + clients.claim() and deletes
- * every previous cache bucket.
+ * This version does exactly one job: on install/activate it (1) deletes every
+ * cache bucket the old SW ever created, and (2) unregisters itself so no future
+ * service worker intercepts requests. The page is then served entirely by the
+ * network — always fresh — which is the correct behavior for this app.
+ *
+ * Bump VERSION on any re-deploy to force the browser to pick up this script.
  */
 
-const CACHE_VERSION = "hv-network-first-v6";
-const SHELL = ["/", "/offline"];
+const VERSION = "hv-retire-v1";
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CACHE_VERSION)
-      .then((cache) => cache.addAll(SHELL))
-      .catch(() => {})
-  );
-  // Take control of open tabs immediately so the new strategy applies now,
-  // not after the next reload.
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
@@ -32,56 +23,10 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => k !== CACHE_VERSION)
-            .map((k) => caches.delete(k))
-        )
-      )
+      .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
+      .then(() => self.registration.unregister())
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Only handle same-origin GETs.
-  if (request.method !== "GET" || url.origin !== self.location.origin) {
-    return;
-  }
-
-  // Navigations (HTML pages): network-first, cache fallback for offline.
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then((res) => {
-          // Cache a copy of successful navigations for offline use.
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy)).catch(() => {});
-          return res;
-        })
-        .catch(() =>
-          caches
-            .match(request)
-            .then((r) => r || caches.match("/"))
-        )
-    );
-    return;
-  }
-
-  // Sub-resources (JS/CSS/fonts): network-first with a short runtime cache.
-  // Always prefer the fresh build; use the cache only when offline.
-  event.respondWith(
-    fetch(request)
-      .then((res) => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy)).catch(() => {});
-        }
-        return res;
-      })
-      .catch(() => caches.match(request))
-  );
-});
+// Do NOT intercept any requests. Let everything hit the network directly.
