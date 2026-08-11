@@ -248,6 +248,7 @@ model User {
   ownedTenantId          String?
   transferToken          String?                  @unique(map: "User_transfer_token_uniq")
   transferExpiresAt      DateTime?
+  phoneVerifiedAt        DateTime?
   deletedAt              DateTime?
   aiUsage                AiUsage?
   carts                  Cart?
@@ -266,6 +267,7 @@ model User {
   supplier               Supplier?                @relation(fields: [supplierId], references: [id])
   tenant                 Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   addresses              UserAddress[]
+  pairingCodes           PairingCode[]
 
   @@index([sector])
   @@index([tenantId])
@@ -276,6 +278,38 @@ model User {
   @@index([platformRole])
   @@index([deletedAt], map: "User_deleted_idx")
   @@index([uuid])
+}
+
+model OtpVerification {
+  id         String    @id @default(cuid())
+  phone      String
+  purpose    String
+  provider   String
+  codeHash   String?
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+  uuid       String?   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  @@unique([phone])
+  @@index([phone, purpose, createdAt])
+  @@index([deletedAt])
+}
+
+model PairingCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  usedBy    String?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model Supplier {
