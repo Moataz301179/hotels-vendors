@@ -216,7 +216,7 @@ model User {
   email                  String                   @unique
   name                   String
   companyName            String?
-  phone                  String?
+  phone                  String?                  @unique
   role                   UserRole                 @default(DEPARTMENT_HEAD)
   status                 UserStatus               @default(ACTIVE)
   sector                 UserSector?
