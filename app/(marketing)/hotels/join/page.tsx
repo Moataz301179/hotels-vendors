@@ -1,181 +1,382 @@
 import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Clock, Shield, Zap, Building2, Users, CreditCard, Wallet, BarChart3, Truck, Landmark, RefreshCw, MapPin, Phone, Mail, Globe, AlertCircle, Package, FileText } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  FileCheck2,
+  Landmark,
+  Lock,
+  MapPin,
+  ShieldCheck,
+  Store,
+  Truck,
+  Users,
+  Wallet,
+  Scale,
+  ScrollText,
+  Clock,
+  PackageSearch,
+  Route,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/hotels/join") },
-  title: "Join as Hotel — Onboarding Wizard | HotelsVendors",
-  description: "Step-by-step hotel onboarding: Register → Connect ETA Token → Set Up Oliv Financing → Start Procuring. Net-60 terms, EGP 10M+ credit facility.",
+  title: "Onboard Your Hotel — ETA e-Invoicing, Oliv Financing & Shared Logistics | HotelsVendors",
+  description:
+    "Join HotelsVendors: one regulated account for compliant ETA e-invoicing, embedded Oliv reverse-factoring terms, and shared-route logistics for your properties. Register your hotel, connect your ETA token, and start procuring.",
   openGraph: {
-    title: "Join HotelsVendors — Hotel Onboarding Wizard",
-    description: "Register, connect ETA, set up Oliv financing, start procuring. Net-60 terms.",
+    title: "HotelsVendors — Onboard Your Hotel",
+    description:
+      "ETA-native e-invoicing, Olivier reverse-factoring terms, and shared-route coastal logistics — from one regulated account.",
     type: "website",
   },
 };
 
-const ONBOARDING_STEPS = [
+/* ── Brand (no orange, no neon) ─────────────────────────────
+   green   #314B43  accent / primary
+   beige   #ABA294  supporting neutral
+   grey    #646367  muted / secondary
+   gold    #8a6d3b  headings / eyebrows
+   ink     #111827  light-mode headings (unused here — dark OLED base)
+   dark    #0c0c12  page base / #12121a surface            */
+
+const STEPS = [
   {
-    step: "1",
-    title: "Register Account",
-    desc: "Create your HotelsVendors account with basic business details.",
+    step: "01",
+    title: "Register your hotel",
     icon: Building2,
-    color: "var(--accent-base)",
-    fields: ["Full Name", "Email", "Password", "Tax ID", "City", "Governorate"],
+    desc: "Create a regulated account in two minutes. Tell us whether you are a single property, chain, or management company. No cash ever moves on the platform — HotelsVendors is a workflow and compliance layer, not a payment intermediary.",
+    points: [
+      "Role preselects to Hotel (type=hotel)",
+      "Regulated account with email verification",
+      "Authorized-signatory onboarding for approvals",
+    ],
+    cta: { href: "/register?type=hotel", label: "Start hotel registration" },
   },
   {
-    step: "2",
-    title: "Complete Hotel Profile",
-    desc: "Add your property details, number of rooms, and management company.",
-    icon: Users,
-    color: "var(--purple-base)",
-    fields: ["Hotel Name", "Property Type", "Number of Rooms", "Management Company", "Contact Person"],
+    step: "02",
+    title: "Connect ETA e-invoicing",
+    icon: FileCheck2,
+    desc: "Wire your Egyptian Tax Authority token to the compliance layer. Invoices are generated, signed, submitted and re-signed directly against the ETA e-invoicing API, with status callbacks tracked end-to-end — no manual re-entry.",
+    points: [
+      "ETA certificate / registration number + digital signature",
+      "Automated submission and status callback handling",
+      "Cancellation, rejection and re-submission workflows",
+    ],
   },
   {
-    step: "3",
-    title: "Connect ETA Token",
-    desc: "Link your Egyptian Tax Authority token for compliant invoicing.",
-    icon: Shield,
-    color: "#64b5f6",
-    fields: ["ETA Registration Number", "Tax Card Number", "Digital Signature"],
-  },
-  {
-    step: "4",
-    title: "Set Up Oliv Financing",
-    desc: "Choose factoring or reverse factoring. Connect to Oliv for Net-60 terms.",
+    step: "03",
+    title: "Set up Oliv financing terms",
     icon: Landmark,
-    color: "var(--success)",
-    fields: ["Company Name", "Commercial Register", "Bank Details", "Financing Preference"],
+    desc: "Embed non-recourse liquidity on every confirmed invoice. Your supplier is funded directly by the factoring partner; you repay later on agreed terms. Every invoice is locked once in the FRA registry to prevent double financing.",
+    points: [
+      "Reverse-factoring / Net terms on confirmed deliveries",
+      "Eligibility inquiry & offer selection via partner bridge",
+      "FRA single-instance lock — no double financing",
+    ],
+  },
+  {
+    step: "04",
+    title: "Go live with shared logistics",
+    icon: Truck,
+    desc: "Activate shared-route delivery to your receiving dock. Multi-supplier loads are consolidated across coastal clusters, with GPS tracking and digital proof of delivery that keeps the compliance trail complete.",
+    points: [
+      "Shared-route consolidation to coastal hubs",
+      "Cold-chain capable & real-time tracking",
+      "Digital POD closes the PO → ETA → GRN loop",
+    ],
   },
 ];
 
-const BENEFITS = [
-  { icon: Clock, title: "Net-60 Payment Terms", desc: "Pay Oliv at Net-60 instead of Net-15/30 to suppliers.", color: "var(--success)" },
-  { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly. They prioritize your orders.", color: "var(--accent-base)" },
-  { icon: Users, title: "One Monthly Payment", desc: "Single wire to Oliv covers all financed invoices.", color: "var(--purple-base)" },
-  { icon: Building2, title: "Multi-Property Support", desc: "Centralized procurement across all properties.", color: "var(--orange-base)" },
-  { icon: Package, title: "10,000+ Products", desc: "Browse fixed-price catalog from 500+ verified suppliers.", color: "#64b5f6" },
-  { icon: FileText, title: "ETA Compliant", desc: "Every invoice digitally signed and ETA-submitted.", color: "var(--success)" },
+const OFFERS = [
+  {
+    icon: FileCheck2,
+    title: "ETA-compliant invoicing, automated",
+    desc: "Invoices generated, signed and submitted to the Egyptian Tax Authority e-invoicing API with status callbacks — no manual tax re-entry per order.",
+  },
+  {
+    icon: Landmark,
+    title: "Embedded reverse-factoring",
+    desc: "Suppliers get funded by the factoring partner against confirmed deliveries while you repay on agreed terms. Non-recourse liquidity on every invoice.",
+  },
+  {
+    icon: Lock,
+    title: "FRA anti-fraud shield",
+    desc: "Three-way matching (PO + ETA UUID + GRN) and a SHA-256 tamper-proof audit trail. Each invoice is locked once in the FRA electronic registry.",
+  },
+  {
+    icon: Route,
+    title: "Shared-route logistics",
+    desc: "Multi-supplier loads consolidated onto shared routes to Red Sea and coastal clusters, with GPS tracking and digital proof of delivery.",
+  },
+  {
+    icon: PackageSearch,
+    title: "Fixed-price hospitality catalog",
+    desc: "10,000+ SKUs across six hospitality categories from vetted suppliers — browse a fixed-price catalog instead of negotiating order by order.",
+  },
+  {
+    icon: Scale,
+    title: "Risk-based credit orchestration",
+    desc: "Seasonal, occupancy-linked credit and a hospitality credit-score engine inform factoring eligibility — so terms adapt to your actual procurement.",
+  },
+  {
+    icon: Users,
+    title: "Multi-property governance",
+    desc: "One account across your chain or management portfolio with role-based approval chains and per-property spend visibility.",
+  },
+  {
+    icon: ScrollText,
+    title: "Immutable audit trail",
+    desc: "Every approval, disbursement and ETA status change is written to a tamper-proof chain — audit-ready for your controllers and regulators.",
+  },
+];
+
+const TRUST = [
+  {
+    icon: FileCheck2,
+    label: "ETA",
+    text: "Egyptian Tax Authority e-invoicing integration",
+  },
+  {
+    icon: ShieldCheck,
+    label: "FRA",
+    text: "Anti-fraud registry lock against double financing",
+  },
+  {
+    icon: Lock,
+    label: "KYC / AML",
+    text: "Regulated account onboarding with signatory verification",
+  },
+  {
+    icon: Scale,
+    label: "Compliance",
+    text: "SHA-256 audit trail on all approvals and disbursements",
+  },
 ];
 
 export default function HotelJoinPage() {
   return (
-    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero */}
-      <section className="pt-28 pb-12 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
-            <Landmark size={12} style={{ color: "var(--success)" }} />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>
-              Hotel Onboarding
-            </span>
+    <main
+      className="min-h-screen"
+      style={{ backgroundColor: "#0c0c12", color: "#ffffff" }}
+    >
+      {/* ══════════════════════════ HERO ══════════════════════════ */}
+      <section className="relative overflow-hidden border-b border-white/[0.06]">
+        {/* Clean branded overlay in brand greens — subtle, non-neon */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 70% -10%, rgba(49,75,67,0.55) 0%, rgba(12,12,18,0) 60%), radial-gradient(ellipse 60% 50% at 10% 10%, rgba(138,109,59,0.15) 0%, rgba(12,12,18,0) 55%)",
+          }}
+        />
+
+        <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-20 sm:pt-36 sm:pb-24">
+          <div
+            className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] mb-7"
+            style={{ borderColor: "rgba(138,109,59,0.4)", color: "#8a6d3b", backgroundColor: "rgba(138,109,59,0.08)" }}
+          >
+            <Building2 size={12} />
+            Hotel Onboarding
           </div>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
-            Onboard Your Hotel<br />
-            <span style={{ color: "var(--success)" }}>in 4 Simple Steps</span>
+
+          <h1 className="max-w-3xl text-[clamp(32px,5.5vw,56px)] font-semibold leading-[1.05] tracking-tight">
+            Onboard your hotel onto a{" "}
+            <span style={{ color: "#8a6d3b" }}>compliant procurement</span>{" "}
+            operating system.
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed">
-            Register, connect your ETA token, set up Oliv financing, and start procuring.
-            Net-60 terms. EGP 10M+ credit facility. 500+ suppliers.
+
+          <p className="mt-6 max-w-2xl text-[16px] leading-relaxed" style={{ color: "#ABA294" }}>
+            HotelsVendors unites three capabilities your procurement already depends on — ETA-compliant
+            e-invoicing, embedded reverse-factoring terms, and shared-route logistics — behind one
+            regulated account. Register once, connect your ETA token, and operate every property
+            through a single, audit-ready workflow.
           </p>
-        </div>
-      </section>
 
-      {/* Steps Overview */}
-      <section className="py-12 border-y" style={{ borderColor: "var(--success)18" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid sm:grid-cols-4 gap-4">
-            {ONBOARDING_STEPS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div key={s.step} className="rounded-xl border bg-[#12121a] p-5 text-center hover:border-white/[0.10] transition-all" style={{ borderColor: `${s.color}22` }}>
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: `${s.color}15`, border: `1px solid ${s.color}33` }}>
-                    <Icon size={20} style={{ color: s.color }} />
-                  </div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-1" style={{ color: s.color }}>Step {s.step}</div>
-                  <h3 className="text-[13px] font-semibold text-white">{s.title}</h3>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Step Details */}
-      <section className="py-20">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="space-y-8">
-            {ONBOARDING_STEPS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div key={s.step} className="rounded-2xl border bg-[#12121a] p-8 hover:border-white/[0.10] transition-all" style={{ borderColor: `${s.color}22` }}>
-                  <div className="flex items-start gap-6">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${s.color}15`, border: `1px solid ${s.color}33` }}>
-                      <Icon size={24} style={{ color: s.color }} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-[11px] font-bold uppercase tracking-[0.15em]" style={{ color: s.color }}>Step {s.step}</span>
-                      </div>
-                      <h3 className="text-[18px] font-semibold text-white mb-2">{s.title}</h3>
-                      <p className="text-[14px] text-white/40 leading-relaxed mb-4">{s.desc}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {s.fields.map((f) => (
-                          <span key={f} className="px-3 py-1.5 rounded-lg text-[11px] font-medium" style={{ backgroundColor: `${s.color}10`, color: `${s.color}`, border: `1px solid ${s.color}22` }}>
-                            {f}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-20 border-y" style={{ borderColor: "var(--success)18" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>What You Get</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white">After Onboarding</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {BENEFITS.map((b) => {
-              const Icon = b.icon;
-              return (
-                <div key={b.title} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: `${b.color}12`, border: `1px solid ${b.color}22` }}>
-                    <Icon size={18} style={{ color: b.color }} />
-                  </div>
-                  <h3 className="text-[14px] font-semibold text-white mb-2">{b.title}</h3>
-                  <p className="text-[13px] text-white/40 leading-relaxed">{b.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Ready to Start?</h2>
-          <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
-            Create your account in 2 minutes. Connect your ETA token. Set up Oliv financing.
-            Start procuring with Net-60 terms.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/register?type=hotel" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
-              Create Hotel Account <ArrowRight size={14} />
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Link
+              href="/register?type=hotel"
+              className="inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-[14px] font-semibold transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a6d3b]"
+              style={{ backgroundColor: "#314B43", color: "#ffffff" }}
+            >
+              Register your hotel <ArrowRight size={15} />
             </Link>
-            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Talk to Our Team
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-xl border px-7 py-3.5 text-[14px] font-medium transition-colors hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a6d3b]"
+              style={{ borderColor: "rgba(255,255,255,0.12)", color: "#ABA294" }}
+            >
+              Talk to our team
             </Link>
           </div>
+
+          {/* Trust badges */}
+          <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Compliance and trust">
+            {TRUST.map((t) => {
+              const Icon = t.icon;
+              return (
+                <li
+                  key={t.label}
+                  className="flex items-start gap-3 rounded-xl border p-4"
+                  style={{ borderColor: "rgba(255,255,255,0.07)", backgroundColor: "#12121a" }}
+                >
+                  <span
+                    className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg"
+                    style={{ backgroundColor: "rgba(49,75,67,0.25)", color: "#314B43", border: "1px solid rgba(49,75,67,0.5)" }}
+                  >
+                    <Icon size={15} />
+                  </span>
+                  <span>
+                    <span className="block text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "#8a6d3b" }}>
+                      {t.label}
+                    </span>
+                    <span className="mt-0.5 block text-[12px] leading-snug" style={{ color: "#646367" }}>
+                      {t.text}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* ═══════════════════════ HOW IT WORKS ═══════════════════════ */}
+      <section className="py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 max-w-2xl">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3" style={{ color: "#8a6d3b" }}>
+              How onboarding works
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Four steps from signature to live procurement.
+            </h2>
+          </div>
+
+          <ol className="grid gap-5 lg:grid-cols-2">
+            {STEPS.map((s) => {
+              const Icon = s.icon;
+              return (
+                <li
+                  key={s.step}
+                  className="flex flex-col rounded-2xl border p-7"
+                  style={{ borderColor: "rgba(255,255,255,0.07)", backgroundColor: "#12121a" }}
+                >
+                  <div className="mb-4 flex items-center justify-between">
+                    <span
+                      className="flex h-11 w-11 items-center justify-center rounded-xl"
+                      style={{ backgroundColor: "rgba(49,75,67,0.2)", color: "#314B43", border: "1px solid rgba(49,75,67,0.45)" }}
+                    >
+                      <Icon size={20} />
+                    </span>
+                    <span className="text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: "#8a6d3b" }}>
+                      Step {s.step}
+                    </span>
+                  </div>
+                  <h3 className="text-[18px] font-semibold text-white">{s.title}</h3>
+                  <p className="mt-2 text-[14px] leading-relaxed" style={{ color: "#ABA294" }}>
+                    {s.desc}
+                  </p>
+                  <ul className="mt-4 space-y-1.5">
+                    {s.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-[13px]" style={{ color: "#646367" }}>
+                        <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0" style={{ color: "#314B43" }} />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                  {s.cta && (
+                    <Link
+                      href={s.cta.href}
+                      className="mt-5 inline-flex w-fit items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a6d3b]"
+                      style={{ backgroundColor: "#314B43", color: "#ffffff" }}
+                    >
+                      {s.cta.label} <ArrowRight size={14} />
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
+      {/* ═══════════════════════ WHAT YOU GET ═══════════════════════ */}
+      <section className="border-y border-white/[0.06] py-20" style={{ backgroundColor: "#0e0e15" }}>
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 max-w-2xl">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3" style={{ color: "#8a6d3b" }}>
+              What you get
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Real capabilities wired into the platform — not a static form.
+            </h2>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {OFFERS.map((o) => {
+              const Icon = o.icon;
+              return (
+                <div
+                  key={o.title}
+                  className="flex flex-col rounded-2xl border p-6 transition-colors hover:border-white/[0.14] focus-within:border-white/[0.14]"
+                  style={{ borderColor: "rgba(255,255,255,0.07)", backgroundColor: "#12121a" }}
+                >
+                  <span
+                    className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: "rgba(49,75,67,0.2)", color: "#314B43", border: "1px solid rgba(49,75,67,0.45)" }}
+                  >
+                    <Icon size={18} />
+                  </span>
+                  <h3 className="text-[15px] font-semibold text-white">{o.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed" style={{ color: "#646367" }}>
+                    {o.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════ CLOSING CTA ═══════════════════════ */}
+      <section className="py-24">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl" style={{ backgroundColor: "rgba(49,75,67,0.2)", border: "1px solid rgba(49,75,67,0.45)" }}>
+            <Wallet size={22} style={{ color: "#314B43" }} />
+          </div>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            Ready to bring your properties onto one platform?
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#ABA294" }}>
+            Register your account, connect your ETA token, and set up financing and logistics terms.
+            Most registrations move from first sign-in to live onboarding within a few days.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/register?type=hotel"
+              className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-[14px] font-semibold transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a6d3b]"
+              style={{ backgroundColor: "#314B43", color: "#ffffff" }}
+            >
+              Register your hotel <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-xl border px-8 py-3.5 text-[14px] font-medium transition-colors hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a6d3b]"
+              style={{ borderColor: "rgba(255,255,255,0.12)", color: "#ABA294" }}
+            >
+              Talk to our team
+            </Link>
+          </div>
+
+          <p className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12px]" style={{ color: "#646367" }}>
+            <span className="inline-flex items-center gap-1.5"><MapPin size={13} /> Egypt — hospitality first</span>
+            <span className="inline-flex items-center gap-1.5"><Store size={13} /> Fixed-price vetted catalog</span>
+            <span className="inline-flex items-center gap-1.5"><Clock size={13} /> ETA & FRA audit-ready</span>
+          </p>
         </div>
       </section>
     </main>

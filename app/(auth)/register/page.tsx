@@ -22,6 +22,8 @@ import {
   Home,
   Building,
   Users,
+  Shield,
+  Lock,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
@@ -182,6 +184,22 @@ function RegisterContent() {
             ? "List your products, reach 480+ hotels, get paid in 48 hours via Oliv."
             : "Join Egypt&apos;s leading B2B hospitality procurement platform."}
         </p>
+
+        {/* Trust bar — real compliance badges, brand-colored */}
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border" style={{ borderColor: "#8a6d3b44", background: "rgba(138,109,59,0.10)", color: "#a68b5a" }}>
+            <Shield size={11} /> ETA e-Invoicing
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border" style={{ borderColor: "rgba(49,75,67,0.4)", background: "rgba(49,75,67,0.12)", color: "#6f9c8a" }}>
+            <CheckCircle2 size={11} /> FRA-Regulated
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border" style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.03)", color: "var(--foreground-secondary)" }}>
+            <Lock size={11} /> Secure · AML/KYC
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border" style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.03)", color: "var(--foreground-secondary)" }}>
+            <CreditCard size={11} /> PCI-DSS Payments
+          </span>
+        </div>
       </div>
 
       <div className="rounded-2xl border border-subtle bg-surface-1 p-6 sm:p-8">

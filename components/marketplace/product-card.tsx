@@ -156,7 +156,7 @@ export function ProductCard({
             {stockStatus.label}
           </span>
           {supplierTier === "PREMIER" && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-accent-base/20 text-[#ff7a33] border border-accent-base/30">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-accent-base/20 text-[#a68b5a] border border-accent-base/30">
               Premier
             </span>
           )}

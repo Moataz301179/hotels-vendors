@@ -22,7 +22,7 @@ const STATUS_COLORS: Record<string, string> = {
   IN_TRANSIT: "#06b6d4",
   DELIVERED: "#8b5cf6",
   CANCELLED: "var(--error)",
-  DISPUTED: "#f97316",
+  DISPUTED: "#b07b3e",
 };
 
 export default function AdminReportsPage() {

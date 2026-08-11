@@ -129,7 +129,8 @@ export default function MarketingPage() {
             </div>
 
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground leading-tight mb-4 animate-fade-in-up">
-              {t("hero.headline1")}<br />{t("hero.headline2")}<span className="text-foreground">.</span>
+              {t("hero.headline1")}<br />
+              <span className="text-[#8a6d3b]">{t("hero.headline2")}</span>
             </h1>
 
             <p className="text-base md:text-lg max-w-xl leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: "rgba(var(--hero-text-rgb), 0.8)" }}>
@@ -193,8 +194,8 @@ export default function MarketingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/5">
               <img
-                src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1920&q=80&fm=webp"
-                alt="Hotel procurement platform"
+                src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1920&q=80&fm=webp"
+                alt="Premium hotel lobby and reception"
                 className="w-full h-48 sm:h-64 md:h-80 object-cover object-center"
                 width={1920}
                 height={1080}
@@ -484,7 +485,7 @@ export default function MarketingPage() {
                     <li key={item} className="flex items-start gap-2 text-sm text-foreground" dir={ar ? "rtl" : "ltr"}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange-base)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5" /></svg>{item}</li>
                   ))}
                 </ul>
-                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-orange-base text-surface hover:bg-[#ff9640] transition-colors">
+                <Link href="/marketplace" className="mt-8 font-semibold gap-2 cursor-pointer rounded-lg text-sm px-6 py-3 inline-flex items-center bg-orange-base text-surface hover:bg-[#a68b5a] transition-colors">
                   {t("invo.cta")} <svg className={ar ? "rotate-180" : ""} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </Link>
               </div>

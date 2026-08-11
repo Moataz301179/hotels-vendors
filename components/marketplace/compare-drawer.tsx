@@ -56,7 +56,7 @@ export function CompareDrawer() {
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
                 <div className="flex items-center gap-3">
-                  <Scale className="w-5 h-5 text-[#ff7a33]" />
+                  <Scale className="w-5 h-5 text-[#a68b5a]" />
                   <h2 className="text-lg font-semibold">Product Comparison</h2>
                   <span className="text-sm text-white/40">{items.length} items</span>
                 </div>
@@ -85,7 +85,7 @@ export function CompareDrawer() {
                     {items.map((item) => (
                       <div key={item.id} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-base/15 text-[#ff7a33] border border-accent-base/25">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-base/15 text-[#a68b5a] border border-accent-base/25">
                             {getCategoryById(item.category)?.code || item.category}
                           </span>
                           <button
@@ -97,7 +97,7 @@ export function CompareDrawer() {
                         </div>
                         <Link
                           href={`/marketplace/${item.id}`}
-                          className="text-sm font-medium text-white/90 hover:text-[#ff7a33] transition-colors line-clamp-2 min-h-[2.5rem]"
+                          className="text-sm font-medium text-white/90 hover:text-[#a68b5a] transition-colors line-clamp-2 min-h-[2.5rem]"
                         >
                           {item.name}
                         </Link>

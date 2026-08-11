@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — DESIGN SYSTEM v8 (Reference-Aligned)
-   Orange: var(--accent-base) — Primary / HotelsVendors
-   Orange: #ff7e1a — Fast / INVO / Factoring
-   Purple: #c455ff — AI / Compliance
-   Background: oklch(0.10 0.015 280) / #0c0c12
+   HOTELS VENDORS — DESIGN SYSTEM v8.1 (Brand-Aligned — OLED)
+   Primary accent: Green #314B43 (HotelsVendors brand)
+   Title gold:     #8a6d3b (headings, eyebrows, gold accents)
+   Beige:          #ABA294 (supporting neutrals / straps)
+   Glass grey:     #646367 (glass / chat surfaces)
+   Base:           OLED #0c0c12 (pure dark layer all over)
+   NO ORANGE. NO neon. No decorative gradients.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Background Layers — Dark reference ── */
+  /* ── Background Layers — Pure OLED dark ── */
   --bg-canvas: #0c0c12;
   --bg-surface-1: #12121a;
   --bg-surface-2: #1a1a24;
@@ -39,16 +41,16 @@
   --border-invisible: rgba(255, 255, 255, 0.03);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(245, 135, 10, 0.20);
+  --border-accent: rgba(49, 75, 67, 0.35);
   /* Aliases used by UI primitives (Button, Card, Input, Badge, Separator, Table) */
   --border-default: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.15);
 
-  /* ── Accent Scale (derived from --accent-base orange var(--accent-base)) ── */
+  /* ── Accent Scale (Green #314B43) ── */
   --accent-400: var(--accent-light);
   --accent-500: var(--accent-base);
-  --accent-600: #c76d08;
-  --accent-700: #a35505;
+  --accent-600: #263c34;
+  --accent-700: #1d2f28;
 
   /* ── Glassmorphism tokens ── */
   --glass-bg: rgba(18, 18, 26, 0.45);
@@ -56,27 +58,44 @@
 
   /* ── Role-specific semantic colors ── */
   --role-hotel: var(--accent-base);
-  --role-factoring: var(--purple-base);
+  --role-factoring: var(--gold-base);
   --role-shipping: var(--info);
   --role-admin: var(--accent-base);
 
-  /* ── Primary: Orange (#f5870a) ── */
-  --accent-base: #f5870a;
-  --accent-base-rgb: 245, 135, 10;
-  --accent-light: #f7a23a;
-  --accent-dark: #c76d08;
-  --accent-muted: rgba(245, 135, 10, 0.10);
-  --accent-glow: rgba(245, 135, 10, 0.12);
+  /* ── Primary: Green #314B43 (HotelsVendors) ── */
+  --accent-base: #314B43;
+  --accent-base-rgb: 49, 75, 67;
+  --accent-light: #3a544a;
+  --accent-dark: #263c34;
+  --accent-muted: rgba(49, 75, 67, 0.14);
+  --accent-glow: rgba(49, 75, 67, 0.22);
 
-  /* ── Orange #ff7e1a ── */
-  --orange-base: #ff7e1a;
-  --orange-base-rgb: 255, 126, 26;
-  --orange-light: #ff9640;
-  --orange-dark: #e06800;
-  --orange-muted: rgba(255, 126, 26, 0.10);
-  --orange-glow: rgba(255, 126, 26, 0.12);
+  /* ── Gold #8a6d3b (title / gold accents) ── */
+  --gold-base: #8a6d3b;
+  --gold-base-rgb: 138, 109, 59;
+  --gold-light: #a68b5a;
+  --gold-dark: #6b522b;
+  --gold-muted: rgba(138, 109, 59, 0.12);
+  --gold-glow: rgba(138, 109, 59, 0.20);
 
-  /* ── Purple #c455ff ── */
+  /* ── Beige #ABA294 (supporting neutrals) ── */
+  --beige-base: #ABA294;
+  --beige-base-rgb: 171, 162, 148;
+  --beige-muted: rgba(171, 162, 148, 0.12);
+
+  /* ── Glass grey #646367 (glass / chat) ── */
+  --glass-grey: #646367;
+  --glass-grey-rgb: 100, 99, 103;
+
+  /* Deprecated orange kept as an alias → maps to gold (no orange renders) */
+  --orange-base: #8a6d3b;
+  --orange-base-rgb: 138, 109, 59;
+  --orange-light: #a68b5a;
+  --orange-dark: #6b522b;
+  --orange-muted: rgba(138, 109, 59, 0.10);
+  --orange-glow: rgba(138, 109, 59, 0.12);
+
+  /* ── Purple #c455ff (AI / Compliance) ── */
   --purple-base: #c455ff;
   --purple-base-rgb: 196, 85, 255;
   --purple-light: #d47aff;
@@ -88,25 +107,25 @@
   --error: #EF4444;
   --error-rgb: 239, 68, 68;
   --error-bg: rgba(239, 68, 68, 0.10);
-  --success: #22c55e;
-  --success-rgb: 34, 197, 94;
-  --success-bg: rgba(34, 197, 94, 0.10);
-  --warning: #f59e0b;
-  --warning-rgb: 245, 158, 11;
-  --warning-bg: rgba(245, 158, 11, 0.10);
-  --info: #64b5f6;
-  --info-rgb: 100, 181, 246;
-  --info-bg: rgba(100, 181, 246, 0.10);
-  --accent-bg: rgba(245, 135, 10, 0.10);
+  --success: #3f8f6b;
+  --success-rgb: 63, 143, 107;
+  --success-bg: rgba(63, 143, 107, 0.12);
+  --warning: #b8860b;
+  --warning-rgb: 184, 134, 11;
+  --warning-bg: rgba(184, 134, 11, 0.10);
+  --info: #6495b6;
+  --info-rgb: 100, 149, 182;
+  --info-bg: rgba(100, 149, 182, 0.10);
+  --accent-bg: rgba(49, 75, 67, 0.14);
 
   /* ── Shadows ── */
   --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-green: 0 0 40px rgba(245, 135, 10, 0.08);
-  --shadow-glow-orange: 0 0 40px rgba(255, 126, 26, 0.08);
-  --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.08);
+  --shadow-glow-green: 0 0 40px rgba(49, 75, 67, 0.18);
+  --shadow-glow-orange: 0 0 40px rgba(138, 109, 59, 0.12);
+  --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.12);
   --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
-  /* ── Hero overlays (dark for dark mode) ── */
+  /* ── Hero overlays (dark for dark mode / OLED) ── */
   --hero-overlay-rgb: 12, 12, 18;
   --hero-text-rgb: 255, 255, 255;
 
@@ -178,26 +197,31 @@
   --border-visible: rgba(1, 18, 36, 0.10);
   --border-accent: rgba(42, 8, 140, 0.20);
 
-  /* ── Accent: Deep Purple #2a088c ── */
-  --accent-base: #2a088c;
-  --accent-base-rgb: 42, 8, 140;
-  --accent-light: #3a18a0;
-  --accent-dark: #1a066c;
-  --accent-muted: rgba(42, 8, 140, 0.10);
-  --accent-glow: rgba(42, 8, 140, 0.08);
+  /* ── Accent: Green #314B43 (HotelsVendors brand) ── */
+  --accent-base: #314B43;
+  --accent-base-rgb: 49, 75, 67;
+  --accent-light: #3a544a;
+  --accent-dark: #263c34;
+  --accent-muted: rgba(49, 75, 67, 0.10);
+  --accent-glow: rgba(49, 75, 67, 0.08);
 
-  /* ── Secondary accents (light overrides) ── */
-  --orange-base: #ea580c;
-  --orange-light: #f97316;
-  --orange-dark: #c2410c;
-  --orange-muted: rgba(234, 88, 12, 0.06);
-  --orange-glow: rgba(234, 88, 12, 0.06);
+  /* ── Secondary accents (light overrides — no orange) ── */
+  --orange-base: #8a6d3b;
+  --orange-light: #a68b5a;
+  --orange-dark: #6b522b;
+  --orange-muted: rgba(138, 109, 59, 0.08);
+  --orange-glow: rgba(138, 109, 59, 0.08);
 
-  --purple-base: #2a088c;
-  --purple-light: #3a18a0;
-  --purple-dark: #1a066c;
-  --purple-muted: rgba(42, 8, 140, 0.06);
-  --purple-glow: rgba(42, 8, 140, 0.06);
+  --gold-base: #8a6d3b;
+  --gold-light: #a68b5a;
+  --gold-dark: #6b522b;
+  --gold-muted: rgba(138, 109, 59, 0.08);
+
+  --purple-base: #8a6d3b;
+  --purple-light: #a68b5a;
+  --purple-dark: #6b522b;
+  --purple-muted: rgba(138, 109, 59, 0.06);
+  --purple-glow: rgba(138, 109, 59, 0.06);
 
   /* ── Semantic ── */
   --error: #dc2626;
@@ -229,8 +253,8 @@
   --role-admin: var(--accent-base);
 
   /* ── Secondary accents (light overrides) ── */
-  --orange-base: #ea580c;
-  --orange-base-rgb: 234, 88, 12;
+  --orange-base: #8a6d3b;
+  --orange-base-rgb: 138, 109, 59;
   --purple-base: #2a088c;
   --purple-base-rgb: 42, 8, 140;
 
@@ -320,9 +344,9 @@
   border-color: rgba(42, 8, 140, 0.20);
 }
 [data-theme="light"] .status-warning {
-  background: rgba(234, 88, 12, 0.08);
-  color: #c2410c;
-  border-color: rgba(234, 88, 12, 0.20);
+  background: rgba(138, 109, 59, 0.08);
+  color: #6b522b;
+  border-color: rgba(138, 109, 59, 0.20);
 }
 [data-theme="light"] .status-error {
   background: rgba(220, 38, 38, 0.06);
@@ -419,13 +443,13 @@
 [data-theme="light"] .border-\[\#0c0c12\] { border-color: #a3c6e1 !important; }
 
 /* ── Secondary orange accent → Darker orange for light contrast ── */
-[data-theme="light"] .bg-\[\#ff7e1a\] { background-color: #ea580c !important; }
+[data-theme="light"] .bg-\[\#ff7e1a\] { background-color: #8a6d3b !important; }
 [data-theme="light"] .bg-\[\#ff7e1a\]\/10 { background-color: rgba(234,88,12,0.10) !important; }
-[data-theme="light"] .text-\[\#ff7e1a\] { color: #c2410c !important; }
+[data-theme="light"] .text-\[\#ff7e1a\] { color: #6b522b !important; }
 [data-theme="light"] .border-\[\#ff7e1a\]\/30 { border-color: rgba(234,88,12,0.30) !important; }
 [data-theme="light"] .border-\[\#ff7e1a\]\/20 { border-color: rgba(234,88,12,0.20) !important; }
 [data-theme="light"] .border-\[\#ff7e1a\]\/40 { border-color: rgba(234,88,12,0.40) !important; }
-[data-theme="light"] .hover\:bg-\[\#ff9640\]:hover { background-color: #c2410c !important; }
+[data-theme="light"] .hover\:bg-\[\#ff9640\]:hover { background-color: #6b522b !important; }
 [data-theme="light"] .focus\:border-\[\#ff7e1a\]\/40:focus { border-color: rgba(234,88,12,0.40) !important; }
 [data-theme="light"] .focus\:ring-\[\#ff7e1a\]\/10:focus { --tw-ring-color: rgba(234,88,12,0.10) !important; }
 
@@ -465,7 +489,7 @@
 }
 [data-theme="light"] [style*="color: \"#ff7e1a\""],
 [data-theme="light"] [style*="color: #ff7e1a"] {
-  color: #c2410c !important;
+  color: #6b522b !important;
 }
 [data-theme="light"] [style*="color: \"#c455ff\""],
 [data-theme="light"] [style*="color: #c455ff"] {
@@ -491,7 +515,7 @@
 [data-theme="light"] [style*="background: \"#ff7e1a"],
 [data-theme="light"] [style*="background-color: \"#ff7e1a"],
 [data-theme="light"] [style*="background: #ff7e1a"] {
-  background-color: #ea580c !important;
+  background-color: #8a6d3b !important;
 }
 [data-theme="light"] [style*="background: \"#c455ff"],
 [data-theme="light"] [style*="background-color: \"#c455ff"],

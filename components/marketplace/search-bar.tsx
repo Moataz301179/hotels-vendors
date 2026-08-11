@@ -97,7 +97,7 @@ export function SearchBar({
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`relative p-1.5 rounded-lg transition-colors ${
-              showFilters ? "bg-accent-base/20 text-[#ff7a33]" : "text-white/30 hover:text-white/60"
+              showFilters ? "bg-accent-base/20 text-[#a68b5a]" : "text-white/30 hover:text-white/60"
             }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
@@ -155,7 +155,7 @@ export function SearchBar({
                       <button
                         key={s}
                         onClick={() => handleSuggestionClick(s)}
-                        className="px-2.5 py-1 rounded-lg bg-accent-base/10 border border-accent-base/20 text-xs text-[#ff7a33]/80 hover:text-[#ff7a33] hover:border-accent-base/40 transition-colors"
+                        className="px-2.5 py-1 rounded-lg bg-accent-base/10 border border-accent-base/20 text-xs text-[#a68b5a]/80 hover:text-[#a68b5a] hover:border-accent-base/40 transition-colors"
                       >
                         {s}
                       </button>

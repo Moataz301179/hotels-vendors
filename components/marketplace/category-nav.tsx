@@ -98,7 +98,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                   >
                     <div className="p-3 border-b border-white/[0.06]">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-[#ff7a33]" />
+                        <Icon className="w-4 h-4 text-[#a68b5a]" />
                         <span className="text-sm font-semibold">{cat.label}</span>
                         <span className="text-[10px] text-white/30">{cat.code}</span>
                       </div>

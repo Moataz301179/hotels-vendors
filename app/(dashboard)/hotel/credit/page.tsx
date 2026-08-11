@@ -153,9 +153,9 @@ export default async function HotelCreditPage() {
               width: `${Math.min(utilizationRate, 100)}%`,
               background:
                 utilizationRate > 80
-                  ? "linear-gradient(90deg, var(--error), #f97316)"
+                  ? "linear-gradient(90deg, var(--error), #b07b3e)"
                   : utilizationRate > 50
-                    ? "linear-gradient(90deg, #f97316, #eab308)"
+                    ? "linear-gradient(90deg, #b07b3e, #eab308)"
                     : "linear-gradient(90deg, var(--accent-base), var(--success))",
             }}
           />

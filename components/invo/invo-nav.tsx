@@ -62,7 +62,7 @@ export function InvoNav() {
           </Link>
           <Link
             href="/register"
-            className="text-[13px] py-2 px-5 bg-accent-base text-black font-medium rounded-lg hover:bg-[#f7a23a] transition-colors"
+            className="text-[13px] py-2 px-5 bg-accent-base text-black font-medium rounded-lg hover:bg-[#b8955c] transition-colors"
           >
             Subscribe
           </Link>
@@ -98,7 +98,7 @@ export function InvoNav() {
               </Link>
               <Link
                 href="/register"
-                className="flex-1 text-center py-2.5 text-[13px] font-medium bg-accent-base text-black rounded-lg hover:bg-[#f7a23a] transition-colors"
+                className="flex-1 text-center py-2.5 text-[13px] font-medium bg-accent-base text-black rounded-lg hover:bg-[#b8955c] transition-colors"
               >
                 Subscribe
               </Link>

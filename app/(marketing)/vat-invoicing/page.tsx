@@ -370,7 +370,7 @@ export default function VatInvoicingPage() {
               <span
                 className="text-transparent bg-clip-text"
                 style={{
-                  backgroundImage: "linear-gradient(to right, var(--accent-base), #f97316)",
+                  backgroundImage: "linear-gradient(to right, var(--accent-base), #b07b3e)",
                 }}
               >
                 VAT Invoices in Minutes
@@ -728,7 +728,7 @@ export default function VatInvoicingPage() {
                 className="text-transparent bg-clip-text"
                 style={{
                   backgroundImage:
-                    "linear-gradient(to right, var(--accent-base), #f97316)",
+                    "linear-gradient(to right, var(--accent-base), #b07b3e)",
                 }}
               >
                 ETA-Compliant Invoice
