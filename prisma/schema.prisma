@@ -302,6 +302,7 @@ model PairingCode {
   id        String    @id @default(cuid())
   code      String    @unique
   userId    String
+  tenantId  String?
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime  @default(now())
@@ -309,6 +310,7 @@ model PairingCode {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([tenantId])
   @@index([expiresAt])
 }
 

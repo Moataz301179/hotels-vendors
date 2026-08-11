@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a 3-digit pairing number
-    const code = Math.floor(100 + Math.random() * 900);
+    const code = String(Math.floor(100 + Math.random() * 900));
 
     // Check if this code already exists and is active
     const existingCode = await prisma.pairingCode.findUnique({
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       let newCode = code;
       let attempts = 0;
       while (attempts < 10) {
-        newCode = Math.floor(100 + Math.random() * 900);
+        newCode = String(Math.floor(100 + Math.random() * 900));
         const check = await prisma.pairingCode.findUnique({ where: { code: newCode } });
         if (!check || check.usedAt || check.expiresAt < new Date()) {
           break;
