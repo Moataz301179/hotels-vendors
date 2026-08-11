@@ -6,9 +6,9 @@ import { BaseOnboardingBot } from "./base-onboarding-chatbot";
 const config = {
   icon: Landmark,
   accentVar: "--purple-base" as const,
-  title: "Onboarding Agent",
+  title: "AI Agent",
   subtitle: "Factoring & Finance",
-  tooltip: "Talk to Factoring Onboarding Agent",
+  tooltip: "Talk to our AI Agent",
   initialMessage:
     "Hi! I'm the HotelsVendors AI assistant for factoring companies. Ask me anything about invoice financing, risk scoring, KYC workflows, or partner onboarding.",
 };

@@ -101,14 +101,16 @@ export function BaseOnboardingBot({ config }: { config: BotConfig }) {
           title={config.tooltip}
         >
           <div className="relative">
+            {/* Brand AI Agent bubble — white icon on brand-green #314B43 squircle, gold ring */}
             <div
-              className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
               style={{
-                backgroundColor: `var(${accentVar})`,
-                boxShadow: `0 0 30px rgba(var(${accentVar.replace("--", "")}-rgb),0.3)`,
+                backgroundColor: "#314B43",
+                border: "2px solid #8a6d3b",
+                boxShadow: "0 0 24px rgba(138,109,59,0.35)",
               }}
             >
-              <Icon size={22} className="text-white" />
+              <Icon size={24} className="text-white" strokeWidth={2} />
             </div>
             <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-base border-2 border-[#0c0c12] animate-pulse" />
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-[#12121a] border border-white/10 text-[11px] text-white/60 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">

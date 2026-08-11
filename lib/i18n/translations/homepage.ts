@@ -8,8 +8,8 @@ export const homepage = {
 
     // ── Hero ──
     "hero.badge": "Egypt & MENA — AI-Native B2B Hotel Procurement",
-    "hero.headline1": "Welcome to the AI-Advanced Procurement",
-    "hero.headline2": "B2B Platform for Hospitality",
+    "hero.headline1": "Apply for an Instant Credit Line",
+    "hero.headline2": "Up to EGP 10M for Hospitality Procurement",
     "hero.subtitle": "The only platform in Egypt aggregating all solutions any hotel needs — from procurement and logistics to financing and ETA compliance — solving traditional procurement limitations.",
     "hero.searchPlaceholder": "Search products, suppliers, or SKU code...",
     "hero.search": "Search",

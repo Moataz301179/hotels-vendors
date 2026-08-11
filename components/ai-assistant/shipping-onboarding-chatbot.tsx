@@ -6,9 +6,9 @@ import { BaseOnboardingBot } from "./base-onboarding-chatbot";
 const config = {
   icon: Truck,
   accentVar: "--info" as const,
-  title: "Onboarding Agent",
+  title: "AI Agent",
   subtitle: "Shipping & Logistics",
-  tooltip: "Talk to Shipping Onboarding Agent",
+  tooltip: "Talk to our AI Agent",
   initialMessage:
     "Hi! I'm the HotelsVendors AI assistant for logistics. Ask me anything about fleet onboarding, delivery workflows, route optimization, or platform features.",
 };

@@ -1,16 +1,16 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import { Bot } from "lucide-react";
 import { BaseOnboardingBot } from "./base-onboarding-chatbot";
 
 const config = {
-  icon: MessageCircle,
+  icon: Bot,
   accentVar: "--success" as const,
-  title: "Onboarding Agent",
+  title: "AI Agent",
   subtitle: "Supplier Onboarding",
-  tooltip: "Talk to Supplier Onboarding Agent",
+  tooltip: "Talk to our AI Agent",
   initialMessage:
-    "Hi! I'm the HotelsVendors AI assistant. Ask me anything about the platform, hotel procurement, supplier registration, financing, logistics, or compliance.",
+    "Hi! I'm the HotelsVendors AI Agent. Ask me anything about the platform, hotel procurement, supplier registration, financing, logistics, or compliance.",
 };
 
 export function SupplierOnboardingBot() {
