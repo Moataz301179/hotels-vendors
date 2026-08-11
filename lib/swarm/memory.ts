@@ -5,10 +5,9 @@
  * access is impossible (lookups are always scoped), and unscoped access (missing
  * or empty tenantId) is REJECTED — it never falls back to a shared bucket.
  *
- * This in-memory store backs the agent-control plane at runtime and is the unit
- * under test for tenant isolation. It implements the same API shape used by the
- * hybrid Prisma+Redis hot-cache layer so the control plane can swap in a durable
- * backend without changing callers.
+ * Backs the agent control plane at runtime and is the unit under test for tenant
+ * isolation. Implemented as an in-memory store; callers can swap in a durable
+ * backend (Prisma + Redis hot cache) without changing the public API.
  */
 
 type MemoryValue = Record<string, unknown> | string | number | boolean | null;
@@ -17,6 +16,21 @@ interface MemoryEntry {
   key: string;
   value: MemoryValue;
   createdAt: number;
+}
+
+/** Legacy single-object form (SwarmMemory-model shaped). Requires tenantId. */
+export interface MemoryRecord {
+  tenantId: string;
+  namespace?: string;
+  key?: string;
+  value?: MemoryValue;
+  // SwarmMemory-model fields (legacy callers)
+  agentId?: string;
+  agentName?: string;
+  content?: string;
+  memoryType?: string;
+  category?: string;
+  metadata?: Record<string, unknown> | null;
 }
 
 // storeMap: tenantId -> (namespace -> Map(key -> entry))
@@ -39,22 +53,49 @@ function namespaceFor(tenantId: string): Map<string, Map<string, MemoryEntry>> {
 
 /**
  * Store a value under (tenantId, namespace, key). Throws if tenantId is empty.
+ * Also supports the legacy single-object form (memoryRecord) which requires
+ * `tenantId` and derives namespace/key from category/agentId when not provided.
  */
 export async function storeMemory(
   tenantId: string,
   namespace: string,
   key: string,
   value: MemoryValue
+): Promise<void>;
+export async function storeMemory(record: MemoryRecord): Promise<void>;
+export async function storeMemory(
+  arg1: string | MemoryRecord,
+  namespace?: string,
+  key?: string,
+  value?: MemoryValue
 ): Promise<void> {
-  requireTenantId(tenantId);
-  const tenant = namespaceFor(tenantId);
+  let tenantId: string;
+  let ns: string;
+  let k: string;
+  let v: MemoryValue;
 
-  let ns = tenant.get(namespace);
-  if (!ns) {
-    ns = new Map<string, MemoryEntry>();
-    tenant.set(namespace, ns);
+  if (typeof arg1 === "string") {
+    tenantId = arg1;
+    requireTenantId(tenantId);
+    ns = namespace ?? "default";
+    k = key ?? "";
+    v = value ?? null;
+  } else {
+    const rec = arg1;
+    tenantId = rec.tenantId;
+    requireTenantId(tenantId);
+    ns = rec.namespace || rec.category || "default";
+    k = rec.key || rec.agentId || "record";
+    v = rec.value ?? (rec.content as MemoryValue) ?? null;
   }
-  ns.set(key, { key, value, createdAt: Date.now() });
+
+  const tenant = namespaceFor(tenantId);
+  let bucket = tenant.get(ns);
+  if (!bucket) {
+    bucket = new Map<string, MemoryEntry>();
+    tenant.set(ns, bucket);
+  }
+  bucket.set(k, { key: k, value: v, createdAt: Date.now() });
 }
 
 /**
@@ -68,8 +109,7 @@ export async function retrieveMemory<T = MemoryValue>(
   key: string
 ): Promise<T | null> {
   requireTenantId(tenantId);
-  const tenant = storeMap.get(tenantId);
-  const entry = tenant?.get(namespace)?.get(key);
+  const entry = storeMap.get(tenantId)?.get(namespace)?.get(key);
   if (!entry) return null;
   return entry.value as T;
 }
@@ -83,8 +123,7 @@ export async function listMemory<T = MemoryValue>(
   namespace: string
 ): Promise<Array<{ key: string; value: T }>> {
   requireTenantId(tenantId);
-  const tenant = storeMap.get(tenantId);
-  const ns = tenant?.get(namespace);
+  const ns = storeMap.get(tenantId)?.get(namespace);
   if (!ns) return [];
   return Array.from(ns.values()).map((e) => ({ key: e.key, value: e.value as T }));
 }

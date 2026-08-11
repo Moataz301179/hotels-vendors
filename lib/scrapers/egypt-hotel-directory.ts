@@ -113,6 +113,7 @@ export async function seedKnownHotels(): Promise<number> {
   }
 
   await storeMemory({
+    tenantId: platformTenantId,
     agentId: "lead-scout",
     agentName: "Lead Scout",
     content: `Seeded ${created} known Egyptian hotels into lead pipeline. Total: ${knownHotels.length}`,
