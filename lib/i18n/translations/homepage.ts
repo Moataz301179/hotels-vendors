@@ -113,7 +113,7 @@ export const homepage = {
     "ai.badge": "AI-Powered",
     "ai.title": "Swarm Agents Handle the Complexity",
     "ai.subtitle": "You focus on hospitality. Our AI swarm handles compliance, documentation, vendor matching, spend forecasting, and factoring — automatically.",
-    "ai.onboarding.title": "Onboarding Agent",
+    "ai.onboarding.title": "AI Agent",
     "ai.onboarding.desc": "Guides hotels and vendors through ETA registration and document collection — conversationally.",
     "ai.forecast.title": "Spend Forecast Agent",
     "ai.forecast.desc": "Analyses historical orders to predict future costs and flag budget overruns before they happen.",
