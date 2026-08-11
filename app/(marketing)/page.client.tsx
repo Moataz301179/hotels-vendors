@@ -30,26 +30,60 @@ function useCountUp(end: number, duration = 1600) {
   const started = useRef(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const tick = (now: number) => {
-            const p = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setValue(Math.round(eased * end));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
+    // Robust animation: start on mount (after a tick so the DOM is present) and
+    // ALWAYS settle on the real end value, even if IntersectionObserver never
+    // fires (e.g. reduced-motion, headless, or observer quirks). Serving a stuck
+    // "0+" reads as placeholders — the end value must be guaranteed.
+    let raf = 0;
+    let settled = false;
+    const run = (startNow: number) => {
+      const tick = (now: number) => {
+        const p = Math.min((now - startNow) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setValue(Math.round(eased * end));
+        if (p < 1) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          settled = true;
+          setValue(end);
         }
-      },
-      { threshold: 0.4 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+      };
+      tick(startNow);
+    };
+
+    const startWhenVisible = (entries: IntersectionObserverEntry[]) => {
+      if (entries[0]?.isIntersecting && !started.current) {
+        started.current = true;
+        run(performance.now());
+      }
+    };
+
+    const startTimer = window.setTimeout(() => {
+      // If the observer hasn't kicked in yet, start the animation anyway so the
+      // numbers never remain at 0.
+      if (!started.current) {
+        started.current = true;
+        run(performance.now());
+      }
+    }, 300);
+
+    const el = ref.current;
+    let obs: IntersectionObserver | null = null;
+    if (el && typeof IntersectionObserver !== "undefined") {
+      obs = new IntersectionObserver(startWhenVisible, { threshold: 0.1 });
+      obs.observe(el);
+    }
+
+    const forceSettle = window.setTimeout(() => {
+      if (!settled) setValue(end);
+    }, duration + 400);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(startTimer);
+      window.clearTimeout(forceSettle);
+      obs?.disconnect();
+    };
   }, [end, duration]);
 
   return { value, ref };
