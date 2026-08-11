@@ -9,7 +9,7 @@ import { checkRateLimit } from "@/lib/redis";
 import { sendWhatsApp } from "@/lib/notifications/whatsapp";
 
 export type OtpProvider = "mock" | "twilio" | "whatsapp";
-export type OtpPurpose = "LOGIN" | "REGISTER";
+export type OtpPurpose = "LOGIN" | "REGISTER" | "PASSWORD_RESET" | "MFA";
 
 export interface OtpSendResult {
   provider: OtpProvider;
