@@ -5,9 +5,9 @@ import { getServerSession } from "@/lib/auth/session";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { pairingNumber } = body;
+    const pairingNumber = String(body?.pairingNumber ?? "").trim();
 
-    if (!pairingNumber || typeof pairingNumber !== "number") {
+    if (!pairingNumber) {
       return NextResponse.json({ success: false, error: "Pairing number is required" }, { status: 400 });
     }
 
