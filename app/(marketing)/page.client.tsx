@@ -912,9 +912,9 @@ export default function MarketingPage() {
         </div>
         <div className="grid md:grid-cols-3 gap-6 stagger-children">
           {[
-            { color: "var(--accent-base)", quote: t("testimonials.sophia.quote"), name: t("testimonials.sophia.name"), role: t("testimonials.sophia.role"), initials: "SM" },
-            { color: "var(--orange-base)", quote: t("testimonials.carlos.quote"), name: t("testimonials.carlos.name"), role: t("testimonials.carlos.role"), initials: "CR" },
-            { color: "var(--purple-base)", quote: t("testimonials.aisha.quote"), name: t("testimonials.aisha.name"), role: t("testimonials.aisha.role"), initials: "AN" },
+            { color: "var(--accent-base)", quote: t("testimonials.sophia.quote"), name: t("testimonials.sophia.name"), role: t("testimonials.sophia.role") },
+            { color: "var(--orange-base)", quote: t("testimonials.carlos.quote"), name: t("testimonials.carlos.name"), role: t("testimonials.carlos.role") },
+            { color: "var(--purple-base)", quote: t("testimonials.aisha.quote"), name: t("testimonials.aisha.name"), role: t("testimonials.aisha.role") },
           ].map((item) => (
             <div key={item.name} className="animate-on-scroll">
               <div
@@ -923,15 +923,12 @@ export default function MarketingPage() {
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px 2px ${item.color}30, inset 0 0 20px 0px ${item.color}08`; e.currentTarget.style.borderColor = `${item.color}88`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = `${item.color}33`; }}
               >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill={item.color} stroke={item.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
-                  ))}
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center border mb-4" style={{ background: `${item.color}15`, borderColor: `${item.color}44`, color: item.color }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                 </div>
-                <p className="text-sm text-foreground-secondary leading-relaxed flex-1 mb-5">&quot;{item.quote}&quot;</p>
+                <p className="text-sm text-foreground-secondary leading-relaxed flex-1 mb-5">{item.quote}</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold border" style={{ background: `${item.color}15`, borderColor: `${item.color}44`, color: item.color }}>{item.initials}</div>
-                   <div><div className="font-semibold text-sm text-foreground">{item.name}</div><div className="text-xs text-foreground-secondary">{item.role}</div></div>
+                  <div><div className="font-semibold text-sm text-foreground">{item.name}</div><div className="text-xs text-foreground-secondary">{item.role}</div></div>
                 </div>
               </div>
             </div>
