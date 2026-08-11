@@ -23,7 +23,6 @@ import {
   Building,
   Users,
   Shield,
-  Lock,
 } from "lucide-react";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
