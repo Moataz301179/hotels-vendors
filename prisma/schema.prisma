@@ -2471,6 +2471,7 @@ enum UserRole {
   DEPARTMENT_HEAD
   CLERK
   RECEIVING_CLERK
+  LOGISTICS_COORDINATOR
 }
 
 enum PlatformRole {
@@ -2486,6 +2487,7 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+  PENDING_VERIFICATION
 }
 
 enum UserSector {
@@ -3055,6 +3057,7 @@ enum NotificationType {
   OLIV_STATUS
   KYC_REQUIRED
   SYSTEM
+  SUPPORT_TICKET
 }
 
 enum PaymentTermsCode {
