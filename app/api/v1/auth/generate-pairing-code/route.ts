@@ -10,13 +10,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    // Generate a 3-digit pairing number (DB stores as Int; API returns as string)
+    // Generate a 3-digit pairing number
     const code = String(Math.floor(100 + Math.random() * 900));
-    const codeInt = parseInt(code, 10);
 
     // Check if this code already exists and is active
     const existingCode = await prisma.pairingCode.findUnique({
-      where: { code: codeInt },
+      where: { code },
     });
 
     if (existingCode && !existingCode.usedAt && existingCode.expiresAt > new Date()) {
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
       let attempts = 0;
       while (attempts < 10) {
         newCode = String(Math.floor(100 + Math.random() * 900));
-        const check = await prisma.pairingCode.findUnique({ where: { code: parseInt(newCode, 10) } });
+        const check = await prisma.pairingCode.findUnique({ where: { code: newCode } });
         if (!check || check.usedAt || check.expiresAt < new Date()) {
           break;
         }
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
     // Create new pairing code (expires in 5 minutes)
     const pairingCode = await prisma.pairingCode.create({
       data: {
-        code: codeInt,
+        code,
         userId: session.user.id,
         tenantId: session.user.tenantId || "",
         expiresAt: new Date(Date.now() + 5 * 60 * 1000),
