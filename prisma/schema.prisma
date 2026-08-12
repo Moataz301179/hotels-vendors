@@ -912,7 +912,7 @@ model LogisticsHub {
 model Trip {
   id                 String              @id @default(cuid())
   tripNumber         String              @unique
-  hubId              String
+  hubId              String?
   driverName         String?
   driverPhone        String?
   vehiclePlate       String?
