@@ -6,14 +6,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const pairingNumber = String(body?.pairingNumber ?? "").trim();
+    const pairingNumberInt = parseInt(pairingNumber, 10);
 
     if (!pairingNumber) {
       return NextResponse.json({ success: false, error: "Pairing number is required" }, { status: 400 });
     }
 
-    // Find the pairing code in the database
+    // Find the pairing code in the database (DB stores code as Int)
     const pairingCode = await prisma.pairingCode.findUnique({
-      where: { code: pairingNumber },
+      where: { code: pairingNumberInt },
       include: { user: true },
     });
 
