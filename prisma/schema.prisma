@@ -927,7 +927,7 @@ model Trip {
   uuid               String?             @unique(map: "Trip_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   deletedAt          DateTime?
   consolidatedOrders ConsolidatedOrder[]
-  hub                LogisticsHub        @relation(fields: [hubId], references: [id])
+  hub                LogisticsHub?        @relation(fields: [hubId], references: [id])
   tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   stops              TripStop[]
 
