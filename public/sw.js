@@ -9,11 +9,7 @@
  * cache bucket the old SW ever created, and (2) unregisters itself so no future
  * service worker intercepts requests. The page is then served entirely by the
  * network — always fresh — which is the correct behavior for this app.
- *
- * Bump VERSION on any re-deploy to force the browser to pick up this script.
  */
-
-const VERSION = "hv-retire-v1";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
