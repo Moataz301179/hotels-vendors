@@ -231,6 +231,7 @@ model User {
   status                 UserStatus               @default(ACTIVE)
   sector                 UserSector?
   passwordHash           String?
+  refreshTokenHash       String?
   platformRole           PlatformRole             @default(HOTEL)
   tenantId               String
   roleId                 String
@@ -429,6 +430,12 @@ model Product {
   uuid               String?              @unique(map: "Product_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   deletedAt          DateTime?
   unitPrice          Decimal?             @db.Decimal(12, 2)
+  basePrice          Decimal?             @db.Decimal(12, 2)
+  pricingMode        PricingMode          @default(FIXED)
+  rfqThresholdQty    Int?
+  source             ProductSource        @default(FIXTURE)
+  sourceProvider     String?
+  sourceKey          String?
   cartItems          CartItem[]
   inventorySnapshots InventorySnapshot[]
   orderItems         OrderItem[]
@@ -3611,4 +3618,18 @@ enum SupportTicketStatus {
   IN_PROGRESS
   RESOLVED
   CLOSED
+}
+
+enum PricingMode {
+  FIXED
+  RFQ
+  HYBRID
+}
+
+enum ProductSource {
+  FIXTURE
+  SUPPLIER_SYNC
+  ECOMMERCE
+  DROPSHIP
+  MANUAL
 }
