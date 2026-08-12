@@ -18,7 +18,7 @@ export const POST = apiRoute(
       include: { stops: true },
     });
 
-    if (!trip) {
+    if (!trip || !trip.hubId) {
       return success(null);
     }
 
