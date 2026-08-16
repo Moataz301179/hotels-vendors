@@ -27,7 +27,7 @@ const MODULES = [
       { label: "Finance & Liquidity", desc: "Credit facilities, factoring pipeline & PO-ETA reconciliation", icon: Wallet, to: "/factoring", color: "#f59e0b" },
       { label: "Shipment Tracking", desc: "Live logistics map, delay alerts & damage reports", icon: Truck, to: "/shipping", color: "#ef4444" },
       { label: "ETA Compliance", desc: "E-invoicing status, submission deadlines & penalty tracking", icon: ShieldCheck, to: "/eta", color: "#ec4899" },
-      { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "#39ff7e" },
+      { label: "Accounting & Revenue", desc: "Platform fees, commissions, P&L tracking & financial reports", icon: Wallet, to: "/admin/accounting", color: "#c8a36f" },
     ],
   },
   {
@@ -36,14 +36,14 @@ const MODULES = [
       { label: "Data Explorer", desc: "Cross-tenant search across users, suppliers, hotels, orders & products", icon: Search, to: "/admin/explorer", color: "#6366f1" },
       { label: "AI Insights", desc: "Anomaly detection, trend analysis & strategic recommendations", icon: Brain, to: "/admin/ai-insights", color: "#14b8a6" },
       { label: "Reports", desc: "Platform-wide analytics, GMV tracking & KPI dashboards", icon: PieChart, to: "/admin/reports", color: "#8b5cf6" },
-      { label: "Analytics & Insights", desc: "User metrics, order analytics, revenue trends & growth KPIs", icon: BarChart3, to: "/admin/analytics", color: "#c455ff" },
+      { label: "Analytics & Insights", desc: "User metrics, order analytics, revenue trends & growth KPIs", icon: BarChart3, to: "/admin/analytics", color: "#a28cb4" },
     ],
   },
   {
     group: "Platform Management",
     items: [
       { label: "Credentials & Secrets", desc: "API keys, webhook secrets, .env config & Oliv/ETA credentials", icon: ShieldCheck, to: "/admin/credentials", color: "#f59e0b" },
-      { label: "AI Assistant", desc: "Generative suggestions for improvements, growth & enhancements", icon: Brain, to: "/admin/ai-assistant", color: "#c455ff" },
+      { label: "AI Assistant", desc: "Generative suggestions for improvements, growth & enhancements", icon: Brain, to: "/admin/ai-assistant", color: "#a28cb4" },
       { label: "User Management", desc: "Users, roles, permissions & tenant administration", icon: Users, to: "/admin/users", color: "#3b82f6" },
       { label: "Logs & Audit", desc: "System logs, security events & compliance audit trail", icon: Activity, to: "/admin/logs", color: "#ef4444" },
     ],
@@ -165,133 +165,134 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="border-b border-white/[0.06] mb-8">
-        <div className="py-6 flex items-center justify-between">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-slate-900">
+      <div className="mb-8 rounded-[28px] border border-slate-200 bg-white/90 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6">
+        <div className="mb-3">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-base)]" />
+            Platform Command Fabric
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-[24px] font-bold tracking-tight text-white">Command Center</h1>
-            <p className="text-[13px] text-white/40 mt-1">Enterprise admin dashboard — all portals, all data, AI-powered</p>
+            <h1 className="text-[24px] font-bold tracking-tight text-slate-900 sm:text-[30px]">Command Center</h1>
+            <p className="mt-1 text-[13px] text-slate-500">Enterprise admin dashboard — all portals, all data, AI-powered</p>
           </div>
           <div className="flex items-center gap-3">
             <button
-              className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+              className="relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-700"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="h-5 w-5" />
               {pulse && pulse.pendingApprovals > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent-base" />
+                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[var(--accent-base)]" />
               )}
             </button>
             <Link
               href="/admin/settings"
-              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-700"
               aria-label="Settings"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Portal Switcher */}
       <div className="mb-8">
-        <h2 className="text-[12px] font-semibold text-white/30 uppercase tracking-wider mb-3">Access Any Portal</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <h2 className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-slate-500">Access Any Portal</h2>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {PORTAL_SWITCHER.map((portal) => {
             const Icon = portal.icon;
             return (
               <Link
                 key={portal.label}
                 href={portal.to}
-                className="flex items-center gap-3 p-4 rounded-xl border border-white/[0.06] bg-[#0f0f0f] hover:border-white/[0.12] hover:bg-white/[0.02] transition-all group"
+                className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_24px_rgba(15,23,42,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-300"
               >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: portal.bg }}>
-                  <Icon className="w-5 h-5" style={{ color: portal.color }} />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: portal.bg }}>
+                  <Icon className="h-5 w-5" style={{ color: portal.color }} />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{portal.label}</p>
-                  <p className="text-[12px] text-white/30">{portal.desc}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-slate-800 transition-colors">{portal.label}</p>
+                  <p className="text-[12px] text-slate-500">{portal.desc}</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-white/10 group-hover:text-white/30 ml-auto transition-colors" />
+                <ArrowRight className="ml-auto h-4 w-4 text-slate-300 transition-colors group-hover:text-slate-500" />
               </Link>
             );
           })}
         </div>
       </div>
 
-      {/* Quick Stats */}
       {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] animate-pulse">
-              <div className="h-8 bg-white/5 rounded w-16 mb-2" />
-              <div className="h-3 bg-white/5 rounded w-24" />
+            <div key={i} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5">
+              <div className="mb-2 h-8 w-16 rounded bg-slate-200" />
+              <div className="h-3 w-24 rounded bg-slate-200" />
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">{error}</div>
+        <div className="mb-8 rounded-xl border border-red-200 bg-red-50 p-4 text-[13px] text-red-600">{error}</div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {stats.map((stat) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06]"
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_24px_rgba(15,23,42,0.03)]"
             >
               <div className="text-[28px] font-bold" style={{ color: stat.color }}>
                 {stat.value.toLocaleString()}
               </div>
-              <div className="text-[12px] text-white/40 mt-1">{stat.label}</div>
+              <div className="mt-1 text-[12px] text-slate-500">{stat.label}</div>
             </motion.div>
           ))}
         </div>
       )}
 
-      {/* Two Column: Activity + GMV */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Activity Feed */}
-        <div className="lg:col-span-2 rounded-xl border border-white/[0.06] bg-[#0f0f0f]">
-          <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+          <div className="flex items-center justify-between border-b border-slate-200 p-5">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#ff6b6b]" />
-              <h2 className="text-sm font-semibold text-white/80">Live Activity Feed</h2>
+              <Activity className="h-4 w-4 text-rose-500" />
+              <h2 className="text-sm font-semibold text-slate-700">Live Activity Feed</h2>
             </div>
-            <Link href="/admin/explorer" className="text-[12px] text-white/30 hover:text-white/60 transition-colors">
+            <Link href="/admin/explorer" className="text-[12px] text-slate-500 transition-colors hover:text-slate-700">
               View All →
             </Link>
           </div>
-          <div className="divide-y divide-white/[0.04]">
+          <div className="divide-y divide-slate-200">
             {actLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="p-4 animate-pulse">
-                  <div className="h-3 bg-white/5 rounded w-1/3 mb-2" />
-                  <div className="h-2 bg-white/5 rounded w-2/3" />
+                  <div className="mb-2 h-3 w-1/3 rounded bg-slate-200" />
+                  <div className="h-2 w-2/3 rounded bg-slate-200" />
                 </div>
               ))
             ) : activity.length === 0 ? (
-              <div className="p-8 text-center text-white/20 text-sm">No recent activity</div>
+              <div className="p-8 text-center text-sm text-slate-400">No recent activity</div>
             ) : (
               activity.map((item) => (
-                <div key={item.id} className="p-4 hover:bg-white/[0.01] transition-colors flex items-start gap-3">
-                  <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.06] mt-0.5">
+                <div key={item.id} className="flex items-start gap-3 p-4 transition-colors hover:bg-slate-50">
+                  <div className="mt-0.5 rounded-md border border-slate-200 bg-slate-50 p-1.5">
                     {typeIcon(item.type)}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-sm font-medium text-white/70">{item.title}</span>
-                      <span className="text-[11px] text-white/20">{formatTimeAgo(item.timestamp)}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-0.5 flex items-center gap-2">
+                      <span className="text-sm font-medium text-slate-700">{item.title}</span>
+                      <span className="text-[11px] text-slate-400">{formatTimeAgo(item.timestamp)}</span>
                     </div>
-                    <p className="text-xs text-white/30">{item.description}</p>
+                    <p className="text-xs text-slate-500">{item.description}</p>
                   </div>
                   {item.amount && (
-                    <span className="text-xs font-medium text-white/40 whitespace-nowrap">
+                    <span className="whitespace-nowrap text-xs font-medium text-slate-500">
                       {item.amount.toLocaleString()} {item.currency || "EGP"}
                     </span>
                   )}
-                  <span className={`text-[11px] px-1.5 py-0.5 rounded border ${statusColor(item.status)}`}>
+                  <span className={`rounded border px-1.5 py-0.5 text-[11px] ${statusColor(item.status)}`}>
                     {item.status}
                   </span>
                 </div>
@@ -300,31 +301,28 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Right Column: GMV + Quick Links */}
         <div className="space-y-6">
-          {/* GMV Card */}
           {pulse && (
-            <div className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
-              <p className="text-[12px] text-white/40 uppercase tracking-wider">Last 30 Days GMV</p>
-              <p className="text-[28px] font-bold text-white mt-2">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+              <p className="text-[12px] uppercase tracking-wider text-slate-500">Last 30 Days GMV</p>
+              <p className="mt-2 text-[28px] font-bold text-slate-900">
                 EGP {pulse.monthlySpend.toLocaleString()}
               </p>
-              <div className="flex items-center gap-1 mt-1">
-                <TrendingUp className="w-3 h-3 text-emerald-400" />
-                <span className="text-xs text-emerald-400">{pulse.recentOrders} orders</span>
+              <div className="mt-1 flex items-center gap-1">
+                <TrendingUp className="h-3 w-3 text-emerald-500" />
+                <span className="text-xs text-emerald-600">{pulse.recentOrders} orders</span>
               </div>
               <Link
                 href="/admin/reports"
-                className="mt-4 block text-center px-4 py-2 bg-white/[0.04] border border-white/[0.08] text-white/60 text-[12px] font-medium rounded-lg hover:bg-white/[0.08] transition-colors"
+                className="mt-4 block rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-center text-[12px] font-medium text-slate-700 transition-colors hover:bg-slate-100"
               >
                 View Full Reports
               </Link>
             </div>
           )}
 
-          {/* Quick Links */}
-          <div className="p-5 rounded-xl bg-[#0f0f0f] border border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-white/60 mb-3">Quick Actions</h3>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+            <h3 className="mb-3 text-sm font-semibold text-slate-700">Quick Actions</h3>
             <div className="space-y-2">
               {[
                 { label: "Data Explorer", to: "/admin/explorer", icon: Search },
@@ -337,11 +335,11 @@ export default function AdminDashboardPage() {
                   <Link
                     key={link.label}
                     href={link.to}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] transition-colors group"
+                    className="group flex items-center gap-3 rounded-lg p-2.5 transition-colors hover:bg-slate-50"
                   >
-                    <Icon className="w-4 h-4 text-white/30 group-hover:text-white/50" />
-                    <span className="text-sm text-white/50 group-hover:text-white/70 transition-colors">{link.label}</span>
-                    <ArrowRight className="w-3 h-3 text-white/10 group-hover:text-white/30 ml-auto transition-colors" />
+                    <Icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700" />
+                    <span className="text-sm text-slate-600 transition-colors group-hover:text-slate-800">{link.label}</span>
+                    <ArrowRight className="ml-auto h-3 w-3 text-slate-300 transition-colors group-hover:text-slate-500" />
                   </Link>
                 );
               })}
@@ -350,14 +348,13 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Module Groups */}
       <div className="space-y-10">
         {MODULES.map((group, gi) => (
           <div key={group.group}>
-            <h2 className="text-[14px] font-semibold text-white/50 uppercase tracking-wider mb-4">
+            <h2 className="mb-4 text-[14px] font-semibold uppercase tracking-wider text-slate-500">
               {group.group}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {group.items.map((item, ii) => (
                 <motion.div
                   key={item.label}
@@ -367,19 +364,19 @@ export default function AdminDashboardPage() {
                 >
                   <Link
                     href={item.to}
-                    className="group block p-5 rounded-2xl bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all h-full"
+                    className="group block h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_24px_rgba(15,23,42,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-300"
                   >
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                      className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
                       style={{ backgroundColor: `${item.color}15` }}
                     >
-                      <item.icon className="w-5 h-5" style={{ color: item.color }} />
+                      <item.icon className="h-5 w-5" style={{ color: item.color }} />
                     </div>
-                    <h3 className="text-[14px] font-semibold text-white mb-1.5 flex items-center gap-2">
+                    <h3 className="mb-1.5 flex items-center gap-2 text-[14px] font-semibold text-slate-800">
                       {item.label}
-                      <ArrowRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
+                      <ArrowRight className="h-3.5 w-3.5 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-slate-500" />
                     </h3>
-                    <p className="text-[12px] text-white/30 leading-relaxed">{item.desc}</p>
+                    <p className="text-[12px] leading-relaxed text-slate-500">{item.desc}</p>
                   </Link>
                 </motion.div>
               ))}

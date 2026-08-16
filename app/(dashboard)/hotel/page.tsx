@@ -9,19 +9,24 @@ export default function HotelDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between rounded-[28px] border border-slate-200 bg-white/90 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <div className="mb-2 inline-flex">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-700">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-base)]" />
+              Hotel Procurement Node
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-[30px]">
             Hotel Procurement Portal
           </h1>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="mt-1 text-sm text-slate-500">
             Track spend, manage orders, and monitor inventory across all properties
           </p>
         </div>
         <button
           onClick={() => setCheckoutOpen(true)}
-          className="px-5 py-2.5 rounded-xl bg-[#39ff7e] text-[#07090f] text-sm font-medium hover:bg-[#39ff7e]/90 transition-colors"
+          className="rounded-xl bg-[var(--accent-base)] px-5 py-2.5 text-sm font-medium text-[#1a140f] transition-colors hover:opacity-90"
         >
           Immediate Checkout
         </button>

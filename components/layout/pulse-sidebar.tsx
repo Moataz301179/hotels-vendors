@@ -215,19 +215,20 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
 
   if (collapsed) {
     return (
-      <div className="h-full flex flex-col items-center py-4 border-r border-white/[0.06] bg-[#12121a]">
-        <Link href="/" className="mb-4 p-1.5 rounded-lg hover:bg-white/[0.05] transition-colors">
-          <BrandLogo variant="dark" size="md" showText={false} />
+      <div className="h-full flex flex-col items-center border-r border-slate-200 bg-slate-50 py-4">
+        <Link href="/" className="mb-4 rounded-lg p-1.5 transition-colors hover:bg-slate-200">
+          <BrandLogo variant="light" size="md" showText={false} />
         </Link>
+        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-600">HV</span>
         <button
           onClick={onToggle}
-          className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.05] text-white/30 hover:text-white transition-colors"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2.5 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
           aria-label={isMobile ? "Close menu" : "Expand sidebar"}
         >
           <ChevronRight size={18} />
         </button>
 
-        <div className="mt-6 flex flex-col gap-1 w-full px-2">
+        <div className="mt-6 flex w-full flex-col gap-1 px-2">
           {navGroups.map((g) =>
             g.items.map((item) => {
               const isActive = pathname === item.href;
@@ -235,15 +236,15 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
+                  className={`relative flex h-10 w-10 items-center justify-center rounded-lg transition-all ${
                     isActive
-                      ? "bg-[#39ff7e]/12 text-white"
-                      : "text-white/30 hover:text-white hover:bg-white/[0.04]"
+                      ? "bg-[var(--accent-base)]/12 text-slate-900"
+                      : "text-slate-500 hover:bg-slate-200 hover:text-slate-800"
                   }`}
                   title={item.label}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 bg-[#39ff7e] rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-r-full bg-[var(--accent-base)]" />
                   )}
                   <item.icon size={18} />
                 </Link>
@@ -252,8 +253,8 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
           )}
         </div>
 
-        <div className="mt-auto flex flex-col gap-1 w-full px-2">
-          <button className="flex items-center justify-center w-10 h-10 rounded-lg text-white/30 hover:text-white hover:bg-white/[0.04] transition-all">
+        <div className="mt-auto flex w-full flex-col gap-1 px-2">
+          <button className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-all hover:bg-slate-200 hover:text-slate-800">
             <Settings size={18} />
           </button>
         </div>
@@ -262,29 +263,34 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-white/[0.06] bg-[#12121a]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 h-14 sm:h-16 border-b border-white/[0.04]">
+    <div className="flex h-full flex-col border-r border-slate-200 bg-slate-50">
+      <div className="flex h-14 items-center justify-between border-b border-slate-200 px-4 sm:h-16">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <BrandLogo variant="dark" size="md" showText={false} />
-          <span className="text-sm font-semibold text-white uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+          <BrandLogo variant="light" size="md" showText={false} />
+          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-800" style={{ fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
             Hotels Vendors
           </span>
         </Link>
         <button
           onClick={onToggle}
-          className="p-1.5 rounded-md hover:bg-white/[0.05] text-white/25 hover:text-white transition-colors"
+          className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
           aria-label={isMobile ? "Close menu" : "Collapse sidebar"}
         >
           {isMobile ? <X size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 
-      {/* Nav */}
+      <div className="px-3 pt-3">
+        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-base)]" />
+          Role Mesh / {role}
+        </span>
+      </div>
+
       <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
         {navGroups.map((group) => (
           <div key={group.section} className="mb-5">
-            <p className="px-3 mb-1.5 text-[12px] font-semibold text-white/20 uppercase tracking-[0.15em]">
+            <p className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               {group.section}
             </p>
             <div className="flex flex-col gap-0.5">
@@ -294,16 +300,16 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
+                    className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
                       isActive
-                        ? "bg-[#39ff7e]/10 text-white font-medium"
-                        : "text-white/40 hover:text-white hover:bg-white/[0.03]"
+                        ? "border border-[var(--accent-base)]/30 bg-[linear-gradient(90deg,rgba(179,138,86,0.14),rgba(255,255,255,0.92))] font-medium text-slate-900"
+                        : "text-slate-600 hover:bg-slate-200 hover:text-slate-800"
                     }`}
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#39ff7e] rounded-r-full shadow-[0_0_8px_rgba(57,255,126,0.3)]" />
+                      <span className="absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-r-full bg-[var(--accent-base)] shadow-[0_0_8px_rgba(179,138,86,0.35)]" />
                     )}
-                    <item.icon size={17} className={isActive ? "text-[#39ff7e]" : ""} />
+                    <item.icon size={17} className={isActive ? "text-[var(--accent-base)]" : "text-slate-500"} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -313,12 +319,11 @@ export function PulseSidebar({ role, collapsed, onToggle, isMobile }: PulseSideb
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="p-3 border-t border-white/[0.04]">
-          <button
-            className="flex items-center gap-3 px-3 py-2 min-h-[44px] rounded-lg text-sm text-white/35 hover:text-white hover:bg-white/[0.03] transition-all w-full"
-            aria-label="Settings"
-          >
+      <div className="border-t border-slate-200 p-3">
+        <button
+          className="flex min-h-[44px] w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 transition-all hover:bg-slate-200 hover:text-slate-800"
+          aria-label="Settings"
+        >
           <Settings size={17} />
           <span>Settings</span>
         </button>

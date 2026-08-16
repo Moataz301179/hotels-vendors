@@ -1,66 +1,53 @@
-import { cn } from "@/lib/utils";
+"use client";
 
 interface BrandLogoProps {
-  className?: string;
-  variant?: "dark" | "light";
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  variant?: "dark" | "light" | "green";
+  size?: "xs" | "sm" | "md" | "lg";
   showText?: boolean;
-  showTagline?: boolean;
+  label?: string;
+  subLabel?: string;
 }
 
-const SIZE_MAP = {
-  xs: { icon: 22, text: 9, tagline: 6 },
-  sm: { icon: 28, text: 11, tagline: 7 },
-  md: { icon: 36, text: 14, tagline: 9 },
-  lg: { icon: 48, text: 18, tagline: 11 },
-  xl: { icon: 64, text: 24, tagline: 14 },
-};
+const sizeMap = { xs: 20, sm: 24, md: 32, lg: 48 };
+const textSizeMap = { xs: "text-[11px]", sm: "text-[13px]", md: "text-[15px]", lg: "text-[20px]" };
 
 export function BrandLogo({
-  className,
-  variant = "light",
+  variant = "dark",
   size = "md",
   showText = true,
-  showTagline = false,
+  label = "HotelsVendors",
+  subLabel,
 }: BrandLogoProps) {
-  const dims = SIZE_MAP[size];
-  const textColor = "#ffffff";
-  const taglineColor = "rgba(255,255,255,0.5)";
+  const px = sizeMap[size];
+  const cls = textSizeMap[size];
+  const iconColor = variant === "green" ? "#39ff7e" : variant === "light" ? "#0f172a" : "#fff";
+  const bgFill = variant === "green" ? "rgba(57,255,126,0.1)" : variant === "light" ? "rgba(15,23,42,0.04)" : "rgba(255,255,255,0.06)";
 
   return (
-    <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
-      <img
-        src="/logo.svg"
-        alt="HotelsVendors"
-        width={dims.icon}
-        height={dims.icon}
-        className="object-contain shrink-0"
-        style={{ width: dims.icon, height: dims.icon }}
-      />
+    <div className="flex items-center gap-2">
+      <svg width={px} height={px} viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect width="48" height="48" rx="10" fill={bgFill} />
+        <path d="M14 16h20v4H14zM14 24h14v4H14zM14 32h8v4H14z" fill={iconColor} opacity="0.9" />
+        <circle cx="36" cy="34" r="6" fill="#39ff7e" opacity="0.8" />
+        <path d="M34 34l1.5 1.5 3-3" stroke="#07090f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
       {showText && (
-        <div className="flex flex-col items-center gap-1 mt-2">
+        <div className="flex flex-col leading-none">
           <span
-            className="font-semibold uppercase whitespace-nowrap"
+            className={`font-semibold ${cls} tracking-wide`}
             style={{
-              fontSize: dims.text,
-              color: textColor,
-              letterSpacing: "0.2em",
-              fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
+              fontFamily: "var(--font-display)",
+              color: variant === "light" ? "#0f172a" : "#fff",
             }}
           >
-            Hotels Vendors
+            {label}
           </span>
-          {showTagline && (
+          {subLabel && (
             <span
-              className="uppercase whitespace-nowrap"
-              style={{
-                fontSize: dims.tagline,
-                color: taglineColor,
-                letterSpacing: "0.25em",
-                fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
-              }}
+              className="mt-0.5 text-[10px] uppercase tracking-[0.22em]"
+              style={{ color: variant === "light" ? "rgba(15,23,42,0.56)" : "rgba(255,255,255,0.30)" }}
             >
-              The Market Changer
+              {subLabel}
             </span>
           )}
         </div>
