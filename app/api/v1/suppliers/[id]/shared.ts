@@ -47,12 +47,12 @@ export async function atomicSupplierStatusUpdate(
 
     await tx.auditLog.create({
       data: {
-        actionType: "UPDATE",
-        entityName: "SUPPLIER",
+        action: newStatus === "ACTIVE" ? "SUPPLIER_APPROVED" : "SUPPLIER_REJECTED",
+        entityType: "SUPPLIER",
         entityId: supplierId,
         actorId,
         tenantId: tenantId,
-        changes: JSON.stringify({ status: newStatus, tier }),
+        afterState: JSON.stringify({ status: newStatus, tier }),
       },
     });
 

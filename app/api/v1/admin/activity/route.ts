@@ -64,11 +64,11 @@ export const GET = apiRoute(async (request: NextRequest) => {
           take: limit,
           select: {
             id: true,
-            entityName: true,
-            actionType: true,
+            entityType: true,
+            action: true,
             actorRole: true,
             createdAt: true,
-            tenantId: true,
+            tenant: { select: { name: true } },
           },
         }),
         prisma.factoringRequest.findMany({
@@ -117,8 +117,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
       ...recentAuditLogs.map((a) => ({
         id: a.id,
         type: "AUDIT" as const,
-        title: `${a.actionType} on ${a.entityName}`,
-        description: `By ${a.actorRole || "system"}`,
+        title: `${a.action} on ${a.entityType}`,
+        description: `By ${a.actorRole || "system"}${a.tenant ? ` — ${a.tenant.name}` : ""}`,
         status: "COMPLETED",
         timestamp: a.createdAt,
       })),

@@ -570,7 +570,7 @@ describe("Phase 2: Status Flow (State Machine)", () => {
     expect(canTransition("APPROVED", "MATURED")).toBe(false);
     expect(canTransition("REJECTED", "APPROVED")).toBe(false);
     expect(canTransition("MATURED", "INITIALIZED")).toBe(false);
-    expect(canTransition("DEFAULTED", "MATURED")).toBe(false);
+    expect(canTransition("DEFAULTED", "SETTLED")).toBe(false);
   });
 
   it.each(TERMINAL_STATUSES)("identifies %s as terminal", (status) => {
@@ -747,7 +747,7 @@ describe("handleOlivWebhook — Phase 2 (String Payload + HMAC)", () => {
 
   it("handles missing signature gracefully", async () => {
     const payload = makeWebhookPayload("FACTORING_STATUS_UPDATE", {}, "test-webhook-secret-32chars-long!");
-    payload.signature = "";
+    delete payload.signature;
     const rawString = JSON.stringify(payload);
 
     const result = await handleOlivWebhook(rawString);

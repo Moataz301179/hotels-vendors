@@ -12,7 +12,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const payload = JSON.parse(body) as FawryCallbackPayload;
 
   // 0. Replay protection — reject duplicate webhook deliveries
-  const eventId = fawryEventId(payload as unknown as Record<string, unknown>);
+  const eventId = fawryEventId(payload);
   const { isReplay } = await checkWebhookReplay("fawry", eventId);
   if (isReplay) {
     return success({ duplicate: true, message: "Webhook already processed" });
@@ -78,12 +78,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
     tenantId: tx.tenantId,
-    entityName: "INVOICE",
+    entityType: "PaymentTransaction",
     entityId: tx.id,
-    actionType: isPaid ? "UPDATE" : "UPDATE",
+    action: isPaid ? "FAWRY_PAYMENT_CONFIRMED" : "FAWRY_PAYMENT_FAILED",
     actorId: "fawry",
     actorRole: "SYSTEM",
-    changes: {
+    afterState: {
       referenceNumber,
       merchantRefNumber,
       orderStatus: payload.orderStatus,

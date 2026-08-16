@@ -72,19 +72,19 @@ export const POST = apiRoute(async (request: NextRequest) => {
       total: item.total,
       valueDifference: 0,
       totalTaxableFees: 0,
-      netTotal: Number(item.total || 0),
+      netTotal: item.total,
       itemsDiscount: 0,
       discount: { amount: 0 },
-      taxableItems: [{ taxType: "T1" as const, amount: Number(item.total || 0) * 0.14, subType: "V001", rate: 14 }],
+      taxableItems: [{ taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 }],
     })),
     totalSalesAmount: invoice.subtotal,
     netAmount: invoice.subtotal,
     taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],
-    totalAmount: Number(invoice.total ?? 0),
+    totalAmount: invoice.total,
   };
 
   try {
-    const result = await etaClient.submitInvoice(payload as unknown as import("@/lib/eta/types").EtaInvoicePayload);
+    const result = await etaClient.submitInvoice(payload);
 
     // Update invoice and populate the order's etaSubmissionId atomically
     await prisma.$transaction(async (tx) => {

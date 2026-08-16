@@ -265,13 +265,13 @@ export async function POST(request: NextRequest) {
       // Audit log
       await tx.auditLog.create({
         data: {
-          actionType: "CREATE",
-          entityName: "USER",
+          action: "DELEGATE_INVITE_SENT",
+          entityType: "USER",
           entityId: delegateUser.id,
           actorId: auth.userId,
           actorRole: auth.platformRole,
           tenantId: payload.tenantId,
-          changes: JSON.stringify({
+          afterState: JSON.stringify({
             inviteeEmail: payload.email || null,
             inviteeWhatsApp: payload.whatsapp || null,
             role: "FINANCIAL_CONTROLLER",

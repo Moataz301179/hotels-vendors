@@ -14,12 +14,12 @@ export const GET = apiRoute(async (request: NextRequest) => {
     orderBy: [{ month: "asc" }],
   });
 
-  const totalSpend = records.reduce((s, r) => s + Number(r.amount || 0), 0);
+  const totalSpend = records.reduce((s, r) => s + r.amount, 0);
   const totalOrders = records.reduce((s, r) => s + r.orderCount, 0);
 
   const byCategory = records.reduce<Record<string, { amount: number; orderCount: number }>>((acc, r) => {
     if (!acc[r.category]) acc[r.category] = { amount: 0, orderCount: 0 };
-    acc[r.category].amount += Number(r.amount || 0);
+    acc[r.category].amount += r.amount;
     acc[r.category].orderCount += r.orderCount;
     return acc;
   }, {});

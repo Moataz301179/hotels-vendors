@@ -102,10 +102,11 @@ export async function POST(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           tenantId: "SYSTEM",
-          entityId: "unknown",
           actorId: "OLIV_CALLBACK",
-          actionType: "UPDATE",
-          changes: {
+          action: "UNAUTHORIZED_RECONCILIATION",
+          resource: "factoring",
+          resourceId: null,
+          details: {
             reason: "Invalid Oliv webhook signature",
             ip: request.headers.get("x-forwarded-for") || "unknown",
             timestamp: new Date().toISOString(),
@@ -130,10 +131,11 @@ export async function POST(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           tenantId: "SYSTEM",
-          entityId: body.etaUuid,
           actorId: "OLIV_CALLBACK",
-          actionType: "UPDATE",
-          changes: {
+          action: "UNAUTHORIZED_RECONCILIATION",
+          resource: "factoring",
+          resourceId: body.etaUuid,
+          details: {
             reason: tokenVerification.error,
             etaUuid: body.etaUuid,
             olivTransactionId: body.olivTransactionId,
@@ -169,10 +171,11 @@ export async function POST(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           tenantId: "SYSTEM",
-          entityId: body.etaUuid,
           actorId: "OLIV_CALLBACK",
-          actionType: "UPDATE",
-          changes: {
+          action: "TAMPERED_ETA_UUID",
+          resource: "factoring",
+          resourceId: body.etaUuid,
+          details: {
             tokenEtaUuid: tokenPayload.etaUuid,
             callbackEtaUuid: body.etaUuid,
             timestamp: new Date().toISOString(),
@@ -233,7 +236,7 @@ export async function POST(request: NextRequest) {
         // Metadata
         processedAt: now,
         callbackTimestamp: now,
-        rawCallback: JSON.stringify(body),
+        rawCallback: body,
       },
     });
 
@@ -241,10 +244,11 @@ export async function POST(request: NextRequest) {
     await prisma.auditLog.create({
       data: {
         tenantId: "SYSTEM",
-        entityId: factoringTx.id,
         actorId: "OLIV_CALLBACK",
-        actionType: "UPDATE",
-        changes: {
+        action: "FACTORIZATION_RECONCILED",
+        resource: "factoring",
+        resourceId: factoringTx.id,
+        details: {
           etaUuid: body.etaUuid,
           olivTransactionId: body.olivTransactionId,
           payoutStatus: body.payoutStatus,
@@ -261,19 +265,16 @@ export async function POST(request: NextRequest) {
     await prisma.ledgerEntry.create({
       data: {
         tenantId: "SYSTEM",
-        entityType: "PLATFORM_FEE",
-        entityId: body.olivTransactionId,
-        entryType: "PLATFORM_FEE",
-        account: "REVENUE",
+        type: "PLATFORM_FEE",
         amount: factoringTx.platformFeeAmount,
         currency: "EGP",
         reference: `OLIV-${body.olivTransactionId}`,
-        metadata: JSON.stringify({
+        description: `Platform fee for ETA ${body.etaUuid}`,
+        metadata: {
           etaUuid: body.etaUuid,
           olivTransactionId: body.olivTransactionId,
           advanceRate: body.advanceRate,
-          description: `Platform fee for ETA ${body.etaUuid}`,
-        }),
+        },
       },
     });
 

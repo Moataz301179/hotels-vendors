@@ -116,13 +116,13 @@ export async function POST(request: NextRequest) {
       // Audit log for lead pipeline tracking
       await tx.auditLog.create({
         data: {
-          actionType: "CREATE",
-          entityName: "USER",
+          action: "LEAD_CAPTURED",
+          entityType: "USER",
           entityId: user.id,
           actorId: "landing-page",
           actorRole: "PUBLIC",
           tenantId: "pending-onboarding",
-          changes: JSON.stringify({
+          afterState: JSON.stringify({
             email: payload.email,
             companyName: payload.companyName,
             sector: payload.sector || null,

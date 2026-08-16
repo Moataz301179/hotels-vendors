@@ -86,9 +86,9 @@ async function getRecentActivity(tenantId: string) {
       take: 20,
       select: {
         id: true,
-        entityName: true,
+        entityType: true,
         entityId: true,
-        actionType: true,
+        action: true,
         actorId: true,
         actorRole: true,
         createdAt: true,
@@ -96,8 +96,8 @@ async function getRecentActivity(tenantId: string) {
     });
     return logs.map((l) => ({
       id: l.id,
-      type: l.entityName,
-      action: l.actionType,
+      type: l.entityType,
+      action: l.action,
       actor: l.actorId || "system",
       role: l.actorRole || "SYSTEM",
       time: l.createdAt.toISOString(),

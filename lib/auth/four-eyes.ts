@@ -26,7 +26,15 @@ export class FourEyesGovernanceGuard {
     const logs = await prisma.auditLog.findMany({
       where: {
         entityId: packageId,
+        entityType: "CONSOLIDATED_INVOICE",
         tenantId,
+        action: {
+          in: [
+            "CONSOLIDATED_INVOICE_ORIGINATED",
+            "CONSOLIDATED_INVOICE_VERIFIED",
+            "CONSOLIDATED_INVOICE_APPROVED",
+          ],
+        },
       },
       orderBy: {
         createdAt: "asc",
@@ -42,10 +50,10 @@ export class FourEyesGovernanceGuard {
 
     // Resolve Originator (Signature A) and Verifier (Signature B)
     const originatorLogs = logs.filter(
-      (l) => l.actorRole === "ORIGINATOR"
+      (l) => l.action === "CONSOLIDATED_INVOICE_ORIGINATED" || l.actorRole === "ORIGINATOR"
     );
     const verifierLogs = logs.filter(
-      (l) => l.actorRole === "VERIFIER"
+      (l) => l.action === "CONSOLIDATED_INVOICE_VERIFIED" || l.actorRole === "VERIFIER"
     );
 
     const firstSigner = originatorLogs[0] || logs[0];

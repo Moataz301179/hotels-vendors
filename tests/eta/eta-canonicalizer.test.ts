@@ -50,7 +50,7 @@ const {
 } = await import("@/lib/eta/canonicalizer");
 
 const {
-  EtaTaxType: _EtaTaxTypeValue,
+  EtaTaxType,
   TAX_CODE_REGISTRY,
   HOSPITALITY_TAX_CODES,
   getTaxCode,
@@ -62,12 +62,12 @@ const {
   getTaxLabel,
 } = await import("@/lib/eta/tax-codes");
 
-type EtaTaxType = import("@/lib/eta/types").EtaTaxType;
-
-type EtaInvoicePayload = import("@/lib/eta/types").EtaInvoicePayload;
-type EtaInvoiceLine = import("@/lib/eta/types").EtaInvoiceLine;
-type EtaTaxpayer = import("@/lib/eta/types").EtaTaxpayer;
-type EtaTaxableItem = import("@/lib/eta/types").EtaTaxableItem;
+const {
+  EtaInvoicePayload,
+  EtaInvoiceLine,
+  EtaTaxpayer,
+  EtaTaxableItem,
+} = await import("@/lib/eta/types");
 
 // ─── Test Fixtures ───────────────────────────────────────────────
 

@@ -24,7 +24,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
 
   if (!invoice) return error("Invoice not found", 404);
 
-  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "INVOICE_FACTOR", amount: Number(invoice.total ?? 0) });
+  const idempotencyKey = await requireIdempotencyKey(request, { userId: auth.userId, action: "INVOICE_FACTOR", amount: invoice.total });
 
   // Validate ETA compliance
   const etaValid = await validateForFactoring(id);
@@ -41,7 +41,7 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     hotelName: invoice.hotel.name,
     hotelRiskScore: risk.compositeScore,
     hotelRiskTier: risk.riskTier,
-    invoiceAmount: Number(invoice.total ?? 0),
+    invoiceAmount: invoice.total,
     invoiceCurrency: "EGP",
     invoiceDueDate: invoice.dueDate || new Date(),
     etaUuid: invoice.etaUuid || "",

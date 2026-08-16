@@ -110,5 +110,5 @@ export const POST = apiRoute(async (request: NextRequest) => {
     tenantId: auth.tenantId,
   });
 
-  return success({ updated: 1, records: Array.isArray(results) ? results : [results] });
+  return success({ updated: results.length, records: results });
 });

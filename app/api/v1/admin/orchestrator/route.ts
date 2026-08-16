@@ -72,7 +72,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   ]);
 
   const [hotelCount, supplierCount, orderCount, productCount, userCount, recentOrders, etaCompliantInvoices, factoringCount] = metrics;
-  const monthlyGmv = recentOrders.reduce((sum, o) => sum + Number(o.total || 0), 0);
+  const monthlyGmv = recentOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
   return NextResponse.json({
     success: true,

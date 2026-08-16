@@ -172,13 +172,14 @@ export async function POST(request: NextRequest) {
   // STEP 9: Write audit log (tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
-    entityName: "INVOICE",
+    entityType: "INVOICE",
     entityId: invoice.id,
-    actionType: "UPDATE",
+    action: "ETA_CALLBACK_PROCESSED",
     tenantId: invoice.tenantId,
     actorId: "system",
     actorRole: "SYSTEM",
-    changes: { etaStatus: newEtaStatus, previousEtaStatus: invoice.etaStatus },
+    beforeState: { etaStatus: invoice.etaStatus },
+    afterState: { etaStatus: newEtaStatus },
   });
 
   return NextResponse.json(

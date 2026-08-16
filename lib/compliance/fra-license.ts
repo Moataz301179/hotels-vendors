@@ -150,18 +150,18 @@ export async function validateFactoringPartner(
 
   // Log the compliance check
   await appendAuditEntry({
-    entityName: "FACTORING_COMPANY",
+    entityType: "FRA_COMPLIANCE_CHECK",
     entityId: partnerId,
-    actionType: "UPDATE",
+    action: "FACTORING_PARTNER_VALIDATED",
     tenantId,
     actorId: triggeredBy,
-    changes: {
+    afterState: JSON.stringify({
       partnerId,
       partnerName: partner.name,
       partnerStatus: partner.status,
       checkType: "FRA_LICENSE_VALIDATION",
       result: "PASSED",
-    },
+    }),
   });
 
   return { valid: true };

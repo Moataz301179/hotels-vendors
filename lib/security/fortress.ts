@@ -248,13 +248,13 @@ export async function triggerAdminLockdown(userId: string, reason: string): Prom
   // 4. Write security audit log (tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
-    entityName: "USER",
+    entityType: "USER",
     entityId: userId,
-    actionType: "UPDATE",
+    action: "SECURITY_LOCKDOWN",
     tenantId: user.tenantId,
     actorId: "SYSTEM",
     actorRole: "SECURITY",
-    changes: { reason, status: "SUSPENDED" },
+    afterState: { reason, status: "SUSPENDED" },
   });
 
   // 5. TODO: Send immediate alert to all admins (email + in-app + SMS)
@@ -301,8 +301,8 @@ async function calculateAnomalyScore(
   };
 
   // Amount deviation
-  const avgAmount = recentOrders.reduce((s, o) => s + Number(o.total ?? 0), 0) / recentOrders.length;
-  const maxAmount = Math.max(...recentOrders.map((o) => Number(o.total ?? 0)));
+  const avgAmount = recentOrders.reduce((s, o) => s + o.total, 0) / recentOrders.length;
+  const maxAmount = Math.max(...recentOrders.map((o) => o.total));
   if (amount > maxAmount * 2) {
     factors.amountDeviation = 1.0;
   } else if (amount > avgAmount * 3) {

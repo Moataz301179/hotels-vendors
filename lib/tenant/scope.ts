@@ -19,12 +19,11 @@ export interface TenantContext {
  * Merge it with any existing where conditions.
  */
 export function tenantWhereClause(
-  ctx: TenantContext | string,
+  ctx: TenantContext,
   additionalWhere?: Record<string, unknown>
 ): Prisma.InputJsonObject {
-  const tenantId = typeof ctx === "string" ? ctx : ctx.tenantId;
   return {
-    tenantId,
+    tenantId: ctx.tenantId,
     ...additionalWhere,
   } as Prisma.InputJsonObject;
 }

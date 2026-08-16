@@ -73,11 +73,9 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
   const handleAdd = () => {
     const resolved = getProductImage(product);
     addItem({
-      id: product.id,
       productId: product.id,
       name: product.name,
       sku: product.sku,
-      price: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
       unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
       supplierId: product.supplierId,
       supplierName: product.supplierName,

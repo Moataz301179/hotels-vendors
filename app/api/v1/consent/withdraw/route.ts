@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 const WithdrawConsentSchema = z.object({
   consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
-    error: () => ({ message: "Invalid consent type. Valid types: OLIV_DATA_SHARING, OLIV_CREDIT_ASSESSMENT" }),
+    error_map: () => ({ message: "Invalid consent type. Valid types: OLIV_DATA_SHARING, OLIV_CREDIT_ASSESSMENT" }),
   }),
   partnerId: z.string().min(1, "Partner ID is required"),
   reason: z.string().max(500).optional(),

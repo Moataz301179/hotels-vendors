@@ -25,14 +25,9 @@ import type {
 
 const ETA_CONFIG: EtaConfig = {
   baseUrl: process.env.ETA_API_URL || "https://api.preprod.invoicing.eta.gov.eg",
-  apiPath: "/documentsubmissions",
   apiVersion: "api/v1",
-  positionId: process.env.ETA_POSITION_ID || "",
-  registrationNumber: process.env.ETA_REGISTRATION_NUMBER || "",
-  privateKey: process.env.ETA_PRIVATE_KEY || "",
   clientId: process.env.ETA_CLIENT_ID || "",
   clientSecret: process.env.ETA_CLIENT_SECRET || "",
-  environment: (process.env.ETA_ENVIRONMENT as "sandbox" | "production") || "sandbox",
   timeoutMs: 30000,
   maxRetries: 3,
   retryDelayMs: 2000,
@@ -59,8 +54,8 @@ async function getAccessToken(): Promise<string> {
   const url = `${ETA_CONFIG.baseUrl}/connect/token`;
   const body = new URLSearchParams({
     grant_type: "client_credentials",
-    client_id: ETA_CONFIG.clientId ?? "",
-    client_secret: ETA_CONFIG.clientSecret ?? "",
+    client_id: ETA_CONFIG.clientId,
+    client_secret: ETA_CONFIG.clientSecret,
   });
 
   const response = await fetchWithRetry(url, {
@@ -89,11 +84,11 @@ async function getAccessToken(): Promise<string> {
 async function fetchWithRetry(
   url: string,
   options: RequestInit,
-  retries = ETA_CONFIG.maxRetries ?? 3
+  retries = ETA_CONFIG.maxRetries
 ): Promise<Response> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), ETA_CONFIG.timeoutMs ?? 30000);
+    const timeoutId = setTimeout(() => controller.abort(), ETA_CONFIG.timeoutMs);
 
     const response = await fetch(url, {
       ...options,
@@ -104,7 +99,7 @@ async function fetchWithRetry(
     return response;
   } catch (error) {
     if (retries > 0) {
-      await delay((ETA_CONFIG.retryDelayMs ?? 2000) * ((ETA_CONFIG.maxRetries ?? 3) - retries + 1));
+      await delay(ETA_CONFIG.retryDelayMs * (ETA_CONFIG.maxRetries - retries + 1));
       return fetchWithRetry(url, options, retries - 1);
     }
     throw error;
@@ -330,7 +325,7 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
     Cancelled: "MANUAL_RESOLUTION",
   };
 
-  const newEtaStatus = etaStatusMap[String(payload.status)] ?? "RETRYING";
+  const newEtaStatus = etaStatusMap[payload.status] ?? "RETRYING";
 
   await prisma.invoice.update({
     where: { id: invoice.id },
@@ -347,13 +342,14 @@ export async function processCallback(payload: EtaCallbackPayload): Promise<void
   // Write audit log (via tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
-    entityName: "INVOICE",
+    entityType: "INVOICE",
     entityId: invoice.id,
-    actionType: "UPDATE",
+    action: "ETA_CALLBACK_PROCESSED",
     tenantId: invoice.tenantId,
     actorId: "system",
     actorRole: "SYSTEM",
-    changes: { etaStatus: newEtaStatus, previousEtaStatus: invoice.etaStatus },
+    beforeState: { etaStatus: invoice.etaStatus },
+    afterState: { etaStatus: newEtaStatus },
   });
 }
 

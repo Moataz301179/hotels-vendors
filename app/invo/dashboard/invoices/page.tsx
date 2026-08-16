@@ -22,7 +22,7 @@ async function getInvoices() {
     const invoices = await prisma.invoice.findMany({
       where: { tenantId },
       include: {
-        factoringRequests: true,
+        factoringRequests: { orderBy: { createdAt: "desc" }, take: 1 },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -144,7 +144,7 @@ export default async function InvoicesPage() {
                     })}
                   </td>
                   <td className="px-4 py-3 text-[13px] text-white/70">
-                    EGP {Number(inv.total ?? 0).toLocaleString()}
+                    EGP {inv.total.toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
                     <PaymentPill status={inv.paymentStatus} />

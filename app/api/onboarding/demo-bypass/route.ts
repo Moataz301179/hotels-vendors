@@ -208,13 +208,13 @@ export async function POST(request: NextRequest) {
       // 5. Create demo audit log entry
       await tx.auditLog.create({
         data: {
-          actionType: "UPDATE",
-          entityName: "TENANT",
+          action: "DEMO_MODE_ACTIVATED",
+          entityType: "TENANT",
           entityId: tenantId,
           actorId: auth.userId,
           actorRole: auth.platformRole,
           tenantId,
-          changes: JSON.stringify({
+          afterState: JSON.stringify({
             status: "ACTIVE_DEMO",
             invoicesSeeded: invoices.length,
             productsSeeded: products.length,

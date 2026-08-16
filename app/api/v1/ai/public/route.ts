@@ -69,14 +69,15 @@ export async function POST(request: NextRequest) {
     const result = await executeLLM(PUBLIC_SYSTEM_PROMPT, sanitization.sanitized, {
       maxTokens: 600,
       temperature: 0.5,
+      preferredModel: "auto",
     });
 
     return Response.json({
       success: true,
       data: {
         answer: result.content,
-        model: result.model ?? "unknown",
-        provider: result.provider ?? "unknown",
+        model: result.model,
+        provider: result.provider,
         remainingQuestions: rateLimit.remaining,
       },
     });

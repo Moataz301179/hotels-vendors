@@ -100,12 +100,12 @@ export async function validateForFactoring(invoiceId: string): Promise<EtaValida
     }
 
     // Amount match check
-    if (Math.abs(Number(etaRecord.total) - Number(invoice.total || 0)) > RULES.AMOUNT_TOLERANCE) {
+    if (Math.abs(etaRecord.total - invoice.total) > RULES.AMOUNT_TOLERANCE) {
       return {
         valid: false,
         code: "ETA_AMOUNT_MISMATCH",
-        message: `Amount mismatch: Platform=${Number(invoice.total || 0).toFixed(2)}, ETA=${Number(etaRecord.total).toFixed(2)}`,
-        details: { platformAmount: Number(invoice.total || 0), etaAmount: Number(etaRecord.total) },
+        message: `Amount mismatch: Platform=${invoice.total.toFixed(2)}, ETA=${etaRecord.total.toFixed(2)}`,
+        details: { platformAmount: invoice.total, etaAmount: etaRecord.total },
       };
     }
 
@@ -129,7 +129,7 @@ export async function validateForFactoring(invoiceId: string): Promise<EtaValida
       valid: true,
       code: "ETA_VALID",
       message: "Invoice is ETA-compliant and eligible for factoring",
-      etaRecord: etaRecord as unknown as Record<string, unknown>,
+      etaRecord,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown ETA API error";
@@ -206,7 +206,7 @@ export async function validateForSubmission(invoiceId: string): Promise<EtaValid
     };
   }
 
-  if (Number(invoice.total || 0) <= 0) {
+  if (invoice.total <= 0) {
     return {
       valid: false,
       code: "ETA_AMOUNT_MISMATCH",

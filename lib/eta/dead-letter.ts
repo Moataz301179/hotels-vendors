@@ -225,20 +225,20 @@ export async function retryDeadLetter(id: string): Promise<{
         total: item.total,
         valueDifference: 0,
         totalTaxableFees: 0,
-        netTotal: Number(item.total || 0),
+        netTotal: item.total,
         itemsDiscount: 0,
         discount: { amount: 0 },
         taxableItems: [
-          { taxType: "T1" as const, amount: Number(item.total || 0) * 0.14, subType: "V001", rate: 14 },
+          { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
         ],
       })),
       totalSalesAmount: invoice.subtotal,
       netAmount: invoice.subtotal,
       taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],
-      totalAmount: Number(invoice.total ?? 0),
+      totalAmount: invoice.total,
     };
 
-    const result = await etaClient.submitInvoice(payload as unknown as import("@/lib/eta/types").EtaInvoicePayload);
+    const result = await etaClient.submitInvoice(payload);
 
     // Success — mark as RESOLVED
     await prisma.etaDeadLetterJob.update({
@@ -266,13 +266,13 @@ export async function retryDeadLetter(id: string): Promise<{
 
     const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
     await appendAuditEntry({
-      entityName: "INVOICE",
+      entityType: "INVOICE",
       entityId: entry.invoiceId,
-      actionType: "UPDATE",
+      action: "ETA_DLQ_RETRY_SUCCESS",
       tenantId: entry.tenantId,
       actorId: "system",
       actorRole: "SYSTEM",
-      changes: { etaUuid: result.uuid, retryAttempt: nextAttempt },
+      afterState: { etaUuid: result.uuid, retryAttempt: nextAttempt },
     });
 
     await recordSwarmEvent("eta_dlq_retry_success", "INFO", {

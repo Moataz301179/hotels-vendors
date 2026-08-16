@@ -14,12 +14,12 @@ import { validateForFactoring } from "@/lib/eta/validator";
 import { assessRisk, generateSmartFixes, type RiskTier, type SmartFix } from "@/lib/fintech/risk-engine";
 import type { HotelTier, SupplierTier, UserRole, OrderStatus } from "@prisma/client";
 
-async function getOrderRequesterRole(requesterId: string): Promise<UserRole | null> {
+async function getOrderRequesterRole(requesterId: string): Promise<string | null> {
   const user = await prisma.user.findUnique({
     where: { id: requesterId },
     select: { role: true },
   });
-  return (user?.role as UserRole) ?? null;
+  return user?.role ?? null;
 }
 
 // ─────────────────────────────────────────
@@ -255,8 +255,8 @@ export async function evaluateAuthority(
         { tenantId: ctx.tenantId },
         { tenantId: null },
       ],
-      minValue: { lte: Number(order.total ?? 0) },
-      maxValue: { gte: Number(order.total ?? 0) },
+      minValue: { lte: order.total },
+      maxValue: { gte: order.total },
     },
     orderBy: { priority: "desc" },
   });
@@ -266,8 +266,6 @@ export async function evaluateAuthority(
   // even if DB rules try to set them to false. This is a non-negotiable governance rule.
   const allRules = mergeRules(BUILT_IN_RULES, dbRules.map(r => ({
     ...r,
-    minValue: Number(r.minValue),
-    maxValue: Number(r.maxValue),
     requiresPaymentGuarantee: true,
     requiresEtaValidation: true,
     requiresDualSignOff: r.requiresDualSignOff ?? false,
@@ -276,7 +274,7 @@ export async function evaluateAuthority(
   // 4. Evaluate each rule in priority order
   for (const rule of allRules) {
     const match = checkRuleMatch(rule, {
-      total: Number(order.total ?? 0),
+      total: order.total,
       hotel: { tier: order.hotel.tier, riskTier: order.hotel.riskTier },
       supplier: { tier: order.supplier.tier },
       requesterRole: order.requesterId ? (await getOrderRequesterRole(order.requesterId)) : null,
@@ -287,7 +285,7 @@ export async function evaluateAuthority(
     if (rule.requiresPaymentGuarantee && !order.paymentGuaranteed) {
       // For HIGH/CRITICAL risk, offer Smart Fixes
       if (riskAssessment.riskTier === "HIGH" || riskAssessment.riskTier === "CRITICAL") {
-        const smartFixes = await generateSmartFixes(orderId, order.hotelId, Number(order.total ?? 0), ctx.tenantId);
+        const smartFixes = await generateSmartFixes(orderId, order.hotelId, order.total, ctx.tenantId);
         return {
           action: "SMART_FIX_REQUIRED",
           rule,
@@ -445,12 +443,12 @@ export async function recordApproval(
   // Audit log (tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
-    entityName: "ORDER",
+    entityType: "ORDER",
     entityId: orderId,
-    actionType: "UPDATE",
+    action: `ORDER_${action}`,
     tenantId,
     actorId: approverId,
-    changes: { status: newStatus, action },
+    afterState: { status: newStatus, action },
   });
 }
 
@@ -516,6 +514,12 @@ export async function adminOverride(
       return { success: false as const, error: "Order not found" as const };
     }
 
+    const beforeState = JSON.stringify({
+      status: order[0].status,
+      paymentGuaranteed: order[0].paymentGuaranteed,
+      paymentGuaranteeMethod: order[0].paymentGuaranteeMethod,
+    });
+
     await tx.order.update({
       where: { id: req.orderId },
       data: {
@@ -545,15 +549,18 @@ export async function adminOverride(
 
     await tx.auditLog.create({
       data: {
-        entityName: "ORDER",
+        entityType: "ORDER",
         entityId: req.orderId,
-        actionType: "UPDATE",
+        action: "ADMIN_OVERRIDE",
         tenantId: req.tenantId,
         actorId: req.authorizerId,
-        changes: {
-          before: { status: order[0].status, paymentGuaranteed: order[0].paymentGuaranteed, paymentGuaranteeMethod: order[0].paymentGuaranteeMethod },
-          after: { status: "APPROVED", paymentGuaranteed: req.waivePaymentGuarantee, waivedBy: `${req.authorizerId}+${req.coAuthorizerId}`, waivedReason: req.reason },
-        },
+        beforeState,
+        afterState: JSON.stringify({
+          status: "APPROVED",
+          paymentGuaranteed: req.waivePaymentGuarantee,
+          waivedBy: `${req.authorizerId}+${req.coAuthorizerId}`,
+          waivedReason: req.reason,
+        }),
       },
     });
 
@@ -615,12 +622,12 @@ export async function setPaymentGuarantee(
   // Audit log (tamper-proof chain)
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
-    entityName: "ORDER",
+    entityType: "ORDER",
     entityId: input.orderId,
-    actionType: "UPDATE",
+    action: "PAYMENT_GUARANTEE_SET",
     tenantId: input.tenantId,
     actorId: input.verifiedBy,
-    changes: {
+    afterState: {
       method: input.method,
       etaValidated: input.etaValidated,
       etaUuid: input.etaUuid,

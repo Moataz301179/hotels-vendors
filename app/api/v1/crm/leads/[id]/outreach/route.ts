@@ -54,6 +54,7 @@ export const POST = apiRoute(async (request: NextRequest, ctx: RouteContext) => 
       recipientPhone: data.recipientPhone,
       sentByAgent: auth.userId,
       agentName: data.agentName || "Manual",
+      tenantId: auth.tenantId,
     },
   });
 

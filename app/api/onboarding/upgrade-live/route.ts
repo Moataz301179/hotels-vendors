@@ -184,13 +184,13 @@ export async function POST(request: NextRequest) {
       // 3g. Audit log (tamper-proof chain)
       const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
       await appendAuditEntry({
-        actionType: "UPDATE",
-        entityName: "TENANT",
+        action: "TENANT_UPGRADED_TO_LIVE",
+        entityType: "TENANT",
         entityId: tenantId,
         actorId: auth.userId,
         actorRole: auth.platformRole,
         tenantId,
-        changes: {
+        afterState: {
           status: "ACTIVE",
           etaEnvironment: credentials.environment,
           taxId: credentials.taxId,

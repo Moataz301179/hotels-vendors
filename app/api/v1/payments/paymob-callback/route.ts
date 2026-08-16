@@ -57,12 +57,13 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
   await appendAuditEntry({
     tenantId: order.tenantId,
-    entityName: "ORDER",
+    entityType: "ORDER",
     entityId: order.id,
-    actionType: "UPDATE",
+    action: "DEPOSIT_PAID",
     actorId: "paymob",
     actorRole: "SYSTEM",
-    changes: {
+    beforeState: { status: order.status },
+    afterState: {
       paymobOrderId,
       amountCents: payload.amount_cents,
       transactionId: payload.id,

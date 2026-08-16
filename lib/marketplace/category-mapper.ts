@@ -93,7 +93,7 @@ export function transformToMarketplaceProduct(
     description: string | null;
     category: ProductCategory;
     subcategory: string | null;
-    unitPrice: number | { valueOf(): number };
+    unitPrice: number;
     currency: string;
     stockQuantity: number;
     minOrderQty: number;
@@ -105,9 +105,8 @@ export function transformToMarketplaceProduct(
     status: string;
     supplierId: string;
     supplier: {
-      id?: string;
       name: string;
-      tier: string | { valueOf(): string };
+      tier: string;
       rating: number | null;
       reviewCount: number | null;
       city: string;
@@ -126,7 +125,7 @@ export function transformToMarketplaceProduct(
     category: toMarketplaceCategory(product.category),
     prismaCategory: product.category,
     subcategory: product.subcategory,
-    unitPrice: Number(product.unitPrice),
+    unitPrice: product.unitPrice,
     currency: product.currency,
     stockQuantity: product.stockQuantity,
     minOrderQty: product.minOrderQty,
@@ -138,7 +137,7 @@ export function transformToMarketplaceProduct(
     status: product.status,
     supplierId: product.supplierId,
     supplierName: product.supplier?.name || "Unknown Supplier",
-    supplierTier: String(product.supplier?.tier ?? "CORE"),
+    supplierTier: product.supplier?.tier || "CORE",
     supplierRating: product.supplier?.rating ?? 4.0,
     supplierReviewCount: product.supplier?.reviewCount ?? 0,
     supplierCity: product.supplier?.city || "Cairo",

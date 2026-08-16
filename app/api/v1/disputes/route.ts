@@ -88,12 +88,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
     action: "DISPUTE_CREATED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
-    afterState: {
+    afterState: JSON.stringify({
       disputeNumber,
       orderId: input.orderId,
       amountDisputed: input.amountDisputed,
       reason: input.reason,
-    },
+    }),
   });
 
   return success(dispute, 201);
