@@ -24,13 +24,14 @@ export function BrandLogo({
   showTagline = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const textColor = "#ffffff";
-  const taglineColor = "rgba(255,255,255,0.5)";
+  const textColor = variant === "dark" ? "#0f172a" : "#ffffff";
+  const taglineColor = variant === "dark" ? "rgba(15,23,42,0.5)" : "rgba(255,255,255,0.5)";
+  const logoSrc = variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
       <img
-        src="/hv-logo-white.svg"
+        src={logoSrc}
         alt="HotelsVendors"
         width={dims.icon}
         height={dims.icon}
