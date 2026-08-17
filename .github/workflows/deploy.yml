@@ -1,3 +1,5 @@
+bash(73213) MallocStackLogging: could not tag MSL-related memory as no_footprint, so those pages will be included in process footprint - No such file or directory (2)
+bash(73214) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
 name: Deploy to Production (PM2)
 
 on:
@@ -55,11 +57,11 @@ jobs:
         run: |
           ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} 'bash -se' << 'EOF' | tee deploy-remote.log
             set -euo pipefail
-            APP_DIR="/var/www/hotelsvendors-v2/hotels-vendors"
+            APP_DIR="/var/www/hotelsvendors-v2"
             APP_NAME="hotels-vendors"
 
             echo "[checkpoint 1/8] Enter app directory"
-            cd "$APP_DIR"
+            cd "/var/www/hotelsvendors-v2"
 
             echo "[checkpoint 2/8] Sync main"
             git fetch origin main
@@ -109,7 +111,7 @@ jobs:
         run: |
           ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} 'bash -se' << 'EOF' > deploy-diagnostics.log
             set -euo pipefail
-            APP_DIR="/var/www/hotelsvendors-v2/hotels-vendors"
+            APP_DIR="/var/www/hotelsvendors-v2"
             APP_NAME="hotels-vendors"
             cd "$APP_DIR"
             echo "=== git status ==="
@@ -134,3 +136,7 @@ jobs:
             deploy-health.json
             deploy-diagnostics.log
           if-no-files-found: warn
+bash(73215) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+bash(73216) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+mktemp(73216) MallocStackLogging: could not tag MSL-related memory as no_footprint, so those pages will be included in process footprint - No such file or directory (2)
+bash(73219) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
