@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 interface DropdownItem {
   href: string;
@@ -16,34 +18,36 @@ interface NavGroup {
   items: DropdownItem[];
 }
 
-const groups: NavGroup[] = [
-  {
-    label: "Products",
-    items: [
-      { href: "/marketplace", label: "Marketplace", desc: "Browse hotel suppliers & catalog" },
-      { href: "/#invo", label: "INVO", desc: "Vendor marketplace sub-layer" },
-      { href: "/compliance", label: "Compliance", desc: "ETA e-invoicing & FRA" },
-    ],
-  },
-  {
-    label: "Financing",
-    items: [
-      { href: "/factoring-service", label: "Invoice Factoring", desc: "Non-recourse invoice financing" },
-      { href: "/financing/oliv", label: "Oliv Financing", desc: "Up to EGP 10M credit line" },
-      { href: "/oliv/referral", label: "Oliv Referral", desc: "Get referred & priority processing" },
-    ],
-  },
-  {
-    label: "Solutions",
-    items: [
-      { href: "/hotels/join", label: "For Hotels", desc: "Procurement & spend management" },
-      { href: "/suppliers/join", label: "For Suppliers", desc: "List products & get paid in 48h" },
-      { href: "/#how", label: "How It Works", desc: "Platform overview & workflow" },
-    ],
-  },
-];
+function getGroups(ar: boolean): NavGroup[] {
+  return [
+    {
+      label: ar ? "المنتجات" : "Products",
+      items: [
+        { href: "/marketplace", label: ar ? "السوق" : "Marketplace", desc: ar ? "تصفح موردي الفنادق والكتالوج" : "Browse hotel suppliers & catalog" },
+        { href: "/#invo", label: "INVO", desc: ar ? "طبقة سوق الموردين" : "Vendor marketplace sub-layer" },
+        { href: "/compliance", label: ar ? "الامتثال" : "Compliance", desc: ar ? "الفوترة الإلكترونية و FRA" : "ETA e-invoicing & FRA" },
+      ],
+    },
+    {
+      label: ar ? "التمويل" : "Financing",
+      items: [
+        { href: "/factoring-service", label: ar ? "تمويل الفواتير" : "Invoice Factoring", desc: ar ? "تمويل فواتير غير ارتجاعي" : "Non-recourse invoice financing" },
+        { href: "/financing/oliv", label: "Oliv " + (ar ? "التمويل" : "Financing"), desc: ar ? "خط ائتمان يصل إلى 10 مليون ج.م" : "Up to EGP 10M credit line" },
+        { href: "/oliv/referral", label: "Oliv " + (ar ? "إحالة" : "Referral"), desc: ar ? "احصل على إحالة ومعالجة أولوية" : "Get referred & priority processing" },
+      ],
+    },
+    {
+      label: ar ? "الحلول" : "Solutions",
+      items: [
+        { href: "/hotels/join", label: ar ? "للفنادق" : "For Hotels", desc: ar ? "المشتريات وإدارة المصروفات" : "Procurement & spend management" },
+        { href: "/suppliers/join", label: ar ? "للموردين" : "For Suppliers", desc: ar ? "اعرض منتجاتك واحصل على أموالك خلال 48 ساعة" : "List products & get paid in 48h" },
+        { href: "/#how", label: ar ? "كيف تعمل" : "How It Works", desc: ar ? "نظرة عامة على المنصة وسير العمل" : "Platform overview & workflow" },
+      ],
+    },
+  ];
+}
 
-function DropdownMenu({ group }: { group: NavGroup }) {
+function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -52,7 +56,7 @@ function DropdownMenu({ group }: { group: NavGroup }) {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button className="flex items-center gap-1 text-sm text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent border-0 font-sans">
+      <button className={`flex items-center gap-1 text-sm text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent border-0 font-sans ${ar ? "font-cairo" : ""}`}>
         {group.label}
         <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -66,7 +70,7 @@ function DropdownMenu({ group }: { group: NavGroup }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex flex-col gap-0.5 px-4 py-2.5 hover:bg-white/[0.04] transition-colors"
+                className={`flex flex-col gap-0.5 px-4 py-2.5 hover:bg-white/[0.04] transition-colors ${ar ? "font-cairo" : ""}`}
               >
                 <span className="text-sm text-white/80">{item.label}</span>
                 {item.desc && (
@@ -83,8 +87,12 @@ function DropdownMenu({ group }: { group: NavGroup }) {
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const { locale } = useLanguage();
+  const ar = locale === "ar";
+  const groups = getGroups(ar);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl">
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 bg-[#0c0c12]/85 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5">
         <BrandLogo variant="dark" size="sm" showText={false} />
         <span className="font-semibold text-white text-[15px] uppercase" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
@@ -95,29 +103,30 @@ export function SiteNav() {
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-7">
         {groups.map((g) => (
-          <DropdownMenu key={g.label} group={g} />
+          <DropdownMenu key={g.label} group={g} ar={ar} />
         ))}
         <Link
           href="/pricing"
           className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer"
         >
-          Pricing
+          {ar ? "الأسعار" : "Pricing"}
         </Link>
       </div>
 
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">
+        <LanguageSwitcher />
         <Link
           href="/login"
           className="text-sm px-4 py-2 text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent font-sans"
         >
-          Sign In
+          {ar ? "تسجيل الدخول" : "Sign In"}
         </Link>
         <Link
           href="/register"
-          className="text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#39ff7e] text-[#07090f]"
+          className={`text-sm px-4 py-2 font-semibold cursor-pointer rounded-md bg-[#39ff7e] text-[#07090f] ${ar ? "font-cairo" : ""}`}
         >
-          Try the Demo
+          {ar ? "جرّب التجربة" : "Try the Demo"}
         </Link>
       </div>
 
@@ -141,34 +150,37 @@ export function SiteNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="text-sm text-white/50 hover:text-white pl-3"
+                  className={`text-sm text-white/50 hover:text-white pl-3 ${ar ? "font-cairo" : ""}`}
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
           ))}
-          <Link
-            href="/pricing"
-            onClick={() => setOpen(false)}
-            className="text-sm text-white/50 hover:text-white"
-          >
-            Pricing
-          </Link>
+          <div className="flex items-center gap-3 px-1">
+            <LanguageSwitcher />
+            <Link
+              href="/pricing"
+              onClick={() => setOpen(false)}
+              className="text-sm text-white/50 hover:text-white"
+            >
+              {ar ? "الأسعار" : "Pricing"}
+            </Link>
+          </div>
           <hr className="border-white/[0.06]" />
           <Link
             href="/login"
             onClick={() => setOpen(false)}
             className="text-sm text-white/50 hover:text-white"
           >
-            Sign In
+            {ar ? "تسجيل الدخول" : "Sign In"}
           </Link>
           <Link
             href="/register"
             onClick={() => setOpen(false)}
-            className="text-sm px-4 py-2 font-semibold rounded-md bg-[#39ff7e] text-[#07090f] text-center"
+            className={`text-sm px-4 py-2 font-semibold rounded-md bg-[#39ff7e] text-[#07090f] text-center ${ar ? "font-cairo" : ""}`}
           >
-            Try the Demo
+            {ar ? "جرّب التجربة" : "Try the Demo"}
           </Link>
         </div>
       )}

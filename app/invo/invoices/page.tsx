@@ -4,12 +4,12 @@ import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { FileText, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
-const BG_CARD = "#1a1e23";
-const BORDER = "rgba(60,64,67,0.50)";
+const BG_CARD = "var(--bg-surface-1)";
+const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#84cc16";
+const ACCENT_LIME = "#39ff7e";
 
 export default async function InvoicesPage() {
   const supabase = await createClient();
@@ -75,7 +75,7 @@ export default async function InvoicesPage() {
                     key={inv.id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(132,204,22,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(57,255,126,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
                     <td className="px-5 py-3 font-mono text-[11px]" style={{ color: ACCENT_LIME }}>

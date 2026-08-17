@@ -232,7 +232,7 @@ async function _mockCreateCharge(request: Omit<FawryChargeRequest, "signature">)
   await _simulateLatency(300);
   return {
     type: "ChargeResponse",
-    referenceNumber: `FAWRY-${Date.now()}`,
+    referenceNumber: `FAWRY-${crypto.randomUUID()}`,
     merchantRefNumber: request.merchantRefNum,
     expirationTime: Date.now() + 24 * 60 * 60 * 1000,
     statusCode: 200,
@@ -263,7 +263,7 @@ async function _mockStatus(merchantRefNum: string): Promise<FawryStatusResponse>
   await _simulateLatency(150);
   return {
     type: "PaymentStatusResponse",
-    referenceNumber: `FAWRY-${Date.now()}`,
+    referenceNumber: `FAWRY-${crypto.randomUUID()}`,
     merchantRefNumber: merchantRefNum,
     paymentAmount: 10000,
     paymentMethod: "PayAtFawry",

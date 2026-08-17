@@ -302,7 +302,7 @@ export async function handleOlivWebhook(
 
 async function _mockSubmitInvoice(_submission: OlivInvoiceSubmission): Promise<OlivSubmissionResponse> {
   await _simulateLatency(500);
-  const factoringRequestId = `OLIV-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  const factoringRequestId = `OLIV-${crypto.randomUUID()}`;
   return {
     factoringRequestId,
     status: "INITIALIZED",
@@ -460,14 +460,14 @@ export class OlivFinanceAdapter implements FactoringPartnerAdapter {
   private async _mockEligibility(invoice: InvoiceDataForPartner): Promise<PartnerOffer> {
     await _simulateLatency(400);
     if (invoice.grossAmount < OLIV_CONFIG.minInvoiceAmount) {
-      return { eligible: false, partnerId: this.id, partnerName: this.name, maxAdvanceRate: 0, discountRate: 0, responseId: `oliv_${Date.now()}`, rejectionReason: `Below Oliv minimum of ${OLIV_CONFIG.minInvoiceAmount} EGP` };
+      return { eligible: false, partnerId: this.id, partnerName: this.name, maxAdvanceRate: 0, discountRate: 0,     responseId: `oliv_${crypto.randomUUID()}`, rejectionReason: `Below Oliv minimum of ${OLIV_CONFIG.minInvoiceAmount} EGP` };
     }
-    return { eligible: true, partnerId: this.id, partnerName: this.name, maxAdvanceRate: OLIV_CONFIG.standardAdvanceRate, discountRate: OLIV_CONFIG.standardDiscountRate, responseId: `oliv_${Date.now()}`, estimatedDisbursement: invoice.grossAmount * OLIV_CONFIG.standardAdvanceRate };
+    return { eligible: true, partnerId: this.id, partnerName: this.name, maxAdvanceRate: OLIV_CONFIG.standardAdvanceRate, discountRate: OLIV_CONFIG.standardDiscountRate,     responseId: `oliv_${crypto.randomUUID()}`, estimatedDisbursement: invoice.grossAmount * OLIV_CONFIG.standardAdvanceRate };
   }
 
   private async _mockSubmit(_invoice: InvoiceDataForPartner) {
     await _simulateLatency(600);
-    return { success: true, instructionId: `oliv_inst_${Date.now()}`, partnerFundingId: `oliv_fund_${Date.now()}`, estimatedDisbursementDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() };
+    return { success: true,     instructionId: `oliv_inst_${crypto.randomUUID()}`, partnerFundingId: `oliv_fund_${crypto.randomUUID()}`, estimatedDisbursementDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() };
   }
 
   private async _mockTrack(_instructionId: string) {
@@ -562,12 +562,12 @@ export function generateOlivCheckoutUrl(payload: OlivCheckoutPayload): string {
 }
 
 export async function createOlivReferral(payload: OlivReferralPayload) {
-  const referralId = `OLIV-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  const referralId = `OLIV-${crypto.randomUUID()}`;
   return { id: referralId, ...payload, status: "PENDING", createdAt: new Date() };
 }
 
 export async function createOlivHotelReferral(payload: OlivHotelReferralPayload) {
-  const referralId = `OLIV-HTL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  const referralId = `OLIV-HTL-${crypto.randomUUID()}`;
   return { id: referralId, ...payload, status: "PENDING", createdAt: new Date() };
 }
 

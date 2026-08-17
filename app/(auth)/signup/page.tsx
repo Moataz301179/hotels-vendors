@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Eye, EyeOff, Loader2, Building2, Store, Sparkles, CheckCircle2 } from "lucide-react"
-import { HOVIN_PILOT_CODE } from "@/lib/onboarding/hovin"
 
 type PlatformRole = "hotel" | "supplier"
 
@@ -16,7 +15,6 @@ export default function SignupPage() {
   const [companyName, setCompanyName] = useState("")
   const [phone, setPhone] = useState("")
   const [taxId, setTaxId] = useState("")
-  const [referralCode, setReferralCode] = useState(HOVIN_PILOT_CODE)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -36,7 +34,7 @@ export default function SignupPage() {
       const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: platformRole, email, password, name, phone: phone || undefined, taxId: taxId || undefined, referralCode }),
+        body: JSON.stringify({ type: platformRole, email, password, name, phone: phone || undefined, taxId: taxId || undefined, accountType: "individual" }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || "Signup failed"); return }
@@ -76,7 +74,7 @@ export default function SignupPage() {
           Quick Signup
         </div>
         <h1 className="text-[28px] font-semibold text-white tracking-[-0.02em]">Create Account</h1>
-        <p className="mt-2 text-[14px] text-white/40">Join HotelsVendors as a verified member. HOVIN pilots use CHV000.</p>
+        <p className="mt-2 text-[14px] text-white/40">Join HotelsVendors as a verified member.</p>
       </div>
 
       <div className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 sm:p-8">
@@ -113,17 +111,6 @@ export default function SignupPage() {
             {error && (
               <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/10 text-sm text-red-400">{error}</div>
             )}
-
-            <div>
-              <label className="block text-[13px] font-medium text-white/50 mb-1.5">Referral code</label>
-              <input
-                type="text"
-                value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value)}
-                placeholder="CHV000"
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/15 outline-none focus:border-[#39ff7e]/30 focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
-              />
-            </div>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${roles.find(r => r.value === platformRole)?.color}10` }}>

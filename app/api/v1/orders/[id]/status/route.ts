@@ -1,97 +1,143 @@
-/**
- * Order Status Update API
- * PATCH /api/v1/orders/:id/status
- *
- * Enforces state machine transitions. Suppliers can progress orders
- * through fulfillment (CONFIRMED → IN_TRANSIT → DELIVERED).
- * Hotels can cancel. Admins can override.
- */
-
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
-import { apiRoute, authenticate, requirePermission, success, error, audit } from "@/lib/api-utils";
-import { validateStatusTransition } from "@/lib/auth/state-machine";
-import { z } from "zod";
+import { validateStatusTransition, getTransitionGate } from "@/lib/auth/state-machine";
+import { evaluateAuthority } from "@/lib/auth/authority-matrix";
+import {
+  apiRoute,
+  authenticate,
+  validateBody,
+  success,
+  error,
+  audit,
+  requirePermission,
+} from "@/lib/api-utils";
 
-const UpdateStatusSchema = z.object({
-  status: z.nativeEnum(OrderStatus),
-  reason: z.string().optional(),
+const StatusTransitionSchema = z.object({
+  status: z.enum([
+    "APPROVED",
+    "CONFIRMED",
+    "IN_TRANSIT",
+    "DELIVERED",
+    "CANCELLED",
+    "DISPUTED",
+  ]),
 });
 
-export const PATCH = apiRoute(async (request: NextRequest) => {
-  const auth = await authenticate(request);
-  await requirePermission(auth, "order:update");
-  const id = request.nextUrl.pathname.split("/").pop();
-  if (!id) return error("Order ID required", 400);
+export const POST = apiRoute(
+  async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
+    const auth = await authenticate(request);
+    await requirePermission(auth, "order:update");
+    const body = await request.json();
+    const data = validateBody(StatusTransitionSchema, body);
+    const requestedStatus = data.status as OrderStatus;
 
-  const body = await request.json();
-  const parsed = UpdateStatusSchema.safeParse(body);
-  if (!parsed.success) {
-    return error("Invalid status", 400);
-  }
-  const { status: newStatus, reason } = parsed.data;
+    const order = await prisma.order.findFirst({
+      where: { id, tenantId: auth.tenantId },
+      include: {
+        items: { include: { product: true } },
+        invoices: true,
+      },
+    });
 
-  // Fetch order with ownership check
-  const order = await prisma.order.findFirst({
-    where: {
-      id,
-      // Suppliers see orders for their tenant; hotels see their own orders; admin sees all
-      ...(auth.platformRole === "SUPPLIER"
-        ? { tenantId: auth.tenantId }
-        : auth.platformRole === "HOTEL"
-          ? { hotel: { tenantId: auth.tenantId } }
-          : {}),
-    },
-    include: { hotel: true, supplier: true, items: true },
-  });
+    if (!order) {
+      return error("Order not found", 404);
+    }
 
-  if (!order) {
-    return error("Order not found", 404);
-  }
-
-  // Validate state machine transition
-  const transition = validateStatusTransition(order.status, newStatus);
-  if (!transition.valid) {
-    return error(transition.reason || "Invalid status transition", 400);
-  }
-
-  // G10 ENFORCED: Payment Guarantee Gate
-  // No order may transition to CONFIRMED, IN_TRANSIT, or DELIVERED without paymentGuaranteed = true
-  const REQUIRES_PAYMENT_GUARANTEE: OrderStatus[] = ["CONFIRMED", "IN_TRANSIT", "DELIVERED"];
-  if (REQUIRES_PAYMENT_GUARANTEE.includes(newStatus) && !order.paymentGuaranteed) {
-    return error(
-      "G10 VIOLATION: Cannot transition to " + newStatus + " without payment guarantee. " +
-      "Order must have paymentGuaranteed = true before confirmation.",
-      403
+    // Validate transition is legal
+    const transition = validateStatusTransition(
+      order.status as OrderStatus,
+      requestedStatus
     );
-  }
+    if (!transition.valid) {
+      return error(transition.reason || "Invalid status transition", 400);
+    }
 
-  // Update order
-  const updated = await prisma.order.update({
-    where: { id },
-    data: {
-      status: newStatus,
-      ...(newStatus === "DELIVERED" ? { deliveryDate: new Date() } : {}),
-    },
-    include: {
-      hotel: { select: { id: true, name: true } },
-      supplier: { select: { id: true, name: true } },
-      items: { include: { product: { select: { id: true, name: true, sku: true } } } },
-    },
-  });
+    // Check transition gates (payment guarantee, etc.)
+    const gate = getTransitionGate(order.status as OrderStatus, requestedStatus);
+    if (gate) {
+      if (gate.requires.paymentGuarantee && !order.paymentGuaranteed) {
+        return error(
+          `Transition ${order.status} → ${requestedStatus} requires payment guarantee`,
+          400
+        );
+      }
+    }
 
-  // Audit log
-  await audit({
-    entityType: "ORDER",
-    entityId: order.id,
-    action: "STATUS_UPDATE",
-    tenantId: order.tenantId,
-    actorId: auth.userId,
-    actorRole: auth.platformRole,
-    beforeState: { status: order.status },
-    afterState: { status: newStatus, reason },
-  });
+    const beforeState = { status: order.status, paymentGuaranteed: order.paymentGuaranteed };
 
-  return success({ order: updated });
-});
+    // DELIVERED → auto-generate Invoice
+    if (requestedStatus === "DELIVERED") {
+      const existingInvoice = order.invoices[0];
+      if (!existingInvoice) {
+        const deliveryDate = order.deliveryDate ?? new Date();
+        const dueDate = new Date(deliveryDate);
+        dueDate.setDate(dueDate.getDate() + 30);
+
+        const invoiceNumber = `INV-${Date.now().toString(36).toUpperCase()}`;
+
+        await prisma.invoice.create({
+          data: {
+            invoiceNumber,
+            orderId: order.id,
+            hotelId: order.hotelId,
+            supplierId: order.supplierId,
+            tenantId: auth.tenantId,
+            issueDate: new Date(),
+            dueDate,
+            subtotal: order.subtotal ?? 0,
+            vatRate: 0.14,
+            vatAmount: order.vatAmount ?? 0,
+            total: order.total ?? 0,
+            status: "DRAFT",
+            paymentStatus: "UNPAID",
+          },
+        });
+      }
+    }
+
+    // Authority evaluation for payment guarantee check
+    const evaluation = await evaluateAuthority(order.id, {
+      userId: auth.userId,
+      userRole: auth.platformRole === "HOTEL" ? "DEPARTMENT_HEAD" : "OWNER",
+      tenantId: auth.tenantId,
+      ipAddress: request.headers.get("x-forwarded-for") || undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+    });
+
+    // Update order status
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: { status: requestedStatus },
+      include: {
+        items: { include: { product: true } },
+        hotel: { select: { id: true, name: true } },
+        supplier: { select: { id: true, name: true } },
+        invoices: true,
+      },
+    });
+
+    // Audit log with before/after state
+    await audit({
+      entityType: "ORDER",
+      entityId: order.id,
+      action: `STATUS_${requestedStatus}`,
+      tenantId: auth.tenantId,
+      actorId: auth.userId,
+      actorRole: auth.platformRole,
+      beforeState,
+      afterState: {
+        status: requestedStatus,
+        paymentGuaranteed: updatedOrder.paymentGuaranteed,
+        evaluation: evaluation.action,
+      },
+      ipAddress: request.headers.get("x-forwarded-for") || null,
+      userAgent: request.headers.get("user-agent"),
+    });
+
+    return success({ order: updatedOrder, evaluation });
+  },
+  { rateLimit: "api" }
+);

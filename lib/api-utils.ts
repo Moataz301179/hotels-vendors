@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createHash } from "crypto";
 import { verifySession, getSessionToken } from "@/lib/session";
-import { initSentry, captureException } from "./sentry";
+import { captureException } from "@sentry/nextjs";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
 import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } from "@/lib/redis";
 import { rateLimitResponse, type RateLimitTier } from "@/lib/security/rate-limiter";
@@ -277,10 +277,9 @@ export function apiRoute(
       }
       // Capture unexpected errors in Sentry (if configured)
       try {
-        initSentry();
         captureException(err);
       } catch {
-        // ignore Sentry init failures
+        // ignore Sentry capture failures
       }
       return handleApiError(err);
     }

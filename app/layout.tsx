@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono, Inter, Fira_Code } from "next/font/google";
+import { Plus_Jakarta_Sans, Fira_Code, Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
@@ -20,23 +20,16 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
 const firaCode = Fira_Code({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  variable: "--font-arabic",
   display: "swap",
   weight: ["400", "500", "600", "700"],
 });
@@ -77,7 +70,7 @@ export const metadata: Metadata = {
       "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance. Purpose-built for Egyptian coastal hotel chains.",
     images: [
       {
-        url: "/assets/logo.svg",
+        url: "/hv-logo-white.svg",
         width: 1200,
         height: 630,
         alt: "HotelsVendors — The Market Changer",
@@ -89,7 +82,7 @@ export const metadata: Metadata = {
     title: "HotelsVendors — B2B Procurement & Fintech",
     description:
       "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
-    images: ["/assets/logo.svg"],
+    images: ["/hv-logo-white.svg"],
     creator: "@hotelsvendors",
   },
   alternates: {
@@ -135,7 +128,7 @@ export default function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`h-full ${plusJakarta.variable} ${jetbrainsMono.variable} ${inter.variable} ${firaCode.variable}`}
+      className={`h-full ${plusJakarta.variable} ${firaCode.variable} ${cairo.variable}`}
     >
       <head>
         <link rel="dns-prefetch" href="https://www.hotelsvendors.com" />
@@ -185,7 +178,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "HotelsVendors",
               url: "https://www.hotelsvendors.com",
-              logo: "https://www.hotelsvendors.com/assets/logo.svg",
+              logo: "https://www.hotelsvendors.com/hv-logo-white.svg",
               description:
                 "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
               sameAs: [
@@ -205,11 +198,14 @@ export default function RootLayout({
             }),
           }}
         />
+        <noscript>
+          <meta httpEquiv="refresh" content="0;url=/?noscript=1" />
+          <style>{`html[dir="rtl"] { direction: rtl; text-align: right; }`}</style>
+        </noscript>
       </head>
       <body
         className="min-h-full flex flex-col antialiased"
         style={{
-          fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           background: "var(--bg-canvas)",
         }}
       >

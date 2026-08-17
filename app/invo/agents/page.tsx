@@ -4,12 +4,12 @@ import { StatusBadge } from "@/components/invo/status-badge";
 import { KPICard, KPIGrid } from "@/components/invo/kpi-card";
 import { Bot, Play, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
-const BG_CARD = "#1a1e23";
-const BORDER = "rgba(60,64,67,0.50)";
+const BG_CARD = "var(--bg-surface-1)";
+const BORDER = "rgba(255,255,255,0.06)";
 const TEXT_PRIMARY = "#E9ECEF";
 const TEXT_SECONDARY = "#9AA0A6";
 const TEXT_MUTED = "#6C757D";
-const ACCENT_LIME = "#84cc16";
+const ACCENT_LIME = "#39ff7e";
 
 const AGENT_PIPELINE = [
   { id: "agent_1_ingestion", name: "Ingestion", desc: "Parse and validate incoming invoices", icon: "📥" },
@@ -65,7 +65,7 @@ export default async function AgentsPage() {
             <div
               key={agent.id}
               className="rounded-xl p-5 text-center"
-              style={{ backgroundColor: "#14171a", border: `1px solid ${BORDER}` }}
+              style={{ backgroundColor: "var(--bg-surface-2)", border: `1px solid ${BORDER}` }}
             >
               <div className="text-3xl mb-3">{agent.icon}</div>
               <div className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{agent.name}</div>
@@ -76,7 +76,7 @@ export default async function AgentsPage() {
               <div className="mt-3">
                 <button
                   className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
-                  style={{ backgroundColor: "rgba(132,204,22,0.10)", color: ACCENT_LIME, border: "1px solid rgba(132,204,22,0.20)" }}
+                  style={{ backgroundColor: "rgba(57,255,126,0.10)", color: ACCENT_LIME, border: "1px solid rgba(57,255,126,0.20)" }}
                 >
                   Run Agent
                 </button>
@@ -133,7 +133,7 @@ export default async function AgentsPage() {
                     key={log.log_id}
                     className="border-t transition-colors"
                     style={{ borderColor: BORDER }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(132,204,22,0.02)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(57,255,126,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
                     <td className="px-5 py-3 font-semibold" style={{ color: ACCENT_LIME }}>{log.agent_name}</td>

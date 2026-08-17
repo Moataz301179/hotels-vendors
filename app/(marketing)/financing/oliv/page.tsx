@@ -1,105 +1,258 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { CreditCard, Shield, Banknote, ArrowRight, FileCheck, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Clock, Shield, CheckCircle2, Banknote, FileText, Landmark, Zap } from "lucide-react";
+import { OlivLogo } from "@/components/partners/oliv-logo";
 
-const features = [
-  { icon: Zap, color: "#D4A843", title: "Instant Liquidity", desc: "Get funded within 48 hours of invoice approval. No waiting for 60-90 day payment terms." },
-  { icon: Shield, color: "#39ff7e", title: "Non-Recourse Factoring", desc: "Zero default risk for suppliers. Factoring partners absorb credit risk, priced into the discount rate." },
-  { icon: FileCheck, color: "#c455ff", title: "ETA-Compliant Invoices", desc: "Only verified, ETA-submitted invoices qualify. Full tax compliance baked into the financing flow." },
-  { icon: Banknote, color: "#64b5f6", title: "Competitive Rates", desc: "Rates from 1.5% per month. Better than traditional bank loans. No hidden fees." },
+export const metadata: Metadata = {
+  title: "Invoice Financing via Oliv | Get Paid in 48 Hours | HotelsVendors",
+  description:
+    "HotelsVendors partners with Oliv to offer suppliers instant invoice financing. Get approved in minutes, funded in 48 hours. No tech integration needed.",
+  keywords: [
+    "invoice financing Egypt",
+    "SME lending Egypt",
+    "Oliv finance",
+    "digital factoring Egypt",
+    "hotel supplier financing",
+    "working capital Egypt",
+    "FRA licensed lending",
+  ],
+  openGraph: {
+    title: "Invoice Financing via Oliv | HotelsVendors",
+    description: "Get your invoices financed in 48 hours. Powered by Oliv — Egypt's first FRA-licensed digital factoring platform.",
+    type: "website",
+  },
+};
+
+const benefits = [
+  {
+    icon: Zap,
+    title: "Instant Credit Approval",
+    desc: "Our credit engine analyzes your business performance in minutes and instantly assigns your available credit.",
+    color: "#39ff7e",
+  },
+  {
+    icon: Clock,
+    title: "Funded in 48 Hours",
+    desc: "From invoice submission to cash in your account — the entire process takes less than 2 days.",
+    color: "#39ff7e",
+  },
+  {
+    icon: FileText,
+    title: "Paperless Process",
+    desc: "Fully digital onboarding with electronic contract signing. No paperwork, no branch visits.",
+    color: "#c455ff",
+  },
+  {
+    icon: Banknote,
+    title: "Transparent Pricing",
+    desc: "Simple pricing with no hidden fees. You see the cost before you commit. No surprises.",
+    color: "#ff7e1a",
+  },
+  {
+    icon: Shield,
+    title: "FRA Regulated",
+    desc: "Oliv holds Egypt's first digital factoring license from the Financial Regulatory Authority. Fully compliant.",
+    color: "#64b5f6",
+  },
+  {
+    icon: Landmark,
+    title: "No Tech Requirements",
+    desc: "No accounting software needed. No API integration. Just submit your invoice and get financed.",
+    color: "#39ff7e",
+  },
 ];
 
 const steps = [
-  { step: "01", title: "Supplier invoices hotel", desc: "Standard order flow generates an ETA-compliant invoice." },
-  { step: "02", title: "Invoice qualifies", desc: "Oliv verifies ETA status, invoice authenticity, and hotel creditworthiness." },
-  { step: "03", title: "Factoring partner matched", desc: "Best-rate offer generated from our network of licensed factoring companies." },
-  { step: "04", title: "Supplier gets funded", desc: "Funds transferred within 48 hours. Hotel pays the factoring partner on due date." },
+  {
+    step: "01",
+    title: "Complete a Transaction",
+    desc: "Fulfill an order on HotelsVendors. Your verified invoice becomes your financing collateral.",
+    color: "#39ff7e",
+  },
+  {
+    step: "02",
+    title: "Apply via Oliv",
+    desc: "Click 'Get Financed' from your order dashboard. Oliv's credit engine evaluates your business in minutes.",
+    color: "#ff7e1a",
+  },
+  {
+    step: "03",
+    title: "Get Approved",
+    desc: "Receive your credit limit instantly. Revolving facility — repay and reborrow as needed.",
+    color: "#c455ff",
+  },
+  {
+    step: "04",
+    title: "Receive Funds",
+    desc: "Cash deposited to your account within 48 hours. Use it for your next procurement cycle.",
+    color: "#39ff7e",
+  },
+];
+
+const faqs = [
+  {
+    q: "What are the requirements?",
+    a: "You must be a legally registered company in Egypt with completed transactions on HotelsVendors.",
+  },
+  {
+    q: "How does repayment work?",
+    a: "Oliv collects repayment directly from you — they do not intervene in your buyer relationships. Repay and your credit limit resets for the next cycle.",
+  },
+  {
+    q: "Is there a minimum invoice amount?",
+    a: "Contact Oliv for current thresholds. The facility is designed for SME invoices in the Egyptian market.",
+  },
+  {
+    q: "What fees does HotelsVendors charge?",
+    a: "HotelsVendors earns a referral fee from Oliv. You pay nothing extra — the financing terms are between you and Oliv.",
+  },
 ];
 
 export default function OlivFinancingPage() {
   return (
-    <>
-      <section className="relative overflow-hidden pt-24 pb-20">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#D4A843]/[0.04] blur-[120px]" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-6 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(212,168,67,0.15)] bg-[rgba(212,168,66,0.05)] px-4 py-1.5 text-[12px] text-[#D4A843]/80">
-            <CreditCard className="h-3.5 w-3.5" />Powered by Oliv Finance
+    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
+      {/* Hero */}
+      <section className="pt-28 pb-16 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(74,124,89,0.08) 0%, transparent 70%)" }} />
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "#39ff7e33", backgroundColor: "#39ff7e10" }}>
+            <OlivLogo size="xs" variant="green" />
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#39ff7e" }}>
+              Partner Integration
+            </span>
           </div>
-          <h1 className="mx-auto max-w-3xl text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.1] tracking-tight text-white" style={{ fontFamily: "var(--font-display)" }}>
-            Get paid <span className="text-[#D4A843]">instantly.</span><br />Never chase invoices again.
+          <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
+            Get Your Invoices<br />
+            <span style={{ color: "#39ff7e" }}>Financed in 48 Hours.</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-[15px] text-white/40">Oliv Finance provides embedded non-recourse factoring for Egyptian hospitality. Suppliers get fast liquidity, hotels get extended payment terms.</p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/register" className="inline-flex items-center gap-2 rounded-md bg-[#D4A843] px-8 py-3 text-[14px] font-medium text-black transition-all hover:bg-[#D4A843]/90">Apply for Factoring <ArrowRight className="h-4 w-4" /></Link>
-            <Link href="/contact" className="btn-ghost !px-8 !py-3 !text-[14px]">Talk to Sales</Link>
+          <p className="text-[15px] text-white/40 max-w-xl mx-auto leading-relaxed mb-8">
+            HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.2)]" style={{ backgroundColor: "#39ff7e", color: "#ffffff" }}>
+              Apply on Oliv <ArrowRight size={14} />
+            </a>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Start Selling on HotelsVendors
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-white/[0.04] py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="mb-12 text-center text-[clamp(1.5rem,3vw,2.2rem)] font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>Why Suppliers Choose Oliv</h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((f) => (
-              <div key={f.title} className="surface-card neon-card p-6">
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: `${f.color}10` }}><f.icon className="h-5 w-5" style={{ color: f.color }} /></div>
-                <h3 className="text-[15px] font-semibold text-white mb-2">{f.title}</h3>
-                <p className="text-[13px] leading-relaxed text-white/40">{f.desc}</p>
-              </div>
-            ))}
-          </div>
+      {/* Trust badges */}
+      <section className="py-6 border-y" style={{ borderColor: "#39ff7e18" }}>
+        <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-6 text-[12px] text-white/30">
+          <span className="flex items-center gap-2"><Shield size={14} style={{ color: "#39ff7e" }} /> FRA Licensed</span>
+          <span className="flex items-center gap-2"><Landmark size={14} style={{ color: "#39ff7e" }} /> Suez Canal Bank Backed</span>
+          <span className="flex items-center gap-2"><CheckCircle2 size={14} style={{ color: "#39ff7e" }} /> EGP 30M Credit Facility</span>
+          <span className="flex items-center gap-2"><Zap size={14} style={{ color: "#39ff7e" }} /> 48-Hour Funding</span>
         </div>
       </section>
 
-      <section className="border-t border-white/[0.04] py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="mb-12 text-center text-[clamp(1.5rem,3vw,2.2rem)] font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>How Factoring Works</h2>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {/* How it works */}
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>How It Works</span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white">From Invoice to Cash in 4 Steps</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((s) => (
-              <div key={s.step} className="text-center">
-                <div className="mb-3 text-[36px] font-bold text-[#D4A843]/15" style={{ fontFamily: "var(--font-display)" }}>{s.step}</div>
-                <h3 className="text-[15px] font-semibold text-white mb-1.5">{s.title}</h3>
-                <p className="text-[13px] leading-relaxed text-white/35">{s.desc}</p>
+              <div key={s.step} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all">
+                <div className="text-[11px] font-bold uppercase tracking-[0.15em] mb-3" style={{ color: s.color }}>{s.step}</div>
+                <h3 className="text-[15px] font-semibold text-white mb-2">{s.title}</h3>
+                <p className="text-[13px] text-white/40 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-t border-white/[0.04] py-20">
-        <div className="mx-auto max-w-4xl px-6">
-          <div className="rounded-2xl border border-[rgba(212,168,67,0.1)] bg-[rgba(212,168,67,0.02)] p-8 md:p-12">
-            <div className="text-center mb-8">
-              <h2 className="text-[22px] font-semibold text-white" style={{ fontFamily: "var(--font-display)" }}>Simple, Transparent Pricing</h2>
-              <p className="mt-2 text-[14px] text-white/35">No hidden fees. No surprises.</p>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-3">
-              {[
-                { label: "Factoring Fee", value: "1.5–3%", desc: "Per month, based on hotel credit risk" },
-                { label: "Processing", value: "EGP 500", desc: "One-time per invoice" },
-                { label: "Advance Rate", value: "80–90%", desc: "Of invoice value, upfront" },
-              ].map((r) => (
-                <div key={r.label} className="text-center">
-                  <p className="text-[28px] font-bold text-[#D4A843]" style={{ fontFamily: "var(--font-display)" }}>{r.value}</p>
-                  <p className="text-[13px] font-medium text-white mt-1">{r.label}</p>
-                  <p className="text-[11px] text-white/30 mt-0.5">{r.desc}</p>
+      {/* Benefits */}
+      <section className="py-20 border-y" style={{ borderColor: "#39ff7e18" }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>Why Oliv</span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white">Built for Egyptian SMEs</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {benefits.map((b) => {
+              const Icon = b.icon;
+              return (
+                <div key={b.title} className="rounded-2xl border border-white/[0.06] bg-[#12121a] p-6 hover:border-white/[0.10] transition-all group">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: `${b.color}12`, border: `1px solid ${b.color}22` }}>
+                    <Icon size={18} style={{ color: b.color }} />
+                  </div>
+                  <h3 className="text-[14px] font-semibold text-white mb-2">{b.title}</h3>
+                  <p className="text-[13px] text-white/40 leading-relaxed">{b.desc}</p>
                 </div>
-              ))}
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Integration note */}
+      <section className="py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "#39ff7e" }}>HotelsVendors + Oliv</span>
+          <h2 className="text-2xl md:text-3xl font-semibold text-white mb-5">Seamless Integration. Zero Disruption.</h2>
+          <p className="text-[14px] text-white/40 leading-relaxed mb-8 max-w-xl mx-auto">
+            Your verified invoices on HotelsVendors become your financing collateral. No additional paperwork. No separate onboarding. Just click &quot;Get Financed&quot; from your order dashboard.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
+              <div className="text-[24px] font-bold text-white mb-1">0</div>
+              <div className="text-[12px] text-white/40">Extra fees from HotelsVendors</div>
+            </div>
+            <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
+              <div className="text-[24px] font-bold mb-1" style={{ color: "#39ff7e" }}>48h</div>
+              <div className="text-[12px] text-white/40">Average funding time</div>
+            </div>
+            <div className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
+              <div className="text-[24px] font-bold mb-1" style={{ color: "#39ff7e" }}>$30M</div>
+              <div className="text-[12px] text-white/40">Suez Canal Bank facility</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-white/[0.04] py-20">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-[clamp(1.6rem,3.5vw,2.5rem)] font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>Ready to unlock your cash flow?</h2>
-          <p className="mt-4 text-[14px] text-white/40">Join the suppliers and hotels already using Oliv Finance.</p>
-          <div className="mt-8"><Link href="/register" className="inline-flex items-center gap-2 rounded-md bg-[#D4A843] px-10 py-3.5 text-[15px] font-medium text-black transition-all hover:bg-[#D4A843]/90">Get Started <ArrowRight className="h-4 w-4" /></Link></div>
+      {/* FAQ */}
+      <section className="py-20 border-y" style={{ borderColor: "#39ff7e18" }}>
+        <div className="max-w-2xl mx-auto px-6">
+          <h2 className="text-2xl font-semibold text-white text-center mb-10">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {faqs.map((f) => (
+              <div key={f.q} className="rounded-xl border border-white/[0.06] bg-[#12121a] p-5">
+                <h3 className="text-[14px] font-semibold text-white mb-2">{f.q}</h3>
+                <p className="text-[13px] text-white/40 leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-    </>
+
+      {/* CTA */}
+      <section className="py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Ready to Finance Your Invoices?</h2>
+          <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
+            Start transacting on HotelsVendors, then apply for Oliv financing. It&apos;s that simple.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(74,124,89,0.25)]" style={{ backgroundColor: "#39ff7e", color: "#ffffff" }}>
+              <OlivLogo size="xs" variant="dark" />
+              Apply Now <ArrowRight size={14} />
+            </a>
+            <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+              Join HotelsVendors
+            </Link>
+          </div>
+          <p className="text-[11px] text-white/20 mt-6">
+            Powered by Oliv Finance — Egypt&apos;s first FRA-licensed digital factoring platform.
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

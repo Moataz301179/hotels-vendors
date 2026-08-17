@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { apiRoute, success, error, authenticate } from "@/lib/api-utils";
+import { apiRoute, success, error, authenticate, requirePermission } from "@/lib/api-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +20,7 @@ export const dynamic = "force-dynamic";
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   if (!auth) return error("Unauthorized", 401);
+  await requirePermission(auth, "fintech:read");
 
   const { period, status } = Object.fromEntries(request.nextUrl.searchParams);
 

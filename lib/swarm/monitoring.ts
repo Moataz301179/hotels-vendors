@@ -1,7 +1,7 @@
-// Stub — swarm monitoring was archived. These functions are no-ops.
+// STUB: Not implemented. See lib/ai/ for active AI infrastructure.
 
 export async function recordSwarmEvent(..._args: unknown[]): Promise<void> {
-  // No-op — swarm monitoring archived
+  // No-op
 }
 
 export async function getSquadPerformance(_squad?: string | number): Promise<unknown> {

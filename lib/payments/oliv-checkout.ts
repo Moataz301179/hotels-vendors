@@ -35,7 +35,7 @@ export async function generateOlivCheckoutUrl(
 
   if (isSandbox || !OLIV_API_KEY) {
     // Sandbox mode — return simulated checkout URL
-    const reference = `oliv_${Date.now()}_${params.orderId.slice(0, 8)}`;
+    const reference = `oliv_${crypto.randomUUID()}_${params.orderId.slice(0, 8)}`;
     return {
       checkoutUrl: `${OLIV_BASE_URL}/checkout/sandbox?ref=${reference}&amount=${params.amount}`,
       reference,

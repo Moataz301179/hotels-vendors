@@ -1,47 +1,52 @@
-"use client";
-
 import Link from "next/link";
 import { Zap } from "lucide-react";
 
 export function InvoFooter() {
   return (
-    <footer className="border-t border-[rgba(212,168,67,0.06)] bg-black">
-      <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-6 w-6 rounded bg-[#D4A843] flex items-center justify-center"><Zap className="h-3.5 w-3.5 text-black" /></div>
-              <span className="text-[12px] font-semibold text-white">INVO</span>
+    <footer className="border-t border-white/5 bg-black">
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-7 h-7 rounded-md bg-[#39ff7e] flex items-center justify-center">
+                <Zap className="w-4 h-4 text-black" />
+              </div>
+              <span className="text-[16px] font-medium text-white">INVO</span>
+              <span className="text-[11px] text-white/30">by HotelsVendors</span>
             </div>
-            <p className="text-[11px] text-white/25 leading-relaxed">Fast invoicing for Egyptian hospitality. ETA-compliant, factoring-ready.</p>
+            <p className="text-[14px] text-white/40 max-w-sm leading-relaxed">
+              The financial layer for suppliers on Egypt's largest hospitality
+              procurement network. Subscribe. List. Get paid.
+            </p>
           </div>
+
           <div>
-            <h4 className="text-[10px] font-medium text-white/25 uppercase tracking-wider mb-3">Product</h4>
-            <ul className="space-y-2">
-              <li><Link href="/invo/dashboard" className="text-[12px] text-white/30 hover:text-white transition-colors">Dashboard</Link></li>
-              <li><Link href="/invo/dashboard/invoices" className="text-[12px] text-white/30 hover:text-white transition-colors">Invoices</Link></li>
-              <li><Link href="/invo/dashboard/factoring" className="text-[12px] text-white/30 hover:text-white transition-colors">Factoring</Link></li>
+            <h4 className="text-[12px] font-medium uppercase tracking-wider text-white/25 mb-4">Product</h4>
+            <ul className="space-y-3">
+              <li><Link href="/invo#features" className="text-[14px] text-white/40 hover:text-white transition-colors">Features</Link></li>
+              <li><Link href="/invo#pricing" className="text-[14px] text-white/40 hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/invo#how-it-works" className="text-[14px] text-white/40 hover:text-white transition-colors">How It Works</Link></li>
             </ul>
           </div>
+
           <div>
-            <h4 className="text-[10px] font-medium text-white/25 uppercase tracking-wider mb-3">Company</h4>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="text-[12px] text-white/30 hover:text-white transition-colors">About</Link></li>
-              <li><Link href="/contact" className="text-[12px] text-white/30 hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="/pricing" className="text-[12px] text-white/30 hover:text-white transition-colors">Pricing</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[10px] font-medium text-white/25 uppercase tracking-wider mb-3">Legal</h4>
-            <ul className="space-y-2">
-              <li><Link href="/compliance" className="text-[12px] text-white/30 hover:text-white transition-colors">Privacy</Link></li>
-              <li><Link href="/compliance" className="text-[12px] text-white/30 hover:text-white transition-colors">Terms</Link></li>
+            <h4 className="text-[12px] font-medium uppercase tracking-wider text-white/25 mb-4">Company</h4>
+            <ul className="space-y-3">
+              <li><Link href="/" className="text-[14px] text-white/40 hover:text-white transition-colors">HotelsVendors</Link></li>
+              <li><Link href="/register" className="text-[14px] text-white/40 hover:text-white transition-colors">Subscribe</Link></li>
+              <li><Link href="/login" className="text-[14px] text-white/40 hover:text-white transition-colors">Sign In</Link></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-[rgba(212,168,67,0.04)] pt-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[11px] text-white/15">&copy; {new Date().getFullYear()} INVO by HotelsVendors.</p>
-          <p className="text-[10px] text-white/15">ETA Compliant &middot; Bank-Grade Security</p>
+
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[13px] text-white/30">
+            © {new Date().getFullYear()} INVO by HotelsVendors. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            <Link href="/" className="text-[13px] text-white/30 hover:text-white/60">Privacy</Link>
+            <Link href="/" className="text-[13px] text-white/30 hover:text-white/60">Terms</Link>
+          </div>
         </div>
       </div>
     </footer>
