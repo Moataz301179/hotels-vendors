@@ -392,10 +392,7 @@ const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {
   ],
   gra: [
     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
-    "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
     "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80",
-    "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80",
-    "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
   ],
   ffe: [
     "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
@@ -431,9 +428,7 @@ const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {
   ],
   sec: [
     "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=600&q=80",
-    "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80",
     "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=80",
-    "https://images.unsplash.com/photo-1495433324511-bf8e92934d90?w=600&q=80",
   ],
 };
 
