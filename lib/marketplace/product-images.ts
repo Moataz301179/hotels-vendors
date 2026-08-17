@@ -360,7 +360,7 @@ const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?w=600&q=80",
   ],
   lin: [
-    "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&q=80",
+    "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ADark%20blue%20tea%20towel%20stack.jpg?width=640",
     "https://images.unsplash.com/photo-1629949009765-40fc74c9ec21?w=600&q=80",
     "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80",
     "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&q=80",
