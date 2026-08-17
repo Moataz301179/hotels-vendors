@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Package, Search, Filter, Eye, Truck, CheckCircle2, Clock } from "lucide-react";
 import { StatusBadge } from "@/components/invo/status-badge";
-import { KpiCard } from "@/components/invo/kpi-card";
+import { KPICard } from "@/components/invo/kpi-card";
 
 const mockOrders = [
   { id: "PO-2026-001", supplier: "Cairo Fresh Foods", items: 12, total: 42500, status: "delivered", created_at: "2026-07-15", delivered_at: "2026-07-19" },

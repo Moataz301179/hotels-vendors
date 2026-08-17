@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FileText, Download, Filter, Search, Eye, Send, AlertCircle, FileCheck, Building2 } from "lucide-react";
 import { StatusBadge } from "@/components/invo/status-badge";
-import { KpiCard } from "@/components/invo/kpi-card";
+import { KPICard } from "@/components/invo/kpi-card";
 
 const mockInvoices = [
   { id: "INV-2026-001", supplier: "Cairo Fresh Foods", hotel: "The Nile Palace", amount: 42500, vat: 6800, total: 49300, status: "paid", eta_status: "submitted", issued_at: "2026-07-20", due_at: "2026-08-19", items: 12 },
