@@ -26,7 +26,8 @@ export function BrandLogo({
   const dims = SIZE_MAP[size];
   const textColor = variant === "dark" ? "#0f172a" : "#ffffff";
   const taglineColor = variant === "dark" ? "rgba(15,23,42,0.5)" : "rgba(255,255,255,0.5)";
-  const logoSrc = variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
+  // Use the clean gold logo for both variants - it works on both backgrounds
+  const logoSrc = "/logo.svg";
 
   return (
     <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
