@@ -72,15 +72,18 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
 
   const handleAdd = () => {
     const resolved = getProductImage(product);
+    const resolvedPrice = memberMode ? memberDiscount(product.unitPrice) : product.unitPrice;
     addItem({
+      id: product.id,
       productId: product.id,
       name: product.name,
       sku: product.sku,
-      unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
+      price: resolvedPrice,
+      unitPrice: resolvedPrice,
       supplierId: product.supplierId,
       supplierName: product.supplierName,
       image: resolved.type === "url" ? resolved.src : undefined,
-    });
+    }, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };

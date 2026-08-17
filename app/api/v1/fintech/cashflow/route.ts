@@ -90,11 +90,9 @@ export const GET = apiRoute(async (request: NextRequest) => {
       id: true,
       invoiceId: true,
       requestedAmount: true,
-      approvedAmount: true,
       status: true,
       factoringFee: true,
-      fundingPartnerFee: true,
-      hubRevenue: true,
+      platformFee: true,
       createdAt: true,
     },
   });
@@ -115,16 +113,16 @@ export const GET = apiRoute(async (request: NextRequest) => {
   });
 
   // Calculate cashflow metrics
-  const totalOrderValue = orders.reduce((sum, o) => sum + o.total, 0);
+  const totalOrderValue = orders.reduce((sum, o) => sum + Number(o.total || 0), 0);
   const totalPaid = orders
     .filter((o) => o.invoices.some((i) => i.paymentStatus === "PAID"))
-    .reduce((sum, o) => sum + o.total, 0);
+    .reduce((sum, o) => sum + Number(o.total || 0), 0);
   const totalPending = orders
     .filter((o) => o.invoices.some((i) => i.paymentStatus === "UNPAID"))
-    .reduce((sum, o) => sum + o.total, 0);
+    .reduce((sum, o) => sum + Number(o.total || 0), 0);
   const totalFactored = orders
-    .filter((o) => o.invoices.some((i) => i.factoringStatus === "FACTORING"))
-    .reduce((sum, o) => sum + o.total, 0);
+    .filter((o) => o.invoices.some((i) => i.factoringStatus === "ACCEPTED"))
+    .reduce((sum, o) => sum + Number(o.total || 0), 0);
   const totalPlatformFees = orders.reduce(
     (sum, o) => sum + o.invoices.reduce((iSum, i) => iSum + Number(i.platformFee || 0), 0),
     0
@@ -139,9 +137,9 @@ export const GET = apiRoute(async (request: NextRequest) => {
       invoiceNumber: i.invoiceNumber,
       hotelName: o.hotel.name,
       supplierName: o.supplier.name,
-      amountEgp: i.total,
+      amountEgp: Number(i.total || 0),
       platformFee: Number(i.platformFee || 0),
-      netAmount: i.total - Number(i.platformFee || 0),
+      netAmount: Number(i.total || 0) - Number(i.platformFee || 0),
       dueDate: i.dueDate,
       paidDate: i.paidDate,
       paymentStatus: i.paymentStatus,
@@ -180,12 +178,11 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const factoringSummary = {
     totalFactored: totalFactored,
     totalFactoringFee: factoringRequests.reduce((sum, r) => sum + Number(r.factoringFee || 0), 0),
-    totalFundingPartnerFee: factoringRequests.reduce(
-      (sum, r) => sum + Number(r.fundingPartnerFee || 0),
+    totalPlatformFee: factoringRequests.reduce(
+      (sum, r) => sum + Number(r.platformFee || 0),
       0
     ),
-    totalHubRevenue: factoringRequests.reduce((sum, r) => sum + Number(r.hubRevenue || 0), 0),
-    activeFactoring: factoringRequests.filter((r) => r.status === "FACTORING").length,
+    activeFactoring: factoringRequests.filter((r) => r.status === "DISBURSED").length,
     settledFactoring: factoringRequests.filter((r) => r.status === "SETTLED").length,
   };
 
@@ -227,8 +224,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
           limit: facility.creditLimitEgp,
           utilized: facility.utilizedEgp,
           available: facility.availableEgp,
-          utilizationRate: facility.creditLimitEgp > 0
-            ? (facility.utilizedEgp / facility.creditLimitEgp) * 100
+          utilizationRate: Number(facility.creditLimitEgp || 0) > 0
+            ? (Number(facility.utilizedEgp || 0) / Number(facility.creditLimitEgp || 0)) * 100
             : 0,
           interestRate: facility.interestRate,
           advanceRate: facility.advanceRate,

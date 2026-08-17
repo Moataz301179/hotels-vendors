@@ -105,7 +105,7 @@ export function createOrderWorker(): Worker {
               requesterName: order.hotel.name,
               orderId: order.orderNumber || orderId,
               approverName: "Authority Matrix",
-              total: order.total,
+              total: Number(order.total || 0),
               currency: "EGP",
             });
             await addEmailJob({

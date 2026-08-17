@@ -182,11 +182,13 @@ export default function MarketplacePage() {
   const handleAdd = (product: MarketplaceProduct) => {
     const resolved = getProductImage(product);
     addItem({
+      id: product.id,
       productId: product.id,
       name: product.name,
       sku: product.sku,
+      price: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
       unitPrice: memberMode ? memberDiscount(product.unitPrice) : product.unitPrice,
-      supplierId: product.supplierId, // FIXED: was product.id
+      supplierId: product.supplierId,
       supplierName: product.supplierName,
       image: resolved.type === "url" ? resolved.src : undefined,
     });
@@ -217,11 +219,11 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-white">
       <MarketingNav />
 
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[var(--bg-canvas)]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
           <div className="flex-1 max-w-2xl">
             <div className="relative flex items-center">
@@ -247,7 +249,7 @@ export default function MarketplacePage() {
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all ${
-                memberMode ? "bg-accent-base text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
+                memberMode ? "bg-[var(--accent-base)] text-[#1a140f]" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
@@ -341,7 +343,7 @@ export default function MarketplacePage() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#050505] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
+          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[var(--bg-canvas)] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
             {mobileSidebarOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
                 <span className="text-sm font-semibold text-white">{t("categories")}</span>
@@ -417,7 +419,7 @@ export default function MarketplacePage() {
                 <p className="text-sm text-white/25 max-w-sm text-center mb-6">{error}</p>
                 <button
                   onClick={fetchProducts}
-                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-accent-base hover:bg-[#6B0000] transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold text-[#1a140f] bg-[var(--accent-base)] hover:opacity-90 transition-colors"
                 >
                   Retry
                 </button>
@@ -434,7 +436,7 @@ export default function MarketplacePage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
-                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-accent-base hover:bg-[#6B0000] transition-colors"
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold text-[#1a140f] bg-[var(--accent-base)] hover:opacity-90 transition-colors"
                   >
                     {t("viewAllProducts")}
                   </button>
@@ -456,7 +458,7 @@ export default function MarketplacePage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.02 }}
-                    className="group relative flex flex-col rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden hover:border-white/[0.10] transition-all duration-300"
+                    className="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[rgba(255,255,255,0.015)] overflow-hidden hover:border-[var(--accent-base)]/35 transition-all duration-300"
                   >
                     {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -540,7 +542,7 @@ export default function MarketplacePage() {
                         </Link>
                         <button
                           onClick={() => handleAdd(product)}
-                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-accent-base hover:bg-[#6B0000] text-white transition-all"
+                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-[var(--accent-base)] hover:opacity-90 text-[#1a140f] transition-all"
                         >
                           <ShoppingCart className="w-4 h-4" />
                         </button>

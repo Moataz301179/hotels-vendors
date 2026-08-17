@@ -52,19 +52,19 @@ export const POST = apiRoute(async (request: NextRequest, ctx: { params: Promise
     action: "DISPUTE_RESOLVED",
     tenantId: auth.tenantId,
     actorId: auth.userId,
-    beforeState: JSON.stringify({
+    beforeState: {
       status: existing.status,
       resolution: existing.resolution,
       liability: existing.liability,
-    }),
-    afterState: JSON.stringify({
+    },
+    afterState: {
       status: "RESOLVED",
       resolution: input.resolution,
       liability: input.liability,
       refundAmount: input.refundAmount,
       resolvedBy: auth.userId,
       resolvedAt: new Date().toISOString(),
-    }),
+    },
   });
 
   return success(updated);

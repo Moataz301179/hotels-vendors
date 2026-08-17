@@ -18,29 +18,22 @@ export function DataTableMini<T extends Record<string, unknown>>({
 }) {
   if (!data.length) {
     return (
-      <div style={{ padding: "48px 16px", textAlign: "center", color: "var(--text-tertiary)" }}>
+      <div className="command-panel rounded-xl px-4 py-12 text-center command-text-muted">
         No data available
       </div>
     )
   }
 
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+    <div className="overflow-x-auto">
+      <table className="command-table min-w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+          <tr>
             {columns.map(col => (
               <th
                 key={col.key}
-                style={{
-                  textAlign: col.align || "left",
-                  padding: "10px 12px",
-                  color: "var(--text-secondary)",
-                  fontWeight: 500,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
+                className="px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.15em] text-[#9bd9ea]"
+                style={{ textAlign: col.align || "left" }}
               >
                 {col.header}
               </th>
@@ -49,18 +42,12 @@ export function DataTableMini<T extends Record<string, unknown>>({
         </thead>
         <tbody>
           {data.map((row, i) => (
-            <tr
-              key={i}
-              style={{ borderBottom: "1px solid var(--border-subtle)" }}
-            >
+            <tr key={i} className="border-t border-white/[0.06]">
               {columns.map(col => (
                 <td
                   key={col.key}
-                  style={{
-                    textAlign: col.align || "left",
-                    padding: "10px 12px",
-                    color: "var(--text-primary)",
-                  }}
+                  className="px-3 py-2.5 text-white/85"
+                  style={{ textAlign: col.align || "left" }}
                 >
                   {col.render ? col.render(row) : String(row[col.key] ?? "")}
                 </td>

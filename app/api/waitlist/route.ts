@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import type { Prisma, UserSector } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import type { UserSector } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 

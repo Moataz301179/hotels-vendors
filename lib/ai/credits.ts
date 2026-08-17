@@ -236,11 +236,10 @@ export async function createSubscription(params: {
   await prisma.auditLog.create({
     data: {
       tenantId,
+      entityId: subscription.id,
       actorId: userId,
-      action: "AI_SUBSCRIPTION_CREATED",
-      resource: "ai_subscription",
-      resourceId: subscription.id,
-      details: {
+      actionType: "CREATE",
+      changes: {
         tier,
         monthlyCredits: tierConfig.monthlyCredits,
         monthlyPrice: tierConfig.monthlyPrice,

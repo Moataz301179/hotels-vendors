@@ -126,9 +126,9 @@ export default function LoginPage() {
               <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-white/[0.03] accent-[#39ff7e]" />
               Remember me
             </label>
-            <Link href="/forgot-password" className="text-[13px] text-[#39ff7e] hover:opacity-80 transition-opacity font-medium">
-              Forgot password?
-            </Link>
+            <a href="mailto:hello@hotelsvendors.com" className="text-[13px] text-[#39ff7e] hover:opacity-80 transition-opacity font-medium">
+              Need help?
+            </a>
           </div>
 
           {/* Submit */}

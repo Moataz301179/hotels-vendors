@@ -198,7 +198,7 @@ export default function HotelCatalogPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-canvas)] text-white flex items-center justify-center">
         <EmptyState title="Error loading catalog" description={error} />
       </div>
     );
@@ -206,10 +206,10 @@ export default function HotelCatalogPage() {
 
   return (
     <CompareProvider>
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-[var(--bg-canvas)] text-white">
         {/* Hero */}
         <div className="relative overflow-hidden border-b border-white/[0.06]">
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-base/10 via-transparent to-accent-base/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-base)]/14 via-transparent to-[var(--orange-base)]/12" />
           <div className="relative max-w-[1600px] mx-auto px-6 py-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -219,7 +219,7 @@ export default function HotelCatalogPage() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <Package className="w-5 h-5 text-accent-base" />
-                <span className="text-xs font-medium text-accent-base uppercase tracking-wider">Procurement Marketplace</span>
+                <span className="text-xs font-medium text-[var(--accent-light)] uppercase tracking-wider">Procurement Marketplace</span>
               </div>
               <h1 className="text-2xl font-bold tracking-tight mb-2">
                 {activeCategoryLabel ? `${activeCategoryLabel} Products` : "One-Stop Hotel Procurement"}
@@ -241,7 +241,7 @@ export default function HotelCatalogPage() {
         </div>
 
         {/* Category Nav */}
-        <div className="border-b border-white/[0.06] bg-[#0a0a0a]/50 backdrop-blur-sm">
+        <div className="border-b border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <div className="max-w-[1600px] mx-auto px-6">
             <CategoryNav
               activeCategory={activeCategory}
@@ -260,7 +260,7 @@ export default function HotelCatalogPage() {
             <div className="flex items-center gap-4">
               <span className="text-sm text-white/40">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}</span>
               {activeCategoryLabel && (
-                <span className="px-2 py-0.5 rounded-md bg-accent-base/15 border border-accent-base/25 text-accent-base text-xs font-medium">{activeCategoryLabel}</span>
+                <span className="px-2 py-0.5 rounded-md bg-[var(--accent-base)]/18 border border-[var(--accent-base)]/30 text-[var(--accent-light)] text-xs font-medium">{activeCategoryLabel}</span>
               )}
 
             </div>
@@ -276,10 +276,10 @@ export default function HotelCatalogPage() {
                 </select>
               </div>
               <div className="flex items-center rounded-lg border border-white/[0.08] overflow-hidden">
-                <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "bg-accent-base text-white" : "text-white/40 hover:text-white/70"}`}>
+                <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "bg-[var(--accent-base)] text-[#1a140f]" : "text-white/40 hover:text-white/70"}`}>
                   <Grid3X3 className="w-4 h-4" />
                 </button>
-                <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "bg-accent-base text-white" : "text-white/40 hover:text-white/70"}`}>
+                <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "bg-[var(--accent-base)] text-[#1a140f]" : "text-white/40 hover:text-white/70"}`}>
                   <LayoutList className="w-4 h-4" />
                 </button>
               </div>
@@ -298,7 +298,7 @@ export default function HotelCatalogPage() {
                   activeCategory && (
                     <button
                       onClick={() => setActiveCategory("")}
-                      className="mt-4 px-4 py-2 rounded-lg bg-accent-base text-white text-sm font-medium hover:bg-accent-base/80 transition-colors"
+                      className="mt-4 px-4 py-2 rounded-lg bg-[var(--accent-base)] text-[#1a140f] text-sm font-semibold hover:opacity-90 transition-colors"
                     >
                       View All Products
                     </button>

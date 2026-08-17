@@ -138,10 +138,10 @@ export function ProductCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-accent-base/40 transition-all duration-300"
+      className="group relative flex flex-col rounded-xl border border-white/[0.08] bg-[rgba(255,255,255,0.015)] overflow-hidden hover:border-[var(--accent-base)]/40 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -2 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -156,7 +156,7 @@ export function ProductCard({
             {stockStatus.label}
           </span>
           {supplierTier === "PREMIER" && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-accent-base/20 text-[#ff7a33] border border-accent-base/30">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[var(--accent-base)]/18 text-[var(--accent-light)] border border-[var(--accent-base)]/30">
               Premier
             </span>
           )}
@@ -173,7 +173,7 @@ export function ProductCard({
             onClick={() => setIsWishlisted(!isWishlisted)}
             className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
               isWishlisted
-                ? "bg-accent-base border-accent-base text-white"
+                ? "bg-[var(--accent-base)] border-[var(--accent-base)] text-[#1a140f]"
                 : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
             }`}
           >
@@ -190,7 +190,7 @@ export function ProductCard({
               onClick={() => inCompare ? removeItem(compareData.id) : addItem(compareData)}
               className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
                 inCompare
-                  ? "bg-accent-base border-accent-base text-white"
+                  ? "bg-[var(--accent-base)] border-[var(--accent-base)] text-[#1a140f]"
                   : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
               }`}
             >
@@ -279,7 +279,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart?.(id, qty)}
             disabled={stockQuantity === 0}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-[#6B0512] disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent-base)] hover:opacity-90 disabled:bg-white/[0.05] disabled:text-white/20 text-[#1a140f] text-sm font-semibold transition-all active:scale-[0.98]"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Add to Cart</span>

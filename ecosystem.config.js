@@ -16,8 +16,8 @@ module.exports = {
     {
       name: "hotels-vendors",
       script: "node_modules/.bin/next",
-      args: ["start"],
-      cwd: "/var/www/hotelsvendors-v2",
+      args: ["start", "-p", "3000"],
+      cwd: process.env.HV_APP_ROOT || "/var/www/hotelsvendors-v2",
       instances: 1,
       exec_mode: "fork",
       autorestart: true,

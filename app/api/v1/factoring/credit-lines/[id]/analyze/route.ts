@@ -65,16 +65,16 @@ export async function POST(
 
     // ── STEP 1: Run proprietary scoring engine ────────────────────
     const financials = {
-      annualRevenue: app.annualRevenue || 0,
-      netProfit: app.netProfit || 0,
-      totalAssets: app.totalAssets || 0,
-      currentAssets: app.currentAssets || 0,
-      totalLiabilities: app.totalLiabilities || 0,
-      currentLiabilities: app.currentLiabilities || 0,
-      bankBalance: app.bankBalance || 0,
-      monthlyPurchases: app.monthlyPurchases || 0,
-      avgPaymentDays: app.avgPaymentDays || 0,
-      existingDebt: app.existingDebt || 0,
+      annualRevenue: Number(app.annualRevenue || 0),
+      netProfit: Number(app.netProfit || 0),
+      totalAssets: Number(app.totalAssets || 0),
+      currentAssets: Number(app.currentAssets || 0),
+      totalLiabilities: Number(app.totalLiabilities || 0),
+      currentLiabilities: Number(app.currentLiabilities || 0),
+      bankBalance: Number(app.bankBalance || 0),
+      monthlyPurchases: Number(app.monthlyPurchases || 0),
+      avgPaymentDays: Number(app.avgPaymentDays || 0),
+      existingDebt: Number(app.existingDebt || 0),
     };
 
     const profile = {
@@ -90,7 +90,7 @@ export async function POST(
       bankGuarantee: app.bankGuarantee,
       personalGuarantee: app.personalGuarantee,
       equipmentCollateral: app.equipmentCollateral,
-      depositAmount: app.depositAmount || 0,
+      depositAmount: Number(app.depositAmount || 0),
     };
 
     const market = {
@@ -109,15 +109,15 @@ PROPERTIES: ${app.properties || 1} | ROOMS: ${app.rooms || "N/A"}
 LOCATION: ${app.governorate || "Unknown"}
 
 FINANCIAL SNAPSHOT:
-- Annual Revenue: EGP ${(app.annualRevenue || 0).toLocaleString()}
-- Net Profit: EGP ${(app.netProfit || 0).toLocaleString()} (${app.annualRevenue ? ((app.netProfit || 0) / app.annualRevenue * 100).toFixed(1) : "N/A"}% margin)
-- Total Assets: EGP ${(app.totalAssets || 0).toLocaleString()}
-- Total Liabilities: EGP ${(app.totalLiabilities || 0).toLocaleString()}
-- Current Ratio: ${(app.currentLiabilities || 0) > 0 ? ((app.currentAssets || 0) / (app.currentLiabilities || 1)).toFixed(2) : "N/A"}
-- Bank Balance: EGP ${(app.bankBalance || 0).toLocaleString()}
-- Monthly Purchases: EGP ${(app.monthlyPurchases || 0).toLocaleString()}
+- Annual Revenue: EGP ${Number(app.annualRevenue || 0).toLocaleString()}
+- Net Profit: EGP ${Number(app.netProfit || 0).toLocaleString()} (${app.annualRevenue ? ((Number(app.netProfit || 0)) / Number(app.annualRevenue) * 100).toFixed(1) : "N/A"}% margin)
+- Total Assets: EGP ${Number(app.totalAssets || 0).toLocaleString()}
+- Total Liabilities: EGP ${Number(app.totalLiabilities || 0).toLocaleString()}
+- Current Ratio: ${Number(app.currentLiabilities || 0) > 0 ? ((Number(app.currentAssets || 0)) / (Number(app.currentLiabilities || 1))).toFixed(2) : "N/A"}
+- Bank Balance: EGP ${Number(app.bankBalance || 0).toLocaleString()}
+- Monthly Purchases: EGP ${Number(app.monthlyPurchases || 0).toLocaleString()}
 - Average Payment Days: ${app.avgPaymentDays || "N/A"}
-- Existing Debt: EGP ${(app.existingDebt || 0).toLocaleString()}
+- Existing Debt: EGP ${Number(app.existingDebt || 0).toLocaleString()}
 
 COLLATERAL:
 - Property Deed: ${app.propertyDeed ? "YES" : "NO"}
@@ -148,7 +148,6 @@ Use the engine scores as your baseline. Your task is to write the narrative repo
       const llmResult = await executeLLM(FINANCIAL_ANALYST_PROMPT, financialPrompt, {
         temperature: 0.2,
         maxTokens: 3000,
-        preferredModel: "xai",
       });
       aiResult = JSON.parse(llmResult.content.replace(/```json?\s*|```/g, "").trim());
     } catch (llmError) {

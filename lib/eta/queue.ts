@@ -125,21 +125,21 @@ export function createEtaWorker(): Worker {
           total: item.total,
           valueDifference: 0,
           totalTaxableFees: 0,
-          netTotal: item.total,
+          netTotal: Number(item.total || 0),
           itemsDiscount: 0,
           discount: { amount: 0 },
           taxableItems: [
-            { taxType: "T1" as const, amount: item.total * 0.14, subType: "V001", rate: 14 },
+            { taxType: "T1" as const, amount: Number(item.total || 0) * 0.14, subType: "V001", rate: 14 },
           ],
         })),
         totalSalesAmount: invoice.subtotal,
         netAmount: invoice.subtotal,
         taxTotals: [{ taxType: "T1" as const, amount: invoice.vatAmount }],
-        totalAmount: invoice.total,
+        totalAmount: Number(invoice.total ?? 0),
       };
 
       // Submit to ETA
-      const result = await etaClient.submitInvoice(payload);
+      const result = await etaClient.submitInvoice(payload as unknown as import("@/lib/eta/types").EtaInvoicePayload);
 
       // Update invoice
       await prisma.invoice.update({
@@ -156,12 +156,12 @@ export function createEtaWorker(): Worker {
       const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
       await appendAuditEntry({
         tenantId,
-        entityType: "INVOICE",
+        entityName: "INVOICE",
         entityId: invoiceId,
-        action: "ETA_SUBMIT",
+        actionType: "UPDATE",
         actorId: userId,
         actorRole: platformRole,
-        afterState: { etaUuid: result.uuid, status: "ACCEPTED" },
+        changes: { etaUuid: result.uuid, status: "ACCEPTED" },
       });
 
       await recordSwarmEvent("eta_submitted", "INFO", {
@@ -205,12 +205,12 @@ export function createEtaDeadLetterWorker(): Worker {
       const { appendAuditEntry: appendAuditEntryDlq } = await import("@/lib/audit/tamper-proof");
       await appendAuditEntryDlq({
         tenantId,
-        entityType: "INVOICE",
+        entityName: "INVOICE",
         entityId: invoiceId,
-        action: "ETA_SUBMIT_DLQ",
+        actionType: "UPDATE",
         actorId: "system",
         actorRole: "SYSTEM",
-        afterState: { error: job.failedReason, attempts: job.attemptsMade },
+        changes: { error: job.failedReason, attempts: job.attemptsMade },
       });
 
       await recordSwarmEvent("eta_dlq", "ERROR", {

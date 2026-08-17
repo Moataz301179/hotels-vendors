@@ -70,7 +70,7 @@ export function SearchBar({
         <div
           className={`flex items-center gap-3 rounded-xl border bg-white/[0.03] px-4 py-3 transition-all duration-200 ${
             isFocused
-              ? "border-accent-base/50 shadow-[0_0_20px_rgba(139,10,30,0.15)]"
+              ? "border-[var(--accent-base)]/45 shadow-[0_8px_24px_rgba(179,138,86,0.14)]"
               : "border-white/[0.08] hover:border-white/[0.12]"
           }`}
         >
@@ -97,7 +97,7 @@ export function SearchBar({
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`relative p-1.5 rounded-lg transition-colors ${
-              showFilters ? "bg-accent-base/20 text-[#ff7a33]" : "text-white/30 hover:text-white/60"
+              showFilters ? "bg-[var(--accent-base)]/20 text-[var(--accent-light)]" : "text-white/30 hover:text-white/60"
             }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
@@ -109,7 +109,7 @@ export function SearchBar({
           </button>
           <button
             type="submit"
-            className="px-4 py-1.5 rounded-lg bg-accent-base hover:bg-[#6B0512] text-white text-sm font-medium transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-[var(--accent-base)] hover:opacity-90 text-[#1a140f] text-sm font-semibold transition-colors"
           >
             Search
           </button>
@@ -155,7 +155,7 @@ export function SearchBar({
                       <button
                         key={s}
                         onClick={() => handleSuggestionClick(s)}
-                        className="px-2.5 py-1 rounded-lg bg-accent-base/10 border border-accent-base/20 text-xs text-[#ff7a33]/80 hover:text-[#ff7a33] hover:border-accent-base/40 transition-colors"
+                        className="px-2.5 py-1 rounded-lg bg-[var(--accent-base)]/12 border border-[var(--accent-base)]/30 text-xs text-[var(--accent-light)] hover:border-[var(--accent-base)]/55 transition-colors"
                       >
                         {s}
                       </button>

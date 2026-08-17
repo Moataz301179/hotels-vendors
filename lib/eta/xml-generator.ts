@@ -101,10 +101,10 @@ function buildParty(tag: "SellerSupplierParty" | "AccountingCustomerParty", part
 
 function buildLineItem(
   idx: number,
-  item: InvoiceRecord["order"]["items"][number],
+  item: NonNullable<InvoiceRecord["order"]>["items"][number],
   vatRate: number
 ): string {
-  const taxableAmount = item.total;
+  const taxableAmount = Number(item.total || 0);
   const taxAmount = taxableAmount * (vatRate / 100);
 
   return `

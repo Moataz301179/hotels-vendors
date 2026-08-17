@@ -1,250 +1,111 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  FileText,
-  Search,
-  Eye,
-  Download,
-} from "lucide-react";
-import { useApi } from "@/lib/hooks/use-api";
-import { LoadingTable } from "@/components/dashboards/shared/loading-card";
-import { EmptyState } from "@/components/dashboards/shared/empty-state";
-import { InvoiceDetailPanel } from "@/components/shared/invoice-detail-panel";
+import { useState } from "react";
+import { FileText, Download, Filter, Search, Eye, Send, AlertCircle, FileCheck, Building2 } from "lucide-react";
+import { StatusBadge } from "@/components/invo/status-badge";
+import { KpiCard } from "@/components/invo/kpi-card";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
-};
+const mockInvoices = [
+  { id: "INV-2026-001", supplier: "Cairo Fresh Foods", hotel: "The Nile Palace", amount: 42500, vat: 6800, total: 49300, status: "paid", eta_status: "submitted", issued_at: "2026-07-20", due_at: "2026-08-19", items: 12 },
+  { id: "INV-2026-002", supplier: "CleanPro Egypt", hotel: "The Nile Palace", amount: 18750, vat: 3000, total: 21750, status: "invoiced", eta_status: "submitted", issued_at: "2026-07-22", due_at: "2026-08-21", items: 5 },
+  { id: "INV-2026-003", supplier: "Nile Hospitality Supplies", hotel: "The Nile Palace", amount: 85000, vat: 13600, total: 98600, status: "pending_approval", eta_status: "not_submitted", issued_at: "2026-07-25", due_at: "2026-08-24", items: 28 },
+  { id: "INV-2026-004", supplier: "Delta Linens Co.", hotel: "The Nile Palace", amount: 31200, vat: 4992, total: 36192, status: "delivered", eta_status: "failed", issued_at: "2026-07-18", due_at: "2026-08-17", items: 8 },
+  { id: "INV-2026-005", supplier: "HotelTech Solutions", hotel: "The Nile Palace", amount: 156000, vat: 24960, total: 180960, status: "draft", eta_status: "not_submitted", issued_at: "2026-07-26", due_at: "2026-08-25", items: 3 },
+];
 
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-};
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  total: number;
-  currency: string;
-  status: string;
-  paymentStatus: string;
-  issueDate: string;
-  dueDate: string | null;
-  hotel: { name: string } | null;
-  supplier: { name: string } | null;
-}
-
-type StatusTab = "ALL" | "PENDING" | "PAID" | "OVERDUE";
-
-function InvoiceStatusBadge({ paymentStatus, dueDate }: { paymentStatus: string; dueDate: string | null }) {
-  const now = new Date();
-  const due = dueDate ? new Date(dueDate) : null;
-  const isOverdue = due && due < now && paymentStatus !== "PAID";
-
-  const config: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    PAID: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400", label: "Paid" },
-    UNPAID: { bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400", label: "Pending" },
-    PARTIAL: { bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400", label: "Partial" },
-    REFUNDED: { bg: "bg-white/10", text: "text-white/40", dot: "bg-white/40", label: "Refunded" },
-  };
-
-  if (isOverdue) {
-    return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-        Overdue
-      </span>
-    );
-  }
-
-  const c = config[paymentStatus] || config.UNPAID;
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${c.bg} ${c.text}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
-      {c.label}
-    </span>
-  );
-}
-
-function formatCurrency(amount: number, currency = "EGP") {
-  return `${currency} ${amount.toLocaleString("en-EG")}`;
+function formatEGP(amount: number) {
+  return new Intl.NumberFormat("en-EG", { style: "currency", currency: "EGP", maximumFractionDigits: 0 }).format(amount);
 }
 
 export default function HotelInvoicesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<StatusTab>("ALL");
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
-  const { data: invoicesData, loading, error } = useApi<Invoice[]>("/api/v1/invoices?page=1&limit=50&sortOrder=desc");
-
-  const invoices = invoicesData ?? [];
-
-  const filtered = useMemo(() => {
-    let list = [...invoices];
-
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(
-        (inv) =>
-          inv.invoiceNumber?.toLowerCase().includes(q) ||
-          inv.hotel?.name?.toLowerCase().includes(q) ||
-          inv.supplier?.name?.toLowerCase().includes(q)
-      );
-    }
-
-    const now = new Date();
-
-    if (activeTab === "PAID") {
-      list = list.filter((inv) => inv.paymentStatus === "PAID");
-    } else if (activeTab === "PENDING") {
-      list = list.filter((inv) => inv.paymentStatus === "UNPAID" && (!inv.dueDate || new Date(inv.dueDate) >= now));
-    } else if (activeTab === "OVERDUE") {
-      list = list.filter((inv) => {
-        const due = inv.dueDate ? new Date(inv.dueDate) : null;
-        return inv.paymentStatus !== "PAID" && due && due < now;
-      });
-    }
-
-    return list;
-  }, [invoices, searchQuery, activeTab]);
-
-  const tabs: { key: StatusTab; label: string }[] = [
-    { key: "ALL", label: "All" },
-    { key: "PENDING", label: "Pending" },
-    { key: "PAID", label: "Paid" },
-    { key: "OVERDUE", label: "Overdue" },
-  ];
+  const filtered = mockInvoices.filter((inv) => {
+    const matchSearch = !search || inv.id.toLowerCase().includes(search.toLowerCase()) || inv.supplier.toLowerCase().includes(search.toLowerCase());
+    const matchFilter = filter === "all" || inv.status === filter || inv.eta_status === filter;
+    return matchSearch && matchFilter;
+  });
 
   return (
-    <motion.div
-      className="max-w-[1600px] mx-auto space-y-6"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header */}
-      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Invoice Management</h1>
-          <p className="text-sm text-white/40 mt-0.5">Track and manage all invoices across your properties</p>
-        </div>
-      </motion.div>
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-[22px] font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>Invoices & VAT</h1>
+        <p className="mt-1 text-[13px] text-white/35">Manage invoices, track ETA e-invoicing status, and view VAT breakdowns.</p>
+      </div>
 
-      {/* Toolbar */}
-      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === tab.key
-                  ? "bg-accent-base text-white"
-                  : "text-white/40 hover:text-white/70 hover:bg-white/[0.03]"
-              }`}
-            >
-              {tab.label}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <KpiCard label="Total Invoiced" value={formatEGP(333450)} change="+12% this month" changeType="positive" icon={FileText} />
+        <KpiCard label="VAT Collected" value={formatEGP(53352)} change="16% standard rate" icon={FileCheck} iconColor="#c455ff" />
+        <KpiCard label="ETA Submitted" value="3 / 5" change="2 pending" changeType="neutral" icon={Send} iconColor="#39ff7e" />
+        <KpiCard label="Overdue" value="0" change="All on track" changeType="positive" icon={AlertCircle} iconColor="#64b5f6" />
+      </div>
+
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <Filter className="h-4 w-4 flex-shrink-0 text-white/25" />
+          {["all", "draft", "invoiced", "paid", "pending_approval", "submitted", "failed"].map((f) => (
+            <button key={f} type="button" onClick={() => setFilter(f)} className={`flex-shrink-0 rounded-full px-3 py-1 text-[11px] font-medium transition-all capitalize ${filter === f ? "bg-white/10 text-white border border-white/15" : "bg-white/[0.03] text-white/35 border border-transparent hover:bg-white/[0.05]"}`}>
+              {f === "all" ? "All" : f.replace("_", " ")}
             </button>
           ))}
         </div>
-        <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-          <input
-            type="text"
-            placeholder="Search invoice number..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-4 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-accent-base/50 w-64"
-          />
+        <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-1.5">
+          <Search className="h-4 w-4 text-white/25" />
+          <input type="text" placeholder="Search invoices..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent text-[13px] text-white placeholder-white/25 outline-none w-48" />
         </div>
-      </motion.div>
+      </div>
 
-      {/* Table */}
-      {loading ? (
-        <LoadingTable rows={5} />
-      ) : error ? (
-        <EmptyState title="Error loading invoices" description={error} />
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          title="No invoices found"
-          description={searchQuery || activeTab !== "ALL" ? "Try adjusting your filters." : "Invoices will appear here once created."}
-        />
-      ) : (
-        <motion.div variants={fadeInUp} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden overflow-x-auto table-scroll-wrapper">
-          <table className="w-full min-w-[800px]">
+      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+        <div className="table-scroll-wrapper">
+          <table className="w-full text-left">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Invoice #</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Hotel</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Supplier</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Issue Date</th>
-                <th className="text-left px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider">Due Date</th>
-                <th className="text-right px-4 py-3 text-[10px] font-semibold text-white/30 uppercase tracking-wider"></th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider">Invoice</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider">Supplier</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider text-right">Amount</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider text-right">VAT</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider text-right">Total</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider">Status</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider">ETA</th>
+                <th className="px-5 py-3 text-[11px] font-medium text-white/30 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((invoice) => (
-                <tr key={invoice.id} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <FileText size={14} className="text-white/20" />
-                      <span className="text-xs font-mono text-white/60">{invoice.invoiceNumber}</span>
-                    </div>
+              {filtered.map((inv) => (
+                <tr key={inv.id} className="data-table-row">
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-2"><Building2 className="h-3.5 w-3.5 text-white/20" /><span className="text-[13px] font-medium text-white">{inv.id}</span></div>
+                    <p className="text-[11px] text-white/25 mt-0.5">{inv.issued_at} &middot; {inv.items} items</p>
                   </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-white">{invoice.hotel?.name || "—"}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-white/60">{invoice.supplier?.name || "—"}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-semibold text-white">{formatCurrency(invoice.total, invoice.currency)}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <InvoiceStatusBadge paymentStatus={invoice.paymentStatus} dueDate={invoice.dueDate} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">{new Date(invoice.issueDate).toLocaleDateString()}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-[11px] text-white/30">
-                      {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : "—"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1">
-                      <button
-                        onClick={() => setSelectedInvoice(invoice)}
-                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                        aria-label={`View invoice ${invoice.invoiceNumber}`}
-                      >
-                        <Eye size={14} />
-                      </button>
-                      <button
-                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/[0.04] text-white/20 hover:text-white/60 transition-colors"
-                        aria-label="Download invoice"
-                      >
-                        <Download size={14} />
-                      </button>
+                  <td className="px-5 py-4 text-[13px] text-white/60">{inv.supplier}</td>
+                  <td className="px-5 py-4 text-[13px] text-white/60 text-right font-mono">{formatEGP(inv.amount)}</td>
+                  <td className="px-5 py-4 text-[13px] text-[#c455ff]/60 text-right font-mono">{formatEGP(inv.vat)}</td>
+                  <td className="px-5 py-4 text-[13px] text-white text-right font-mono font-medium">{formatEGP(inv.total)}</td>
+                  <td className="px-5 py-4"><StatusBadge status={inv.status} /></td>
+                  <td className="px-5 py-4"><StatusBadge status={inv.eta_status} /></td>
+                  <td className="px-5 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button type="button" className="p-1.5 rounded-md hover:bg-white/[0.05] text-white/25 hover:text-white transition-colors" title="View"><Eye className="h-3.5 w-3.5" /></button>
+                      <button type="button" className="p-1.5 rounded-md hover:bg-white/[0.05] text-white/25 hover:text-white transition-colors" title="Download"><Download className="h-3.5 w-3.5" /></button>
                     </div>
                   </td>
                 </tr>
               ))}
+              {filtered.length === 0 && <tr><td colSpan={8} className="px-5 py-12 text-center text-[13px] text-white/20">No invoices found.</td></tr>}
             </tbody>
           </table>
-        </motion.div>
-      )}
+        </div>
+      </div>
 
-      <InvoiceDetailPanel
-        invoice={selectedInvoice}
-        isOpen={!!selectedInvoice}
-        onClose={() => setSelectedInvoice(null)}
-        onViewFull={(inv) => window.open(`/invoices/${inv.id}`, "_self")}
-      />
-    </motion.div>
+      <div className="mt-8 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
+        <h3 className="text-[15px] font-semibold text-white mb-4" style={{ fontFamily: "var(--font-display)" }}>VAT Summary — July 2026</h3>
+        <div className="grid gap-6 sm:grid-cols-3">
+          <div><p className="text-[11px] text-white/30 uppercase tracking-wider mb-1">Taxable Amount</p><p className="text-[20px] font-semibold text-white">{formatEGP(333450)}</p></div>
+          <div><p className="text-[11px] text-white/30 uppercase tracking-wider mb-1">VAT Due (16%)</p><p className="text-[20px] font-semibold text-[#c455ff]">{formatEGP(53352)}</p></div>
+          <div><p className="text-[11px] text-white/30 uppercase tracking-wider mb-1">ETA Submission Rate</p><p className="text-[20px] font-semibold text-[#39ff7e]">60%</p><p className="text-[11px] text-white/25 mt-1">3 of 5 invoices submitted</p></div>
+        </div>
+      </div>
+    </div>
   );
 }

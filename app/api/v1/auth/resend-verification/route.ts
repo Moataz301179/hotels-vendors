@@ -65,7 +65,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   try {
     const verification = emailVerificationTemplate({
       name: user.name,
-      verificationUrl: `${baseUrl}/verify-email?token=${token}`,
+      verificationUrl: `${baseUrl}/verify?token=${token}&email=${encodeURIComponent(user.email)}`,
     });
     await sendEmail({
       to: [user.email],

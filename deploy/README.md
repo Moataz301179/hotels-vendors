@@ -1,5 +1,11 @@
 # Hotels Vendors — Production Deployment Guide
 
+## Canonical Production Path
+
+- Production deployment is PM2 on Hostinger VPS via GitHub Actions workflow [.github/workflows/deploy.yml](../.github/workflows/deploy.yml).
+- Docker-based production workflows are deprecated and must not be used for live releases.
+- Always verify post-deploy with `https://www.hotelsvendors.com/api/health` and review uploaded deploy artifacts when a run fails.
+
 ## Architecture
 
 ```

@@ -61,7 +61,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const parsed = InvoiceUploadSchema.safeParse(body);
 
   if (!parsed.success) {
-    return error(`Validation failed: ${parsed.error.errors.map(e => e.message).join(", ")}`, 400);
+    return error(`Validation failed: ${parsed.error.issues.map((e: { message: string }) => e.message).join(", ")}`, 400);
   }
 
   const data = parsed.data;
@@ -95,7 +95,9 @@ export const POST = apiRoute(async (request: NextRequest) => {
         taxId: data.supplierTaxId,
         tenantId: auth.tenantId,
         status: "ACTIVE",
-        category: "HOSPITALITY_SUPPLIER",
+        city: "Unknown",
+        governorate: "Unknown",
+        email: `supplier-${Date.now()}@placeholder.local`,
       },
     });
 
@@ -129,6 +131,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
         taxId: data.hotelTaxId || `PENDING-${Date.now()}`,
         tenantId: auth.tenantId,
         status: "ACTIVE",
+        city: "Unknown",
+        governorate: "Unknown",
       },
     });
   }
@@ -182,14 +186,14 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (data.etaUuid) {
     const etaResult = await validateForFactoring(invoice.id);
     etaValid = etaResult.valid;
-    etaError = etaResult.valid ? null : etaResult.message;
+    etaError = etaResult.valid ? null : (etaResult.message ?? null);
 
     // Update invoice with ETA status
     await prisma.invoice.update({
       where: { id: invoice.id },
       data: {
         etaStatus: etaResult.valid ? "ACCEPTED" : "REJECTED",
-        factoringStatus: etaResult.valid ? "FACTORING" : "NOT_FACTORABLE",
+        factoringStatus: etaResult.valid ? "AVAILABLE" : "NOT_FACTORABLE",
       },
     });
   }

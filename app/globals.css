@@ -1,80 +1,84 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   HOTELS VENDORS — DESIGN SYSTEM v8 (Reference-Aligned)
-   Green: #39ff7e — Primary / HotelsVendors
-   Orange: #ff7e1a — Fast / INVO / Factoring
-   Purple: #c455ff — AI / Compliance
+  HOTELS VENDORS — DESIGN SYSTEM v9 (Ledger Atelier)
+  Brass: #b38a56 — Primary / Trust
+  Slate: #7d8f9c — Data
+  Plum: #6d5a7a — Insight
    Background: oklch(0.10 0.015 280) / #0c0c12
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Background Layers — Dark reference ── */
-  --bg-canvas: #0c0c12;
-  --bg-surface-1: #12121a;
-  --bg-surface-2: #1a1a24;
-  --bg-surface-3: #22222e;
+  /* ── Background Layers — Light neutral reference ── */
+  --bg-canvas: #f5f7f8;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f1f4f6;
+  --bg-surface-3: #e8edf1;
 
-  --background: #0c0c12;
-  --surface: #12121a;
-  --surface-raised: #1a1a24;
-  --surface-hover: #22222e;
+  --background: #f5f7f8;
+  --surface: #ffffff;
+  --surface-raised: #f1f4f6;
+  --surface-hover: #e8edf1;
 
   /* ── Text Hierarchy ── */
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0b0;
-  --text-tertiary: #7a7a92;
-  --text-muted: #797994;
+  --text-primary: #1a1d1f;
+  --text-secondary: #3a3f45;
+  --text-tertiary: #616a72;
+  --text-muted: #7a8188;
 
-  --foreground: #ffffff;
-  --foreground-secondary: #a0a0b0;
-  --foreground-tertiary: #7a7a92;
-  --foreground-muted: #797994;
+  --foreground: #1a1d1f;
+  --foreground-secondary: #3a3f45;
+  --foreground-tertiary: #616a72;
+  --foreground-muted: #7a8188;
 
   /* ── Borders ── */
-  --border-invisible: rgba(255, 255, 255, 0.03);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-visible: rgba(255, 255, 255, 0.10);
-  --border-accent: rgba(57, 255, 126, 0.20);
+  --border-invisible: rgba(15, 23, 42, 0.03);
+  --border-subtle: rgba(15, 23, 42, 0.07);
+  --border-visible: rgba(15, 23, 42, 0.12);
+  --border-accent: rgba(179, 138, 86, 0.22);
 
-  /* ── Primary: Green #39ff7e ── */
-  --accent-base: #39ff7e;
-  --accent-light: #5fff9a;
-  --accent-dark: #20e060;
-  --accent-muted: rgba(57, 255, 126, 0.10);
-  --accent-glow: rgba(57, 255, 126, 0.12);
+  /* ── Primary: Brass #b38a56 ── */
+  --accent-base: #b38a56;
+  --accent-light: #c9a873;
+  --accent-dark: #8d6b42;
+  --accent-muted: rgba(179, 138, 86, 0.12);
+  --accent-glow: rgba(179, 138, 86, 0.15);
 
-  /* ── Orange #ff7e1a ── */
-  --orange-base: #ff7e1a;
-  --orange-light: #ff9640;
-  --orange-dark: #e06800;
-  --orange-muted: rgba(255, 126, 26, 0.10);
-  --orange-glow: rgba(255, 126, 26, 0.12);
+  /* ── Data Slate #7d8f9c ── */
+  --orange-base: #7d8f9c;
+  --orange-light: #96a7b4;
+  --orange-dark: #586875;
+  --orange-muted: rgba(125, 143, 156, 0.12);
+  --orange-glow: rgba(125, 143, 156, 0.14);
 
-  /* ── Purple #c455ff ── */
-  --purple-base: #c455ff;
-  --purple-light: #d47aff;
-  --purple-dark: #a030e0;
-  --purple-muted: rgba(196, 85, 255, 0.10);
-  --purple-glow: rgba(196, 85, 255, 0.12);
+  /* ── Insight Plum #6d5a7a ── */
+  --purple-base: #6d5a7a;
+  --purple-light: #827092;
+  --purple-dark: #564761;
+  --purple-muted: rgba(109, 90, 122, 0.12);
+  --purple-glow: rgba(109, 90, 122, 0.14);
 
   /* ── Semantic ── */
   --error: #EF4444;
-  --success: #39ff7e;
-  --warning: #ff7e1a;
-  --info: #64b5f6;
+  --success: #5b8f63;
+  --warning: #b38a56;
+  --info: #3a7bd5;
 
   /* ── Shadows ── */
-  --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow-green: 0 0 40px rgba(57, 255, 126, 0.08);
-  --shadow-glow-orange: 0 0 40px rgba(255, 126, 26, 0.08);
-  --shadow-glow-purple: 0 0 40px rgba(196, 85, 255, 0.08);
-  --shadow-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-elevated: 0 10px 32px rgba(15, 23, 42, 0.08);
+  --shadow-glow-green: 0 0 24px rgba(91, 143, 99, 0.08);
+  --shadow-glow-orange: 0 0 24px rgba(179, 138, 86, 0.10);
+  --shadow-glow-purple: 0 0 24px rgba(109, 90, 122, 0.08);
+  --shadow-inner-light: inset 0 1px 0 rgba(255,255,255,0.7);
+  --shadow-holo: 0 0 0 1px rgba(15,23,42,0.04), 0 18px 48px rgba(15, 23, 42, 0.10);
 
   /* ── Layout ── */
   --header-height: 64px;
   --sidebar-width: 280px;
   --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
+  --mesh-line: rgba(179, 138, 86, 0.10);
+  --mesh-line-soft: rgba(125, 143, 156, 0.08);
+  --mesh-scan: rgba(15,23,42,0.04);
 
   /* ── Density Scale (comfortable = default) ── */
   --density-scale: 1;
@@ -110,12 +114,17 @@
 /* ── Base ── */
 html { scroll-behavior: smooth; }
 body {
-  background: var(--bg-canvas);
+  background:
+    radial-gradient(circle at 12% -8%, rgba(179,138,86,0.12), transparent 42%),
+    radial-gradient(circle at 82% 8%, rgba(125,143,156,0.10), transparent 40%),
+    radial-gradient(circle at 56% 120%, rgba(109,90,122,0.08), transparent 38%),
+    linear-gradient(180deg, #f9fafb 0%, #f2f5f7 46%, #eef2f4 100%);
   color: var(--text-primary);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
+  color-scheme: light;
 }
 ::selection { background: var(--accent-muted); color: #fff; }
 
@@ -440,10 +449,172 @@ textarea:focus-visible {
    TEXT GRADIENT UTILITIES
    ═══════════════════════════════════════════════════════════════ */
 .text-gradient-lime {
-  background: linear-gradient(135deg, #39ff7e, #ff7e1a);
+  background: linear-gradient(135deg, #d8bd93, #8da2af);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.text-gradient-holo {
+  background: linear-gradient(125deg, #efe4d2 0%, #d3b182 38%, #93a7b5 72%, #a693b3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Signature layer used on marketing surfaces for a recognizable tech identity */
+.fintech-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.fintech-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--mesh-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mesh-line-soft) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at 50% 0%, black 40%, transparent 92%);
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, black 40%, transparent 92%);
+  z-index: -2;
+}
+
+.fintech-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255,255,255,0.015) 49%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  opacity: 0.2;
+  z-index: -1;
+}
+
+.tech-panel {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  box-shadow: var(--shadow-holo);
+  backdrop-filter: blur(12px);
+}
+
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(210, 176, 126, 0.35);
+  background: rgba(6, 20, 28, 0.72);
+  color: rgba(245, 229, 203, 0.94);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.signature-divider {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgba(210,176,126,0.5), transparent);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-120%); opacity: 0; }
+  30% { opacity: 0.35; }
+  100% { transform: translateY(240%); opacity: 0; }
+}
+
+@keyframes shaderFloat {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(22px, -16px, 0) scale(1.04); }
+  66% { transform: translate3d(-18px, 14px, 0) scale(0.98); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes shaderDrift {
+  0% { transform: translateX(-5%) rotate(0deg); opacity: 0.5; }
+  50% { transform: translateX(7%) rotate(4deg); opacity: 0.78; }
+  100% { transform: translateX(-5%) rotate(0deg); opacity: 0.5; }
+}
+
+@keyframes shaderPulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.48; }
+}
+
+.scanline {
+  position: absolute;
+  inset: -120% 0 auto 0;
+  height: 24%;
+  background: linear-gradient(180deg, transparent, var(--mesh-scan), transparent);
+  mix-blend-mode: screen;
+  animation: scanline 6.8s linear infinite;
+  pointer-events: none;
+}
+
+.shader-stack {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shader-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: shaderFloat 14s ease-in-out infinite;
+}
+
+.shader-orb-brass {
+  background: radial-gradient(circle at 35% 35%, rgba(211, 177, 130, 0.58), rgba(179, 138, 86, 0.2) 62%, transparent 75%);
+}
+
+.shader-orb-slate {
+  background: radial-gradient(circle at 40% 42%, rgba(161, 176, 187, 0.48), rgba(125, 143, 156, 0.18) 65%, transparent 78%);
+  animation-duration: 18s;
+  animation-direction: reverse;
+}
+
+.shader-ribbon {
+  position: absolute;
+  width: 130%;
+  height: 140%;
+  left: -15%;
+  top: -18%;
+  background:
+    conic-gradient(from 120deg at 50% 50%, transparent, rgba(200, 163, 111, 0.22), rgba(125, 143, 156, 0.2), rgba(162, 140, 180, 0.16), transparent 75%);
+  filter: blur(52px);
+  mix-blend-mode: screen;
+  opacity: 0.58;
+  animation: shaderDrift 22s ease-in-out infinite;
+}
+
+.shader-grain {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.09) 0.65px, transparent 0.65px),
+    radial-gradient(rgba(0,0,0,0.08) 0.65px, transparent 0.65px);
+  background-size: 3px 3px, 4px 4px;
+  background-position: 0 0, 1px 1px;
+  opacity: 0.055;
+  mix-blend-mode: soft-light;
+  animation: shaderPulse 6s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .fintech-shell::before {
+    background-size: 36px 36px;
+    opacity: 0.45;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -511,4 +682,92 @@ textarea:focus-visible {
 /* Sidebar nav item spacing */
 .density-nav > * + * {
   margin-top: calc(var(--density-scale) * 0.25rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD SIGNATURE SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+
+.command-room {
+  position: relative;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(179,138,86,0.15), transparent 38%),
+    radial-gradient(circle at 90% 12%, rgba(125,143,156,0.12), transparent 34%),
+    linear-gradient(180deg, #0d1115 0%, #11171d 42%, #0d1217 100%);
+}
+
+.command-room::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(210,176,126,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143,157,168,0.06) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(circle at 50% 0%, black 36%, transparent 86%);
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, black 36%, transparent 86%);
+}
+
+.command-panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.42);
+  backdrop-filter: blur(12px);
+}
+
+.command-header {
+  border-bottom: 1px solid rgba(210,176,126,0.2);
+  background: linear-gradient(90deg, rgba(24,18,12,0.72), rgba(17,24,29,0.66));
+}
+
+.command-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(210,176,126,0.35);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(241, 224, 196, 0.94);
+  background: rgba(6,20,28,0.66);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.command-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #c8a36f;
+  box-shadow: 0 0 10px rgba(200,163,111,0.7);
+}
+
+.command-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+
+.command-table thead th {
+  background: rgba(28, 22, 16, 0.72);
+}
+
+.command-table tbody tr:hover {
+  background: rgba(210,176,126,0.08);
+}
+
+.command-text-soft {
+  color: rgba(255,255,255,0.6);
+}
+
+.command-text-muted {
+  color: rgba(255,255,255,0.42);
 }

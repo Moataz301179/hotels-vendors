@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: false, error: "Product not found" }, { status: 404 });
       }
 
-      const marketplaceProduct = transformManyToMarketplace([product])[0];
+      const marketplaceProduct = transformManyToMarketplace([product as unknown as Parameters<typeof transformManyToMarketplace>[0][0]])[0];
       return NextResponse.json({ success: true, data: { data: marketplaceProduct } });
     }
 
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    const marketplaceProducts = transformManyToMarketplace(products);
+    const marketplaceProducts = transformManyToMarketplace(products as unknown as Parameters<typeof transformManyToMarketplace>[0]);
 
     return NextResponse.json({
       success: true,
@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const marketplaceProduct = transformManyToMarketplace([product as Parameters<typeof transformManyToMarketplace>[0][0]])[0];
+    const marketplaceProduct = transformManyToMarketplace([product as unknown as Parameters<typeof transformManyToMarketplace>[0][0]])[0];
 
     return NextResponse.json(
       { success: true, data: marketplaceProduct },

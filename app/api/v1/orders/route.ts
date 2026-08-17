@@ -93,8 +93,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
       });
 
       // Re-validate inside the transaction (race-condition guard)
-      const currentExposure = hotel.creditUsed ?? 0;
-      if (currentExposure + total > (hotel.creditLimit ?? Infinity)) {
+      const currentExposure = Number(hotel.creditUsed ?? 0);
+      if (currentExposure + total > Number(hotel.creditLimit ?? Infinity)) {
         throw new CREDIT_EXCEEDED_ERROR(
           `Concurrent credit breach. Exposure: EGP ${currentExposure.toFixed(2)} + this order EGP ${total.toFixed(2)} > Limit: EGP ${(hotel.creditLimit ?? 0).toFixed(2)}`,
           currentExposure,

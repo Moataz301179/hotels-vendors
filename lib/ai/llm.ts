@@ -39,6 +39,8 @@ export interface RouterResult {
   latencyMs: number;
   tokensUsed?: number;
   creditsCost: number;
+  model?: string;
+  provider?: string;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -168,17 +170,18 @@ async function callGroq(
   if (!groqKey) return null;
 
   const { temperature = 0.7, maxTokens = 1024, jsonMode = false } = options;
+  const model = process.env.OPENROUTER_MODEL || "llama-3.3-70b-versatile";
 
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${groqKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model,
         messages,
         temperature,
         max_tokens: maxTokens,
-        response_format: jsonMode ? { type: "json_object" } : undefined,
+        response_format: jsonMode? { type: "json_object" } : undefined,
       }),
       signal: AbortSignal.timeout(options.timeoutMs || 15000),
     });
@@ -229,7 +232,8 @@ export async function executeLLM(
   }
 
   // PII scrubbing for external providers
-  const { messages: scrubbed, piiFound, warning } = scrubMessages(messages);
+  const { messages: rawScrubbed, piiFound, warning } = scrubMessages(messages);
+  const scrubbed = rawScrubbed as LLMMessage[];
   if (piiFound) console.warn("[PII-GOVERNANCE]", warning);
 
   // ═══ TRY 1: Ollama (local, free) ═══

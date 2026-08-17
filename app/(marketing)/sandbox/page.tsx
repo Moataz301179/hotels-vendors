@@ -50,8 +50,8 @@ const ROLES: RoleConfig[] = [
     key: "hotel",
     label: "Hotel / Resort",
     icon: Building2,
-    color: "#39ff7e",
-    accentMuted: "rgba(57,255,126,0.1)",
+    color: "#c8a36f",
+    accentMuted: "rgba(200,163,111,0.14)",
     description: "See how coastal hotels automate procurement, enforce budgets, and optimize cashflow.",
     steps: [
       { title: "AI Demand Forecast", description: "The engine analyzes your occupancy curve, booked events, and 12-month consumption history.", action: "Generate 14-day forecast", result: "Forecast generated: 2,400 kg F&B, 800 units consumables, 120 linens. Budget blockade set at EGP 185,000.", icon: BarChart3 },
@@ -64,8 +64,8 @@ const ROLES: RoleConfig[] = [
     key: "supplier",
     label: "Supplier / Vendor",
     icon: Store,
-    color: "#39ff7e",
-    accentMuted: "rgba(34,197,94,0.1)",
+    color: "#97a9b6",
+    accentMuted: "rgba(151,169,182,0.14)",
     description: "Discover how suppliers get discovered, receive POs, and get paid in 24 hours.",
     steps: [
       { title: "Catalog Upload", description: "Upload your product catalog. AI categorizes and matches you to hotel demand.", action: "Upload 450 SKUs", result: "450 SKUs categorized. Matched to 12 active hotel buyers. 3 POs received within 1 hour.", icon: Package },
@@ -78,8 +78,8 @@ const ROLES: RoleConfig[] = [
     key: "factoring",
     label: "Factoring Company",
     icon: Landmark,
-    color: "#ff7e1a",
-    accentMuted: "rgba(255,126,26,0.1)",
+    color: "#a28cb4",
+    accentMuted: "rgba(162,140,180,0.15)",
     description: "Access pre-verified hospitality invoices and deploy capital with competitive bidding.",
     steps: [
       { title: "Invoice Pool Access", description: "Browse pre-verified invoices that have passed three-way matching and ETA validation.", action: "Browse available invoices", result: "24 invoices available. Total pool: EGP 2.1M. Average invoice: EGP 87,500. All ETA-cleared.", icon: Receipt },
@@ -92,8 +92,8 @@ const ROLES: RoleConfig[] = [
     key: "shipping",
     label: "Logistics Provider",
     icon: Truck,
-    color: "#64b5f6",
-    accentMuted: "rgba(59,130,246,0.1)",
+    color: "#8fa3b1",
+    accentMuted: "rgba(143,163,177,0.14)",
     description: "Fill your trucks with consolidated loads and get guaranteed on-time payment.",
     steps: [
       { title: "Load Matching", description: "AI matches your available capacity to multi-supplier delivery requests.", action: "View available loads", result: "3 loads matched. Route: Cairo → Sharm El-Sheikh. 4 suppliers consolidated. 95% truck utilization.", icon: Package },
@@ -130,10 +130,16 @@ export default function SandboxPage() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#0c0c12", color: "#ffffff" }}>
+    <main className="command-room min-h-screen text-white">
 
       <section className="pt-28 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(57,255,126,0.03) 0%, transparent 70%)" }} />
+        <div className="scanline" />
+        <div className="shader-stack" aria-hidden="true">
+          <div className="shader-ribbon" />
+          <div className="shader-grain" />
+          <div className="shader-orb shader-orb-brass left-[22%] top-[-4%] h-[420px] w-[420px]" />
+          <div className="shader-orb shader-orb-slate right-[6%] top-[26%] h-[340px] w-[340px]" />
+        </div>
 
         <div className="relative z-10 mx-auto max-w-5xl px-6">
           {/* Header */}
@@ -143,12 +149,18 @@ export default function SandboxPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(57,255,126,0.15)", backgroundColor: "rgba(57,255,126,0.04)" }}>
-              <Zap size={11} style={{ color: "#39ff7e" }} />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4" style={{ border: "1px solid rgba(179,138,86,0.35)", backgroundColor: "rgba(179,138,86,0.08)" }}>
+              <Zap size={11} style={{ color: "#c8a36f" }} />
               <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Interactive Sandbox</span>
             </div>
+            <div className="mb-4 flex justify-center">
+              <span className="command-chip px-3 py-1 text-[10px]">
+                <span className="command-chip-dot" />
+                Simulation Lab / Workflow Twin
+              </span>
+            </div>
             <h1 className="text-[clamp(28px,4vw,44px)] font-bold tracking-tight text-white mb-4">
-              Try HotelsVendors.<br /><span className="text-gradient-lime">No Sign-Up Required.</span>
+              Run the platform as if it&apos;s live.<br /><span className="text-gradient-holo">No Sign-Up Required.</span>
             </h1>
             <p className="text-[14px] text-white/40 max-w-xl mx-auto leading-relaxed">
               Walk through a real procurement workflow from any stakeholder perspective. See how AI forecasting, ETA compliance, and embedded factoring work together.
@@ -176,8 +188,7 @@ export default function SandboxPage() {
                       whileHover={{ y: -3, borderColor: r.color + "40" }}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => setSelectedRole(r.key)}
-                      className="rounded-xl p-5 text-left transition-all"
-                      style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}
+                      className="command-panel rounded-xl p-5 text-left transition-all"
                     >
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: r.accentMuted }}>
                         <r.icon size={20} style={{ color: r.color }} />
@@ -212,6 +223,7 @@ export default function SandboxPage() {
                       {RoleIcon && <RoleIcon size={13} style={{ color: role!.color }} />}
                     </div>
                     <span className="text-[11px] font-medium text-white/50">{role!.label}</span>
+                    <span className="command-chip px-2 py-1 text-[9px]">Live Twin</span>
                   </div>
                   <button
                     onClick={handleReset}
@@ -253,7 +265,7 @@ export default function SandboxPage() {
                         transition={{ delay: i * 0.05 }}
                         className="rounded-xl overflow-hidden"
                         style={{
-                          backgroundColor: isCurrent ? "rgba(255,255,255,0.02)" : "#12121a",
+                            backgroundColor: isCurrent ? "rgba(255,255,255,0.03)" : "#0e141d",
                           border: `1px solid ${isCompleted ? role!.color + "30" : isCurrent ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.04)"}`,
                           opacity: isLocked ? 0.5 : 1,
                         }}
@@ -301,7 +313,7 @@ export default function SandboxPage() {
                                   onClick={() => handleStartStep(i)}
                                   disabled={isRunning}
                                   className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold rounded-lg transition-all disabled:opacity-50"
-                                  style={{ backgroundColor: role!.color, color: "#07090f" }}
+                                  style={{ backgroundColor: role!.color, color: "#1a140f" }}
                                 >
                                   {isRunning ? (
                                     <>
@@ -342,7 +354,7 @@ export default function SandboxPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                       className="mt-8 rounded-2xl p-8 text-center"
-                      style={{ backgroundColor: "#12121a", border: `1px solid ${role!.color}25` }}
+                        style={{ backgroundColor: "#0e141d", border: `1px solid ${role!.color}25` }}
                     >
                       <Sparkles size={28} className="mx-auto mb-4" style={{ color: role!.color }} />
                       <h3 className="text-[18px] font-bold text-white mb-2">Workflow Complete</h3>
@@ -353,7 +365,7 @@ export default function SandboxPage() {
                         <Link
                           href="/register"
                           className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(57,255,126,0.2)]"
-                          style={{ backgroundColor: "#39ff7e", color: "#07090f" }}
+                          style={{ backgroundColor: "#c8a36f", color: "#1a140f" }}
                         >
                           Get Full Access <ArrowRight size={14} />
                         </Link>

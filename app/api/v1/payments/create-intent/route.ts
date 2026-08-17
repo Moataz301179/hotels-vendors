@@ -32,14 +32,50 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const authToken = await getAuthToken();
 
   // Step 2: Create Paymob order
-  const paymobOrderId = await createPaymobOrder(authToken, amountCents, merchantOrderId);
+  const paymobOrderResponse = await createPaymobOrder(authToken, {
+    delivery_needed: false,
+    amount_cents: amountCents,
+    currency: "EGP",
+    merchant_order_id: merchantOrderId,
+    items: [],
+    shipping_data: {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      phone_number: data.phone || "",
+      apartment: "",
+      floor: "",
+      street: "",
+      building: "",
+      city: "",
+      country: "EG",
+      postal_code: "",
+      state: "",
+    },
+  });
+  const paymobOrderId = paymobOrderResponse.id;
 
   // Step 3: Generate payment key
-  const paymentKey = await generatePaymentKey(authToken, paymobOrderId, amountCents, {
-    email: data.email,
-    phone: data.phone,
-    firstName: data.firstName,
-    lastName: data.lastName,
+  const paymentKey = await generatePaymentKey(authToken, {
+    amount_cents: amountCents,
+    expiration: 3600,
+    order_id: paymobOrderId,
+    currency: "EGP",
+    lock_order_when_paid: false,
+    billing_data: {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      phone_number: data.phone || "",
+      apartment: "",
+      floor: "",
+      street: "",
+      building: "",
+      city: "",
+      country: "EG",
+      postal_code: "",
+      state: "",
+    },
   });
 
   // Store payment record

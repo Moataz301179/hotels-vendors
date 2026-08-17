@@ -7,8 +7,17 @@
 
 import { Redis } from "ioredis";
 
-const REDIS_URL = process.env.REDIS_URL;
+const REDIS_URL = process.env.REDIS_URL?.trim() ?? "";
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+const normalizedRedisUrl = REDIS_URL.trim();
+const isBuildOrCi =
+  process.env.NEXT_PHASE === "phase-production-build" ||
+  process.env.CI === "true" ||
+  process.env.NODE_ENV === "test";
+const isLocalhostRedis =
+  normalizedRedisUrl.includes("localhost") ||
+  normalizedRedisUrl.includes("127.0.0.1") ||
+  normalizedRedisUrl.includes("::1");
 
 let redis: Redis | null = null;
 let redisAvailable = false;
@@ -28,26 +37,30 @@ function cleanExpired(map: Map<string, { expiresAt: number }>) {
 
 export { redis as redis };
 
-const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" || process.env.CI === "true";
-
 export function getRedis(): Redis | null {
-  if (!REDIS_URL) return null;
+  if (!normalizedRedisUrl) return null;
+
+  // Static generation and CI should never assume a locally running Redis service.
+  if (isBuildOrCi || isLocalhostRedis) {
+    return null;
+  }
+
   if (!redis) {
     try {
-      redis = new Redis(REDIS_URL, {
-        password: REDIS_PASSWORD,
+      redis = new Redis(normalizedRedisUrl, {
+        password: REDIS_PASSWORD || undefined,
         retryStrategy: (times) => Math.min(times * 50, 2000),
         maxRetriesPerRequest: 1,
         connectTimeout: 5000,
         lazyConnect: true,
+        enableReadyCheck: true,
       });
       redis.on("connect", () => {
         redisAvailable = true;
       });
       redis.on("error", (err) => {
         redisAvailable = false;
-        if (!isBuildTime) {
-           
+        if (!isBuildOrCi && !isLocalhostRedis) {
           console.error("[Redis] Connection error:", err.message);
         }
       });

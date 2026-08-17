@@ -6,6 +6,7 @@ import { BusinessRegisterSchema } from "@/lib/zod";
 import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, welcomeTemplate, emailVerificationTemplate } from "@/lib/notifications/email";
+import { HOVIN_PILOT_CODE, isHovinPilotReferral } from "@/lib/onboarding/hovin";
 import { randomBytes, createHash } from "crypto";
 
 function generateToken(): string {
@@ -26,6 +27,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   const body = await request.json();
   const data = validateBody(BusinessRegisterSchema, body);
+  const isPilotReferral = isHovinPilotReferral(data.referralCode);
 
   // Check if email is already registered
   const existingUser = await prisma.user.findUnique({
@@ -58,7 +60,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
             platformRole === "SUPPLIER" ? "SUPPLIER" :
             platformRole === "FACTORING" ? "FACTORING_COMPANY" :
             platformRole === "SHIPPING" ? "SHIPPING_PROVIDER" : "PLATFORM",
-      taxId: data.taxId || null,
+      taxId: data.taxId || (isPilotReferral ? `PENDING-${HOVIN_PILOT_CODE}` : null),
     },
   });
 
@@ -90,8 +92,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
       data: {
         name: data.name,
         taxId: data.taxId || uniquePlaceholder,
-        city: data.city || "Cairo",
-        governorate: data.governorate || "Cairo",
+        city: data.city || (isPilotReferral ? "Pilot" : "Cairo"),
+        governorate: data.governorate || (isPilotReferral ? "Pilot" : "Cairo"),
         address: data.address,
         commercialReg: data.commercialReg,
         email: data.email,
@@ -107,8 +109,8 @@ export const POST = apiRoute(async (request: NextRequest) => {
         name: data.name,
         taxId: data.taxId || uniquePlaceholder,
         email: data.email,
-        city: data.city || "Cairo",
-        governorate: data.governorate || "Cairo",
+        city: data.city || (isPilotReferral ? "Pilot" : "Cairo"),
+        governorate: data.governorate || (isPilotReferral ? "Pilot" : "Cairo"),
         address: data.address,
         commercialReg: data.commercialReg,
         phone: data.phone,
@@ -128,7 +130,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         contactEmail: data.email,
         contactPhone: data.phone,
         tenantId: tenant.id,
-        status: "ACTIVE",
+        status: isPilotReferral ? "PENDING" : "ACTIVE",
       },
     });
     await prisma.user.create({
@@ -182,7 +184,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   try {
     const verification = emailVerificationTemplate({
       name: data.name,
-      verificationUrl: `${baseUrl}/verify-email?token=${verifyToken}`,
+      verificationUrl: `${baseUrl}/verify?token=${verifyToken}&email=${encodeURIComponent(data.email)}`,
     });
     await sendEmail({
       to: [data.email],
@@ -214,5 +216,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
     supplier,
     factoringCompany,
     tenantId: tenant.id,
+    pilotReferral: isPilotReferral ? HOVIN_PILOT_CODE : null,
   }, 201);
 });

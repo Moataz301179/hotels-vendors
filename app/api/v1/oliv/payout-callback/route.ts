@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
         data: {
           tenantId: "SYSTEM",
           actorId: "OLIV_CALLBACK",
-          action: "UNAUTHORIZED_RECONCILIATION",
-          resource: "factoring",
-          resourceId: null,
-          details: {
+          actionType: "CREATE",
+          entityName: "INVOICE",
+          entityId: "unknown",
+          changes: {
             reason: "Invalid Oliv webhook signature",
             ip: request.headers.get("x-forwarded-for") || "unknown",
             timestamp: new Date().toISOString(),
@@ -81,10 +81,10 @@ export async function POST(request: NextRequest) {
         data: {
           tenantId: "SYSTEM",
           actorId: "OLIV_CALLBACK",
-          action: "UNAUTHORIZED_RECONCILIATION",
-          resource: "factoring",
-          resourceId: body.etaUuid,
-          details: {
+          actionType: "CREATE",
+          entityName: "INVOICE",
+          entityId: body.etaUuid || "unknown",
+          changes: {
             reason: tokenVerification.error,
             etaUuid: body.etaUuid,
             olivTransactionId: body.olivTransactionId,
@@ -166,10 +166,10 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId: "SYSTEM",
         actorId: "OLIV_CALLBACK",
-        action: "FACTORIZATION_RECONCILED",
-        resource: "factoring",
-        resourceId: factoringTx.id,
-        details: {
+        actionType: "UPDATE",
+        entityName: "INVOICE",
+        entityId: factoringTx.id,
+        changes: {
           etaUuid: body.etaUuid,
           olivTransactionId: body.olivTransactionId,
           payoutStatus: body.payoutStatus,
@@ -183,15 +183,18 @@ export async function POST(request: NextRequest) {
     await prisma.ledgerEntry.create({
       data: {
         tenantId: "SYSTEM",
-        type: "PLATFORM_FEE",
+        entityType: "PLATFORM_FEE",
+        entityId: body.olivTransactionId,
+        entryType: "PLATFORM_FEE",
+        account: "REVENUE",
         amount: platformFee,
         currency: "EGP",
         reference: `OLIV-${body.olivTransactionId}`,
-        description: `Platform fee for ETA ${body.etaUuid}`,
-        metadata: {
+        metadata: JSON.stringify({
           etaUuid: body.etaUuid,
           olivTransactionId: body.olivTransactionId,
-        },
+          description: `Platform fee for ETA ${body.etaUuid}`,
+        }),
       },
     });
 

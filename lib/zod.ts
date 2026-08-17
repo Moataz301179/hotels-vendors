@@ -259,6 +259,7 @@ export const BusinessRegisterSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: passwordStrength,
+  referralCode: z.string().optional(),
   phone: z.string().optional(),
   city: z.string().optional(),
   governorate: z.string().optional(),
@@ -269,9 +270,11 @@ export const BusinessRegisterSchema = z.object({
   taxDocumentUrl: z.string().optional(),
   accountType: z.enum(["individual", "business"]).default("business"),
   marketingConsent: z.boolean().default(false),
-  termsAccepted: z.literal(true, { error_map: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
+  termsAccepted: z.literal(true, { error: () => ({ message: "You must accept the Terms of Service and Privacy Policy" }) }),
 }).superRefine((data, ctx) => {
-  if (data.accountType === "business") {
+  const isPilotReferral = (data.referralCode || "").trim().toUpperCase() === "CHV000";
+
+  if (data.accountType === "business" && !isPilotReferral) {
     if (!data.taxId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

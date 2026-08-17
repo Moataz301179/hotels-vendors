@@ -74,7 +74,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0c0c12]">
+    <div className="command-room relative flex h-screen w-full overflow-hidden">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:flex flex-shrink-0 transition-all duration-300 ease-out ${
@@ -94,7 +94,7 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
       {mobileOpen && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-[#02050b]/70 backdrop-blur-sm md:hidden"
             onClick={() => setMobileOpen(false)}
           />
           <aside className="fixed left-0 top-0 z-50 h-full w-[280px] md:hidden" role="navigation" aria-label="Dashboard navigation">
@@ -110,14 +110,14 @@ export function DashboardShell({ children, role, user }: DashboardShellProps) {
 
       {/* Main Content */}
       <CartProvider>
-        <div className="flex flex-col flex-1 min-w-0">
+        <div className="relative z-10 flex min-w-0 flex-1 flex-col">
           <DashboardHeader
             role={role}
             user={user}
             onMenuClick={handleMenuClick}
             onCmdOpen={openCmd}
           />
-          <main id="main-content" className="flex-1 overflow-y-auto p-4 sm:p-6" role="main">
+          <main id="main-content" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7" role="main">
             {children}
           </main>
         </div>

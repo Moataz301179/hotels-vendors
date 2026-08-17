@@ -16,19 +16,19 @@ export function MetricTile({
   iconBg = "bg-cyan-500/10 text-cyan-400",
 }: MetricTileProps) {
   return (
-    <div className="glass-card rounded-xl p-5">
+    <div className="command-panel rounded-xl p-5">
       <div className="flex items-start justify-between mb-3">
-        <div className={`p-2 rounded-lg ${iconBg}`}>
+        <div className={`p-2 rounded-lg border border-white/10 ${iconBg}`}>
           <Icon size={18} />
         </div>
         {trend && (
-          <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+          <span className="command-chip border-emerald-400/30 bg-emerald-500/10 px-2 py-1 text-[9px] text-emerald-300">
             {trend}
           </span>
         )}
       </div>
-      <p className="text-2xl font-bold text-white">{value}</p>
-      <p className="text-[11px] text-[var(--foreground-muted)] mt-1 uppercase tracking-wider">{label}</p>
+      <p className="text-2xl font-bold text-white sm:text-[30px]">{value}</p>
+      <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-white/45">{label}</p>
     </div>
   );
 }

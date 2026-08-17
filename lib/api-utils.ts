@@ -166,26 +166,39 @@ export async function completeIdempotency(key: string, result: string): Promise<
 
 export async function audit(
   params: {
-    entityType: string;
+    entityType?: string;
+    entityName?: string;
     entityId: string;
-    action: string;
+    action?: string;
+    actionType?: string;
     tenantId: string;
     actorId?: string | null;
     actorRole?: string | null;
     beforeState?: Record<string, unknown> | null;
     afterState?: Record<string, unknown> | null;
+    changes?: Record<string, unknown> | string | null;
     ipAddress?: string | null;
     userAgent?: string | null;
   }
 ): Promise<void> {
   try {
+    const changes = params.changes ?? {
+      ...(params.beforeState ? { before: params.beforeState } : {}),
+      ...(params.afterState ? { after: params.afterState } : {}),
+    };
     await appendAuditEntry({
-      ...params,
+      entityName: params.entityName || params.entityType,
+      entityId: params.entityId,
+      actionType: params.actionType || params.action,
+      tenantId: params.tenantId,
+      actorId: params.actorId,
+      actorRole: params.actorRole,
+      changes,
       ipAddress: hashIpAddress(params.ipAddress ?? null),
+      userAgent: params.userAgent,
     });
   } catch {
     // Audit failure should not break the request, but log it somewhere
-     
     console.error("Audit log failed:", params);
   }
 }

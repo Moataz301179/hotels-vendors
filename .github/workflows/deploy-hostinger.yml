@@ -1,68 +1,14 @@
-name: Deploy to Hostinger VPS
+name: Deprecated Deploy Flow (Do Not Use)
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Build & Deploy to Hostinger (Docker Compose)
+  deprecated:
+    name: Deprecated deployment guard
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          log-public-key: false
-
-      - name: Add Hostinger to known hosts
+      - name: Explain canonical deployment
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to VPS (Docker Compose)
-        run: |
-          ssh ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
-            set -e
-            echo "═══════════════════════════════════════════"
-            echo "  Hotels Vendors — Auto Deploy Started"
-            echo "  Commit: ${{ github.sha }}"
-            echo "  Method: Docker Compose"
-            echo "═══════════════════════════════════════════"
-
-            cd /var/www/hotelsvendors
-
-            echo "[1/5] Pulling latest code..."
-            git fetch origin main
-            git reset --hard origin/main
-
-            echo "[2/5] Running Prisma migrations..."
-            docker compose -f docker-compose.swarm.yml run --rm app npx prisma migrate deploy
-
-            echo "[3/5] Building all services..."
-            docker compose -f docker-compose.swarm.yml build --no-cache
-
-            echo "[4/5] Starting full stack..."
-            docker compose -f docker-compose.swarm.yml up -d
-
-            echo "[5/5] Health checks..."
-            sleep 10
-            APP_STATUS=$(docker inspect --format='{{.State.Status}}' hv-app 2>/dev/null || echo "unknown")
-            WORKER_STATUS=$(docker inspect --format='{{.State.Status}}' hv-swarm-worker 2>/dev/null || echo "unknown")
-            echo "  App:     $APP_STATUS"
-            echo "  Worker:  $WORKER_STATUS"
-
-            echo "═══════════════════════════════════════════"
-            echo "  Deploy Complete"
-            echo "═══════════════════════════════════════════"
-          EOF
-
-      - name: Verify deployment
-        run: |
-          sleep 10
-          curl -sfI https://www.hotelsvendors.com/api/health || echo "Health check failed — check server logs"
+          echo "This workflow is deprecated."
+          echo "Use .github/workflows/deploy.yml (PM2) as the only production deployment path."

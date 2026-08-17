@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SupplierOnboardingBot } from "@/components/ai-assistant/supplier-onboarding-chatbot";
 import {
   Eye,
   EyeOff,
@@ -22,6 +23,7 @@ import {
   Building,
   Users,
 } from "lucide-react";
+import { HOVIN_PILOT_CODE } from "@/lib/onboarding/hovin";
 
 type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
@@ -63,6 +65,7 @@ function RegisterContent() {
     name: "",
     email: "",
     password: "",
+    referralCode: HOVIN_PILOT_CODE,
     role: initialRole as StakeholderRole,
     taxId: "",
     city: "",
@@ -73,10 +76,12 @@ function RegisterContent() {
     termsAccepted: false,
   });
 
-  const updateForm = (field: string, value: string) => {
+  const updateForm = (field: string, value: string | boolean | number) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setError("");
   };
+
+  const isPilotReferral = form.referralCode.trim().toUpperCase() === HOVIN_PILOT_CODE;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +98,7 @@ function RegisterContent() {
       setLoading(false);
       return;
     }
-    if (!form.taxId || !form.city || !form.governorate) {
+    if (!isPilotReferral && (!form.taxId || !form.city || !form.governorate)) {
       setError("Tax ID, City, and Governorate are required for business accounts");
       setLoading(false);
       return;
@@ -113,6 +118,7 @@ function RegisterContent() {
           name: form.name,
           email: form.email,
           password: form.password,
+          referralCode: form.referralCode,
           taxId: form.taxId,
           city: form.city,
           governorate: form.governorate,
@@ -179,6 +185,26 @@ function RegisterContent() {
               {error}
             </div>
           )}
+
+          <div className="space-y-2">
+            <label className="block text-[13px] font-medium text-white/50">
+              Referral Code <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
+              <input
+                type="text"
+                value={form.referralCode}
+                onChange={(e) => updateForm("referralCode", e.target.value)}
+                placeholder="CHV000"
+                required
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
+              />
+            </div>
+            <p className="text-[11px] text-white/30">
+              HOVIN pilot access code for the first manual onboarding group.
+            </p>
+          </div>
 
           {/* Role Selection */}
           <div className="space-y-2">
@@ -272,7 +298,7 @@ function RegisterContent() {
           {/* Tax ID */}
           <div className="space-y-2">
             <label className="block text-[13px] font-medium text-white/50">
-              Tax ID <span className="text-red-400">*</span>
+              Tax ID <span className="text-white/25">(pilot optional)</span>
             </label>
             <div className="relative">
               <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
@@ -281,7 +307,7 @@ function RegisterContent() {
                 value={form.taxId}
                 onChange={(e) => updateForm("taxId", e.target.value)}
                 placeholder="Egyptian Tax Identification Number"
-                required
+                required={!isPilotReferral}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
               />
             </div>
@@ -290,7 +316,7 @@ function RegisterContent() {
           {/* City */}
           <div className="space-y-2">
             <label className="block text-[13px] font-medium text-white/50">
-              City <span className="text-red-400">*</span>
+              City <span className="text-white/25">(pilot optional)</span>
             </label>
             <div className="relative">
               <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
@@ -299,7 +325,7 @@ function RegisterContent() {
                 value={form.city}
                 onChange={(e) => updateForm("city", e.target.value)}
                 placeholder="e.g. Cairo, Sharm El-Sheikh"
-                required
+                required={!isPilotReferral}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all"
               />
             </div>
@@ -308,14 +334,14 @@ function RegisterContent() {
           {/* Governorate */}
           <div className="space-y-2">
             <label className="block text-[13px] font-medium text-white/50">
-              Governorate <span className="text-red-400">*</span>
+              Governorate <span className="text-white/25">(pilot optional)</span>
             </label>
             <div className="relative">
               <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/15" />
               <select
                 value={form.governorate}
                 onChange={(e) => updateForm("governorate", e.target.value)}
-                required
+                required={!isPilotReferral}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-[#39ff7e]/30 focus:outline-none focus:ring-1 focus:ring-[#39ff7e]/10 transition-all appearance-none"
               >
                 <option value="" className="bg-[#12121a] text-white/40">Select governorate</option>
@@ -410,7 +436,7 @@ function RegisterContent() {
               <input
                 type="checkbox"
                 checked={form.termsAccepted}
-                onChange={(e) => updateForm("termsAccepted", e.target.checked ? "true" : "")}
+                onChange={(e) => updateForm("termsAccepted", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
@@ -425,7 +451,7 @@ function RegisterContent() {
               <input
                 type="checkbox"
                 checked={form.marketingConsent}
-                onChange={(e) => updateForm("marketingConsent", e.target.checked ? "true" : "")}
+                onChange={(e) => updateForm("marketingConsent", e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/[0.03] text-[#39ff7e] focus:ring-[#39ff7e]/20"
               />
               <span className="text-[12px] text-white/40 leading-relaxed">
@@ -455,6 +481,9 @@ function RegisterContent() {
           </button>
         </form>
       </div>
+
+      {/* AI Onboarding Chatbot */}
+      <SupplierOnboardingBot />
 
       {/* Footer */}
       <p className="text-center text-[13px] text-white/30">
