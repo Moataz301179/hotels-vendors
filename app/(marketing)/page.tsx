@@ -1,4 +1,4 @@
-import { HomePage } from "./page.client";
+import MarketingPage from "./page.client";
 
 export const metadata = {
   title: "HotelsVendors — Egypt's B2B Procurement OS for Hospitality",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <HomePage />;
+  return <MarketingPage />;
 }
