@@ -174,8 +174,8 @@ const KEYWORD_MAP: Record<string, string> = {
   // ═══════════════════════════════════════════════════════════════
   //  LINENS & TEXTILES
   // ═══════════════════════════════════════════════════════════════
-  sheet:      "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&q=80",
-  bedding:    "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&q=80",
+  sheet:      "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ADark%20blue%20tea%20towel%20stack.jpg?width=640",
+  bedding:    "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ADark%20blue%20tea%20towel%20stack.jpg?width=640",
   pillow:     "https://images.unsplash.com/photo-1629949009765-40fc74c9ec21?w=600&q=80",
   cushion:    "https://images.unsplash.com/photo-1629949009765-40fc74c9ec21?w=600&q=80",
   blanket:    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80",
