@@ -16,8 +16,8 @@ const KEYWORD_MAP: Record<string, string> = {
   chef: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3AChef%20cooking.jpg?width=640",
   kitchen: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3AChef%20cooking.jpg?width=640",
   board: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3AChopping%20Board.jpg?width=640",
-  slipper: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3A2023%20Kapcie.jpg?width=640",
   sewing: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ABerghotel%20auf%20der%20Loreley%20N%C3%A4h-Etui%20Sewing%20kit%20%281%29.jpg?width=640",
+  slipper: "https://commons.wikimedia.org/wiki/Special:FilePath/File%3A2023%20Kapcie.jpg?width=640",
   //  MEATS & POULTRY
   // ═══════════════════════════════════════════════════════════════
   beef:      "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ARaw%20beef%20steak%2C%202011.jpg?width=640",
@@ -152,8 +152,6 @@ const KEYWORD_MAP: Record<string, string> = {
   clean:        "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   disinfectant: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   sanitizer:    "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
-  soap:         "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
-  hand:         "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
   towel:        "https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=600&q=80",
   tissue:       "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   napkin:       "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
@@ -167,15 +165,11 @@ const KEYWORD_MAP: Record<string, string> = {
   brush:        "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   polish:       "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   wax:          "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
-  freshener:    "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
-  deodorizer:   "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
   cleaner:      "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   carpet:       "https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600&q=80",
   biohazard:    "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   compactor:    "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
   waste:        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80",
-  softener:     "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
-  waterproof:   "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
 
   // ═══════════════════════════════════════════════════════════════
   //  LINENS & TEXTILES
@@ -214,16 +208,9 @@ const KEYWORD_MAP: Record<string, string> = {
   gel:        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
   body:       "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
   shower:     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
-  bath:       "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
-  toothbrush: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
-  paste:      "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
-  dental:     "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
   razor:      "https://images.unsplash.com/photo-1621607512214-68297480165e?w=600&q=80",
   shave:      "https://images.unsplash.com/photo-1621607512214-68297480165e?w=600&q=80",
-  slipper:    "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80",
   shoe:       "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80",
-  sewing:     "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
-  kit:        "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=600&q=80",
   vanity:     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
   mirror:     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80",
   tray:       "https://commons.wikimedia.org/wiki/Special:FilePath/File%3ACranberry-Mohn%20Muffins%20in%20baking%20tray.jpg?width=640",
@@ -231,9 +218,6 @@ const KEYWORD_MAP: Record<string, string> = {
   fruit:      "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600&q=80",
   basket:     "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600&q=80",
   gift:       "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=600&q=80",
-  candle:     "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
-  incense:    "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
-  sachet:     "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
 
   // ═══════════════════════════════════════════════════════════════
   //  MINIBAR & SNACKS
@@ -258,7 +242,6 @@ const KEYWORD_MAP: Record<string, string> = {
   massage:   "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80",
   scrub:     "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80",
   swab:      "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80",
-  diffuser:  "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600&q=80",
 
   // ═══════════════════════════════════════════════════════════════
   //  IT & TECHNOLOGY
