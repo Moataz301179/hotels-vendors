@@ -10,12 +10,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# The real, current production app lives in the nested hotels-vendors/ directory.
-# All CI steps run inside it so the @/* path alias resolves against the correct tree.
-defaults:
-  run:
-    working-directory: hotels-vendors
-
 jobs:
   lint:
     name: Lint
