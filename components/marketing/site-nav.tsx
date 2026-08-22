@@ -57,24 +57,24 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button className={`flex items-center gap-1 text-sm text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent border-0 font-sans ${ar ? "font-cairo" : ""}`}>
+      <button className={`flex items-center gap-1 text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer bg-transparent border-0 font-sans ${ar ? "font-cairo" : ""}`}>
         {group.label}
         <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-surface-1 border border-border-subtle rounded-xl shadow-2xl backdrop-blur-xl"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-surface-1 border border-border-subtle rounded-xl shadow-2xl"
         >
           <div className="py-2">
             {group.items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col gap-0.5 px-4 py-2.5 hover:bg-white/[0.04] transition-colors ${ar ? "font-cairo" : ""}`}
+                className={`flex flex-col gap-0.5 px-4 py-2.5 hover:bg-foreground/5 transition-colors ${ar ? "font-cairo" : ""}`}
               >
-                <span className="text-sm text-white/80">{item.label}</span>
+                <span className="text-sm text-foreground">{item.label}</span>
                 {item.desc && (
-                  <span className="text-xs text-white/35">{item.desc}</span>
+                  <span className="text-xs text-foreground-muted">{item.desc}</span>
                 )}
               </Link>
             ))}
@@ -107,7 +107,7 @@ export function SiteNav() {
   const textColor = isLight ? "var(--foreground)" : "var(--foreground)";
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-border-subtle bg-canvas/90 backdrop-blur-xl ${ar ? "font-cairo" : ""}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-border-subtle bg-canvas ${ar ? "font-cairo" : ""}`}>
       <Link href="/" className="flex items-center gap-2.5 shrink-0 rtl:order-last" dir="ltr">
         {/* Mobile: icon-only, smaller */}
         <BrandLogo variant={logoVariant} size="sm" showText={false} className="md:hidden" />
@@ -127,13 +127,13 @@ export function SiteNav() {
         ))}
         <Link
           href="/sandbox"
-          className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+          className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer shrink-0 whitespace-nowrap"
         >
           {ar ? "التمثيل الذكي" : "Sandbox"}
         </Link>
         <Link
           href="/pricing"
-          className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+          className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer shrink-0 whitespace-nowrap"
         >
           {ar ? "الأسعار" : "Pricing"}
         </Link>
@@ -145,7 +145,7 @@ export function SiteNav() {
         <ThemeModeToggle variant="icon" />
         <Link
           href="/login"
-          className="text-sm px-4 py-2 text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent font-sans"
+          className="text-sm px-4 py-2 text-foreground-secondary hover:text-foreground transition-colors cursor-pointer bg-transparent font-sans"
         >
           {ar ? "تسجيل الدخول" : "Sign In"}
         </Link>
@@ -160,7 +160,7 @@ export function SiteNav() {
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden text-white/50 cursor-pointer bg-transparent border-0 p-2 flex-shrink-0 ml-auto"
+        className="md:hidden text-foreground-secondary cursor-pointer bg-transparent border-0 p-2 flex-shrink-0 ml-auto"
         aria-label="Toggle menu"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
@@ -171,13 +171,13 @@ export function SiteNav() {
         <div className="absolute top-full left-0 right-0 border-b border-border-subtle px-6 py-4 flex flex-col gap-4 md:hidden bg-surface-1">
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
-              <span className="text-xs text-white/30 uppercase tracking-widest font-semibold">{g.label}</span>
+              <span className="text-xs text-foreground-tertiary uppercase tracking-widest font-semibold">{g.label}</span>
               {g.items.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`text-sm text-white/50 hover:text-white pl-3 ${ar ? "font-cairo" : ""}`}
+                  className={`text-sm text-foreground-secondary hover:text-foreground pl-3 ${ar ? "font-cairo" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -190,7 +190,7 @@ export function SiteNav() {
             <Link
               href="/pricing"
               onClick={() => setOpen(false)}
-              className="text-sm text-white/50 hover:text-white"
+              className="text-sm text-foreground-secondary hover:text-foreground"
             >
               {ar ? "الأسعار" : "Pricing"}
             </Link>
@@ -199,14 +199,14 @@ export function SiteNav() {
           <Link
             href="/sandbox"
             onClick={() => setOpen(false)}
-            className="text-sm text-white/50 hover:text-white"
+            className="text-sm text-foreground-secondary hover:text-foreground"
           >
             {ar ? "التمثيل الذكي" : "Sandbox"}
           </Link>
           <Link
             href="/login"
             onClick={() => setOpen(false)}
-            className="text-sm text-white/50 hover:text-white"
+            className="text-sm text-foreground-secondary hover:text-foreground"
           >
             {ar ? "تسجيل الدخول" : "Sign In"}
           </Link>

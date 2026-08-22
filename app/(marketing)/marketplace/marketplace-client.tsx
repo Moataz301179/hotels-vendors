@@ -18,16 +18,16 @@ interface Product {
 }
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" },
-  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400&h=300&fit=crop" },
-  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop" },
-  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" },
+  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "/images/suppliers/1.jpg" },
+  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "/images/suppliers/2.jpg" },
+  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "/images/suppliers/3.jpg" },
+  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "/images/suppliers/1.jpg" },
 ];
 
 const supplierFeatures = [
   { icon: Upload, title: "Catalog Upload", desc: "Upload your catalog with fixed prices. Set per-hotel or per-group pricing." },
   { icon: ShoppingCart, title: "PO Matching", desc: "Receive purchase orders directly from hotel procurement teams." },
-  { icon: Banknote, title: "24-Hour Payment", desc: "Get paid in 24 hours via embedded factoring." },
+  { icon: Banknote, title: "Fast Payment", desc: "Get paid in days, not months, via embedded factoring." },
   { icon: FileCheck, title: "ETA Invoicing", desc: "Every invoice is auto-generated with RSA-2048 signing and UUID tracking." },
   { icon: BarChart3, title: "Sales Analytics", desc: "Track orders, revenue, and buyer behavior across properties." },
   { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified supplier badge." },
@@ -87,10 +87,10 @@ function MarketplaceContent() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            {products.length}+ Products. Verified<br />Suppliers. <span className="text-white">Zero Collection Chases.</span>
+            {products.length} products live<br />Suppliers. <span className="text-white">Zero Collection Chases.</span>
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Egypt&apos;s largest hospitality procurement catalog. Fixed-price listings, ETA-compliant invoicing, and 24-hour settlement via embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
+            The ETA-native procurement catalog for Egyptian hospitality. Fixed-price listings, ETA-compliant invoicing, and embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
           </p>
           <div className="max-w-2xl mb-8">
             <div className="flex gap-2">
@@ -137,7 +137,7 @@ function MarketplaceContent() {
           <div className="flex flex-wrap justify-center gap-8">
             {[
               { icon: Shield, label: `${products.length}+ Products`, desc: "Live in catalog" },
-              { icon: Clock, label: "24-Hour Settlement", desc: "Via embedded factoring" },
+              { icon: Clock, label: "Fast settlement via factoring", desc: "Non-recourse, on validated invoices" },
               { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">
@@ -171,21 +171,21 @@ function MarketplaceContent() {
               {filteredProducts.slice(0, 24).map((p) => (
                 <div key={p.id} className="group rounded-xl overflow-hidden border transition-all hover:border-white/20 hover:scale-[1.02] cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                   <div className="relative h-32 overflow-hidden">
-                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || "https://images.unsplash.com/photo-1585670149967-b4f4da88cc9f?w=400"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
+                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || "/logo-horse.png"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
                     <div className="absolute top-2 left-2">
                       <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.15)", color: "var(--accent-base)" }}>{p.category.replace(/_/g, " ")}</span>
                     </div>
                   </div>
                   <div className="p-3">
                     <h4 className="text-[11px] font-medium text-white mb-1 leading-tight line-clamp-2">{p.name}</h4>
-                    <p className="text-[10px] text-white/30 mb-1.5">{p.supplier?.name || "Verified Supplier"}</p>
+                    <p className="text-[10px] text-white/30 mb-1.5">{p.supplier?.name || "Supplier"}</p>
                     <p className="text-[12px] font-semibold text-accent-base">{formatPrice(p.unitPrice)}/{p.unitOfMeasure}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-white/30 py-8 text-center">No products match your search.</p>
+            <p className="text-[13px] text-white/30 py-8 text-center">Be the first to list — the catalog shows verified supplier inventory as it is published. your search.</p>
           )}
         </div>
       </section>
@@ -232,7 +232,7 @@ function MarketplaceContent() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Sell to Egypt&apos;s Top Hotels?</h2>
+          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to sell to Egyptian hotels?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
           <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
             Register as Supplier <ArrowRight size={14} />
