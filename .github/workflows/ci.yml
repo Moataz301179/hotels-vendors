@@ -35,6 +35,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - run: npx prisma generate
       - run: npx tsc --noEmit
 
   build:

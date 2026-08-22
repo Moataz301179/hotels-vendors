@@ -27,6 +27,7 @@ jobs:
       - name: Lint (non-blocking — pre-existing warnings across project)
         run: npm run lint
         continue-on-error: true
+      - run: npx prisma generate
       - run: npx tsc --noEmit
       - run: npx prisma generate
       - run: npm run build
