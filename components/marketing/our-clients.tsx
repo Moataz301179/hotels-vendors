@@ -15,123 +15,124 @@ interface Hotel {
   monthly_gmv_egp: number;
 }
 
-/* ─── LOCAL EGYPTIAN HOTEL GROUPS ONLY ───
+/* ⚠️ HONESTY NOTICE — not verified platform usage; market context ONLY.
+   Do NOT present these hotels as customers until real contracts exist. ───
    International chains (Marriott, Hilton, Four Seasons, Accor, etc.)
    are excluded. These are Egyptian-owned and operated groups.
 */
 const LOCAL_HOTELS: Hotel[] = [
   // ─── JAZ HOTEL GROUP (Travco) — 75+ properties ───
-  { id: "lz01", name: "Jaz Aquamarine Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 1001, chain: "Jaz", monthly_gmv_egp: 5200000 },
-  { id: "lz02", name: "Jaz Aquaviva", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 1009, chain: "Jaz", monthly_gmv_egp: 4800000 },
-  { id: "lz03", name: "Jaz Makadi Star & Spa", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 420, chain: "Jaz", monthly_gmv_egp: 2100000 },
-  { id: "lz04", name: "Jaz Fanara Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 320, chain: "Jaz", monthly_gmv_egp: 1800000 },
-  { id: "lz05", name: "Jaz Mirabel Beach", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 380, chain: "Jaz", monthly_gmv_egp: 1950000 },
-  { id: "lz06", name: "Jaz Bluemarine", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 450, chain: "Jaz", monthly_gmv_egp: 2200000 },
-  { id: "lz07", name: "Jaz Sakhra", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Jaz", monthly_gmv_egp: 1600000 },
-  { id: "lz08", name: "Jaz Casa Del Mar Beach", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 380, chain: "Jaz", monthly_gmv_egp: 2400000 },
-  { id: "lz09", name: "Jaz Sharks Bay", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 220, chain: "Jaz", monthly_gmv_egp: 1200000 },
-  { id: "lz10", name: "Jaz Almaza Beach", city: "North Coast", governorate: "Matrouh", tier: "luxury", rooms: 350, chain: "Jaz", monthly_gmv_egp: 2800000 },
+  { id: "lz01", name: "Jaz Aquamarine Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 1001, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz02", name: "Jaz Aquaviva", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 1009, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz03", name: "Jaz Makadi Star & Spa", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 420, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz04", name: "Jaz Fanara Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 320, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz05", name: "Jaz Mirabel Beach", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 380, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz06", name: "Jaz Bluemarine", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 450, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz07", name: "Jaz Sakhra", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz08", name: "Jaz Casa Del Mar Beach", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 380, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz09", name: "Jaz Sharks Bay", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 220, chain: "Jaz", monthly_gmv_egp: null },
+  { id: "lz10", name: "Jaz Almaza Beach", city: "North Coast", governorate: "Matrouh", tier: "luxury", rooms: 350, chain: "Jaz", monthly_gmv_egp: null },
 
   // ─── SUNRISE HOTELS & RESORTS ───
-  { id: "ls01", name: "Sunrise Arabian Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 470, chain: "Sunrise", monthly_gmv_egp: 3800000 },
-  { id: "ls02", name: "Sunrise Crystal Bay Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 360, chain: "Sunrise", monthly_gmv_egp: 2100000 },
-  { id: "ls03", name: "Sunrise Holidays Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 320, chain: "Sunrise", monthly_gmv_egp: 1750000 },
-  { id: "ls04", name: "Sunrise Garden Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Sunrise", monthly_gmv_egp: 1500000 },
-  { id: "ls05", name: "Sunrise Montemare Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 310, chain: "Sunrise", monthly_gmv_egp: 2500000 },
-  { id: "ls06", name: "Sunrise Remal Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 260, chain: "Sunrise", monthly_gmv_egp: 1400000 },
-  { id: "ls07", name: "Sunrise Tucana Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Sunrise", monthly_gmv_egp: 1800000 },
-  { id: "ls08", name: "Sunrise Diamond Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Sunrise", monthly_gmv_egp: 1650000 },
-  { id: "ls09", name: "Sunrise Mamlouk Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 410, chain: "Sunrise", monthly_gmv_egp: 2600000 },
-  { id: "ls10", name: "Sunrise Alora Aqua Park", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 380, chain: "Sunrise", monthly_gmv_egp: 1900000 },
+  { id: "ls01", name: "Sunrise Arabian Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 470, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls02", name: "Sunrise Crystal Bay Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 360, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls03", name: "Sunrise Holidays Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 320, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls04", name: "Sunrise Garden Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls05", name: "Sunrise Montemare Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 310, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls06", name: "Sunrise Remal Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 260, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls07", name: "Sunrise Tucana Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls08", name: "Sunrise Diamond Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls09", name: "Sunrise Mamlouk Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 410, chain: "Sunrise", monthly_gmv_egp: null },
+  { id: "ls10", name: "Sunrise Alora Aqua Park", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 380, chain: "Sunrise", monthly_gmv_egp: null },
 
   // ─── PICKALBATROS / ALBATROS ───
-  { id: "lp01", name: "Albatros Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 480, chain: "Pickalbatros", monthly_gmv_egp: 2900000 },
-  { id: "lp02", name: "Albatros Aqua Park", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 520, chain: "Pickalbatros", monthly_gmv_egp: 2400000 },
-  { id: "lp03", name: "Pickalbatros Citadel Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "luxury", rooms: 380, chain: "Pickalbatros", monthly_gmv_egp: 2700000 },
-  { id: "lp04", name: "Albatros Dana Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 420, chain: "Pickalbatros", monthly_gmv_egp: 2100000 },
-  { id: "lp05", name: "Albatros Makadi Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 350, chain: "Pickalbatros", monthly_gmv_egp: 1800000 },
-  { id: "lp06", name: "Pickalbatros Laguna Club", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Pickalbatros", monthly_gmv_egp: 1500000 },
-  { id: "lp07", name: "Pickalbatros Aqua Park", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 340, chain: "Pickalbatros", monthly_gmv_egp: 1750000 },
-  { id: "lp08", name: "Albatros White Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 310, chain: "Pickalbatros", monthly_gmv_egp: 1600000 },
+  { id: "lp01", name: "Albatros Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "luxury", rooms: 480, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp02", name: "Albatros Aqua Park", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 520, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp03", name: "Pickalbatros Citadel Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "luxury", rooms: 380, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp04", name: "Albatros Dana Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 420, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp05", name: "Albatros Makadi Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 350, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp06", name: "Pickalbatros Laguna Club", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp07", name: "Pickalbatros Aqua Park", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 340, chain: "Pickalbatros", monthly_gmv_egp: null },
+  { id: "lp08", name: "Albatros White Beach Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 310, chain: "Pickalbatros", monthly_gmv_egp: null },
 
   // ─── PYRAMISA HOTELS ───
-  { id: "ly01", name: "Pyramisa Beach Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 380, chain: "Pyramisa", monthly_gmv_egp: 1700000 },
-  { id: "ly02", name: "Pyramisa Island Hotel", city: "Aswan", governorate: "Aswan", tier: "midscale", rooms: 400, chain: "Pyramisa", monthly_gmv_egp: 1100000 },
-  { id: "ly03", name: "Pyramisa Suites Hotel", city: "Cairo", governorate: "Cairo", tier: "upscale", rooms: 260, chain: "Pyramisa", monthly_gmv_egp: 950000 },
+  { id: "ly01", name: "Pyramisa Beach Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 380, chain: "Pyramisa", monthly_gmv_egp: null },
+  { id: "ly02", name: "Pyramisa Island Hotel", city: "Aswan", governorate: "Aswan", tier: "midscale", rooms: 400, chain: "Pyramisa", monthly_gmv_egp: null },
+  { id: "ly03", name: "Pyramisa Suites Hotel", city: "Cairo", governorate: "Cairo", tier: "upscale", rooms: 260, chain: "Pyramisa", monthly_gmv_egp: null },
 
   // ─── BARON HOTELS ───
-  { id: "lb01", name: "Baron Resort Sharm El Sheikh", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 336, chain: "Baron", monthly_gmv_egp: 3100000 },
-  { id: "lb02", name: "Baron Palace Sahl Hasheesh", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "luxury", rooms: 290, chain: "Baron", monthly_gmv_egp: 2200000 },
-  { id: "lb03", name: "Baron Hotel Taba", city: "Taba", governorate: "South Sinai", tier: "upscale", rooms: 220, chain: "Baron", monthly_gmv_egp: 850000 },
+  { id: "lb01", name: "Baron Resort Sharm El Sheikh", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 336, chain: "Baron", monthly_gmv_egp: null },
+  { id: "lb02", name: "Baron Palace Sahl Hasheesh", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "luxury", rooms: 290, chain: "Baron", monthly_gmv_egp: null },
+  { id: "lb03", name: "Baron Hotel Taba", city: "Taba", governorate: "South Sinai", tier: "upscale", rooms: 220, chain: "Baron", monthly_gmv_egp: null },
 
   // ─── SIVA HOTELS ───
-  { id: "lvi01", name: "Siva Grand Beach", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 368, chain: "Siva", monthly_gmv_egp: 1400000 },
-  { id: "lvi02", name: "Siva Sharm Resort & Spa", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 510, chain: "Siva", monthly_gmv_egp: 4100000 },
-  { id: "lvi03", name: "Siva Port Ghalib", city: "Marsa Alam", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Siva", monthly_gmv_egp: 980000 },
+  { id: "lvi01", name: "Siva Grand Beach", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 368, chain: "Siva", monthly_gmv_egp: null },
+  { id: "lvi02", name: "Siva Sharm Resort & Spa", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 510, chain: "Siva", monthly_gmv_egp: null },
+  { id: "lvi03", name: "Siva Port Ghalib", city: "Marsa Alam", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Siva", monthly_gmv_egp: null },
 
   // ─── STELLA DI MARE ───
-  { id: "lst01", name: "Stella Di Mare Beach Hotel", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 298, chain: "Stella Di Mare", monthly_gmv_egp: 2200000 },
-  { id: "lst02", name: "Stella Di Mare Gardens Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Stella Di Mare", monthly_gmv_egp: 1600000 },
-  { id: "lst03", name: "Stella Beach Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 220, chain: "Stella Di Mare", monthly_gmv_egp: 1100000 },
+  { id: "lst01", name: "Stella Di Mare Beach Hotel", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 298, chain: "Stella Di Mare", monthly_gmv_egp: null },
+  { id: "lst02", name: "Stella Di Mare Gardens Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Stella Di Mare", monthly_gmv_egp: null },
+  { id: "lst03", name: "Stella Beach Resort", city: "Makadi Bay", governorate: "Red Sea", tier: "upscale", rooms: 220, chain: "Stella Di Mare", monthly_gmv_egp: null },
 
   // ─── DESERT ROSE ───
-  { id: "ldr01", name: "Desert Rose Resort", city: "Hurghada", governorate: "Red Sea", tier: "midscale", rooms: 884, chain: "Desert Rose", monthly_gmv_egp: 2100000 },
-  { id: "ldr02", name: "Desert Rose Neverland City", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 420, chain: "Desert Rose", monthly_gmv_egp: 1400000 },
+  { id: "ldr01", name: "Desert Rose Resort", city: "Hurghada", governorate: "Red Sea", tier: "midscale", rooms: 884, chain: "Desert Rose", monthly_gmv_egp: null },
+  { id: "ldr02", name: "Desert Rose Neverland City", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 420, chain: "Desert Rose", monthly_gmv_egp: null },
 
   // ─── REEF OASIS ───
-  { id: "lro01", name: "Reef Oasis Blue Bay Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 530, chain: "Reef Oasis", monthly_gmv_egp: 1600000 },
-  { id: "lro02", name: "Reef Oasis Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 380, chain: "Reef Oasis", monthly_gmv_egp: 2100000 },
+  { id: "lro01", name: "Reef Oasis Blue Bay Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 530, chain: "Reef Oasis", monthly_gmv_egp: null },
+  { id: "lro02", name: "Reef Oasis Beach Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 380, chain: "Reef Oasis", monthly_gmv_egp: null },
 
   // ─── TROPITEL ───
-  { id: "ltr01", name: "Tropitel Sahl Hasheesh", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 438, chain: "Tropitel", monthly_gmv_egp: 1600000 },
-  { id: "ltr02", name: "Tropitel Naama Bay", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Tropitel", monthly_gmv_egp: 1250000 },
+  { id: "ltr01", name: "Tropitel Sahl Hasheesh", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 438, chain: "Tropitel", monthly_gmv_egp: null },
+  { id: "ltr02", name: "Tropitel Naama Bay", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 290, chain: "Tropitel", monthly_gmv_egp: null },
 
   // ─── AL NABILA ───
-  { id: "lan01", name: "Al Nabila Grand Bay Makadi", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 314, chain: "Al Nabila", monthly_gmv_egp: 1900000 },
+  { id: "lan01", name: "Al Nabila Grand Bay Makadi", city: "Makadi Bay", governorate: "Red Sea", tier: "luxury", rooms: 314, chain: "Al Nabila", monthly_gmv_egp: null },
 
   // ─── TOLIP ───
-  { id: "ltl01", name: "Tolip Hotel Alexandria", city: "Alexandria", governorate: "Alexandria", tier: "midscale", rooms: 200, chain: "Tolip", monthly_gmv_egp: 900000 },
-  { id: "ltl02", name: "Tolip El Galaa", city: "Cairo", governorate: "Cairo", tier: "upscale", rooms: 300, chain: "Tolip", monthly_gmv_egp: 1350000 },
+  { id: "ltl01", name: "Tolip Hotel Alexandria", city: "Alexandria", governorate: "Alexandria", tier: "midscale", rooms: 200, chain: "Tolip", monthly_gmv_egp: null },
+  { id: "ltl02", name: "Tolip El Galaa", city: "Cairo", governorate: "Cairo", tier: "upscale", rooms: 300, chain: "Tolip", monthly_gmv_egp: null },
 
   // ─── HELNAN ───
-  { id: "lhl01", name: "Helnan Dreamland Hotel", city: "6th of October", governorate: "Giza", tier: "midscale", rooms: 150, chain: "Helnan", monthly_gmv_egp: 650000 },
-  { id: "lhl02", name: "Helnan Aswan", city: "Aswan", governorate: "Aswan", tier: "upscale", rooms: 195, chain: "Helnan", monthly_gmv_egp: 680000 },
+  { id: "lhl01", name: "Helnan Dreamland Hotel", city: "6th of October", governorate: "Giza", tier: "midscale", rooms: 150, chain: "Helnan", monthly_gmv_egp: null },
+  { id: "lhl02", name: "Helnan Aswan", city: "Aswan", governorate: "Aswan", tier: "upscale", rooms: 195, chain: "Helnan", monthly_gmv_egp: null },
 
   // ─── ARABELLA ───
-  { id: "lar01", name: "Arabella Azur Resort", city: "Hurghada", governorate: "Red Sea", tier: "midscale", rooms: 396, chain: "Arabella", monthly_gmv_egp: 1200000 },
+  { id: "lar01", name: "Arabella Azur Resort", city: "Hurghada", governorate: "Red Sea", tier: "midscale", rooms: 396, chain: "Arabella", monthly_gmv_egp: null },
 
   // ─── CORAL SEA ───
-  { id: "lcs01", name: "Coral Sea Holiday Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 340, chain: "Coral Sea", monthly_gmv_egp: 1450000 },
-  { id: "lcs02", name: "Coral Sea Aqua Club", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 280, chain: "Coral Sea", monthly_gmv_egp: 1100000 },
+  { id: "lcs01", name: "Coral Sea Holiday Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 340, chain: "Coral Sea", monthly_gmv_egp: null },
+  { id: "lcs02", name: "Coral Sea Aqua Club", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 280, chain: "Coral Sea", monthly_gmv_egp: null },
 
   // ─── CHARMILLION ───
-  { id: "lch01", name: "Charmillion Club Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 320, chain: "Charmillion", monthly_gmv_egp: 1900000 },
-  { id: "lch02", name: "Charmillion Sea Life Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 260, chain: "Charmillion", monthly_gmv_egp: 1350000 },
+  { id: "lch01", name: "Charmillion Club Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 320, chain: "Charmillion", monthly_gmv_egp: null },
+  { id: "lch02", name: "Charmillion Sea Life Resort", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "upscale", rooms: 260, chain: "Charmillion", monthly_gmv_egp: null },
 
   // ─── SAVOY ───
-  { id: "lsv01", name: "Savoy Sharm El Sheikh", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 510, chain: "Savoy", monthly_gmv_egp: 4100000 },
+  { id: "lsv01", name: "Savoy Sharm El Sheikh", city: "Sharm El-Sheikh", governorate: "South Sinai", tier: "luxury", rooms: 510, chain: "Savoy", monthly_gmv_egp: null },
 
   // ─── PORTO (Amer Group) ───
-  { id: "lpt01", name: "Porto Marina Resort", city: "Marsa Matrouh", governorate: "Matrouh", tier: "upscale", rooms: 250, chain: "Porto", monthly_gmv_egp: 950000 },
-  { id: "lpt02", name: "Porto Sokhna", city: "Ain Sokhna", governorate: "Suez", tier: "upscale", rooms: 380, chain: "Porto", monthly_gmv_egp: 1200000 },
+  { id: "lpt01", name: "Porto Marina Resort", city: "Marsa Matrouh", governorate: "Matrouh", tier: "upscale", rooms: 250, chain: "Porto", monthly_gmv_egp: null },
+  { id: "lpt02", name: "Porto Sokhna", city: "Ain Sokhna", governorate: "Suez", tier: "upscale", rooms: 380, chain: "Porto", monthly_gmv_egp: null },
 
   // ─── PARADISE INN ───
-  { id: "lpi01", name: "Paradise Inn Beach Resort", city: "Alexandria", governorate: "Alexandria", tier: "midscale", rooms: 180, chain: "Paradise Inn", monthly_gmv_egp: 580000 },
+  { id: "lpi01", name: "Paradise Inn Beach Resort", city: "Alexandria", governorate: "Alexandria", tier: "midscale", rooms: 180, chain: "Paradise Inn", monthly_gmv_egp: null },
 
   // ─── CONTINENTAL (formerly Movenpick, now local) ───
-  { id: "lcn01", name: "Continental Hotel Hurghada", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 310, chain: "Continental", monthly_gmv_egp: 1150000 },
+  { id: "lcn01", name: "Continental Hotel Hurghada", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 310, chain: "Continental", monthly_gmv_egp: null },
 
   // ─── OLD PALACE ───
-  { id: "lop01", name: "Old Palace Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 290, chain: "Old Palace", monthly_gmv_egp: 980000 },
+  { id: "lop01", name: "Old Palace Resort", city: "Sahl Hasheesh", governorate: "Red Sea", tier: "upscale", rooms: 290, chain: "Old Palace", monthly_gmv_egp: null },
 
   // ─── JASMINE PALACE ───
-  { id: "ljm01", name: "Jasmine Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Jasmine Palace", monthly_gmv_egp: 1250000 },
+  { id: "ljm01", name: "Jasmine Palace Resort", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 340, chain: "Jasmine Palace", monthly_gmv_egp: null },
 
   // ─── SEA STAR ───
-  { id: "lss01", name: "Sea Star Beau Rivage", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Sea Star", monthly_gmv_egp: 1050000 },
+  { id: "lss01", name: "Sea Star Beau Rivage", city: "Hurghada", governorate: "Red Sea", tier: "upscale", rooms: 280, chain: "Sea Star", monthly_gmv_egp: null },
 
   // ─── AMARINA ───
-  { id: "lam01", name: "Amarina Abu Soma Resort", city: "Safaga", governorate: "Red Sea", tier: "luxury", rooms: 320, chain: "Amarina", monthly_gmv_egp: 1450000 },
+  { id: "lam01", name: "Amarina Abu Soma Resort", city: "Safaga", governorate: "Red Sea", tier: "luxury", rooms: 320, chain: "Amarina", monthly_gmv_egp: null },
 ];
 
 const TIER_LABELS: Record<string, string> = {

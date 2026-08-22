@@ -73,7 +73,7 @@ const STEPS: Step[] = [
     desc: "Suppliers request reverse factoring via HOVIN. AI compliance agents audit the invoice and trigger disbursement in 38–48 hours at 1.5–3% rate, while hotels preserve standard 60–90 day payment cycles.",
     proofLabel: "EGP 14,400 Payout Approved in 38h",
     proofIcon: "💳",
-    hotelView: "Invoice auto-reconciled · Payment due in 90 days · Zero cash flow impact",
+    hotelView: "Invoice auto-reconciled · Payment on terms · platform-managed",
     supplierView: "Tap 'Request Payout' → FRA auto-audit → Funds in bank in 48h · 1.5–3% fee",
     terminalOut: [
       "[Factoring] Supplier requested 48h payout for invoice INV-2847",
