@@ -101,7 +101,7 @@ export function SiteFooter() {
             <p className="text-white/55 text-sm leading-relaxed mb-4">
               {ar
                 ? "أول منصة مشتريات فندقية B2B بالذكاء الاصطناعي في مصر. متوافقة مع الهيئة الضريبية وهيئة الرقابة المالية. مجانية للبدء."
-                : "The world's first AI-driven B2B procurement platform for hospitality. ETA & FRA compliant. Free to start."}
+                : "The B2B procurement platform for Egyptian hospitality. ETA e-invoicing, fixed pricing, and embedded factoring."}
             </p>
             <div className="mb-4">
               <p className="text-[11px] text-white/40 uppercase tracking-widest mb-1">{ar ? "عن الشركة" : "About"}</p>
