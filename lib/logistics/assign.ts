@@ -59,7 +59,7 @@ export async function assignCarrier(
       status: "ACTIVE",
     },
     include: {
-      CarrierProfile: true,
+      carrierProfile: true,
     },
   });
 
@@ -69,7 +69,7 @@ export async function assignCarrier(
   const scored: Array<{ carrier: typeof carriers[0]; score: number; reason: string }> = [];
 
   for (const carrier of carriers) {
-    const profile = carrier.CarrierProfile;
+    const profile = carrier.carrierProfile;
     if (!profile) continue;
 
     const zones = (profile.zones as string[]) ?? [];

@@ -49,7 +49,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   const carriers = await prisma.user.findMany({
     where,
     include: {
-      CarrierProfile: true,
+      carrierProfile: true,
     },
     orderBy: { createdAt: "desc" },
   });
@@ -57,7 +57,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
   // Filter by zone if specified
   const filtered = zone
     ? carriers.filter((c) => {
-        const zones = (c.CarrierProfile?.zones as string[]) ?? [];
+        const zones = (c.carrierProfile?.zones as string[]) ?? [];
         return zones.includes(zone) || zones.includes("ALL");
       })
     : carriers;
@@ -91,12 +91,12 @@ export const GET = apiRoute(async (request: NextRequest) => {
         email: c.email,
         phone: c.phone,
         status: c.status,
-        profile: c.CarrierProfile,
+        profile: c.carrierProfile,
         stats: {
           activeTrips,
           completedTrips,
           onTimeRate: recentTrips.length > 0 ? Math.round((onTimeCount / recentTrips.length) * 100) : 0,
-          rating: c.CarrierProfile?.rating ?? 0,
+          rating: c.carrierProfile?.rating ?? 0,
         },
       };
     })

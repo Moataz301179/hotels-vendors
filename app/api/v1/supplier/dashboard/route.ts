@@ -26,7 +26,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       where: supplierId ? { supplierId } : { tenantId: auth.tenantId },
       orderBy: { createdAt: "desc" },
       take: 5,
-      include: { Order: { select: { orderNumber: true } } },
+      include: { order: { select: { orderNumber: true } } },
     }),
     prisma.product.findMany({
       where: { tenantId: auth.tenantId, deletedAt: null, stockQuantity: { lte: 10 } },
@@ -69,7 +69,7 @@ export const GET = apiRoute(async (request: NextRequest) => {
       grnNumber: g.grnNumber,
       status: g.status,
       receivedAt: g.receivedAt,
-      orderNumber: g.Order?.orderNumber,
+      orderNumber: g.order?.orderNumber,
     })),
     lowStock,
   });
