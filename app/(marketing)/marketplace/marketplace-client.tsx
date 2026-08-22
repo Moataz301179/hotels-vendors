@@ -27,7 +27,7 @@ const categories = [
 const supplierFeatures = [
   { icon: Upload, title: "Catalog Upload", desc: "Upload your catalog with fixed prices. Set per-hotel or per-group pricing." },
   { icon: ShoppingCart, title: "PO Matching", desc: "Receive purchase orders directly from hotel procurement teams." },
-  { icon: Banknote, title: "Fast Payment", desc: "Get paid in days, not months, via embedded factoring." },
+  { icon: Banknote, title: "Embedded Factoring", desc: "Settle faster through non-recourse factoring on validated invoices." },
   { icon: FileCheck, title: "ETA Invoicing", desc: "Every invoice is auto-generated with RSA-2048 signing and UUID tracking." },
   { icon: BarChart3, title: "Sales Analytics", desc: "Track orders, revenue, and buyer behavior across properties." },
   { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified supplier badge." },
@@ -35,6 +35,17 @@ const supplierFeatures = [
 
 function formatPrice(price: number): string {
   return "EGP " + price.toLocaleString("en-EG");
+}
+
+const CATEGORY_IMG: Record<string, string> = {
+  fb: "/images/suppliers/cat-fb.svg",
+  cons: "/images/suppliers/cat-cons.svg",
+  guest: "/images/suppliers/cat-guest.svg",
+  ffe: "/images/suppliers/cat-ffe.svg",
+};
+
+function productFallbackImage(category: string): string {
+  return CATEGORY_IMG[category] || "/images/suppliers/cat-cons.svg";
 }
 
 function MarketplaceContent() {
@@ -80,17 +91,16 @@ function MarketplaceContent() {
   const hasResults = filteredProducts.length > 0 || filteredCategories.length > 0;
 
   return (
-    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
+    <main className="min-h-screen bg-canvas text-foreground">
       {/* Hero */}
       <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
           <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-foreground">
-            {products.length} products live<br />Suppliers. <span className="text-foreground">Zero Collection Chases.</span>
+            {products.length} products live<br />Fixed prices. No bidding. ETA-native.
           </h1>
           <p className="text-[15px] text-foreground-secondary max-w-2xl leading-relaxed mb-8">
-            The ETA-native procurement catalog for Egyptian hospitality. Fixed-price listings, ETA-compliant invoicing, and embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
+            The ETA-native procurement catalog for Egyptian hospitality. Suppliers publish fixed-price stock, hotels order directly, and invoices are generated ETA-compliant.
           </p>
           <div className="max-w-2xl mb-8">
             <div className="flex gap-2">
@@ -101,7 +111,7 @@ function MarketplaceContent() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search products, suppliers, or categories..."
-                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-white/[0.03] border border-border-subtle text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-accent-base/60 transition-all"
+                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-surface-1 border border-border-subtle text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-accent-base/60 transition-all"
                 />
                 {query && (
                   <button
@@ -126,13 +136,13 @@ function MarketplaceContent() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>Start Selling <ArrowRight size={14} /></Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-foreground/5" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl border border-border-subtle text-foreground-secondary hover:text-foreground transition-colors">Register as Buyer</Link>
           </div>
         </div>
       </section>
 
       {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
+      <section className="py-8 border-y border-border-subtle bg-canvas">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
@@ -154,7 +164,6 @@ function MarketplaceContent() {
 
       {/* Product Showcase */}
       <section className="py-16 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(var(--accent-base-rgb),0.04) 0%, transparent 60%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -169,9 +178,9 @@ function MarketplaceContent() {
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {filteredProducts.slice(0, 24).map((p) => (
-                <div key={p.id} className="group rounded-xl overflow-hidden border transition-all hover:border-white/20 hover:scale-[1.02] cursor-pointer" style={{ backgroundColor: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                <div key={p.id} className="group rounded-xl overflow-hidden border border-border-subtle transition-all hover:border-foreground/25 cursor-pointer bg-surface-1">
                   <div className="relative h-32 overflow-hidden">
-                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || "/logo-horse.png"} alt={p.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
+                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || productFallbackImage(p.category)} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute top-2 left-2">
                       <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.15)", color: "var(--accent-base)" }}>{p.category.replace(/_/g, " ")}</span>
                     </div>
@@ -185,22 +194,21 @@ function MarketplaceContent() {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-foreground-muted py-8 text-center">Be the first to list — the catalog shows verified supplier inventory as it is published. your search.</p>
+            <p className="text-[13px] text-foreground-muted py-8 text-center">Be the first to list. The catalog shows verified supplier inventory as it is published.</p>
           )}
         </div>
       </section>
 
       {/* Product Categories */}
-      <section className="py-16" style={{ backgroundColor: "#12121a" }}>
+      <section className="py-16 border-t border-border-subtle bg-surface-1/40">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Product Categories</h2>
           {filteredCategories.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {filteredCategories.map((cat) => (
-                <div key={cat.name} className="group relative rounded-xl overflow-hidden border cursor-pointer transition-all hover:scale-[1.02] hover:border-white/20" style={{ borderColor: `${cat.color}33` }}>
-                  <img src={cat.image} alt={cat.name} className="w-full h-32 object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                <div key={cat.name} className="group relative rounded-xl overflow-hidden border cursor-pointer transition-all hover:border-foreground/25 bg-surface-1" style={{ borderColor: `${cat.color}55` }}>
+                  <img src={cat.image} alt={cat.name} className="w-full h-32 object-cover" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/55">
                     <h3 className="text-[13px] font-semibold mb-0.5" style={{ color: cat.color }}>{cat.name}</h3>
                     <p className="text-[10px] text-foreground-muted leading-tight">{cat.desc}</p>
                   </div>
@@ -214,12 +222,12 @@ function MarketplaceContent() {
       </section>
 
       {/* Supplier Features */}
-      <section className="py-16" style={{ backgroundColor: "#12121a" }}>
+      <section className="py-16 border-t border-border-subtle bg-canvas">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {supplierFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-accent-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={f.title} className="rounded-xl p-6 border border-border-subtle transition-all hover:border-accent-base/40 bg-surface-1">
                 <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
                 <h3 className="text-[14px] font-medium text-foreground mb-2">{f.title}</h3>
                 <p className="text-[12px] text-foreground-muted leading-relaxed">{f.desc}</p>
@@ -232,8 +240,8 @@ function MarketplaceContent() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-foreground">Ready to sell to Egyptian hotels?</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
+          <h2 className="text-[24px] font-medium mb-4 text-foreground">Publish your stock for Egyptian hotels</h2>
+          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Add products with fixed prices and quantities. Hotels order directly; invoices are ETA-compliant automatically.</p>
           <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
             Register as Supplier <ArrowRight size={14} />
           </Link>
@@ -245,7 +253,7 @@ function MarketplaceContent() {
 
 export default function MarketplaceClient() {
   return (
-    <Suspense fallback={<div style={{ backgroundColor: "#0c0c12", minHeight: "100vh" }} />}>
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
       <MarketplaceContent />
     </Suspense>
   );
