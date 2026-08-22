@@ -92,6 +92,10 @@ jobs:
             NEXT_TELEMETRY_DISABLED=1 npm run build
 
             echo "[5/6] Restarting PM2 process..."
+            # Kill any orphaned Next server holding the port (avoids EADDRINUSE crash-loop)
+            fuser -k 3003/tcp 2>/dev/null || true
+            pkill -f 'next-server' 2>/dev/null || true
+            sleep 2
             # Ensure static assets are served by nginx (standalone track path)
             if [ ! -d .next/standalone/.next/static ]; then
               mkdir -p .next/standalone/.next

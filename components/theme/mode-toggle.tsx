@@ -6,14 +6,14 @@ import { useEffect, useState, useCallback } from "react";
 const STORAGE_KEY = "hv-theme-mode";
 
 export function getStoredMode(): "dark" | "light" {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "light" || stored === "dark") return stored;
   } catch {
     // ignore
   }
-  return "dark";
+  return "light";
 }
 
 export function setThemeMode(mode: "dark" | "light") {
@@ -48,7 +48,7 @@ interface ThemeModeToggleProps {
 }
 
 export function ThemeModeToggle({ variant = "icon", className = "" }: ThemeModeToggleProps) {
-  const [mode, setMode] = useState<"dark" | "light">("dark");
+  const [mode, setMode] = useState<"dark" | "light">("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

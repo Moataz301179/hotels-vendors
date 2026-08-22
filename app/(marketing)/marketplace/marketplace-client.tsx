@@ -85,28 +85,28 @@ function MarketplaceContent() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.03) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            {products.length} products live<br />Suppliers. <span className="text-white">Zero Collection Chases.</span>
+          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
+          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-foreground">
+            {products.length} products live<br />Suppliers. <span className="text-foreground">Zero Collection Chases.</span>
           </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
+          <p className="text-[15px] text-foreground-secondary max-w-2xl leading-relaxed mb-8">
             The ETA-native procurement catalog for Egyptian hospitality. Fixed-price listings, ETA-compliant invoicing, and embedded factoring. Built for suppliers who are done waiting 90 days to get paid.
           </p>
           <div className="max-w-2xl mb-8">
             <div className="flex gap-2">
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search products, suppliers, or categories..."
-                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white placeholder:text-white/20 outline-none focus:border-accent-base/60 transition-all"
+                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-white/[0.03] border border-border-subtle text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-accent-base/60 transition-all"
                 />
                 {query && (
                   <button
                     onClick={() => setQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-secondary hover:text-foreground transition-colors"
                     aria-label="Clear search"
                   >
                     <X size={16} />
@@ -115,18 +115,18 @@ function MarketplaceContent() {
               </div>
             </div>
             {query && (
-              <p className="text-[12px] text-white/40 mt-3">
+              <p className="text-[12px] text-foreground-secondary mt-3">
                 {hasResults ? (
                   <>Showing results for <span className="text-accent-base font-medium">&ldquo;{query}&rdquo;</span></>
                 ) : (
-                  <>No matches for <span className="text-white font-medium">&ldquo;{query}&rdquo;</span></>
+                  <>No matches for <span className="text-foreground font-medium">&ldquo;{query}&rdquo;</span></>
                 )}
               </p>
             )}
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>Start Selling <ArrowRight size={14} /></Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
+            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-foreground/5" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>Register as Buyer</Link>
           </div>
         </div>
       </section>
@@ -143,8 +143,8 @@ function MarketplaceContent() {
               <div key={b.label} className="flex items-center gap-3">
                 <b.icon size={16} style={{ color: "var(--accent-base)" }} />
                 <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                  <p className="text-[11px] font-medium text-foreground-secondary">{b.label}</p>
+                  <p className="text-[9px] text-foreground-muted">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -158,8 +158,8 @@ function MarketplaceContent() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-2">Products</h2>
-              <p className="text-[13px] text-white/40">Browse our catalog of hospitality products</p>
+              <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-2">Products</h2>
+              <p className="text-[13px] text-foreground-secondary">Browse our catalog of hospitality products</p>
             </div>
           </div>
           {loading ? (
@@ -177,15 +177,15 @@ function MarketplaceContent() {
                     </div>
                   </div>
                   <div className="p-3">
-                    <h4 className="text-[11px] font-medium text-white mb-1 leading-tight line-clamp-2">{p.name}</h4>
-                    <p className="text-[10px] text-white/30 mb-1.5">{p.supplier?.name || "Supplier"}</p>
+                    <h4 className="text-[11px] font-medium text-foreground mb-1 leading-tight line-clamp-2">{p.name}</h4>
+                    <p className="text-[10px] text-foreground-muted mb-1.5">{p.supplier?.name || "Supplier"}</p>
                     <p className="text-[12px] font-semibold text-accent-base">{formatPrice(p.unitPrice)}/{p.unitOfMeasure}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-white/30 py-8 text-center">Be the first to list — the catalog shows verified supplier inventory as it is published. your search.</p>
+            <p className="text-[13px] text-foreground-muted py-8 text-center">Be the first to list — the catalog shows verified supplier inventory as it is published. your search.</p>
           )}
         </div>
       </section>
@@ -193,7 +193,7 @@ function MarketplaceContent() {
       {/* Product Categories */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-6">Product Categories</h2>
+          <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Product Categories</h2>
           {filteredCategories.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {filteredCategories.map((cat) => (
@@ -202,13 +202,13 @@ function MarketplaceContent() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-3">
                     <h3 className="text-[13px] font-semibold mb-0.5" style={{ color: cat.color }}>{cat.name}</h3>
-                    <p className="text-[10px] text-white/30 leading-tight">{cat.desc}</p>
+                    <p className="text-[10px] text-foreground-muted leading-tight">{cat.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-white/30 py-8 text-center">No categories match your search.</p>
+            <p className="text-[13px] text-foreground-muted py-8 text-center">No categories match your search.</p>
           )}
         </div>
       </section>
@@ -216,13 +216,13 @@ function MarketplaceContent() {
       {/* Supplier Features */}
       <section className="py-16" style={{ backgroundColor: "#12121a" }}>
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
+          <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {supplierFeatures.map((f) => (
               <div key={f.title} className="rounded-xl p-6 transition-all hover:border-accent-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
-                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
+                <h3 className="text-[14px] font-medium text-foreground mb-2">{f.title}</h3>
+                <p className="text-[12px] text-foreground-muted leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -232,8 +232,8 @@ function MarketplaceContent() {
       {/* CTA */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to sell to Egyptian hotels?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
+          <h2 className="text-[24px] font-medium mb-4 text-foreground">Ready to sell to Egyptian hotels?</h2>
+          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Join our suppliers already transacting on HotelsVendors. Get paid in 24 hours, not 90.</p>
           <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
             Register as Supplier <ArrowRight size={14} />
           </Link>

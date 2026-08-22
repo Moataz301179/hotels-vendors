@@ -125,7 +125,13 @@ function RegisterContent() {
       const data = await res.json();
       if (data.success) {
         setRegistered(true);
-        setTimeout(() => router.push("/login"), 2000);
+        const roleRoute =
+          data.user?.platformRole === "ADMIN" ? "/admin"
+          : data.user?.platformRole === "SUPPLIER" ? "/supplier"
+          : data.user?.platformRole === "FACTORING" ? "/factoring"
+          : data.user?.platformRole === "SHIPPING" ? "/shipping"
+          : "/hotel";
+        setTimeout(() => router.push(roleRoute), 2000);
       } else {
         setError(data.error || "Registration failed");
       }
@@ -136,7 +142,7 @@ function RegisterContent() {
     }
   };
 
-  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-white text-[14px] placeholder:text-white/15 focus:border-accent-base/30 focus:outline-none focus:ring-1 focus:ring-accent-base/10 transition-all";
+  const fieldCls = "w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.03] border border-border-subtle text-foreground text-[14px] placeholder:text-foreground-muted focus:border-accent-base/30 focus:outline-none focus:ring-1 focus:ring-accent-base/10 transition-all";
 
   const roleColorMap: Record<StakeholderRole, string> = {
     HOTEL: "var(--accent-base)",
@@ -158,7 +164,7 @@ function RegisterContent() {
           <CheckCircle2 size={40} style={{ color: "var(--accent-base)" }} />
         </div>
         <div>
-          <h1 className="text-[24px] font-semibold text-white mb-2">Welcome aboard, {form.name}!</h1>
+          <h1 className="text-[24px] font-semibold text-foreground mb-2">Welcome aboard, {form.name}!</h1>
           <p className="text-foreground-secondary text-[14px]">
             Your account has been created. Please check your email to verify your account before signing in.
           </p>
@@ -224,7 +230,7 @@ function RegisterContent() {
                     className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[13px] font-medium transition-all ${
                       isSelected
                         ? "text-surface border-transparent"
-                        : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                        : "bg-white/[0.02] border-border-subtle text-foreground-secondary hover:text-foreground-secondary hover:border-white/[0.10]"
                     }`}
                     style={isSelected ? { backgroundColor: role.color, borderColor: role.color } : {}}
                   >
@@ -330,7 +336,7 @@ function RegisterContent() {
               >
                 <option value="" className="bg-surface-1 text-foreground-secondary">Select governorate</option>
                 {GOVERNORATES.map((g) => (
-                  <option key={g} value={g} className="bg-surface-1 text-white">{g}</option>
+                  <option key={g} value={g} className="bg-surface-1 text-foreground">{g}</option>
                 ))}
               </select>
             </div>
@@ -356,7 +362,7 @@ function RegisterContent() {
                         type="button"
                         onClick={() => updateForm("propertyType", pt.value)}
                         className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border text-[11px] font-medium transition-all ${
-                          isSelected ? "text-surface border-transparent" : "bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60 hover:border-white/[0.10]"
+                          isSelected ? "text-surface border-transparent" : "bg-white/[0.02] border-border-subtle text-foreground-secondary hover:text-foreground-secondary hover:border-white/[0.10]"
                         }`}
                         style={isSelected ? { backgroundColor: pt.color, borderColor: pt.color } : {}}
                       >
@@ -382,10 +388,10 @@ function RegisterContent() {
                       className={`${fieldCls} appearance-none`}
                     >
                       <option value="1" className="bg-surface-1 text-foreground-secondary">1 property</option>
-                      <option value="2-5" className="bg-surface-1 text-white">2-5 properties</option>
-                      <option value="6-10" className="bg-surface-1 text-white">6-10 properties</option>
-                      <option value="11-20" className="bg-surface-1 text-white">11-20 properties</option>
-                      <option value="20+" className="bg-surface-1 text-white">20+ properties</option>
+                      <option value="2-5" className="bg-surface-1 text-foreground">2-5 properties</option>
+                      <option value="6-10" className="bg-surface-1 text-foreground">6-10 properties</option>
+                      <option value="11-20" className="bg-surface-1 text-foreground">11-20 properties</option>
+                      <option value="20+" className="bg-surface-1 text-foreground">20+ properties</option>
                     </select>
                   </div>
                 </div>
@@ -457,7 +463,7 @@ function RegisterContent() {
         </form>
       </div>
 
-      <div className="rounded-xl p-4 bg-white/[0.02] border border-white/[0.06]">
+      <div className="rounded-xl p-4 bg-white/[0.02] border border-border-subtle">
         <p className="text-[12px] text-foreground-secondary leading-relaxed">
           Tax ID and Commercial Registry can be added after registration in your dashboard settings.
         </p>

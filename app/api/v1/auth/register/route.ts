@@ -6,6 +6,7 @@ import { apiRoute, validateBody, success, error, audit } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/redis";
 import { sendEmail, welcomeTemplate, emailVerificationTemplate } from "@/lib/notifications/email";
 import { randomBytes, createHash } from "crypto";
+import { createSession } from "@/lib/session";
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
@@ -178,6 +179,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   }
 
   // Send verification email
+  let verificationSent = false;
   try {
     const verification = emailVerificationTemplate({
       name: data.name,
@@ -188,8 +190,23 @@ export const POST = apiRoute(async (request: NextRequest) => {
       subject: verification.subject,
       html: verification.html,
     });
+    verificationSent = true;
   } catch {
     console.error("[Register] Failed to send verification email to", data.email);
+  }
+
+  const emailConfigured = Boolean(process.env.SMTP_HOST || process.env.RESEND_API_KEY);
+  if (!emailConfigured || !verificationSent) {
+    // No working email channel - let the user in without the verification wall.
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { emailVerifiedAt: new Date() },
+    });
+  }
+
+  // Auto-login: create the session cookie so the user lands in their portal directly
+  if (!emailConfigured || !verificationSent) {
+    await createSession(user.id, user.platformRole, user.tenantId || user.hotelId || "legacy");
   }
 
   await audit({

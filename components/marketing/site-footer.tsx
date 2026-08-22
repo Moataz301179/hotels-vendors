@@ -94,30 +94,30 @@ export function SiteFooter() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-3" dir="ltr">
               <BrandLogo variant="dark" size="md" showText={false} />
-              <span className="font-semibold text-white uppercase text-[15px]" style={{ letterSpacing: "0.2em" }}>
+              <span className="font-semibold text-foreground uppercase text-[15px]" style={{ letterSpacing: "0.2em" }}>
                 Hotels Vendors
               </span>
             </div>
-            <p className="text-white/55 text-sm leading-relaxed mb-4">
+            <p className="text-foreground/55 text-sm leading-relaxed mb-4">
               {ar
                 ? "أول منصة مشتريات فندقية B2B بالذكاء الاصطناعي في مصر. متوافقة مع الهيئة الضريبية وهيئة الرقابة المالية. مجانية للبدء."
                 : "The B2B procurement platform for Egyptian hospitality. ETA e-invoicing, fixed pricing, and embedded factoring."}
             </p>
             <div className="mb-4">
-              <p className="text-[11px] text-white/40 uppercase tracking-widest mb-1">{ar ? "عن الشركة" : "About"}</p>
-              <p className="text-sm text-white/70">
+              <p className="text-[11px] text-foreground-secondary uppercase tracking-widest mb-1">{ar ? "عن الشركة" : "About"}</p>
+              <p className="text-sm text-foreground">
                 {ar
                   ? " مطور بواسطة Restaurants for E-Marketing، القاهرة، مصر. تأسست لتحرير سلسلة توريد الضيافة المصرية."
                   : "Built by Restaurants for E-Marketing, Cairo, Egypt — founded to unbundle the Egyptian hospitality supply chain."}
               </p>
-              <p className="text-sm text-white/70 mt-1">
+              <p className="text-sm text-foreground mt-1">
                 <span className="text-[#8a6d3b] font-semibold">{ar ? "المؤسس :" : "Founder: "}</span>
                 {ar ? "معتز إبراهيم" : "Moataz Ibrahim"}
               </p>
             </div>
             {/* Real brand socials */}
             <div className="flex items-center gap-3 mb-5">
-              <span className="text-[11px] text-white/40 uppercase tracking-widest">{ar ? "تابعنا" : "Follow us"}</span>
+              <span className="text-[11px] text-foreground-secondary uppercase tracking-widest">{ar ? "تابعنا" : "Follow us"}</span>
               {socials.map(({ label, href, Icon }) => (
                 <a
                   key={label}
@@ -125,7 +125,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-white/70 hover:text-white transition-colors"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground hover:text-foreground transition-colors"
                   style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}
                 >
                   <Icon size={17} />
@@ -141,31 +141,31 @@ export function SiteFooter() {
 
           {/* Platform links */}
           <div>
-            <div className="font-semibold mb-3 text-white">{ar ? "المنتج" : "Platform"}</div>
+            <div className="font-semibold mb-3 text-foreground">{ar ? "المنتج" : "Platform"}</div>
             <ul className="flex flex-col gap-2 text-sm">
-              <li><Link href="/marketplace" className="text-white/50 hover:text-white transition-colors">HotelsVendors</Link></li>
-              <li><Link href="/sandbox" className="text-white/50 hover:text-white transition-colors">{ar ? "تجربة المنصة" : "Sandbox"}</Link></li>
-              <li><Link href="/financing" className="text-white/50 hover:text-white transition-colors">Oliv {ar ? "التمويل" : "Financing"}</Link></li>
-              <li><Link href="/suppliers/join" className="text-white/50 hover:text-white transition-colors">{ar ? "للموردين" : "For Suppliers"}</Link></li>
-              <li><Link href="/hotels/join" className="text-white/50 hover:text-white transition-colors">{ar ? "للفنادق" : "For Hotels"}</Link></li>
-              <li><Link href="/eta-compliance" className="text-white/50 hover:text-white transition-colors">{ar ? "الامتثال الضريبي" : "ETA Compliance"}</Link></li>
+              <li><Link href="/marketplace" className="text-foreground-secondary hover:text-foreground transition-colors">HotelsVendors</Link></li>
+              <li><Link href="/sandbox" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "تجربة المنصة" : "Sandbox"}</Link></li>
+              <li><Link href="/financing" className="text-foreground-secondary hover:text-foreground transition-colors">Oliv {ar ? "التمويل" : "Financing"}</Link></li>
+              <li><Link href="/suppliers/join" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "للموردين" : "For Suppliers"}</Link></li>
+              <li><Link href="/hotels/join" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "للفنادق" : "For Hotels"}</Link></li>
+              <li><Link href="/eta-compliance" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "الامتثال الضريبي" : "ETA Compliance"}</Link></li>
             </ul>
           </div>
 
           {/* Company + Legal */}
           <div>
-            <div className="font-semibold mb-3 text-white">{ar ? "الشركة" : "Company"}</div>
+            <div className="font-semibold mb-3 text-foreground">{ar ? "الشركة" : "Company"}</div>
             <ul className="flex flex-col gap-2 text-sm">
-              <li><Link href="/about" className="text-white/50 hover:text-white transition-colors">{ar ? "عنّا" : "About"}</Link></li>
-              <li><Link href="/contact" className="text-white/50 hover:text-white transition-colors">{ar ? "تواصل معنا" : "Contact"}</Link></li>
-              <li><Link href="/privacy" className="text-white/50 hover:text-white transition-colors">{ar ? "الخصوصية" : "Privacy"}</Link></li>
-              <li><Link href="/terms" className="text-white/50 hover:text-white transition-colors">{ar ? "الشروط" : "Terms"}</Link></li>
+              <li><Link href="/about" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "عنّا" : "About"}</Link></li>
+              <li><Link href="/contact" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "تواصل معنا" : "Contact"}</Link></li>
+              <li><Link href="/privacy" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "الخصوصية" : "Privacy"}</Link></li>
+              <li><Link href="/terms" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "الشروط" : "Terms"}</Link></li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar — real trust badges as small chips */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-white/35" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t text-xs text-foreground-muted" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <span>&copy; {new Date().getFullYear()} {ar ? " Restaurants for E-Marketing. جميع الحقوق محفوظة." : "Restaurants for E-Marketing. All rights reserved."}</span>
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-2.5 py-1 rounded-full border text-[10px] font-semibold bg-white/5" style={{ borderColor: "#8a6d3b55", color: "#8a6d3b" }}>ETA e-Invoicing</span>

@@ -141,13 +141,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0c0c12" id="theme-color-meta" />
+        <meta name="theme-color" content="#f8f9fa" id="theme-color-meta" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var mode = localStorage.getItem('hv-theme-mode') || 'dark';
+                  var mode = localStorage.getItem('hv-theme-mode') || 'light';
                   if (mode === 'light') {
                     document.documentElement.setAttribute('data-theme', 'light');
                     var meta = document.getElementById('theme-color-meta');

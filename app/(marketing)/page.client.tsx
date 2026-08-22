@@ -35,7 +35,19 @@ function useLiveCounts(): LiveCounts {
   return counts;
 }
 
+const HERO_SLIDES = [
+  { src: "/images/suppliers/cat-fb.svg", title: "F&B", desc: "Food, beverages, kitchen" },
+  { src: "/images/suppliers/cat-cons.svg", title: "Consumables", desc: "Housekeeping, chemicals, linens" },
+  { src: "/images/suppliers/cat-guest.svg", title: "Guest supplies", desc: "Amenities and room accessories" },
+  { src: "/images/suppliers/cat-ffe.svg", title: "FF&E", desc: "Furniture, fixtures, equipment" },
+];
+
 export default function MarketingPage() {
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setSlide((v) => (v + 1) % HERO_SLIDES.length), 3200);
+    return () => clearInterval(t);
+  }, []);
   const { products, suppliers } = useLiveCounts();
   const hasLive = (products !== null && products > 0) || (suppliers !== null && suppliers > 0);
 
@@ -85,28 +97,28 @@ export default function MarketingPage() {
           )}
         </div>
 
-        {/* Right: platform schematic (real capabilities, no invented metrics) */}
+        {/* Product category carousel - real platform category imagery */}
         <div style={{ position: "relative", minHeight: 430 }}>
-          <div className="ct-shadow" style={{ position: "absolute", inset: "28px 28px 28px 8px", background: TX.beige, border: "1.5px solid "+TX.ink, borderRadius: 12, padding: 26, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <span style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#8a8a90", fontWeight: 800 }}>Platform core</span>
-            {[
-              ["Fixed-price catalog", "Suppliers set price + quantity — no bidding"],
-              ["Authority Matrix", "Every order mutation passes approval chains"],
-              ["ETA e-Invoicing", "Sign, submit, track — dead-letter retry"],
-              ["Factoring", "Non-recourse advances on validated invoices"],
-              ["Shared logistics", "Consolidated routes cut delivery overhead"],
-            ].map(([t, d]) => (
-              <div key={t} style={{ background: "#fff", border: "1px solid "+TX.border, borderRadius: 10, padding: "10px 14px", boxShadow: "3px 3px 0 rgba(11,15,20,.05)" }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 700 }}>{t}</div>
-                <div style={{ fontSize: 11, color: "#8a8a90", marginTop: 2 }}>{d}</div>
+          <div className="ct-shadow" style={{ position: "relative", inset: "28px 28px 28px 8px", background: TX.beige, border: "1.5px solid "+TX.ink, borderRadius: 12, overflow: "hidden", height: 360 }}>
+            {HERO_SLIDES.map((sl, i) => (
+              <div key={sl.src} style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity .7s ease", pointerEvents: i === slide ? "auto" : "none" }}>
+                <img src={sl.src} alt={sl.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <div style={{ position: "absolute", left: 16, bottom: 14, background: "rgba(11,15,20,.82)", color: "#fff", padding: "10px 16px", borderRadius: 8 }}>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 15, fontWeight: 700 }}>{sl.title}</div>
+                  <div style={{ fontSize: 11.5, color: "rgba(255,255,255,.7)" }}>{sl.desc}</div>
+                </div>
               </div>
             ))}
           </div>
-          <div style={{ position: "absolute", left: -16, bottom: -18, background: TX.ink, color: "#fff", padding: "14px 18px", borderRadius: 10, fontFamily: "'JetBrains Mono',monospace", fontSize: 13, boxShadow: "5px 5px 0 rgba(168,135,74,.55)" }}>
+          <div style={{ position: "absolute", right: 40, top: 34, display: "flex", gap: 6 }}>
+            {HERO_SLIDES.map((_, i) => (
+              <button key={i} onClick={() => setSlide(i)} aria-label={"Slide " + i} style={{ width: 9, height: 9, borderRadius: 99, border: "1.5px solid "+TX.ink, background: i === slide ? TX.goldDark : "#fff", cursor: "pointer", padding: 0 }} />
+            ))}
+          </div>
+          <div style={{ position: "absolute", left: -8, bottom: -8, background: TX.ink, color: "#fff", padding: "14px 18px", borderRadius: 10, fontFamily: "'JetBrains Mono',monospace", fontSize: 13, boxShadow: "5px 5px 0 rgba(168,135,74,.55)" }}>
             ETA e-invoicing enabled
           </div>
-        </div>
-      </section>
+        </div></section>
 
       {/* REAL differentiators (factual, no invented testimonials) */}
       <section style={{ borderTop: "1px solid "+TX.border, background: "#FAFAF7", padding: "64px 28px" }}>

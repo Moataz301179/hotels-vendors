@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <rect width="640" height="420" fill="#a8874a"/>
+  <rect x="24" y="24" width="592" height="372" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+  <text x="40" y="210" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" fill="#ffffff">Consumables</text>
+  <text x="42" y="256" font-family="Arial, Helvetica, sans-serif" font-size="24" letter-spacing="3" fill="rgba(255,255,255,.75)">Housekeeping · Chemicals · Linens</text>
+  <text x="540" y="380" font-family="monospace" font-size="16" fill="rgba(255,255,255,.5)">HOTELSVENDORS</text>
+</svg>
