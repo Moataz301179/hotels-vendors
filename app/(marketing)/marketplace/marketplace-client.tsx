@@ -18,10 +18,10 @@ interface Product {
 }
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "/images/suppliers/1.jpg" },
-  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "/images/suppliers/2.jpg" },
-  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "/images/suppliers/3.jpg" },
-  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "/images/suppliers/1.jpg" },
+  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "/images/suppliers/cat-fb.svg" },
+  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "/images/suppliers/cat-cons.svg" },
+  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "/images/suppliers/cat-guest.svg" },
+  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "/images/suppliers/cat-fb.svg" },
 ];
 
 const supplierFeatures = [
@@ -136,7 +136,7 @@ function MarketplaceContent() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap justify-center gap-8">
             {[
-              { icon: Shield, label: `${products.length}+ Products`, desc: "Live in catalog" },
+              { icon: Shield, label: `${products.length} products`, desc: "Live in catalog" },
               { icon: Clock, label: "Fast settlement via factoring", desc: "Non-recourse, on validated invoices" },
               { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
             ].map((b) => (
