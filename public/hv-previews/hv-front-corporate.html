@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HotelsVendors — Corporate Trust · B2B Procurement</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --ink:#0B0F14; --grey:#646367; --grey-light:#8a8a90;
+  --gold:#c8a86b; --gold-dark:#a8874a; --beige:#F4F0E8; --border:rgba(11,15,20,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+/* top bar */
+.topbar{background:var(--ink);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;padding:10px 28px;display:flex;justify-content:space-between}
+.topbar b{color:var(--gold)}
+/* nav */
+.nav{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--border)}
+.nav-in{display:flex;align-items:center;height:72px;gap:28px}
+.logo{font-weight:800;font-size:19px;display:flex;gap:10px;align-items:center}
+.logo .m{width:30px;height:30px;background:var(--gold-dark);color:#fff;display:grid;place-items:center;font-weight:800;border-radius:8px}
+.nav-links{display:flex;gap:22px;font-size:13.5px;font-weight:600;color:var(--grey)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{margin-left:auto;display:flex;gap:10px}
+.btn{padding:12px 22px;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font-family:inherit;transition:transform .15s ease-out,box-shadow .15s ease-out}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+.btn.gold{background:var(--gold-dark);color:#fff;border-color:var(--gold-dark)}
+/* hero — split 60/40 with floating card stack */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:center;padding:70px 0 80px}
+.hero h1{font-size:clamp(38px,4.4vw,62px);font-weight:800;letter-spacing:-.025em;line-height:1.04}
+.hero h1 span{color:var(--gold-dark)}
+.hero .sub{font-size:16.5px;color:var(--grey);margin-top:18px;max-width:48ch;line-height:1.65}
+.trust-row{display:flex;gap:32px;margin-top:38px;border-top:1px solid var(--border);padding-top:22px}
+.trust-item b{font-family:'JetBrains Mono',monospace;font-size:24px;display:block}
+.trust-item span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:700}
+.hero-cta{display:flex;gap:12px;margin-top:30px}
+.hero-visual{position:relative;min-height:430px}
+.vis-main{position:absolute;inset:28px 28px 28px 8px;background:var(--beige);border:1.5px solid var(--ink);border-radius:12px;box-shadow:10px 10px 0 rgba(11,15,20,.08);display:flex;flex-direction:column;justify-content:space-between;padding:26px}
+.vis-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;box-shadow:4px 4px 0 rgba(11,15,20,.05)}
+.vis-card b{font-family:'JetBrains Mono',monospace;font-size:17px;display:block}
+.vis-card span{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.vis-flag{position:absolute;left:-16px;bottom:-18px;background:var(--ink);color:#fff;border-radius:10px;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:15px;box-shadow:5px 5px 0 rgba(168,135,74,.55)}
+.vis-chip{position:absolute;right:-10px;top:-14px;background:var(--gold-dark);color:#fff;border-radius:99px;padding:8px 16px;font-size:11px;font-weight:800;letter-spacing:.06em;box-shadow:3px 3px 0 rgba(11,15,20,.15)}
+/* logos strip */
+.logos{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:22px 0;display:flex;justify-content:center;gap:44px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--grey-light);text-transform:uppercase;flex-wrap:wrap}
+/* stats band */
+.stats{padding:54px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-bottom:1px solid var(--border)}
+.stat{padding:0 8px;text-align:center}
+.stat b{font-family:'JetBrains Mono',monospace;font-size:36px;letter-spacing:-.02em;display:block}
+.stat span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-top:6px;display:block}
+.stat+.stat{border-left:1px solid var(--border)}
+/* section head */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:64px 0 34px}
+.sec-head h2{font-size:clamp(26px,3vw,38px);font-weight:800;letter-spacing:-.02em}
+.sec-head h2 span{color:var(--gold-dark)}
+.sec-head .tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:700}
+/* features — zig zag */
+.zz{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:48px}
+.zz.rev{direction:rtl}
+.zz>div{direction:ltr}
+.zz .txt h3{font-size:24px;font-weight:800;margin-bottom:12px}
+.zz .txt p{font-size:15px;color:var(--grey);line-height:1.7;max-width:46ch}
+.zz .vis{position:relative;min-height:230px;background:var(--beige);border:1.5px solid var(--ink);border-radius:12px;box-shadow:8px 8px 0 rgba(11,15,20,.07)}
+.zz .vis .inner{position:absolute;inset:20px;border:1.5px dashed var(--grey-light);border-radius:8px;display:grid;place-items:center;color:var(--grey);font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+.zz .ic{display:inline-grid;place-items:center;width:48px;height:48px;background:var(--gold-dark);color:#fff;border-radius:10px;font-weight:800;margin-bottom:16px;font-size:17px}
+/* pricing */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin:0 0 20px}
+.plan{border:1.5px solid var(--border);border-radius:14px;padding:28px;background:var(--surface);position:relative}
+.plan.pop{border-color:var(--gold-dark);box-shadow:0 0 0 1.5px var(--gold-dark), 8px 8px 0 rgba(168,135,74,.18)}
+.plan .ribbon{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold-dark);color:#fff;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px}
+.plan h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);font-weight:800}
+.plan .price{font-size:40px;font-weight:800;margin:14px 0 4px;font-family:'JetBrains Mono',monospace}
+.plan .price small{font-size:14px;color:var(--grey);font-weight:600}
+.plan ul{list-style:none;margin:18px 0 24px}
+.plan li{font-size:13.5px;color:var(--grey);padding:7px 0 7px 24px;position:relative}
+.plan li::before{content:'✓';position:absolute;left:0;color:var(--gold-dark);font-weight:800}
+.plan .btn{width:100%;}
+/* testimonials */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:0 0 8px}
+.q{border:1.5px solid var(--border);border-radius:12px;padding:24px;background:var(--surface)}
+.q .big{font-size:44px;line-height:1;color:var(--gold-dark);font-weight:800;font-family:'JetBrains Mono',monospace}
+.q p{font-size:14px;color:var(--grey);line-height:1.7;margin:12px 0 18px;font-style:italic}
+.q .who{display:flex;align-items:center;gap:12px}
+.q .av{width:38px;height:38px;border-radius:50%;background:var(--beige);border:1.5px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:13px}
+.q .who b{font-size:13.5px;display:block}
+.q .who span{font-size:11.5px;color:var(--grey)}
+/* CTA band */
+.cta{background:var(--ink);color:#fff;border-radius:16px;padding:60px 28px;text-align:center;margin:64px 0}
+.cta h2{font-size:clamp(26px,3vw,40px);font-weight:800}
+.cta p{color:rgba(255,255,255,.7);margin-top:10px;font-size:15px}
+.cta .btn{margin-top:26px;background:var(--gold-dark);color:#fff;border-color:var(--gold-dark)}
+/* footer */
+footer{border-top:1px solid var(--border);padding:48px 0 28px;background:var(--bg)}
+.f-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+.f-grid h4{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dark);font-weight:800;margin-bottom:14px}
+.f-grid a{display:block;font-size:13px;color:var(--grey);margin-bottom:9px}
+.f-grid a:hover{color:var(--ink)}
+.f-grid p{font-size:12.5px;color:var(--grey);line-height:1.6}
+.f-bot{display:flex;justify-content:space-between;margin-top:36px;padding-top:18px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey)}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:40px}
+  .hero-visual{min-height:320px;margin-top:30px}
+  .stats{grid-template-columns:1fr 1fr;gap:26px}
+  .zz{grid-template-columns:1fr}
+  .pricing{grid-template-columns:1fr}
+  .quotes{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><span>ET</span><span>eta-native · fixed pricing · live quantities</span><span><b>100% ETA E-INVOICED</b></span></div>
+
+<nav class="nav"><div class="wrap nav-in">
+  <a class="logo" href="#"><span class="m">H</span>HotelsVendors</a>
+  <div class="nav-links"><a href="#">Platform</a><a href="#">Marketplace</a><a href="#">Suppliers</a><a href="#">Factoring</a><a href="#">Logistics</a></div>
+  <div class="nav-cta"><a class="btn" href="#">Sign in</a><a class="btn gold" href="#">New purchase order</a></div>
+</div></nav>
+
+<div class="wrap hero">
+  <div>
+    <h1>The procurement hub for <span>Egyptian hospitality</span></h1>
+    <p class="sub">A four-sided B2B marketplace — hotels, suppliers, logistics, and factoring — with fixed pricing, tenant-isolated governance, and ETA-native e-invoicing on every order.</p>
+    <div class="hero-cta"><a class="btn gold" href="#">Browse marketplace</a><a class="btn" href="#">Talk to sales</a></div>
+    <div class="trust-row">
+      <div class="trust-item"><b>EGP 418K</b><span>GMV / hour</span></div>
+      <div class="trust-item"><b>5,214</b><span>Live SKUs</span></div>
+      <div class="trust-item"><b>99.6%</b><span>ETA accepted</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="vis-main">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:800">Market pulse</span>
+        <span class="vis-chip">LIVE</span>
+      </div>
+      <div class="vis-card"><b>EGP 418,200</b><span>GMV closed · last 60min</span></div>
+      <div class="vis-card"><b>+12.4%</b><span>vs same hour yesterday</span></div>
+      <div class="vis-card"><b>22</b><span>properties ordering now</span></div>
+    </div>
+    <div class="vis-flag">ETA UUID ✓ SIGNED</div>
+  </div>
+</div>
+
+<div class="wrap logos"><span>Nile Grand</span><span>Delta Foods</span><span>Cairo Climate</span><span>MedFish</span><span>Sphinx</span><span>Global Kitchen</span></div>
+
+<div class="wrap stats">
+  <div class="stat"><b data-count="5214">0</b><span>Live SKUs</span></div>
+  <div class="stat"><b data-count="312">0</b><span>Suppliers</span></div>
+  <div class="stat"><b data-count="1284">0</b><span>Open orders</span></div>
+  <div class="stat"><b data-count="60">0</b><span>% storage freed</span></div>
+</div>
+
+<div class="wrap">
+  <div class="sec-head"><h2>Everything you need to <span>run procurement</span></h2><span class="tag">Four-sided marketplace</span></div>
+  <div class="zz">
+    <div class="txt"><div class="ic">▲</div><h3>Fixed-price catalog</h3><p>Suppliers list price and quantity. No bidding — predictable, auditable procurement with hospitality-specific SKU taxonomy (F&amp;B, Housekeeping, Engineering, Amenities, Capital Equipment).</p></div>
+    <div class="vis"><div class="inner">Catalog · 5,214 SKUs · fixed pricing</div></div>
+  </div>
+  <div class="zz rev">
+    <div class="txt"><div class="ic">ETA</div><h3>Authority Matrix governance</h3><p>Every order mutation passes value-threshold approval chains. Rejections log actor, timestamp, reason, and order snapshot. Admin overrides need dual authorization.</p></div>
+    <div class="vis"><div class="inner">Approval chain · dual-auth</div></div>
+  </div>
+  <div class="zz">
+    <div class="txt"><div class="ic">FC</div><h3>Embedded factoring liquidity</h3><p>Non-recourse advances against ETA-validated invoices. Suppliers get paid in 48h; the hub fee is settled first, always. Credit terms negotiated per hotel.</p></div>
+    <div class="vis"><div class="inner">Factoring · 48h advance</div></div>
+  </div>
+  <div class="zz rev">
+    <div class="txt"><div class="ic">LN</div><h3>Shared-route logistics</h3><p>Consolidated coastal-cluster trips cut delivery overhead and free up to 60% of hotel storage. Real-time POD capture on every route stop.</p></div>
+    <div class="vis"><div class="inner">Route network · consolidated</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="sec-head"><h2>Simple, transparent <span>pricing</span></h2><span class="tag">Transaction fee · decreasing with volume</span></div>
+  <div class="pricing">
+    <div class="plan">
+      <h4>Starter</h4>
+      <div class="price">2.5<small>% fee</small></div>
+      <ul><li>Up to 3 properties</li><li>Fixed-price catalog</li><li>ETA e-invoicing</li><li>Email support</li></ul>
+      <a class="btn" href="#">Start free</a>
+    </div>
+    <div class="plan pop">
+      <span class="ribbon">Most popular</span>
+      <h4>Professional</h4>
+      <div class="price">2.0<small>% fee</small></div>
+      <ul><li>Unlimited properties</li><li>Authority Matrix governance</li><li>Embedded factoring (48h)</li><li>Shared-route logistics</li><li>Priority support</li></ul>
+      <a class="btn gold" href="#">Get started</a>
+    </div>
+    <div class="plan">
+      <h4>Enterprise</h4>
+      <div class="price">1.5<small>% fee</small></div>
+      <ul><li>Everything in Professional</li><li>Dedicated account manager</li><li>ERP integrations (Opera/SAP)</li><li>Custom SLA &amp; SSO</li></ul>
+      <a class="btn" href="#">Contact sales</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="sec-head"><h2>Trusted by <span>hotel leaders</span></h2><span class="tag">Closed beta · 2026</span></div>
+  <div class="quotes">
+    <div class="q"><div class="big">"</div><p>Daily ordering via shared logistics freed 60% of our storage — that's pure found money for a 15-property chain.</p><div class="who"><div class="av">MG</div><div><b>Mark G.</b><span>Procurement Director, Cairo hotel group</span></div></div></div>
+    <div class="q"><div class="big">"</div><p>We stopped chasing WhatsApp threads. Every PO is ETA-signed and every approval is logged. The Authority Matrix works.</p><div class="who"><div class="av">SA</div><div><b>Sara A.</b><span>GM, Coastal resort</span></div></div></div>
+    <div class="q"><div class="big">"</div><p>Factoring against validated invoices got us paid in 48 hours. Zero recourse, zero chasing.</p><div class="who"><div class="av">EN</div><div><b>El Nour Textiles</b><span>Supplier, 6th of October</span></div></div></div>
+  </div>
+</div>
+
+<div class="wrap"><div class="cta">
+  <h2>Ready to cut procurement cost?</h2>
+  <p>Join the closed beta — 5 hotel groups already on board.</p>
+  <a class="btn" href="#">Start free trial</a>
+</div></div>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div><h4>HotelsVendors</h4><p>B2B procurement hub for Egyptian hospitality. ETA-native, factoring-embedded, logistics-optimized.</p></div>
+      <div><h4>Marketplace</h4><a href="#">Categories</a><a href="#">Suppliers</a><a href="#">New purchase order</a></div>
+      <div><h4>Platform</h4><a href="#">Hotel portal</a><a href="#">Supplier central</a><a href="#">Logistics network</a><a href="#">Factoring</a></div>
+      <div><h4>Compliance</h4><a href="#">ETA e-invoicing</a><a href="#">Authority Matrix</a><a href="#">FRA</a></div>
+    </div>
+    <div class="f-bot"><span>© 2026 HotelsVendors · Corporate Trust design system</span><span>Zero gradients · solid surfaces · offset depth</span></div>
+  </div>
+</footer>
+
+<script>
+/* count-up stats */
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=+el.dataset.count;const dur=1000;const t0=performance.now();
+  const step=(t)=>{const p=Math.min((t-t0)/dur,1);el.textContent=Math.round(target*(0.5-0.5*Math.cos(Math.PI*p))).toLocaleString();if(p<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+});
+</script>
+<div style="position:fixed;left:22px;top:96px;z-index:99;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px">
+<a href="/hv-previews/hv-front.html" style="border:1.5px solid var(--ink);background:#fff;color:var(--ink);padding:8px 12px;text-decoration:none;letter-spacing:.08em">SWISS SKIN →</a>
+</div></body>
+</html>

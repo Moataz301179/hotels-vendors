@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HotelsVendors — Logistics Control · Industrial</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0F14; --panel:#16161F; --raised:#1C1F27; --ink2:#23262C;
+  --line:rgba(255,255,255,.10); --gold:#c8a86b; --gold-dark:#8a6d3b;
+  --green:#314B43; --green-hi:#4ade80; --beige:#ABA294;
+  --txt:#F2F4F7; --muted:rgba(255,255,255,.55);
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;padding-bottom:60px}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1340px;margin:0 auto;padding:0 28px}
+/* ── top chassis bar ── */
+.chassis{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:60}
+.chassis-in{display:flex;align-items:center;height:70px;gap:26px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:17px;letter-spacing:.02em}
+.brand .led{width:10px;height:10px;border-radius:50%;background:var(--green-hi);box-shadow:0 0 0 3px rgba(74,222,128,.25);animation:blink 2.2s infinite}
+@keyframes blink{0%,70%,100%{opacity:1}75%,95%{opacity:.25}}
+.brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.22em;font-weight:600}
+.ch-nav{display:flex;gap:20px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ch-nav a{padding:6px 2px;border-bottom:2px solid transparent}
+.ch-nav a.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ch-status{margin-left:auto;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ch-status b{color:var(--green-hi);font-weight:600}
+/* ── signal bar ── */
+.signal{display:flex;gap:0;border-bottom:1px solid var(--line);background:var(--panel);font-family:var(--mono);font-size:11px;letter-spacing:.06em;overflow:hidden}
+.signal div{flex:1;padding:12px 22px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--line);white-space:nowrap}
+.signal div:last-child{border-right:0}
+.signal .dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.signal .dot.g{background:var(--green-hi)}
+.signal b{color:var(--txt);font-weight:600}
+.signal span{color:var(--muted)}
+/* ── page head ── */
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;padding:30px 0 16px}
+.page-head h1{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:.01em;text-transform:uppercase}
+.page-head h1 span{color:var(--gold)}
+.page-head .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:.04em}
+.mode{display:flex;gap:10px}
+.seg-btn{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 20px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;font-weight:600}
+.seg-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+/* ── status tiles (LED + readout) ── */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+.tile{border:1px solid var(--line);background:var(--panel);padding:18px;position:relative;overflow:hidden}
+.tile::before{content:'';position:absolute;top:0;left:0;height:3px;width:100%;background:var(--gold)}
+.tile.g::before{background:var(--green-hi)}
+.tile .top{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.tile .led{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block}
+.tile.g .led{background:var(--green-hi)}
+.tile b{font-family:var(--mono);font-size:26px;font-weight:700;display:block;margin-top:12px;letter-spacing:-.02em}
+.tile span{font-size:11px;color:var(--muted);margin-top:4px;display:block}
+.tile .trend{font-family:var(--mono);font-size:10px;position:absolute;right:14px;bottom:14px;color:var(--green-hi)}
+/* ── main grid: routes + modules ── */
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.panel{border:1px solid var(--line);background:var(--panel)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel-head h2{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.panel-head .fig{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em}
+.panel-head .live{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--green-hi);letter-spacing:.1em}
+.panel-head .live .led{width:7px;height:7px;border-radius:50%;background:var(--green-hi);animation:blink 1.6s infinite}
+/* route rows */
+.route{display:flex;align-items:center;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.route:last-child{border-bottom:0}
+.route .rnum{font-family:var(--mono);font-size:11px;color:var(--muted);width:58px}
+.route .rmain{flex:1}
+.route .rmain b{font-size:14px;font-weight:700;display:block}
+.route .rmain span{font-size:11.5px;color:var(--muted)}
+.route .rstat{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.route .pill{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border:1px solid;font-weight:600}
+.pill.run{border-color:var(--green-hi);color:var(--green-hi)}
+.pill.wait{border-color:var(--gold);color:var(--gold)}
+.pill.done{border-color:var(--muted);color:var(--muted)}
+.route .eta{font-family:var(--mono);font-size:11px;color:var(--txt)}
+.route:hover{background:var(--raised)}
+/* modules */
+.mod{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 18px}
+.mcard{border:1px solid var(--line);background:var(--raised);padding:16px;position:relative}
+.mcard .mcode{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;position:absolute;top:10px;right:12px}
+.mcard h3{font-size:13px;font-weight:800;margin-top:4px}
+.mcard p{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.55}
+.mcard .readout{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:10px;display:block}
+.mcard .readout small{font-size:10px;color:var(--muted);font-weight:600}
+/* ── field logs ── */
+.logs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.log{border:1px solid var(--line);background:var(--panel);padding:18px}
+.log .ltag{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.1em}
+.log h3{font-size:14px;font-weight:800;margin:10px 0 6px}
+.log p{font-size:12px;color:var(--muted);line-height:1.6}
+.log .meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:12px;border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between}
+/* ── CTA chassis ── */
+.cta-panel{margin-top:26px;border:1px solid var(--gold-dark);background:var(--panel);padding:34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.cta-panel h2{font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.cta-panel p{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+.mech-btn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--bg);border:0;padding:16px 30px;cursor:pointer;transition:transform .12s ease-out,box-shadow .12s ease-out}
+.mech-btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 var(--gold-dark)}
+.mech-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--gold-dark)}
+.foot-note{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center;margin-top:36px;letter-spacing:.08em}
+@media(max-width:900px){
+  .tiles{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .logs{grid-template-columns:1fr}
+  .mod{grid-template-columns:1fr}
+  .ch-nav{display:none}
+}
+@media(max-width:560px){.tiles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="chassis"><div class="wrap chassis-in">
+  <div class="brand"><span class="led"></span><div>HOVIN<span style="color:var(--gold)">·LOG</span><small>LOGISTICS CONTROL</small></div></div>
+  <nav class="ch-nav"><a href="#">Overview</a><a href="#" class="active">Routes</a><a href="#">Fleet</a><a href="#">Stops</a><a href="#">Invoices</a></nav>
+  <div class="ch-status"><span>SYSTEM</span><b>● OPERATIONAL</b><span>UPTIME 99.98%</span></div>
+</div></div>
+
+<div class="wrap signal">
+  <div><span class="dot g"></span><span>ETA BRIDGE</span><b>ONLINE</b></div>
+  <div><span class="dot"></span><span>REDIS QUEUE</span><b>128 jobs</b></div>
+  <div><span class="dot"></span><span>ACTIVE ROUTES</span><b>17</b></div>
+  <div><span class="dot g"></span><span>GREEN CHANNEL</span><b>EGP 92K</b></div>
+  <div><span class="dot"></span><span>FACTORING</span><b>48H</b></div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <div><h1>Route <span>control</span></h1><div class="sub">CONSOLIDATED SHARED-ROUTE NETWORK · COASTAL CLUSTER</div></div>
+    <div class="mode">
+      <button class="seg-btn active">Live ops</button>
+      <button class="seg-btn">Planning</button>
+      <button class="seg-btn">Archive</button>
+    </div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="top"><span class="led"></span>DELIVERIES TODAY</div><b>142</b><span>Across 22 properties</span><span class="trend">▲ on-time 98%</span></div>
+    <div class="tile g"><div class="top"><span class="led"></span>CONSOLIDATION RATE</div><b>4.7×</b><span>Trips saved per day</span><span class="trend">▲ fuel −31%</span></div>
+    <div class="tile"><div class="top"><span class="led"></span>FACTORING ADVANCES</div><b>EGP 92K</b><span>Paid in 48h window</span><span class="trend">▲ +18%</span></div>
+    <div class="tile g"><div class="top"><span class="led"></span>ETA INVOICES SIGNED</div><b>4,108</b><span>UUID-validated</span><span class="trend">▲ 100%</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><h2>Active routes — shared trips</h2><span class="fig">FIG 2.1 / ROUTE BUS</span><span class="live"><span class="led"></span>LIVE</span></div>
+      <div class="route"><span class="rnum">RT-041</span><div class="rmain"><b>Khartoum St cluster</b><span>17 deliveries · 3 pallets · 420 kg · Delta Foods + Sphinx + 5 more</span></div><div class="rstat"><span class="pill run">In transit</span><span class="eta">ETA 21:40</span></div></div>
+      <div class="route"><span class="rnum">RT-042</span><div class="rmain"><b>10th of Ramadan line</b><span>12 deliveries · 2 pallets · 310 kg · Cairo Climate Parts</span></div><div class="rstat"><span class="pill run">In transit</span><span class="eta">ETA 22:05</span></div></div>
+      <div class="route"><span class="rnum">RT-043</span><div class="rmain"><b>Aswan corridor</b><span>8 deliveries · 1 pallet · 96 hvac kits</span></div><div class="rstat"><span class="pill wait">Awaiting pickup</span><span class="eta">Load 20:10</span></div></div>
+      <div class="route"><span class="rnum">RT-040</span><div class="rmain"><b>Nile Grand morning run</b><span>6 deliveries · 4,200 pcs linens · El Nour Textiles</span></div><div class="rstat"><span class="pill done">Delivered</span><span class="eta">POD captured</span></div></div>
+      <div class="route"><span class="rnum">RT-044</span><div class="rmain"><b>North Coast seasonal</b><span>23 deliveries · 5 pallets · F&amp;B dry goods</span></div><div class="rstat"><span class="pill wait">Consolidating</span><span class="eta">Load 22:30</span></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>System modules</h2><span class="fig">FIG 2.2 / CORE</span></div>
+      <div class="mod">
+        <div class="mcard"><span class="mcode">MOD-01</span><h3>ETA Invoice Bridge</h3><p>Sign · submit · validate · dead-letter retry</p><span class="readout">4,108 <small>signed</small></span></div>
+        <div class="mcard"><span class="mcode">MOD-02</span><h3>Authority Matrix</h3><p>Approval chains · dual-auth overrides</p><span class="readout">0 <small>blocked</small></span></div>
+        <div class="mcard"><span class="mcode">MOD-03</span><h3>Factoring Desk</h3><p>Non-recourse · ETA-validated only</p><span class="readout">EGP 92K <small>48h</small></span></div>
+        <div class="mcard"><span class="mcode">MOD-04</span><h3>Inventory Sync</h3><p>REST + webhooks · tenant-scoped</p><span class="readout">5,214 <small>SKUs</small></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logs">
+    <div class="log"><span class="ltag">LOG #039</span><h3>Route RT-041 consolidated</h3><p>17 hotels merged onto one Khartoum St trip. Supplier loading slots confirmed by all four vendors.</p><div class="meta"><span>OPS / 21:02</span><span>saved EGP 2,310</span></div></div>
+    <div class="log"><span class="ltag">LOG #040</span><h3>POD captured — RT-040</h3><p>Nile Grand signed digital proof of delivery for 4,200 pcs linens. ETA invoice released to factoring queue.</p><div class="meta"><span>OPS / 20:47</span><span>ETA UUID ok</span></div></div>
+    <div class="log"><span class="ltag">LOG #041</span><h3>ETA bridge retry batch</h3><p>3 failed invoice submissions re-queued automatically after transient timeouts. Zero manual intervention.</p><div class="meta"><span>SYS / 20:31</span><span>DLQ cleared</span></div></div>
+  </div>
+
+  <div class="cta-panel">
+    <div><h2>Open the logistics console</h2><p>CAPACITY PLANNING · ROUTE BUILDER · POD AUDIT — FULL ACCESS</p></div>
+    <button class="mech-btn">Launch console</button>
+  </div>
+
+  <div class="foot-note">ZERO GRADIENTS · ZERO GLASSMORPHISM · SOLID CHASSIS · GOLD ACCENT · HOVIN·LOG V0.1</div>
+</div>
+</body>
+</html>

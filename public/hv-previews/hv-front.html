@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HotelsVendors — Swiss International · B2B Procurement</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0F14; --white:#FFFFFF; --muted:#F2F2F2;
+  --grey:#646367; --gold:#c8a86b; --gold-dark:#a8874a; --beige:#ABA294;
+}
+[data-theme="dark"]{
+  --ink:#F2F4F7; --white:#0B0F14; --muted:#16161f;
+  --grey:#ABA294; --gold:#c8a86b; --gold-dark:#d9b97c; --beige:#1f2229;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.swiss-grid{background-image:linear-gradient(rgba(11,15,20,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(11,15,20,.04) 1px,transparent 1px);background-size:24px 24px}
+.ticker{border-bottom:3px solid var(--ink);background:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 28px;display:flex;justify-content:space-between}
+.ticker b{color:var(--gold-dark)}
+header{border-bottom:3px solid var(--ink);position:sticky;top:0;z-index:60;background:var(--white)}
+.hwrap{max-width:1360px;margin:0 auto;padding:0 28px;height:76px;display:flex;align-items:center;gap:30px}
+.logo{font-weight:800;font-size:19px;display:flex;align-items:center;gap:10px}
+.logo-mark{width:30px;height:30px;background:var(--ink);color:var(--white);display:grid;place-items:center;font-size:14px;font-weight:800}
+.hnav{display:flex;gap:24px;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.hnav a:hover{color:var(--gold-dark)}
+.hcta{margin-left:auto;display:flex;gap:12px;align-items:center}
+.btn{border:2.5px solid var(--ink);background:var(--white);color:var(--ink);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px;font-family:inherit;cursor:pointer}
+.btn:hover{background:var(--ink);color:var(--white)}
+.btn.gold{background:var(--gold-dark);color:#fff}
+.btn.gold:hover{background:var(--ink)}
+.hero{max-width:1360px;margin:0 auto;padding:56px 28px 60px;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--gold-dark);text-transform:uppercase;display:block;margin-bottom:14px}
+.hero h1{font-size:clamp(44px,6vw,84px);font-weight:800;letter-spacing:-.03em;line-height:.98;text-transform:uppercase}
+.hero h1 em{font-style:normal;color:var(--gold-dark)}
+.hero p.sub{font-size:16px;color:var(--grey);max-width:46ch;margin-top:20px;line-height:1.6}
+.hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.hero-trust{display:flex;gap:28px;margin-top:40px;border-top:2px solid var(--ink);padding-top:18px}
+.hero-trust div b{font-family:'JetBrains Mono',monospace;font-size:22px;display:block}
+.hero-trust div span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:700}
+.hero-fig{position:relative;min-height:420px}
+.hfig-inner{position:absolute;inset:24px;background:var(--muted);border:2.5px solid var(--ink)}
+.hfig-grid{position:absolute;right:-16px;top:-16px;width:42%;height:46%;background:var(--gold-dark);color:#fff;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
+.hfig-grid b{font-family:'JetBrains Mono',monospace;font-size:22px}
+.hfig-grid span{font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.hfig-bw{position:absolute;left:-16px;bottom:-16px;width:150px;height:150px;background:var(--ink);display:grid;place-items:center;color:var(--white);font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700}
+.hfig-stats{position:absolute;right:24px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2.2;color:var(--ink)}
+@keyframes ml{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.marquee{overflow:hidden;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);background:var(--ink);color:var(--white);padding:13px 0}
+.marquee>div{display:inline-block;white-space:nowrap;animation:ml 24s linear infinite}
+.marquee span{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:0 18px}
+.marquee span b{color:var(--gold)}
+section.seg{border-bottom:3px solid var(--ink)}
+.seg-inner{max-width:1360px;margin:0 auto;padding:56px 28px}
+.seg-head{display:flex;align-items:baseline;gap:16px;margin-bottom:30px}
+.seg-head .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold-dark);font-weight:700}
+.seg-head h2{font-size:clamp(26px,3vw,40px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em}
+.seg-head .tag{margin-left:auto;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);font-weight:700}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(96px,auto);gap:14px}
+.b{border:2.5px solid var(--ink);padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;background:var(--white)}
+.b b{font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:-.02em}
+.b .k{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--grey)}
+.b .v{font-size:12px;color:var(--grey);line-height:1.5}
+.b.solid{background:var(--ink);color:var(--white)}
+.b.solid .k,.b.solid .v{color:rgba(255,255,255,.66)}
+.b.gold{background:var(--gold-dark);color:#fff}
+.b.beige{background:var(--beige)}
+.b.lg{grid-column:span 6;grid-row:span 2}
+.b.g{grid-column:span 3;grid-row:span 2}
+.b.w{grid-column:span 3}
+.b.w2{grid-column:span 3}
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fcard{border:2.5px solid var(--ink);background:var(--white);padding:24px;display:flex;flex-direction:column;gap:12px;min-height:180px}
+.fcard .fi{width:44px;height:44px;border:2.5px solid var(--ink);display:grid;place-items:center;font-size:20px;font-weight:800}
+.fcard h3{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.fcard p{font-size:13px;color:var(--grey);line-height:1.6}
+.fcard:hover{background:var(--ink);color:var(--white)}
+.fcard:hover p{color:rgba(255,255,255,.66)}
+.fcard:hover .fi{background:var(--gold-dark);color:#fff;border-color:var(--gold-dark)}
+.orbit-section{background:var(--muted);border-top:3px solid var(--ink)}
+.orbit-stage{position:relative;height:400px;perspective:1400px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.orbit{position:absolute;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.disk{position:absolute;width:620px;height:620px;border:2px solid rgba(11,15,20,.25);border-radius:50%;transform:translateZ(-50px)}
+.disk.d2{width:800px;height:800px;border-color:rgba(200,168,107,.5);transform:translateZ(-110px)}
+.card3d{position:absolute;width:230px;height:265px;border:2.5px solid var(--ink);background:var(--white);overflow:hidden}
+.card3d .cf{height:120px;display:grid;place-items:center;font-size:40px;font-weight:800;border-bottom:2.5px solid var(--ink);background:var(--muted)}
+.card3d .cf.gold{background:var(--gold-dark);color:#fff}
+.card3d .cf.ink{background:var(--ink);color:var(--white)}
+.card3d .cf.beige{background:var(--beige)}
+.card3d .cb{padding:14px 16px}
+.card3d .cb h3{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.card3d .cb p{font-size:11.5px;color:var(--grey);margin-top:5px;line-height:1.5}
+.card3d .cb .tag{margin-top:9px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold-dark);border:1.5px solid var(--gold-dark);padding:3px 8px;display:inline-block}
+.orbit-ctl{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 0 10px}
+.arrow{width:44px;height:44px;border:2.5px solid var(--ink);background:var(--white);font-size:17px;font-weight:800;cursor:pointer;font-family:inherit}
+.arrow:hover{background:var(--ink);color:var(--white)}
+.dots{display:flex;gap:8px}
+.dot{width:10px;height:10px;border:2px solid var(--ink);cursor:pointer;background:var(--white)}
+.dot.active{background:var(--gold-dark)}
+.cta-band{background:var(--gold-dark);color:#fff;text-align:center;padding:56px 28px;border-top:3px solid var(--ink)}
+.cta-band h2{font-size:clamp(28px,4vw,48px);font-weight:800;text-transform:uppercase}
+.cta-band .btn{margin-top:26px;background:var(--ink);color:var(--white);border-color:#fff}
+footer{border-top:3px solid var(--ink);background:var(--white)}
+.foot{max-width:1360px;margin:0 auto;padding:44px 28px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1.2fr;gap:30px}
+.foot h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--gold-dark);margin-bottom:12px}
+.foot a{display:block;font-size:13px;color:var(--grey);margin-bottom:8px}
+.foot a:hover{color:var(--ink)}
+.foot p{font-size:12.5px;color:var(--grey);line-height:1.6}
+.fb{max-width:1360px;margin:0 auto;padding:14px 28px;border-top:2px solid var(--ink);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey)}
+.skinbar{position:fixed;right:22px;top:96px;z-index:99;display:flex;flex-direction:column;gap:8px}
+.skinbar button{border:2px solid var(--ink);background:var(--white);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+.skinbar button.active{background:var(--ink);color:var(--white)}
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding-top:36px}
+  .hero-fig{min-height:360px;margin-top:30px}
+  .feats{grid-template-columns:1fr 1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .hnav{display:none}
+}
+@media(max-width:640px){
+  .feats{grid-template-columns:1fr}
+  .b.lg,.b.g{grid-column:span 12}
+  .b.w,.b.w2{grid-column:span 6}
+  .hero h1{font-size:38px}
+  .hero-trust{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="ticker"><span>ETA-NATIVE · FIXED PRICING · LIVE QUANTITIES · FACTORING-EMBEDDED</span><span><b>100% ETA E-INVOICED</b></span></div>
+
+<header>
+  <div class="hwrap">
+    <a class="logo" href="#"><span class="logo-mark">H</span>Hotels<b>Vendors</b></a>
+    <nav class="hnav"><a href="#bento">Platform</a><a href="#categories">Categories</a><a href="#features">How it works</a><a href="#">Orders</a><a href="#">Suppliers</a></nav>
+    <div class="hcta"><a class="btn" href="#">Sign in</a><a class="btn gold" href="#">New purchase order</a></div>
+  </div>
+</header>
+
+<section class="hero swiss-grid">
+  <div>
+    <span class="sec-num">01 / Procurement Infrastructure</span>
+    <h1>The Procurement Hub<br>for <em>Egyptian</em><br>Hospitality</h1>
+    <p class="sub">A four-sided B2B marketplace: hotels buy, suppliers sell at fixed prices, logistics fulfills, factoring injects liquidity. Every invoice ETA-signed at issuance.</p>
+    <div class="hero-cta"><a class="btn gold" href="#">Browse marketplace</a><a class="btn" href="#">Join as supplier</a></div>
+    <div class="hero-trust">
+      <div><b>5,214</b><span>Live SKUs</span></div>
+      <div><b>312</b><span>Suppliers</span></div>
+      <div><b>EGP 418K</b><span>GMV / hour</span></div>
+    </div>
+  </div>
+  <div class="hero-fig">
+    <div class="hfig-inner swiss-dots"></div>
+    <div class="hfig-grid"><span>Market pulse</span><b>EGP 418K</b><span>+12.4% vs yesterday</span></div>
+    <div class="hfig-bw">ETA</div>
+    <div class="hfig-stats">SKU-0142 · Towel ⏐ 4,2K<br>SKU-0810 · Tahini ⏐ 310<br>SKU-0233 · HVAC kit ⏐ 38</div>
+  </div>
+</section>
+
+<div class="marquee"><div><span>F&B ▸ <b>2,340 SKUs</b></span><span>HOUSEKEEPING ▸ <b>1,120 SKUs</b></span><span>ENGINEERING ▸ <b>860 SKUs</b></span><span>AMENITIES ▸ <b>640 SKUs</b></span><span>CAPITAL EQUIPMENT ▸ <b>310 SKUs</b></span><span>F&amp;B ▸ <b>2,340 SKUs</b></span><span>HOUSEKEEPING ▸ <b>1,120 SKUs</b></span></div></div>
+
+<section class="seg" id="bento">
+  <div class="seg-inner">
+    <div class="seg-head"><span class="n">02.</span><h2>Live market <span>pulse</span></h2><span class="tag">Updated hourly</span></div>
+    <div class="bento">
+      <div class="b lg solid"><span class="k">Market pulse — this hour</span><b style="font-size:34px">EGP 418K</b><span class="v">GMV closed across 22 properties in the last 60 minutes</span><span class="k">▲ +12.4% vs same hour yesterday</span></div>
+      <div class="b g gold"><span class="k">Factoring</span><b>EGP 92K</b><span class="v">paid to suppliers in 48h</span></div>
+      <div class="b w"><span class="k">ETA sync</span><b>100%</b><span class="v">invoices signed + accepted</span></div>
+      <div class="b w2 beige"><span class="k">Best route</span><b>Khartoum St</b><span class="v">17 deliveries, 1 trip</span></div>
+      <div class="b w2"><span class="k">Hot now</span><b>Linens</b><span class="v">+38% demand this week</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="seg orbit-section" id="categories">
+  <div class="seg-inner">
+    <div class="seg-head"><span class="n">03.</span><h2>Supply <span>categories</span></h2><span class="tag">Spatial orbit — drag or arrows</span></div>
+    <div class="orbit-stage">
+      <div class="disk"></div><div class="disk d2"></div>
+      <div class="orbit" id="orbit">
+        <div class="card3d"><div class="cf gold">FF</div><div class="cb"><h3>Food &amp; Beverage</h3><p>Produce, proteins, disposables.</p><span class="tag">2,340 SKUs</span></div></div>
+        <div class="card3d"><div class="cf ink">HK</div><div class="cb"><h3>Housekeeping</h3><p>Linens, chemicals, guest supplies.</p><span class="tag">1,120 SKUs</span></div></div>
+        <div class="card3d"><div class="cf beige">EN</div><div class="cb"><h3>Engineering</h3><p>HVAC, electrical, plumbing kits.</p><span class="tag">860 SKUs</span></div></div>
+        <div class="card3d"><div class="cf">AM</div><div class="cb"><h3>Amenities</h3><p>In-room comfort and bath care.</p><span class="tag">640 SKUs</span></div></div>
+        <div class="card3d"><div class="cf ink">CE</div><div class="cb"><h3>Capital Equipment</h3><p>FF&amp;E, kitchen machinery.</p><span class="tag">310 SKUs</span></div></div>
+      </div>
+    </div>
+    <div class="orbit-ctl">
+      <button class="arrow" id="prevBtn">←</button>
+      <div class="dots" id="dots"></div>
+      <button class="arrow" id="nextBtn">→</button>
+    </div>
+  </div>
+</section>
+
+<section class="seg" id="features">
+  <div class="seg-inner">
+    <div class="seg-head"><span class="n">04.</span><h2>Built for <span>governance</span></h2><span class="tag">Zero gradients · zero blur</span></div>
+    <div class="feats">
+      <div class="fcard"><div class="fi">AM</div><h3>Authority Matrix</h3><p>Every order mutation passes the approval chain — value thresholds, hotel hierarchy, supplier tiers.</p></div>
+      <div class="fcard"><div class="fi">ETA</div><h3>ETA e-Invoicing</h3><p>Sign, submit, track. Failed submissions hit the dead-letter queue with automatic retry.</p></div>
+      <div class="fcard"><div class="fi">LN</div><h3>Shared-Route Logistics</h3><p>Consolidated trips cut delivery cost and free 60% of hotel storage.</p></div>
+      <div class="fcard"><div class="fi">FC</div><h3>Embedded Factoring</h3><p>Non-recourse liquidity tied to ETA-validated invoices. Hub fee paid first.</p></div>
+      <div class="fcard"><div class="fi">01</div><h3>Tenant isolation</h3><p>Every query tenant-scoped. Cross-tenant access is a security incident.</p></div>
+      <div class="fcard"><div class="fi">▲</div><h3>Fixed pricing</h3><p>Suppliers list price + quantity. No bidding — predictable procurement.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Ready to cut procurement cost?</h2>
+  <p style="margin-top:10px;font-size:15px;opacity:.85">Fixed pricing · ETA-native · factoring-embedded</p>
+  <a class="btn" href="#">Start free trial</a>
+</div>
+
+<footer>
+  <div class="foot">
+    <div><h4>HotelsVendors</h4><p>B2B procurement hub for Egyptian hospitality. ETA-native, factoring-embedded, logistics-optimized.</p></div>
+    <div><h4>Marketplace</h4><a href="#">Categories</a><a href="#">Suppliers</a><a href="#">New purchase order</a></div>
+    <div><h4>Platform</h4><a href="#">Hotel portal</a><a href="#">Supplier central</a><a href="#">Logistics</a></div>
+    <div><h4>Compliance</h4><a href="#">ETA e-invoicing</a><a href="#">Authority matrix</a><a href="#">FRA</a></div>
+    <div><h4>HOVIN</h4><p>Mobile-first dark ops companion for operators and suppliers.</p></div>
+  </div>
+  <div class="fb"><span>© 2026 HotelsVendors · Swiss International design system</span><span>Zero gradients · zero glassmorphism</span></div>
+</footer>
+
+<div class="skinbar">
+  <button id="btnLight" class="active">Light</button>
+  <button id="btnDark">Dark</button>
+</div>
+
+<script>
+const orbit=document.getElementById('orbit');
+const cards=orbit.querySelectorAll('.card3d');
+const N=cards.length,R=430;let angle=0;
+function render(){
+  cards.forEach((c,i)=>{
+    const a=((angle+i*360/N)*Math.PI)/180;
+    const x=Math.sin(a)*R,z=Math.cos(a)*R;
+    c.style.transform='translate3d('+x+'px,'+((-Math.abs(z)/R)*22)+'px,'+z+'px) rotateY('+(-a*180/Math.PI+90)+'deg)';
+    c.style.opacity=(z>0)?1:0.16;c.style.zIndex=Math.round(z);
+    c.style.pointerEvents=(z>60)?'auto':'none';
+  });
+  const active=Math.round(((angle%360)+360)%360/(360/N))%N;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===active));
+}
+const dots=document.getElementById('dots');
+for(let i=0;i<N;i++){const d=document.createElement('button');d.className='dot';d.onclick=()=>{angle=Math.round(angle/(360/N))*(360/N)+i*(360/N);render();};dots.appendChild(d);}
+document.getElementById('nextBtn').onclick=()=>{angle-=360/N;render();};
+document.getElementById('prevBtn').onclick=()=>{angle+=360/N;render();};
+let drift=setInterval(()=>{angle-=1.0;render();},40);
+orbit.addEventListener('mouseenter',()=>clearInterval(drift));
+orbit.addEventListener('mouseleave',()=>{drift=setInterval(()=>{angle-=1.0;render();},40);});
+render();
+const setTheme=(t)=>{document.documentElement.setAttribute('data-theme',t);localStorage.setItem('hv-skin',t);
+  document.getElementById('btnLight').classList.toggle('active',t==='light');
+  document.getElementById('btnDark').classList.toggle('active',t==='dark');};
+const saved=localStorage.getItem('hv-skin');
+if(saved)setTheme(saved);
+document.getElementById('btnLight').onclick=()=>setTheme('light');
+document.getElementById('btnDark').onclick=()=>setTheme('dark');
+</script>
+<div class="skinbar" style="top:190px">
+  <a href="/hv-previews/hv-front-corporate.html" style="border:2px solid var(--ink);background:var(--white);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;text-decoration:none">CORP TRUST</a>
+  <a href="/hv-previews/hv-logistics.html" style="border:2px solid var(--ink);background:var(--gold-dark);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;text-decoration:none">INDUSTRIAL</a>
+</div></body>
+</html>

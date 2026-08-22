@@ -133,7 +133,7 @@ export async function retryDeadLetter(id: string): Promise<{
 }> {
   const entry = await prisma.etaDeadLetterJob.findUnique({
     where: { id },
-    include: { invoice: true },
+    include: { Invoice: true },
   });
 
   if (!entry) {
@@ -155,7 +155,7 @@ export async function retryDeadLetter(id: string): Promise<{
 
     await recordSwarmEvent("eta_dlq_max_retries", "ERROR", {
       entryId: id,
-      invoiceId: entry.invoiceId,
+      invoiceId: entry.Invoice.id,
       attempts: nextAttempt,
     });
 
@@ -170,7 +170,7 @@ export async function retryDeadLetter(id: string): Promise<{
     // Re-invoke the ETA submission via the client
     // This requires the full payload to be reconstructed from the invoice
     const invoice = await prisma.invoice.findUnique({
-      where: { id: entry.invoiceId },
+      where: { id: entry.Invoice.id },
       include: {
         hotel: true,
         supplier: true,
@@ -251,7 +251,7 @@ export async function retryDeadLetter(id: string): Promise<{
 
     // Update the invoice
     await prisma.invoice.update({
-      where: { id: entry.invoiceId },
+      where: { id: entry.Invoice.id },
       data: {
         etaUuid: result.uuid,
         etaStatus: "SUBMITTING",
@@ -267,7 +267,7 @@ export async function retryDeadLetter(id: string): Promise<{
     const { appendAuditEntry } = await import("@/lib/audit/tamper-proof");
     await appendAuditEntry({
       entityName: "INVOICE",
-      entityId: entry.invoiceId,
+      entityId: entry.Invoice.id,
       actionType: "UPDATE",
       tenantId: entry.tenantId,
       actorId: "system",
@@ -277,7 +277,7 @@ export async function retryDeadLetter(id: string): Promise<{
 
     await recordSwarmEvent("eta_dlq_retry_success", "INFO", {
       entryId: id,
-      invoiceId: entry.invoiceId,
+      invoiceId: entry.Invoice.id,
       attempt: nextAttempt,
       etaUuid: result.uuid,
     });
@@ -319,7 +319,7 @@ export async function retryDeadLetter(id: string): Promise<{
 
     await recordSwarmEvent("eta_dlq_retry_failed", "ERROR", {
       entryId: id,
-      invoiceId: entry.invoiceId,
+      invoiceId: entry.Invoice.id,
       attempt: nextAttempt,
       error: retryMsg,
       nextRetryAt: nextRetryAt.toISOString(),

@@ -69,3 +69,6 @@ crew/
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Expo mobile static build output (deployed separately)
+public/mobile/

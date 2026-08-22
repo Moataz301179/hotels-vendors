@@ -70,7 +70,7 @@ export async function performThreeWayMatch(orderId: string): Promise<MatchResult
   // Find latest GRN for this order
   const grn = await prisma.goodsReceiptNote.findFirst({
     where: { orderId },
-    include: { lineItems: true },
+    include: { GrnLineItem: true },
     orderBy: { createdAt: "desc" },
   });
 
@@ -93,7 +93,7 @@ export async function performThreeWayMatch(orderId: string): Promise<MatchResult
     totalPOAmount += poTotal;
 
     // Find corresponding GRN line item
-    const grnLine = grn?.lineItems.find((gl) => gl.orderItemId === orderItem.id);
+    const grnLine = grn?.GrnLineItem.find((gl) => gl.orderItemId === orderItem.id);
     const receivedQty = grnLine?.receivedQuantity ?? 0;
     const acceptedQty = grnLine?.acceptedQuantity ?? 0;
     totalGRNAccepted += acceptedQty * poUnitPrice;

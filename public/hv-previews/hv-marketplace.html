@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HotelsVendors — Marketplace Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#ffffff; --beige:#ABA294; --beige-soft:rgba(171,162,148,.14);
+  --gold:#c8a86b; --gold-light:#d4b96e; --gold-dark:#a8874a;
+  --green:#646367; --green-light:#7a797e; --green-muted:rgba(100,99,103,.08);
+  --ink:#0B0F14; --grey:#646367;
+  --r:8px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+header.green-band{background:var(--green);color:#fff;padding:10px 0;font-size:12px;font-weight:700;letter-spacing:.06em;text-align:center}
+header.green-band b{color:var(--gold-light)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid rgba(171,162,148,.5)}
+.nav-inner{max-width:1360px;margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;gap:28px}
+.logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:10px}
+.logo-mark{width:28px;height:28px;background:var(--green);display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;border-radius:4px}
+.search{flex:1;max-width:520px;display:flex;border:1.5px solid rgba(171,162,148,.7);border-radius:var(--r);overflow:hidden}
+.search input{flex:1;border:0;outline:0;padding:11px 16px;font-family:var(--font);font-size:14px}
+.search button{border:0;background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:0 20px;cursor:pointer}
+.nav-links{display:flex;gap:22px;font-size:13.5px;font-weight:600;color:var(--green)}
+.nav-cta{background:var(--gold);color:#fff;font-weight:700;font-size:13px;padding:10px 20px;border-radius:var(--r);white-space:nowrap}
+@media(max-width:1024px){.nav-links{display:none}}
+
+/* PAGE HEAD */
+.page-head{max-width:1360px;margin:0 auto;padding:26px 28px 6px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.page-head h1{font-size:34px;font-weight:800;letter-spacing:-.02em}
+.page-head h1 span{color:var(--gold-dark)}
+.page-head p{font-size:14px;color:var(--grey);margin-top:6px;max-width:52ch}
+.head-metrics{display:flex;gap:26px}
+.head-metrics div b{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--green);display:block}
+.head-metrics div span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey)}
+
+/* 3D ORBITAL CATEGORIES */
+.orbit-sec{max-width:1360px;margin:0 auto;padding:26px 28px 10px}
+.orbit-label{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:8px}
+.stage-wrap{perspective:1500px}
+.stage{position:relative;height:360px;display:flex;align-items:center;justify-content:center}
+.orbit{position:absolute;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.disk{position:absolute;width:600px;height:600px;border:1.5px solid rgba(100,99,103,.25);border-radius:50%;transform:translateZ(-40px)}
+.disk.d2{width:760px;height:760px;border-color:rgba(200,168,107,.35);transform:translateZ(-90px)}
+.disk.d3{width:920px;height:920px;border-color:rgba(171,162,148,.35);transform:translateZ(-160px)}
+.card3d{position:absolute;width:230px;height:270px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;overflow:hidden;box-shadow:5px 7px 0 rgba(11,15,20,.08)}
+.card3d .c-flag{height:128px;display:grid;place-items:center;border-bottom:1.5px solid var(--ink);font-size:46px;font-weight:800}
+.card3d .c-flag.green{background:var(--green);color:#fff}
+.card3d .c-flag.gold{background:var(--gold);color:#fff}
+.card3d .c-flag.beige{background:var(--beige);color:var(--green)}
+.card3d .c-flag.white{background:#fff;color:var(--green)}
+.card3d .c-body{padding:13px 16px}
+.card3d .c-body h3{font-size:15.5px;font-weight:800;color:var(--ink)}
+.card3d .c-body p{font-size:11.5px;color:var(--grey);line-height:1.5;margin-top:4px}
+.card3d .c-body .c-tag{display:inline-block;margin-top:9px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dark);border:1px solid rgba(200,168,107,.5);padding:3px 9px;border-radius:99px}
+.carousel-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:4px}
+.c-arrow{width:42px;height:42px;border-radius:var(--r);border:1.5px solid var(--ink);background:#fff;font-size:17px;cursor:pointer;font-weight:700}
+.c-arrow:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.c-dots{display:flex;gap:8px}
+.c-dot{width:9px;height:9px;border-radius:99px;border:1.5px solid var(--ink);cursor:pointer;background:#fff}
+.c-dot.active{background:var(--gold-dark);border-color:var(--gold-dark)}
+
+/* FILTER BAR */
+.filters{max-width:1360px;margin:16px auto 0;padding:0 28px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.f-label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-right:4px}
+.ffilter{border:1.5px solid rgba(171,162,148,.7);background:#fff;border-radius:var(--r);padding:9px 16px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--green);cursor:pointer}
+.ffilter.active{background:var(--green);color:#fff;border-color:var(--green)}
+.ffilter.gold-active{background:var(--gold);color:#fff;border-color:var(--gold)}
+
+/* ASYMMETRIC BENTO: market pulse */
+.pulse-bento{max-width:1360px;margin:26px auto 0;padding:0 28px;display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:112px;gap:13px}
+.p-cell{border:1.5px solid var(--ink);border-radius:10px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;background:#fff}
+.p-cell.lg{grid-column:span 6;grid-row:span 2;background:var(--ink);color:#fff}
+.p-cell.g{grid-column:span 3;grid-row:span 2;background:var(--green);border-color:var(--green);color:#fff}
+.p-cell.gd{grid-column:span 3;grid-row:span 1;background:var(--gold);border-color:var(--gold);color:#fff}
+.p-cell.bg{grid-column:span 3;grid-row:span 1;background:var(--beige);border-color:var(--beige);color:var(--green)}
+.p-cell.w{grid-column:span 3;grid-row:span 1;background:#fff}
+.p-cell .k{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dark)}
+.p-cell .k.lt{color:rgba(255,255,255,.7)}
+.p-cell .k.gn{color:rgba(255,255,255,.75)}
+.p-cell b{font-size:30px;font-weight:800;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace}
+.p-cell p{font-size:11.5px;color:var(--grey)}
+.p-cell p.lt{color:rgba(255,255,255,.75)}
+
+/* PRODUCT LEDGER */
+.ledger{max-width:1360px;margin:28px auto 0;padding:0 28px 60px}
+.ledger-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ledger-head h2{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.ledger-head h2 span{color:var(--gold-dark)}
+.ledger-head .count{font-size:13px;color:var(--grey);font-weight:600}
+table{width:100%;border-collapse:collapse;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden}
+thead th{background:var(--green);color:#fff;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:13px 16px;border-right:1px solid rgba(255,255,255,.15)}
+thead th:last-child{border-right:0}
+tbody td{padding:13px 16px;font-size:13.5px;border-top:1px solid rgba(171,162,148,.45);border-right:1px solid rgba(171,162,148,.25);vertical-align:middle}
+tbody td:last-child{border-right:0}
+tbody tr:nth-child(even){background:var(--beige-soft)}
+tbody tr:hover{background:var(--green-muted)}
+td.sku{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--grey);font-weight:600}
+td .p-name{font-weight:700;color:var(--ink);font-size:14px}
+td .p-sup{font-size:11.5px;color:var(--grey)}
+td.price b{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green)}
+td.price span{display:block;font-size:10.5px;color:var(--grey);font-weight:600}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;letter-spacing:.03em}
+.pill.in{background:var(--green-muted);color:var(--green);border:1px solid rgba(100,99,103,.3)}
+.pill.low{background:rgba(220,38,38,.08);color:#b91c1c;border:1px solid rgba(220,38,38,.3)}
+.pill.eta{background:rgba(200,168,107,.15);color:var(--gold-dark);border:1px solid rgba(200,168,107,.45)}
+td.act a{color:var(--green);font-weight:700;font-size:13px}
+td.act a:hover{color:var(--gold-dark)}
+.page-cta{text-align:center;margin-top:34px}
+.page-cta .btn{display:inline-block;background:var(--green);color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:var(--r)}
+.page-cta .btn:hover{background:var(--green-light)}
+
+.foot-strap{background:var(--beige);height:30px;margin-top:0}
+.footer{background:var(--ink);color:#fff;padding:48px 28px 32px}
+.foot-inner{max-width:1360px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px}
+.foot-inner h4{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.foot-inner a{display:block;font-size:13px;color:rgba(255,255,255,.72);margin-bottom:9px}
+.foot-bottom{max-width:1360px;margin:18px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;color:rgba(255,255,255,.5);display:flex;justify-content:space-between}
+@media(max-width:1024px){
+  .page-head{flex-direction:column;align-items:flex-start}
+  .pulse-bento{grid-template-columns:repeat(6,1fr)}
+  .p-cell.lg{grid-column:span 6}.p-cell.g{grid-column:span 3}.p-cell.gd,.p-cell.bg,.p-cell.w{grid-column:span 3}
+}
+@media(max-width:640px){
+  .p-cell.lg,.p-cell.g,.p-cell.gd,.p-cell.bg,.p-cell.w{grid-column:span 6}
+  .head-metrics{flex-wrap:wrap}
+  .search{max-width:100%}
+}
+
+:root{--ink:#0B0F14;--grey:#646367;--gold:#c8a86b;--gold-dark:#a8874a;--beige:#ABA294}
+.sec-lbl{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dark);display:flex;align-items:center;gap:10px}
+.sec-lbl::before{content:'';width:26px;height:4px;background:var(--gold-dark);display:inline-block}
+section{border-bottom:2px solid var(--ink)}
+
+</style>
+</head>
+<body>
+<header class="green-band">ETA-native marketplace · Fixed pricing · Live quantities · <b>Fully ETA e-invoiced</b></header>
+<nav class="nav"><div class="nav-inner">
+  <a class="logo" href="#"><div class="logo-mark">H</div>HotelsVendors</a>
+  <div class="search"><input placeholder="Search 5,000+ hospitality SKUs… (e.g. Egyptian cotton towels)"><button>Search</button></div>
+  <div class="nav-links"><a href="#">Dashboard</a><a href="#">Orders</a><a href="#">Suppliers</a><a href="#">Factoring</a></div>
+  <a class="nav-cta" href="#">New purchase order</a>
+</div></nav>
+
+<div class="page-head">
+  <div>
+    <h1>Marketplace <span>&amp; supply ledger</span></h1>
+    <p>Fixed-price catalog refreshed live by suppliers. Every order is ETA-signed, authority-matrix approved, and factoring-ready.</p>
+  </div>
+  <div class="head-metrics">
+    <div><b>5,214</b><span>Live SKUs</span></div>
+    <div><b>312</b><span>Suppliers</span></div>
+    <div><b>1,284</b><span>Open orders</span></div>
+  </div>
+</div>
+
+<!-- 3D ORBITAL CATEGORIES -->
+<section class="orbit-sec">
+  <div class="orbit-label">Browse by category — spatial orbit</div>
+  <div class="stage-wrap">
+    <div class="stage">
+      <div class="disk"></div><div class="disk d2"></div><div class="disk d3"></div>
+      <div class="orbit" id="orbit">
+        <div class="card3d"><div class="c-flag green">FF</div><div class="c-body"><h3>Food &amp; Beverage</h3><p>Produce, proteins, disposables.</p><span class="c-tag">2,340 SKUs</span></div></div>
+        <div class="card3d"><div class="c-flag gold">HK</div><div class="c-body"><h3>Housekeeping</h3><p>Linens, chemicals, guest supplies.</p><span class="c-tag">1,120 SKUs</span></div></div>
+        <div class="card3d"><div class="c-flag beige">EN</div><div class="c-body"><h3>Engineering</h3><p>HVAC, electrical, plumbing kits.</p><span class="c-tag">860 SKUs</span></div></div>
+        <div class="card3d"><div class="c-flag white">AM</div><div class="c-body"><h3>Amenities</h3><p>In-room comfort and bath care.</p><span class="c-tag">640 SKUs</span></div></div>
+        <div class="card3d"><div class="c-flag green">CE</div><div class="c-body"><h3>Capital Equipment</h3><p>FF&amp;E, kitchen machinery.</p><span class="c-tag">310 SKUs</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="carousel-controls">
+    <button class="c-arrow" id="prevBtn">←</button>
+    <div class="c-dots" id="dots"></div>
+    <button class="c-arrow" id="nextBtn">→</button>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters">
+  <span class="f-label">Category</span>
+  <button class="ffilter active">All</button><button class="ffilter">Food &amp; Beverage</button><button class="ffilter">Housekeeping</button><button class="ffilter">Engineering</button><button class="ffilter">Amenities</button>
+  <button class="ffilter">Capital Equipment</button>
+  <span class="f-label" style="margin-left:14px">In stock</span>
+  <button class="ffilter gold-active">✓ Available</button><button class="ffilter">Low stock</button>
+</div>
+
+<!-- ASYMMETRIC PULSE BENTO -->
+<section class="pulse-bento">
+  <div class="p-cell lg">
+    <span class="k lt">Market pulse — this hour</span>
+    <div><b style="font-size:34px">EGP 418K</b><p class="lt" style="margin-top:6px">GMV closed in the last 60 minutes across 22 properties</p></div>
+    <span class="k lt" style="font-size:11px;letter-spacing:.05em">▲ +12.4% vs same hour yesterday</span>
+  </div>
+  <div class="p-cell g">
+    <span class="k gn">Best route</span>
+    <b style="font-size:26px">Khartoum St</b>
+    <p style="font-size:11px;color:rgba(255,255,255,.8)">17 deliveries consolidated, 1 trip</p>
+  </div>
+  <div class="p-cell gd">
+    <span class="k" style="color:rgba(255,255,255,.75)">Factoring</span>
+    <b style="font-size:24px">EGP 92K</b>
+    <p style="font-size:11px;color:rgba(255,255,255,.85)">paid to suppliers in 48h</p>
+  </div>
+  <div class="p-cell bg">
+    <span class="k" style="color:var(--green)">ETA sync</span>
+    <b style="font-size:24px;color:var(--green)">100%</b>
+    <p style="font-size:11px;color:var(--green)">invoices signed + accepted</p>
+  </div>
+  <div class="p-cell w">
+    <span class="k">Hot right now</span>
+    <b style="font-size:24px">Linens</b>
+    <p>+38% demand this week</p>
+  </div>
+  <div class="p-cell w">
+    <span class="k">Low stock flags</span>
+    <b style="font-size:24px">14</b>
+    <p>SKUs below reorder point</p>
+  </div>
+</section>
+
+<!-- LEDGER -->
+<section class="ledger">
+  <div class="ledger-head">
+    <h2>Live supply ledger <span>— fixed pricing</span></h2>
+    <span class="count">Showing 8 of 5,214 SKUs</span>
+  </div>
+  <table>
+    <thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Unit price</th><th>Stock</th><th>ETA status</th><th></th></tr></thead>
+    <tbody>
+      <tr><td class="sku">HV-FF-0142</td><td><div class="p-name">Premium Egyptian Cotton Towel 70×140</div><div class="p-sup">El Nour Textiles · 6th of October</div></td><td>Housekeeping</td><td class="price"><b>EGP 128.50</b><span>/ piece · min 100</span></td><td><span class="pill in">4,200 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-FF-0810</td><td><div class="p-name">Tahini Paste 18kg pail</div><div class="p-sup">Delta Food Industries · 10th of Ramadan</div></td><td>F&amp;B</td><td class="price"><b>EGP 1,940</b><span>/ pail · min 5</span></td><td><span class="pill in">310 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-EN-0233</td><td><div class="p-name">HVAC Filter Kit — split AC 2.5HP</div><div class="p-sup">Cairo Climate Parts · Obour City</div></td><td>Engineering</td><td class="price"><b>EGP 86.00</b><span>/ kit · min 50</span></td><td><span class="pill low">38 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-HK-0417</td><td><div class="p-name">Housekeeping Cart — 2-tier</div><div class="p-sup">EgyptServe Equipment · 6th of October</div></td><td>Housekeeping</td><td class="price"><b>EGP 3,450</b><span>/ unit · min 2</span></td><td><span class="pill in">96 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-AM-0109</td><td><div class="p-name">Guest Bath Amenity Set — 40ml</div><div class="p-sup">SpaCraft Egypt · Sadat City</div></td><td>Amenities</td><td class="price"><b>EGP 22.75</b><span>/ set · min 500</span></td><td><span class="pill in">18,400 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-CE-0071</td><td><div class="p-name">Combi Oven 10 GN — gas</div><div class="p-sup">Global Kitchen Lines · Cairo</div></td><td>Capital Equipment</td><td class="price"><b>EGP 187,000</b><span>/ unit · negotiable qty</span></td><td><span class="pill in">7 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Request quote →</a></td></tr>
+      <tr><td class="sku">HV-FF-0922</td><td><div class="p-name">Frozen Sea Bass — 1kg blocks</div><div class="p-sup">MedFish Trading · Alexandria</div></td><td>F&amp;B</td><td class="price"><b>EGP 265.00</b><span>/ kg · min 100 kg</span></td><td><span class="pill in">2,800 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+      <tr><td class="sku">HV-OS-0550</td><td><div class="p-name">Kitchen Paper Roll — 2-ply case</div><div class="p-sup">Sphinx Hygienics · 10th of Ramadan</div></td><td>Operating Supplies</td><td class="price"><b>EGP 540</b><span>/ case · min 10</span></td><td><span class="pill in">720 in stock</span></td><td><span class="pill eta">ETA · signed</span></td><td class="act"><a href="#">Add to order →</a></td></tr>
+    </tbody>
+  </table>
+  <div class="page-cta"><a class="btn" href="#">Load more SKUs (5,206 remaining)</a></div>
+</section>
+
+<div class="foot-strap"></div>
+<footer class="footer">
+  <div class="foot-inner">
+    <div><h4>HotelsVendors</h4><p>B2B procurement hub for Egyptian hospitality. ETA-native, factoring-embedded.</p></div>
+    <div><h4>Marketplace</h4><a href="#">Categories</a><a href="#">Suppliers</a><a href="#">New purchase order</a></div>
+    <div><h4>Platform</h4><a href="#">Hotel portal</a><a href="#">Supplier central</a><a href="#">Logistics</a></div>
+    <div><h4>Compliance</h4><a href="#">ETA e-invoicing</a><a href="#">FRA</a><a href="#">Authority matrix</a></div>
+  </div>
+  <div class="foot-bottom"><span>© 2026 HotelsVendors. Returants for E-Marketing.</span><span>Trial data — preview only</span></div>
+</footer>
+
+<script>
+const orbit=document.getElementById('orbit');
+const cards=orbit.querySelectorAll('.card3d');
+const N=cards.length, R=430;
+let angle=0;
+function render(){
+  cards.forEach((c,i)=>{
+    const a=((angle + i*360/N)*Math.PI)/180;
+    const x=Math.sin(a)*R, z=Math.cos(a)*R;
+    c.style.transform='translate3d('+x+'px,'+((-Math.abs(z)/R)*22)+'px,'+z+'px) rotateY('+(-a*180/Math.PI+90)+'deg)';
+    c.style.opacity=(z>0)?1:0.18;
+    c.style.zIndex=Math.round(z);
+    c.style.pointerEvents=(z>60)?'auto':'none';
+  });
+  const active=Math.round(((angle%360)+360)%360/(360/N))%N;
+  document.querySelectorAll('.c-dot').forEach((d,i)=>d.classList.toggle('active', i===active));
+}
+const dots=document.getElementById('dots');
+for(let i=0;i<N;i++){const d=document.createElement('button');d.className='c-dot';d.onclick=()=>{angle=Math.round(angle/(360/N))*(360/N)+i*(360/N);render();};dots.appendChild(d);}
+document.getElementById('nextBtn').onclick=()=>{angle-=360/N;render();};
+document.getElementById('prevBtn').onclick=()=>{angle+=360/N;render();};
+let drift=setInterval(()=>{angle-=1.0;render();},40);
+orbit.addEventListener('mouseenter',()=>clearInterval(drift));
+orbit.addEventListener('mouseleave',()=>{drift=setInterval(()=>{angle-=1.0;render();},40);});
+render();
+</script>
+</body>
+</html>

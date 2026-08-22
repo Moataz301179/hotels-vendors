@@ -19,11 +19,6 @@ const InvoFactoringQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(200).default(50),
 });
 
-/**
- * POST /api/v1/invo/factoring
- * Creates a factoring request from a qualified invoice.
- * Triggers agent_4_routing for funder matching.
- */
 export async function POST(req: NextRequest) {
   try {
     const auth = await authenticate(req);
@@ -57,8 +52,13 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createClient();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Factoring service unavailable (Supabase not configured)" },
+        { status: 503 }
+      );
+    }
 
-    // Verify invoice is qualified for factoring
     const { data: qualification } = await supabase
       .from("invoice_qualification_details")
       .select("*")
@@ -94,7 +94,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Log agent action
     await supabase.from("agent_audit_log").insert({
       agent_name: "agent_4_routing",
       action_executed: "factoring_request_created",
@@ -114,39 +113,38 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/**
- * GET /api/v1/invo/factoring
- * List factoring requests with bids.
- */
 export async function GET(req: NextRequest) {
   try {
+    const auth = await authenticate(req);
+    await requirePermission(auth, "invoice:factor");
+
     const { searchParams } = new URL(req.url);
-    const parsed = InvoFactoringQuerySchema.safeParse(Object.fromEntries(searchParams));
+    const parsed = InvoFactoringQuerySchema.safeParse({
+      hotel_id: searchParams.get("hotel_id"),
+      status: searchParams.get("status"),
+      limit: searchParams.get("limit"),
+    });
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || "Invalid query parameters" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid query" }, { status: 400 });
     }
     const { hotel_id, status, limit } = parsed.data;
 
     const supabase = await createClient();
-    let query = supabase
-      .from("factoring_requests")
-      .select("*, hotels(name), factoring_bids(*)")
-      .order("created_at", { ascending: false })
-      .limit(limit);
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Factoring service unavailable (Supabase not configured)" },
+        { status: 503 }
+      );
+    }
 
+    let query = supabase.from("factoring_requests").select("*").limit(limit);
     if (hotel_id) query = query.eq("hotel_id", hotel_id);
     if (status) query = query.eq("status", status);
 
-    const { data, error } = await query;
+    const { data, error } = await query.order("created_at", { ascending: false });
+    if (error) throw error;
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ requests: data || [] });
+    return NextResponse.json({ success: true, data: data || [] });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

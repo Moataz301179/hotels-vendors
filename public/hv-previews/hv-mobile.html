@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOVIN — Mobile App Preview (Dark)</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0F14; --raised:#16161f; --deep:#15151e; --input:rgba(255,255,255,.08);
+  --gold:#c8a86b; --gold-dark:#8a6d3b; --green:#646367; --green-light:#7a797e; --beige:#ABA294;
+  --white:#F2F4F7; --grey:rgba(255,255,255,.55);
+  --r:12px; --r-sm:8px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:#05070a;color:var(--white);display:flex;flex-direction:column;align-items:center;gap:26px;padding:36px 20px;-webkit-font-smoothing:antialiased}
+.page-title{color:var(--gold);font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;text-align:center}
+.page-title small{display:block;color:var(--grey);font-weight:500;letter-spacing:.04em;text-transform:none;margin-top:6px;font-size:12px}
+
+/* PHONE CHASSIS */
+.phone{width:390px;background:var(--bg);border:1.5px solid #2a2f3a;border-radius:44px;padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.screen{position:relative;background:var(--bg);border-radius:32px;overflow:hidden;height:790px;display:flex;flex-direction:column}
+.notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:26px;background:#000;border-radius:20px;z-index:60}
+.statusbar{display:flex;justify-content:space-between;align-items:center;padding:18px 24px 8px;font-size:12.5px;font-weight:700;color:var(--white)}
+.statusbar .icons{display:flex;gap:6px;font-size:11px}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:4px 20px 14px}
+.app-header .word{font-size:24px;font-weight:800;letter-spacing:4px;color:var(--white)}
+.app-header .word b{color:var(--gold)}
+.app-header .avatar{width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;border:1.5px solid var(--gold)}
+.scroll{flex:1;overflow-y:auto;padding:6px 16px 26px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* GREETING */
+.greet h1{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.greet h1 span{color:var(--gold)}
+.greet p{font-size:12.5px;color:var(--grey);margin-top:4px}
+
+/* QUICK STATS — asymmetric bento */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.stat{border:1px solid rgba(200,168,107,.28);background:var(--raised);border-radius:var(--r);padding:13px 12px}
+.stat b{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;display:block;color:var(--white)}
+.stat span{font-size:9.5px;color:var(--grey);font-weight:600;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;display:block;margin-top:3px}
+.stat.gold{background:var(--gold);border-color:var(--gold)}
+.stat.gold b{color:var(--bg)}
+.stat.gold span{color:rgba(11,15,20,.7)}
+.stat.green{background:var(--green);border-color:var(--green)}
+.stat.green span{color:rgba(255,255,255,.75)}
+
+/* SECTION TITLE */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 10px}
+.sec h2{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.sec a{font-size:11.5px;font-weight:700;color:var(--gold);text-decoration:none}
+
+/* ORDER STATUS TIMELINE */
+.timeline-card{background:var(--raised);border:1px solid rgba(200,168,107,.25);border-radius:var(--r);padding:16px}
+.tl-head{display:flex;justify-content:space-between;align-items:center}
+.tl-head b{font-size:13.5px}
+.tl-head .eta-pill{background:var(--green);color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.04em}
+.tl-progress{display:flex;align-items:center;gap:0;margin:16px 0 6px}
+.tl-step{flex:1;text-align:center;position:relative}
+.tl-step .dot{width:22px;height:22px;margin:0 auto;border-radius:50%;border:2px solid #3a4150;background:var(--deep);display:grid;place-items:center;font-size:9px;color:transparent}
+.tl-step.done .dot{background:var(--gold);border-color:var(--gold);color:var(--bg);font-weight:800}
+.tl-step.current .dot{border-color:var(--gold);color:var(--gold)}
+.tl-step span{display:block;font-size:9px;color:var(--grey);margin-top:6px;font-weight:600}
+.tl-step.done span{color:var(--gold)}
+.tl-step::after{content:'';position:absolute;top:11px;left:calc(50% + 12px);width:calc(100% - 24px);height:2px;background:#3a4150}
+.tl-step.done::after{background:var(--gold)}
+.tl-step:last-child::after{display:none}
+.tl-meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--grey);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+
+/* 3D CATEGORY STRIP */
+.cat-strip{perspective:900px;height:166px;margin:6px 0 0;position:relative}
+.cat-orbit{position:absolute;inset:0;transform-style:preserve-3d;display:flex;align-items:center;justify-content:center}
+.cat-card{position:absolute;width:150px;height:150px;border:1.5px solid var(--gold-dark);border-radius:var(--r);background:var(--raised);padding:14px;display:flex;flex-direction:column;justify-content:space-between}
+.cat-card .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:17px;font-weight:800;color:#fff}
+.cat-card .ic.g{background:var(--green)}
+.cat-card .ic.gd{background:var(--gold);color:var(--bg)}
+.cat-card .ic.bg{background:var(--beige);color:var(--bg)}
+.cat-card h3{font-size:12.5px;font-weight:800}
+.cat-card p{font-size:9.5px;color:var(--grey);line-height:1.45}
+.cat-card .cnt{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+
+/* ACTION PILLS */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.act{display:flex;align-items:center;gap:12px;background:var(--raised);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:14px;color:var(--white);text-decoration:none}
+.act .ai{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:800}
+.act .ai.gold{background:var(--gold);color:var(--bg)}
+.act .ai.green{background:var(--green)}
+.act b{font-size:13px;display:block}
+.act span{font-size:10px;color:var(--grey)}
+
+/* SUPPLIER REQUESTS */
+.req{border:1px solid rgba(255,255,255,.08);background:var(--deep);border-radius:var(--r);padding:13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.req .r-name{font-size:13px;font-weight:700}
+.req .r-sub{font-size:10.5px;color:var(--grey);margin-top:2px}
+.req .r-pill{font-size:10px;font-weight:800;padding:5px 11px;border-radius:99px}
+.req .r-pill.open{background:rgba(200,168,107,.15);color:var(--gold);border:1px solid rgba(200,168,107,.4)}
+.req .r-pill.signed{background:rgba(49,117,91,.2);color:#4ade80;border:1px solid rgba(74,222,128,.3)}
+
+/* BOTTOM NAV */
+.bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:10px 8px 18px;border-top:1px solid rgba(255,255,255,.08);background:var(--deep)}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:var(--grey);text-decoration:none}
+.nav-item .ni{width:22px;height:22px;display:grid;place-items:center;font-size:15px}
+.nav-item.active{color:var(--gold)}
+.nav-item.active .ni{background:var(--gold);color:var(--bg);border-radius:8px}
+.nav-fab{width:52px;height:52px;margin-top:-24px;background:var(--gold);border-radius:16px;display:grid;place-items:center;font-size:22px;color:var(--bg);font-weight:800;border:3px solid var(--bg);box-shadow:0 8px 24px rgba(200,168,107,.35)}
+
+/* SECOND PHONE — Supplier side */
+.phone.alt .screen{height:790px}
+.switch-row{display:flex;gap:12px;margin-top:6px}
+.switch-btn{font-family:var(--font);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:10px 20px;border-radius:99px;border:1.5px solid #2a2f3a;background:transparent;color:var(--grey);cursor:pointer}
+.switch-btn.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.open-orders{background:var(--raised);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:13px;margin-bottom:9px}
+.open-orders .oo-top{display:flex;justify-content:space-between;align-items:center}
+.open-orders b{font-size:13px}
+.open-orders .amt{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--gold)}
+.open-orders .oo-bar{height:6px;background:#2a2f3a;border-radius:99px;margin:10px 0 7px;overflow:hidden}
+.open-orders .oo-bar i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.open-orders .oo-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--grey)}
+.fulfill-btns{display:flex;gap:9px;margin-top:12px}
+.fulfill-btn{flex:1;text-align:center;padding:12px;border-radius:var(--r);font-size:12px;font-weight:800;font-family:var(--font)}
+.fulfill-btn.gold{background:var(--gold);color:var(--bg);border:0}
+.fulfill-btn.ghost{background:transparent;border:1.5px solid var(--gold-dark);color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="page-title">HOVIN — Mobile app preview<small>Immersive dark theme · operators &amp; suppliers · touch-first</small></div>
+<div class="switch-row">
+  <button class="switch-btn active" id="opBtn" onclick="showPhone('op')">Operator</button>
+  <button class="switch-btn" id="supBtn" onclick="showPhone('sup')">Supplier</button>
+</div>
+
+<!-- OPERATOR PHONE -->
+<div class="phone" id="phoneOp">
+  <div class="screen">
+    <div class="notch"></div>
+    <div class="statusbar"><span>9:41</span><span class="icons">●●● ▮</span></div>
+    <div class="app-header">
+      <div class="word">HO<b>VIN</b></div>
+      <div class="avatar">MG</div>
+    </div>
+    <div class="scroll">
+      <div class="greet">
+        <h1>Good evening, <span>Moataz</span></h1>
+        <p>3 orders need approval · 1 shipment inbound tonight</p>
+      </div>
+      <div class="stats">
+        <div class="stat gold"><b>EGP 92K</b><span>Factoring<br>approved 48h</span></div>
+        <div class="stat"><b>1,284</b><span>Open<br>orders</span></div>
+        <div class="stat green"><b>99.6%</b><span>ETA<br>accepted</span></div>
+        <div class="stat"><b>60%</b><span>Storage<br>freed</span></div>
+      </div>
+      <div class="sec"><h2>Live order</h2><a href="#">View all →</a></div>
+      <div class="timeline-card">
+        <div class="tl-head"><b>PO-2026-08841 · Linens, towels</b><span class="eta-pill">ETA-signed</span></div>
+        <div class="tl-progress">
+          <div class="tl-step done"><div class="dot">✓</div><span>Approved</span></div>
+          <div class="tl-step done"><div class="dot">✓</div><span>ETA issued</span></div>
+          <div class="tl-step current"><div class="dot">3</div><span>In transit</span></div>
+          <div class="tl-step"><div class="dot">4</div><span>Delivered</span></div>
+        </div>
+        <div class="tl-meta"><span>El Nour Textiles</span><span>Arriving 21:40</span><span>EGP 128,500</span></div>
+      </div>
+      <div class="sec"><h2>Categories</h2><a href="#">Marketplace →</a></div>
+      <div class="cat-strip">
+        <div class="cat-orbit" id="catOrbit">
+          <div class="cat-card"><div class="ic g">FF</div><h3>F&amp;B</h3><p>Produce, proteins &amp; dry goods</p><span class="cnt">2,340 SKUs</span></div>
+          <div class="cat-card"><div class="ic gd">HK</div><h3>Housekeeping</h3><p>Linens &amp; guest supplies</p><span class="cnt">1,120 SKUs</span></div>
+          <div class="cat-card"><div class="ic bg">EN</div><h3>Engineering</h3><p>HVAC &amp; spare parts</p><span class="cnt">860 SKUs</span></div>
+          <div class="cat-card"><div class="ic g">AM</div><h3>Amenities</h3><p>In-room comforts</p><span class="cnt">640 SKUs</span></div>
+        </div>
+      </div>
+      <div class="sec"><h2>Quick actions</h2></div>
+      <div class="actions">
+        <a class="act" href="#"><span class="ai gold">+</span><div><b>New order</b><span>3-step PO builder</span></div></a>
+        <a class="act" href="#"><span class="ai green">≈</span><div><b>Factoring</b><span>Request advance</span></div></a>
+      </div>
+      <div class="sec"><h2>Approvals</h2><a href="#">3 pending →</a></div>
+      <div class="req"><div><div class="r-name">PO-2026-08859 · EGP 312K</div><div class="r-sub">Capital equipment · over EGP 250K threshold</div></div><span class="r-pill open">Needs 2nd approval</span></div>
+      <div class="req"><div><div class="r-name">PO-2026-08844 · EGP 68K</div><div class="r-sub">Housekeeping · within buyer limit</div></div><span class="r-pill signed">Auto-approved</span></div>
+    </div>
+    <div class="bottom-nav">
+      <a class="nav-item active" href="#"><span class="ni">⌂</span>Home</a>
+      <a class="nav-item" href="#"><span class="ni">▤</span>Orders</a>
+      <a class="nav-item" href="#"><span class="ni fab">+</span></a>
+      <a class="nav-item" href="#"><span class="ni">◈</span>Market</a>
+      <a class="nav-item" href="#"><span class="ni">⚙</span>More</a>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPLIER PHONE -->
+<div class="phone alt" id="phoneSup" style="display:none">
+  <div class="screen">
+    <div class="notch"></div>
+    <div class="statusbar"><span>9:41</span><span class="icons">●●● ▮</span></div>
+    <div class="app-header">
+      <div class="word">HO<b>VIN</b></div>
+      <div class="avatar">EN</div>
+    </div>
+    <div class="scroll">
+      <div class="greet">
+        <h1>El Nour Textiles</h1>
+        <p>3 orders to fulfill · next delivery window 21:40</p>
+      </div>
+      <div class="stats">
+        <div class="stat green"><b>EGP 812K</b><span>June<br>revenue</span></div>
+        <div class="stat"><b>14</b><span>Days<br>receivable</span></div>
+        <div class="stat gold"><b>EGP 92K</b><span>Factored<br>paid 48h</span></div>
+        <div class="stat"><b>98%</b><span>On-time<br>delivery</span></div>
+      </div>
+      <div class="sec"><h2>Fulfillment queue</h2><a href="#">All →</a></div>
+      <div class="open-orders">
+        <div class="oo-top"><b>PO-2026-08841</b><span class="amt">EGP 128,500</span></div>
+        <div class="oo-bar"><i style="width:68%"></i></div>
+        <div class="oo-meta"><span>4,200 pcs · towels</span><span>68% packed</span></div>
+        <div class="fulfill-btns">
+          <button class="fulfill-btn gold">Scan &amp; ship</button>
+          <button class="fulfill-btn ghost">Invoice</button>
+        </div>
+      </div>
+      <div class="open-orders">
+        <div class="oo-top"><b>PO-2026-08836</b><span class="amt">EGP 44,200</span></div>
+        <div class="oo-bar"><i style="width:100%"></i></div>
+        <div class="oo-meta"><span>520 sets · bath amenities</span><span>Awaiting pickup</span></div>
+        <div class="fulfill-btns">
+          <button class="fulfill-btn gold">Mark handed over</button>
+        </div>
+      </div>
+      <div class="sec"><h2>Next delivery window</h2></div>
+      <div class="timeline-card">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b>Shared route · Khartoum St</b><span class="eta-pill">Consolidated</span></div>
+        <div style="font-size:11.5px;color:var(--grey);margin-top:9px;line-height:1.6">17 hotel deliveries on one trip. Your cargo loads at 20:10 — 3 pallets, 420 kg.</div>
+        <div class="tl-meta"><span>Savings: EGP 2,310</span><span>CO₂ −64%</span></div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <a class="nav-item active" href="#"><span class="ni">⌂</span>Home</a>
+      <a class="nav-item" href="#"><span class="ni">▤</span>Orders</a>
+      <a class="nav-item" href="#"><span class="ni fab">+</span></a>
+      <a class="nav-item" href="#"><span class="ni">◈</span>Market</a>
+      <a class="nav-item" href="#"><span class="ni">⚙</span>More</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-title" style="color:var(--grey);margin-top:8px"><small style="margin-top:0">Zero gradients · zero glassmorphism · solid materials · sharp borders</small></div>
+
+<script>
+function showPhone(which){
+  document.getElementById('phoneOp').style.display = which==='op' ? 'block' : 'none';
+  document.getElementById('phoneSup').style.display = which==='sup' ? 'block' : 'none';
+  document.getElementById('opBtn').classList.toggle('active', which==='op');
+  document.getElementById('supBtn').classList.toggle('active', which==='sup');
+}
+/* mobile 3D category orbit */
+const orbit=document.getElementById('catOrbit');
+const cards=orbit.querySelectorAll('.cat-card');
+const N=cards.length, R=105;
+let angle=0;
+function render(){
+  cards.forEach((c,i)=>{
+    const a=((angle + i*360/N)*Math.PI)/180;
+    const x=Math.sin(a)*R, z=Math.cos(a)*R;
+    c.style.transform='translate3d('+x+'px,'+((-Math.abs(z)/R)*14)+'px,'+z+'px) rotateY('+(-a*180/Math.PI+90)+'deg)';
+    c.style.opacity=(z>0)?1:0.25;
+    c.style.zIndex=Math.round(z);
+  });
+}
+let drift=setInterval(()=>{angle-=1.2;render();},40);
+orbit.addEventListener('mouseenter',()=>clearInterval(drift));
+orbit.addEventListener('mouseleave',()=>{drift=setInterval(()=>{angle-=1.2;render();},40);});
+render();
+</script>
+</body>
+</html>
