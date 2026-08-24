@@ -218,8 +218,10 @@ export async function middleware(request: NextRequest) {
     return addSecurityHeaders(NextResponse.next());
   }
 
-  // Read session cookie
-  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  // Read session: cookie first, then Authorization Bearer header (mobile app / API clients)
+  const authHeader = request.headers.get("authorization");
+  const bearerToken = authHeader?.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : null;
+  const token = request.cookies.get(SESSION_COOKIE)?.value || bearerToken;
 
   // ── API routes: require valid session ──
   if (isApiPath(pathname)) {

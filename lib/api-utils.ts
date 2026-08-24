@@ -77,8 +77,11 @@ export interface AuthContext {
 }
 
 export async function authenticate(request: NextRequest): Promise<AuthContext> {
-  // Primary: read from session cookie
+  // Primary: session cookie (web). Fallback: Authorization Bearer (mobile / API clients).
   let token = await getSessionToken();
+  if (!token) {
+    token = getBearerToken(request) ?? undefined;
+  }
 
   if (!token) {
     throw new ApiError("Unauthorized", 401);

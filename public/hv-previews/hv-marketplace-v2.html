@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Marketplace Preview — light theme</title><style>
+:root{--bg:#F7F6F3;--surface:#fff;--surface2:#F1EFE9;--ink:#1A1A1A;--muted:#6B6B6B;--accent:#9A7B4F;--border:#E4E1D8;--gold:#c8a86b}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+nav{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:var(--surface);border-bottom:1px solid var(--border)}
+.logo{font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:15px}
+.groups{display:flex;gap:28px}.dd{position:relative}.dd>button{background:none;border:0;font-size:14px;color:var(--muted);cursor:pointer;font-family:inherit;padding:6px 2px}.dd>button:hover{color:var(--ink)}
+.panel{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:10px;width:240px;background:var(--surface);border:1px solid var(--border);box-shadow:0 12px 32px rgba(0,0,0,.08);padding:8px 0;z-index:50;display:none}
+.panel a{display:block;padding:9px 16px;text-decoration:none;color:var(--ink);font-size:13px}.panel a small{display:block;color:var(--muted);font-size:11px}.panel a:hover{background:var(--surface2)}
+.actions{display:flex;gap:12px;align-items:center}.btn{font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none}.btn-solid{background:var(--accent);color:#fff;font-weight:600}
+main{max-width:1200px;margin:0 auto;padding:64px 48px}.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin-bottom:16px}.hero p{color:var(--muted);max-width:640px;line-height:1.6;margin-bottom:28px}
+.search input{width:100%;padding:14px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:14px;outline:none;margin-bottom:28px}.search input:focus{border-color:var(--accent)}
+.cta-row{display:flex;gap:12px}.cta-primary{background:var(--accent);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600}.cta-outline{border:1px solid var(--border);color:var(--muted);padding:12px 24px;border-radius:8px;text-decoration:none;font-size:13px}
+.trust{display:flex;gap:40px;padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:32px 0 48px;color:var(--muted);font-size:12px}.trust b{color:var(--ink);display:block;font-size:13px}
+h2.section{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px}
+.card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);cursor:pointer}.card:hover{border-color:var(--grey)}.card .img{height:120px;display:flex;align-items:center;justify-content:center;background:var(--surface2);font-size:32px;color:var(--gold)}.card .body{padding:12px}.card h4{font-size:12px;margin-bottom:4px}.card .sup{font-size:10px;color:var(--muted);margin-bottom:6px}.card .price{font-size:12px;font-weight:700;color:var(--accent)}
+.chip{display:inline-block;font-size:9px;background:rgba(154,123,79,.12);color:var(--accent);padding:2px 8px;border-radius:99px;margin-top:8px}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px}.cat{border-radius:10px;overflow:hidden;border:1px solid var(--border);height:130px;display:flex;align-items:flex-end;background:var(--surface2)}.cat .lbl{padding:12px;color:#fff;width:100%;background:linear-gradient(to top,rgba(0,0,0,.55),transparent)}.cat h3{font-size:13px}.cat p{font-size:10px;color:rgba(255,255,255,.85)}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px}.why .card{padding:20px}.why h3{font-size:14px;margin-bottom:8px}.why p{font-size:12px;color:var(--muted);line-height:1.5}
+.cta-final{text-align:center;padding:48px 0}.cta-final h2{font-size:24px;margin-bottom:12px}.cta-final p{color:var(--muted);font-size:13px;max-width:480px;margin:0 auto 24px}
+@media(max-width:900px){.groups{display:none}.grid,.cats,.why{grid-template-columns:repeat(2,1fr)}nav{padding:14px 20px}main{padding:40px 20px}}
+</style></head><body>
+<nav><div class="logo">Hotels Vendors</div><div class="groups">
+<div class="dd"><button>Products ▾</button><div class="panel"><a href="/marketplace">Marketplace<small>Fixed-price hospitality catalog</small></a><a href="/categories">Categories<small>F&amp;B, FF&amp;E, consumables</small></a><a href="/ai-catalog">AI Catalog<small>Smart product matching</small></a></div></div>
+<div class="dd"><button>Financing ▾</button><div class="panel"><a href="/factoring-service">Factoring<small>Non-recourse invoice funding</small></a><a href="/oliv">Oliv<small>Embedded payments &amp; credit</small></a><a href="/funders">Funders<small>Liquidity partners</small></a></div></div>
+<div class="dd"><button>Solutions ▾</button><div class="panel"><a href="/hotels/join">For Hotels<small>Procurement &amp; spend</small></a><a href="/suppliers/join">For Suppliers<small>List products, get paid fast</small></a><a href="/sandbox">Sandbox<small>Interactive demo</small></a></div></div>
+</div><div class="actions"><a class="btn" href="/login" style="color:var(--muted)">Sign In</a><a class="btn btn-solid" href="/register">Try the Demo</a></div></nav>
+<main><section class="hero"><h1>Many products live<br/>Fixed prices. No bidding. ETA-native.</h1><p>The ETA-native procurement catalog for Egyptian hospitality. Suppliers publish fixed-price stock, hotels order directly, and invoices are generated ETA-compliant.</p>
+<div class="search"><input placeholder="Search products, suppliers, or categories…"/></div><div class="cta-row"><a class="cta-primary" href="/register?sector=procurement">Start Selling →</a><a class="cta-outline" href="/register?sector=procurement">Register as Buyer</a></div></section>
+<section class="trust"><div><b>12 products</b>Live in catalog</div><div><b>ETA Compliant</b>Auto-generated invoices</div><div><b>Fixed pricing</b>No bidding, per-hotel credit</div></section>
+<section><h2 class="section">Products</h2><div class="grid">
+<div class="card"><div class="img">🥫</div><div class="body"><h4>San Pellegrino 250ml (24-pack)</h4><div class="sup">Cairo Beverages Co.</div><div class="price">EGP 480/case</div><span class="chip">F&amp;B</span></div></div>
+<div class="card"><div class="img">🧴</div><div class="body"><h4>Hotel Shampoo 30ml Amenity</h4><div class="sup">Delta Amenities</div><div class="price">EGP 3.75/piece</div><span class="chip">Consumables</span></div></div>
+<div class="card"><div class="img">🛏️</div><div class="body"><h4>King Bed Sheet Set 200TC</h4><div class="sup">Nile Linen Works</div><div class="price">EGP 640/set</div><span class="chip">Guest Supplies</span></div></div>
+<div class="card"><div class="img">☕</div><div class="body"><h4>Nescafé Gold 500g (12 tin)</h4><div class="sup">Cairo Beverages Co.</div><div class="price">EGP 1,150/case</div><span class="chip">F&amp;B</span></div></div>
+</div></section>
+<section><h2 class="section">Product Categories</h2><div class="cats"><div class="cat"><div class="lbl"><h3>F&amp;B</h3><p>Food, beverages, kitchen equipment</p></div></div><div class="cat"><div class="lbl"><h3>Consumables</h3><p>Housekeeping, chemicals, linens</p></div></div><div class="cat"><div class="lbl"><h3>Guest Supplies</h3><p>Amenities, room accessories</p></div></div><div class="cat"><div class="lbl"><h3>FF&amp;E</h3><p>Furniture, fixtures, capital equipment</p></div></div></div></section>
+<section><h2 class="section" style="text-align:center">Why Suppliers Choose HotelsVendors</h2><div class="why">
+<div class="card"><h3>Catalog Upload</h3><p>Upload your catalog with fixed prices. Set per-hotel or per-group pricing.</p></div>
+<div class="card"><h3>PO Matching</h3><p>Receive purchase orders directly from hotel procurement teams.</p></div>
+<div class="card"><h3>Embedded Factoring</h3><p>Settle faster through non-recourse factoring on validated invoices.</p></div>
+<div class="card"><h3>ETA Invoicing</h3><p>Every invoice auto-generated with RSA-2048 signing and UUID tracking.</p></div>
+<div class="card"><h3>Sales Analytics</h3><p>Track orders, revenue, and buyer behavior across properties.</p></div>
+<div class="card"><h3>Verified Badge</h3><p>Complete KYC and get the verified supplier badge.</p></div>
+</div></section>
+<section class="cta-final"><h2>Publish your stock for Egyptian hotels</h2><p>Add products with fixed prices and quantities. Hotels order directly; invoices are ETA-compliant automatically.</p><a class="cta-primary" href="/register?sector=procurement">Register as Supplier →</a></section>
+</main>
+<script>document.querySelectorAll('.dd').forEach(dd=>{const b=dd.querySelector('button'),p=dd.querySelector('.panel');b.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.panel').forEach(x=>{if(x!==p)x.style.display='none'});p.style.display=p.style.display==='block'?'none':'block'});dd.addEventListener('mouseenter',()=>p.style.display='block');dd.addEventListener('mouseleave',()=>p.style.display='none')});document.addEventListener('click',()=>document.querySelectorAll('.panel').forEach(p=>p.style.display='none'));</script>
+</body></html>

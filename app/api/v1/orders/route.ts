@@ -18,6 +18,14 @@ export const GET = apiRoute(async (request: NextRequest) => {
   if (query.search) {
     where.orderNumber = { contains: query.search };
   }
+  // Status filter (mobile approvals screen + dashboard tabs)
+  const statusParam = request.nextUrl.searchParams.get("status");
+  if (statusParam) {
+    const statuses = ["DRAFT","PENDING_APPROVAL","APPROVED","REJECTED","CONFIRMED","IN_TRANSIT","PARTIALLY_DELIVERED","DELIVERED","DISPUTED","CANCELLED"] as const;
+    if ((statuses as readonly string[]).includes(statusParam)) {
+      where.status = statusParam;
+    }
+  }
 
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
