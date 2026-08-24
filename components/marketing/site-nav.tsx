@@ -27,6 +27,8 @@ function getGroups(ar: boolean): NavGroup[] {
         { href: "/marketplace", label: ar ? "السوق" : "Marketplace", desc: ar ? "تصفح موردي الفنادق والكتالوج" : "Browse hotel suppliers & catalog" },
         { href: "/#invo", label: "INVO", desc: ar ? "طبقة سوق الموردين" : "Vendor marketplace sub-layer" },
         { href: "/compliance", label: ar ? "الامتثال" : "Compliance", desc: ar ? "الفوترة الإلكترونية و FRA" : "ETA e-invoicing & FRA" },
+        { href: "/rfq", label: ar ? "طلب عروض أسعار" : "Request for Quote", desc: ar ? "أرسل احتياجاتك للموردين المعتمدين" : "Send your needs to vetted suppliers" },
+        { href: "/categories", label: ar ? "الفئات" : "Categories", desc: ar ? "تصفح فئات التوريد الفندقي" : "Browse hospitality supply categories" },
       ],
     },
     {
@@ -43,6 +45,7 @@ function getGroups(ar: boolean): NavGroup[] {
         { href: "/hotels/join", label: ar ? "للفنادق" : "For Hotels", desc: ar ? "المشتريات وإدارة المصروفات" : "Procurement & spend management" },
         { href: "/suppliers/join", label: ar ? "للموردين" : "For Suppliers", desc: ar ? "اعرض منتجاتك واحصل على أموالك خلال 48 ساعة" : "List products & get paid in 48h" },
         { href: "/#how", label: ar ? "كيف تعمل" : "How It Works", desc: ar ? "نظرة عامة على المنصة وسير العمل" : "Platform overview & workflow" },
+        { href: "/rfq", label: ar ? "اطلب عرض سعر" : "Get a Quote (RFQ)", desc: ar ? "من الاحتياج إلى العرض خلال ساعات" : "From requirement to quote in hours" },
       ],
     },
   ];

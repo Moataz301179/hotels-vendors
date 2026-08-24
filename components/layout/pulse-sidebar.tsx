@@ -59,6 +59,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: FileText, label: "Invoices", href: "/hotel/invoices" },
         { icon: Calculator, label: "Accounting", href: "/hotel/accounting" },
         { icon: ShoppingBag, label: "Checkout", href: "/hotel/checkout" },
+        { icon: Truck, label: "Receiving", href: "/hotel/receiving" },
+        { icon: Calendar, label: "Scheduled Orders", href: "/hotel/scheduled-orders" },
       ],
     },
     {
@@ -67,6 +69,8 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: CreditCard, label: "Cashflow", href: "/hotel/cashflow" },
         { icon: Wallet, label: "Credit Facility", href: "/hotel/credit" },
         { icon: FileText, label: "Upload Invoice", href: "/hotel/financing" },
+        { icon: BarChart3, label: "Consumption", href: "/hotel/consumption" },
+        { icon: PackageSearch, label: "Inventory Reconciliation", href: "/hotel/inventory-reconciliation" },
       ],
     },
     {
@@ -85,6 +89,12 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
         { icon: Users, label: "Users", href: "/admin/users" },
         { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+        { icon: Scale, label: "Authority Matrix", href: "/admin/authority-matrix" },
+        { icon: Calculator, label: "Accounting", href: "/admin/accounting" },
+        { icon: CreditCard, label: "Billing", href: "/admin/billing" },
+        { icon: Users, label: "CRM", href: "/admin/crm" },
+        { icon: FileText, label: "Logs", href: "/admin/logs" },
+        { icon: Zap, label: "Credentials", href: "/admin/credentials" },
       ],
     },
     {
@@ -150,6 +160,7 @@ const ROLE_NAV: Record<string, { section: string; items: { icon: React.ElementTy
         { icon: CreditCard, label: "Cashflow", href: "/supplier/cashflow" },
         { icon: Wallet, label: "Credit Facility", href: "/supplier/credit" },
         { icon: FileText, label: "Upload Invoice", href: "/supplier/financing" },
+        { icon: Landmark, label: "Factoring Activation", href: "/supplier/factoring-activation" },
       ],
     },
     {
