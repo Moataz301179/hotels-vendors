@@ -244,7 +244,10 @@ export async function middleware(request: NextRequest) {
       pathname === "/api/v1/auth/register" ||
       pathname === "/api/v1/oliv/webhook" ||
       pathname.startsWith("/api/webhooks");
-    if (isStateChanging && !isExemptPath) {
+    // CSRF applies to cookie-authenticated browsers. Bearer-token clients
+    // (mobile app) are immune to CSRF by construction — no ambient cookie.
+    const isBearerRequest = Boolean(bearerToken);
+    if (isStateChanging && !isExemptPath && !isBearerRequest) {
       const csrfResult = await csrfMiddleware(request);
       if (csrfResult) return addSecurityHeaders(csrfResult);
     }
