@@ -124,14 +124,13 @@ function RegisterContent() {
       });
       const data = await res.json();
       if (data.success) {
-        setRegistered(true);
         const roleRoute =
           data.user?.platformRole === "ADMIN" ? "/admin"
           : data.user?.platformRole === "SUPPLIER" ? "/supplier"
           : data.user?.platformRole === "FACTORING" ? "/factoring"
           : data.user?.platformRole === "SHIPPING" ? "/shipping"
           : "/hotel";
-        setTimeout(() => router.push(roleRoute), 2000);
+        router.push(roleRoute);
       } else {
         setError(data.error || "Registration failed");
       }
@@ -166,7 +165,7 @@ function RegisterContent() {
         <div>
           <h1 className="text-[24px] font-semibold text-foreground mb-2">Welcome aboard, {form.name}!</h1>
           <p className="text-foreground-secondary text-[14px]">
-            Your account has been created. Please check your email to verify your account before signing in.
+            Your account has been created. Your account has been created — taking you to your dashboard…
           </p>
         </div>
       </div>

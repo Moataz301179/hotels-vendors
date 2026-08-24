@@ -222,7 +222,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   });
 
   return success({
-    message: "Registration successful. Please check your email to verify your account before logging in.",
+    message: "Registration successful.",
     user: { id: user.id, email: user.email, name: user.name, role: user.role, platformRole: user.platformRole, accountType: user.accountType },
     hotel,
     supplier,
