@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Fira_Code, Cairo } from "next/font/google";
+import { Inter_Tight, Playfair_Display, JetBrains_Mono, Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
@@ -13,14 +13,23 @@ if (typeof window === "undefined") {
   initServer();
 }
 
-const plusJakarta = Plus_Jakarta_Sans({
+// ── Bold Typography design system fonts ──
+const interTight = Inter_Tight({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-sans",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const firaCode = Fira_Code({
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
@@ -129,7 +138,7 @@ export default function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`h-full ${plusJakarta.variable} ${firaCode.variable} ${cairo.variable}`}
+      className={`h-full ${interTight.variable} ${playfair.variable} ${jetbrainsMono.variable} ${cairo.variable}`}
     >
       <head>
         <link rel="dns-prefetch" href="https://www.hotelsvendors.com" />
