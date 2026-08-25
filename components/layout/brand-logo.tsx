@@ -1,19 +1,22 @@
+/**
+ * BrandLogo — Bold Typography edition.
+ * Icon 34px + wordmark 13px/0.22em tracking, single line (icon LEFT of text).
+ * Old stacked tiny-logo layout removed. Sizes: sm 28 / md 34 / lg 44.
+ */
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
   className?: string;
   variant?: "dark" | "light";
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg";
   showText?: boolean;
-  showTagline?: boolean;
+  showTagline?: boolean; // deprecated — ignored, kept for old call sites
 }
 
 const SIZE_MAP = {
-  xs: { icon: 22, text: 12, tagline: 10 },
-  sm: { icon: 28, text: 13, tagline: 11 },
-  md: { icon: 36, text: 14, tagline: 12 },
-  lg: { icon: 48, text: 16, tagline: 13 },
-  xl: { icon: 64, text: 18, tagline: 14 },
+  sm: { icon: 28, text: 12 },
+  md: { icon: 34, text: 13 },
+  lg: { icon: 44, text: 15 },
 };
 
 export function BrandLogo({
@@ -21,13 +24,13 @@ export function BrandLogo({
   variant = "light",
   size = "md",
   showText = true,
-  showTagline = false,
 }: BrandLogoProps) {
   const dims = SIZE_MAP[size];
-  const logoSrc = variant === "dark" ? "/logo-colored.svg" : "/logo-white.svg";
+  const logoSrc = variant === "dark" ? "/logo-white.svg" : "/logo-colored.svg";
 
   return (
-    <div className={cn("inline-flex flex-col items-center shrink-0", className)}>
+    <span className={cn("inline-flex items-center gap-2.5 shrink-0", className)} dir="ltr">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logoSrc}
         alt="HotelsVendors"
@@ -37,33 +40,16 @@ export function BrandLogo({
         style={{ width: dims.icon, height: dims.icon }}
       />
       {showText && (
-        <div className="flex flex-col items-center gap-1 mt-2">
-          <span
-            className="font-semibold uppercase whitespace-nowrap"
-            style={{
-              fontSize: dims.text,
-              color: "var(--foreground)",
-              letterSpacing: "0.05em",
-              fontFamily: "var(--font-display), system-ui, sans-serif",
-            }}
-          >
-            Hotels Vendors
-          </span>
-          {showTagline && (
-            <span
-              className="uppercase whitespace-nowrap"
-              style={{
-                fontSize: dims.tagline,
-                color: "var(--foreground-muted)",
-                letterSpacing: "0.05em",
-                fontFamily: "var(--font-display), system-ui, sans-serif",
-              }}
-            >
-              The Market Changer
-            </span>
-          )}
-        </div>
+        <span
+          className="font-semibold uppercase whitespace-nowrap text-[var(--foreground)]"
+          style={{
+            fontSize: dims.text,
+            letterSpacing: "0.22em",
+          }}
+        >
+          HotelsVendors
+        </span>
       )}
-    </div>
+    </span>
   );
 }
