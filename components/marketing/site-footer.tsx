@@ -144,7 +144,7 @@ export function SiteFooter() {
             <div className="font-semibold mb-3 text-foreground">{ar ? "المنتج" : "Platform"}</div>
             <ul className="flex flex-col gap-2 text-sm">
               <li><Link href="/marketplace" className="text-foreground-secondary hover:text-foreground transition-colors">HotelsVendors</Link></li>
-              <li><Link href="/sandbox" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "تجربة المنصة" : "Sandbox"}</Link></li>
+              <li><Link href="/register" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "ابدأ الآن" : "Get Started"}</Link></li>
               <li><Link href="/financing" className="text-foreground-secondary hover:text-foreground transition-colors">Oliv {ar ? "التمويل" : "Financing"}</Link></li>
               <li><Link href="/suppliers/join" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "للموردين" : "For Suppliers"}</Link></li>
               <li><Link href="/hotels/join" className="text-foreground-secondary hover:text-foreground transition-colors">{ar ? "للفنادق" : "For Hotels"}</Link></li>

@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, FileText, Truck, CreditCard, Landmark, Zap, Shield, Building2, Factory, Users, RefreshCw, ExternalLink, Calendar } from "lucide-react";
-import { OlivLogo } from "@/components/partners/oliv-logo";
 import { BrandLogo } from "@/components/layout/brand-logo";
 
 export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/flow") },
-  title: "How It Works — Order to Payment in 48 Hours | HotelsVendors × Oliv",
-  description: "Place orders, get ETA-compliant invoices, access up to EGP 10M instant financing via Oliv. Paperless, 48-hour funding, any invoice volume.",
+  title: "How It Works — Order to Payment in 48 Hours | HotelsVendors",
+  description: "One integrated system from order to cash: ETA-compliant invoices, 48-hour funding, and credit lines up to EGP 10M — inventory, cash flow, and payments handled at execution level.",
   openGraph: {
     title: "How It Works — Order to Payment in 48 Hours",
     description: "Seamless procurement + instant invoice financing for Egyptian hospitality.",
@@ -61,22 +60,22 @@ const FLOW_STEPS = [
   },
   {
     number: "04",
-    title: "Oliv Finances Invoice (Optional)",
-    subtitle: "Supplier clicks 'Get Financed' → up to EGP 10M in 48h",
-    actor: "Oliv × Supplier",
+    title: "Invoice Financed (Optional)",
+    subtitle: "Supplier clicks Get Financed → funded in 48h, lines up to EGP 10M",
+    actor: "Finance Partner × Supplier",
     icon: Landmark,
     color: "var(--success)",
     details: [
       "Pre-approved credit engine processes any volume",
       "No paperwork — digital contract signing",
       "Funds in supplier account within 48 hours",
-      "Hotel pays Oliv at net-60, supplier paid now",
+      "Hotel pays at net-60, supplier paid now",
     ],
   },
   {
     number: "05",
     title: "Hotel Settles at Net-60",
-    subtitle: "Single consolidated payment to Oliv",
+    subtitle: "Single consolidated payment to the platform",
     actor: "Hotel Finance",
     icon: CreditCard,
     color: "#64b5f6",
@@ -100,13 +99,13 @@ const KEY_METRICS = [
 
 const SUPPLIER_BENEFITS = [
   { icon: Zap, title: "Instant Cash Flow", desc: "Turn verified invoices into working capital in 48h — no waiting for hotel payment cycles." },
-  { icon: Shield, title: "Zero Recourse Risk", desc: "Oliv collects from hotel. Supplier has zero liability if hotel delays." },
+  { icon: Shield, title: "Zero Recourse Risk", desc: "The finance partner collects from the hotel. Supplier carries zero liability for delays." },
   { icon: RefreshCw, title: "Unlimited Volume", desc: "Credit engine handles any number of invoices. Revolving facility grows with your business." },
   { icon: ExternalLink, title: "No Tech Integration", desc: "Works through HotelsVendors dashboard. One click to apply. No API, no accounting software needed." },
 ];
 
 const HOTEL_BENEFITS = [
-  { icon: Clock, title: "Extended Payment Terms", desc: "Net-60 to Oliv vs. Net-15/30 to suppliers. Preserve cash for operations." },
+  { icon: Clock, title: "Extended Payment Terms", desc: "Net-60 platform terms vs. Net-15/30 to suppliers. Preserve cash for operations." },
   { icon: Shield, title: "Supplier Loyalty", desc: "Suppliers get paid instantly. They prioritize your orders. Better fill rates, better pricing." },
   { icon: Users, title: "Single Consolidated Payment", desc: "One monthly wire to Oliv covers all financed invoices. Simplified AP workflow." },
   { icon: Building2, title: "Zero Balance Sheet Impact", desc: "Financing is off-balance-sheet for hotel. Oliv takes the credit risk." },
@@ -162,18 +161,18 @@ export default function FlowPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-[150px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
-            <OlivLogo size="xs" variant="green" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--success)" }}>◆ Liquidity Partner</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>HotelsVendors × Oliv Partnership</span>
           </div>
           <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
             From Order to Cash in <span style={{ color: "var(--success)" }}>48 Hours</span>
           </h1>
           <p className="text-[16px] text-white/40 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Place an order. Get ETA-compliant invoice. Click "Get Financed." Supplier paid in 48h. Hotel pays at net-60. <br />Zero paperwork. Unlimited invoice volume. Up to EGP 10M pre-approval.
+            Place an order. Get an ETA-compliant invoice. Click "Get Financed." Supplier paid in 48h. Hotel pays at net-60. <br />Zero paperwork. Unlimited volume. Pre-approval up to EGP 10M.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
-              <OlivLogo size="xs" variant="dark" />
+            <Link href="/financing" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground-secondary">◆ Liquidity Partner</span>
               Learn About Financing <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -226,7 +225,7 @@ export default function FlowPage() {
               <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--orange-base)" }}>For Suppliers</span>
               <h2 className="text-3xl md:text-4xl font-semibold text-white">Get Paid Now. Grow Faster.</h2>
             </div>
-            <OlivLogo size="md" variant="green" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--success)" }}>◆ Liquidity Partner</span>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {SUPPLIER_BENEFITS.map((b) => (
@@ -295,7 +294,7 @@ export default function FlowPage() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.3)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
-              <OlivLogo size="xs" variant="dark" />
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground-secondary">◆ Liquidity Partner</span>
               Apply for Oliv Financing <ExternalLink size={14} />
             </a>
             <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>

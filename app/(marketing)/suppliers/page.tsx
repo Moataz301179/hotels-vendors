@@ -24,13 +24,13 @@ const SUPPLIER_FEATURES = [
   {
     icon: CreditCard,
     title: "Get Paid in 48 Hours",
-    desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.",
+    desc: "Verified invoices are financed instantly by our liquidity partners. No waiting for hotel payment cycles.",
     color: "var(--success)",
   },
   {
     icon: Shield,
     title: "Zero Recourse Risk",
-    desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.",
+    desc: "The finance partner collects from the hotel. You carry zero liability if payment is delayed.",
     color: "var(--accent-base)",
   },
   {
@@ -63,15 +63,15 @@ const STATS = [
 const HOW_IT_WORKS = [
   { step: "1", title: "Register", desc: "Fill in your company details, Tax ID, and product categories. Takes 2 minutes.", color: "var(--accent-base)" },
   { step: "2", title: "List Products", desc: "Upload SKUs, set fixed prices & stock levels. Start receiving orders immediately.", color: "var(--orange-base)" },
-  { step: "3", title: "Get Paid", desc: "Fulfill orders, apply for Oliv financing, receive cash in 48 hours.", color: "var(--success)" },
+  { step: "3", title: "Get Paid", desc: "Fulfill orders, apply for invoice financing, receive cash in 48 hours.", color: "var(--success)" },
 ];
 
 const FAQ = [
-  { q: "What are the fees?", a: "HotelsVendors charges 1.5–2.5% transaction fee on completed orders. Oliv financing fee is separate and transparent." },
+  { q: "What are the fees?", a: "HotelsVendors charges a 1.5–2.5% transaction fee on completed orders. Financing fees are separate and transparent." },
   { q: "Do I need to integrate my ERP?", a: "No. Everything happens in the HotelsVendors supplier dashboard. Order management, delivery tracking, invoice financing — all in one place." },
-  { q: "What if the hotel doesn't pay Oliv?", a: "That's Oliv's risk, not yours. Non-recourse financing means zero liability to the supplier." },
+  { q: "What if the hotel delays payment to the finance partner?", a: "That's the finance partner's risk, not yours. Non-recourse financing means zero liability for the supplier." },
   { q: "What documents do I need?", a: "At registration: Tax ID, City, Governorate. For full onboarding: Commercial Register, company logo, product catalog." },
-  { q: "How do I get the EGP 10M credit line?", a: "After your first verified invoice on HotelsVendors, apply for Oliv financing from your dashboard." },
+  { q: "How do I get the EGP 10M credit line?", a: "After your first verified invoice on HotelsVendors, apply for financing from your dashboard — lines up to EGP 10M." },
 ];
 
 export default function SuppliersPage() {
@@ -84,7 +84,7 @@ export default function SuppliersPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
             <span className="text-[13px] font-semibold" style={{ color: "var(--success)" }}>oliv</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>
-              Oliv Partnership Active
+              Liquidity Partnership Active
             </span>
           </div>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
@@ -93,14 +93,14 @@ export default function SuppliersPage() {
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             List your hospitality products on Egypt&apos;s largest B2B procurement platform.
-            Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "var(--success)" }}>Oliv finances it instantly</strong>.
+            Access 480+ hotels. And when the invoice is verified — <strong style={{ color: "var(--success)" }}>it is financed instantly</strong>.
             Up to <strong style={{ color: "var(--accent-base)" }}>EGP 10M</strong>. Zero paperwork. Zero recourse risk.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/financing" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
               Learn About Oliv Financing
             </Link>
           </div>
@@ -193,7 +193,7 @@ export default function SuppliersPage() {
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/financing" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
               Learn About Oliv Financing
             </Link>
           </div>

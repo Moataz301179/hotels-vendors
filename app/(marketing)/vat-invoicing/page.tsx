@@ -753,7 +753,7 @@ export default function VatInvoicingPage() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="/sandbox"
+                href="/marketplace"
                 className="px-8 py-4 rounded-full text-base font-medium transition-all duration-300 flex items-center gap-2"
                 style={{
                   color: "var(--text-secondary)",

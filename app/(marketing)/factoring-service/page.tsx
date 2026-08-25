@@ -124,7 +124,7 @@ export default function FactoringServicePage() {
             <p className="text-[13px] text-white/40 max-w-lg mx-auto mb-6">
               HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
             </p>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
+            <Link href="/financing" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Learn More <ArrowRight size={14} />
             </Link>
           </div>

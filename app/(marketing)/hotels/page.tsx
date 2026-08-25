@@ -5,11 +5,11 @@ import { ArrowRight, CheckCircle2, Shield, Zap, Building2, CreditCard, FileText,
 
 export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/hotels") },
-  title: "Hotels — B2B Procurement + Oliv Factoring | HotelsVendors",
-  description: "Centralize procurement across all properties. Get Net-60 terms via Oliv reverse factoring. Suppliers paid instantly. ETA-compliant invoicing. EGP 10M+ credit facility.",
+  title: "Hotels — B2B Procurement + Embedded Factoring | HotelsVendors",
+  description: "Centralize procurement across all properties. Net-60 terms through embedded factoring, instant supplier payment, ETA-compliant invoicing, and credit facilities up to EGP 10M+.",
   openGraph: {
-    title: "Hotels — B2B Procurement + Oliv Factoring | HotelsVendors",
-    description: "Centralize procurement. Net-60 terms via Oliv. Suppliers paid instantly. ETA-compliant.",
+    title: "Hotels — B2B Procurement + Embedded Factoring | HotelsVendors",
+    description: "Centralize procurement. Net-60 terms via embedded factoring. Suppliers paid instantly. ETA-compliant.",
     type: "website",
   },
 };
@@ -33,16 +33,16 @@ const ONBOARDING_STEPS = [
   },
   {
     step: "3",
-    title: "Connect Oliv Finance",
-    desc: "Link your HotelsVendors account to Oliv. Choose factoring or reverse factoring based on your needs.",
+    title: "Connect Financing",
+    desc: "Link your account to our FRA-licensed liquidity partners. Choose factoring or reverse factoring based on your needs.",
     icon: Landmark,
     color: "var(--success)",
-    detail: "Oliv evaluates your credit profile and assigns a revolving facility up to EGP 10M+.",
+    detail: "Our FRA-licensed liquidity partners evaluate your credit profile and assign a revolving facility up to EGP 10M+.",
   },
   {
     step: "4",
     title: "Start Procuring",
-    desc: "Browse the marketplace, place orders, and let Oliv handle supplier payments. You pay at Net-60.",
+    desc: "Browse the marketplace, place orders, and let the platform handle supplier payments. You pay at Net-60.",
     icon: Package,
     color: "var(--orange-base)",
     detail: "500+ suppliers, 10,000+ products, fixed pricing. All invoices ETA-compliant automatically.",
@@ -52,7 +52,7 @@ const ONBOARDING_STEPS = [
 const FACTORING_OPTIONS = [
   {
     title: "Factoring (Supplier-Initiated)",
-    desc: "Suppliers submit verified invoices to Oliv for immediate payment. You maintain your payment terms.",
+    desc: "Suppliers submit verified invoices for immediate payment. You maintain your payment terms.",
     icon: RefreshCw,
     color: "var(--accent-base)",
     benefits: [
@@ -64,7 +64,7 @@ const FACTORING_OPTIONS = [
   },
   {
     title: "Reverse Factoring (Hotel-Initiated)",
-    desc: "You approve invoices and Oliv pays suppliers early. You settle with Oliv at Net-60.",
+    desc: "You approve invoices and the finance partner pays suppliers early. You settle at Net-60.",
     icon: ArrowRight,
     color: "var(--success)",
     benefits: [
@@ -77,7 +77,7 @@ const FACTORING_OPTIONS = [
 ];
 
 const BENEFITS = [
-  { icon: Clock, title: "Net-60 Payment Terms", desc: "Pay Oliv at Net-60 instead of Net-15/30 to suppliers. Preserve working capital for operations.", color: "var(--success)" },
+  { icon: Clock, title: "Net-60 Payment Terms", desc: "Pay at Net-60 instead of Net-15/30 to suppliers. Preserve working capital for operations.", color: "var(--success)" },
   { icon: Shield, title: "Supplier Priority", desc: "Suppliers get paid instantly via Oliv. They prioritize your orders — better fill rates, faster delivery.", color: "var(--accent-base)" },
   { icon: Users, title: "One Monthly Payment", desc: "Single wire to Oliv covers all financed invoices. Simplified AP. Auto-reconciled to PO level.", color: "var(--purple-base)" },
   { icon: Building2, title: "Multi-Property Support", desc: "Centralized procurement across all properties. Budget controls per outlet. Authority Matrix governance.", color: "var(--orange-base)" },

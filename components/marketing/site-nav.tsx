@@ -35,8 +35,7 @@ function getGroups(ar: boolean): NavGroup[] {
       label: ar ? "التمويل" : "Financing",
       items: [
         { href: "/factoring-service", label: ar ? "تمويل الفواتير" : "Invoice Factoring", desc: ar ? "تمويل فواتير غير ارتجاعي" : "Non-recourse invoice financing" },
-        { href: "/financing/oliv", label: "Oliv " + (ar ? "التمويل" : "Financing"), desc: ar ? "خط ائتمان يصل إلى 10 مليون ج.م" : "Up to EGP 10M credit line" },
-        { href: "/oliv/referral", label: "Oliv " + (ar ? "إحالة" : "Referral"), desc: ar ? "احصل على إحالة ومعالجة أولوية" : "Get referred & priority processing" },
+        { href: "/financing", label: ar ? "التمويل والسيولة" : "Financing & Liquidity", desc: ar ? "خطوط ائتمان وفوترة إلكترونية" : "Credit lines & invoice financing" },
       ],
     },
     {
@@ -144,12 +143,6 @@ export function SiteNav() {
           <DropdownMenu key={g.label} group={g} ar={ar} />
         ))}
         <Link
-          href="/sandbox"
-          className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-        >
-          {ar ? "التمثيل الذكي" : "Sandbox"}
-        </Link>
-        <Link
           href="/pricing"
           className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer shrink-0 whitespace-nowrap"
         >
@@ -214,13 +207,6 @@ export function SiteNav() {
             </Link>
           </div>
           <hr className="border-white/[0.06]" />
-          <Link
-            href="/sandbox"
-            onClick={() => setOpen(false)}
-            className="text-sm text-foreground-secondary hover:text-foreground"
-          >
-            {ar ? "التمثيل الذكي" : "Sandbox"}
-          </Link>
           <Link
             href="/login"
             onClick={() => setOpen(false)}

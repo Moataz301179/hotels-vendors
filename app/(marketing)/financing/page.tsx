@@ -8,7 +8,7 @@ import { Banknote, CreditCard, Calculator, ShieldCheck, ArrowRight, CheckCircle2
 
 const FEATURES = [
   { icon: Banknote, title: "48h Reverse Factoring", desc: "Suppliers cash out on delivery — no more 60-day waits. FRA-compliant, verified GRN.", href: "/factoring-service" },
-  { icon: CreditCard, title: "Oliv Partner Liquidity", desc: "EGP 10M pool, promo code CHV000. Fast-track early payout for verified suppliers.", href: "/oliv-financing" },
+  { icon: CreditCard, title: "Liquidity Partners", desc: "Credit lines through our FRA-licensed factoring partners. Verified invoices only — apply via the financing desk.", href: "/factoring-service" },
   { icon: Calculator, title: "Yield Calculator", desc: "Model discount rates and margin impact before committing to a factoring offer.", href: "/yield-calculator" },
   { icon: ShieldCheck, title: "FRA Regulatory Shield", desc: "Non-duplication registry checks and auditable e-factoring records.", href: "/fra-shield" },
 ];

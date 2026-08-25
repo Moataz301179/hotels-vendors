@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, Shield, Zap, Landmark, RefreshCw, ExternalLink, Factory, Truck, CreditCard, Users, TrendingUp, FileText, Building2, Package } from "lucide-react";
-import { OlivLogo } from "@/components/partners/oliv-logo";
 
 export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/suppliers/join") },
@@ -52,24 +51,24 @@ const PAYMENT_STEPS = [
   {
     step: "B",
     title: "Click 'Get Financed'",
-    desc: "From your dashboard, submit the verified invoice to Oliv. Approval takes minutes.",
+    desc: "From your dashboard, submit the verified invoice to our finance desk. Approval takes minutes.",
     color: "var(--success)",
   },
   {
     step: "C",
     title: "Receive Cash in 48h",
-    desc: "Oliv deposits funds to your bank account. Your credit limit resets for the next cycle.",
+    desc: "Funds are deposited to your bank account. Your credit limit resets for the next cycle.",
     color: "var(--orange-base)",
   },
 ];
 
 const BENEFITS = [
-  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Oliv finances your verified invoices instantly. No waiting for hotel payment cycles.", color: "var(--accent-base)" },
-  { icon: Shield, title: "Zero Recourse Risk", desc: "Oliv collects from the hotel. You have zero liability if the hotel delays payment.", color: "var(--success)" },
+  { icon: Zap, title: "Get Paid in 48 Hours", desc: "Verified invoices are financed instantly. No waiting for hotel payment cycles.", color: "var(--accent-base)" },
+  { icon: Shield, title: "Zero Recourse Risk", desc: "The finance partner collects from the hotel. You carry zero liability for delays.", color: "var(--success)" },
   { icon: RefreshCw, title: "Unlimited Invoice Volume", desc: "Credit engine processes any number of invoices. Revolving facility grows with you.", color: "var(--purple-base)" },
   { icon: ExternalLink, title: "No Tech Integration", desc: "Works through HotelsVendors dashboard. One click to apply. No API needed.", color: "var(--orange-base)" },
   { icon: Factory, title: "Coastal Hotel Demand", desc: "Access 480+ hotels in Sharm El-Sheikh, Hurghada, Cairo, Alexandria. High-velocity orders.", color: "#64b5f6" },
-  { icon: Landmark, title: "FRA Regulated & Backed", desc: "Oliv holds Egypt's first digital factoring license. Suez Canal Bank EGP 30M facility.", color: "var(--success)" },
+  { icon: Landmark, title: "FRA Regulated & Backed", desc: "Delivered through FRA-licensed digital factoring partners with bank-backed facilities.", color: "var(--success)" },
 ];
 
 const FAQ = [
@@ -89,7 +88,7 @@ export default function SupplierJoinPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
-            <OlivLogo size="xs" variant="green" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--success)" }}>◆ Liquidity Partner</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>
               Oliv Partnership Active
             </span>
@@ -175,8 +174,8 @@ export default function SupplierJoinPage() {
           </div>
           <div className="text-center">
             <p className="text-[13px] text-white/30 mb-4">After your first verified invoice, apply for Oliv financing from your dashboard.</p>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
-              <OlivLogo size="xs" variant="dark" />
+            <Link href="/financing" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground-secondary">◆ Liquidity Partner</span>
               See Financing Details <ArrowRight size={14} />
             </Link>
           </div>
@@ -188,7 +187,7 @@ export default function SupplierJoinPage() {
         <div className="max-w-4xl mx-auto px-6">
           <div className="rounded-2xl border p-8 md:p-12 text-center" style={{ borderColor: "var(--success)22", backgroundColor: "var(--success)06" }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
-              <OlivLogo size="xs" variant="green" />
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--success)" }}>◆ Liquidity Partner</span>
               <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>Oliv Invoice Financing</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-semibold text-white mb-5">The Credit Engine That Scales With You</h2>
@@ -265,7 +264,7 @@ export default function SupplierJoinPage() {
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
-            <Link href="/financing/oliv" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <Link href="/financing" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
               Learn About Oliv Financing
             </Link>
           </div>

@@ -26,15 +26,16 @@ import {
   CreditCard,
 } from "lucide-react";
 
-type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "LOGISTICS";
+type StakeholderRole = "HOTEL" | "SUPPLIER";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "var(--accent-base)" },
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "var(--orange-base)" },
-  { value: "FACTORING", label: "Factoring Company", icon: Landmark, color: "var(--purple-base)" },
-  { value: "LOGISTICS", label: "Logistics Provider", icon: Truck, color: "var(--info)" },
 ];
+
+// Factoring & Logistics partners onboard via the dedicated Partner Portal
+const PARTNER_PORTAL_URL = "/partners";
 
 const GOVERNORATES = [
   "Cairo", "Alexandria", "Giza", "Sharm El-Sheikh", "Hurghada", "Luxor", "Aswan",
@@ -146,8 +147,6 @@ function RegisterContent() {
   const roleColorMap: Record<StakeholderRole, string> = {
     HOTEL: "var(--accent-base)",
     SUPPLIER: "var(--orange-base)",
-    FACTORING: "var(--purple-base)",
-    LOGISTICS: "var(--info)",
   };
 
   const ptColorMap: Record<string, string> = {
@@ -176,17 +175,17 @@ function RegisterContent() {
     <div className="space-y-8">
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium uppercase tracking-[0.15em] mb-5" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
-          {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
-          {form.role === "HOTEL" ? "Hotel Registration" : form.role === "SUPPLIER" ? "Supplier Registration" : form.role === "FACTORING" ? "Factoring Registration" : "Logistics Registration"}
+          {form.role === "HOTEL" ? <Hotel size={11} /> : <Store size={11} />}
+          {form.role === "HOTEL" ? "Hotel Registration" : "Supplier Registration"}
         </div>
         <h1 className="text-[28px] font-semibold text-foreground tracking-[-0.02em]">
           Create Account
         </h1>
         <p className="mt-2 text-[14px] text-foreground-secondary">
           {form.role === "HOTEL"
-            ? "Join Egypt&apos;s leading B2B hospitality procurement platform. Net-60 terms via Oliv."
+            ? "Join Egypt&apos;s leading B2B hospitality procurement platform. Net-60 terms via embedded factoring."
             : form.role === "SUPPLIER"
-            ? "List your products, reach 480+ hotels, get paid in 48 hours via Oliv."
+            ? "List your products, reach 480+ hotels, get paid in 48 hours via embedded factoring."
             : "Join Egypt&apos;s leading B2B hospitality procurement platform."}
         </p>
 
@@ -239,10 +238,14 @@ function RegisterContent() {
                 );
               })}
             </div>
+            <p className="text-[12px] text-foreground-muted mt-2">
+              Factoring company or logistics provider?{' '}
+              <a href={PARTNER_PORTAL_URL} className="text-[var(--accent)] underline underline-offset-2 hover:underline">Use the Partner Portal</a> — separate onboarding, dashboards &amp; pricing.
+            </p>
           </div>
 
           <div className="pt-1">
-            <RoleBenefits role={form.role === "FACTORING" ? "FACTOR" : form.role} />
+            <RoleBenefits role={form.role} />
           </div>
 
           <div className="space-y-2">
@@ -398,7 +401,7 @@ function RegisterContent() {
 
               <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(var(--success-rgb),0.05)", border: "1px solid rgba(var(--success-rgb),0.13)" }}>
                 <p className="text-[12px] text-foreground-secondary leading-relaxed">
-                  <strong style={{ color: "var(--success)" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then set up Oliv financing for Net-60 payment terms. Suppliers get paid instantly.
+                  <strong style={{ color: "var(--success)" }}>After registration:</strong> Connect your ETA token for compliant invoicing, then activate financing for Net-60 payment terms. Suppliers get paid instantly.
                 </p>
               </div>
             </>
@@ -407,7 +410,7 @@ function RegisterContent() {
           {form.role === "SUPPLIER" && (
             <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,126,26,0.05)", border: "1px solid rgba(255,126,26,0.13)" }}>
               <p className="text-[12px] text-foreground-secondary leading-relaxed">
-                <strong style={{ color: "var(--orange-base)" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for Oliv financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
+                <strong style={{ color: "var(--orange-base)" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for invoice financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
               </p>
             </div>
           )}

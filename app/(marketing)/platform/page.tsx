@@ -65,7 +65,7 @@ export default function PlatformPage() {
             AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
@@ -163,7 +163,7 @@ export default function PlatformPage() {
           <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
           <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egypt&apos;s leading hotel groups already running on HotelsVendors infrastructure.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/sandbox" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
               Try the Sandbox <ArrowRight size={14} />
             </Link>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
