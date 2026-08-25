@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { HovinDevice } from "@/components/marketing/hovin-device";
 
 const ACCENT = "#FF3D00";
 
@@ -29,18 +30,7 @@ function useLiveCounts(): LiveCounts {
   return counts;
 }
 
-const HERO_SLIDES = [
-  { src: "/hero/p1.jpg", label: "Coastal resorts", desc: "Consolidated supply for Red Sea and Sinai clusters" },
-  { src: "/hero/p2.jpg", label: "Guest rooms", desc: "Linens, amenities, FF&E at fixed prices" },
-  { src: "/hero/p3.jpg", label: "F&B operations", desc: "Food and beverage sourced daily, ETA-invoiced" },
-];
-
 export default function MarketingPage() {
-  const [slide, setSlide] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setSlide((v) => (v + 1) % HERO_SLIDES.length), 4000);
-    return () => clearInterval(t);
-  }, []);
   const { products, suppliers } = useLiveCounts();
   const hasLive = (products !== null && products > 0) || (suppliers !== null && suppliers > 0);
 
@@ -105,34 +95,7 @@ export default function MarketingPage() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden border-l-2 border-t-2 border-[#262626]">
-              {HERO_SLIDES.map((sl, i) => (
-                <div key={sl.src} className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === slide ? 1 : 0 }}>
-                  <img src={sl.src} alt={sl.label} className="h-full w-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/90 via-transparent to-transparent" />
-                  <div className="absolute left-0 bottom-0 p-5">
-                    <div key={slide} className="hv-fade">
-                      <div className="text-[15px] font-semibold tracking-[-0.01em]">{sl.label}</div>
-                      <div className="text-[12px] text-[#A3A3A3] mt-0.5">{sl.desc}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className="absolute top-0 right-0 h-1 w-16" style={{ background: ACCENT }} />
-            </div>
-            <div className="flex gap-2 mt-4 justify-end">
-              {HERO_SLIDES.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSlide(i)}
-                  aria-label={"View " + HERO_SLIDES[i].label}
-                  className="h-1.5 w-8 transition-colors"
-                  style={{ background: i === slide ? ACCENT : "#262626" }}
-                />
-              ))}
-            </div>
-          </div>
+          <HovinDevice />
         </div>
       </section>
 
