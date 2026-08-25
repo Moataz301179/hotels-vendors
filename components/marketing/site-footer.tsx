@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/* Footer — Bold Typography: black body, mono labels, vermillion hover,
+/* Footer — Bold Typography: black body, vermillion (#FF3D00) bold column titles, Jakarta Sans body,
    5-column grid collapsing to 2 on mobile. No Oliv references. */
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
@@ -47,7 +47,7 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
     <footer className="border-t border-[#262626] bg-[#0A0A0A] text-[#FAFAFA]">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-10">
-          {/* Brand block */}
+          {/* Brand block — single lockup, identical to the nav */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-3" dir="ltr">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -67,7 +67,7 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h4 className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#737373] mb-5">{col.title}</h4>
+              <h4 className="font-bold text-[12px] tracking-[0.16em] uppercase text-[#FF3D00] mb-5">{col.title}</h4>
               <ul className="space-y-3">
                 {col.links.map((l) => (
                   <li key={l.label + l.href}>
