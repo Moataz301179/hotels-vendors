@@ -51,7 +51,7 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-3" dir="ltr">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-white.svg" alt="HotelsVendors" width={30} height={30} className="object-contain" />
+              <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
               <span className="font-semibold uppercase text-[13px] tracking-[0.22em]">HotelsVendors</span>
             </Link>
             <p className="mt-5 text-[13px] leading-[1.7] text-[#737373] max-w-[34ch]">

@@ -132,7 +132,7 @@ export function SiteNav() {
         {/* Logo — icon + wordmark, tight, single line */}
         <Link href="/" className="flex items-center gap-3 shrink-0" dir="ltr">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-white.svg" alt="HotelsVendors" width={30} height={30} className="object-contain" />
+          <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
           <span
             className="hidden sm:block font-semibold uppercase text-[13px] text-[#FAFAFA]"
             style={{ letterSpacing: "0.22em" }}
