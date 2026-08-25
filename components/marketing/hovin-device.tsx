@@ -8,7 +8,12 @@ import React from "react";
 
 const RED = "#FF3000";
 
-export function HovinDevice() {
+export function HovinDevice({ variant = "hotel" }: { variant?: "hotel" | "supplier" }) {
+  const isSupplier = variant === "supplier";
+  const accent = isSupplier ? "#FF8A00" : RED; // supplier = amber signal
+  const prop = isSupplier ? "Nile Linens Co" : "Cairo Marina Hotel";
+  const shipName = isSupplier ? "PO #HV-2026-08841 · New Order" : "F&B Supply Batch #4471";
+  const shipSub = isSupplier ? "Cairo Marina Hotel · 16 lines · EGP 486,320" : "HV Logistics · Van 27 · ETA 14:20 · 2.1 KM";
   return (
     <div className="relative flex justify-center" aria-label="HOVIN mobile app preview">
       <style>{`
@@ -133,7 +138,7 @@ export function HovinDevice() {
               </div>
               <div className="hv-prop">
                 <span className="hv-dot-blink" />
-                Cairo Marina Hotel
+                {prop}
               </div>
             </div>
 
@@ -145,8 +150,8 @@ export function HovinDevice() {
                     <span className="hv-idx">01</span>INCOMING SHIPMENT
                     <span className="hv-chip">In Transit</span>
                   </div>
-                  <div className="hv-ship-name">F&amp;B Supply Batch #4471</div>
-                  <div className="hv-ship-sub">HV Logistics · Van 27 · ETA 14:20 · 2.1 KM</div>
+                  <div className="hv-ship-name">{shipName}</div>
+                  <div className="hv-ship-sub">{shipSub}</div>
                 </div>
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.6" strokeLinecap="square" aria-hidden>
                   <path d="M2.5 7.5h11v9h-11z" /><path d="M13.5 10.5h3.8l3.2 3v3h-7z" />

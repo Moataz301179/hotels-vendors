@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { HovinDevice } from "@/components/marketing/hovin-device";
+import { CategoryCarousel3D } from "@/components/marketing/category-carousel-3d";
 
 const ACCENT = "#FF3D00";
 
@@ -98,6 +99,9 @@ export default function MarketingPage() {
           <HovinDevice />
         </div>
       </section>
+
+      {/* MARKETPLACE 3D CAROUSEL */}
+      <CategoryCarousel3D />
 
       {/* FOUR PILLARS */}
       <section className="border-t border-[#262626]">
